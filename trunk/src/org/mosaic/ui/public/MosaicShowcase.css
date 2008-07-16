@@ -1,0 +1,19 @@
+.mosaic-sc-Page { 
+	/* TODO padding: 10px 20px; */
+	/* layouts do not support the padding */
+	
+}
+
+.mosaic-sc-Page-source,
+.mosaic-sc-Page-style {
+	border: 1px solid #888;
+	background: #eeeeee;
+	/* TODO: padding: 10px 2px; */
+	/* layouts do not support the padding */
+	/* margin: 10px; */
+	overflow: scroll;
+}
+.mosaic-sc-Page-style pre {
+	border: 1px dotted #888;
+	margin: 10px;
+}

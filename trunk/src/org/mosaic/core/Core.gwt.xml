@@ -1,0 +1,14 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                        -->
+	<inherits name='com.google.gwt.user.User' />
+
+	<!-- Inherit gwt-dnd 2.x support                                -->
+    <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
+	
+	<!-- Other module inherits                                      -->
+	<inherits name='org.mosaic.core.CompatMode' />
+	<inherits name='org.mosaic.core.DOM' />
+	<inherits name='org.mosaic.core.UserAgent' />
+
+</module>
