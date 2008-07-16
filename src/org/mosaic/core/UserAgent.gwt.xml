@@ -1,0 +1,31 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                        -->
+	<inherits name='com.google.gwt.user.User' />
+
+	<replace-with class="org.mosaic.core.client.impl.UserAgentImplGecko">
+		<when-type-is class="org.mosaic.core.client.impl.UserAgentImpl" />
+		<when-property-is name="user.agent" value="gecko" />
+	</replace-with>
+
+	<replace-with class="org.mosaic.core.client.impl.UserAgentImplGecko18">
+		<when-type-is class="org.mosaic.core.client.impl.UserAgentImpl" />
+		<when-property-is name="user.agent" value="gecko1_8" />
+	</replace-with>
+	
+	<replace-with class="org.mosaic.core.client.impl.UserAgentImplIE6">
+		<when-type-is class="org.mosaic.core.client.impl.UserAgentImpl" />
+		<when-property-is name="user.agent" value="ie6" />
+	</replace-with>
+	
+	<replace-with class="org.mosaic.core.client.impl.UserAgentImplOpera">
+		<when-type-is class="org.mosaic.core.client.impl.UserAgentImpl" />
+		<when-property-is name="user.agent" value="opera" />
+	</replace-with>
+	
+	<replace-with class="org.mosaic.core.client.impl.UserAgentImplSafari">
+		<when-type-is class="org.mosaic.core.client.impl.UserAgentImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
+
+</module>

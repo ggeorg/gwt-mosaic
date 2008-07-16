@@ -1,0 +1,17 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                        -->
+	<inherits name='com.google.gwt.user.User' />
+	
+	<define-property name="compat.mode" values="CSS1Compat,BackCompat"/>
+	
+	<property-provider name="compat.mode"><![CDATA[
+		return  (document.compatMode == 'CSS1Compat') ? 'CSS1Compat' : 'BackCompat';
+	]]></property-provider>
+
+	<replace-with class="org.mosaic.core.client.impl.BackCompatImpl">
+		<when-type-is class="org.mosaic.core.client.impl.CSS1CompatImpl" />
+		<when-property-is name="compat.mode" value="BackCompat" />
+	</replace-with>
+
+</module>

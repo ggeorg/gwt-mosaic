@@ -1,0 +1,36 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                        -->
+	<inherits name="com.google.gwt.core.Core" />
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.i18n.I18N" />
+
+	<!-- Inherit the default GWT style sheet.  You can change       -->
+	<!-- the theme of your GWT application by uncommenting          -->
+	<!-- any one of the following lines.                            -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
+	<inherits name="com.google.gwt.user.theme.chrome.ChromeResources" />
+	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
+	<inherits name="com.google.gwt.user.theme.dark.DarkResources" />
+
+	<!-- Enable debug ID.                                           -->
+	<inherits name="com.google.gwt.user.Debug" />
+	<set-property name="gwt.enableDebugId" value="true" />
+
+	<!-- Use a generator to create the source code                  -->
+	<generate-with class="org.mosaic.ui.generator.MosaicGenerator">
+		<when-type-assignable class="org.mosaic.ui.client.Mosaic.GeneratorInfo" />
+	</generate-with>
+
+	<!-- Other module inherits                                      -->
+	<inherits name='org.mosaic.core.Core' />
+
+	<!-- Specify the app entry point class.                         -->
+	<entry-point class='org.mosaic.ui.client.Mosaic' />
+
+	<!-- Specify the application specific style sheet.              -->
+	<stylesheet src="gwt/standard/Mosaic.css" />
+	<stylesheet src="MosaicShowcase.css" />
+
+</module>
