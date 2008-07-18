@@ -50,56 +50,12 @@ public abstract class AbstractLayoutPage extends Page {
     layoutPanel.add(b3);
     layoutPanel.add(b4, new BoxLayoutData(FillStyle.HORIZONTAL));
   }
-  
+
   /**
    * 
    */
   @MosaicSource
   protected void populate2(LayoutPanel layoutPanel) {
-    final BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
-    boxLayout.setSpacing(5);
-    layoutPanel.setLayout(boxLayout);
-    
-    final BoxLayoutData boxLayoutData1 = new BoxLayoutData(FillStyle.VERTICAL);
-
-    final Button b11 = new Button("Button 11");
-    final Button b12 = new Button("Button 12");
-    final Button b13 = new Button("Button 13");
-    final Button b14 = new Button("Button 14");
-
-    BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
-    boxLayout1.setSpacing(2);
-    final LayoutPanel layoutPanel1 = new LayoutPanel(boxLayout1);
-
-    layoutPanel1.add(b11, boxLayoutData1);
-    layoutPanel1.add(b12, boxLayoutData1);
-    layoutPanel1.add(b13, boxLayoutData1);
-    layoutPanel1.add(b14, boxLayoutData1);
-
-    final Button b21 = new Button("Button 21");
-    final Button b22 = new Button("Button 22");
-    final Button b23 = new Button("Button 23");
-    final Button b24 = new Button("Button 24");
-
-    BoxLayout boxLayout2 = new BoxLayout(); // default is horizontal
-    boxLayout2.setSpacing(2);
-    boxLayout2.setLeftToRight(false);
-    final LayoutPanel layoutPanel2 = new LayoutPanel(boxLayout2);
-
-    layoutPanel2.add(b21, boxLayoutData1);
-    layoutPanel2.add(b22, boxLayoutData1);
-    layoutPanel2.add(b23, boxLayoutData1);
-    layoutPanel2.add(b24, boxLayoutData1);
-
-    layoutPanel.add(layoutPanel1, new BoxLayoutData(FillStyle.BOTH, true));
-    layoutPanel.add(layoutPanel2, new BoxLayoutData(FillStyle.BOTH, true));
-  }
-
-  /**
-   * 
-   */
-  @MosaicSource
-  protected void populate3(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
 
     final Button b1 = new Button("Button 1");
@@ -119,7 +75,7 @@ public abstract class AbstractLayoutPage extends Page {
    * 
    */
   @MosaicSource
-  protected void populate4(LayoutPanel layoutPanel) {
+  protected void populate3(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
 
     final Button b1 = new Button("Button 1");
@@ -152,7 +108,7 @@ public abstract class AbstractLayoutPage extends Page {
    * 
    */
   @MosaicSource
-  protected void populate5(LayoutPanel layoutPanel) {
+  protected void populate4(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
 
     final Button b1 = new Button("Button 1");

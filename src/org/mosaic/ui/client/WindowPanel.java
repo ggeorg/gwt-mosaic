@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mosaic.core.client.DOM;
+import org.mosaic.core.client.util.DelayedRunnable;
 import org.mosaic.ui.client.Caption.CaptionRegion;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -12,11 +13,9 @@ import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
-import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
 import com.allen_sauer.gwt.dnd.client.util.Location;
-import com.allen_sauer.gwt.dnd.client.util.WidgetArea;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
@@ -29,7 +28,6 @@ import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
@@ -58,7 +56,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
       this.directionLetters = directionLetters;
     }
   }
-  
+
   final class MoveDragController extends PickupDragController {
 
     public MoveDragController(AbsolutePanel boundaryPanel) {
@@ -70,14 +68,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
       body.setVisible(false);
       super.dragStart();
     }
-    
+
     @Override
     public void dragEnd() {
       body.setVisible(true);
       super.dragEnd();
     }
   }
-  
+
   class CaptionHanldeProxy extends Widget {
     public CaptionHanldeProxy(Element elem) {
       setElement(elem);
@@ -182,7 +180,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
 
       moveDragController = new MoveDragController(boundaryPanel);
       moveDragController.setBehaviorConstrainedToBoundaryPanel(true);
-      //moveDragController.setBehaviorDragProxy(true);
+      // moveDragController.setBehaviorDragProxy(true);
       moveDragController.setBehaviorMultipleSelection(false);
 
       resizeDragController = new ResizeDragController(boundaryPanel, windowPanel);
@@ -291,7 +289,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
   private final LayoutPanel body;
 
   private final boolean resizable, modal;
-  
+
   private boolean initialized;
 
   private Timer layoutTimer = new Timer() {
@@ -460,13 +458,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
   protected void onLoad() {
     if (!initialized) {
       initialized = true;
-
-      DeferredCommand.addCommand(new Command() {
-        public void execute() {
-          setContentSize(getOffsetWidth(), getOffsetHeight());
-          layoutPanel.layout();
-        }
-      });
+      setContentSize(getOffsetWidth(), getOffsetHeight());
+      layoutTimer.schedule(1);
     }
   }
 

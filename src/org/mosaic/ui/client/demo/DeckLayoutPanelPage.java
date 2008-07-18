@@ -50,14 +50,9 @@ public class DeckLayoutPanelPage extends AbstractLayoutPage {
     populate4(panel4);
     deck.add(panel4);
 
-    final LayoutPanel panel5 = new LayoutPanel();
-    populate5(panel5);
-    deck.add(panel5);
-
     // Add a drop box with the list types
     final ListBox dropBox = new ListBox(false);
     dropBox.addItem("BoxLayout");
-    dropBox.addItem("Bi-directional");
     dropBox.addItem("BorderLayout");
     dropBox.addItem("Nested BorderLayout");
     dropBox.addItem("Mixed Layout");

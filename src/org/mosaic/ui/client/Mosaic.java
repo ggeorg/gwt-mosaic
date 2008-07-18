@@ -10,7 +10,8 @@ import org.mosaic.ui.client.demo.BoxLayoutPage;
 import org.mosaic.ui.client.demo.ButtonPage;
 import org.mosaic.ui.client.demo.DeckLayoutPanelPage;
 import org.mosaic.ui.client.demo.InfoPanelPage;
-import org.mosaic.ui.client.demo.BidiBoxLayoutPage;
+import org.mosaic.ui.client.demo.LayoutTest1Page;
+import org.mosaic.ui.client.demo.LayoutTest2Page;
 import org.mosaic.ui.client.demo.MessageBoxPage;
 import org.mosaic.ui.client.demo.MixedLayoutPage;
 import org.mosaic.ui.client.demo.MosaicConstants;
@@ -161,13 +162,16 @@ public class Mosaic implements EntryPoint {
 
     // Layout pages
     pages.add(new BoxLayoutPage());
-    pages.add(new BidiBoxLayoutPage());
     pages.add(new BorderLayoutPage());
     pages.add(new NestedBorderLayoutPage());
     pages.add(new MixedLayoutPage());
     
     // Layout/Panels
     pages.add(new DeckLayoutPanelPage());
+    
+    // Layout/Advanced Layout
+    pages.add(new LayoutTest1Page());
+    pages.add(new LayoutTest2Page());
   }
 
   /**
