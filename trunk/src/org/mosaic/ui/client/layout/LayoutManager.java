@@ -25,4 +25,12 @@ public interface LayoutManager {
    * @param layoutPanel the <code>LayoutPanel</code> to be laid out
    */
   void layoutPanel(LayoutPanel layoutPanel);
+  
+  /**
+   * 
+   * @param layoutPanel
+   * @return
+   */
+  int[] getPreferredSize(LayoutPanel layoutPanel);
+  
 }

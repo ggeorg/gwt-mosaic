@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -54,12 +53,12 @@ public class MessageBox extends WindowPanel {
     final int width = Window.getClientWidth();
     alert.setWidth(Math.max(width / 3, 256) + "px");
 
-    BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    // box.setMargin(0);
+    final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
+    box.setMargin(0);
     LayoutPanel panel = new LayoutPanel(box);
     panel.add(new HTML(message));
 
-    Button button = new Button("OK");
+    final Button button = new Button("OK");
     button.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         alert.hide();
@@ -77,32 +76,27 @@ public class MessageBox extends WindowPanel {
     final int width = Window.getClientWidth();
     confirm.setWidth(Math.max(width / 3, 256) + "px");
 
-    BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    // box.setMargin(0);
+    final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
+    box.setMargin(0);
     LayoutPanel panel = new LayoutPanel(box);
     panel.add(new HTML(message));
 
-    HorizontalPanel hpanel = new HorizontalPanel();
-
-    Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        confirm.hide();
-      }
-    });
-
-    Button buttonOK = new Button("OK");
+    final Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         confirm.hide();
       }
     });
 
-    hpanel.add(buttonCancel);
-    hpanel.add(new HTML("&nbsp;"));
-    hpanel.add(buttonOK);
+    final Button buttonCancel = new Button("Cancel");
+    buttonCancel.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        confirm.hide();
+      }
+    });
 
-    confirm.getButtonPanel().add(hpanel);
+    confirm.getButtonPanel().add(buttonOK);
+    confirm.getButtonPanel().add(buttonCancel);
 
     confirm.setWidget(panel);
     confirm.center();
@@ -117,21 +111,12 @@ public class MessageBox extends WindowPanel {
     final TextBox input = new TextBox();
     input.setText(defaultValue);
 
-    BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    // box.setMargin(0);
-    LayoutPanel panel = new LayoutPanel(box);
+    final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
+    box.setMargin(0);
+    final LayoutPanel panel = new LayoutPanel(box);
 
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
     panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    HorizontalPanel hpanel = new HorizontalPanel();
-
-    Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        prompt.hide();
-      }
-    });
 
     Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
@@ -139,12 +124,16 @@ public class MessageBox extends WindowPanel {
         prompt.hide();
       }
     });
+    
+    Button buttonCancel = new Button("Cancel");
+    buttonCancel.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        prompt.hide();
+      }
+    });
 
-    hpanel.add(buttonCancel);
-    hpanel.add(new HTML("&nbsp;"));
-    hpanel.add(buttonOK);
-
-    prompt.getButtonPanel().add(hpanel);
+    prompt.getButtonPanel().add(buttonOK);
+    prompt.getButtonPanel().add(buttonCancel);
 
     prompt.setWidget(panel);
     prompt.center();
@@ -158,7 +147,8 @@ public class MessageBox extends WindowPanel {
 
   private Widget widget;
 
-  private HorizontalPanel buttonPanel = new HorizontalPanel();
+  // private HorizontalPanel buttonPanel = new HorizontalPanel();
+  private LayoutPanel buttonPanel = new LayoutPanel();
 
   public MessageBox() {
     this(null, DEFAULT_TYPE);
@@ -184,9 +174,14 @@ public class MessageBox extends WindowPanel {
     super(text, false, autoHide, true);
 
     LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setLayout(new BorderLayout());
+    final BorderLayout layout = new BorderLayout();
+    layout.setSpacing(10);
+    layoutPanel.setLayout(layout);
 
-    buttonPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+    final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
+    buttonPanelLayout.setLeftToRight(false);
+    buttonPanelLayout.setMargin(0);
+    buttonPanel.setLayout(buttonPanelLayout);
     layoutPanel.add(buttonPanel, new BorderLayoutData(BorderLayoutRegion.SOUTH));
 
     if (type == MessageBoxType.ALERT) {
@@ -207,7 +202,7 @@ public class MessageBox extends WindowPanel {
     }
   }
 
-  public HorizontalPanel getButtonPanel() {
+  public LayoutPanel getButtonPanel() {
     return buttonPanel;
   }
 
@@ -256,11 +251,13 @@ public class MessageBox extends WindowPanel {
 
   public void setWidget(Widget w) {
     final LayoutPanel layoutPanel = getLayoutPanel();
-    if (widget != null) {
-      layoutPanel.remove(widget);
+    if (widget != w) {
+      if (widget != null) {
+        layoutPanel.remove(widget);
+      }
+      widget = w;
+      layoutPanel.add(widget);
     }
-    widget = w;
-    layoutPanel.add(widget);
   }
 
 }

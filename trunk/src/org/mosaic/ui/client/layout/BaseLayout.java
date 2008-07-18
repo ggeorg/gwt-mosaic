@@ -77,4 +77,31 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
       DOM.setHeight(elem, Math.max(0, height));
     }
   }
+  
+  protected int getFlowWidth(Widget child) {
+    final int[] p = DOM.getPaddingSizes(child.getElement());
+    int flowWidth;
+    if (child instanceof LayoutPanel) {
+      final LayoutPanel lp = (LayoutPanel) child;
+      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
+      flowWidth = preferredSize[0] + p[1] + p[3];
+    } else {
+      flowWidth = child.getOffsetWidth() + p[1] + p[3];
+    }
+    return flowWidth;
+  }
+  
+  protected int getFlowHeight(Widget child) {
+    final int[] p = DOM.getPaddingSizes(child.getElement());
+    int flowHeight;
+    if (child instanceof LayoutPanel) {
+      final LayoutPanel lp = (LayoutPanel) child;
+      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
+      flowHeight = preferredSize[1] + p[0] + p[2];
+    } else {
+      flowHeight = child.getOffsetHeight() + p[0] + p[2];
+    }
+    return flowHeight;
+  }
+
 }

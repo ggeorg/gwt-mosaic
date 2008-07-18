@@ -105,38 +105,29 @@ public class BoxLayout extends BaseLayout {
             fillWidth -= layoutData.width;
             layoutData.calcWidth = layoutData.width;
           } else {
-            int[] p = DOM.getPaddingSizes(child.getElement());
-            int flowWidth = child.getOffsetWidth() + p[1] + p[3];
+            int flowWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
-              // flowWidth += 2 * (child.getAbsoluteLeft() -
-              // decPanel.getAbsoluteLeft());
               flowWidth += decPanelBorderWidth;
             }
             fillWidth -= flowWidth;
-            layoutData.calcWidth = flowWidth;
-            // for next time
-            layoutData.width = flowWidth;
+            layoutData.calcWidth = layoutData.width = flowWidth;
           }
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
           } else if (layoutData.height != -1) {
             layoutData.calcHeight = layoutData.height;
           } else {
-            final int[] p = DOM.getPaddingSizes(child.getElement());
-            layoutData.calcHeight = child.getOffsetHeight() + p[0] + p[2];
+            int flowHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
-              // layoutData.calcHeight += 2 * (child.getAbsoluteTop() -
-              // decPanel.getAbsoluteTop());
-              layoutData.calcHeight += decPanelBorderHeight;
+              flowHeight += decPanelBorderHeight;
             }
-            // for next time
-            layoutData.height = layoutData.calcHeight;
+            layoutData.calcHeight = layoutData.height = flowHeight;
           }
         } else {
           if (layoutData.fillHeight) {
@@ -145,38 +136,29 @@ public class BoxLayout extends BaseLayout {
             fillHeight -= layoutData.height;
             layoutData.calcHeight = layoutData.height;
           } else {
-            final int[] p = DOM.getPaddingSizes(child.getElement());
-            int flowHeight = child.getOffsetHeight() + p[0] + p[2];
+            int flowHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
-              // flowHeight += 2 * (child.getAbsoluteTop() -
-              // decPanel.getAbsoluteTop());
               flowHeight += decPanelBorderHeight;
             }
             fillHeight -= flowHeight;
-            layoutData.calcHeight = flowHeight;
-            // for next time
-            layoutData.height = flowHeight;
+            layoutData.calcHeight = layoutData.height = flowHeight;
           }
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
           } else if (layoutData.width != -1) {
             layoutData.calcWidth = layoutData.width;
           } else {
-            final int[] p = DOM.getPaddingSizes(child.getElement());
-            layoutData.calcWidth = child.getOffsetWidth() + p[1] + p[3];
+            int flowWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
-              // layoutData.calcWidth += 2 * (child.getAbsoluteLeft() -
-              // decPanel.getAbsoluteLeft());
-              layoutData.calcWidth += decPanelBorderWidth;
+              flowWidth += decPanelBorderWidth;
             }
-            // for next time
-            layoutData.width = layoutData.calcWidth;
+            layoutData.calcWidth = layoutData.width = flowWidth;
           }
         }
       }
@@ -210,23 +192,22 @@ public class BoxLayout extends BaseLayout {
 
         if (layoutData.hasDecoratorPanel()) {
           final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+          final int decPanelBorderWidth = decPanel.getOffsetWidth()
+              - child.getOffsetWidth();
+
           if (fw != -1) {
-            final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                - child.getOffsetWidth();
-            // fw -= 2 * (child.getAbsoluteLeft() - decPanel.getAbsoluteLeft());
             fw -= decPanelBorderWidth;
           }
           if (fh != -1) {
             final int decPanelBorderHeight = decPanel.getOffsetHeight()
                 - child.getOffsetHeight();
-            // fh -= 2 * (child.getAbsoluteTop() - decPanel.getAbsoluteTop());
             fh -= decPanelBorderHeight;
           }
 
           if (orient == Orientation.VERTICAL || isLeftToRight()) {
             setBounds(layoutPanel, decPanel, left, top, fw, fh);
           } else {
-            setBounds(layoutPanel, decPanel, box[0]
+            setBounds(layoutPanel, decPanel, box[0] - decPanelBorderWidth
                 - (left + (fw != -1 ? fw : decPanel.getOffsetWidth())), top, fw, fh);
           }
         } else {
@@ -259,6 +240,133 @@ public class BoxLayout extends BaseLayout {
 
   public void setSpacing(int spacing) {
     this.spacing = spacing;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
+   */
+  public int[] getPreferredSize(LayoutPanel layoutPanel) {
+    int[] result = {0, 0};
+    
+    try {
+      if (layoutPanel == null) {
+        return result;
+      }
+
+      final int size = layoutPanel.getWidgetCount();
+
+      int width = 2 * getMargin();
+      int height = 2 * getMargin();
+
+      // adjust for spacing
+      if (orient == Orientation.HORIZONTAL) {
+        width += ((size - 1) * spacing);
+      } else {
+        height += ((size - 1) * spacing);
+      }
+
+      int maxWidth = 0;
+      int maxHeight = 0;
+
+      for (int i = 0; i < size; i++) {
+        Widget child = layoutPanel.getWidget(i);
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
+
+        if (!DOM.isVisible(child.getElement())) {
+          continue;
+        }
+
+        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+        if (layoutDataObject == null || !(layoutDataObject instanceof BoxLayoutData)) {
+          layoutDataObject = new BoxLayoutData();
+          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+        }
+        BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
+
+        if (orient == Orientation.HORIZONTAL) {
+          if (layoutData.fillWidth) {
+            // fillingWidth++;
+          } else if (layoutData.width != -1) {
+            width += layoutData.width;
+            layoutData.calcWidth = layoutData.width;
+          } else {
+            int flowWidth = getFlowWidth(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderWidth = decPanel.getOffsetWidth()
+                  - child.getOffsetWidth();
+              flowWidth += decPanelBorderWidth;
+            }
+            width += flowWidth;
+            layoutData.calcWidth = layoutData.width = flowWidth;
+          }
+          if (layoutData.fillHeight) {
+            // layoutData.calcHeight = height;
+          } else if (layoutData.height != -1) {
+            layoutData.calcHeight = layoutData.height;
+          } else {
+            int flowHeight = getFlowHeight(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderHeight = decPanel.getOffsetHeight()
+                  - child.getOffsetHeight();
+              flowHeight += decPanelBorderHeight;
+            }
+            layoutData.calcHeight = layoutData.height = flowHeight;
+          }
+          maxHeight = Math.max(maxHeight, (int) layoutData.height);
+        } else {
+          if (layoutData.fillHeight) {
+            // fillingHeight++;
+          } else if (layoutData.height != -1) {
+            height += layoutData.height;
+            layoutData.calcHeight = layoutData.height;
+          } else {
+            int flowHeight = getFlowHeight(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderHeight = decPanel.getOffsetHeight()
+                  - child.getOffsetHeight();
+              flowHeight += decPanelBorderHeight;
+            }
+            height += flowHeight;
+            layoutData.calcHeight = layoutData.height = flowHeight;
+          }
+          if (layoutData.fillWidth) {
+            //layoutData.calcWidth = width;
+          } else if (layoutData.width != -1) {
+            layoutData.calcWidth = layoutData.width;
+          } else {
+            int flowWidth = getFlowWidth(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderWidth = decPanel.getOffsetWidth()
+                  - child.getOffsetWidth();
+              flowWidth += decPanelBorderWidth;
+            }
+            layoutData.calcWidth = layoutData.width = flowWidth;
+          }
+          maxWidth = Math.max(maxWidth, (int) layoutData.width);
+        }
+      }
+
+      if (orient == Orientation.HORIZONTAL) {
+        result[0] = width;
+        result[1] = height + maxHeight;
+      } else {
+        result[0] = width + maxWidth;
+        result[1] = height;
+      }
+
+    } catch (Exception e) {
+      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+    }
+    
+    return result;
   }
 
 }
