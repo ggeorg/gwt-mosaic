@@ -45,6 +45,59 @@ public class BorderLayout extends BaseLayout {
     return west;
   }
 
+  private void scanForPanels(LayoutPanel layoutPanel) {
+    final int size = layoutPanel.getWidgetCount();
+
+    for (int i = 0; i < size; i++) {
+      Widget child = layoutPanel.getWidget(i);
+      if (child instanceof DecoratorPanel) {
+        child = ((DecoratorPanel) child).getWidget();
+      }
+
+      if (!DOM.isVisible(child.getElement())) {
+        continue;
+      }
+
+      Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+      if (layoutDataObject == null || !(layoutDataObject instanceof BorderLayoutData)) {
+        layoutDataObject = new BorderLayoutData();
+        LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+      }
+      BorderLayoutData layoutData = (BorderLayoutData) layoutDataObject;
+
+      if (layoutData.region == BorderLayoutRegion.NORTH) {
+        if (north == null) {
+          north = child;
+        }
+      } else if (layoutData.region == BorderLayoutRegion.EAST) {
+        if (east == null) {
+          east = child;
+        }
+      } else if (layoutData.region == BorderLayoutRegion.SOUTH) {
+        if (south == null) {
+          south = child;
+        }
+      } else if (layoutData.region == BorderLayoutRegion.WEST) {
+        if (west == null) {
+          west = child;
+        }
+      } else if (layoutData.region == BorderLayoutRegion.CENTER) {
+        if (center == null) {
+          center = child;
+        }
+      }
+
+      if (north != null && east != null && south != null && west != null
+          && center != null) {
+        break;
+      }
+    }
+
+    if (center == null) {
+      throw new RuntimeException("BorderLayout requires a widget in the center region.");
+    }
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -56,59 +109,9 @@ public class BorderLayout extends BaseLayout {
         return;
       }
 
+      scanForPanels(layoutPanel);
+
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
-
-      final int size = layoutPanel.getWidgetCount();
-
-      // 1st pass
-      for (int i = 0; i < size; i++) {
-        Widget child = layoutPanel.getWidget(i);
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
-        }
-
-        if (!DOM.isVisible(child.getElement())) {
-          continue;
-        }
-
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof BorderLayoutData)) {
-          layoutDataObject = new BorderLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
-        }
-        BorderLayoutData layoutData = (BorderLayoutData) layoutDataObject;
-
-        if (layoutData.region == BorderLayoutRegion.NORTH) {
-          if (north == null) {
-            north = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.EAST) {
-          if (east == null) {
-            east = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.SOUTH) {
-          if (south == null) {
-            south = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.WEST) {
-          if (west == null) {
-            west = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.CENTER) {
-          if (center == null) {
-            center = child;
-          }
-        }
-
-        if (north != null && east != null && south != null && west != null
-            && center != null) {
-          break;
-        }
-      }
-
-      if (center == null) {
-        throw new RuntimeException("BorderLayout requires a widget in the center region.");
-      }
 
       final int width = box[0];
       final int height = box[1];
@@ -135,7 +138,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double northHeight = layoutData.preferredSize;
           if (northHeight == -1.0) {
-            northHeight = getFlowHeight(north);
+            layoutData.preferredSize = northHeight = getFlowHeight(north);
           } else if (northHeight > 0 && northHeight <= 1.0) {
             northHeight = height * northHeight;
           }
@@ -143,11 +146,14 @@ public class BorderLayout extends BaseLayout {
           h = (int) Math.round(northHeight);
           if (layoutData.hasDecoratorPanel()) {
             final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-            final int _width = Math.max(0, right - left)
-                - (decPanel.getOffsetWidth() - north.getOffsetWidth());
-            setBounds(layoutPanel, decPanel, left, top, _width, h);
+            final int decPanelBorderWidth = decPanel.getOffsetWidth()
+                - north.getOffsetWidth();
+            final int decPanelBorderHeight = decPanel.getOffsetHeight()
+                - north.getOffsetHeight();
+            setBounds(layoutPanel, decPanel, left, top, Math.max(0, right - left)
+                - decPanelBorderWidth, h);
             // increase 'h'
-            h += (decPanel.getOffsetHeight() - north.getOffsetHeight());
+            h += decPanelBorderHeight;
           } else {
             setBounds(layoutPanel, north, left, top, Math.max(0, right - left), h);
           }
@@ -172,7 +178,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double southHeight = layoutData.preferredSize;
           if (southHeight == -1.0) {
-            southHeight = getFlowHeight(south);
+            layoutData.preferredSize = southHeight = getFlowHeight(south);
           } else if (southHeight > 0 && southHeight <= 1.0) {
             southHeight = height * southHeight;
           }
@@ -212,7 +218,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double westWidth = layoutData.preferredSize;
           if (westWidth == -1.0) {
-            westWidth = getFlowWidth(west);
+            layoutData.preferredSize = westWidth = getFlowWidth(west);
           } else if (westWidth > 0 && westWidth <= 1.0) {
             westWidth = width * westWidth;
           }
@@ -249,7 +255,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double eastWidth = layoutData.preferredSize;
           if (eastWidth == -1.0) {
-            eastWidth = getFlowWidth(east);
+            layoutData.preferredSize = eastWidth = getFlowWidth(east);
           } else if (eastWidth > 0 && eastWidth <= 1.0) {
             eastWidth = width * eastWidth;
           }
@@ -307,57 +313,7 @@ public class BorderLayout extends BaseLayout {
         return result;
       }
 
-      final int size = layoutPanel.getWidgetCount();
-
-      // 1st pass
-      for (int i = 0; i < size; i++) {
-        Widget child = layoutPanel.getWidget(i);
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
-        }
-
-        if (!DOM.isVisible(child.getElement())) {
-          continue;
-        }
-
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof BorderLayoutData)) {
-          layoutDataObject = new BorderLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
-        }
-        BorderLayoutData layoutData = (BorderLayoutData) layoutDataObject;
-
-        if (layoutData.region == BorderLayoutRegion.NORTH) {
-          if (north == null) {
-            north = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.EAST) {
-          if (east == null) {
-            east = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.SOUTH) {
-          if (south == null) {
-            south = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.WEST) {
-          if (west == null) {
-            west = child;
-          }
-        } else if (layoutData.region == BorderLayoutRegion.CENTER) {
-          if (center == null) {
-            center = child;
-          }
-        }
-
-        if (north != null && east != null && south != null && west != null
-            && center != null) {
-          break;
-        }
-      }
-
-      if (center == null) {
-        throw new RuntimeException("BorderLayout requires a widget in the center region.");
-      }
+      scanForPanels(layoutPanel);
 
       int width = 2 * getMargin();
       int height = 2 * getMargin();
@@ -370,7 +326,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double northHeight = layoutData.preferredSize;
           if (northHeight == -1.0) {
-            northHeight = getFlowHeight(north);
+            layoutData.preferredSize = northHeight = getFlowHeight(north);
           } else if (northHeight > 0 && northHeight <= 1.0) {
             northHeight = height * northHeight;
           }
@@ -393,7 +349,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double southHeight = layoutData.preferredSize;
           if (southHeight == -1.0) {
-            southHeight = getFlowHeight(south);
+            layoutData.preferredSize = southHeight = getFlowHeight(south);
           } else if (southHeight > 0 && southHeight <= 1.0) {
             southHeight = height * southHeight;
           }
@@ -416,7 +372,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double westWidth = layoutData.preferredSize;
           if (westWidth == -1.0) {
-            westWidth = getFlowWidth(west);
+            layoutData.preferredSize = westWidth = getFlowWidth(west);
           } else if (westWidth > 0 && westWidth <= 1.0) {
             westWidth = width * westWidth;
           }
@@ -439,7 +395,7 @@ public class BorderLayout extends BaseLayout {
         } else {
           double eastWidth = layoutData.preferredSize;
           if (eastWidth == -1.0) {
-            eastWidth = getFlowWidth(east);
+            layoutData.preferredSize = eastWidth = getFlowWidth(east);
           } else if (eastWidth > 0 && eastWidth <= 1.0) {
             eastWidth = width * eastWidth;
           }
@@ -453,10 +409,10 @@ public class BorderLayout extends BaseLayout {
 
         width += spacing;
       }
-      
+
       width += getFlowWidth(center);
       height += getFlowHeight(center);
-      
+
       BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(center);
       if (layoutData.hasDecoratorPanel()) {
         final DecoratorPanel decPanel = layoutData.getDecoratorPanel();

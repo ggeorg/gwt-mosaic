@@ -1,5 +1,7 @@
 package org.mosaic.ui.client.demo;
 
+import org.mosaic.ui.client.demo.Annotations.MosaicSource;
+import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -7,8 +9,16 @@ import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.Button;
 
+/**
+ * 
+ */
+@MosaicStyle({".mosaix-LayoutPanel"})
 public class BorderLayoutPage extends Page {
 
+  /**
+   * 
+   */
+  @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());

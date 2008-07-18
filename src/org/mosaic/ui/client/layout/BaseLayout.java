@@ -4,20 +4,10 @@ import org.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
+import com.google.gwt.user.client.ui.Widget;
 
 public abstract class BaseLayout extends LayoutManagerHelper implements LayoutManager {
-
-  private int margin = 0;
-
-  public int getMargin() {
-    return margin;
-  }
-
-  public void setMargin(int margin) {
-    this.margin = margin;
-  }
 
   /**
    * Gets the panel-defined layout data associated with this widget.
@@ -42,12 +32,44 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     LayoutManagerHelper.setLayoutData(widget, layoutData);
   }
 
+  private int margin = 0;
+
+  protected int getFlowHeight(Widget child) {
+    final int[] b = DOM.getBorderSizes(child.getElement());
+    int flowHeight;
+    if (child instanceof LayoutPanel) {
+      final LayoutPanel lp = (LayoutPanel) child;
+      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
+      flowHeight = preferredSize[1] + b[0] + b[2];
+    } else {
+      flowHeight = child.getOffsetHeight() + b[0] + b[2];
+    }
+    return flowHeight;
+  }
+
+  protected int getFlowWidth(Widget child) {
+    final int[] b = DOM.getBorderSizes(child.getElement());
+    int flowWidth;
+    if (child instanceof LayoutPanel) {
+      final LayoutPanel lp = (LayoutPanel) child;
+      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
+      flowWidth = preferredSize[0] + b[1] + b[3];
+    } else {
+      flowWidth = child.getOffsetWidth() + b[1] + b[3];
+    }
+    return flowWidth;
+  }
+
+  public int getMargin() {
+    return margin;
+  }
+
   protected void setBounds(final LayoutPanel layoutPanel, final DecoratorPanel decPanel,
       final int x, final int y, int width, int height) {
     setXY(layoutPanel, decPanel, x, y);
     setSize(decPanel.getWidget(), width, height);
   }
-  
+
   protected void setBounds(final LayoutPanel layoutPanel, final Widget widget,
       final int x, final int y, int width, int height) {
     int[] margins = DOM.getMarginSizes(widget.getElement());
@@ -62,9 +84,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     setSize(widget, width, height);
   }
 
-  private void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
-      final int y) {
-    layoutPanel.setWidgetPosition(widget, x, y);
+  public void setMargin(int margin) {
+    this.margin = margin;
   }
 
   private void setSize(final Widget widget, int width, int height) {
@@ -77,31 +98,10 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
       DOM.setHeight(elem, Math.max(0, height));
     }
   }
-  
-  protected int getFlowWidth(Widget child) {
-    final int[] p = DOM.getPaddingSizes(child.getElement());
-    int flowWidth;
-    if (child instanceof LayoutPanel) {
-      final LayoutPanel lp = (LayoutPanel) child;
-      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
-      flowWidth = preferredSize[0] + p[1] + p[3];
-    } else {
-      flowWidth = child.getOffsetWidth() + p[1] + p[3];
-    }
-    return flowWidth;
-  }
-  
-  protected int getFlowHeight(Widget child) {
-    final int[] p = DOM.getPaddingSizes(child.getElement());
-    int flowHeight;
-    if (child instanceof LayoutPanel) {
-      final LayoutPanel lp = (LayoutPanel) child;
-      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
-      flowHeight = preferredSize[1] + p[0] + p[2];
-    } else {
-      flowHeight = child.getOffsetHeight() + p[0] + p[2];
-    }
-    return flowHeight;
+
+  private void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
+      final int y) {
+    layoutPanel.setWidgetPosition(widget, x, y);
   }
 
 }
