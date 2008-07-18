@@ -1,5 +1,7 @@
 package org.mosaic.ui.client.demo;
 
+import org.mosaic.ui.client.demo.Annotations.MosaicSource;
+import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -8,8 +10,16 @@ import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.Button;
 
+/**
+ * 
+ */
+@MosaicStyle({".mosaix-LayoutPanel"})
 public class BoxLayoutPage extends Page {
 
+  /**
+   * 
+   */
+  @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);

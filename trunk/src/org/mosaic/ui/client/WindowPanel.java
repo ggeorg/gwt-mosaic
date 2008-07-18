@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mosaic.core.client.DOM;
-import org.mosaic.core.client.util.DelayedRunnable;
 import org.mosaic.ui.client.Caption.CaptionRegion;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -18,8 +17,6 @@ import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -458,7 +455,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
   protected void onLoad() {
     if (!initialized) {
       initialized = true;
-      setContentSize(getOffsetWidth(), getOffsetHeight());
+      final int[] box = DOM.getClientSize(getElement());
+      setContentSize(box[0], box[1]);
       layoutTimer.schedule(1);
     }
   }

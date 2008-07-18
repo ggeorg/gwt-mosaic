@@ -28,6 +28,25 @@ button {
 	/*width: 100%*/
 }
 
+input {
+	margin: 0px;
+	padding: 0px;
+	text-decoration: none;
+	font-size: small;
+	border: 1px inset #ccc;
+}
+
+select {
+	margin: 0;
+	padding: 0px;
+	text-decoration: none;
+	font-size: small;
+	cursor: pointer;
+	cursor: hand;
+	background: url("images/hborder.png") repeat-x 0px -27px;
+	border: 1px inset #ccc;
+}
+
 /*** WindowPanel ***/
 
 .mosaic-WindowPanel {
