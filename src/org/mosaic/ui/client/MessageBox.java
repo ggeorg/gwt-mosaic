@@ -116,7 +116,7 @@ public class MessageBox extends WindowPanel {
     final LayoutPanel panel = new LayoutPanel(box);
 
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
-    panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
+    panel.add(new WidgetWrapper(input), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {

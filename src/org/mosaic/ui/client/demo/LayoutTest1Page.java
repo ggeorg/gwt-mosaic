@@ -13,8 +13,18 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * 
  */
-@MosaicStyle( {".mosaic-LayoutPanel"})
+@MosaicStyle({".mosaic-LayoutPanel"})
 public class LayoutTest1Page extends Page {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public LayoutTest1Page(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
 
   /**
    * 

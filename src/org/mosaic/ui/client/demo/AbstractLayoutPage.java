@@ -15,9 +15,14 @@ import com.google.gwt.user.client.ui.Button;
 public abstract class AbstractLayoutPage extends Page {
 
   /**
+   * Constructor.
    * 
+   * @param constants the constants
    */
-  @MosaicSource
+  public AbstractLayoutPage(DemoConstants constants) {
+    super(constants);
+  }
+
   protected void populate1(LayoutPanel layoutPanel) {
     BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
     boxLayout.setSpacing(5);

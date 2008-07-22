@@ -6,7 +6,6 @@ import java.util.List;
 import org.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,6 +33,125 @@ public class BoxLayout extends BaseLayout {
 
   public Orientation getOrient() {
     return orient;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
+   */
+  public int[] getPreferredSize(LayoutPanel layoutPanel) {
+    int[] result = {0, 0};
+    
+    try {
+      if (layoutPanel == null) {
+        return result;
+      }
+
+      final int size = layoutPanel.getWidgetCount();
+
+      int width = 2 * getMargin();
+      int height = 2 * getMargin();
+
+      // adjust for spacing
+      if (orient == Orientation.HORIZONTAL) {
+        width += ((size - 1) * spacing);
+      } else {
+        height += ((size - 1) * spacing);
+      }
+
+      int maxWidth = 0;
+      int maxHeight = 0;
+
+      for (int i = 0; i < size; i++) {
+        Widget child = layoutPanel.getWidget(i);
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
+
+        if (!DOM.isVisible(child.getElement())) {
+          continue;
+        }
+
+        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+        if (layoutDataObject == null || !(layoutDataObject instanceof BoxLayoutData)) {
+          layoutDataObject = new BoxLayoutData();
+          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+        }
+        BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
+
+        if (orient == Orientation.HORIZONTAL) {
+          if (layoutData.width != -1) {
+            width += layoutData.width;
+            layoutData.calcWidth = layoutData.width;
+          } else {
+            int flowWidth = getFlowWidth(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderWidth = decPanel.getOffsetWidth()
+                  - child.getOffsetWidth();
+              flowWidth += decPanelBorderWidth;
+            }
+            width += flowWidth;
+            layoutData.calcWidth = layoutData.width = flowWidth;
+          }
+          if (layoutData.height != -1) {
+            layoutData.calcHeight = layoutData.height;
+          } else {
+            int flowHeight = getFlowHeight(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderHeight = decPanel.getOffsetHeight()
+                  - child.getOffsetHeight();
+              flowHeight += decPanelBorderHeight;
+            }
+            layoutData.calcHeight = layoutData.height = flowHeight;
+          }
+          maxHeight = Math.max(maxHeight, (int) layoutData.height);
+        } else {
+          if (layoutData.height != -1) {
+            height += layoutData.height;
+            layoutData.calcHeight = layoutData.height;
+          } else {
+            int flowHeight = getFlowHeight(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderHeight = decPanel.getOffsetHeight()
+                  - child.getOffsetHeight();
+              flowHeight += decPanelBorderHeight;
+            }
+            height += flowHeight;
+            layoutData.calcHeight = layoutData.height = flowHeight;
+          }
+          if (layoutData.width != -1) {
+            layoutData.calcWidth = layoutData.width;
+          } else {
+            int flowWidth = getFlowWidth(child);
+            if (layoutData.hasDecoratorPanel()) {
+              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final int decPanelBorderWidth = decPanel.getOffsetWidth()
+                  - child.getOffsetWidth();
+              flowWidth += decPanelBorderWidth;
+            }
+            layoutData.calcWidth = layoutData.width = flowWidth;
+          }
+          maxWidth = Math.max(maxWidth, (int) layoutData.width);
+        }
+      }
+
+      if (orient == Orientation.HORIZONTAL) {
+        result[0] = width;
+        result[1] = height + maxHeight;
+      } else {
+        result[0] = width + maxWidth;
+        result[1] = height;
+      }
+
+    } catch (Exception e) {
+      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+    }
+    
+    return result;
   }
 
   public int getSpacing() {
@@ -241,133 +359,6 @@ public class BoxLayout extends BaseLayout {
 
   public void setSpacing(int spacing) {
     this.spacing = spacing;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
-   */
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
-    
-    try {
-      if (layoutPanel == null) {
-        return result;
-      }
-
-      final int size = layoutPanel.getWidgetCount();
-
-      int width = 2 * getMargin();
-      int height = 2 * getMargin();
-
-      // adjust for spacing
-      if (orient == Orientation.HORIZONTAL) {
-        width += ((size - 1) * spacing);
-      } else {
-        height += ((size - 1) * spacing);
-      }
-
-      int maxWidth = 0;
-      int maxHeight = 0;
-
-      for (int i = 0; i < size; i++) {
-        Widget child = layoutPanel.getWidget(i);
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
-        }
-
-        if (!DOM.isVisible(child.getElement())) {
-          continue;
-        }
-
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof BoxLayoutData)) {
-          layoutDataObject = new BoxLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
-        }
-        BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
-
-        if (orient == Orientation.HORIZONTAL) {
-          if (layoutData.fillWidth) {
-            // fillingWidth++;
-          } else if (layoutData.width != -1) {
-            width += layoutData.width;
-            layoutData.calcWidth = layoutData.width;
-          } else {
-            int flowWidth = getFlowWidth(child);
-            if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-              final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                  - child.getOffsetWidth();
-              flowWidth += decPanelBorderWidth;
-            }
-            width += flowWidth;
-            layoutData.calcWidth = layoutData.width = flowWidth;
-          }
-          if (layoutData.fillHeight) {
-            // layoutData.calcHeight = height;
-          } else if (layoutData.height != -1) {
-            layoutData.calcHeight = layoutData.height;
-          } else {
-            int flowHeight = getFlowHeight(child);
-            if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-              final int decPanelBorderHeight = decPanel.getOffsetHeight()
-                  - child.getOffsetHeight();
-              flowHeight += decPanelBorderHeight;
-            }
-            layoutData.calcHeight = layoutData.height = flowHeight;
-          }
-          maxHeight = Math.max(maxHeight, (int) layoutData.height);
-        } else {
-          if (layoutData.fillHeight) {
-            // fillingHeight++;
-          } else if (layoutData.height != -1) {
-            height += layoutData.height;
-            layoutData.calcHeight = layoutData.height;
-          } else {
-            int flowHeight = getFlowHeight(child);
-            if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-              final int decPanelBorderHeight = decPanel.getOffsetHeight()
-                  - child.getOffsetHeight();
-              flowHeight += decPanelBorderHeight;
-            }
-            height += flowHeight;
-            layoutData.calcHeight = layoutData.height = flowHeight;
-          }
-          if (layoutData.fillWidth) {
-            //layoutData.calcWidth = width;
-          } else if (layoutData.width != -1) {
-            layoutData.calcWidth = layoutData.width;
-          } else {
-            int flowWidth = getFlowWidth(child);
-            if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-              final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                  - child.getOffsetWidth();
-              flowWidth += decPanelBorderWidth;
-            }
-            layoutData.calcWidth = layoutData.width = flowWidth;
-          }
-          maxWidth = Math.max(maxWidth, (int) layoutData.width);
-        }
-      }
-
-      if (orient == Orientation.HORIZONTAL) {
-        result[0] = width;
-        result[1] = height + maxHeight;
-      } else {
-        result[0] = width + maxWidth;
-        result[1] = height;
-      }
-
-    } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
-    }
-    
-    return result;
   }
 
 }

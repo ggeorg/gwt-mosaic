@@ -36,7 +36,8 @@ public class MosaicGenerator extends Generator {
   private static final String[] SRC_CSS = {
       "com/google/gwt/user/theme/$THEME/public/gwt/$THEME/$THEME.css",
       "com/allen_sauer/gwt/dnd/public/gwt-dnd.css",
-      "org/mosaic/ui/public/gwt/$THEME/Mosaic.css"};
+      "org/mosaic/ui/public/gwt/$THEME/Mosaic.css",
+      "org/mosaic/ui/public/MosaicShowcase.css"};
 
   /**
    * The class loader used to get resources.
@@ -157,6 +158,8 @@ public class MosaicGenerator extends Generator {
       // Get the file contents
       String filename = type.getQualifiedSourceName().replace('.', '/') + ".java";
       String fileContents = getResourceContents(filename);
+      
+      System.out.println("generateSourceFiles() : " + filename);
 
       // Get each data code block
       String formattedSource = "";
@@ -229,9 +232,13 @@ public class MosaicGenerator extends Generator {
     String[] prefixes = type.getAnnotation(MosaicStyle.class).value();
     Map<String, String> matched = new LinkedHashMap<String, String>();
     for (String prefix : prefixes) {
+      if (prefix != null && prefix.length() == 0) {
+        continue;
+      }
       // Get the start location of the style code in the source file
       boolean foundStyle = false;
       int start = styleDefs.indexOf("\n" + prefix);
+System.out.println(prefix + " : " +start);
       while (start >= 0) {
         // Get the cssContents string name pattern
         int end = styleDefs.indexOf("{", start);

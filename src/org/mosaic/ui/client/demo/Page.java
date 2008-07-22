@@ -12,6 +12,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
@@ -19,7 +20,16 @@ import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
 
 public abstract class Page extends LayoutPanel {
-
+  
+  /**
+   * The constants used in this Page.
+   */
+  public static interface DemoConstants extends Constants {
+    String mosaicPageExample();
+    String mosaicPageSource();
+    String mosaicPageStyle();
+  }
+  
   /**
    * The default style name.
    */
@@ -29,6 +39,11 @@ public abstract class Page extends LayoutPanel {
    * The static loading image displayed when loading CSS or source code.
    */
   private static Image loadingImage;
+
+  /**
+   * An instance of the constants
+   */
+  private DemoConstants constants;
 
   /**
    * A boolean indicating whether or not this widget has been initialized.
@@ -56,7 +71,13 @@ public abstract class Page extends LayoutPanel {
    */
   private HTML styleWidget = null;
 
-  public Page() {
+  /**
+   * A mapping of themes to style definitions.
+   */
+  private Map<String, String> styleDefs = null;
+
+  public Page(DemoConstants constants) {
+    this.constants = constants;
     setStyleName(DEFAULT_STYLE_NAME);
   }
 
@@ -64,11 +85,6 @@ public abstract class Page extends LayoutPanel {
     final String s = this.getClass().getName();
     return s.substring(s.lastIndexOf('.') + 1, s.length());
   }
-
-  /**
-   * A mapping of themes to style definitions.
-   */
-  private Map<String, String> styleDefs = null;
 
   public final void init() {
     if (initialized) {
@@ -85,9 +101,9 @@ public abstract class Page extends LayoutPanel {
     LayoutPanel panel2 = new LayoutPanel();
     LayoutPanel panel3 = new LayoutPanel();
 
-    tabPanel.add("Example", panel1);
-    tabPanel.add("Source Code", panel2);
-    tabPanel.add("CSS Style", panel3);
+    tabPanel.add(constants.mosaicPageExample(), panel1);
+    tabPanel.add(constants.mosaicPageSource(), panel2);
+    tabPanel.add(constants.mosaicPageStyle(), panel3);
 
     // Add source code tab
     sourceWidget = new HTML();

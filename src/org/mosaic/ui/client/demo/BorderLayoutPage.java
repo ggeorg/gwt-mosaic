@@ -12,8 +12,17 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * 
  */
-@MosaicStyle({".mosaix-LayoutPanel"})
+@MosaicStyle({".mosaic-LayoutPanel"})
 public class BorderLayoutPage extends Page {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public BorderLayoutPage(DemoConstants constants) {
+    super(constants);
+  }
 
   /**
    * 

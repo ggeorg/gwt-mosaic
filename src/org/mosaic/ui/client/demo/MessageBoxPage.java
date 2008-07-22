@@ -1,11 +1,13 @@
 package org.mosaic.ui.client.demo;
 
 import org.mosaic.ui.client.MessageBox;
+import org.mosaic.ui.client.demo.Annotations.MosaicData;
 import org.mosaic.ui.client.demo.Annotations.MosaicSource;
 import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.FillLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
@@ -19,6 +21,27 @@ import com.google.gwt.user.client.ui.Widget;
  */
 @MosaicStyle({".mosaic-WindowPanel", ".dragdrop-positioner"})
 public class MessageBoxPage extends Page {
+
+  @MosaicSource
+  public static interface DemoConstants extends Constants, Page.DemoConstants {
+
+  }
+
+  /**
+   * An instance of the constants
+   */
+  @MosaicData
+  private DemoConstants constants;
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public MessageBoxPage(DemoConstants constants) {
+    super(constants);
+    this.constants = constants;
+  }
 
   /**
    * 
@@ -47,28 +70,28 @@ public class MessageBoxPage extends Page {
         MessageBox.alert("Warning", "I am an warning box!");
       }
     });
-    
+
     Button errorBtn = new Button("Error");
     errorBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         MessageBox.error("Error", "I am an error box!");
       }
     });
-    
+
     Button infoBtn = new Button("Info");
     infoBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         MessageBox.info("Info", "I am an info box!");
       }
     });
-    
+
     HorizontalPanel hpanel = new HorizontalPanel();
     hpanel.add(alertBtn);
     hpanel.add(new HTML("&nbsp;"));
     hpanel.add(errorBtn);
     hpanel.add(new HTML("&nbsp;"));
     hpanel.add(infoBtn);
-    
+
     vPanel.add(hpanel);
 
     HTML confirmDesc = new HTML(

@@ -16,8 +16,18 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * 
  */
-@MosaicStyle({".mosaix-LayoutPanel"})
+@MosaicStyle({".mosaic-LayoutPanel"})
 public class MixedLayoutPage extends Page {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public MixedLayoutPage(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
 
   /**
    * 

@@ -1,6 +1,7 @@
 .mosaic-sc-Page { 
 	/* TODO padding: 10px 20px; */
 	/* layouts do not support the padding */
+	
 }
 
 .mosaic-sc-Page-source,
@@ -19,7 +20,12 @@
 
 /*** Basic Button with Images ***/
 
-.gwt-Button[disabled] table {
+.gwt-Button[disabled] div {
+	cursor: default;
+	color: #888;
+}
+
+.gwt-Button[disabled] img {
 	opacity: .5;
 	zoom: 1;
 	filter: alpha(opacity=40);

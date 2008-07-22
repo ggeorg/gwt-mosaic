@@ -16,8 +16,17 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Example file.
  */
-@MosaicStyle( {".mosaic-DockLayoutPanel", ".mosaic-LayoutPanel"})
+@MosaicStyle({".mosaic-DockLayoutPanel", ".mosaic-LayoutPanel"})
 public class DeckLayoutPanelPage extends AbstractLayoutPage {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public DeckLayoutPanelPage(DemoConstants constants) {
+    super(constants);
+  }
 
   /**
    * <code>DeckLayoutPanel</code> example code.

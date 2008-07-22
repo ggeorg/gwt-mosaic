@@ -2,6 +2,8 @@ package org.mosaic.ui.client.demo;
 
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.InfoPanel.InfoPanelType;
+import org.mosaic.ui.client.demo.Annotations.MosaicSource;
+import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -17,8 +19,26 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ */
+@MosaicStyle({""})
 public class InfoPanelPage extends Page {
 
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public InfoPanelPage(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
+
+  /**
+   * 
+   */
+  @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
