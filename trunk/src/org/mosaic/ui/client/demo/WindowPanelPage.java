@@ -14,11 +14,19 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
- * @author ggeorg
- *
  */
 @MosaicStyle({".dragdrop-positioner"})
 public class WindowPanelPage extends Page {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public WindowPanelPage(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
 
   /**
    * 

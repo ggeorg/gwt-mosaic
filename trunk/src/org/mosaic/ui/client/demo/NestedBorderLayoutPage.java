@@ -12,8 +12,18 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * 
  */
-@MosaicStyle({".mosaix-LayoutPanel"})
+@MosaicStyle({".mosaic-LayoutPanel"})
 public class NestedBorderLayoutPage extends Page {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public NestedBorderLayoutPage(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
 
   /**
    * 

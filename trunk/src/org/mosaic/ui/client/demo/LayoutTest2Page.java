@@ -17,6 +17,16 @@ import com.google.gwt.user.client.ui.Button;
 public class LayoutTest2Page extends Page {
 
   /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public LayoutTest2Page(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
+
+  /**
    * 
    */
   @MosaicSource

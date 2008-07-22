@@ -2,10 +2,29 @@ package org.mosaic.ui.client.demo;
 
 import org.mosaic.ui.client.TabLayoutPanel;
 import org.mosaic.ui.client.TabLayoutPanel.TabBarPosition;
+import org.mosaic.ui.client.demo.Annotations.MosaicSource;
+import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
+/**
+ * 
+ */
+@MosaicStyle({".mosaic-LayoutPanel"})
 public class BottomTabBarsPage extends AbstractLayoutPage {
 
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public BottomTabBarsPage(DemoConstants constants) {
+    super(constants);
+  }
+
+  /**
+   * 
+   */
+  @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final TabLayoutPanel tabPanel = new TabLayoutPanel(TabBarPosition.BOTTOM, true);

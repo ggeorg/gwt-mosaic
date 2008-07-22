@@ -1,3 +1,18 @@
+/*
+ * Copyright 2008 Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.mosaic.ui.client;
 
 import java.util.ArrayList;
@@ -7,13 +22,16 @@ import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.demo.BorderLayoutPage;
 import org.mosaic.ui.client.demo.BottomTabBarsPage;
 import org.mosaic.ui.client.demo.BoxLayoutPage;
-import org.mosaic.ui.client.demo.ButtonPage;
+import org.mosaic.ui.client.demo.BasicButtonPage;
+import org.mosaic.ui.client.demo.CustomButtonPage;
 import org.mosaic.ui.client.demo.DeckLayoutPanelPage;
+import org.mosaic.ui.client.demo.DemoConstants;
 import org.mosaic.ui.client.demo.InfoPanelPage;
 import org.mosaic.ui.client.demo.LayoutTest1Page;
 import org.mosaic.ui.client.demo.LayoutTest2Page;
 import org.mosaic.ui.client.demo.MessageBoxPage;
 import org.mosaic.ui.client.demo.MixedLayoutPage;
+import org.mosaic.ui.client.demo.MosaicButtonPage;
 import org.mosaic.ui.client.demo.MosaicConstants;
 import org.mosaic.ui.client.demo.NestedBorderLayoutPage;
 import org.mosaic.ui.client.demo.Page;
@@ -145,33 +163,38 @@ public class Mosaic implements EntryPoint {
   private Page currentPage;
 
   public Mosaic() {
+    // Create the constants
+    DemoConstants constants = GWT.create(DemoConstants.class);
+    
     // Widgets
-    pages.add(new ButtonPage());
+    pages.add(new BasicButtonPage(constants));
+    pages.add(new CustomButtonPage(constants));
+    pages.add(new MosaicButtonPage(constants));
 
     // Widgets/Table
-    pages.add(new TablePage());
+    pages.add(new TablePage(constants));
 
     // Widgets/Tabs
-    pages.add(new TabLayoutPanelPage());
-    pages.add(new BottomTabBarsPage());
+    pages.add(new TabLayoutPanelPage(constants));
+    pages.add(new BottomTabBarsPage(constants));
 
     // Widgets/Windows
-    pages.add(new InfoPanelPage());
-    pages.add(new WindowPanelPage());
-    pages.add(new MessageBoxPage());
+    pages.add(new InfoPanelPage(constants));
+    pages.add(new WindowPanelPage(constants));
+    pages.add(new MessageBoxPage(constants));
 
     // Layout pages
-    pages.add(new BoxLayoutPage());
-    pages.add(new BorderLayoutPage());
-    pages.add(new NestedBorderLayoutPage());
-    pages.add(new MixedLayoutPage());
+    pages.add(new BoxLayoutPage(constants));
+    pages.add(new BorderLayoutPage(constants));
+    pages.add(new NestedBorderLayoutPage(constants));
+    pages.add(new MixedLayoutPage(constants));
     
     // Layout/Panels
-    pages.add(new DeckLayoutPanelPage());
+    pages.add(new DeckLayoutPanelPage(constants));
     
     // Layout/Advanced Layout
-    pages.add(new LayoutTest1Page());
-    pages.add(new LayoutTest2Page());
+    pages.add(new LayoutTest1Page(constants));
+    pages.add(new LayoutTest2Page(constants));
   }
 
   /**

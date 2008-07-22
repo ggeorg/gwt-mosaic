@@ -1,13 +1,33 @@
 package org.mosaic.ui.client.demo;
 
 import org.mosaic.ui.client.Table;
+import org.mosaic.ui.client.demo.Annotations.MosaicSource;
+import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.table.DefaultTableColumnModel;
 import org.mosaic.ui.client.table.TableColumn;
 import org.mosaic.ui.client.table.TableColumnModel;
 
+/**
+ * 
+ */
+@MosaicStyle({""})
 public class TablePage extends Page {
 
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public TablePage(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
+
+  /**
+   * 
+   */
+  @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
 

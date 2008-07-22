@@ -13,8 +13,17 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * 
  */
-@MosaicStyle({".mosaix-LayoutPanel"})
+@MosaicStyle({".mosaic-LayoutPanel"})
 public class BoxLayoutPage extends Page {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public BoxLayoutPage(DemoConstants constants) {
+    super(constants);
+  }
 
   /**
    * 

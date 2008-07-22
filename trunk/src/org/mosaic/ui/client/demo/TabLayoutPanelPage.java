@@ -3,9 +3,24 @@ package org.mosaic.ui.client.demo;
 import org.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.mosaic.ui.client.TabLayoutPanel;
 import org.mosaic.ui.client.demo.Annotations.MosaicSource;
+import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
+/**
+ * 
+ */
+@MosaicStyle({""})
 public class TabLayoutPanelPage extends AbstractLayoutPage {
+
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public TabLayoutPanelPage(DemoConstants constants) {
+    super(constants);
+    // TODO Auto-generated constructor stub
+  }
 
   /**
    * 
