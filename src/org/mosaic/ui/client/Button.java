@@ -20,6 +20,8 @@ import org.mosaic.core.client.Region;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventPreview;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.FocusListener;
@@ -27,6 +29,7 @@ import com.google.gwt.user.client.ui.FocusListenerCollection;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasName;
+import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
@@ -126,7 +129,6 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
   public void addClickListener(ClickListener listener) {
     if (clickListeners == null) {
       clickListeners = new ClickListenerCollection();
-      sinkEvents(Event.ONCLICK);
     }
     clickListeners.add(listener);
   }
@@ -145,6 +147,13 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
       sinkEvents(Event.KEYEVENTS);
     }
     keyboardListeners.add(listener);
+  }
+
+  private void addNewStyleName(String styleName) {
+    addStyleName(styleName);
+    if (!isEnabled()) {
+      addStyleName(styleName + "-disabled");
+    }
   }
 
   /**
@@ -167,6 +176,15 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
     return menu;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.dev.jjs.ast.HasName#getName()
+   */
+  public String getName() {
+    return DOM.getElementProperty(button, "name");
+  }
+
   public ButtonStyle getStyle() {
     return style;
   }
@@ -185,15 +203,6 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
   }
 
   /**
-   * Gets whether this widget is enabled.
-   * 
-   * @return <code>true</code> if the widget is enabled
-   */
-  public boolean isEnabled() {
-    return !DOM.getElementPropertyBoolean(button, "disabled");
-  }
-
-  /**
    * Determines whether this check box is currently checked.
    * 
    * @return <code>true</code> if the check box is checked
@@ -201,6 +210,15 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
   public boolean isChecked() {
     String propName = isAttached() ? "checked" : "defaultChecked";
     return DOM.getElementPropertyBoolean(button, propName);
+  }
+
+  /**
+   * Gets whether this widget is enabled.
+   * 
+   * @return <code>true</code> if the widget is enabled
+   */
+  public boolean isEnabled() {
+    return !DOM.getElementPropertyBoolean(button, "disabled");
   }
 
   /*
@@ -229,6 +247,24 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
         if (style == ButtonStyle.CHECKBOX) {
           setChecked(!isChecked());
         }
+        if (style == ButtonStyle.RADIO) {
+          final Widget parent = getParent();
+          if (parent instanceof IndexedPanel) {
+            final IndexedPanel panel = (IndexedPanel) getParent();
+            for (int i = 0, n = panel.getWidgetCount(); i < n; i++) {
+              final Widget widget = panel.getWidget(i);
+              if (widget instanceof Button) {
+                final Button button = (Button) widget;
+                final String name = button.getName();
+                if (button.getStyle() == ButtonStyle.RADIO && button.isChecked()
+                    && name != null && name.equals(getName())) {
+                  button.setChecked(false);
+                }
+              }
+            }
+          }
+          setChecked(true);
+        }
         if (clickListeners != null) {
           clickListeners.fireClick(this);
         }
@@ -241,6 +277,8 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
             return;
           }
         }
+        addStyleName("mosaic-Button-active");
+        DOM.setCapture(getElement());
         break;
       case Event.ONMOUSEUP:
         if (style == ButtonStyle.SPLIT && event.getTarget() == button) {
@@ -255,15 +293,24 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
             return;
           }
         }
+        removeStyleName("mosaic-Button-active");
+        DOM.releaseCapture(getElement());
         break;
       case Event.ONMOUSEOVER:
-        addStyleName("mosaic-Button-hover");
-        if (style == ButtonStyle.SPLIT) {
-          addStyleName("mosaic-Split-Button-hover");
+        if (getElement().isOrHasChild(event.getTarget())) {
+          addStyleName("mosaic-Button-hover");
+          if (DOM.getCaptureElement() == getElement()
+              && getElement().isOrHasChild(event.getTarget())) {
+            addStyleName("mosaic-Button-active");
+          }
+          if (style == ButtonStyle.SPLIT) {
+            addStyleName("mosaic-Split-Button-hover");
+          }
         }
         break;
       case Event.ONMOUSEOUT:
         removeStyleName("mosaic-Button-hover");
+        removeStyleName("mosaic-Button-active");
         if (style == ButtonStyle.SPLIT) {
           removeStyleName("mosaic-Split-Button-hover");
         }
@@ -302,8 +349,63 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
     }
   }
 
+  private void removeOldStyleName(String styleName) {
+    removeStyleName(styleName);
+    if (!isEnabled()) {
+      removeStyleName(styleName + "-disabled");
+    }
+  }
+
   public void setAccessKey(char key) {
     DOM.setElementProperty(button, "accessKey", "" + key);
+  }
+
+  /**
+   * Checks or unchecks this check box.
+   * 
+   * @param checked <code>true</code> to check the check box
+   */
+  public void setChecked(boolean checked) {
+    DOM.setElementPropertyBoolean(button, "checked", checked);
+    DOM.setElementPropertyBoolean(button, "defaultChecked", checked);
+    if (checked) {
+      addStyleName("mosaic-Checkbox-Button-checked");
+    } else {
+      removeStyleName("mosaic-Checkbox-Button-checked");
+    }
+  }
+
+  /**
+   * Sets whether this widget is enabled.
+   * 
+   * @param enabled <code>true</code> to enable the widget, <code>false</code>
+   *            to disable it
+   */
+  public void setEnabled(boolean enabled) {
+    DOM.setElementPropertyBoolean(button, "disabled", !enabled);
+    if (enabled) {
+      removeStyleName("mosaic-Button-disabled");
+      sinkEvents(Event.ONCLICK | Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONMOUSEOVER
+          | Event.ONMOUSEOUT);
+      if (this.style == ButtonStyle.MENU) {
+        removeStyleName("mosaic-Menu-Button-disabled");
+      } else if (this.style == ButtonStyle.SPLIT) {
+        removeStyleName("mosaic-Split-Button-disabled");
+      } else if (this.style == ButtonStyle.CHECKBOX) {
+        removeStyleName("mosaic-Checkbox-Button-disabled");
+      }
+    } else {
+      addStyleName("mosaic-Button-disabled");
+      unsinkEvents(Event.ONCLICK | Event.ONMOUSEDOWN | Event.ONMOUSEUP
+          | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+      if (style == ButtonStyle.MENU) {
+        addStyleName("mosaic-Menu-Button-disabled");
+      } else if (style == ButtonStyle.SPLIT) {
+        addStyleName("mosaic-Split-Button-disabled");
+      } else if (this.style == ButtonStyle.CHECKBOX) {
+        addStyleName("mosaic-Checkbox-Button-disabled");
+      }
+    }
   }
 
   public void setFocus(boolean focused) {
@@ -327,18 +429,8 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
     this.menu = menu;
   }
 
-  private void removeOldStyleName(String styleName) {
-    removeStyleName(styleName);
-    if (!isEnabled()) {
-      removeStyleName(styleName + "-disabled");
-    }
-  }
-
-  private void addNewStyleName(String styleName) {
-    addStyleName(styleName);
-    if (!isEnabled()) {
-      addStyleName(styleName + "-disabled");
-    }
+  public void setName(String name) {
+    DOM.setElementProperty(button, "name", name);
   }
 
   public void setStyle(ButtonStyle style) {
@@ -352,13 +444,10 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
       }
       if (style == ButtonStyle.MENU) {
         addNewStyleName("mosaic-Menu-Button");
-        sinkEvents(Event.ONCLICK);
       } else if (style == ButtonStyle.SPLIT) {
         addNewStyleName("mosaic-Split-Button");
-        sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONCLICK);
       } else if (this.style == ButtonStyle.CHECKBOX) {
         addNewStyleName("mosaic-Checkbox-Button");
-        sinkEvents(Event.ONCLICK);
       }
       this.style = style;
     }
@@ -375,64 +464,5 @@ public class Button extends Widget implements HasFocus, HasName, HasHTML,
    */
   public void setText(String text) {
     button.setInnerText(text);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.dev.jjs.ast.HasName#getName()
-   */
-  public String getName() {
-    return DOM.getElementProperty(button, "name");
-  }
-
-  public void setName(String name) {
-    DOM.setElementProperty(button, "name", name);
-  }
-
-  /**
-   * Sets whether this widget is enabled.
-   * 
-   * @param enabled <code>true</code> to enable the widget, <code>false</code>
-   *            to disable it
-   */
-  public void setEnabled(boolean enabled) {
-    DOM.setElementPropertyBoolean(button, "disabled", !enabled);
-    if (enabled) {
-      removeStyleName("mosaic-Button-disabled");
-      sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
-      if (this.style == ButtonStyle.MENU) {
-        removeStyleName("mosaic-Menu-Button-disabled");
-      } else if (this.style == ButtonStyle.SPLIT) {
-        removeStyleName("mosaic-Split-Button-disabled");
-      } else if (this.style == ButtonStyle.CHECKBOX) {
-        removeStyleName("mosaic-Checkbox-Button-disabled");
-      }
-    } else {
-      addStyleName("mosaic-Button-disabled");
-      unsinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
-      if (style == ButtonStyle.MENU) {
-        addStyleName("mosaic-Menu-Button-disabled");
-      } else if (style == ButtonStyle.SPLIT) {
-        addStyleName("mosaic-Split-Button-disabled");
-      } else if (this.style == ButtonStyle.CHECKBOX) {
-        addStyleName("mosaic-Checkbox-Button-disabled");
-      }
-    }
-  }
-
-  /**
-   * Checks or unchecks this check box.
-   * 
-   * @param checked <code>true</code> to check the check box
-   */
-  public void setChecked(boolean checked) {
-    DOM.setElementPropertyBoolean(button, "checked", checked);
-    DOM.setElementPropertyBoolean(button, "defaultChecked", checked);
-    if (checked) {
-      addStyleName("mosaic-Checkbox-Button-checked");
-    } else {
-      removeStyleName("mosaic-Checkbox-Button-checked");
-    }
   }
 }

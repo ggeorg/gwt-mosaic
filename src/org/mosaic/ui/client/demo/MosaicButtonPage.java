@@ -212,6 +212,47 @@ public class MosaicButtonPage extends Page implements ClickListener {
     checkButton4.ensureDebugId("mosaicCheckboxButton-normal");
 
     hBox4.add(checkButton4);
+    
+    //
+    // Radio buttons
+    //
+
+    layoutPanel.add(new HTML("Radio buttons"));
+
+    final LayoutPanel hBox5 = new LayoutPanel(new BoxLayout());
+    layoutPanel.add(hBox5, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+
+    // Add a checkbox button
+    Button radioButton1 = new Button("Hello");
+    radioButton1.setStyle(ButtonStyle.RADIO);
+    radioButton1.addClickListener(this);
+    radioButton1.ensureDebugId("mosaicRadioButton-normal");
+
+    hBox5.add(radioButton1);
+
+    // Add a second checkbox button
+    Button radioButton2 = new Button("Hello");
+    radioButton2.setStyle(ButtonStyle.RADIO);
+    radioButton2.addClickListener(this);
+    radioButton2.ensureDebugId("mosaicRadioButton-normal");
+
+    hBox5.add(radioButton2);
+
+    // Add a third checkbox button
+    Button radioButton3 = new Button("Hello");
+    radioButton3.setStyle(ButtonStyle.RADIO);
+    radioButton3.addClickListener(this);
+    radioButton3.ensureDebugId("mosaicRadioButton-normal");
+
+    hBox5.add(radioButton3);
+
+    // Add a third checkbox button
+    Button radioButton4 = new Button("Hello");
+    radioButton4.setStyle(ButtonStyle.RADIO);
+    radioButton4.setEnabled(false);
+    radioButton4.ensureDebugId("mosaicRadioButton-normal");
+
+    hBox5.add(radioButton4);
   }
 
 }
