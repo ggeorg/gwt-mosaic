@@ -8,18 +8,6 @@ package org.mosaic.ui.client.layout;
 public interface LayoutManager {
 
   /**
-   * 
-   * @return
-   */
-  int getMargin();
-
-  /**
-   * 
-   * @param margin
-   */
-  void setMargin(int margin);
-
-  /**
    * Lays out the specified <code>LayoutPanel</code>.
    * 
    * @param layoutPanel the <code>LayoutPanel</code> to be laid out

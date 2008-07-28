@@ -18,7 +18,7 @@ public class BorderLayout extends BaseLayout {
   private Widget north, east, south, west, center;
 
   public BorderLayout() {
-    setMargin(5);
+    // Nothing to do here!
   }
 
   public int getSpacing() {
@@ -112,15 +112,16 @@ public class BorderLayout extends BaseLayout {
       scanForPanels(layoutPanel);
 
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
-      final int width = box[0];
-      final int height = box[1];
+      final int width = box[0] - (paddings[1] + paddings[3]);
+      final int height = box[1] - (paddings[0] + paddings[2]);
 
-      int left = getMargin();
-      int right = left + width - (2 * getMargin());
+      int left = paddings[3];
+      int right = left + width;
 
-      int top = getMargin();
-      int bottom = top + height - (2 * getMargin());
+      int top = paddings[0];
+      int bottom = top + height;
 
       if (north != null) {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(north);
@@ -314,9 +315,11 @@ public class BorderLayout extends BaseLayout {
       }
 
       scanForPanels(layoutPanel);
+      
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
-      int width = 2 * getMargin();
-      int height = 2 * getMargin();
+      int width = paddings[1] + paddings[3];
+      int height = paddings[0] + paddings[2];
 
       if (north != null) {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(north);

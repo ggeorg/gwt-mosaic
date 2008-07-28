@@ -126,8 +126,8 @@ public class TabLayoutPanel extends Composite implements HasLayout, SourcesTabEv
     // TODO
   }
 
-  public int getMargin() {
-    return layout.getMargin();
+  public int getPadding() {
+    return deck.getPadding();
   }
 
   /*
@@ -175,8 +175,8 @@ public class TabLayoutPanel extends Composite implements HasLayout, SourcesTabEv
     }
   }
 
-  public void setMargin(int margin) {
-    layout.setMargin(margin);
+  public void setPadding(int padding) {
+    deck.setPadding(padding);
   }
 
 }

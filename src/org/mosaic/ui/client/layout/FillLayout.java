@@ -21,6 +21,12 @@ public class FillLayout extends BaseLayout {
       }
 
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+      
+      final int left = paddings[3];
+      final int top = paddings[0];
+      int width = box[0] - (paddings[1] + paddings[3]);
+      int height = box[1] - (paddings[0] + paddings[2]);
 
       final int size = layoutPanel.getWidgetCount();
 
@@ -45,11 +51,11 @@ public class FillLayout extends BaseLayout {
           final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
           final int offsetWidth = decPanel.getOffsetWidth() - child.getOffsetWidth();
           final int offsetHeight = decPanel.getOffsetHeight() - child.getOffsetHeight();
-          box[0] -= offsetWidth;
-          box[1] -= offsetHeight;
-          setBounds(layoutPanel, decPanel, 0, 0, box[0], box[1]);
+          width -= offsetWidth;
+          height -= offsetHeight;
+          setBounds(layoutPanel, decPanel, left, top, width, height);
         } else {
-          setBounds(layoutPanel, child, 0, 0, box[0], box[1]);
+          setBounds(layoutPanel, child, left, top, width, height);
         }
 
         break;

@@ -1,9 +1,9 @@
 package org.mosaic.ui.client.demo;
 
-import org.mosaic.ui.client.Button;
+import org.mosaic.ui.client.MosaicButton;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.PopupMenu;
-import org.mosaic.ui.client.Button.ButtonStyle;
+import org.mosaic.ui.client.MosaicButton.ButtonStyle;
 import org.mosaic.ui.client.demo.Annotations.MosaicData;
 import org.mosaic.ui.client.demo.Annotations.MosaicSource;
 import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
@@ -15,6 +15,7 @@ import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Example file.
  */
-@MosaicStyle( {".mosaic-Button"})
+@MosaicStyle( {".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button", ".mosaic-Split-Button"})
 public class MosaicButtonPage extends Page implements ClickListener {
 
   /**
@@ -77,14 +78,14 @@ public class MosaicButtonPage extends Page implements ClickListener {
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     // Add a push button
-    Button pushButton = new Button("Hello");
+    MosaicButton pushButton = new MosaicButton("Hello");
     pushButton.addClickListener(this);
     pushButton.ensureDebugId("mosaicPushButton-normal");
 
     hBox1.add(pushButton);
 
     // Add a disabled push button
-    Button disabledPushButton = new Button("Hello");
+    MosaicButton disabledPushButton = new MosaicButton("Hello");
     disabledPushButton.setEnabled(false);
     pushButton.ensureDebugId("mosaicPushButton-disabled");
 
@@ -100,7 +101,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     // Add a menu button
-    Button menuButton = new Button("Hello");
+    MosaicButton menuButton = new MosaicButton("Hello");
     menuButton.setStyle(ButtonStyle.MENU);
     menuButton.addClickListener(this);
     menuButton.ensureDebugId("mosaicMenuButton-normal");
@@ -124,7 +125,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox2.add(menuButton);
 
     // Add a disabled menu button
-    Button disabledMenuButton = new Button("Hello");
+    MosaicButton disabledMenuButton = new MosaicButton("Hello");
     disabledMenuButton.setStyle(ButtonStyle.MENU);
     disabledMenuButton.setEnabled(false);
     disabledMenuButton.ensureDebugId("mosaicMenuButton-disabled");
@@ -141,7 +142,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     // Add a menu button
-    Button splitButton = new Button("Hello");
+    MosaicButton splitButton = new MosaicButton("Hello");
     splitButton.setStyle(ButtonStyle.SPLIT);
     splitButton.addClickListener(this);
     splitButton.ensureDebugId("mosaicSplitButton-normal");
@@ -165,7 +166,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox3.add(splitButton);
 
     // Add a disabled menu button
-    Button disabledSplitButton = new Button("Hello");
+    MosaicButton disabledSplitButton = new MosaicButton("Hello");
     disabledSplitButton.setStyle(ButtonStyle.SPLIT);
     disabledSplitButton.setEnabled(false);
     disabledSplitButton.ensureDebugId("mosaicSplitButton-disabled");
@@ -182,7 +183,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     // Add a checkbox button
-    Button checkButton1 = new Button("Hello");
+    MosaicButton checkButton1 = new MosaicButton("Hello");
     checkButton1.setStyle(ButtonStyle.CHECKBOX);
     checkButton1.addClickListener(this);
     checkButton1.ensureDebugId("mosaicCheckboxButton-normal");
@@ -190,7 +191,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox4.add(checkButton1);
 
     // Add a second checkbox button
-    Button checkButton2 = new Button("Hello");
+    MosaicButton checkButton2 = new MosaicButton("Hello");
     checkButton2.setStyle(ButtonStyle.CHECKBOX);
     checkButton2.addClickListener(this);
     checkButton2.ensureDebugId("mosaicCheckboxButton-normal");
@@ -198,7 +199,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox4.add(checkButton2);
 
     // Add a third checkbox button
-    Button checkButton3 = new Button("Hello");
+    MosaicButton checkButton3 = new MosaicButton("Hello");
     checkButton3.setStyle(ButtonStyle.CHECKBOX);
     checkButton3.addClickListener(this);
     checkButton3.ensureDebugId("mosaicCheckboxButton-normal");
@@ -206,7 +207,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox4.add(checkButton3);
 
     // Add a third checkbox button
-    Button checkButton4 = new Button("Hello");
+    MosaicButton checkButton4 = new MosaicButton("Hello");
     checkButton4.setStyle(ButtonStyle.CHECKBOX);
     checkButton4.setEnabled(false);
     checkButton4.ensureDebugId("mosaicCheckboxButton-normal");
@@ -223,7 +224,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     layoutPanel.add(hBox5, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     // Add a checkbox button
-    Button radioButton1 = new Button("Hello");
+    MosaicButton radioButton1 = new MosaicButton("Hello");
     radioButton1.setStyle(ButtonStyle.RADIO);
     radioButton1.addClickListener(this);
     radioButton1.ensureDebugId("mosaicRadioButton-normal");
@@ -231,7 +232,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox5.add(radioButton1);
 
     // Add a second checkbox button
-    Button radioButton2 = new Button("Hello");
+    MosaicButton radioButton2 = new MosaicButton("Hello");
     radioButton2.setStyle(ButtonStyle.RADIO);
     radioButton2.addClickListener(this);
     radioButton2.ensureDebugId("mosaicRadioButton-normal");
@@ -239,7 +240,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox5.add(radioButton2);
 
     // Add a third checkbox button
-    Button radioButton3 = new Button("Hello");
+    MosaicButton radioButton3 = new MosaicButton("Hello");
     radioButton3.setStyle(ButtonStyle.RADIO);
     radioButton3.addClickListener(this);
     radioButton3.ensureDebugId("mosaicRadioButton-normal");
@@ -247,7 +248,7 @@ public class MosaicButtonPage extends Page implements ClickListener {
     hBox5.add(radioButton3);
 
     // Add a third checkbox button
-    Button radioButton4 = new Button("Hello");
+    MosaicButton radioButton4 = new MosaicButton("Hello");
     radioButton4.setStyle(ButtonStyle.RADIO);
     radioButton4.setEnabled(false);
     radioButton4.ensureDebugId("mosaicRadioButton-normal");

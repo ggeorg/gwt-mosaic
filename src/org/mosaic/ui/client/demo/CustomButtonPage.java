@@ -70,7 +70,7 @@ public class CustomButtonPage extends Page implements ClickListener {
     //
 
     BoxLayout pushLayout = new BoxLayout(Orientation.VERTICAL);
-    pushLayout.setMargin(0);
+    //pushLayout.setMargin(0);
     pushLayout.setSpacing(0);
     final LayoutPanel pushBox = new LayoutPanel(pushLayout);
 
@@ -104,7 +104,7 @@ public class CustomButtonPage extends Page implements ClickListener {
     //
 
     BoxLayout toggleLayout = new BoxLayout(Orientation.VERTICAL);
-    toggleLayout.setMargin(0);
+    //toggleLayout.setMargin(0);
     toggleLayout.setSpacing(0);
     final LayoutPanel toggleBox = new LayoutPanel(toggleLayout);
 

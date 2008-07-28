@@ -209,13 +209,14 @@ public class DOM extends com.google.gwt.user.client.DOM {
    *            be used
    * @return the parsed value
    */
-  protected native static Integer parseInt(String str, int radix) /*-{
-                    var number = parseInt(str, radix);
-                    if (isNaN(number))
-                      return null;
-                    else
-                      return @java.lang.Integer::valueOf(I)(number);
-                  }-*/;
+  protected native static Integer parseInt(String str, int radix)
+  /*-{
+    var number = parseInt(str, radix);
+    if (isNaN(number))
+      return null;
+    else
+      return @java.lang.Integer::valueOf(I)(number);
+  }-*/;
 
   /**
    * Parses a string and returns an integer.
@@ -348,32 +349,48 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
-   * Sets the height of the element based on the border size of the element.
+   * Sets the height of the element based on the border and padding size of the
+   * element.
    * 
    * @param elem the elements to have it's height set
    * @param height the height that you want it the element set to
-   * @return the new height, fixed for borders and IE QuirksMode
+   * @return the new height, fixed for borders, paddings and IE QuirksMode
    */
-  public static int setHeight(Element elem, int height) {
+  public static int setContentAreaHeight(Element elem, int height) {
     final int[] b = getBorderSizes(elem);
-    final int h = b[0] + b[2];
-    height = fixQuirks(elem, height - h, 'h');
-    elem.getStyle().setPropertyPx("height", height);
+    final int[] p = getPaddingSizes(elem);
+    final int h = b[0] + b[2] + p[0] + p[2];
+    final int fixedHeight = fixQuirks(elem, height - h, 'h');
+    elem.getStyle().setPropertyPx("height", fixedHeight);
+
+    // Intrinsic height?
+    if (height != elem.getOffsetHeight()) {
+      elem.getStyle().setPropertyPx("height", height);
+    }
+
     return height;
   }
 
   /**
-   * Sets the width of the element based on the border size of the element.
+   * Sets the width of the element based on the border and padding size of the
+   * element.
    * 
    * @param elem the elements to have it's width set
    * @param width the width that you want it the element set to
-   * @return the new width, fixed for borders and IE QuirksMode
+   * @return the new width, fixed for borders, paddings and IE QuirksMode
    */
-  public static int setWidth(Element elem, int width) {
+  public static int setContentAreaWidth(Element elem, int width) {
     final int[] b = getBorderSizes(elem);
-    final int w = b[1] + b[3];
-    width = fixQuirks(elem, width - w, 'w');
-    elem.getStyle().setPropertyPx("width", width);
+    final int[] p = getPaddingSizes(elem);
+    final int w = b[1] + b[3] + p[1] + p[3];
+    final int fixedWidth = fixQuirks(elem, width - w, 'w');
+    elem.getStyle().setPropertyPx("width", fixedWidth);
+
+    // Intrinsic width?
+    if (width != elem.getOffsetWidth()) {
+      elem.getStyle().setPropertyPx("width", width);
+    }
+
     return width;
   }
 
@@ -422,15 +439,18 @@ public class DOM extends com.google.gwt.user.client.DOM {
       elem.getStyle().setProperty("zoom", "1");
     }
 
-    int[] b = getBorderSizes(elem);
-    size[0] = getClientWidth(elem) + (b[1] + b[3]);
-    size[1] = getClientHeight(elem) + (b[0] + b[2]);
+    final int[] b = getBorderSizes(elem);
+    final int[] c = getClientSize(elem);
+    size[0] = c[0] + (b[1] + b[3]);
+    size[1] = c[1] + (b[0] + b[2]);
 
     return size;
   }
 
   /**
    * Get's the elements <code>clientHeight</code> and <code>clientWidth</code>.
+   * <code>clientHeight/Width</code> is a non-standard, HTML-specific property
+   * introduced in the IE object model.
    * 
    * @param elem the element to get the size of
    * @return an array of width and height
@@ -465,7 +485,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @param elem the element to get the <code>clientHeight</code> of
    * @return the <code>clientHeight</code> of the given element
    */
-  private native static int getClientHeight(Element elem) 
+  private native static int getClientHeight(Element elem)
   /*-{
     return elem.clientHeight;
   }-*/;
@@ -482,7 +502,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @param elem the element to get the <code>clientWidth</code> of
    * @return the <code>clientWidth</code> of the given element
    */
-  private native static int getClientWidth(Element elem) 
+  private native static int getClientWidth(Element elem)
   /*-{
     return elem.clientWidth;
   }-*/;
@@ -522,7 +542,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     if (UserAgent.isIE6() && !CompatMode.isStandardsMode()) {
       elem.getStyle().setProperty("zoom", "1");
     }
-    
+
     // IE will return NaN on these if they are set to auto, well set them to 0
 
     size[0] = parseInt(getStyleAttribute(elem, "marginTop"), 10, 0);
@@ -539,7 +559,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     if (UserAgent.isIE6() && !CompatMode.isStandardsMode()) {
       elem.getStyle().setProperty("zoom", "1");
     }
-    
+
     // IE will return NaN on these if they are set to auto, well set them to 0
 
     size[0] = parseInt(getStyleAttribute(elem, "paddingTop"), 10, 0);

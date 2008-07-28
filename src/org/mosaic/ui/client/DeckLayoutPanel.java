@@ -153,4 +153,12 @@ public class DeckLayoutPanel extends Composite implements HasLayout, IndexedPane
     getWidget().remove(w);
   }
 
+  public int getPadding() {
+    return getWidget().getPadding();
+  }
+
+  public void setPadding(int padding) {
+    getWidget().setPadding(padding);
+  }
+
 }

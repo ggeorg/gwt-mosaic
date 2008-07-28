@@ -28,7 +28,6 @@ public class BoxLayout extends BaseLayout {
 
   public BoxLayout(Orientation orient) {
     this.orient = orient;
-    this.setMargin(5);
   }
 
   public Orientation getOrient() {
@@ -49,9 +48,11 @@ public class BoxLayout extends BaseLayout {
       }
 
       final int size = layoutPanel.getWidgetCount();
+      
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
-      int width = 2 * getMargin();
-      int height = 2 * getMargin();
+      int width = paddings[1] + paddings[3];
+      int height = paddings[0] + paddings[2];
 
       // adjust for spacing
       if (orient == Orientation.HORIZONTAL) {
@@ -174,13 +175,14 @@ public class BoxLayout extends BaseLayout {
       }
 
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
       final int size = layoutPanel.getWidgetCount();
 
-      int width = box[0] - 2 * getMargin();
-      int height = box[1] - 2 * getMargin();
-      int left = getMargin();
-      int top = getMargin();
+      int width = box[0] - (paddings[1] + paddings[3]);
+      int height = box[1] - (paddings[0] + paddings[2]);
+      int left = paddings[3];
+      int top = paddings[0];
 
       // adjust for spacing
       if (orient == Orientation.HORIZONTAL) {

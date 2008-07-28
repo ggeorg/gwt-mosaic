@@ -158,8 +158,8 @@ public class MosaicGenerator extends Generator {
       // Get the file contents
       String filename = type.getQualifiedSourceName().replace('.', '/') + ".java";
       String fileContents = getResourceContents(filename);
-      
-      System.out.println("generateSourceFiles() : " + filename);
+
+      // System.out.println("generateSourceFiles() : " + filename);
 
       // Get each data code block
       String formattedSource = "";
@@ -221,8 +221,7 @@ public class MosaicGenerator extends Generator {
    * @param styleDefs the concatenated style definitions
    * @param outDir the output directory
    */
-  private void generateStyleFiles(JClassType type, String styleDefs,
-      String outDir) {
+  private void generateStyleFiles(JClassType type, String styleDefs, String outDir) {
     // Look for annotation
     if (!type.isAnnotationPresent(MosaicStyle.class)) {
       return;
@@ -238,7 +237,7 @@ public class MosaicGenerator extends Generator {
       // Get the start location of the style code in the source file
       boolean foundStyle = false;
       int start = styleDefs.indexOf("\n" + prefix);
-System.out.println(prefix + " : " +start);
+      // System.out.println(prefix + " : " +start);
       while (start >= 0) {
         // Get the cssContents string name pattern
         int end = styleDefs.indexOf("{", start);
