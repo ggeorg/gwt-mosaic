@@ -49,6 +49,7 @@ public class TabLayoutPanelPage extends AbstractLayoutPage {
     tabPanel.add("Mixed Layout", panel4);
 
     layoutPanel.add(tabPanel);
+    layoutPanel.setPadding(5);
   }
 
 }

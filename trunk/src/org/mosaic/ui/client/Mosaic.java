@@ -19,11 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mosaic.core.client.DOM;
+import org.mosaic.ui.client.demo.BasicButtonPage;
 import org.mosaic.ui.client.demo.BorderLayoutPage;
 import org.mosaic.ui.client.demo.BottomTabBarsPage;
 import org.mosaic.ui.client.demo.BoxLayoutPage;
-import org.mosaic.ui.client.demo.BasicButtonPage;
+import org.mosaic.ui.client.demo.ComboBoxPage;
 import org.mosaic.ui.client.demo.CustomButtonPage;
+import org.mosaic.ui.client.demo.DatePickerPage;
 import org.mosaic.ui.client.demo.DeckLayoutPanelPage;
 import org.mosaic.ui.client.demo.DemoConstants;
 import org.mosaic.ui.client.demo.InfoPanelPage;
@@ -170,6 +172,8 @@ public class Mosaic implements EntryPoint {
     pages.add(new BasicButtonPage(constants));
     pages.add(new CustomButtonPage(constants));
     pages.add(new MosaicButtonPage(constants));
+    pages.add(new ComboBoxPage(constants));
+    pages.add(new DatePickerPage(constants));
 
     // Widgets/Table
     pages.add(new TablePage(constants));
@@ -243,7 +247,7 @@ public class Mosaic implements EntryPoint {
       layoutPanel.add(header, new BoxLayoutData(FillStyle.HORIZONTAL));
       layoutPanel.add(main, new BoxLayoutData(FillStyle.BOTH));
 
-      Viewport.get().initWidget(layoutPanel);
+      Viewport.get().initWidget(layoutPanel, false);
     } catch (Throwable t) {
       Window.alert(t.getMessage());
     }

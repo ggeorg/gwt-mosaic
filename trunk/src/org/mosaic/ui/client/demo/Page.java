@@ -93,8 +93,7 @@ public abstract class Page extends LayoutPanel {
     initialized = true;
 
     tabPanel = new DecoratedTabLayoutPanel(true);
-    tabPanel.setMargin(0);
-    // getLayout().setMargin(0);
+    tabPanel.setPadding(0);
     add(tabPanel);
 
     LayoutPanel panel1 = new LayoutPanel();

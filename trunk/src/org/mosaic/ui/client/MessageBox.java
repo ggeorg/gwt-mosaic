@@ -54,7 +54,7 @@ public class MessageBox extends WindowPanel {
     alert.setWidth(Math.max(width / 3, 256) + "px");
 
     final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    box.setMargin(0);
+    //box.setMargin(0);
     LayoutPanel panel = new LayoutPanel(box);
     panel.add(new HTML(message));
 
@@ -77,7 +77,7 @@ public class MessageBox extends WindowPanel {
     confirm.setWidth(Math.max(width / 3, 256) + "px");
 
     final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    box.setMargin(0);
+    //box.setMargin(0);
     LayoutPanel panel = new LayoutPanel(box);
     panel.add(new HTML(message));
 
@@ -112,7 +112,7 @@ public class MessageBox extends WindowPanel {
     input.setText(defaultValue);
 
     final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    box.setMargin(0);
+    //box.setMargin(0);
     final LayoutPanel panel = new LayoutPanel(box);
 
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
@@ -180,7 +180,7 @@ public class MessageBox extends WindowPanel {
 
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);
-    buttonPanelLayout.setMargin(0);
+    //buttonPanelLayout.setMargin(0);
     buttonPanel.setLayout(buttonPanelLayout);
     layoutPanel.add(buttonPanel, new BorderLayoutData(BorderLayoutRegion.SOUTH));
 

@@ -5,8 +5,6 @@ import org.mosaic.ui.client.layout.FillLayoutData;
 import org.mosaic.ui.client.layout.HasLayout;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -32,20 +30,16 @@ public class Viewport extends Composite implements WindowResizeListener,
 
     @Override
     public void run() {
+      final Widget widget = Viewport.get().getWidget();
+
       final int width = Window.getClientWidth();
       final int height = Window.getClientHeight();
-      
-      final Widget widget = Viewport.get().getWidget();
 
       Viewport.this.setBounds(widget, 0, 0, width, height);
 
       if (widget instanceof HasLayout) {
         final HasLayout layoutWidget = (HasLayout) widget;
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            layoutWidget.layout();
-          }
-        });
+        layoutWidget.layout();
       }
     }
   };
@@ -78,11 +72,11 @@ public class Viewport extends Composite implements WindowResizeListener,
     
     if (width != -1) {
       width -= (margins[1] + margins[3]);
-      DOM.setWidth(elem, Math.max(0, width));
+      DOM.setContentAreaWidth(elem, Math.max(0, width));
     }
     if (height != -1) {
       height -= (margins[0] + margins[2]);
-      DOM.setHeight(elem, Math.max(0, height));
+      DOM.setContentAreaHeight(elem, Math.max(0, height));
     }
   }
 

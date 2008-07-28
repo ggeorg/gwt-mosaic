@@ -217,8 +217,8 @@ public class Table extends Composite implements HasLayout, TableModelListener,
     public void onPropertyChange(PropertyChangeEvent event) {
       if (event.getProperty() == TableColumn.WIDTH) {
         final int width = (Integer) event.getNewValue();
-        DOM.setWidth(captionContainer, width - DRAG_WIDGET_WIDTH - 4);
-        DOM.setWidth(getElement(), width);
+        DOM.setContentAreaWidth(captionContainer, width - DRAG_WIDGET_WIDTH - 4);
+        DOM.setContentAreaWidth(getElement(), width);
       }
     }
 
@@ -466,7 +466,7 @@ public class Table extends Composite implements HasLayout, TableModelListener,
 
   public Table(TableModel dataModel, TableColumnModel columnModel) {
     final LayoutPanel layoutPanel = new LayoutPanel(layout);
-    layout.setMargin(0);
+    //layout.setMargin(0);
     layout.setSpacing(0);
 
     layoutPanel.add(tableHeader, new BorderLayoutData(BorderLayoutRegion.NORTH));

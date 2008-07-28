@@ -27,8 +27,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
    */
   public LayoutPanel(LayoutManager layout) {
     super();
-    setLayout(layout);
     setStyleName("mosaic-LayoutPanel");
+    setLayout(layout);
   }
 
   /**
@@ -93,7 +93,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
    */
   public void setLayout(LayoutManager layout) {
     this.layout = layout;
+    if (layoutClassName != null) {
+      removeStyleName(layoutClassName);
+    }
+    layoutClassName = layout.getClass().getName();
+    final int dotPos = layoutClassName.lastIndexOf('.');
+    layoutClassName = layoutClassName.substring(dotPos + 1, layoutClassName.length());
+    addStyleName(getStylePrimaryName() + "-" + layoutClassName);
   }
+
+  private String layoutClassName;
 
   /**
    * @param w
@@ -111,6 +120,14 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     } else {
       super.insert(w, getElement(), beforeIndex, true);
     }
+  }
+
+  public int getPadding() {
+    return DOM.getIntStyleAttribute(getElement(), "padding");
+  }
+  
+  public void setPadding(int padding) {
+    DOM.setStyleAttribute(getElement(), "padding", padding + "px");
   }
 
 }

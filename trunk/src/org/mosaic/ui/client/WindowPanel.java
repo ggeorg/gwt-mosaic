@@ -344,7 +344,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     body.setStyleName("Body");
 
     BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
-    boxLayout.setMargin(0);
+    //boxLayout.setMargin(0);
     boxLayout.setSpacing(0);
 
     layoutPanel = new LayoutPanel(boxLayout);
