@@ -466,8 +466,8 @@ public class Table extends Composite implements HasLayout, TableModelListener,
 
   public Table(TableModel dataModel, TableColumnModel columnModel) {
     final LayoutPanel layoutPanel = new LayoutPanel(layout);
-    //layout.setMargin(0);
-    layout.setSpacing(0);
+    layoutPanel.setPadding(0);
+    layoutPanel.setWidgetSpacing(0);
 
     layoutPanel.add(tableHeader, new BorderLayoutData(BorderLayoutRegion.NORTH));
 
