@@ -75,7 +75,7 @@ public class TabLayoutPanel extends Composite implements HasLayout, SourcesTabEv
 
   protected TabLayoutPanel(TabBarPosition region, boolean decorate, boolean decorateBody) {
     final LayoutPanel layoutPanel = new LayoutPanel(layout);
-    layout.setSpacing(0);
+    layoutPanel.setWidgetSpacing(0);
 
     if (decorate) {
       tabBar = new DecoratedTabBar();
