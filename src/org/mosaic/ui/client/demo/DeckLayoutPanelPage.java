@@ -34,9 +34,8 @@ public class DeckLayoutPanelPage extends AbstractLayoutPage {
   @MosaicSource
   @Override
   protected void onPageLoad(final LayoutPanel layoutPanel) {
-    final BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
-    boxLayout.setSpacing(5);
-    layoutPanel.setLayout(boxLayout);
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    layoutPanel.setWidgetSpacing(5);
 
     // Create a DeckLayoutPanel
     final DeckLayoutPanel deck = new DeckLayoutPanel();
