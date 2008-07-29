@@ -39,8 +39,7 @@ public class DeckLayoutPanelPage extends AbstractLayoutPage {
 
     // Create a DeckLayoutPanel
     final DeckLayoutPanel deck = new DeckLayoutPanel();
-    // deck.setSpacing(4);
-    // deck.setMargin(5);
+    deck.setPadding(5);
 
     final LayoutPanel panel1 = new LayoutPanel();
     populate1(panel1);

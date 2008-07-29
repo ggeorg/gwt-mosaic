@@ -28,8 +28,8 @@ public class TabLayoutPanelPage extends AbstractLayoutPage {
   @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
-
     final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel(true);
+    tabPanel.setPadding(5);
 
     LayoutPanel panel1 = new LayoutPanel();
     populate1(panel1);
@@ -49,7 +49,6 @@ public class TabLayoutPanelPage extends AbstractLayoutPage {
     tabPanel.add("Mixed Layout", panel4);
 
     layoutPanel.add(tabPanel);
-    layoutPanel.setPadding(5);
   }
 
 }

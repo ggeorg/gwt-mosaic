@@ -28,6 +28,7 @@ public class BottomTabBarsPage extends AbstractLayoutPage {
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final TabLayoutPanel tabPanel = new TabLayoutPanel(TabBarPosition.BOTTOM, true);
+    tabPanel.setPadding(5);
 
     LayoutPanel panel1 = new LayoutPanel();
     populate1(panel1);
@@ -47,7 +48,6 @@ public class BottomTabBarsPage extends AbstractLayoutPage {
     tabPanel.add("Mixed Layout", panel4);
 
     layoutPanel.add(tabPanel);
-    layoutPanel.setPadding(5);
   }
 
 }
