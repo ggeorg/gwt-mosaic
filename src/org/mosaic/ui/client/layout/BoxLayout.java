@@ -18,8 +18,6 @@ public class BoxLayout extends BaseLayout {
 
   private Orientation orient;
 
-  private int spacing = 4;
-
   boolean leftToRight = true;
 
   public BoxLayout() {
@@ -54,6 +52,8 @@ public class BoxLayout extends BaseLayout {
       int width = paddings[1] + paddings[3];
       int height = paddings[0] + paddings[2];
 
+      final int spacing = layoutPanel.getWidgetSpacing();
+        
       // adjust for spacing
       if (orient == Orientation.HORIZONTAL) {
         width += ((size - 1) * spacing);
@@ -155,10 +155,6 @@ public class BoxLayout extends BaseLayout {
     return result;
   }
 
-  public int getSpacing() {
-    return spacing;
-  }
-
   public boolean isLeftToRight() {
     return leftToRight;
   }
@@ -178,6 +174,8 @@ public class BoxLayout extends BaseLayout {
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
       final int size = layoutPanel.getWidgetCount();
+      
+      final int spacing = layoutPanel.getWidgetSpacing();
 
       int width = box[0] - (paddings[1] + paddings[3]);
       int height = box[1] - (paddings[0] + paddings[2]);
@@ -357,10 +355,6 @@ public class BoxLayout extends BaseLayout {
 
   public void setOrient(Orientation orient) {
     this.orient = orient;
-  }
-
-  public void setSpacing(int spacing) {
-    this.spacing = spacing;
   }
 
 }
