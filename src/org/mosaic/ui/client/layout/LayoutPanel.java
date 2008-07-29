@@ -13,6 +13,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
    */
   private LayoutManager layout;
 
+  private String layoutClassName;
+
+  private int widgetSpacing = 4;
+
   /**
    * Creates a new <code>LayoutPanel</code> with <code>FillLayout</code>.
    */
@@ -60,6 +64,32 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     return layout;
   }
 
+  public int getPadding() {
+    return DOM.getIntStyleAttribute(getElement(), "padding");
+  }
+
+  public int getWidgetSpacing() {
+    return widgetSpacing;
+  }
+
+  /**
+   * @param w
+   * @param layoutData
+   */
+  public void insert(Widget w, LayoutData layoutData, int beforeIndex) {
+    if (w instanceof DecoratorPanel) {
+      throw new IllegalArgumentException("Adding a DecoratorPanel is not allowed!");
+    }
+    BaseLayout.setLayoutData(w, layoutData);
+    if (layoutData.hasDecoratorPanel()) {
+      final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+      decPanel.setWidget(w);
+      super.insert(decPanel, getElement(), beforeIndex, true);
+    } else {
+      super.insert(w, getElement(), beforeIndex, true);
+    }
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -100,34 +130,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     final int dotPos = layoutClassName.lastIndexOf('.');
     layoutClassName = layoutClassName.substring(dotPos + 1, layoutClassName.length());
     addStyleName(getStylePrimaryName() + "-" + layoutClassName);
+    
+    // System.out.println(getStyleName());
   }
 
-  private String layoutClassName;
-
-  /**
-   * @param w
-   * @param layoutData
-   */
-  public void insert(Widget w, LayoutData layoutData, int beforeIndex) {
-    if (w instanceof DecoratorPanel) {
-      throw new IllegalArgumentException("Adding a DecoratorPanel is not allowed!");
-    }
-    BaseLayout.setLayoutData(w, layoutData);
-    if (layoutData.hasDecoratorPanel()) {
-      final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-      decPanel.setWidget(w);
-      super.insert(decPanel, getElement(), beforeIndex, true);
-    } else {
-      super.insert(w, getElement(), beforeIndex, true);
-    }
-  }
-
-  public int getPadding() {
-    return DOM.getIntStyleAttribute(getElement(), "padding");
-  }
-  
   public void setPadding(int padding) {
     DOM.setStyleAttribute(getElement(), "padding", padding + "px");
+  }
+
+  public void setWidgetSpacing(int widgetSpacing) {
+    this.widgetSpacing = widgetSpacing;
   }
 
 }
