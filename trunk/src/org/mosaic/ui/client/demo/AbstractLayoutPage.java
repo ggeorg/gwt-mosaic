@@ -24,18 +24,16 @@ public abstract class AbstractLayoutPage extends Page {
   }
 
   protected void populate1(LayoutPanel layoutPanel) {
-    BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
-    boxLayout.setSpacing(5);
-    layoutPanel.setLayout(boxLayout);
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    layoutPanel.setWidgetSpacing(5);
 
     final Button b1 = new Button("Button 1");
     final Button b2 = new Button("Button 2");
     final Button b3 = new Button("Button 3");
     final Button b4 = new Button("Button 4");
 
-    BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
-    boxLayout1.setSpacing(2);
-    final LayoutPanel layoutPanel1 = new LayoutPanel(boxLayout1);
+    final LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout());
+    layoutPanel1.setWidgetSpacing(2);
 
     final Button b11 = new Button("Button 11");
     final Button b12 = new Button("Button 12");
