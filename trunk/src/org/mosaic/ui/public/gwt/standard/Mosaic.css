@@ -155,6 +155,9 @@ input {
 .mosaic-WindowPanel .Body {
 	background: white;
 }
+.mosaic-WindowPanel .Body-BorderLayout {
+	padding: 5px;
+}
 .mosaic-WindowPanel .mosaic-Caption {
 	background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
 	border-bottom: 1px solid #bbbbbb;
@@ -455,18 +458,18 @@ input {
 
 .mosaic-LayoutPanel {
 	/* border: 1px dotted #f00; */
+	padding: 5px;
 	margin: 0px;
 }
 
 .mosaic-LayoutPanel-FillLayout {
-	/* border: 1px solid #f00; */
 	padding: 0px;
 }
 
 .mosaic-LayoutPanel-BoxLayout {
-	padding: 5px;
+
 }
 
 .mosaic-LayoutPanel-BorderLayout {
-	padding: 5px;
+
 }
