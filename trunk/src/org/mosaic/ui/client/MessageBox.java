@@ -53,9 +53,8 @@ public class MessageBox extends WindowPanel {
     final int width = Window.getClientWidth();
     alert.setWidth(Math.max(width / 3, 256) + "px");
 
-    final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    //box.setMargin(0);
-    LayoutPanel panel = new LayoutPanel(box);
+    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.setPadding(0);
     panel.add(new HTML(message));
 
     final Button button = new Button("OK");
@@ -76,9 +75,8 @@ public class MessageBox extends WindowPanel {
     final int width = Window.getClientWidth();
     confirm.setWidth(Math.max(width / 3, 256) + "px");
 
-    final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    //box.setMargin(0);
-    LayoutPanel panel = new LayoutPanel(box);
+    final LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.setPadding(0);
     panel.add(new HTML(message));
 
     final Button buttonOK = new Button("OK");
@@ -111,9 +109,8 @@ public class MessageBox extends WindowPanel {
     final TextBox input = new TextBox();
     input.setText(defaultValue);
 
-    final BoxLayout box = new BoxLayout(Orientation.VERTICAL);
-    //box.setMargin(0);
-    final LayoutPanel panel = new LayoutPanel(box);
+    final LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.setPadding(0);
 
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
     panel.add(new WidgetWrapper(input), new BoxLayoutData(FillStyle.HORIZONTAL));
@@ -124,7 +121,7 @@ public class MessageBox extends WindowPanel {
         prompt.hide();
       }
     });
-    
+
     Button buttonCancel = new Button("Cancel");
     buttonCancel.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
@@ -173,14 +170,13 @@ public class MessageBox extends WindowPanel {
   public MessageBox(String text, MessageBoxType type, boolean autoHide) {
     super(text, false, autoHide, true);
 
-    LayoutPanel layoutPanel = getLayoutPanel();
-    final BorderLayout layout = new BorderLayout();
-    layout.setSpacing(10);
-    layoutPanel.setLayout(layout);
+    final LayoutPanel layoutPanel = getLayoutPanel();
+    layoutPanel.setLayout(new BorderLayout());
+    layoutPanel.setWidgetSpacing(10);
 
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);
-    //buttonPanelLayout.setMargin(0);
+    // buttonPanelLayout.setMargin(0);
     buttonPanel.setLayout(buttonPanelLayout);
     layoutPanel.add(buttonPanel, new BorderLayoutData(BorderLayoutRegion.SOUTH));
 
