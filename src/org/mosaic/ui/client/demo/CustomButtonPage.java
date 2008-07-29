@@ -69,10 +69,9 @@ public class CustomButtonPage extends Page implements ClickListener {
     // push buttons
     //
 
-    BoxLayout pushLayout = new BoxLayout(Orientation.VERTICAL);
-    //pushLayout.setMargin(0);
-    pushLayout.setSpacing(0);
-    final LayoutPanel pushBox = new LayoutPanel(pushLayout);
+    final LayoutPanel pushBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+	pushBox.setPadding(0);
+    pushBox.setWidgetSpacing(0);
 
     final Caption pushCaption = new Caption(constants.mosaicCustomButtonPush());
     final LayoutPanel pushBody = new LayoutPanel(new BoxLayout());
@@ -103,10 +102,9 @@ public class CustomButtonPage extends Page implements ClickListener {
     // toggle buttons
     //
 
-    BoxLayout toggleLayout = new BoxLayout(Orientation.VERTICAL);
-    //toggleLayout.setMargin(0);
-    toggleLayout.setSpacing(0);
-    final LayoutPanel toggleBox = new LayoutPanel(toggleLayout);
+    final LayoutPanel toggleBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+	toggleBox.setPadding(0);
+    toggleBox.setWidgetSpacing(0);
 
     final Caption toggleCaption = new Caption(constants.mosaicCustomButtonToggle());
     final LayoutPanel toggleBody = new LayoutPanel(new BoxLayout());
