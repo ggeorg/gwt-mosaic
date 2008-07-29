@@ -32,9 +32,8 @@ public class LayoutTest1Page extends Page {
   @MosaicSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
-    final BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
-    boxLayout.setSpacing(5);
-    layoutPanel.setLayout(boxLayout);
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    layoutPanel.setWidgetSpacing(5);
 
     final Button b11 = new Button("Button 11");
     final Button b12 = new Button("Button 12");
