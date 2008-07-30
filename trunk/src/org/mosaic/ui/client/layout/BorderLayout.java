@@ -53,7 +53,7 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(north);
 
         if (layoutData.collapse) {
-          // collapse
+          // TODO collapse
         } else {
           double northHeight = layoutData.preferredSize;
           if (northHeight == -1.0) {
@@ -76,7 +76,7 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(south);
 
         if (layoutData.collapse) {
-          // collapse
+          // TODO collapse
         } else {
           double southHeight = layoutData.preferredSize;
           if (southHeight == -1.0) {
@@ -99,7 +99,7 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(west);
 
         if (layoutData.collapse) {
-          // collapse
+          // TODO collapse
         } else {
           double westWidth = layoutData.preferredSize;
           if (westWidth == -1.0) {
@@ -122,7 +122,7 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(east);
 
         if (layoutData.collapse) {
-          // collapse
+          // TODO collapse
         } else {
           double eastWidth = layoutData.preferredSize;
           if (eastWidth == -1.0) {
@@ -169,6 +169,8 @@ public class BorderLayout extends BaseLayout {
     return west;
   }
 
+  private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
+
   /*
    * (non-Javadoc)
    * 
@@ -200,9 +202,16 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(north);
 
         if (layoutData.resizable) {
-          // init split bar
+          if (northSplitBar == null) {
+            northSplitBar = new SplitBar(layoutPanel, north, SplitBar.NORTH);
+            northSplitBar.setStyleName("NorthSplitBar");
+            layoutPanel.add(northSplitBar);
+          }
         } else {
-          // remove split bar
+          if (northSplitBar != null) {
+            layoutPanel.remove(northSplitBar);
+            northSplitBar = null;
+          }
         }
 
         int h = 0;
@@ -224,12 +233,17 @@ public class BorderLayout extends BaseLayout {
                 - north.getOffsetWidth();
             final int decPanelBorderHeight = decPanel.getOffsetHeight()
                 - north.getOffsetHeight();
-            setBounds(layoutPanel, decPanel, left, top, Math.max(0, right - left)
+            setBounds(layoutPanel, north, left, top, Math.max(0, right - left)
                 - decPanelBorderWidth, h);
             // increase 'h'
             h += decPanelBorderHeight;
           } else {
             setBounds(layoutPanel, north, left, top, Math.max(0, right - left), h);
+          }
+
+          if (layoutData.resizable) {
+            setBounds(layoutPanel, northSplitBar, left, top + h,
+                Math.max(0, right - left), spacing);
           }
         }
 
@@ -240,9 +254,16 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(south);
 
         if (layoutData.resizable) {
-          // init split bar
+          if (southSplitBar == null) {
+            southSplitBar = new SplitBar(layoutPanel, south, SplitBar.SOUTH);
+            southSplitBar.setStyleName("SouthSplitBar");
+            layoutPanel.add(southSplitBar);
+          }
         } else {
-          // remove split bar
+          if (southSplitBar != null) {
+            layoutPanel.remove(southSplitBar);
+            southSplitBar = null;
+          }
         }
 
         int h = 0;
@@ -264,12 +285,17 @@ public class BorderLayout extends BaseLayout {
                 - (decPanel.getOffsetWidth() - south.getOffsetWidth());
             final int _top = Math.max(0, bottom - h)
                 - (decPanel.getOffsetHeight() - south.getOffsetHeight());
-            setBounds(layoutPanel, decPanel, left, _top, _width, h);
+            setBounds(layoutPanel, south, left, _top, _width, h);
             // increase 'h'
             h += (decPanel.getOffsetHeight() - south.getOffsetHeight());
           } else {
             setBounds(layoutPanel, south, left, Math.max(0, bottom - h), Math.max(0,
                 right - left), h);
+          }
+
+          if (layoutData.resizable) {
+            setBounds(layoutPanel, southSplitBar, left,
+                Math.max(0, bottom - h) - spacing, Math.max(0, right - left), spacing);
           }
         }
 
@@ -280,9 +306,17 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(west);
 
         if (layoutData.resizable) {
-          // init split bar
+          if (westSplitBar == null) {
+            westSplitBar = new SplitBar(layoutPanel, west, SplitBar.WEST);
+            westSplitBar.setStyleName("WestSplitBar");
+            layoutPanel.add(westSplitBar);
+
+          }
         } else {
-          // remove split bar
+          if (westSplitBar != null) {
+            layoutPanel.remove(westSplitBar);
+            westSplitBar = null;
+          }
         }
 
         int w = 0;
@@ -302,11 +336,16 @@ public class BorderLayout extends BaseLayout {
             final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
             final int _height = Math.max(0, bottom - top)
                 - (decPanel.getOffsetHeight() - west.getOffsetHeight());
-            setBounds(layoutPanel, decPanel, left, top, w, _height);
+            setBounds(layoutPanel, west, left, top, w, _height);
             // increase 'h'
             w += (decPanel.getOffsetWidth() - west.getOffsetWidth());
           } else {
             setBounds(layoutPanel, west, left, top, w, Math.max(0, bottom - top));
+          }
+
+          if (layoutData.resizable) {
+            setBounds(layoutPanel, westSplitBar, left + w, top, spacing, Math.max(0,
+                bottom - top));
           }
         }
 
@@ -317,9 +356,16 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(east);
 
         if (layoutData.resizable) {
-          // init split bar
+          if (eastSplitBar == null) {
+            eastSplitBar = new SplitBar(layoutPanel, east, SplitBar.EAST);
+            eastSplitBar.setStyleName("EastSplitBar");
+            layoutPanel.add(eastSplitBar);
+          }
         } else {
-          // remove split bar
+          if (eastSplitBar != null) {
+            layoutPanel.remove(eastSplitBar);
+            eastSplitBar = null;
+          }
         }
 
         int w = 0;
@@ -343,12 +389,17 @@ public class BorderLayout extends BaseLayout {
                 - east.getOffsetHeight();
             final int _left = Math.max(0, right - w) - decPanelBorderWidth;
             final int _height = Math.max(0, bottom - top) - decPanelBorderHeight;
-            setBounds(layoutPanel, decPanel, _left, top, w, _height);
+            setBounds(layoutPanel, east, _left, top, w, _height);
             // increase 'h'
             w += (decPanel.getOffsetWidth() - east.getOffsetWidth());
           } else {
             setBounds(layoutPanel, east, Math.max(0, right - w), top, w, Math.max(0,
                 bottom - top));
+          }
+
+          if (layoutData.resizable) {
+            setBounds(layoutPanel, eastSplitBar, Math.max(0, right - w) - spacing, top,
+                spacing, Math.max(0, bottom - top));
           }
         }
 
@@ -364,7 +415,7 @@ public class BorderLayout extends BaseLayout {
             - center.getOffsetHeight();
         final int _width = Math.max(0, right - left) - decPanelBorderWidth;
         final int _height = Math.max(0, bottom - top) - decPanelBorderHeight;
-        setBounds(layoutPanel, decPanel, left, top, _width, _height);
+        setBounds(layoutPanel, center, left, top, _width, _height);
       } else {
         setBounds(layoutPanel, center, left, top, Math.max(0, right - left), Math.max(0,
             bottom - top));

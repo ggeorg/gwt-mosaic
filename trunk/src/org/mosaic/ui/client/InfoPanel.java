@@ -9,6 +9,7 @@ import org.mosaic.core.client.util.DelayedRunnable;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
@@ -21,7 +22,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * Displays information in the bottom region of the browser for a specified
  * amount of time.
  */
-public class InfoPanel extends DecoratedPopupPanel implements HasText {
+public class InfoPanel extends DecoratedPopupPanel implements HasText,
+    WindowResizeListener, PopupListener {
 
   public enum InfoPanelType {
     HUMANIZED_MESSAGE, TRAY_NOTIFICATION
@@ -79,12 +81,8 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText {
       // values);
 
       final InfoPanel infoPanel = new InfoPanel(caption, text, true);
-      infoPanel.addPopupListener(new PopupListener() {
-        public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-          // Nothing to do here!
-        }
-      });
       infoPanel.center();
+      infoPanel.addPopupListener(infoPanel);
     }
   }
 
@@ -138,16 +136,10 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText {
     this(caption, description, false);
   }
 
-  protected InfoPanel(String caption, String description, boolean autoHide) {
+  protected InfoPanel(String caption, String description, final boolean autoHide) {
     super(autoHide, false); // modal=false
     ensureDebugId("mosaicInfoPanel-simplePopup");
-    if (autoHide) {
-      //final int width = Window.getClientWidth();
-      //InfoPanel.this.setWidth(Math.max(width / 3, WIDTH) + "px");
-      setWidth(WIDTH + "px");
-    } else {
-      setWidth(WIDTH + "px");
-    }
+
     setAnimationEnabled(true);
 
     this.caption = new Label(caption);
@@ -156,9 +148,15 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText {
     this.description = new Label(description);
     this.description.setStyleName(DEFAULT_STYLENAME + "-description");
 
-    FlowPanel panel = new FlowPanel();
+    final FlowPanel panel = new FlowPanel();
     panel.setStyleName(DEFAULT_STYLENAME + "-panel");
-    panel.setPixelSize(WIDTH, HEIGHT);
+    if (autoHide) {
+      final int width = Window.getClientWidth();
+      panel.setPixelSize(Math.max(width / 3, WIDTH), HEIGHT);
+      Window.addWindowResizeListener(this);
+    } else {
+      panel.setPixelSize(WIDTH, HEIGHT);
+    }
     DOM.setStyleAttribute(panel.getElement(), "overflow", "hidden");
 
     SimplePanel div1 = new SimplePanel();
@@ -189,6 +187,21 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText {
 
   public void setText(String text) {
     this.description.setText(text);
+  }
+
+  public void onWindowResized(int width, int height) {
+    new DelayedRunnable(333) {
+      public void run() {
+        final int width = Window.getClientWidth();
+        getWidget().setPixelSize(Math.max(width / 3, WIDTH), HEIGHT);
+        center();
+      }
+    };
+  }
+
+  public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+    System.out.println("=======================");
+    Window.removeWindowResizeListener(this);
   }
 
 }

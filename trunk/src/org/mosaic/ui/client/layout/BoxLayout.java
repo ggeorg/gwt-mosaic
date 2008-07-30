@@ -324,9 +324,9 @@ public class BoxLayout extends BaseLayout {
           }
 
           if (orient == Orientation.VERTICAL || isLeftToRight()) {
-            setBounds(layoutPanel, decPanel, left, top, fw, fh);
+            setBounds(layoutPanel, child, left, top, fw, fh);
           } else {
-            setBounds(layoutPanel, decPanel, box[0] - decPanelBorderWidth
+            setBounds(layoutPanel, child, box[0] - decPanelBorderWidth
                 - (left + (fw != -1 ? fw : decPanel.getOffsetWidth())), top, fw, fh);
           }
         } else {

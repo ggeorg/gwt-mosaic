@@ -3,7 +3,6 @@ package org.mosaic.ui.client.layout;
 import org.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -60,19 +59,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     return flowWidth;
   }
 
-  protected void setBounds(final LayoutPanel layoutPanel, final DecoratorPanel decPanel,
-      final int x, final int y, int width, int height) {
-    int[] margins = DOM.getMarginSizes(decPanel.getElement());
-    if (width != -1) {
-      width -= (margins[1] + margins[3]);
-    }
-    if (height != -1) {
-      height -= (margins[0] + margins[2]);
-    }
-    setXY(layoutPanel, decPanel, x, y);
-    setSize(decPanel.getWidget(), width, height);
-  }
-
   protected void setBounds(final LayoutPanel layoutPanel, final Widget widget,
       final int x, final int y, int width, int height) {
     int[] margins = DOM.getMarginSizes(widget.getElement());
@@ -86,7 +72,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     setSize(widget, width, height);
   }
 
-  private void setSize(final Widget widget, int width, int height) {
+  static void setSize(final Widget widget, int width, int height) {
     final Element elem = widget.getElement();
     if (width != -1) {
       DOM.setContentAreaWidth(elem, Math.max(0, width));
@@ -96,7 +82,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     }
   }
 
-  private void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
+  static void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
       final int y) {
     layoutPanel.setWidgetPosition(widget, x, y);
   }

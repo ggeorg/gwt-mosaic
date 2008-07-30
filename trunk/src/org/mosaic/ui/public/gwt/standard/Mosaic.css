@@ -473,3 +473,44 @@ input {
 .mosaic-LayoutPanel-BorderLayout {
 
 }
+
+.mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
+	cursor: n-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .NorthSplitBar:hover {
+	background: #ddd;
+}
+.mosaic-LayoutPanel-BorderLayout .NorthSplitBar-Movable {
+	background: #888;
+	cursor: n-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
+	cursor: s-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .SouthSplitBar:hover {
+	background: #ddd;
+}
+.mosaic-LayoutPanel-BorderLayout .SouthSplitBar-Movable {
+	background: #888;
+	cursor: s-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .WestSplitBar {
+	cursor: w-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .WestSplitBar:hover {
+	background: #ddd;
+}
+.mosaic-LayoutPanel-BorderLayout .WestSplitBar-Movable {
+	background: #888;
+	cursor: w-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .EastSplitBar {
+	cursor: w-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .EastSplitBar:hover {
+	background: #ddd;
+}
+.mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
+	background: #888;
+	cursor: w-resize;
+}
