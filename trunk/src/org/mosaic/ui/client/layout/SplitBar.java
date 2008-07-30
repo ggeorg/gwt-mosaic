@@ -132,8 +132,6 @@ public class SplitBar extends FocusPanel {
       if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
         int delta = context.draggable.getAbsoluteTop() - draggableOldAbsoluteTop;
         layoutData.preferredSize += delta;
-        layoutData.preferredSize = Math.max((int)layoutData.preferredSize, layoutData.minSize);
-        layoutData.preferredSize = Math.min((int)layoutData.preferredSize, layoutData.maxSize);
       } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
         int delta = draggableOldAbsoluteTop - context.draggable.getAbsoluteTop();
         layoutData.preferredSize += delta;
@@ -145,6 +143,9 @@ public class SplitBar extends FocusPanel {
         int delta = draggableOldAbsoluteLeft - context.draggable.getAbsoluteLeft();
         layoutData.preferredSize += delta;
       }
+      
+      layoutData.preferredSize = Math.max((int)layoutData.preferredSize, layoutData.minSize);
+      layoutData.preferredSize = Math.min((int)layoutData.preferredSize, layoutData.maxSize);
       
       super.dragEnd();
 
