@@ -104,7 +104,7 @@ public class FillLayout extends BaseLayout {
           final int offsetHeight = decPanel.getOffsetHeight() - child.getOffsetHeight();
           width -= offsetWidth;
           height -= offsetHeight;
-          setBounds(layoutPanel, decPanel, left, top, width, height);
+          setBounds(layoutPanel, child, left, top, width, height);
         } else {
           setBounds(layoutPanel, child, left, top, width, height);
         }

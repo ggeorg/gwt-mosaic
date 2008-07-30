@@ -38,10 +38,10 @@ public class BorderLayoutPage extends Page {
     final Button b4 = new Button("Button 4");
     final Button b5 = new Button("Button 5");
     
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST));
+    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 100, 200));
+    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
     layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
   }
   

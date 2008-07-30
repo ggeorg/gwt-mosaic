@@ -1,5 +1,7 @@
 package org.mosaic.ui.client.layout;
 
+import java.util.Iterator;
+
 import org.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -55,6 +57,20 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
       super.add(widget);
     }
   }
+  
+  /**
+   * Adds a widget to the panel at the specified position. Setting a position of
+   * <code>(-1, -1)</code> will cause the child widget to be positioned
+   * statically.
+   * 
+   * @param w the widget to be added
+   * @param left the widget's left position
+   * @param top the widget's top position
+   */
+//  public void add(Widget w, int left, int top) {
+//    // XXX ignore left & top
+//    add(w);
+//  }
 
   /**
    * 
@@ -130,7 +146,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     final int dotPos = layoutClassName.lastIndexOf('.');
     layoutClassName = layoutClassName.substring(dotPos + 1, layoutClassName.length());
     addStyleName(getStylePrimaryName() + "-" + layoutClassName);
-    
+
     // System.out.println(getStyleName());
   }
 
@@ -142,4 +158,89 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     this.widgetSpacing = widgetSpacing;
   }
 
+  private Widget getUnDecoratedWidget(Widget widget) {
+    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+    if (layoutData != null && layoutData.hasDecoratorPanel()) {
+      return layoutData.getDecoratorPanel().getWidget();
+    }
+    return widget;
+  }
+
+  private Widget getDecoratorWidget(Widget widget) {
+    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+    if (layoutData != null && layoutData.hasDecoratorPanel()) {
+      return layoutData.getDecoratorPanel();
+    }
+    return widget;
+  }
+
+  @Override
+  public Widget getWidget(int index) {
+    return getUnDecoratedWidget(super.getWidget(index));
+  }
+
+  @Override
+  public int getWidgetIndex(Widget child) {
+    return super.getWidgetIndex(getDecoratorWidget(child));
+  }
+
+  @Override
+  public boolean remove(Widget w) {
+    return super.remove(getDecoratorWidget(w));
+  }
+
+  @Override
+  public Iterator<Widget> iterator() {
+    final Iterator<Widget> iter = super.iterator();
+    return new Iterator<Widget>() {
+      public boolean hasNext() {
+        return iter.hasNext();
+      }
+
+      public Widget next() {
+        return getUnDecoratedWidget(iter.next());
+      }
+
+      public void remove() {
+        iter.remove();
+      }
+    };
+  }
+  
+  /**
+   * Gets the position of the left outer border edge of the widget relative to
+   * the left outer border edge of the panel.
+   * 
+   * @param w the widget whose position is to be retrieved
+   * @return the widget's left position
+   */
+  @Override
+  public int getWidgetLeft(Widget w) {
+    return super.getWidgetLeft(getDecoratorWidget(w));
+  }
+  
+  /**
+   * Gets the position of the top outer border edge of the widget relative to
+   * the top outer border edge of the panel.
+   * 
+   * @param w the widget whose position is to be retrieved
+   * @return the widget's top position
+   */
+  @Override
+  public int getWidgetTop(Widget w) {
+    return super.getWidgetTop(getDecoratorWidget(w));
+  }
+
+  /**
+   * Sets the position of the specified child widget. Setting a position of
+   * <code>(-1, -1)</code> will cause the child widget to be positioned
+   * statically.
+   * 
+   * @param w the child widget to be positioned
+   * @param left the widget's left position
+   * @param top the widget's top position
+   */
+  public void setWidgetPosition(Widget w, int left, int top) {
+    super.setWidgetPosition(getDecoratorWidget(w), left, top);
+  }
 }
