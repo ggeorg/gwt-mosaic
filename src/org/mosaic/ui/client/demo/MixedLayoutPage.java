@@ -44,10 +44,10 @@ public class MixedLayoutPage extends Page {
 
     final LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
 
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST));
+    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
     layoutPanel.add(layoutPanel1, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
 
     final Button b11 = new Button("Button 11");
