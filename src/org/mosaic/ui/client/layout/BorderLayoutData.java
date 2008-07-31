@@ -62,6 +62,11 @@ public class BorderLayoutData extends LayoutData {
     this(region, preferredSize, minSize, maxSize, false);
   }
 
+  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize,
+      boolean decorate) {
+    this(region, -1.0, minSize, maxSize, decorate);
+  }
+
   public BorderLayoutData(BorderLayoutRegion region, double preferredSize, int minSize,
       int maxSize, boolean decorate) {
     this.region = region;

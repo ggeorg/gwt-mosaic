@@ -454,7 +454,86 @@ input {
 	text-indent: 6px;
 }
 
-/* TEST */
+/*** ScrollTable ***/
+
+.gwt-ScrollTable {
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 1px 0px 1px 1px;
+}
+
+.gwt-ScrollTable .headerWrapper {
+	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+}
+
+.gwt-ScrollTable .footerWrapper {
+	border-top: 1px solid #aaa;
+	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+}
+
+.gwt-ScrollTable .dataTable td,
+.gwt-ScrollTable .headerTable td,
+.gwt-ScrollTable .footerTable td {
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 0px 1px 1px 0px;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 3px;
+}
+
+.gwt-ScrollTable .headerTable td,
+.gwt-ScrollTable .footerTable td {
+  color: #fff;
+}
+    
+.gwt-ScrollTable .dataTable tr.hovering {
+  background: #C3D9FF;
+}
+
+.gwt-ScrollTable .dataTable td.hovering {
+  background: #FFFFAA;
+  cursor: hand;
+  cursor: pointer;
+}
+
+.gwt-ScrollTable .dataTable tr.selected {
+  background: #7AA5D6;
+}
+
+.gwt-ScrollTable .pagingOptions {
+	background: #e8eef7;
+	border-top: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	padding: 1px 0px;
+}
+
+.gwt-ScrollTable .pagingOptions .errorMessage {
+	color: red;
+}
+
+.gwt-PagingOptions .gwt-Image {
+	cursor: hand;
+	cursor: pointer;
+}
+
+.gwt-InlineCellEditor {
+	border: 3px solid #7AA5D6;
+	padding: 4px;
+	background: white;
+	overflow: auto;
+}
+.gwt-InlineCellEditor .accept {
+	cursor: pointer;
+	cursor: hand;
+}
+.gwt-InlineCellEditor .cancel {
+	cursor: pointer;
+	cursor: hand;
+}
+
+
+/*** TEST ***/
 
 .mosaic-LayoutPanel {
 	/* border: 1px dotted #f00; */

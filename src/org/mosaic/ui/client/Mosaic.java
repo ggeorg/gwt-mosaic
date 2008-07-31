@@ -37,6 +37,7 @@ import org.mosaic.ui.client.demo.MosaicButtonPage;
 import org.mosaic.ui.client.demo.MosaicConstants;
 import org.mosaic.ui.client.demo.NestedBorderLayoutPage;
 import org.mosaic.ui.client.demo.Page;
+import org.mosaic.ui.client.demo.ScrollTablePage;
 import org.mosaic.ui.client.demo.TabLayoutPanelPage;
 import org.mosaic.ui.client.demo.TablePage;
 import org.mosaic.ui.client.demo.WindowPanelPage;
@@ -176,6 +177,7 @@ public class Mosaic implements EntryPoint {
     pages.add(new DatePickerPage(constants));
 
     // Widgets/Table
+    pages.add(new ScrollTablePage(constants));
     pages.add(new TablePage(constants));
 
     // Widgets/Tabs
@@ -241,7 +243,7 @@ public class Mosaic implements EntryPoint {
       centerPanel = new LayoutPanel(new FillLayout());
 
       LayoutPanel main = new LayoutPanel(new BorderLayout());
-      main.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, -1.0, 100, 350, true));
+      main.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200.0, 100, 350, true));
       main.add(centerPanel);
 
       layoutPanel.add(header, new BoxLayoutData(FillStyle.HORIZONTAL));
