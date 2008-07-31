@@ -475,6 +475,7 @@ input {
 }
 
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
+	background: #fff;
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar-Movable {
@@ -482,6 +483,7 @@ input {
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
+	background: #fff;
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar-Movable {
@@ -489,6 +491,7 @@ input {
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar {
+	background: #fff;
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar-Movable {
@@ -496,6 +499,7 @@ input {
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
+	background: #fff;
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
