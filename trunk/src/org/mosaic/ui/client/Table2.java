@@ -26,7 +26,6 @@ import org.mosaic.core.client.UserAgent;
 import org.mosaic.ui.client.Table2.TableBody.TableRow;
 import org.mosaic.ui.client.event.TableColumnModelEvent;
 import org.mosaic.ui.client.event.TableColumnModelListener;
-import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.table.DefaultTableColumnModel;
 import org.mosaic.ui.client.table.TableColumn;
 import org.mosaic.ui.client.table.TableColumnModel;

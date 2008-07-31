@@ -241,7 +241,7 @@ public class Mosaic implements EntryPoint {
       centerPanel = new LayoutPanel(new FillLayout());
 
       LayoutPanel main = new LayoutPanel(new BorderLayout());
-      main.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200, 100, 350, true));
+      main.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, -1.0, 100, 350, true));
       main.add(centerPanel);
 
       layoutPanel.add(header, new BoxLayoutData(FillStyle.HORIZONTAL));

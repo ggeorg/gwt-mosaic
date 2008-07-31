@@ -17,8 +17,6 @@ package org.mosaic.ui.client.datepicker;
 
 import java.util.Date;
 
-
-
 /**
  * Abstract month selector widget.
  * 
