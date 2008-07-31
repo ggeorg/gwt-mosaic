@@ -570,4 +570,24 @@ public class DOM extends com.google.gwt.user.client.DOM {
     return size;
   }
 
+  /**
+   * Gets the row index of a row element.
+   * 
+   * @param tr the row element
+   * @return the row index
+   */
+  public static int getRowIndex(Element tr) {
+    return getElementPropertyInt(tr, "rowIndex");
+  }
+
+  /**
+   * Gets the cell index of a cell within a table row.
+   * 
+   * @param td the cell element
+   * @return the cell index
+   */
+  public static int getCellIndex(Element td) {
+    return impl.getCellIndex(td);
+  }
+
 }

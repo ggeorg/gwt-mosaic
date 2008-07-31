@@ -7,5 +7,10 @@
 		<when-type-is class="org.mosaic.core.client.impl.DOMImpl" />
 		<when-property-is name="user.agent" value="ie6" />
 	</replace-with>
+	
+	<replace-with class="org.mosaic.core.client.impl.DOMImplSafari">
+		<when-type-is class="org.mosaic.core.client.impl.DOMImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
 
 </module>

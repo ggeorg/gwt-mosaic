@@ -15,6 +15,7 @@
  */
 package org.mosaic.core.client.impl;
 
+import org.mosaic.core.client.DOM;
 import org.mosaic.core.client.Point;
 import org.mosaic.core.client.UserAgent;
 
@@ -139,4 +140,14 @@ public class DOMImpl {
     doc = doc || document;
     return Math.max(doc.documentElement.scrollTop, doc.body.scrollTop);
   }-*/;
+
+  /**
+   * Gets the cell index of a cell within a table row.
+   * 
+   * @param td the cell element
+   * @return the cell index
+   */
+  public int getCellIndex(Element td) {
+    return DOM.getElementPropertyInt(td, "cellIndex");
+  }
 }
