@@ -95,10 +95,10 @@ public class GridBulkRenderer extends TableBulkRenderer {
    * Short term hack to set protected row and columns.
    */
   native void setGridDimensions(Grid table) /*-{
-    var numRows =  table.@com.google.gwt.widgetideas.table.client.overrides.HTMLTable::getDOMRowCount()();
-    table.@com.google.gwt.widgetideas.table.client.overrides.Grid::numRows = numRows;
-    table.@com.google.gwt.widgetideas.table.client.overrides.Grid::numColumns =
-      table.@com.google.gwt.widgetideas.table.client.overrides.HTMLTable::getDOMCellCount(I)(numRows - 1);
+    var numRows =  table.@org.mosaic.ui.client.scrolltable.overrides.HTMLTable::getDOMRowCount()();
+    table.@org.mosaic.ui.client.scrolltable.overrides.Grid::numRows = numRows;
+    table.@org.mosaic.ui.client.scrolltable.overrides.Grid::numColumns =
+      table.@org.mosaic.ui.client.scrolltable.overrides.HTMLTable::getDOMCellCount(I)(numRows - 1);
    }-*/;
 
 }

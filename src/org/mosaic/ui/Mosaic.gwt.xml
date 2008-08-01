@@ -32,5 +32,8 @@
 	<!-- Specify the application specific style sheet.              -->
 	<stylesheet src="gwt/standard/Mosaic.css" />
 	<stylesheet src="MosaicShowcase.css" />
+	
+	<!-- Define the RPC service -->
+	<servlet path="/datasource" class="org.mosaic.ui.server.DataSourceServiceImpl"/>
 
 </module>

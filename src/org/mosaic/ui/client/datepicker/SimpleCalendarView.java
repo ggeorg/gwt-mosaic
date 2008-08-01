@@ -41,7 +41,7 @@ public class SimpleCalendarView extends CalendarView<DatePicker> {
    * identical import (on line 25 as a write this, but subject to change).
    * --fabbott, 20mar08
    */
-  class CellGrid extends Grid {
+  public class CellGrid extends Grid {
 
     class Cell extends UIObject {
       int index;

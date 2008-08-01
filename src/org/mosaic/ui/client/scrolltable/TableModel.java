@@ -321,7 +321,9 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
   /**
    * A {@link TableModel} request.
    */
-  public static class Request implements IsSerializable {
+  public static class Request implements Serializable {
+    private static final long serialVersionUID = 3166584286685571712L;
+
     /**
      * The number of rows to request.
      */
@@ -448,7 +450,9 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
    * @param <R> the serializable data type of the row values
    */
   public static class SerializableResponse<R extends Serializable> extends Response<R>
-      implements IsSerializable {
+      implements Serializable {
+    private static final long serialVersionUID = 4800402144192326997L;
+
     /**
      * The 2D {@link Collection} of serializable cell data.
      */

@@ -17,6 +17,7 @@ package org.mosaic.ui.client;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WidgetWrapper extends Composite {
@@ -30,6 +31,8 @@ public class WidgetWrapper extends Composite {
     grid.setCellSpacing(0);
 
     grid.setWidget(0, 0, widget);
+    grid.getCellFormatter().setAlignment(0, 0, HasAlignment.ALIGN_CENTER,
+        HasAlignment.ALIGN_MIDDLE);
 
     initWidget(grid);
 
