@@ -1,7 +1,7 @@
 package org.mosaic.ui.client.demo;
 
-import org.mosaic.ui.client.MosaicButton;
 import org.mosaic.ui.client.InfoPanel;
+import org.mosaic.ui.client.MosaicButton;
 import org.mosaic.ui.client.PopupMenu;
 import org.mosaic.ui.client.MosaicButton.ButtonStyle;
 import org.mosaic.ui.client.demo.Annotations.MosaicData;
@@ -15,7 +15,6 @@ import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;

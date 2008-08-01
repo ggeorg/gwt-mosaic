@@ -24,6 +24,15 @@ button {
 	font-size: 16pt;
 }
 
+/*
+.gwt-PushButton,
+.gwt-CustomButton {
+	overflow: hidden;
+	width: auto;
+	height: auto;
+}
+*/
+
 .widePanel {
 	/*width: 100%*/
 }
@@ -36,7 +45,37 @@ input {
 	border: 1px inset #ccc;
 }
 
-/** ComboBox ***/
+/*** DecoratedButton ***/
+
+.mosaic-DecoratedButton {
+	margin: 0px;
+	text-decoration: none;
+	font-size: small;
+	cursor: pointer;
+	cursor: hand;
+	background: url("images/hborder.png") repeat-x 0px -27px;
+	border: none;
+}
+.mosaic-DecoratedButton .buttonTopCenter,
+.mosaic-DecoratedButton .buttonBottomCenter {
+	height: 1px;
+	background: #444;
+}
+.mosaic-DecoratedButton .buttonMiddleLeft,
+.mosaic-DecoratedButton .buttonMiddleRight {
+	width: 1px;
+	background: #444;
+}
+.mosaic-DecoratedButton .buttonTopLeftInner,
+.mosaic-DecoratedButton .buttonTopRightInner,
+.mosaic-DecoratedButton .buttonBottomLeftInner,
+.mosaic-DecoratedButton .buttonBottomRightInner {
+	width: 1px;
+	height: 1px;
+	zoom: 1;
+}
+
+/*** ComboBox ***/
 
 .mosaic-ComboBox {
 	border: 1px inset #ccc;
@@ -85,18 +124,15 @@ input {
 
 /* Checked state */
 
-.yui-radio-button-checked,
 .mosaic-Checkbox-Button-checked {
     border-color: #304369;
     background-position: 0 -1400px;
 }
 
-.yui-radio-button-checked .first-child,
 .mosaic-Checkbox-Button-checked .first-child {
     border-color: #304369;
 }
 
-.yui-radio-button-checked button,
 .mosaic-Checkbox-Button-checked button { 
     color: #fff;
 }
@@ -177,18 +213,19 @@ input {
 	display: block;
 	cursor: pointer;
 	
-	/* border: 1px solid transparent;
+	/*
 	 * Unfortunately, in IE, border-color: transparent is rendered as black.
 	 * We get around the border on hover displacement of content by adjusting
 	 * the margin/padding at the same time.
 	 */
-	margin: 2px; 
+	border: 1px solid transparent;
+	margin: 1px; 
 	
 	width: 16px;
 	height: 16px;
 }
 .mosaic-WindowPanel .mosaic-ImageButton:hover {
-	/* border: 1px solid transparent;
+	/*
 	 * Unfortunately, in IE, border-color: transparent is rendered as black.
 	 * We get around the border on hover displacement of content by adjusting
 	 * the margin/padding at the same time.
@@ -484,21 +521,21 @@ input {
 
 .gwt-ScrollTable .headerTable td,
 .gwt-ScrollTable .footerTable td {
-  color: #fff;
+	color: #fff;
 }
     
 .gwt-ScrollTable .dataTable tr.hovering {
-  background: #C3D9FF;
+	background: #C3D9FF;
 }
 
 .gwt-ScrollTable .dataTable td.hovering {
-  background: #FFFFAA;
-  cursor: hand;
-  cursor: pointer;
+	background: #FFFFAA;
+	cursor: hand;
+	cursor: pointer;
 }
 
 .gwt-ScrollTable .dataTable tr.selected {
-  background: #7AA5D6;
+	background: #7AA5D6;
 }
 
 .gwt-ScrollTable .pagingOptions {
@@ -533,7 +570,7 @@ input {
 }
 
 
-/*** TEST ***/
+/*** LayoutPanel ***/
 
 .mosaic-LayoutPanel {
 	/* border: 1px dotted #f00; */

@@ -22,7 +22,6 @@ import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.scrolltable.FixedWidthFlexTable;
 import org.mosaic.ui.client.scrolltable.FixedWidthGrid;
 import org.mosaic.ui.client.scrolltable.ScrollTable;
-import org.mosaic.ui.client.scrolltable.ScrollTable.ScrollPolicy;
 import org.mosaic.ui.client.scrolltable.overrides.FlexTable.FlexCellFormatter;
 
 import com.google.gwt.i18n.client.Constants;

@@ -218,7 +218,7 @@ public class MosaicGenerator extends Generator {
       formattedSource = formattedSource.replace("<", "&lt;");
       formattedSource = formattedSource.replace(">", "&gt;");
       formattedSource = formattedSource.replace("* \n   */\n", "*/\n");
-      formattedSource = "<pre>" + formattedSource + "</pre>";
+      formattedSource = "<pre class=\"java\" name=\"code\">" + formattedSource + "</pre>";
 
       // Save the source code to a file
       String dstPath = MosaicConstants.DST_SOURCE_EXAMPLE + type.getSimpleSourceName()
@@ -260,7 +260,7 @@ public class MosaicGenerator extends Generator {
 
         // Get the style code
         end = styleDefs.indexOf("}", start) + 1;
-        String styleDef = "<pre>" + styleDefs.substring(start, end) + "</pre>";
+        String styleDef = "<pre class=\"css\" name=\"code\">" + styleDefs.substring(start, end) + "</pre>";
         matched.put(matchedName, styleDef);
 
         // Goto the next match

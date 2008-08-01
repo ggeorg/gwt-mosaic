@@ -1,6 +1,7 @@
 package org.mosaic.ui.client.demo;
 
 import org.mosaic.ui.client.Caption;
+import org.mosaic.ui.client.DecoratedButton;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.WidgetWrapper;
@@ -85,8 +86,13 @@ public class CustomButtonPage extends Page implements ClickListener {
         MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage(), this);
     normalPushButton.ensureDebugId("mosaicCustomButton-push-normal");
 
-    pushBody.add(new WidgetWrapper(normalPushButton));
-
+    pushBody.add(new WidgetWrapper(normalPushButton), new BoxLayoutData(FillStyle.BOTH, true));
+    
+    // ???
+    final DecoratedButton decButton = new DecoratedButton("Hello");
+    
+    pushBody.add(decButton, new BoxLayoutData(FillStyle.BOTH));
+    
     // Add a disabled PushButton
     final PushButton disabledPushButton = new PushButton(
         MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
@@ -94,9 +100,9 @@ public class CustomButtonPage extends Page implements ClickListener {
     disabledPushButton.ensureDebugId("mosaicCustomButton-push-disabled");
     disabledPushButton.setEnabled(false);
 
-    pushBody.add(new WidgetWrapper(disabledPushButton));
+    pushBody.add(new WidgetWrapper(disabledPushButton), new BoxLayoutData(FillStyle.BOTH, true));
 
-    layoutPanel.add(pushBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    layoutPanel.add(pushBox, new BoxLayoutData(FillStyle.BOTH, true));
 
     //
     // toggle buttons
@@ -129,7 +135,7 @@ public class CustomButtonPage extends Page implements ClickListener {
 
     toggleBody.add(new WidgetWrapper(disabledToggleButton));
 
-    layoutPanel.add(toggleBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    layoutPanel.add(toggleBox, new BoxLayoutData(FillStyle.BOTH, true));
   }
 
   /**
