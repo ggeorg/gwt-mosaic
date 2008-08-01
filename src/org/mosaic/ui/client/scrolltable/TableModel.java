@@ -104,8 +104,7 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
       if (csi == null) {
         return false;
       }
-      return getColumn() == csi.getColumn()
-          && isAscending() == csi.isAscending();
+      return getColumn() == csi.getColumn() && isAscending() == csi.isAscending();
     }
 
     /**
@@ -151,8 +150,7 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
    * single column. The first entry is the primary sort order, the second entry
    * is the first tie-breaker, and so on.
    */
-  public static class ColumnSortList implements IsSerializable,
-      Iterable<ColumnSortInfo> {
+  public static class ColumnSortList implements IsSerializable, Iterable<ColumnSortInfo> {
     /**
      * A List used to manage the insertion/removal of {@link ColumnSortInfo}.
      */
@@ -449,8 +447,8 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
    * 
    * @param <R> the serializable data type of the row values
    */
-  public static class SerializableResponse<R extends Serializable> extends
-      Response<R> implements IsSerializable {
+  public static class SerializableResponse<R extends Serializable> extends Response<R>
+      implements IsSerializable {
     /**
      * The 2D {@link Collection} of serializable cell data.
      */
@@ -544,8 +542,7 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
   /**
    * An {@link Iterator} over a 2D {@link Collection} of column data.
    */
-  private static class SerializableResponseIterator implements
-      Iterator<Iterator<Object>> {
+  private static class SerializableResponseIterator implements Iterator<Iterator<Object>> {
     /**
      * The {@link Iterator} of row data. Each row is a {@link Collection} of
      * column data.
@@ -564,8 +561,7 @@ public abstract class TableModel<R> implements SourceTableModelEvents {
      * 
      * @param rows the row data
      */
-    public SerializableResponseIterator(
-        Collection<Collection<Serializable>> rows) {
+    public SerializableResponseIterator(Collection<Collection<Serializable>> rows) {
       if (rows != null) {
         this.rows = rows.iterator();
       }

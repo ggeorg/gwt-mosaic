@@ -215,7 +215,6 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
   }
 
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    System.out.println("=======================");
     Window.removeWindowResizeListener(this);
   }
 

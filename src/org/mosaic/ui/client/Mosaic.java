@@ -23,6 +23,7 @@ import org.mosaic.ui.client.demo.BasicButtonPage;
 import org.mosaic.ui.client.demo.BorderLayoutPage;
 import org.mosaic.ui.client.demo.BottomTabBarsPage;
 import org.mosaic.ui.client.demo.BoxLayoutPage;
+import org.mosaic.ui.client.demo.TableLoadingBenchmarkPage;
 import org.mosaic.ui.client.demo.ComboBoxPage;
 import org.mosaic.ui.client.demo.CustomButtonPage;
 import org.mosaic.ui.client.demo.DatePickerPage;
@@ -178,6 +179,7 @@ public class Mosaic implements EntryPoint {
 
     // Widgets/Table
     pages.add(new ScrollTablePage(constants));
+    pages.add(new TableLoadingBenchmarkPage(constants));
     pages.add(new TablePage(constants));
 
     // Widgets/Tabs

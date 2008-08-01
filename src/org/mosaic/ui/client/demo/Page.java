@@ -190,6 +190,7 @@ public abstract class Page extends LayoutPanel {
           callback.onResponseReceived(request, response);
         }
       }
+
     };
     builder.setCallback(realCallback);
 

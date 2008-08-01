@@ -18,6 +18,20 @@
 <!--                                           -->
 <title>Mosaic</title>
 
+<!-- SyntaxHightlighter for Java & CSS         -->
+<link type="text/css" rel="stylesheet"
+	href="SyntaxHightlighter/Styles/SyntaxHighlighter.css"></link>
+<script type="text/javascript" language="javascript"
+	src="SyntaxHightlighter/Scripts/shCore.js"></script>
+<script type="text/javascript" language="javascript"
+	src="SyntaxHightlighter/Scripts/shBrushJava.js"></script>
+<script type="text/javascript" language="javascript"
+	src="SyntaxHightlighter/Scripts/shBrushCss.js"></script>
+<script language="javascript">
+dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHightlighter/Scripts/clipboard.swf';
+dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+
 <!--                                           -->
 <!-- This script loads your compiled module.   -->
 <!-- If you add any GWT meta tags, they must   -->
@@ -25,6 +39,7 @@
 <!--                                           -->
 <script type="text/javascript" language="javascript"
 	src="org.mosaic.ui.Mosaic.nocache.js"></script>
+
 </head>
 
 <!--                                           -->
@@ -48,8 +63,10 @@
 		<li id="DatePickerPage" title="DatePicker"></li>
 		<li title="Table">
 		<ul>
-			<li id="ScrollTablePage" title="ScrollTable">
+			<li id="ScrollTablePage" title="Scroll Table">
+			<li id="TableLoadingBenchmarkPage" title="Loading Benchmark">
 			<!-- li id="TablePage" title="Fixed Columns Table"></li -->
+			
 		</ul>
 		</li>
 		<li title="Tree"></li>
