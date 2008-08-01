@@ -486,7 +486,7 @@ public class FixedWidthFlexTable extends FlexTable {
   }
 
   /**
-   * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
+   * @see org.mosaic.ui.client.scrolltable.overrides.HTMLTable#getDOMCellCount(int)
    */
   @Override
   protected int getDOMCellCount(int row) {
@@ -495,7 +495,7 @@ public class FixedWidthFlexTable extends FlexTable {
   }
 
   /**
-   * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
+   * @see org.mosaic.ui.client.scrolltable.overrides.HTMLTable#getDOMRowCount()
    */
   @Override
   protected int getDOMRowCount() {

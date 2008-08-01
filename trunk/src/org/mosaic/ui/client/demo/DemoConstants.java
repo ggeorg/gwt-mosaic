@@ -8,7 +8,8 @@ import com.google.gwt.i18n.client.Constants;
 public interface DemoConstants extends Constants, Page.DemoConstants,
     BasicButtonPage.DemoConstants, CustomButtonPage.DemoConstants,
     MosaicButtonPage.DemoConstants, ComboBoxPage.DemoConstants,
-    ScrollTablePage.DemoConstants, TableLoadingBenchmarkPage.DemoConstants,
-    DatePickerPage.DemoConstants, MessageBoxPage.DemoConstants {
+    ScrollTablePage.DemoConstants, PagingScrollTablePage.DemoConstants,
+    TableLoadingBenchmarkPage.DemoConstants, DatePickerPage.DemoConstants,
+    MessageBoxPage.DemoConstants {
 
 }

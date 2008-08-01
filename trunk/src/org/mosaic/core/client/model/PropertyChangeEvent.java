@@ -15,10 +15,9 @@
  */
 package org.mosaic.core.client.model;
 
-import java.io.Serializable;
 import java.util.EventObject;
 
-public class PropertyChangeEvent extends EventObject implements Serializable {
+public class PropertyChangeEvent extends EventObject {
   private static final long serialVersionUID = -8649777609924711940L;
 
   private String property;

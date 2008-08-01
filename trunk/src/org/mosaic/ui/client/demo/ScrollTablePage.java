@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.CheckBox;
  * Test methods in the {@link ScrollTable} class.
  * 
  */
-@MosaicStyle( {})
+@MosaicStyle( {".gwt-ScrollTable"})
 public class ScrollTablePage extends Page {
 
   /**
@@ -51,25 +51,25 @@ public class ScrollTablePage extends Page {
    * The data portion of the {@link ScrollTable}.
    */
   @MosaicData
-  protected static FixedWidthGrid dataTable = null;
+  protected FixedWidthGrid dataTable = null;
 
   /**
    * The footer portion of the {@link ScrollTable}.
    */
   @MosaicData
-  protected static FixedWidthFlexTable footerTable = null;
+  protected FixedWidthFlexTable footerTable = null;
 
   /**
    * The header portion of the {@link ScrollTable}.
    */
   @MosaicData
-  protected static FixedWidthFlexTable headerTable = null;
+  protected FixedWidthFlexTable headerTable = null;
 
   /**
    * The scroll table.
    */
   @MosaicSource
-  protected static ScrollTable scrollTable = null;
+  protected ScrollTable scrollTable = null;
 
   /**
    * Get the data table.
@@ -77,7 +77,7 @@ public class ScrollTablePage extends Page {
    * @return the data table
    */
   @MosaicSource
-  public static FixedWidthGrid getDataTable() {
+  public FixedWidthGrid getDataTable() {
     if (dataTable == null) {
       dataTable = new FixedWidthGrid();
     }
@@ -90,7 +90,7 @@ public class ScrollTablePage extends Page {
    * @return the footer table.
    */
   @MosaicSource
-  public static FixedWidthFlexTable getFooterTable() {
+  public FixedWidthFlexTable getFooterTable() {
     if (footerTable == null) {
       footerTable = new FixedWidthFlexTable();
     }
@@ -103,7 +103,7 @@ public class ScrollTablePage extends Page {
    * @return the header table.
    */
   @MosaicSource
-  public static FixedWidthFlexTable getHeaderTable() {
+  public FixedWidthFlexTable getHeaderTable() {
     if (headerTable == null) {
       headerTable = new FixedWidthFlexTable();
     }
@@ -116,7 +116,7 @@ public class ScrollTablePage extends Page {
    * @return the scroll table.
    */
   @MosaicSource
-  public static ScrollTable getScrollTable() {
+  public ScrollTable getScrollTable() {
     return scrollTable;
   }
 
@@ -128,7 +128,7 @@ public class ScrollTablePage extends Page {
    * @param beforeRow the index to add the new row into
    */
   @MosaicSource
-  public static void insertDataRow(int beforeRow) {
+  public void insertDataRow(int beforeRow) {
     // Insert the new row
     beforeRow = dataTable.insertRow(beforeRow);
 
@@ -201,7 +201,7 @@ public class ScrollTablePage extends Page {
     scrollTable.setSize("95%", "50%");
     scrollTable.setCellPadding(3);
     scrollTable.setCellSpacing(1);
-    //scrollTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
+    // scrollTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
 
     // Level 1 headers
     FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
