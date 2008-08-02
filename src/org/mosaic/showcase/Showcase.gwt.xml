@@ -20,9 +20,9 @@
 	<inherits name='org.mosaic.ui.Mosaic' />
 
 	<!-- Use a generator to create the source code                  -->
-	<generate-with class="org.mosaic.ui.generator.MosaicGenerator">
+	<generate-with class="org.mosaic.showcase.generator.MosaicGenerator">
 		<when-type-assignable
-			class="org.mosaic.ui.client.Mosaic.GeneratorInfo" />
+			class="org.mosaic.showcase.client.Showcase.GeneratorInfo" />
 	</generate-with>
 
 	<!-- Specify the app entry point class.                         -->
@@ -33,6 +33,6 @@
 
 	<!-- Define the RPC service -->
 	<servlet path="/datasource"
-		class="org.mosaic.ui.server.DataSourceServiceImpl" />
+		class="org.mosaic.showcase.server.DataSourceServiceImpl" />
 
 </module>
