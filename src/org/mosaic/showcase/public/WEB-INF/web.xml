@@ -18,8 +18,8 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>fileSystem</servlet-name>
-		<url-pattern>/fileSystem</url-pattern>
+		<servlet-name>datasource</servlet-name>
+		<url-pattern>/datasource</url-pattern>
 	</servlet-mapping>
 
 </web-app>
