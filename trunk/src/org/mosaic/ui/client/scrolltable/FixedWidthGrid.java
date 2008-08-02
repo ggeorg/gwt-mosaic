@@ -15,23 +15,21 @@
  */
 package org.mosaic.ui.client.scrolltable;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.mosaic.core.client.DOM;
-import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
 import org.mosaic.ui.client.scrolltable.overrides.HTMLTable;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 
 /**
  * A variation of the
  * {@link com.google.gwt.widgetideas.table.client.overrides.Grid} that resizes
  * columns using a fixed table width.
  */
-@MosaicStyle( {".gwt-Table"})
 public class FixedWidthGrid extends SortableGrid {
   /**
    * This class contains methods used to format a table's cells.
