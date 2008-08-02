@@ -1,0 +1,38 @@
+<!--                                                                        -->
+<!-- Copyright 2008 Georgios J. Georgopoulos.                               -->
+<!--                                                                        -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you    -->
+<!-- may not use this file except in compliance with the License. You may   -->
+<!-- may obtain a copy of the License at                                    -->
+<!--                                                                        -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0                             -->
+<!--                                                                        -->
+<!-- Unless required by applicable law or agreed to in writing, software    -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,      -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or        -->
+<!-- implied. License for the specific language governing permissions and   -->
+<!-- limitations under the License.                                         -->
+<!--                                                                        -->
+
+<module>
+
+	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
+	<inherits name='org.mosaic.ui.Mosaic' />
+
+	<!-- Use a generator to create the source code                  -->
+	<generate-with class="org.mosaic.ui.generator.MosaicGenerator">
+		<when-type-assignable
+			class="org.mosaic.ui.client.Mosaic.GeneratorInfo" />
+	</generate-with>
+
+	<!-- Specify the app entry point class.                         -->
+	<entry-point class='org.mosaic.showcase.client.Showcase' />
+
+	<!-- Specify the application specific style sheet.              -->
+	<stylesheet src="MosaicShowcase.css" />
+
+	<!-- Define the RPC service -->
+	<servlet path="/datasource"
+		class="org.mosaic.ui.server.DataSourceServiceImpl" />
+
+</module>
