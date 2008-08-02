@@ -5,7 +5,10 @@
 
 	<!-- Inherit gwt-dnd 2.x support                                -->
     <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
-	
+    
+    <!-- Inherit the libideas from http://code.google.com/p/google-web-toolkit-incubator/ -->
+	<inherits name='com.google.gwt.libideas.LibIdeas' />
+
 	<!-- Other module inherits                                      -->
 	<inherits name='org.mosaic.core.CompatMode' />
 	<inherits name='org.mosaic.core.DOM' />
