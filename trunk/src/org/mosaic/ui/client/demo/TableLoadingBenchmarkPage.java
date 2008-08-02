@@ -193,7 +193,7 @@ public class TableLoadingBenchmarkPage extends Page {
     });
     panel.add(pendingAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    layoutPanel.add(panel, new BorderLayoutData(BorderLayoutRegion.WEST, 250));
+    layoutPanel.add(panel, new BorderLayoutData(BorderLayoutRegion.WEST, 250, true));
     layoutPanel.add(center, new BorderLayoutData(true));
   }
 

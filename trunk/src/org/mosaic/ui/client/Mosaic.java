@@ -20,9 +20,11 @@ import java.util.List;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.demo.BasicButtonPage;
+import org.mosaic.ui.client.demo.BasicTreePage;
 import org.mosaic.ui.client.demo.BorderLayoutPage;
 import org.mosaic.ui.client.demo.BottomTabBarsPage;
 import org.mosaic.ui.client.demo.BoxLayoutPage;
+import org.mosaic.ui.client.demo.LazyTreePage;
 import org.mosaic.ui.client.demo.PagingScrollTablePage;
 import org.mosaic.ui.client.demo.TableLoadingBenchmarkPage;
 import org.mosaic.ui.client.demo.ComboBoxPage;
@@ -42,6 +44,7 @@ import org.mosaic.ui.client.demo.Page;
 import org.mosaic.ui.client.demo.ScrollTablePage;
 import org.mosaic.ui.client.demo.TabLayoutPanelPage;
 import org.mosaic.ui.client.demo.TablePage;
+import org.mosaic.ui.client.demo.VerboseTreePage;
 import org.mosaic.ui.client.demo.WindowPanelPage;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
@@ -183,6 +186,11 @@ public class Mosaic implements EntryPoint {
     pages.add(new PagingScrollTablePage(constants));
     pages.add(new TableLoadingBenchmarkPage(constants));
     pages.add(new TablePage(constants));
+    
+    // Widgets/Tree
+    pages.add(new BasicTreePage(constants));
+    pages.add(new LazyTreePage(constants));
+    pages.add(new VerboseTreePage(constants));
 
     // Widgets/Tabs
     pages.add(new TabLayoutPanelPage(constants));

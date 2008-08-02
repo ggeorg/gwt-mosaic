@@ -20,16 +20,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.mosaic.core.client.event.ChangeEvent;
-import org.mosaic.core.client.event.ChangeHandler;
-import org.mosaic.core.client.event.EventHandlers;
-import org.mosaic.core.client.event.FiresChangeEvents;
-import org.mosaic.core.client.event.FiresHighlightEvents;
-import org.mosaic.core.client.event.FiresRenderingEvents;
-import org.mosaic.core.client.event.HighlightEvent;
-import org.mosaic.core.client.event.HighlightHandler;
-import org.mosaic.core.client.event.RenderingEvent;
-import org.mosaic.core.client.event.RenderingHandler;
+import org.mosaic.ui.client.event.ChangeEvent;
+import org.mosaic.ui.client.event.ChangeHandler;
+import org.mosaic.ui.client.event.EventHandlers;
+import org.mosaic.ui.client.event.FiresChangeEvents;
+import org.mosaic.ui.client.event.FiresHighlightEvents;
+import org.mosaic.ui.client.event.FiresRenderingEvents;
+import org.mosaic.ui.client.event.HighlightEvent;
+import org.mosaic.ui.client.event.HighlightHandler;
+import org.mosaic.ui.client.event.RenderingEvent;
+import org.mosaic.ui.client.event.RenderingHandler;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
