@@ -23,12 +23,12 @@ import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.mosaic.ui.client.demo.MosaicConstants;
-import org.mosaic.ui.client.demo.Page;
-import org.mosaic.ui.client.demo.Annotations.MosaicData;
-import org.mosaic.ui.client.demo.Annotations.MosaicRaw;
-import org.mosaic.ui.client.demo.Annotations.MosaicSource;
-import org.mosaic.ui.client.demo.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.pages.MosaicConstants;
+import org.mosaic.showcase.client.pages.Page;
+import org.mosaic.showcase.client.pages.Annotations.MosaicData;
+import org.mosaic.showcase.client.pages.Annotations.MosaicRaw;
+import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
+import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -52,7 +52,7 @@ public class MosaicGenerator extends Generator {
       "com/google/gwt/user/theme/$THEME/public/gwt/$THEME/$THEME.css",
       "com/allen_sauer/gwt/dnd/public/gwt-dnd.css",
       "org/mosaic/ui/public/gwt/$THEME/Mosaic.css",
-      "org/mosaic/ui/public/MosaicShowcase.css"};
+      "org/mosaic/showcase/public/MosaicShowcase.css"};
 
   /**
    * The class loader used to get resources.
