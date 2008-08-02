@@ -75,7 +75,7 @@ import com.google.gwt.user.client.ui.TreeListener;
 public class Mosaic implements EntryPoint {
 
   /**
-   * The type passed into the {@link org.mosaic.ui.generator.MosaicGenerator}.
+   * The type passed into the {@link org.mosaic.showcase.generator.MosaicGenerator}.
    */
   private static final class GeneratorInfo {
   }
