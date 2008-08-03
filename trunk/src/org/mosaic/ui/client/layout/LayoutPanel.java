@@ -72,7 +72,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
       super.add(widget);
     }
   }
-  
+
+  private Widget getDecoratorWidget(Widget widget) {
+    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+    if (layoutData != null && layoutData.hasDecoratorPanel()) {
+      return layoutData.getDecoratorPanel();
+    }
+    return widget;
+  }
+
   /**
    * Adds a widget to the panel at the specified position. Setting a position of
    * <code>(-1, -1)</code> will cause the child widget to be positioned
@@ -82,14 +90,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
    * @param left the widget's left position
    * @param top the widget's top position
    */
-//  public void add(Widget w, int left, int top) {
-//    // XXX ignore left & top
-//    add(w);
-//  }
+  // public void add(Widget w, int left, int top) {
+  // // XXX ignore left & top
+  // add(w);
+  // }
 
-  /**
+  /*
+   * (non-Javadoc)
    * 
-   * @return
+   * @see org.mosaic.ui.client.layout.HasLayout#getLayout()
    */
   public LayoutManager getLayout() {
     return layout;
@@ -99,8 +108,59 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     return DOM.getIntStyleAttribute(getElement(), "padding");
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   */
+  public int[] getPreferredSize() {
+    return layout.getPreferredSize(this);
+  }
+
+  private Widget getUnDecoratedWidget(Widget widget) {
+    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+    if (layoutData != null && layoutData.hasDecoratorPanel()) {
+      return layoutData.getDecoratorPanel().getWidget();
+    }
+    return widget;
+  }
+
+  @Override
+  public Widget getWidget(int index) {
+    return getUnDecoratedWidget(super.getWidget(index));
+  }
+
+  @Override
+  public int getWidgetIndex(Widget child) {
+    return super.getWidgetIndex(getDecoratorWidget(child));
+  }
+
+  /**
+   * Gets the position of the left outer border edge of the widget relative to
+   * the left outer border edge of the panel.
+   * 
+   * @param w the widget whose position is to be retrieved
+   * @return the widget's left position
+   */
+  @Override
+  public int getWidgetLeft(Widget w) {
+    return super.getWidgetLeft(getDecoratorWidget(w));
+  }
+
   public int getWidgetSpacing() {
     return widgetSpacing;
+  }
+
+  /**
+   * Gets the position of the top outer border edge of the widget relative to
+   * the top outer border edge of the panel.
+   * 
+   * @param w the widget whose position is to be retrieved
+   * @return the widget's top position
+   */
+  @Override
+  public int getWidgetTop(Widget w) {
+    return super.getWidgetTop(getDecoratorWidget(w));
   }
 
   /**
@@ -119,6 +179,24 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     } else {
       super.insert(w, getElement(), beforeIndex, true);
     }
+  }
+
+  @Override
+  public Iterator<Widget> iterator() {
+    final Iterator<Widget> iter = super.iterator();
+    return new Iterator<Widget>() {
+      public boolean hasNext() {
+        return iter.hasNext();
+      }
+
+      public Widget next() {
+        return getUnDecoratedWidget(iter.next());
+      }
+
+      public void remove() {
+        iter.remove();
+      }
+    };
   }
 
   /*
@@ -147,6 +225,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     }
   }
 
+  @Override
+  public boolean remove(Widget w) {
+    return super.remove(getDecoratorWidget(w));
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -169,83 +252,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
     DOM.setStyleAttribute(getElement(), "padding", padding + "px");
   }
 
-  public void setWidgetSpacing(int widgetSpacing) {
-    this.widgetSpacing = widgetSpacing;
-  }
-
-  private Widget getUnDecoratedWidget(Widget widget) {
-    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
-    if (layoutData != null && layoutData.hasDecoratorPanel()) {
-      return layoutData.getDecoratorPanel().getWidget();
-    }
-    return widget;
-  }
-
-  private Widget getDecoratorWidget(Widget widget) {
-    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
-    if (layoutData != null && layoutData.hasDecoratorPanel()) {
-      return layoutData.getDecoratorPanel();
-    }
-    return widget;
-  }
-
-  @Override
-  public Widget getWidget(int index) {
-    return getUnDecoratedWidget(super.getWidget(index));
-  }
-
-  @Override
-  public int getWidgetIndex(Widget child) {
-    return super.getWidgetIndex(getDecoratorWidget(child));
-  }
-
-  @Override
-  public boolean remove(Widget w) {
-    return super.remove(getDecoratorWidget(w));
-  }
-
-  @Override
-  public Iterator<Widget> iterator() {
-    final Iterator<Widget> iter = super.iterator();
-    return new Iterator<Widget>() {
-      public boolean hasNext() {
-        return iter.hasNext();
-      }
-
-      public Widget next() {
-        return getUnDecoratedWidget(iter.next());
-      }
-
-      public void remove() {
-        iter.remove();
-      }
-    };
-  }
-  
-  /**
-   * Gets the position of the left outer border edge of the widget relative to
-   * the left outer border edge of the panel.
-   * 
-   * @param w the widget whose position is to be retrieved
-   * @return the widget's left position
-   */
-  @Override
-  public int getWidgetLeft(Widget w) {
-    return super.getWidgetLeft(getDecoratorWidget(w));
-  }
-  
-  /**
-   * Gets the position of the top outer border edge of the widget relative to
-   * the top outer border edge of the panel.
-   * 
-   * @param w the widget whose position is to be retrieved
-   * @return the widget's top position
-   */
-  @Override
-  public int getWidgetTop(Widget w) {
-    return super.getWidgetTop(getDecoratorWidget(w));
-  }
-
   /**
    * Sets the position of the specified child widget. Setting a position of
    * <code>(-1, -1)</code> will cause the child widget to be positioned
@@ -257,5 +263,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
    */
   public void setWidgetPosition(Widget w, int left, int top) {
     super.setWidgetPosition(getDecoratorWidget(w), left, top);
+  }
+
+  public void setWidgetSpacing(int widgetSpacing) {
+    this.widgetSpacing = widgetSpacing;
   }
 }

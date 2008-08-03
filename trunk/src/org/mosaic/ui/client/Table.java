@@ -50,7 +50,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class Table extends Composite implements HasLayout, TableModelListener,
     TableColumnModelListener {
 
-  public class HeaderCell extends Widget implements HasLayout, PropertyChangeListener {
+  public class HeaderCell extends Widget implements PropertyChangeListener {
 
     private static final int DRAG_WIDGET_WIDTH = 4;
 
@@ -204,11 +204,6 @@ public class Table extends Composite implements HasLayout, TableModelListener,
       return getParent() != null;
     }
 
-    public void layout() {
-      // TODO Auto-generated method stub
-
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -292,7 +287,7 @@ public class Table extends Composite implements HasLayout, TableModelListener,
 
   }
 
-  public class TableHeader extends Panel implements HasLayout {
+  public class TableHeader extends Panel {
 
     Element div = DOM.createDiv();
     Element hTableWrapper = DOM.createDiv();
@@ -371,16 +366,6 @@ public class Table extends Composite implements HasLayout, TableModelListener,
           throw new RuntimeException("remove() Not allowed");
         }
       };
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mosaic.ui.client.layout.HasLayout#layout()
-     */
-    public void layout() {
-      // TODO Auto-generated method stub
-
     }
 
     public void moveCell(int columnIndex, int newIndex) {
@@ -578,8 +563,23 @@ public class Table extends Composite implements HasLayout, TableModelListener,
     return reorderingAllowed;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.Composite#getWidget()
+   */
+  @Override
+  protected LayoutPanel getWidget() {
+    return (LayoutPanel) super.getWidget();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#layout()
+   */
   public void layout() {
-    ((LayoutPanel) getWidget()).layout();
+    getWidget().layout();
   }
 
   /*
@@ -706,5 +706,14 @@ public class Table extends Composite implements HasLayout, TableModelListener,
   private void updateFromModel() {
     tableHeader.updateFromModel();
 
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   */
+  public int[] getPreferredSize() {
+    return getWidget().getPreferredSize();
   }
 }

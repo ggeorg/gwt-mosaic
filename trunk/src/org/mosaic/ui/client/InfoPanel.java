@@ -139,7 +139,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
   protected InfoPanel(String caption, String description, final boolean autoHide) {
     super(autoHide, false); // modal=false
     ensureDebugId("mosaicInfoPanel-simplePopup");
-
+    
     setAnimationEnabled(true);
 
     this.caption = new Label(caption);

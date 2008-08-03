@@ -13,9 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.mosaic.ui.client.layout;
+package org.mosaic.ui.client;
 
-public interface HasLayout {
-  void layout();
-  int[] getPreferredSize();
+import org.mosaic.core.client.DOM;
+
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * A separator that can be placed in a {@link ToolBar}.
+ */
+public class ToolBarSeparator extends Widget {
+  
+  /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-ToolBarSeparator";
+  
+  public ToolBarSeparator() {
+    setElement(DOM.createDiv());
+    setStyleName(DEFAULT_STYLENAME);
+  }
+
 }

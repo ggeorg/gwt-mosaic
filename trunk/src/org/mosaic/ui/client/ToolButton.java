@@ -131,13 +131,13 @@ public class ToolButton extends Composite implements HasHTML, HasLayout, HasName
             setChecked(!isChecked());
           }
           if (style == ToolButtonStyle.RADIO) {
-            final Widget parent = getParent();
+            final Widget parent = ToolButton.this.getParent();
             if (parent instanceof IndexedPanel) {
-              final IndexedPanel panel = (IndexedPanel) getParent();
+              final IndexedPanel panel = (IndexedPanel) parent;
               for (int i = 0, n = panel.getWidgetCount(); i < n; i++) {
                 final Widget widget = panel.getWidget(i);
-                if (widget instanceof ButtonWidget) {
-                  final ButtonWidget button = (ButtonWidget) widget;
+                if (widget instanceof ToolButton) {
+                  final ToolButton button = (ToolButton) widget;
                   final String name = button.getName();
                   if (button.getStyle() == ToolButtonStyle.RADIO && button.isChecked()
                       && name != null && name.equals(getName())) {
@@ -454,4 +454,14 @@ public class ToolButton extends Composite implements HasHTML, HasLayout, HasName
   public void setChecked(boolean checked) {
     button.setChecked(checked);
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   */
+  public int[] getPreferredSize() {
+    return getWidget().getPreferredSize();
+  }
+
 }

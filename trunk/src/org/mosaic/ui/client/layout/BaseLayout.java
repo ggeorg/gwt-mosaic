@@ -50,9 +50,9 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     final int[] b = DOM.getBorderSizes(child.getElement());
     final int[] p = DOM.getPaddingSizes(child.getElement());
     int flowHeight;
-    if (child instanceof LayoutPanel) {
-      final LayoutPanel lp = (LayoutPanel) child;
-      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
+    if (child instanceof HasLayout) {
+      final HasLayout lp = (HasLayout) child;
+      final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + b[0] + b[2];
     } else {
       flowHeight = child.getOffsetHeight() + b[0] + b[2] + p[0] + p[2];
@@ -64,9 +64,9 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     final int[] b = DOM.getBorderSizes(child.getElement());
     final int[] p = DOM.getPaddingSizes(child.getElement());
     int flowWidth;
-    if (child instanceof LayoutPanel) {
-      final LayoutPanel lp = (LayoutPanel) child;
-      final int[] preferredSize = lp.getLayout().getPreferredSize(lp);
+    if (child instanceof HasLayout) {
+      final HasLayout lp = (HasLayout) child;
+      final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + b[1] + b[3];
     } else {
       flowWidth = child.getOffsetWidth() + b[1] + b[3] + p[1] + p[3];

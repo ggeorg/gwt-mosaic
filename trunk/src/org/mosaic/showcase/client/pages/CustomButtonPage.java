@@ -4,10 +4,8 @@ import org.mosaic.showcase.client.pages.Annotations.MosaicData;
 import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
 import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
 import org.mosaic.ui.client.Caption;
-import org.mosaic.ui.client.DecoratedButton;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
-import org.mosaic.ui.client.ToolButton;
 import org.mosaic.ui.client.WidgetWrapper;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -87,13 +85,8 @@ public class CustomButtonPage extends Page implements ClickListener {
         MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage(), this);
     normalPushButton.ensureDebugId("mosaicCustomButton-push-normal");
 
-    pushBody.add(new WidgetWrapper(normalPushButton), new BoxLayoutData(FillStyle.BOTH, true));
+    pushBody.add(new WidgetWrapper(normalPushButton));
     
-    // ???
-    //final DecoratedButton decButton = new DecoratedButton("Hello");
-    //pushBody.add(decButton, new BoxLayoutData(FillStyle.BOTH));
-    final ToolButton toolButton = new ToolButton("Hello");
-    pushBody.add(toolButton, new BoxLayoutData(FillStyle.BOTH));
     
     // Add a disabled PushButton
     final PushButton disabledPushButton = new PushButton(
@@ -102,7 +95,7 @@ public class CustomButtonPage extends Page implements ClickListener {
     disabledPushButton.ensureDebugId("mosaicCustomButton-push-disabled");
     disabledPushButton.setEnabled(false);
 
-    pushBody.add(new WidgetWrapper(disabledPushButton), new BoxLayoutData(FillStyle.BOTH, true));
+    pushBody.add(new WidgetWrapper(disabledPushButton));
 
     layoutPanel.add(pushBox, new BoxLayoutData(FillStyle.BOTH, true));
 
