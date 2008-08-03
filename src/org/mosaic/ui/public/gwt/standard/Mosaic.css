@@ -634,3 +634,28 @@ input {
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
 	background: #000;
 }
+
+/*** ToolBar ***/
+
+.mosaic-ToolBar {
+	cursor: default;
+	padding: 3px 5px 3px 5px;
+	margin: 0px;
+	background: #ccc;
+	-background: url("images/hborder.png") repeat-x 0px -27px;
+	-border: 1px solid #888;
+	border-top: none;
+	font-size: 75%;
+}
+.mosaic-ToolBar .mosaic-ToolButton {
+	-background: none;	
+}
+
+.mosaic-ToolBarSeparator {
+	width: 1px;
+	padding: 0px;
+	margin: 3px 0px 3px 0px;
+	border: 0px;
+	border-left: 1px solid #888888;
+	background: white;
+}

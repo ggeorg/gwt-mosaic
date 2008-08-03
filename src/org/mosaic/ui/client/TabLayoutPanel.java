@@ -194,4 +194,13 @@ public class TabLayoutPanel extends Composite implements HasLayout, SourcesTabEv
     deck.setPadding(padding);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   */
+  public int[] getPreferredSize() {
+    return getWidget().getPreferredSize();
+  }
+
 }

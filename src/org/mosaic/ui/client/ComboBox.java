@@ -156,4 +156,13 @@ public class ComboBox extends Composite implements HasLayout, HasName, HasText {
     getWidget().layout();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   */
+  public int[] getPreferredSize() {
+    return getWidget().getPreferredSize();
+  }
+
 }
