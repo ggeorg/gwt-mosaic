@@ -24,6 +24,7 @@ import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.i18n.client.HasDirection.Direction;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasName;
@@ -36,7 +37,7 @@ public class ComboBox extends Composite implements HasLayout, HasName, HasText {
   private static final String DEFAULT_STYLE_NAME = "mosaic-ComboBox";
 
   private final TextBox input;
-  private final MosaicButton button;
+  private final Button button;
 
   public ComboBox() {
     this(DEFAULT_STYLE_NAME);
@@ -52,7 +53,7 @@ public class ComboBox extends Composite implements HasLayout, HasName, HasText {
     input = new TextBox();
     layoutPanel.add(input, new BoxLayoutData(FillStyle.BOTH));
 
-    button = new MosaicButton("&nbsp;", new ClickListener() {
+    button = new Button("&nbsp;", new ClickListener() {
       public void onClick(Widget sender) {
         // TODO Auto-generated method stub
       }

@@ -35,7 +35,7 @@ import org.mosaic.showcase.client.pages.LayoutTest2Page;
 import org.mosaic.showcase.client.pages.LazyTreePage;
 import org.mosaic.showcase.client.pages.MessageBoxPage;
 import org.mosaic.showcase.client.pages.MixedLayoutPage;
-import org.mosaic.showcase.client.pages.MosaicButtonPage;
+import org.mosaic.showcase.client.pages.ToolButtonPage;
 import org.mosaic.showcase.client.pages.MosaicConstants;
 import org.mosaic.showcase.client.pages.NestedBorderLayoutPage;
 import org.mosaic.showcase.client.pages.Page;
@@ -178,7 +178,7 @@ public class Showcase implements EntryPoint {
     // Widgets
     pages.add(new BasicButtonPage(constants));
     pages.add(new CustomButtonPage(constants));
-    pages.add(new MosaicButtonPage(constants));
+    pages.add(new ToolButtonPage(constants));
     pages.add(new ComboBoxPage(constants));
     pages.add(new DatePickerPage(constants));
 

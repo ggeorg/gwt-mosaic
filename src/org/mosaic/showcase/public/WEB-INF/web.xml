@@ -7,7 +7,7 @@
 	<display-name>GWT-MOSAIC</display-name>
 
 	<welcome-file-list>
-		<welcome-file>Mosaic.html</welcome-file>
+		<welcome-file>Showcase.html</welcome-file>
 	</welcome-file-list>
 
 	<servlet>

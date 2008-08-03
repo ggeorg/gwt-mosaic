@@ -55,11 +55,18 @@ input {
 	cursor: hand;
 	background: url("images/hborder.png") repeat-x 0px -27px;
 	border: none;
+	border-collapse: collapse;
+	table-layout: fixed;
 }
 .mosaic-DecoratedButton .buttonTopCenter,
 .mosaic-DecoratedButton .buttonBottomCenter {
-	height: 1px;
+	height: 1px !important;
 	background: #444;
+}
+.mosaic-DecoratedButton .buttonTopCenterInner,
+.mosaic-DecoratedButton .buttonBottomCenterInner {
+	height: 1px !important;
+	background: #f00;
 }
 .mosaic-DecoratedButton .buttonMiddleLeft,
 .mosaic-DecoratedButton .buttonMiddleRight {
@@ -72,7 +79,11 @@ input {
 .mosaic-DecoratedButton .buttonBottomRightInner {
 	width: 1px;
 	height: 1px;
-	zoom: 1;
+}
+.mosaic-DecoratedButton .buttonMiddleCenterInner {
+	width: 100%;
+	height: 100%;
+	background: #0ff;
 }
 
 /*** ComboBox ***/
@@ -96,70 +107,60 @@ input {
     background-image: url(images/combobox/arrow-down.png);
 }
 
-/*** Button ***/
+/*** ToolButton ***/
 
-.mosaic-Button  {
+.mosaic-ToolButton {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	background: url("images/hborder.png") repeat-x 0px -27px;
 }
-.mosaic-Menu-Button,
-.mosaic-Split-Button {
+.mosaic-ToolButton .mosaic-Button {
+    background: none;
+}
+.mosaic-ToolButton .mosaic-Button {
+}
+.mosaic-ToolButton .mosaic-Menu-Button,
+.mosaic-ToolButton .mosaic-Split-Button {
     padding-right: 20px;
     background-position: right center;
     background-repeat: no-repeat;
 }
-.mosaic-Menu-Button {
+.mosaic-ToolButton .mosaic-Menu-Button {
     background-image: url(images/button/menu-button-arrow.png);
 }
-.mosaic-Split-Button {
+.mosaic-ToolButton .mosaic-Split-Button {
     background-image: url(images/button/split-button-arrow.png);
 }
-.mosaic-Split-Button-focus {
+.mosaic-ToolButton .mosaic-Split-Button-focus {
     background-image: url(split-button-arrow-focus.png);
 }
-.mosaic-Split-Button-hover {
+.mosaic-ToolButton .mosaic-Split-Button-hover {
     background-image: url(images/button/split-button-arrow-hover.png);
 }
-.mosaic-Split-Button-activeoption {
+.mosaic-ToolButton .mosaic-Split-Button-activeoption {
     background-image: url(images/button/split-button-arrow-active.png);
 }
 
 /* Checked state */
 
-.mosaic-Checkbox-Button-checked {
-    border-color: #304369;
-    background-position: 0 -1400px;
+.mosaic-ToolButton .mosaic-Checkbox-Button-checked {
+    border: 1px inset #ccc;
+    background-color: #ccc;
 }
-
-.mosaic-Checkbox-Button-checked .first-child {
-    border-color: #304369;
-}
-
-.mosaic-Checkbox-Button-checked button { 
-    color: #fff;
-}
-
 
 /* Disabled state */
 
-.mosaic-Button-disabled {
-    border-color: #ccc;
-}
-
-.mosaic-Button-disabled .first-child {
-    border-color: #ccc;
-}
-
-.mosaic-Button-disabled button, 
-.mosaic-Button-disabled a {
-	cursor: default;
-    color: #888;
-}
-
-.mosaic-Menu-Button-disabled button {
+.mosaic-ToolButton .mosaic-Menu-Button-disabled {
     background-image: url(images/button/menu-button-arrow-disabled.png);
 }
 
-.mosaic-Split-Button-disabled button {
+.mosaic-ToolButton .mosaic-Split-Button-disabled {
     background-image: url(images/button/split-button-arrow-disabled.png);    
+}
+
+.mosaic-ToolButton .mosaic-Checkbox-Button-checked[disabled] {
+    border: 1px inset #ccc;  
 }
 
 /*** Caption ***/
@@ -594,6 +595,9 @@ input {
 	background: #fff;
 	cursor: n-resize;
 }
+.mosaic-LayoutPanel-BorderLayout .NorthSplitBar:hover {
+	border-top: 1px dashed #888;
+}
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar-Movable {
 	background: #000;
 	cursor: n-resize;
@@ -601,6 +605,9 @@ input {
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
 	background: #fff;
 	cursor: s-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .SouthSplitBar:hover {
+	border-bottom: 1px dashed #888;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar-Movable {
 	background: #000;
@@ -610,6 +617,9 @@ input {
 	background: #fff;
 	cursor: w-resize;
 }
+.mosaic-LayoutPanel-BorderLayout .WestSplitBar:hover {
+	border-left: 1px dashed #888;
+}
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar-Movable {
 	background: #000;
 	cursor: w-resize;
@@ -617,6 +627,9 @@ input {
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
 	background: #fff;
 	cursor: w-resize;
+}
+.mosaic-LayoutPanel-BorderLayout .EastSplitBar:hover {
+	border-right: 1px dashed #888;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
 	background: #000;

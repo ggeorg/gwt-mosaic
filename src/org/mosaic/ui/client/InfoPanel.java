@@ -21,7 +21,6 @@ import java.util.List;
 import org.mosaic.core.client.DOM;
 import org.mosaic.core.client.util.DelayedRunnable;
 
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
@@ -83,7 +82,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     } else {
       infoPanel.setPopupPosition(left, top);
       infoPanel.show();
-      infoPanel.hideTimer.scheduleRepeating(delayMsec / 10);
+      infoPanel.hideTimer.scheduleRepeating(delayMsec);
     }
   }
 
@@ -120,22 +119,8 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
   private Label caption, description;
 
   private final Timer hideTimer = new Timer() {
-    private int opacity = 100;
-
     public void run() {
-      updateOpacity();
-      if (opacity == 10) {
-        hideTimer.cancel();
-        InfoPanel.this.hide();
-      } else {
-        opacity -= 10;
-      }
-    }
-
-    private void updateOpacity() {
-      final Element elem = InfoPanel.this.getElement();
-      DOM.setStyleAttribute(elem, "opacity", (new Double(opacity / 100.0)).toString());
-      DOM.setStyleAttribute(elem, "filter", "alpha(opacity=" + opacity + ");");
+      InfoPanel.this.hide();
     }
   };
 
