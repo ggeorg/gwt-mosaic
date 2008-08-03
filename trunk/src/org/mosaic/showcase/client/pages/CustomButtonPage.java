@@ -7,6 +7,7 @@ import org.mosaic.ui.client.Caption;
 import org.mosaic.ui.client.DecoratedButton;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
+import org.mosaic.ui.client.ToolButton;
 import org.mosaic.ui.client.WidgetWrapper;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -89,9 +90,10 @@ public class CustomButtonPage extends Page implements ClickListener {
     pushBody.add(new WidgetWrapper(normalPushButton), new BoxLayoutData(FillStyle.BOTH, true));
     
     // ???
-    final DecoratedButton decButton = new DecoratedButton("Hello");
-    
-    pushBody.add(decButton, new BoxLayoutData(FillStyle.BOTH));
+    //final DecoratedButton decButton = new DecoratedButton("Hello");
+    //pushBody.add(decButton, new BoxLayoutData(FillStyle.BOTH));
+    final ToolButton toolButton = new ToolButton("Hello");
+    pushBody.add(toolButton, new BoxLayoutData(FillStyle.BOTH));
     
     // Add a disabled PushButton
     final PushButton disabledPushButton = new PushButton(

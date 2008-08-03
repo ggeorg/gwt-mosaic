@@ -8,7 +8,7 @@
 		Ant Build File for GWT-MOSAIC
 	</description>
 
-	<property name="gwt.module" value="org.mosaic.ui.Mosaic" />
+	<property name="gwt.module" value="org.mosaic.showcase.Showcase" />
 	<property name="source.path" value="src" />
 	<property name="webapp.path" value="${source.path}/org/mosaic/showcase/public" />
 
@@ -36,11 +36,9 @@
 	<!-- set classpath -->
 	<path id="project.class.path">
 		<pathelement location="${build}/classes" />
-		<!--
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
-		-->
 		<pathelement location="${env.GWT_HOME}/gwt-user.jar" />
 		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
 	</path>
@@ -49,11 +47,9 @@
 	<path id="gwt.class.path">
 		<pathelement location="${source.path}" />
 		<pathelement location="${build}/classes" />
-		<!--
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
-		-->
 		<pathelement location="${env.GWT_HOME}/gwt-user.jar" />
 		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
 	</path>
@@ -83,7 +79,7 @@
 		<echo message="Classpath = ${classpath}" />
 		<echo>---------------------------------</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" fork="true">
-			<jvmarg line="-Xmx128m" />
+			<jvmarg line="-Xmx256m" />
 			<arg line="-out ${build}/www" />
 			<!-- arg line="-style PRETTY" / -->
 			<!-- arg line="-style DETAILED" / -->
@@ -168,7 +164,7 @@
 	<!-- ======= -->
 	<target name="clean">
 		<delete file="${ant.project.name}-${project.version}.jar" />
-		<delete file="${ant.project.name}-${project.version}.war" />
+		<delete file="${ant.project.name}-showcase-${project.version}.war" />
 		<delete dir="${build}" />
 	</target>
 
