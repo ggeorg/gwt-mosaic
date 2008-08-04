@@ -581,23 +581,18 @@ input {
 /*** LayoutPanel ***/
 
 .mosaic-LayoutPanel {
-	border: 1px dotted #f00;
+	/* border: 1px dotted #f00; */
 	padding: 5px;
-	margin: 10px;
+	margin: 1px;
 }
-
 .mosaic-LayoutPanel-FillLayout {
 	padding: 0px;
 }
-
 .mosaic-LayoutPanel-BoxLayout {
-
 }
 
 .mosaic-LayoutPanel-BorderLayout {
-
 }
-
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
 	background: #fff;
 	cursor: n-resize;
@@ -646,21 +641,14 @@ input {
 
 .mosaic-ToolBar {
 	cursor: default;
-	padding: 3px 5px 3px 5px;
-	margin: 0px;
-	background: #ccc;
-	-background: url("images/hborder.png") repeat-x 0px -27px;
-	-border: 1px solid #888;
-	border-top: none;
-	font-size: 75%;
+	padding: 3px;
+	background: url("images/hborder.png") repeat-x 0px -27px;
 }
 .mosaic-ToolBar .mosaic-ToolButton {
-	-background: none;	
+	background: none;	
 }
-
-.mosaic-ToolBarSeparator {
-	width: 0px;
-	padding: 0px;
+.mosaic-ToolBar .mosaic-ToolBarSeparator {
+	width: 3px;
+	padding: 3px;
 	margin: 3px 0px 3px 0px;
-	border-left: 2px groove #ccc;
 }
