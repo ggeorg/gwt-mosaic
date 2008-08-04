@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  */
-@MosaicStyle({".dragdrop-positioner"})
+@MosaicStyle({".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle"})
 public class WindowPanelPage extends Page {
 
   /**

@@ -33,24 +33,62 @@ import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.MouseListener;
+import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
 
-  class AttachableFocusPanel extends FocusPanel {
+  class ElementDragHandle extends Widget implements SourcesMouseEvents {
+    private MouseListenerCollection mouseListeners;
+    
+    public ElementDragHandle(Element elem) {
+      setElement(elem);
+      sinkEvents(Event.MOUSEEVENTS);
+    }
+    
     protected void onAttach() {
       super.onAttach();
     }
 
     protected void onDetach() {
       super.onDetach();
+    }
+
+    public void addMouseListener(MouseListener listener) {
+      if (mouseListeners == null) {
+        mouseListeners = new MouseListenerCollection();
+      }
+      mouseListeners.add(listener);
+    }
+
+    public void removeMouseListener(MouseListener listener) {
+      if (mouseListeners != null) {
+        mouseListeners.remove(listener);
+      }
+    }
+    
+    @Override
+    public void onBrowserEvent(Event event) {
+      switch (DOM.eventGetType(event)) {
+        case Event.ONMOUSEDOWN:
+        case Event.ONMOUSEUP:
+        case Event.ONMOUSEMOVE:
+        case Event.ONMOUSEOVER:
+        case Event.ONMOUSEOUT:
+          if (mouseListeners != null) {
+            mouseListeners.fireMouseEvent(this, event);
+          }
+          break;
+      }
     }
   }
 
@@ -288,9 +326,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
    */
   static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST, "w");
 
-  private AttachableFocusPanel nwFocusPanel, nFocusPanel, neFocusPanel;
-  private AttachableFocusPanel swFocusPanel, sFocusPanel, seFocusPanel;
-  private AttachableFocusPanel wFocusPanel, eFocusPanel;
+  private ElementDragHandle nwFocusPanel, nFocusPanel, neFocusPanel;
+  private ElementDragHandle swFocusPanel, sFocusPanel, seFocusPanel;
+  private ElementDragHandle wFocusPanel, eFocusPanel;
 
   private int contentWidth, contentHeight;
   private final WindowController windowController;
@@ -478,13 +516,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     if (isResizable()) {
       if (width != contentWidth) {
         contentWidth = width;
-        nFocusPanel.setWidth(contentWidth + "px");
-        sFocusPanel.setWidth(contentWidth + "px");
       }
       if (height != contentHeight) {
         contentHeight = height;
-        wFocusPanel.setHeight((contentHeight) + "px");
-        eFocusPanel.setHeight((contentHeight) + "px");
       }
     }
     layoutPanel.setPixelSize(width, height);
@@ -515,13 +549,12 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     caption.setText(text);
   }
 
-  private AttachableFocusPanel setupCell(int row, int col, DirectionConstant direction) {
-    final AttachableFocusPanel widget = new AttachableFocusPanel();
-    Element td = getCellElement(row, col);
-    DOM.appendChild(td, widget.getElement());
+  private ElementDragHandle setupCell(int row, int col, DirectionConstant direction) {
+    final Element td = getCellElement(row, col).getParentElement().cast();
+    final ElementDragHandle widget = new ElementDragHandle(td);
     adopt(widget);
     windowController.getResizeDragController().makeDraggable(widget, direction);
-    widget.setStyleName("Resize-" + direction.directionLetters);
+    widget.addStyleName("Resize-" + direction.directionLetters);
     return widget;
   }
 

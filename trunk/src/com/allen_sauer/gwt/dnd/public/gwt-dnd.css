@@ -40,8 +40,8 @@ HTML {
   background-color: #77AAFF; /* light blue */
 }
 .dragdrop-selected,.dragdrop-dragging,.dragdrop-proxy {
-  filter: alpha(opacity = 30);
-  opacity: 0.3;
+  filter: alpha(opacity = 65);
+  opacity: 0.75;
 }
 
 .dragdrop-movable-panel {

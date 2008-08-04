@@ -245,39 +245,29 @@ input {
 }
 .mosaic-WindowPanel .Resize-nw {
 	cursor: nw-resize;
-	width: 5px;
-	height: 5px;
 }
 .mosaic-WindowPanel .Resize-n {
 	cursor: n-resize;
-	height: 5px;
 }
 .mosaic-WindowPanel .Resize-ne {
 	cursor: ne-resize;
-	width: 8px;
-	height: 5px;
 }
 .mosaic-WindowPanel .Resize-e {
 	cursor: e-resize;
-	width: 8px;
+	background: #fff; /* needed for IE */
 }
 .mosaic-WindowPanel .Resize-se {
 	cursor: se-resize;
-	width: 8px;
-	height: 8px;
 }
 .mosaic-WindowPanel .Resize-s {
 	cursor: s-resize;
-	height: 8px;
+	background: #fff; /* needed for IE */
 }
 .mosaic-WindowPanel .Resize-sw {
 	cursor: sw-resize;
-	width: 5px;
-	height: 8px;
 }
 .mosaic-WindowPanel .Resize-w {
 	cursor: w-resize;
-	width: 5px;
 }
 
 .dragdrop-positioner {
