@@ -64,7 +64,7 @@
 		<echo message="Classpath = ${classpath}" />
 		<echo>---------------------------------</echo>
 		<javac srcdir="${source.path}" destdir="${build}/classes" debug="on" debuglevel="${debuglevel}" source="${source}" target="${target}">
-			<include name="**/generator/*.java" />
+			
 			<classpath refid="project.class.path" />
 		</javac>
 	</target>

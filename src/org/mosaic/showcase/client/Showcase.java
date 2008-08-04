@@ -32,6 +32,7 @@ import org.mosaic.showcase.client.pages.DemoConstants;
 import org.mosaic.showcase.client.pages.InfoPanelPage;
 import org.mosaic.showcase.client.pages.LayoutTest1Page;
 import org.mosaic.showcase.client.pages.LayoutTest2Page;
+import org.mosaic.showcase.client.pages.LayoutTest3Page;
 import org.mosaic.showcase.client.pages.LazyTreePage;
 import org.mosaic.showcase.client.pages.MessageBoxPage;
 import org.mosaic.showcase.client.pages.MixedLayoutPage;
@@ -216,6 +217,7 @@ public class Showcase implements EntryPoint {
     // Layout/Advanced Layout
     pages.add(new LayoutTest1Page(constants));
     pages.add(new LayoutTest2Page(constants));
+    pages.add(new LayoutTest3Page(constants));
   }
 
   /**
