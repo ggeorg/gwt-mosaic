@@ -156,8 +156,19 @@ public class ToolBarPage extends Page implements ClickListener {
   private Widget createToolBar1() {
     final ToolBar toolBar = new ToolBar();
 
-    toolBar.add(new ToolButton("Push 1"));
-    toolBar.add(new ToolButton("Push 2"));
+    // Add a push button
+    ToolButton pushButton = new ToolButton("Push 1");
+    pushButton.addClickListener(this);
+    pushButton.ensureDebugId("mosaicPushButton-normal");
+
+    toolBar.add(pushButton);
+
+    // Add a disabled push button
+    ToolButton disabledPushButton = new ToolButton("Push 2");
+    disabledPushButton.setEnabled(false);
+    pushButton.ensureDebugId("mosaicPushButton-disabled");
+
+    toolBar.add(disabledPushButton);
 
     toolBar.addSeparator();
 
@@ -248,14 +259,6 @@ public class ToolBarPage extends Page implements ClickListener {
     checkButton3.ensureDebugId("mosaicCheckboxButton-normal");
 
     toolBar.add(checkButton3);
-
-    // Add a fourth checkbox button
-    ToolButton checkButton4 = new ToolButton("Checkbox 4");
-    checkButton4.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton4.setEnabled(false);
-    checkButton4.ensureDebugId("mosaicCheckboxButton-normal");
-
-    toolBar.add(checkButton4);
 
     toolBar.addSeparator();
 

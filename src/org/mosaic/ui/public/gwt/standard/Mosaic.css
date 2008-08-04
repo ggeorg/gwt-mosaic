@@ -652,10 +652,8 @@ input {
 }
 
 .mosaic-ToolBarSeparator {
-	width: 1px;
+	width: 0px;
 	padding: 0px;
 	margin: 3px 0px 3px 0px;
-	border: 0px;
-	border-left: 1px solid #888888;
-	background: white;
+	border-left: 2px groove #ccc;
 }
