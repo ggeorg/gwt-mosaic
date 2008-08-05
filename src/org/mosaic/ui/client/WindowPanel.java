@@ -394,7 +394,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     windowController.getMoveDragController().makeDraggable(this, caption);
 
     body = new LayoutPanel();
-    body.setStyleName("Body");
+    body.addStyleName("Body");
 
     layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setPadding(0);
@@ -469,7 +469,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     return caption.getHTML();
   }
 
-  protected LayoutPanel getLayoutPanel() {
+  /** XXX */
+  public LayoutPanel getLayoutPanel() {
     return body;
   }
 

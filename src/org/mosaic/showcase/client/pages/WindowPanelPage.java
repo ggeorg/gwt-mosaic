@@ -5,8 +5,11 @@ import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
 import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.WindowPanel;
 import org.mosaic.ui.client.MessageBox.MessageBoxType;
+import org.mosaic.ui.client.layout.BorderLayout;
+import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.LayoutPanel;
+import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -38,7 +41,8 @@ public class WindowPanelPage extends Page {
 
     final WindowPanel basic = new WindowPanel("Basic");
     basic.setAnimationEnabled(true);
-    // basic.setWidth("150px");
+    basic.setSize("320px", "256px");
+    createContent(basic.getLayoutPanel());
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {
@@ -47,28 +51,24 @@ public class WindowPanelPage extends Page {
       }
     });
 
-    Button btn2 = new Button("Resizable");
-    btn2.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        // TODO Auto-generated method stub
-
-      }
-    });
-
-    Button btn3 = new Button("Modal");
-    btn3.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        MessageBox messageBox = new MessageBox("Alert", MessageBoxType.ALERT);
-        messageBox.setWidth(256 + "px");
-        messageBox.setAnimationEnabled(true);
-        messageBox.setText("Hello dear George!");
-        messageBox.center();
-      }
-    });
-
     layoutPanel.add(btn1);
-    layoutPanel.add(btn2);
-    layoutPanel.add(btn3);
+  }
+  
+  private void createContent(LayoutPanel layoutPanel) {
+    layoutPanel.setLayout(new BorderLayout());
+    layoutPanel.setPadding(5);
+    
+    final Button b1 = new Button("Button 1");
+    final Button b2 = new Button("Button 2");
+    final Button b3 = new Button("Button 3");
+    final Button b4 = new Button("Button 4");
+    final Button b5 = new Button("Button 5");
+    
+    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
+    layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
   }
 
 }
