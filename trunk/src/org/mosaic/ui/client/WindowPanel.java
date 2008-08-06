@@ -20,11 +20,7 @@ import java.util.Map;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.Caption.CaptionRegion;
-import org.mosaic.ui.client.layout.BoxLayout;
-import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.mosaic.ui.client.layout.BaseLayout;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
@@ -38,23 +34,23 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
-import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.HasCaption;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
-public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
+public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
   class ElementDragHandle extends Widget implements SourcesMouseEvents {
     private MouseListenerCollection mouseListeners;
-    
+
     public ElementDragHandle(Element elem) {
       setElement(elem);
       sinkEvents(Event.MOUSEEVENTS);
     }
-    
+
     protected void onAttach() {
       super.onAttach();
     }
@@ -75,7 +71,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
         mouseListeners.remove(listener);
       }
     }
-    
+
     @Override
     public void onBrowserEvent(Event event) {
       switch (DOM.eventGetType(event)) {
@@ -115,13 +111,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
 
     @Override
     public void dragStart() {
-      body.setVisible(false);
+      panel.hideBody(true);
       super.dragStart();
     }
 
     @Override
     public void dragEnd() {
-      body.setVisible(true);
+      panel.hideBody(false);
       super.dragEnd();
     }
   }
@@ -326,17 +322,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
    */
   static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST, "w");
 
-  private ElementDragHandle nwFocusPanel, nFocusPanel, neFocusPanel;
-  private ElementDragHandle swFocusPanel, sFocusPanel, seFocusPanel;
-  private ElementDragHandle wFocusPanel, eFocusPanel;
+  private ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
+  private ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
+  private ElementDragHandle wResizeHandle, eResizeHandle;
 
   private int contentWidth, contentHeight;
   private final WindowController windowController;
-  private final LayoutPanel layoutPanel;
 
-  private final Caption caption;
-
-  private final LayoutPanel body;
+  private final TitledLayoutPanel panel;
 
   private final boolean resizable, modal;
 
@@ -344,7 +337,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
 
   private Timer layoutTimer = new Timer() {
     public void run() {
-      layoutPanel.layout();
+      panel.layout();
     }
   };
 
@@ -352,36 +345,41 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     this(null);
   }
 
-  public WindowPanel(String text) {
-    this(text, true, false);
+  public WindowPanel(String caption) {
+    this(caption, true, false);
   }
 
-  public WindowPanel(String text, boolean resizable, boolean modal) {
-    this(text, resizable, false, modal);
+  public WindowPanel(String caption, boolean resizable, boolean modal) {
+    this(caption, resizable, false, modal);
   }
 
-  protected WindowPanel(String text, boolean resizable, boolean autoHide, boolean modal) {
+  protected WindowPanel(String caption, boolean resizable, boolean autoHide, boolean modal) {
+    this(RootPanel.get(), caption, resizable, autoHide, modal);
+  }
+
+  protected WindowPanel(AbsolutePanel boundaryPanel, String caption, boolean resizable,
+      boolean autoHide, boolean modal) {
     super(autoHide, modal);
 
     this.resizable = resizable;
     this.modal = modal;
 
-    windowController = new WindowController(RootPanel.get(), this);
+    windowController = new WindowController(boundaryPanel, this);
 
     if (isResizable()) {
-      nwFocusPanel = setupCell(0, 0, NORTH_WEST);
-      nFocusPanel = setupCell(0, 1, NORTH);
-      neFocusPanel = setupCell(0, 2, NORTH_EAST);
+      nwResizeHandle = newResizeHandle(0, 0, NORTH_WEST);
+      nResizeHandle = newResizeHandle(0, 1, NORTH);
+      neResizeHandle = newResizeHandle(0, 2, NORTH_EAST);
 
-      wFocusPanel = setupCell(1, 0, WEST);
-      eFocusPanel = setupCell(1, 2, EAST);
+      wResizeHandle = newResizeHandle(1, 0, WEST);
+      eResizeHandle = newResizeHandle(1, 2, EAST);
 
-      swFocusPanel = setupCell(2, 0, SOUTH_WEST);
-      sFocusPanel = setupCell(2, 1, SOUTH);
-      seFocusPanel = setupCell(2, 2, SOUTH_EAST);
+      swResizeHandle = newResizeHandle(2, 0, SOUTH_WEST);
+      sResizeHandle = newResizeHandle(2, 1, SOUTH);
+      seResizeHandle = newResizeHandle(2, 2, SOUTH_EAST);
     }
 
-    caption = new Caption(text);
+    panel = new TitledLayoutPanel(caption);
 
     ImageButton closeBtn = new ImageButton(CAPTION_IMAGES.windowClose());
     closeBtn.addClickListener(new ClickListener() {
@@ -389,20 +387,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
         hide();
       }
     });
-    caption.add(closeBtn, CaptionRegion.RIGHT);
+    panel.getHeader().add(closeBtn, CaptionRegion.RIGHT);
 
-    windowController.getMoveDragController().makeDraggable(this, caption);
+    windowController.getMoveDragController().makeDraggable(this, panel.getHeader());
 
-    body = new LayoutPanel();
-    body.addStyleName("Body");
-
-    layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    layoutPanel.setPadding(0);
-    layoutPanel.setWidgetSpacing(0);
-    layoutPanel.add(caption, new BoxLayoutData(FillStyle.HORIZONTAL));
-    layoutPanel.add(body, new BoxLayoutData(FillStyle.BOTH));
-
-    super.setWidget(layoutPanel);
+    super.setWidget(panel);
 
     // addClickListener(new ClickListener() {
     // public void onClick(Widget sender) {
@@ -426,14 +415,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
 
     // See comment in doDetachChildren for an explanation of this call
     if (isResizable()) {
-      nFocusPanel.onAttach();
-      sFocusPanel.onAttach();
-      wFocusPanel.onAttach();
-      eFocusPanel.onAttach();
-      nwFocusPanel.onAttach();
-      neFocusPanel.onAttach();
-      swFocusPanel.onAttach();
-      seFocusPanel.onAttach();
+      nResizeHandle.onAttach();
+      sResizeHandle.onAttach();
+      wResizeHandle.onAttach();
+      eResizeHandle.onAttach();
+      nwResizeHandle.onAttach();
+      neResizeHandle.onAttach();
+      swResizeHandle.onAttach();
+      seResizeHandle.onAttach();
     }
   }
 
@@ -446,14 +435,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     // This is similar to a {@link ComplexPanel}, but we do not want to expose
     // the caption widget, as its just an internal implementation.
     if (isResizable()) {
-      nFocusPanel.onDetach();
-      sFocusPanel.onDetach();
-      wFocusPanel.onDetach();
-      eFocusPanel.onDetach();
-      nwFocusPanel.onDetach();
-      neFocusPanel.onDetach();
-      swFocusPanel.onDetach();
-      seFocusPanel.onDetach();
+      nResizeHandle.onDetach();
+      sResizeHandle.onDetach();
+      wResizeHandle.onDetach();
+      eResizeHandle.onDetach();
+      nwResizeHandle.onDetach();
+      neResizeHandle.onDetach();
+      swResizeHandle.onDetach();
+      seResizeHandle.onDetach();
     }
   }
 
@@ -463,24 +452,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
 
   public int getContentWidth() {
     return contentWidth;
-  }
-
-  public String getHTML() {
-    return caption.getHTML();
-  }
-
-  /** XXX */
-  public LayoutPanel getLayoutPanel() {
-    return body;
-  }
-
-  /**
-   * Gets the caption's text.
-   * 
-   * @return the caption's text
-   */
-  public String getText() {
-    return caption.getText();
   }
 
   public boolean isModal() {
@@ -508,7 +479,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
     if (!initialized) {
       initialized = true;
       final int[] box = DOM.getClientSize(getElement());
-      setContentSize(box[0], box[1]);
+      final int[] m = DOM.getMarginSizes(panel.getElement());
+      final int delta = panel.getOffsetHeight() + m[0] + m[2]
+          - BaseLayout.getFlowHeight(panel);
+      setContentSize(box[0], box[1] - delta + 1); // FIXME why (+ 1) ?
       layoutTimer.schedule(1);
     }
   }
@@ -522,41 +496,66 @@ public class WindowPanel extends DecoratedPopupPanel implements HasHTML {
         contentHeight = height;
       }
     }
-    layoutPanel.setPixelSize(width, height);
+    DOM.setContentAreaWidth(panel.getElement(), width);
+    DOM.setContentAreaHeight(panel.getElement(), height);
     layoutTimer.schedule(333);
   }
 
-  /**
-   * Sets the html string inside the caption.
-   * 
-   * Use {@link #setWidget(Widget)} to set the contents inside the
-   * {@link WindowPanel}.
-   * 
-   * @param html the object's new HTML
-   */
-  public void setHTML(String html) {
-    caption.setHTML(html);
-  }
-
-  /**
-   * Sets the text inside the caption.
-   * 
-   * Use {@link #setWidget(Widget)} to set the contents inside the
-   * {@link WindowPanel}.
-   * 
-   * @param text the object's new text
-   */
-  public void setText(final String text) {
-    caption.setText(text);
-  }
-
-  private ElementDragHandle setupCell(int row, int col, DirectionConstant direction) {
+  private ElementDragHandle newResizeHandle(int row, int col, DirectionConstant direction) {
     final Element td = getCellElement(row, col).getParentElement().cast();
     final ElementDragHandle widget = new ElementDragHandle(td);
     adopt(widget);
     windowController.getResizeDragController().makeDraggable(widget, direction);
     widget.addStyleName("Resize-" + direction.directionLetters);
     return widget;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasCaption#getCaption()
+   */
+  public String getCaption() {
+    return panel.getHeader().getText();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasCaption#setCaption(java.lang.String)
+   */
+  public void setCaption(final String text) {
+    panel.getHeader().setText(text);
+  }
+
+  @Override
+  public void setWidget(Widget w) {
+    panel.clear();
+    panel.add(w);
+    // maybeUpdateSize();
+  }
+
+  @Override
+  public Widget getWidget() {
+    if (panel.getWidgetCount() > 0) {
+      return panel.getWidget(0);
+    } else {
+      return null;
+    }
+  }
+
+  public void setFooter(Widget footer) {
+    if (getFooter() != null) {
+      getFooter().removeStyleName("Footer");
+    }
+    panel.setFooter(footer);
+    if (getFooter() != null) {
+      getFooter().addStyleName("Footer");
+    }
+  }
+
+  public Widget getFooter() {
+    return panel.getFooter();
   }
 
 }

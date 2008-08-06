@@ -166,14 +166,16 @@ input {
 /*** Caption ***/
 
 .mosaic-Caption {
+	/*
 	background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
 	border-bottom: 1px solid #bbbbbb;
+	*/
 }
 .mosaic-Caption-iconBoxLeft {
-	padding: 0px 0px 0px 2px;
+	/*padding: 0px 0px 0px 2px;*/
 }
 .mosaic-Caption-iconBoxRight {
-	padding: 0px 2px 0px 0px;
+	/*padding: 0px 2px 0px 0px;*/
 }
 .mosaic-Caption-text {
 	padding: 4px 4px 4px 4px;
@@ -192,18 +194,26 @@ input {
 .mosaic-WindowPanel .Body {
 	background: white;
 }
+.mosaic-MessageBox .Body {
+	background: none;
+}
+.mosaic-WindowPanel .Footer {
+	
+}
 .mosaic-WindowPanel .Body-BorderLayout {
 	padding: 5px;
 }
 .mosaic-WindowPanel .mosaic-Caption {
+	/*
 	background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
 	border-bottom: 1px solid #bbbbbb;
+	*/
 }
 .mosaic-WindowPanel .mosaic-Caption-iconBoxLeft {
-	padding: 0px 0px 0px 2px;
+	/*padding: 0px 0px 0px 2px;*/
 }
 .mosaic-WindowPanel .mosaic-Caption-iconBoxRight {
-	padding: 0px 2px 0px 0px;
+	/*padding: 0px 2px 0px 0px;*/
 }
 .mosaic-WindowPanel .mosaic-Caption-text {
 	padding: 4px 4px 4px 4px;
@@ -219,7 +229,7 @@ input {
 	 * We get around the border on hover displacement of content by adjusting
 	 * the margin/padding at the same time.
 	 */
-	border: 1px solid transparent;
+	border: 0px solid transparent;
 	margin: 1px; 
 	
 	width: 16px;
@@ -231,8 +241,8 @@ input {
 	 * We get around the border on hover displacement of content by adjusting
 	 * the margin/padding at the same time.
 	 */
-	margin: 1px;
 	border: 1px solid #4d4d4d;
+	margin: 0px;
 	
 	background-color: #ccc;
 }
@@ -584,6 +594,7 @@ input {
 .mosaic-LayoutPanel-BorderLayout {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
+	overflow: hidden; /* required by IE6 */
 	background: #fff;
 	cursor: n-resize;
 }
@@ -595,6 +606,7 @@ input {
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
+	overflow: hidden; /* required by IE6 */
 	background: #fff;
 	cursor: s-resize;
 }
@@ -606,6 +618,7 @@ input {
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar {
+	overflow: hidden; /* required by IE6 */
 	background: #fff;
 	cursor: w-resize;
 }
@@ -617,6 +630,7 @@ input {
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
+	overflow: hidden; /* required by IE6 */
 	background: #fff;
 	cursor: w-resize;
 }
@@ -641,4 +655,7 @@ input {
 	width: 3px;
 	padding: 3px;
 	margin: 3px 0px 3px 0px;
+}
+html>body .mosaic-ToolBar .mosaic-ToolBarSeparator {
+	display: inline;
 }

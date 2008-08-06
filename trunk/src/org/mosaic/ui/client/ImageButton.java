@@ -35,13 +35,13 @@ public class ImageButton extends Widget implements SourcesClickEvents {
   }
 
   public ImageButton(AbstractImagePrototype image) {
-    setElement(DOM.createAnchor());
+    setElement(image.createElement());
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
-    if (image != null) {
-      this.image = image;
-      getElement().setInnerHTML(image.getHTML());
-    }
+//    if (image != null) {
+//      this.image = image;
+//      getElement().setInnerHTML(image.getHTML());
+//    }
 
     setStyleName("mosaic-ImageButton");
   }
@@ -50,9 +50,9 @@ public class ImageButton extends Widget implements SourcesClickEvents {
     return image;
   }
 
-  public void setImage(AbstractImagePrototype image) {
-    this.image = image;
-  }
+//  public void setImage(AbstractImagePrototype image) {
+//    this.image = image;
+//  }
 
   public void addClickListener(ClickListener listener) {
     if (clickListeners == null) {

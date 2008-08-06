@@ -95,11 +95,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
   // add(w);
   // }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getLayout()
-   */
   public LayoutManager getLayout() {
     return layout;
   }
