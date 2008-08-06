@@ -29,10 +29,10 @@ public class WidgetWrapper extends Composite {
     grid.setBorderWidth(0);
     grid.setCellPadding(0);
     grid.setCellSpacing(0);
-
-    grid.setWidget(0, 0, widget);
     grid.getCellFormatter().setAlignment(0, 0, HasAlignment.ALIGN_CENTER,
         HasAlignment.ALIGN_MIDDLE);
+    
+    grid.setWidget(0, 0, widget);
 
     initWidget(grid);
 

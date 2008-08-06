@@ -46,7 +46,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     LayoutManagerHelper.setLayoutData(widget, layoutData);
   }
 
-  protected int getFlowHeight(Widget child) {
+  public static int getFlowHeight(Widget child) {
     final int[] m = DOM.getMarginSizes(child.getElement());
     int flowHeight;
     if (child instanceof HasLayout) {
@@ -59,7 +59,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     return flowHeight;
   }
 
-  protected int getFlowWidth(Widget child) {
+  public static int getFlowWidth(Widget child) {
     final int[] m = DOM.getMarginSizes(child.getElement());
     int flowWidth;
     if (child instanceof HasLayout) {
@@ -85,7 +85,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     setSize(widget, width, height);
   }
 
-  static void setSize(final Widget widget, int width, int height) {
+  public static void setSize(final Widget widget, int width, int height) {
     final Element elem = widget.getElement();
     if (width != -1) {
       DOM.setContentAreaWidth(elem, Math.max(0, width));

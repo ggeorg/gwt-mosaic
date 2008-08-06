@@ -15,34 +15,42 @@
  */
 package org.mosaic.ui.client;
 
-import com.google.gwt.user.client.ui.FocusPanel;
+import org.mosaic.core.client.DOM;
+
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.MouseListener;
+import com.google.gwt.user.client.ui.MouseListenerCollection;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that is used as a header in e.g. <code>WindowPanel</code>.
  */
-public class Caption extends FocusPanel implements HasHTML {
-
+public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents {
+  public enum CaptionRegion {
+    LEFT, RIGHT
+  }
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-Caption";
 
-  private final HorizontalPanel hpanel = new HorizontalPanel();
+  private MouseListenerCollection mouseListeners;
 
+  private final HorizontalPanel hpanel = new HorizontalPanel();
   private final HorizontalPanel leftIconBox = new HorizontalPanel();
+
   private final HorizontalPanel rightIconBox = new HorizontalPanel();
 
-  private final HTML caption = new HTML();
-
-  public enum CaptionRegion {
-    LEFT, RIGHT
-  };
+  private final HTML caption = new HTML();;
 
   public Caption(String text) {
+    sinkEvents(Event.MOUSEEVENTS);
+    
     caption.setStyleName(DEFAULT_STYLENAME + "-text");
     leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
     rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
@@ -84,13 +92,11 @@ public class Caption extends FocusPanel implements HasHTML {
     }
   }
 
-  public boolean remove(Widget widget) {
-    int index = leftIconBox.getWidgetIndex(widget);
-    if (index != -1) {
-      return leftIconBox.remove(index);
-    } else {
-      return rightIconBox.remove(widget);
+  public void addMouseListener(MouseListener listener) {
+    if (mouseListeners == null) {
+      mouseListeners = new MouseListenerCollection();
     }
+    mouseListeners.add(listener);
   }
 
   public void clear() {
@@ -110,21 +116,51 @@ public class Caption extends FocusPanel implements HasHTML {
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String)
-   */
-  public void setHTML(String html) {
-    caption.setHTML(html);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see com.google.gwt.user.client.ui.HasText#getText()
    */
   public String getText() {
     return caption.getText();
   }
 
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONMOUSEDOWN:
+      case Event.ONMOUSEUP:
+      case Event.ONMOUSEMOVE:
+      case Event.ONMOUSEOVER:
+      case Event.ONMOUSEOUT:
+        if (mouseListeners != null) {
+          mouseListeners.fireMouseEvent(this, event);
+        }
+        break;
+    }
+  }
+
+  public boolean remove(Widget widget) {
+    int index = leftIconBox.getWidgetIndex(widget);
+    if (index != -1) {
+      return leftIconBox.remove(index);
+    } else {
+      return rightIconBox.remove(widget);
+    }
+  }
+
+  public void removeMouseListener(MouseListener listener) {
+    if (mouseListeners != null) {
+      mouseListeners.remove(listener);
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String)
+   */
+  public void setHTML(String html) {
+    caption.setHTML(html);
+  }
+  
   /*
    * (non-Javadoc)
    * 
