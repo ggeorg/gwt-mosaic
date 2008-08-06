@@ -2,9 +2,7 @@ package org.mosaic.showcase.client.pages;
 
 import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
 import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
-import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.WindowPanel;
-import org.mosaic.ui.client.MessageBox.MessageBoxType;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.BoxLayout;
@@ -42,7 +40,9 @@ public class WindowPanelPage extends Page {
     final WindowPanel basic = new WindowPanel("Basic");
     basic.setAnimationEnabled(true);
     basic.setSize("320px", "256px");
-    createContent(basic.getLayoutPanel());
+    LayoutPanel panel = new LayoutPanel();
+    basic.setWidget(panel);
+    createContent(panel);
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {
