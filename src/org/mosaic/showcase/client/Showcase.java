@@ -48,6 +48,7 @@ import org.mosaic.showcase.client.pages.TableLoadingBenchmarkPage;
 import org.mosaic.showcase.client.pages.TablePage;
 import org.mosaic.showcase.client.pages.VerboseTreePage;
 import org.mosaic.showcase.client.pages.WindowPanelPage;
+import org.mosaic.ui.client.TitledLayoutPanel;
 import org.mosaic.ui.client.Viewport;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
@@ -251,7 +252,8 @@ public class Showcase implements EntryPoint {
         }
       });
 
-      ScrollPanel westPanel = new ScrollPanel(mainMenu);
+      TitledLayoutPanel westPanel = new TitledLayoutPanel("Select demo");
+      westPanel.add(new ScrollPanel(mainMenu));
 
       Element toc = DOM.getElementById("toc");
       TreeBuilder.buildTree(mainMenu, toc);
