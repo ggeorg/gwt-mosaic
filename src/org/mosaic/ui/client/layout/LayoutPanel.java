@@ -26,6 +26,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class LayoutPanel extends AbsolutePanel implements HasLayout {
 
   /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-LayoutPanel";
+
+  /**
    * Layout manager for this panel.
    */
   private LayoutManager layout;
@@ -48,7 +53,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
    */
   public LayoutPanel(LayoutManager layout) {
     super();
-    setStyleName("mosaic-LayoutPanel");
+    setStyleName(DEFAULT_STYLENAME);
     setLayout(layout);
   }
 
@@ -94,7 +99,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
   // // XXX ignore left & top
   // add(w);
   // }
-
   public LayoutManager getLayout() {
     return layout;
   }

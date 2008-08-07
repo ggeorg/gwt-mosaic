@@ -4,6 +4,7 @@ import org.mosaic.showcase.client.pages.Annotations.MosaicData;
 import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
 import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
 import org.mosaic.ui.client.InfoPanel;
+import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.PopupMenu;
 import org.mosaic.ui.client.ToolBar;
 import org.mosaic.ui.client.ToolButton;
@@ -92,7 +93,7 @@ public class ToolBarPage extends Page implements ClickListener {
       private final String[] phrases = constants.mosaicMenuBarPrompts();
 
       public void execute() {
-        Window.alert(phrases[curPhrase]);
+        MessageBox.alert(Window.getTitle(), phrases[curPhrase]);
         curPhrase = (curPhrase + 1) % phrases.length;
       }
     };

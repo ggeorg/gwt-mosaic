@@ -33,28 +33,26 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class MessageBox extends WindowPanel {
 
-  public abstract void onClose(boolean result);
-
-  @Override
-  public boolean onKeyDownPreview(char key, int modifiers) {
-    switch (key) {
-      case KeyboardListener.KEY_ESCAPE:
-        onClose(false);
-        break;
-    }
-    return super.onKeyDownPreview(key, modifiers);
+  public interface ConfirmationCallback {
+    void onResult(boolean result);
   }
 
   public enum MessageBoxType {
     ALERT, CONFIRM, ERROR, INFO, PASSWORD, PLAIN, PROMPT
+  }
+
+  public interface PromptCallback {
+    void onResult(String input);
   };
 
   /**
@@ -75,10 +73,6 @@ public abstract class MessageBox extends WindowPanel {
     final int width = Window.getClientWidth();
     alert.setWidth(Math.max(width / 3, 256) + "px");
 
-    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    panel.setPadding(0);
-    panel.add(new HTML(message));
-
     final Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
@@ -87,7 +81,9 @@ public abstract class MessageBox extends WindowPanel {
     });
     alert.getButtonPanel().add(buttonOK);
 
-    alert.setWidget(panel);
+    final HTML html = new HTML(message);
+    alert.setWidget(new WidgetWrapper(html, HasAlignment.ALIGN_LEFT,
+        HasAlignment.ALIGN_TOP));
     alert.center();
 
     DeferredCommand.addCommand(new Command() {
@@ -99,10 +95,6 @@ public abstract class MessageBox extends WindowPanel {
 
   public static void alert(String caption, String message) {
     alert(MessageBoxType.ALERT, caption, message);
-  }
-
-  public interface ConfirmationCallback {
-    void onResult(boolean result);
   }
 
   public static void confirm(String caption, String message,
@@ -117,10 +109,6 @@ public abstract class MessageBox extends WindowPanel {
     confirm.setAnimationEnabled(true);
     final int width = Window.getClientWidth();
     confirm.setWidth(Math.max(width / 3, 256) + "px");
-
-    final LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    panel.setPadding(0);
-    panel.add(new HTML(message));
 
     final Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
@@ -139,7 +127,9 @@ public abstract class MessageBox extends WindowPanel {
     confirm.getButtonPanel().add(buttonOK);
     confirm.getButtonPanel().add(buttonCancel);
 
-    confirm.setWidget(panel);
+    final HTML html = new HTML(message);
+    confirm.setWidget(new WidgetWrapper(html, HasAlignment.ALIGN_LEFT,
+        HasAlignment.ALIGN_TOP));
     confirm.center();
 
     DeferredCommand.addCommand(new Command() {
@@ -155,10 +145,6 @@ public abstract class MessageBox extends WindowPanel {
 
   public static void info(String caption, String message) {
     alert(MessageBoxType.INFO, caption, message);
-  }
-
-  public interface PromptCallback {
-    void onResult(String input);
   }
 
   public static void prompt(String caption, String message, String defaultValue,
@@ -182,7 +168,6 @@ public abstract class MessageBox extends WindowPanel {
     prompt.setWidth(Math.max(width / 3, 256) + "px");
 
     final LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    panel.setPadding(0);
 
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
     panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
@@ -218,20 +203,16 @@ public abstract class MessageBox extends WindowPanel {
 
   private LayoutPanel buttonPanel = new LayoutPanel();
 
+  private Image image;
+
+  private WidgetWrapper imageWrapper;
+
   public MessageBox() {
     this(DEFAULT_TYPE, null);
   }
 
   public MessageBox(MessageBoxType type) {
     this(type, null);
-  }
-
-  public MessageBox(String text) {
-    this(DEFAULT_TYPE, text, false);
-  }
-
-  public MessageBox(String text, boolean autoHide) {
-    this(DEFAULT_TYPE, text, autoHide);
   }
 
   public MessageBox(MessageBoxType type, String text) {
@@ -255,30 +236,28 @@ public abstract class MessageBox extends WindowPanel {
     setFooter(buttonPanel);
 
     if (type == MessageBoxType.ALERT) {
-      layoutPanel.add(new WidgetWrapper(MESSAGEBOX_IMAGES.dialogWarning().createImage()),
-          new BorderLayoutData(BorderLayoutRegion.WEST));
+      setImage(MESSAGEBOX_IMAGES.dialogWarning().createImage());
     } else if (type == MessageBoxType.CONFIRM) {
-      layoutPanel.add(
-          new WidgetWrapper(MESSAGEBOX_IMAGES.dialogQuestion().createImage()),
-          new BorderLayoutData(BorderLayoutRegion.WEST));
+      setImage(MESSAGEBOX_IMAGES.dialogQuestion().createImage());
     } else if (type == MessageBoxType.ERROR) {
-      layoutPanel.add(new WidgetWrapper(MESSAGEBOX_IMAGES.dialogError().createImage()),
-          new BorderLayoutData(BorderLayoutRegion.WEST));
+      setImage(MESSAGEBOX_IMAGES.dialogError().createImage());
     } else if (type == MessageBoxType.INFO) {
-      layoutPanel.add(new WidgetWrapper(
-          MESSAGEBOX_IMAGES.dialogInformation().createImage()), new BorderLayoutData(
-          BorderLayoutRegion.WEST));
+      setImage(MESSAGEBOX_IMAGES.dialogInformation().createImage());
     } else if (type == MessageBoxType.PASSWORD) {
-      layoutPanel.add(
-          new WidgetWrapper(MESSAGEBOX_IMAGES.dialogPassword().createImage()),
-          new BorderLayoutData(BorderLayoutRegion.WEST));
+      setImage(MESSAGEBOX_IMAGES.dialogPassword().createImage());
     } else if (type == MessageBoxType.PROMPT) {
-      layoutPanel.add(
-          new WidgetWrapper(MESSAGEBOX_IMAGES.dialogQuestion().createImage()),
-          new BorderLayoutData(BorderLayoutRegion.WEST));
+      setImage(MESSAGEBOX_IMAGES.dialogQuestion().createImage());
     }
 
     addStyleName("mosaic-MessageBox");
+  }
+
+  public MessageBox(String text) {
+    this(DEFAULT_TYPE, text, false);
+  }
+
+  public MessageBox(String text, boolean autoHide) {
+    this(DEFAULT_TYPE, text, autoHide);
   }
 
   public LayoutPanel getButtonPanel() {
@@ -293,6 +272,10 @@ public abstract class MessageBox extends WindowPanel {
     }
   }
 
+  public Image getImage() {
+    return image;
+  }
+
   public String getText() {
     if (widget instanceof HasText) {
       return ((HasText) widget).getText();
@@ -305,11 +288,35 @@ public abstract class MessageBox extends WindowPanel {
     return widget;
   }
 
+  public abstract void onClose(boolean result);
+
+  @Override
+  public boolean onKeyDownPreview(char key, int modifiers) {
+    switch (key) {
+      case KeyboardListener.KEY_ESCAPE:
+        onClose(false);
+        break;
+    }
+    return super.onKeyDownPreview(key, modifiers);
+  }
+
   public void setHTML(String html) {
     if (widget instanceof HasHTML) {
       ((HasHTML) widget).setHTML(html);
     } else {
       setWidget(new HTML(html));
+    }
+  }
+
+  public void setImage(Image image) {
+    final LayoutPanel layoutPanel = (LayoutPanel) super.getWidget();
+    if (this.image != image) {
+      if (imageWrapper != null) {
+        layoutPanel.remove(imageWrapper);
+      }
+      this.image = image;
+      imageWrapper = new WidgetWrapper(image);
+      layoutPanel.add(imageWrapper, new BorderLayoutData(BorderLayoutRegion.WEST));
     }
   }
 

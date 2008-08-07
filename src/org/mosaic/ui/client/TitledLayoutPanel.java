@@ -56,7 +56,6 @@ public class TitledLayoutPanel extends Composite implements HasLayout, HasWidget
    */
   public TitledLayoutPanel(final String text) {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
 
     header = new Caption(text);
