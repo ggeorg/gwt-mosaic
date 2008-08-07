@@ -19,23 +19,26 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 public class WidgetWrapper extends Composite {
 
   private static final String DEFAULT_STYLE_NAME = "mosaic-WidgetWrapper";
 
   public WidgetWrapper(Widget widget) {
+    this(widget, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
+  }
+
+  public WidgetWrapper(Widget widget, HorizontalAlignmentConstant alignLeft,
+      VerticalAlignmentConstant alignTop) {
     Grid grid = new Grid(1, 1);
     grid.setBorderWidth(0);
     grid.setCellPadding(0);
     grid.setCellSpacing(0);
-    grid.getCellFormatter().setAlignment(0, 0, HasAlignment.ALIGN_CENTER,
-        HasAlignment.ALIGN_MIDDLE);
-    
+    grid.getCellFormatter().setAlignment(0, 0, alignLeft, alignTop);
     grid.setWidget(0, 0, widget);
-
     initWidget(grid);
-
     addStyleName(DEFAULT_STYLE_NAME);
   }
 

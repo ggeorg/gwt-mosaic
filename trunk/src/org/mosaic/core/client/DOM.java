@@ -396,7 +396,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   public static boolean isVisible(Element element) {
-    return !"none".equalsIgnoreCase(element.getStyle().getProperty("display"));
+    return !"none".equalsIgnoreCase(DOM.getStyleAttribute(element, "display"));
   }
 
   /**
@@ -475,13 +475,11 @@ public class DOM extends com.google.gwt.user.client.DOM {
     final int[] p = getPaddingSizes(elem);
     final int h = b[0] + b[2] + p[0] + p[2];
     final int fixedHeight = fixQuirks(elem, height - h, 'h');
-    elem.getStyle().setPropertyPx("height", fixedHeight);
-
+    elem.getStyle().setPropertyPx("height", Math.max(0, fixedHeight));
     // Intrinsic height?
     if (height != elem.getOffsetHeight()) {
-      elem.getStyle().setPropertyPx("height", height);
+      elem.getStyle().setPropertyPx("height", Math.max(0, height));
     }
-
     return height;
   }
 
@@ -498,13 +496,11 @@ public class DOM extends com.google.gwt.user.client.DOM {
     final int[] p = getPaddingSizes(elem);
     final int w = b[1] + b[3] + p[1] + p[3];
     final int fixedWidth = fixQuirks(elem, width - w, 'w');
-    elem.getStyle().setPropertyPx("width", fixedWidth);
-
+    elem.getStyle().setPropertyPx("width", Math.max(0, fixedWidth));
     // Intrinsic width?
     if (width != elem.getOffsetWidth()) {
-      elem.getStyle().setPropertyPx("width", width);
+      elem.getStyle().setPropertyPx("width", Math.max(0, width));
     }
-
     return width;
   }
 

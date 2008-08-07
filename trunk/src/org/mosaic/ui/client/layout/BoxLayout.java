@@ -16,9 +16,11 @@
 package org.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.mosaic.core.client.DOM;
+import org.mosaic.ui.client.ToolBarSeparator;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -54,21 +56,24 @@ public class BoxLayout extends BaseLayout {
    */
   public int[] getPreferredSize(LayoutPanel layoutPanel) {
     int[] result = {0, 0};
-    
+
     try {
       if (layoutPanel == null) {
         return result;
       }
 
-      final int size = layoutPanel.getWidgetCount();
-      
+      final int size = getVisibleWidgetCount(layoutPanel);
+      if (size == 0) {
+        return result;
+      }
+
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
       int width = paddings[1] + paddings[3];
       int height = paddings[0] + paddings[2];
 
       final int spacing = layoutPanel.getWidgetSpacing();
-        
+
       // adjust for spacing
       if (orient == Orientation.HORIZONTAL) {
         width += ((size - 1) * spacing);
@@ -79,8 +84,8 @@ public class BoxLayout extends BaseLayout {
       int maxWidth = 0;
       int maxHeight = 0;
 
-      for (int i = 0; i < size; i++) {
-        Widget child = layoutPanel.getWidget(i);
+      for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+        Widget child = iter.next();
         if (child instanceof DecoratorPanel) {
           child = ((DecoratorPanel) child).getWidget();
         }
@@ -164,9 +169,24 @@ public class BoxLayout extends BaseLayout {
       }
 
     } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      Window.alert(this.getClass().getName() + ".getPreferredSize() : " + e.getMessage());
     }
-    
+
+    return result;
+  }
+
+  public int getVisibleWidgetCount(LayoutPanel layoutPanel) {
+    int result = 0;
+    for (int i = 0, n = layoutPanel.getWidgetCount(); i < n; i++) {
+      Widget child = layoutPanel.getWidget(i);
+      if (child instanceof DecoratorPanel) {
+        child = ((DecoratorPanel) child).getWidget();
+      }
+      if (!DOM.isVisible(child.getElement())) {
+        continue;
+      }
+      ++result;
+    }
     return result;
   }
 
@@ -185,11 +205,14 @@ public class BoxLayout extends BaseLayout {
         return;
       }
 
+      final int size = getVisibleWidgetCount(layoutPanel);
+      if (size == 0) {
+        return;
+      }
+
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
-      final int size = layoutPanel.getWidgetCount();
-      
       final int spacing = layoutPanel.getWidgetSpacing();
 
       int width = box[0] - (paddings[1] + paddings[3]);
@@ -213,8 +236,8 @@ public class BoxLayout extends BaseLayout {
       final List<Widget> visibleChildList = new ArrayList<Widget>();
 
       // 1st pass
-      for (int i = 0; i < size; i++) {
-        Widget child = layoutPanel.getWidget(i);
+      for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+        Widget child = iter.next();
         if (child instanceof DecoratorPanel) {
           child = ((DecoratorPanel) child).getWidget();
         }
@@ -360,7 +383,7 @@ public class BoxLayout extends BaseLayout {
         }
       }
     } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
     }
   }
 

@@ -16,7 +16,9 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  */
-@MosaicStyle({".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle"})
+@MosaicStyle( {
+    ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
+    ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle"})
 public class WindowPanelPage extends Page {
 
   /**
@@ -53,17 +55,17 @@ public class WindowPanelPage extends Page {
 
     layoutPanel.add(btn1);
   }
-  
+
   private void createContent(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setPadding(5);
-    
+
     final Button b1 = new Button("Button 1");
     final Button b2 = new Button("Button 2");
     final Button b3 = new Button("Button 3");
     final Button b4 = new Button("Button 4");
     final Button b5 = new Button("Button 5");
-    
+
     layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
     layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
     layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));

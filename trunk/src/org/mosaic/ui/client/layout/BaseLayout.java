@@ -24,6 +24,38 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class BaseLayout extends LayoutManagerHelper implements LayoutManager {
 
   /**
+   * TODO: move this method to DOM
+   */
+  public static int getFlowHeight(Widget child) {
+    final int[] m = DOM.getMarginSizes(child.getElement());
+    int flowHeight;
+    if (child instanceof HasLayout) {
+      final HasLayout lp = (HasLayout) child;
+      final int[] preferredSize = lp.getPreferredSize();
+      flowHeight = preferredSize[1] + m[0] + m[2];
+    } else {
+      flowHeight = child.getOffsetHeight() + m[0] + m[2];
+    }
+    return flowHeight;
+  }
+
+  /**
+   * TODO: move this method to DOM
+   */
+  public static int getFlowWidth(Widget child) {
+    final int[] m = DOM.getMarginSizes(child.getElement());
+    int flowWidth;
+    if (child instanceof HasLayout) {
+      final HasLayout lp = (HasLayout) child;
+      final int[] preferredSize = lp.getPreferredSize();
+      flowWidth = preferredSize[0] + m[1] + m[3];
+    } else {
+      flowWidth = child.getOffsetWidth() + m[1] + m[3];
+    }
+    return flowWidth;
+  }
+
+  /**
    * Gets the panel-defined layout data associated with this widget.
    * 
    * @param widget the widget
@@ -46,30 +78,17 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     LayoutManagerHelper.setLayoutData(widget, layoutData);
   }
 
-  public static int getFlowHeight(Widget child) {
-    final int[] m = DOM.getMarginSizes(child.getElement());
-    int flowHeight;
-    if (child instanceof HasLayout) {
-      final HasLayout lp = (HasLayout) child;
-      final int[] preferredSize = lp.getPreferredSize();
-      flowHeight = preferredSize[1] + m[0] + m[2];
-    } else {
-      flowHeight = child.getOffsetHeight() + m[0] + m[2];
+  /**
+   * TODO: move this method to DOM
+   */
+  public static void setSize(final Widget widget, int width, int height) {
+    final Element elem = widget.getElement();
+    if (width != -1) {
+      DOM.setContentAreaWidth(elem, width);
     }
-    return flowHeight;
-  }
-
-  public static int getFlowWidth(Widget child) {
-    final int[] m = DOM.getMarginSizes(child.getElement());
-    int flowWidth;
-    if (child instanceof HasLayout) {
-      final HasLayout lp = (HasLayout) child;
-      final int[] preferredSize = lp.getPreferredSize();
-      flowWidth = preferredSize[0] + m[1] + m[3];
-    } else {
-      flowWidth = child.getOffsetWidth() + m[1] + m[3];
+    if (height != -1) {
+      DOM.setContentAreaHeight(elem, height);
     }
-    return flowWidth;
   }
 
   protected void setBounds(final LayoutPanel layoutPanel, final Widget widget,
@@ -85,17 +104,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     setSize(widget, width, height);
   }
 
-  public static void setSize(final Widget widget, int width, int height) {
-    final Element elem = widget.getElement();
-    if (width != -1) {
-      DOM.setContentAreaWidth(elem, Math.max(0, width));
-    }
-    if (height != -1) {
-      DOM.setContentAreaHeight(elem, Math.max(0, height));
-    }
-  }
-
-  static void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
+  protected void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
       final int y) {
     layoutPanel.setWidgetPosition(widget, x, y);
   }

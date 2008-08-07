@@ -166,16 +166,14 @@ input {
 /*** Caption ***/
 
 .mosaic-Caption {
-	/*
 	background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
 	border-bottom: 1px solid #bbbbbb;
-	*/
 }
 .mosaic-Caption-iconBoxLeft {
-	/*padding: 0px 0px 0px 2px;*/
+	padding: 0px 0px 0px 2px;
 }
 .mosaic-Caption-iconBoxRight {
-	/*padding: 0px 2px 0px 0px;*/
+	padding: 0px 2px 0px 0px;
 }
 .mosaic-Caption-text {
 	padding: 4px 4px 4px 4px;
@@ -186,10 +184,13 @@ input {
 /*** WindowPanel ***/
 
 .mosaic-WindowPanel {
-	/*
-	opacity: .5;
-	filter: alpha(opacity=40);
-	*/
+}
+.mosaic-WindowPanel .mosaic-TitledLayoutPanel {	
+	padding: 0px;
+	margin: 0px;
+	
+	/* debug */
+	/*border: 1px solid #00f;*/
 }
 .mosaic-WindowPanel .Body {
 	background: white;
@@ -198,27 +199,6 @@ input {
 	background: none;
 }
 .mosaic-WindowPanel .Footer {
-	
-}
-.mosaic-WindowPanel .Body-BorderLayout {
-	padding: 5px;
-}
-.mosaic-WindowPanel .mosaic-Caption {
-	/*
-	background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
-	border-bottom: 1px solid #bbbbbb;
-	*/
-}
-.mosaic-WindowPanel .mosaic-Caption-iconBoxLeft {
-	/*padding: 0px 0px 0px 2px;*/
-}
-.mosaic-WindowPanel .mosaic-Caption-iconBoxRight {
-	/*padding: 0px 2px 0px 0px;*/
-}
-.mosaic-WindowPanel .mosaic-Caption-text {
-	padding: 4px 4px 4px 4px;
-	text-align: left !important;
-	font-weight: bold;
 }
 .mosaic-WindowPanel .mosaic-ImageButton {
 	display: block;
@@ -264,14 +244,14 @@ input {
 }
 .mosaic-WindowPanel .Resize-e {
 	cursor: e-resize;
-	background: #fff; /* needed for IE */
+	background: #fff; /* needed by IE */
 }
 .mosaic-WindowPanel .Resize-se {
 	cursor: se-resize;
 }
 .mosaic-WindowPanel .Resize-s {
 	cursor: s-resize;
-	background: #fff; /* needed for IE */
+	background: #fff; /* needed by IE */
 }
 .mosaic-WindowPanel .Resize-sw {
 	cursor: sw-resize;
@@ -577,13 +557,27 @@ input {
 	cursor: hand;
 }
 
+/*** TitledLayoutPanel ***/
+.mosaic-TitledLayoutPanel {
+	padding: 0px;
+	margin: 0px;
+
+	/* debug */
+	/*border: 1px dotted #00f;*/
+}
+.mosaic-TitledLayoutPanel .Body {
+	/* debug */
+	/*border: 1px dotted #0f0;*/
+}
 
 /*** LayoutPanel ***/
 
 .mosaic-LayoutPanel {
-	/* border: 1px dotted #f00; */
 	padding: 5px;
 	margin: 1px;
+	
+	/* debug */
+	/*border: 1px dotted #f00;*/
 }
 .mosaic-LayoutPanel-FillLayout {
 	padding: 0px;
@@ -649,13 +643,24 @@ input {
 	background: url("images/hborder.png") repeat-x 0px -27px;
 }
 .mosaic-ToolBar .mosaic-ToolButton {
-	background: none;	
+	background: none;
+	white-space: nowrap;
 }
 .mosaic-ToolBar .mosaic-ToolBarSeparator {
-	width: 3px;
-	padding: 3px;
-	margin: 3px 0px 3px 0px;
+	border-left: 1px solid #ccc;
+	background: white;
+	
+	/* required by Safari to handle the 'width' attribute */
+	position: absolute;
+	width: 1px;
+	
+	padding: 0px;
+	margin: 5px 3px;
 }
-html>body .mosaic-ToolBar .mosaic-ToolBarSeparator {
-	display: inline;
+
+/*** WidgetWrapper ***/
+
+.mosaic-WidgetWrapper {
+	/* debug */
+	/*border: 1px solid;*/	
 }

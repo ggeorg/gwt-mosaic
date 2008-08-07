@@ -43,20 +43,27 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
+  /**
+   * WindowPanel direction constant, used in {@link ResizeDragController}.
+   */
+  static final class DirectionConstant {
+
+    final int directionBits;
+
+    final String directionLetters;
+
+    private DirectionConstant(int directionBits, String directionLetters) {
+      this.directionBits = directionBits;
+      this.directionLetters = directionLetters;
+    }
+  }
+
   class ElementDragHandle extends Widget implements SourcesMouseEvents {
     private MouseListenerCollection mouseListeners;
 
     public ElementDragHandle(Element elem) {
       setElement(elem);
       sinkEvents(Event.MOUSEEVENTS);
-    }
-
-    protected void onAttach() {
-      super.onAttach();
-    }
-
-    protected void onDetach() {
-      super.onDetach();
     }
 
     public void addMouseListener(MouseListener listener) {
@@ -66,10 +73,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       mouseListeners.add(listener);
     }
 
-    public void removeMouseListener(MouseListener listener) {
-      if (mouseListeners != null) {
-        mouseListeners.remove(listener);
-      }
+    protected void onAttach() {
+      super.onAttach();
     }
 
     @Override
@@ -86,20 +91,15 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           break;
       }
     }
-  }
 
-  /**
-   * WindowPanel direction constant, used in {@link ResizeDragController}.
-   */
-  static final class DirectionConstant {
+    protected void onDetach() {
+      super.onDetach();
+    }
 
-    final int directionBits;
-
-    final String directionLetters;
-
-    private DirectionConstant(int directionBits, String directionLetters) {
-      this.directionBits = directionBits;
-      this.directionLetters = directionLetters;
+    public void removeMouseListener(MouseListener listener) {
+      if (mouseListeners != null) {
+        mouseListeners.remove(listener);
+      }
     }
   }
 
@@ -110,27 +110,21 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
 
     @Override
-    public void dragStart() {
-      panel.hideBody(true);
-      super.dragStart();
-    }
-
-    @Override
     public void dragEnd() {
       panel.hideBody(false);
       super.dragEnd();
     }
-  }
 
-  class CaptionHanldeProxy extends Widget {
-    public CaptionHanldeProxy(Element elem) {
-      setElement(elem);
+    @Override
+    public void dragStart() {
+      panel.hideBody(true);
+      super.dragStart();
     }
   }
 
   final class ResizeDragController extends AbstractDragController {
 
-    private static final int MIN_WIDGET_SIZE = 32;
+    private static final int MIN_WIDGET_SIZE = 96;
 
     private Map<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
 
@@ -158,20 +152,23 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     public void dragMove() {
       int direction = ((ResizeDragController) context.dragController).getDirection(context.draggable).directionBits;
       if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
-        int delta = context.draggable.getAbsoluteTop() - context.desiredDraggableY;
+        final int delta = context.draggable.getAbsoluteTop() - context.desiredDraggableY;
         if (delta != 0) {
           int contentHeight = windowPanel.getContentHeight();
-          int newHeight = Math.max(contentHeight + delta, MIN_WIDGET_SIZE);
+          int newHeight = Math.max(contentHeight + delta,
+              windowPanel.panel.getHeader().getOffsetHeight());
           if (newHeight != contentHeight) {
             windowPanel.moveBy(0, contentHeight - newHeight);
           }
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
         }
       } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
-        int delta = context.desiredDraggableY - context.draggable.getAbsoluteTop();
+        final int delta = context.desiredDraggableY - context.draggable.getAbsoluteTop();
         if (delta != 0) {
-          windowPanel.setContentSize(windowPanel.getContentWidth(),
-              windowPanel.getContentHeight() + delta);
+          int contentHeight = windowPanel.getContentHeight();
+          int newHeight = Math.max(contentHeight + delta,
+              windowPanel.panel.getHeader().getOffsetHeight());
+          windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
         }
       }
       if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
@@ -187,8 +184,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
         int delta = context.desiredDraggableX - context.draggable.getAbsoluteLeft();
         if (delta != 0) {
-          windowPanel.setContentSize(windowPanel.getContentWidth() + delta,
-              windowPanel.getContentHeight());
+          int contentWidth = windowPanel.getContentWidth();
+          int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
+          windowPanel.setContentSize(newWidth, windowPanel.getContentHeight());
         }
       }
 
@@ -345,18 +343,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     this(null);
   }
 
-  public WindowPanel(String caption) {
-    this(caption, true, false);
-  }
-
-  public WindowPanel(String caption, boolean resizable, boolean modal) {
-    this(caption, resizable, false, modal);
-  }
-
-  protected WindowPanel(String caption, boolean resizable, boolean autoHide, boolean modal) {
-    this(RootPanel.get(), caption, resizable, autoHide, modal);
-  }
-
   protected WindowPanel(AbsolutePanel boundaryPanel, String caption, boolean resizable,
       boolean autoHide, boolean modal) {
     super(autoHide, modal);
@@ -367,16 +353,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     windowController = new WindowController(boundaryPanel, this);
 
     if (isResizable()) {
-      nwResizeHandle = newResizeHandle(0, 0, NORTH_WEST);
-      nResizeHandle = newResizeHandle(0, 1, NORTH);
-      neResizeHandle = newResizeHandle(0, 2, NORTH_EAST);
-
-      wResizeHandle = newResizeHandle(1, 0, WEST);
-      eResizeHandle = newResizeHandle(1, 2, EAST);
-
-      swResizeHandle = newResizeHandle(2, 0, SOUTH_WEST);
-      sResizeHandle = newResizeHandle(2, 1, SOUTH);
-      seResizeHandle = newResizeHandle(2, 2, SOUTH_EAST);
+      makeResizable();
     }
 
     panel = new TitledLayoutPanel(caption);
@@ -404,9 +381,19 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     // }
     // });
 
-    // Add the style name (keep
-    // TODO I don't understand it
     addStyleName(DEFAULT_STYLENAME);
+  }
+
+  public WindowPanel(String caption) {
+    this(caption, true, false);
+  }
+
+  public WindowPanel(String caption, boolean resizable, boolean modal) {
+    this(caption, resizable, false, modal);
+  }
+
+  protected WindowPanel(String caption, boolean resizable, boolean autoHide, boolean modal) {
+    this(RootPanel.get(), caption, resizable, autoHide, modal);
   }
 
   @Override
@@ -446,12 +433,34 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasCaption#getCaption()
+   */
+  public String getCaption() {
+    return panel.getHeader().getText();
+  }
+
   public int getContentHeight() {
     return contentHeight;
   }
 
   public int getContentWidth() {
     return contentWidth;
+  }
+
+  public Widget getFooter() {
+    return panel.getFooter();
+  }
+
+  @Override
+  public Widget getWidget() {
+    if (panel.getWidgetCount() > 0) {
+      return panel.getWidget(0);
+    } else {
+      return null;
+    }
   }
 
   public boolean isModal() {
@@ -462,43 +471,25 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     return resizable;
   }
 
+  public void makeResizable() {
+    nwResizeHandle = newResizeHandle(0, 0, NORTH_WEST);
+    nResizeHandle = newResizeHandle(0, 1, NORTH);
+    neResizeHandle = newResizeHandle(0, 2, NORTH_EAST);
+
+    wResizeHandle = newResizeHandle(1, 0, WEST);
+    eResizeHandle = newResizeHandle(1, 2, EAST);
+
+    swResizeHandle = newResizeHandle(2, 0, SOUTH_WEST);
+    sResizeHandle = newResizeHandle(2, 1, SOUTH);
+    seResizeHandle = newResizeHandle(2, 2, SOUTH_EAST);
+  }
+
   public void moveBy(int right, int down) {
     AbsolutePanel parent = (AbsolutePanel) getParent();
     Location location = new WidgetLocation(this, parent);
     int left = location.getLeft() + right;
     int top = location.getTop() + down;
     parent.setWidgetPosition(this, left, top);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Panel#onLoad()
-   */
-  protected void onLoad() {
-    if (!initialized) {
-      initialized = true;
-      final int[] box = DOM.getClientSize(getElement());
-      final int[] m = DOM.getMarginSizes(panel.getElement());
-      final int delta = panel.getOffsetHeight() + m[0] + m[2]
-          - BaseLayout.getFlowHeight(panel);
-      setContentSize(box[0], box[1] - delta + 1); // FIXME why (+ 1) ?
-      layoutTimer.schedule(1);
-    }
-  }
-
-  public void setContentSize(int width, int height) {
-    if (isResizable()) {
-      if (width != contentWidth) {
-        contentWidth = width;
-      }
-      if (height != contentHeight) {
-        contentHeight = height;
-      }
-    }
-    DOM.setContentAreaWidth(panel.getElement(), width);
-    DOM.setContentAreaHeight(panel.getElement(), height);
-    layoutTimer.schedule(333);
   }
 
   private ElementDragHandle newResizeHandle(int row, int col, DirectionConstant direction) {
@@ -513,10 +504,18 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasCaption#getCaption()
+   * @see com.google.gwt.user.client.ui.Panel#onLoad()
    */
-  public String getCaption() {
-    return panel.getHeader().getText();
+  protected void onLoad() {
+    if (!initialized) {
+      final int[] box = DOM.getClientSize(getElement());
+      final int[] m = DOM.getMarginSizes(panel.getElement());
+      final int delta = panel.getOffsetHeight() + m[0] + m[2]
+          - BaseLayout.getFlowHeight(panel);
+      setContentSize(box[0], box[1] - delta + 1); // FIXME why (+ 1) ?
+      setSize("auto", "auto");
+      layoutTimer.schedule(1);
+    }
   }
 
   /*
@@ -528,19 +527,22 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     panel.getHeader().setText(text);
   }
 
-  @Override
-  public void setWidget(Widget w) {
-    panel.clear();
-    panel.add(w);
-    // maybeUpdateSize();
-  }
+  public void setContentSize(int width, int height) {
+    if (isResizable()) {
+      if (width != contentWidth) {
+        contentWidth = width;
+      }
+      if (height != contentHeight) {
+        contentHeight = height;
+      }
+    }
+    DOM.setContentAreaWidth(panel.getElement(), width);
+    DOM.setContentAreaHeight(panel.getElement(), height);
 
-  @Override
-  public Widget getWidget() {
-    if (panel.getWidgetCount() > 0) {
-      return panel.getWidget(0);
+    if (initialized) {
+      layoutTimer.schedule(333);
     } else {
-      return null;
+      initialized = true;
     }
   }
 
@@ -554,8 +556,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   }
 
-  public Widget getFooter() {
-    return panel.getFooter();
+  @Override
+  public void setWidget(Widget w) {
+    panel.clear();
+    panel.add(w);
+    // maybeUpdateSize();
   }
 
 }
