@@ -558,6 +558,7 @@ input {
 }
 
 /*** TitledLayoutPanel ***/
+
 .mosaic-TitledLayoutPanel {
 	padding: 0px;
 	margin: 0px;
@@ -570,21 +571,33 @@ input {
 	/*border: 1px dotted #0f0;*/
 }
 
+/*** FormLayoutPanel ***/
+
+.mosaic-FormLayoutPanel {
+	padding: 0px;
+	margin: 0px;
+
+	/* debug */
+	border: 1px dotted #00f;
+}
+
 /*** LayoutPanel ***/
 
 .mosaic-LayoutPanel {
 	padding: 5px;
-	margin: 1px;
+	margin: 0px;
 	
 	/* debug */
-	/*border: 1px dotted #f00;*/
+	/*
+	margin: 1px;
+	border: 1px dotted #f00;
+	*/
 }
 .mosaic-LayoutPanel-FillLayout {
 	padding: 0px;
 }
 .mosaic-LayoutPanel-BoxLayout {
 }
-
 .mosaic-LayoutPanel-BorderLayout {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {

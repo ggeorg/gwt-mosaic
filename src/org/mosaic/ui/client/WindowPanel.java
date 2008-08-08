@@ -508,13 +508,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
    */
   protected void onLoad() {
     if (!initialized) {
+      initialized = true;
       final int[] box = DOM.getClientSize(getElement());
       final int[] m = DOM.getMarginSizes(panel.getElement());
       final int delta = panel.getOffsetHeight() + m[0] + m[2]
           - BaseLayout.getFlowHeight(panel);
       setContentSize(box[0], box[1] - delta + 1); // FIXME why (+ 1) ?
       setSize("auto", "auto");
-      layoutTimer.schedule(1);
+      panel.layout();
     }
   }
 
@@ -538,12 +539,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
     DOM.setContentAreaWidth(panel.getElement(), width);
     DOM.setContentAreaHeight(panel.getElement(), height);
-
-    if (initialized) {
-      layoutTimer.schedule(333);
-    } else {
-      initialized = true;
-    }
+    layoutTimer.schedule(333);
   }
 
   public void setFooter(Widget footer) {

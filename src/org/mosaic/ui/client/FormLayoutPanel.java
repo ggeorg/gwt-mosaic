@@ -17,20 +17,22 @@ package org.mosaic.ui.client;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.layout.BaseLayout;
-import org.mosaic.ui.client.layout.FillLayoutData;
 import org.mosaic.ui.client.layout.HasLayout;
-import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FormLayoutPanel extends FormPanel implements HasLayout {
+  
+  /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-FormLayoutPanel";
 
   public FormLayoutPanel() {
     super();
+    setStyleName(DEFAULT_STYLENAME);
   }
 
   public int[] getPreferredSize() {
