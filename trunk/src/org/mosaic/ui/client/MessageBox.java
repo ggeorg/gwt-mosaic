@@ -168,7 +168,7 @@ public abstract class MessageBox extends WindowPanel {
     prompt.setWidth(Math.max(width / 3, 256) + "px");
 
     final LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-
+    panel.setPadding(0);
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
     panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
 
@@ -220,7 +220,7 @@ public abstract class MessageBox extends WindowPanel {
   }
 
   public MessageBox(MessageBoxType type, String text, boolean autoHide) {
-    super(text, false, autoHide, true);
+    super(text, true, autoHide, true);
 
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
     super.setWidget(layoutPanel);
@@ -228,7 +228,7 @@ public abstract class MessageBox extends WindowPanel {
     if (UserAgent.isGecko()) {
       DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
     }
-
+    
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);
     buttonPanel.setLayout(buttonPanelLayout);

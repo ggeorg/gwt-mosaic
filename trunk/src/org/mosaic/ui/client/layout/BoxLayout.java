@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mosaic.core.client.DOM;
-import org.mosaic.ui.client.ToolBarSeparator;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
