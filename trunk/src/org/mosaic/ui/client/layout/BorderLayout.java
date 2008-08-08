@@ -30,6 +30,8 @@ public class BorderLayout extends BaseLayout {
 
   private Widget north, east, south, west, center;
 
+  private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
+
   public BorderLayout() {
     // Nothing to do here!
   }
@@ -183,8 +185,6 @@ public class BorderLayout extends BaseLayout {
   public Widget getWest() {
     return west;
   }
-
-  private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
 
   /*
    * (non-Javadoc)
@@ -345,7 +345,6 @@ public class BorderLayout extends BaseLayout {
           } else if (westWidth > 0 && westWidth <= 1.0) {
             westWidth = width * westWidth;
           }
-          // split bar
           w = (int) Math.round(westWidth);
           if (layoutData.hasDecoratorPanel()) {
             final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
