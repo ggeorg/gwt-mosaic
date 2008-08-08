@@ -578,7 +578,9 @@ input {
 	margin: 0px;
 
 	/* debug */
+	/*
 	border: 1px dotted #00f;
+	*/
 }
 
 /*** LayoutPanel ***/
