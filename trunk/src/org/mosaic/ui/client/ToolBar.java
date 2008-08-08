@@ -17,7 +17,7 @@ package org.mosaic.ui.client;
 
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ToolBar extends Composite implements HasLayout, HasName, IndexedPanel {
+public class ToolBar extends Composite implements HasLayoutManager, HasName, IndexedPanel {
 
   /**
    * The default style name.

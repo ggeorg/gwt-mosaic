@@ -16,7 +16,7 @@
 package org.mosaic.ui.client;
 
 import org.mosaic.ui.client.layout.FillLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * A panel that displays all of its child widgets in a 'deck', where only one
  * can be visible at a time.
  */
-public class DeckLayoutPanel extends Composite implements HasLayout, IndexedPanel {
+public class DeckLayoutPanel extends Composite implements HasLayoutManager, IndexedPanel {
 
   /**
    * The default style name.

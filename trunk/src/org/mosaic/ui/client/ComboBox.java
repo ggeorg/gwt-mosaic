@@ -17,7 +17,7 @@ package org.mosaic.ui.client;
 
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ComboBox extends Composite implements HasLayout, HasName, HasText {
+public class ComboBox extends Composite implements HasLayoutManager, HasName, HasText {
 
   private static final String DEFAULT_STYLE_NAME = "mosaic-ComboBox";
 

@@ -17,7 +17,7 @@ package org.mosaic.ui.client;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.layout.FillLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
@@ -52,8 +52,8 @@ public class Viewport extends Composite implements WindowResizeListener,
 
       Viewport.this.setBounds(widget, 0, 0, width, height);
 
-      if (widget instanceof HasLayout) {
-        final HasLayout layoutWidget = (HasLayout) widget;
+      if (widget instanceof HasLayoutManager) {
+        final HasLayoutManager layoutWidget = (HasLayoutManager) widget;
         layoutWidget.layout();
       }
     }

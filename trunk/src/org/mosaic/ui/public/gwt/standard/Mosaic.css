@@ -567,20 +567,9 @@ input {
 	/*border: 1px dotted #00f;*/
 }
 .mosaic-TitledLayoutPanel .Body {
+	
 	/* debug */
 	/*border: 1px dotted #0f0;*/
-}
-
-/*** FormLayoutPanel ***/
-
-.mosaic-FormLayoutPanel {
-	padding: 0px;
-	margin: 0px;
-
-	/* debug */
-	/*
-	border: 1px dotted #00f;
-	*/
 }
 
 /*** LayoutPanel ***/

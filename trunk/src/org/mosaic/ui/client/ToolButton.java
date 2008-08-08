@@ -2,7 +2,7 @@ package org.mosaic.ui.client;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.core.client.Region;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Event;
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.SourcesFocusEvents;
 import com.google.gwt.user.client.ui.SourcesKeyboardEvents;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ToolButton extends Composite implements HasHTML, HasLayout, HasName,
+public class ToolButton extends Composite implements HasHTML, HasLayoutManager, HasName,
     SourcesClickEvents, SourcesFocusEvents, HasFocus, SourcesKeyboardEvents {
 
   public enum ToolButtonStyle {

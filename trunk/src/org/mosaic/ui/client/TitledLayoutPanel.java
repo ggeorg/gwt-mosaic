@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutData;
 import org.mosaic.ui.client.layout.LayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TitledLayoutPanel extends Composite implements HasLayout, HasWidgets,
+public class TitledLayoutPanel extends Composite implements HasLayoutManager, HasWidgets,
     IndexedPanel {
 
   /**

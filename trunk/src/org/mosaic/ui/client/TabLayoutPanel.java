@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TabLayoutPanel extends Composite implements HasLayout, SourcesTabEvents {
+public class TabLayoutPanel extends Composite implements HasLayoutManager, SourcesTabEvents {
 
   public enum TabBarPosition {
     TOP, BOTTOM

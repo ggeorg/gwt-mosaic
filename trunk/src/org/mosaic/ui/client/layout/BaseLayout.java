@@ -18,6 +18,7 @@ package org.mosaic.ui.client.layout;
 import org.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,8 +30,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
   public static int getFlowHeight(Widget child) {
     final int[] m = DOM.getMarginSizes(child.getElement());
     int flowHeight;
-    if (child instanceof HasLayout) {
-      final HasLayout lp = (HasLayout) child;
+    if (child instanceof HasLayoutManager) {
+      final HasLayoutManager lp = (HasLayoutManager) child;
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
@@ -45,8 +46,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
   public static int getFlowWidth(Widget child) {
     final int[] m = DOM.getMarginSizes(child.getElement());
     int flowWidth;
-    if (child instanceof HasLayout) {
-      final HasLayout lp = (HasLayout) child;
+    if (child instanceof HasLayoutManager) {
+      final HasLayoutManager lp = (HasLayoutManager) child;
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
@@ -81,7 +82,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
   /**
    * TODO: move this method to DOM
    */
-  public static void setSize(final Widget widget, int width, int height) {
+  public static void setSize(final Widget widget, final int width, final int height) {
     final Element elem = widget.getElement();
     if (width != -1) {
       DOM.setContentAreaWidth(elem, width);
@@ -102,6 +103,16 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     }
     setXY(layoutPanel, widget, x, y);
     setSize(widget, width, height);
+
+    if (widget instanceof FormPanel) {
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null) {
+        if (child instanceof HasLayoutManager) {
+          setSize(child, width, height);
+          ((HasLayoutManager) child).layout();
+        }
+      }
+    }
   }
 
   protected void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
