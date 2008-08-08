@@ -29,7 +29,6 @@ import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -229,7 +228,7 @@ public abstract class MessageBox extends WindowPanel {
     if (UserAgent.isGecko()) {
       DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
     }
-    
+
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);
     buttonPanel.setLayout(buttonPanelLayout);
@@ -332,7 +331,14 @@ public abstract class MessageBox extends WindowPanel {
   }
 
   public void setWidget(Widget w) {
+    setWidget(w, -1);
+  }
+
+  public void setWidget(Widget w, final int padding) {
     final LayoutPanel layoutPanel = (LayoutPanel) super.getWidget();
+    if (padding > -1) {
+      layoutPanel.setPadding(padding);
+    }
     if (widget != w) {
       if (widget != null) {
         layoutPanel.remove(widget);

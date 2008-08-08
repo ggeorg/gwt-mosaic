@@ -315,7 +315,7 @@ public class MessageBoxPage extends Page {
     prompt.getButtonPanel().add(buttonOK);
     prompt.getButtonPanel().add(buttonCancel);
 
-    prompt.setWidget(panel);
+    prompt.setWidget(panel, 0);
     prompt.center();
 
     DeferredCommand.addCommand(new Command() {
