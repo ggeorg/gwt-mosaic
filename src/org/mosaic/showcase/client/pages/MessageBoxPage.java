@@ -4,7 +4,6 @@ import org.mosaic.core.client.DOM;
 import org.mosaic.showcase.client.pages.Annotations.MosaicData;
 import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
 import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
-import org.mosaic.ui.client.FormLayoutPanel;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.MessageBox.ConfirmationCallback;
@@ -212,7 +211,7 @@ public class MessageBoxPage extends Page {
     panel.setPadding(0);
 
     // Create a method=POST FormPanel and point it at a service
-    final FormLayoutPanel form = new FormLayoutPanel();
+    final FormPanel form = new FormPanel();
     form.setAction("/myLoginFormHandler");
     form.setMethod(FormPanel.METHOD_POST);
 

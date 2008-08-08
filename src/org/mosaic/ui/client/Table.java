@@ -29,7 +29,7 @@ import org.mosaic.ui.client.event.TableModelListener;
 import org.mosaic.ui.client.event.TableModelEvent.TableModelEventType;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
-import org.mosaic.ui.client.layout.HasLayout;
+import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 import org.mosaic.ui.client.table.DefaultTableColumnModel;
@@ -47,7 +47,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class Table extends Composite implements HasLayout, TableModelListener,
+public class Table extends Composite implements HasLayoutManager, TableModelListener,
     TableColumnModelListener {
 
   public class HeaderCell extends Widget implements PropertyChangeListener {

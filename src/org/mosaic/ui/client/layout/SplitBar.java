@@ -171,10 +171,10 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
 
       super.dragEnd();
 
-      if (context.boundaryPanel instanceof HasLayout) {
+      if (context.boundaryPanel instanceof HasLayoutManager) {
         new DelayedRunnable(33) {
           public void run() {
-            ((HasLayout) context.boundaryPanel).layout();
+            ((HasLayoutManager) context.boundaryPanel).layout();
             movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
           }
         };

@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LayoutPanel extends AbsolutePanel implements HasLayout {
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   /**
    * The default style name.
@@ -218,8 +218,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayout {
       if (child instanceof DecoratorPanel) {
         child = ((DecoratorPanel) child).getWidget();
       }
-      if (child instanceof HasLayout && DOM.isVisible(child.getElement())) {
-        ((HasLayout) child).layout();
+      if (child instanceof HasLayoutManager && DOM.isVisible(child.getElement())) {
+        ((HasLayoutManager) child).layout();
       }
     }
   }
