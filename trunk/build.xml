@@ -25,66 +25,59 @@
 	<!-- init - create needed dirs -->
 	<target name="init">
 		<tstamp />
-		<mkdir dir="${build}" />
 		<mkdir dir="${build}/classes" />
 		<mkdir dir="${build}/www" />
-		<mkdir dir="${dist}" />
 		<mkdir dir="${dist}/WEB-INF/classes" />
 		<mkdir dir="${dist}/WEB-INF/lib" />
 	</target>
 
 	<!-- set classpath -->
-	<path id="project.class.path">
+	<path id="project.classpath">
 		<pathelement location="${build}/classes" />
+		<pathelement location="${env.GWT_HOME}/gwt-user.jar" />
+		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
-		<pathelement location="${env.GWT_HOME}/gwt-user.jar" />
-		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
 	</path>
 
 	<!-- gwt classpath for GWTCompiler (NOTE - must include source) -->
-	<path id="gwt.class.path">
+	<path id="gwt.classpath">
 		<pathelement location="${source.path}" />
-		<pathelement location="${build}/classes" />
-		<fileset dir="lib">
-			<include name="**/*.jar" />
-		</fileset>
-		<pathelement location="${env.GWT_HOME}/gwt-user.jar" />
+		<path refid="project.classpath" />
 		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
 	</path>
 
 	<!-- compile JAVA -->
 	<target name="compile" depends="init" description="Compile src to build/classes">
 		<!-- Capture the path as a delimited property using the refid attribute -->
-		<property name="classpath" refid="project.class.path" />
+		<property name="classpath" refid="project.classpath" />
 		<!-- Emit the property to the ant console -->
 		<echo>env.GWT_HOME=${env.GWT_HOME}</echo>
 		<echo>---------------------------------</echo>
 		<echo message="Classpath = ${classpath}" />
 		<echo>---------------------------------</echo>
 		<javac srcdir="${source.path}" destdir="${build}/classes" debug="on" debuglevel="${debuglevel}" source="${source}" target="${target}">
-			
-			<classpath refid="project.class.path" />
+			<classpath refid="project.classpath" />
 		</javac>
 	</target>
 
 	<!-- compile GWT -->
 	<target name="gwtcompile" description="Invoke the GWTCompiler against GWT Java source files">
 		<!-- Capture the path as a delimited property using the refid attribute -->
-		<property name="classpath" refid="gwt.class.path" />
+		<property name="classpath" refid="gwt.classpath" />
 		<!-- Emit the property to the ant console -->
 		<echo>env.GWT_HOME=${env.GWT_HOME}</echo>
 		<echo>---------------------------------</echo>
 		<echo message="Classpath = ${classpath}" />
 		<echo>---------------------------------</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" fork="true">
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="true" fork="true">
 			<jvmarg line="-Xmx256m" />
 			<arg line="-out ${build}/www" />
 			<!-- arg line="-style PRETTY" / -->
 			<!-- arg line="-style DETAILED" / -->
 			<arg value="${gwt.module}" />
-			<classpath refid="gwt.class.path" />
+			<classpath refid="gwt.classpath" />
 		</java>
 	</target>
 
