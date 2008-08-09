@@ -17,6 +17,7 @@ package org.mosaic.ui.client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.Caption.CaptionRegion;
@@ -111,13 +112,25 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
     @Override
     public void dragEnd() {
-      panel.hideBody(false);
       super.dragEnd();
+      if (!modal) {
+        glassPanel.removeFromParent();
+      }
+      panel.hideBody(false);
     }
 
     @Override
     public void dragStart() {
       panel.hideBody(true);
+      if (!modal) {
+        if (glassPanel == null) {
+          glassPanel = new GlassPanel(false);
+          glassPanel.addStyleName("mosaic-GlassPanel-default");
+          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
+              DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
+        }
+        RootPanel.get().add(glassPanel, 0, 0);
+      }
       super.dragStart();
     }
   }
@@ -135,19 +148,30 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       this.windowPanel = windowPanel;
     }
 
-    // protected Widget newDragProxy(DragContext)
+    @Override
+    public void dragStart() {
+      panel.hideBody(true);
+      if (!modal) {
+        if (glassPanel == null) {
+          glassPanel = new GlassPanel(false);
+          glassPanel.addStyleName("mosaic-GlassPanel-default");
+          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
+              DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
+        }
+        RootPanel.get().add(glassPanel, 0, 0);
+      }
+      super.dragStart();
+    }
 
-    // @Override
-    // public void startDrag() {
-    // super.dragStart();
-    //      
-    // WidgetLocation currentDraggableLocation = new
-    // WidgetLocation(context.draggable, context.boundaryPanel);
-    //      
-    // movablePanel = newDragProxy(context);
-    // context.boundaryPanel.add(movablePanel.
-    // currentDraggableLocation.getLeft(), currentDraggableLocation.getTop());
-    // }
+    @Override
+    public void dragEnd() {
+      super.dragEnd();
+      if (!modal) {
+        glassPanel.removeFromParent();
+      }
+      panel.hideBody(false);
+      setContentSize(contentWidth, contentHeight);
+    }
 
     public void dragMove() {
       int direction = ((ResizeDragController) context.dragController).getDirection(context.draggable).directionBits;
@@ -339,16 +363,52 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   };
 
+  private GlassPanel glassPanel;
+
   public WindowPanel() {
     this(null);
+  }
+
+  private static final int Z_INDEX_BASE = 10000;
+
+  private static final int Z_INDEX_MODAL_OFFSET = 1000;
+
+  private static Vector<WindowPanel> windowPanelOrder = new Vector<WindowPanel>();
+
+  private void setWindowOrder(int order) {
+    int zIndex = (order + Z_INDEX_BASE);
+    if (modal) {
+      zIndex += Z_INDEX_MODAL_OFFSET;
+    }
+    DOM.setStyleAttribute(getElement(), "zIndex", Integer.toString(zIndex));
+  }
+
+  public void bringToFront() {
+    int curIndex = windowPanelOrder.indexOf(this);
+    if (curIndex + 1 < windowPanelOrder.size()) {
+      windowPanelOrder.remove(this);
+      windowPanelOrder.add(this);
+      for (; curIndex < windowPanelOrder.size(); curIndex++) {
+        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
+      }
+    }
+  }
+
+  public boolean isActive() {
+    return windowPanelOrder.lastElement().equals(this);
   }
 
   protected WindowPanel(AbsolutePanel boundaryPanel, String caption, boolean resizable,
       boolean autoHide, boolean modal) {
     super(autoHide, modal);
+    sinkEvents(Event.ONMOUSEDOWN);
 
     this.resizable = resizable;
     this.modal = modal;
+
+    final int order = windowPanelOrder.size();
+    setWindowOrder(order);
+    windowPanelOrder.add(this);
 
     windowController = new WindowController(boundaryPanel, this);
 
@@ -463,6 +523,17 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   }
 
+  /**
+   * Hides the popup. This has no effect if it is not currently visible.
+   */
+  @Override
+  public void hide() {
+    super.hide();
+    if (modal && glassPanel != null) {
+      glassPanel.removeFromParent();
+    }
+  }
+
   public boolean isModal() {
     return modal;
   }
@@ -557,6 +628,38 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     panel.clear();
     panel.add(w);
     // maybeUpdateSize();
+  }
+
+  /**
+   * Shows the popup. It must have a child widget before this method is called.
+   */
+  @Override
+  public void show() {
+    if (modal) {
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-default");
+        DOM.setStyleAttribute(glassPanel.getElement(), "z-index",
+            DOM.getStyleAttribute(WindowPanel.this.getElement(), "z-index"));
+      }
+      RootPanel.get().add(glassPanel, 0, 0);
+    }
+    super.show();
+
+    if (!isActive()) {
+      bringToFront();
+    }
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONMOUSEDOWN:
+        if (!isActive()) {
+          bringToFront();
+        }
+        break;
+    }
   }
 
 }

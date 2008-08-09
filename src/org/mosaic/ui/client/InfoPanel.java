@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
@@ -95,11 +96,16 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
       // values);
 
       final InfoPanel infoPanel = new InfoPanel(caption, text, true);
+      if (infoPanel.glassPanel == null) {
+        infoPanel.glassPanel = new GlassPanel(false);
+        infoPanel.glassPanel.addStyleName("mosaic-GlassPanel-default");
+      }
+      RootPanel.get().add(infoPanel.glassPanel, 0, 0);
       infoPanel.center();
       infoPanel.addPopupListener(infoPanel);
     }
   }
-
+  private GlassPanel glassPanel;
   public static void show(String caption, String text, String... values) {
     final int avail = firstAvail();
     // if (text != null && values != null) text = Format.substitute(text,
@@ -201,6 +207,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
 
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     Window.removeWindowResizeListener(this);
+    glassPanel.removeFromParent();
   }
 
 }

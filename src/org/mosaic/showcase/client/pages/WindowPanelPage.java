@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.core.client.DOM;
 import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
 import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
 import org.mosaic.ui.client.WindowPanel;
@@ -11,6 +12,8 @@ import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -18,7 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 @MosaicStyle( {
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
-    ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle"})
+    ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
+    ".dragdrop-movable-panel"})
 public class WindowPanelPage extends Page {
 
   /**
@@ -41,10 +45,20 @@ public class WindowPanelPage extends Page {
 
     final WindowPanel basic = new WindowPanel("Basic");
     basic.setAnimationEnabled(true);
-    basic.setSize("320px", "256px");
+    basic.setWidget(new HTML("Hello World!"));
+    
+    final WindowPanel layout = new WindowPanel("Layout");
+    layout.setAnimationEnabled(true);
     LayoutPanel panel = new LayoutPanel();
-    basic.setWidget(panel);
+    layout.setWidget(panel);
     createContent(panel);
+    
+    final WindowPanel sized = new WindowPanel("Sized");
+    sized.setAnimationEnabled(true);
+    sized.setSize("512px", "385px");
+    Frame frame = new Frame("http://www.google.com");
+    DOM.setStyleAttribute(frame.getElement(), "border", "none");
+    sized.setWidget(frame);
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {
@@ -52,8 +66,23 @@ public class WindowPanelPage extends Page {
         basic.center();
       }
     });
-
     layoutPanel.add(btn1);
+
+    Button btn2 = new Button("Layout");
+    btn2.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        layout.center();
+      }
+    });
+    layoutPanel.add(btn2);
+    
+    Button btn3 = new Button("Sized");
+    btn3.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        sized.center();
+      }
+    });
+    layoutPanel.add(btn3);
   }
 
   private void createContent(LayoutPanel layoutPanel) {
