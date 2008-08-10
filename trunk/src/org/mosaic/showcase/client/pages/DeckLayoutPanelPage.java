@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.DeckLayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Example file.
  */
-@MosaicStyle({".mosaic-DockLayoutPanel", ".mosaic-LayoutPanel"})
+@ShowcaseStyle({".mosaic-DockLayoutPanel", ".mosaic-LayoutPanel"})
 public class DeckLayoutPanelPage extends AbstractLayoutPage {
 
   /**
@@ -31,7 +31,7 @@ public class DeckLayoutPanelPage extends AbstractLayoutPage {
   /**
    * <code>DeckLayoutPanel</code> example code.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(final LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));

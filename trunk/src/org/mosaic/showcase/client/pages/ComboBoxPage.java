@@ -1,8 +1,8 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.ComboBox;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -15,13 +15,13 @@ import com.google.gwt.i18n.client.Constants;
 /**
  * Example file.
  */
-@MosaicStyle( {".gwt-ComboBox"})
+@ShowcaseStyle( {".gwt-ComboBox"})
 public class ComboBoxPage extends Page {
   
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
     
   }
@@ -29,7 +29,7 @@ public class ComboBoxPage extends Page {
   /**
    * An instance of the constants.
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   public ComboBoxPage(DemoConstants constants) {
@@ -40,7 +40,7 @@ public class ComboBoxPage extends Page {
   /**
    * Load this example.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final BoxLayout vLayout = new BoxLayout(Orientation.VERTICAL);

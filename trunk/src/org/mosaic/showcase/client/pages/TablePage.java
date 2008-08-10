@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.Table;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.table.DefaultTableColumnModel;
@@ -11,7 +11,7 @@ import org.mosaic.ui.client.table.TableColumnModel;
 /**
  * 
  */
-@MosaicStyle({""})
+@ShowcaseStyle({""})
 public class TablePage extends Page {
 
   /**
@@ -27,7 +27,7 @@ public class TablePage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
 

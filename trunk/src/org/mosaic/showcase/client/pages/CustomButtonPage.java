@@ -1,8 +1,8 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.Caption;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
@@ -23,13 +23,13 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Example file.
  */
-@MosaicStyle( {".gwt-CustomButton", ".gwt-PushButton", ".gwt-ToggleButton"})
+@ShowcaseStyle( {".gwt-CustomButton", ".gwt-PushButton", ".gwt-ToggleButton"})
 public class CustomButtonPage extends Page implements ClickListener {
 
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
     String mosaicCustomButtonDescription();
 
@@ -41,7 +41,7 @@ public class CustomButtonPage extends Page implements ClickListener {
   /**
    * An instance of the constants
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   /**
@@ -57,7 +57,7 @@ public class CustomButtonPage extends Page implements ClickListener {
   /**
    * Load this example.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final BoxLayout vLayout = new BoxLayout(Orientation.VERTICAL);
@@ -136,7 +136,7 @@ public class CustomButtonPage extends Page implements ClickListener {
   /**
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  @MosaicSource
+  @ShowcaseSource
   public void onClick(Widget sender) {
     if (sender instanceof PushButton) {
       InfoPanel.show("Custom Button", "Clicked!");

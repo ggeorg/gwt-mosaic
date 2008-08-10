@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HasAlignment;
 /**
  * 
  */
-@MosaicStyle( {".mosaic-LayoutPanel"})
+@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class LayoutTest3Page extends Page {
 
   /**
@@ -27,7 +27,7 @@ public class LayoutTest3Page extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final Grid grid = new Grid(2, 2);

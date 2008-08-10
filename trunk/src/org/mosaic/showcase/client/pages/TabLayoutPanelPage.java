@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.mosaic.ui.client.TabLayoutPanel;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -9,7 +9,7 @@ import org.mosaic.ui.client.layout.LayoutPanel;
 /**
  * 
  */
-@MosaicStyle({""})
+@ShowcaseStyle({""})
 public class TabLayoutPanelPage extends AbstractLayoutPage {
 
   /**
@@ -25,7 +25,7 @@ public class TabLayoutPanelPage extends AbstractLayoutPage {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel(true);

@@ -1,9 +1,9 @@
 package org.mosaic.showcase.client.pages;
 
 import org.mosaic.core.client.DOM;
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.MessageBox.ConfirmationCallback;
@@ -38,10 +38,10 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  */
-@MosaicStyle( {".mosaic-WindowPanel", ".dragdrop-positioner"})
+@ShowcaseStyle( {".mosaic-WindowPanel", ".dragdrop-positioner"})
 public class MessageBoxPage extends Page {
 
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
 
   }
@@ -49,7 +49,7 @@ public class MessageBoxPage extends Page {
   /**
    * An instance of the constants
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   /**
@@ -65,7 +65,7 @@ public class MessageBoxPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     ScrollPanel scrollPanel = new ScrollPanel();
@@ -186,7 +186,7 @@ public class MessageBoxPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   private void showLoginForm() {
     final TextBox username = new TextBox();
     final PasswordTextBox passwd = new PasswordTextBox();
@@ -265,7 +265,7 @@ public class MessageBoxPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   public static void richTextAreaPrompt(final PromptCallback callback) {
     // Create the text area and toolbar
     final RichTextArea area = new RichTextArea();

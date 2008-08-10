@@ -164,8 +164,11 @@ public class TitledLayoutPanel extends Composite implements HasLayoutManager, Ha
     return body.getWidgetSpacing();
   }
 
-  void hideBody(boolean hideBody) {
-    body.setVisible(!hideBody);
+  void hideContents(boolean flag) {
+    body.setVisible(!flag);
+    if(footer != null) {
+      footer.setVisible(!flag);
+    }
   }
 
   /*

@@ -2,9 +2,9 @@ package org.mosaic.showcase.client.pages;
 
 import java.util.Date;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.datepicker.DatePicker;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
@@ -13,13 +13,13 @@ import com.google.gwt.i18n.client.Constants;
 /**
  * Example file.
  */
-@MosaicStyle( {".mosaic-DatePicker"})
+@ShowcaseStyle( {".mosaic-DatePicker"})
 public class DatePickerPage extends Page {
   
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
     
   }
@@ -27,7 +27,7 @@ public class DatePickerPage extends Page {
   /**
    * An instance of the constants.
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   /**
@@ -43,7 +43,7 @@ public class DatePickerPage extends Page {
   /**
    * Load this example.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     DatePicker picker = new DatePicker();

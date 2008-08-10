@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.tree.FastTree;
 import org.mosaic.ui.client.tree.FastTreeItem;
@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.TextBox;
 /**
  * 
  */
-@MosaicStyle({".gwt-FastTree"})
+@ShowcaseStyle({".gwt-FastTree"})
 public class BasicTreePage extends Page {
 
   public BasicTreePage(DemoConstants constants) {
@@ -26,7 +26,7 @@ public class BasicTreePage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {    
     final FastTree t = new FastTree();
