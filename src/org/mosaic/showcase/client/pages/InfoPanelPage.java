@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.mosaic.ui.client.layout.BoxLayout;
@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  */
-@MosaicStyle({""})
+@ShowcaseStyle({""})
 public class InfoPanelPage extends Page {
 
   /**
@@ -38,7 +38,7 @@ public class InfoPanelPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));

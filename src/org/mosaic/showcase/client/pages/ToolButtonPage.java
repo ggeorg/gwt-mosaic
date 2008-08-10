@@ -1,8 +1,8 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.PopupMenu;
 import org.mosaic.ui.client.ToolButton;
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Example file.
  */
-@MosaicStyle( {
+@ShowcaseStyle( {
     ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button", ".mosaic-Split-Button",
     ".mosaic-Checkbox-Button", ".mosaic-Radio-Button"})
 public class ToolButtonPage extends Page implements ClickListener {
@@ -31,7 +31,7 @@ public class ToolButtonPage extends Page implements ClickListener {
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
 
   }
@@ -39,7 +39,7 @@ public class ToolButtonPage extends Page implements ClickListener {
   /**
    * An instance of the constants.
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   /**
@@ -55,7 +55,7 @@ public class ToolButtonPage extends Page implements ClickListener {
   /**
    * Load this example.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
@@ -122,7 +122,7 @@ public class ToolButtonPage extends Page implements ClickListener {
    * 
    * @param layoutPanel
    */
-  @MosaicSource
+  @ShowcaseSource
   private void addPushButtons(LayoutPanel layoutPanel) {
     // Add a push button
     ToolButton pushButton = new ToolButton("Hello");
@@ -144,7 +144,7 @@ public class ToolButtonPage extends Page implements ClickListener {
    * 
    * @param layoutPanel
    */
-  @MosaicSource
+  @ShowcaseSource
   private void addMenuButtons(LayoutPanel layoutPanel) {
     // Add a menu button
     ToolButton menuButton = new ToolButton("Hello");
@@ -184,7 +184,7 @@ public class ToolButtonPage extends Page implements ClickListener {
    * 
    * @param layoutPanel
    */
-  @MosaicSource
+  @ShowcaseSource
   private void addSplitButtons(LayoutPanel layoutPanel) {
     // Add a menu button
     ToolButton splitButton = new ToolButton("Hello");
@@ -224,7 +224,7 @@ public class ToolButtonPage extends Page implements ClickListener {
    * 
    * @param layoutPanel
    */
-  @MosaicSource
+  @ShowcaseSource
   private void addCheckboxButtons(LayoutPanel layoutPanel) {
     // Add a checkbox button
     ToolButton checkButton1 = new ToolButton("Hello");
@@ -273,7 +273,7 @@ public class ToolButtonPage extends Page implements ClickListener {
    * 
    * @param layoutPanel
    */
-  @MosaicSource
+  @ShowcaseSource
   private void addRadioButtons(LayoutPanel layoutPanel) {
     // Add a checkbox button
     ToolButton radioButton1 = new ToolButton("Hello");
@@ -321,7 +321,7 @@ public class ToolButtonPage extends Page implements ClickListener {
    * 
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  @MosaicSource
+  @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
     InfoPanel.show(btn.getHTML(), "Clicked!");

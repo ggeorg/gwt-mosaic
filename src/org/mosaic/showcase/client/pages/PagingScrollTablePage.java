@@ -2,9 +2,9 @@ package org.mosaic.showcase.client.pages;
 
 import java.io.Serializable;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.WidgetWrapper;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
@@ -36,26 +36,26 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  */
-@MosaicStyle( {".gwt-ScrollTable"})
+@ShowcaseStyle( {".gwt-ScrollTable"})
 public class PagingScrollTablePage extends ScrollTablePage {
 
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, ScrollTablePage.DemoConstants {
   }
 
   /**
    * An instance of the constants.
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   /**
    * A custom cell renderer.
    */
-  @MosaicSource
+  @ShowcaseSource
   private static class CustomBulkRenderer extends TableBulkRenderer.CellRenderer {
 
     @Override
@@ -157,7 +157,7 @@ public class PagingScrollTablePage extends ScrollTablePage {
   /**
    * Load this example.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     // Create the inner tables

@@ -1,8 +1,9 @@
 package org.mosaic.showcase.client.pages;
 
 import org.mosaic.core.client.DOM;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.WindowPanel;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
@@ -12,14 +13,17 @@ import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  */
-@MosaicStyle( {
+@ShowcaseStyle( {
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
     ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
     ".dragdrop-movable-panel"})
@@ -38,7 +42,7 @@ public class WindowPanelPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout());
@@ -51,7 +55,7 @@ public class WindowPanelPage extends Page {
     layout.setAnimationEnabled(true);
     LayoutPanel panel = new LayoutPanel();
     layout.setWidget(panel);
-    createContent(panel);
+    createLayoutContent(panel);
     
     final WindowPanel sized = new WindowPanel("Sized");
     sized.setAnimationEnabled(true);
@@ -59,6 +63,17 @@ public class WindowPanelPage extends Page {
     Frame frame = new Frame("http://www.google.com");
     DOM.setStyleAttribute(frame.getElement(), "border", "none");
     sized.setWidget(frame);
+    
+    final WindowPanel fixed = new WindowPanel("Fixed", false, false);
+    fixed.setAnimationEnabled(true);
+    Image img = new Image("MeteoraGreece.JPG");
+    fixed.setWidget(img);
+    
+    final WindowPanel modal = new WindowPanel("Modal", false, true);
+    modal.setAnimationEnabled(true);
+    LayoutPanel upload = new LayoutPanel();
+    modal.setWidget(upload);
+    createUploadFileContent(upload);
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {
@@ -83,9 +98,25 @@ public class WindowPanelPage extends Page {
       }
     });
     layoutPanel.add(btn3);
+    
+    Button btn4 = new Button("Fixed");
+    btn4.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+       fixed.center();
+      }
+    });
+    layoutPanel.add(btn4);
+    
+    Button btn5 = new Button("Modal");
+    btn5.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+       modal.center();
+      }
+    });
+    layoutPanel.add(btn5);
   }
 
-  private void createContent(LayoutPanel layoutPanel) {
+  private void createLayoutContent(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setPadding(5);
 
@@ -100,6 +131,37 @@ public class WindowPanelPage extends Page {
     layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
     layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
     layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+  }
+  
+  private void createUploadFileContent(LayoutPanel layoutPanel) {
+    // Create a vertical panel to align the content
+    VerticalPanel vPanel = new VerticalPanel();
+
+    // Add a label
+    vPanel.add(new HTML("Select a file"));
+
+    // Add a file upload widget
+    final FileUpload fileUpload = new FileUpload();
+    fileUpload.ensureDebugId("cwFileUpload");
+    vPanel.add(fileUpload);
+
+    // Add a button to upload the file
+    Button uploadButton = new Button("Upload File");
+    uploadButton.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        String filename = fileUpload.getFilename();
+        if (filename.length() == 0) {
+          MessageBox.alert("Upload File", "You must select a file to upload");
+        } else {
+          MessageBox.alert("Upload File", "File uploaded!");
+        }
+      }
+    });
+    vPanel.add(new HTML("<br>"));
+    vPanel.add(uploadButton);
+    
+    layoutPanel.add(vPanel);
+    layoutPanel.setPadding(5);
   }
 
 }

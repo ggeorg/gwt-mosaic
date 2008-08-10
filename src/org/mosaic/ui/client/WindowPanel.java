@@ -82,6 +82,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     public void onBrowserEvent(Event event) {
       switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
+          if (!isActive()) {
+            bringToFront();
+          }
         case Event.ONMOUSEUP:
         case Event.ONMOUSEMOVE:
         case Event.ONMOUSEOVER:
@@ -116,12 +119,15 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       if (!modal) {
         glassPanel.removeFromParent();
       }
-      panel.hideBody(false);
+      panel.hideContents(false);
     }
 
     @Override
     public void dragStart() {
-      panel.hideBody(true);
+      if (!isActive()) {
+        bringToFront();
+      }
+      panel.hideContents(true);
       if (!modal) {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
@@ -150,7 +156,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
     @Override
     public void dragStart() {
-      panel.hideBody(true);
+      panel.hideContents(true);
       if (!modal) {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
@@ -169,7 +175,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       if (!modal) {
         glassPanel.removeFromParent();
       }
-      panel.hideBody(false);
+      panel.hideContents(false);
       setContentSize(contentWidth, contentHeight);
     }
 
@@ -401,7 +407,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
   protected WindowPanel(AbsolutePanel boundaryPanel, String caption, boolean resizable,
       boolean autoHide, boolean modal) {
     super(autoHide, modal);
-    sinkEvents(Event.ONMOUSEDOWN);
 
     this.resizable = resizable;
     this.modal = modal;
@@ -648,17 +653,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
     if (!isActive()) {
       bringToFront();
-    }
-  }
-
-  @Override
-  public void onBrowserEvent(Event event) {
-    switch (DOM.eventGetType(event)) {
-      case Event.ONMOUSEDOWN:
-        if (!isActive()) {
-          bringToFront();
-        }
-        break;
     }
   }
 

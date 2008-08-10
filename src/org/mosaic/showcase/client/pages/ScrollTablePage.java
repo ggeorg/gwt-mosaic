@@ -15,9 +15,9 @@
  */
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.scrolltable.FixedWidthFlexTable;
 import org.mosaic.ui.client.scrolltable.FixedWidthGrid;
@@ -31,44 +31,44 @@ import com.google.gwt.user.client.ui.CheckBox;
  * Test methods in the {@link ScrollTable} class.
  * 
  */
-@MosaicStyle( {".gwt-ScrollTable"})
+@ShowcaseStyle( {".gwt-ScrollTable"})
 public class ScrollTablePage extends Page {
 
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
   }
 
   /**
    * An instance of the constants.
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   /**
    * The data portion of the {@link ScrollTable}.
    */
-  @MosaicData
+  @ShowcaseData
   protected FixedWidthGrid dataTable = null;
 
   /**
    * The footer portion of the {@link ScrollTable}.
    */
-  @MosaicData
+  @ShowcaseData
   protected FixedWidthFlexTable footerTable = null;
 
   /**
    * The header portion of the {@link ScrollTable}.
    */
-  @MosaicData
+  @ShowcaseData
   protected FixedWidthFlexTable headerTable = null;
 
   /**
    * The scroll table.
    */
-  @MosaicSource
+  @ShowcaseSource
   protected ScrollTable scrollTable = null;
 
   /**
@@ -76,7 +76,7 @@ public class ScrollTablePage extends Page {
    * 
    * @return the data table
    */
-  @MosaicSource
+  @ShowcaseSource
   public FixedWidthGrid getDataTable() {
     if (dataTable == null) {
       dataTable = new FixedWidthGrid();
@@ -89,7 +89,7 @@ public class ScrollTablePage extends Page {
    * 
    * @return the footer table.
    */
-  @MosaicSource
+  @ShowcaseSource
   public FixedWidthFlexTable getFooterTable() {
     if (footerTable == null) {
       footerTable = new FixedWidthFlexTable();
@@ -102,7 +102,7 @@ public class ScrollTablePage extends Page {
    * 
    * @return the header table.
    */
-  @MosaicSource
+  @ShowcaseSource
   public FixedWidthFlexTable getHeaderTable() {
     if (headerTable == null) {
       headerTable = new FixedWidthFlexTable();
@@ -115,7 +115,7 @@ public class ScrollTablePage extends Page {
    * 
    * @return the scroll table.
    */
-  @MosaicSource
+  @ShowcaseSource
   public ScrollTable getScrollTable() {
     return scrollTable;
   }
@@ -127,7 +127,7 @@ public class ScrollTablePage extends Page {
    * 
    * @param beforeRow the index to add the new row into
    */
-  @MosaicSource
+  @ShowcaseSource
   public void insertDataRow(int beforeRow) {
     // Insert the new row
     beforeRow = dataTable.insertRow(beforeRow);
@@ -160,7 +160,7 @@ public class ScrollTablePage extends Page {
   /**
    * Load this example.
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     // Create the inner tables
@@ -195,7 +195,7 @@ public class ScrollTablePage extends Page {
   /**
    * Setup the scroll table.
    */
-  @MosaicSource
+  @ShowcaseSource
   private void setupScrollTable() {
     // Setup the formatting
     scrollTable.setSize("95%", "50%");

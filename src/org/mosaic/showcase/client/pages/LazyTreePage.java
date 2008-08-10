@@ -1,7 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.tree.FastTree;
 import org.mosaic.ui.client.tree.FastTreeItem;
@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 /**
  * 
  */
-@MosaicStyle( {"gwt-FastTree"})
+@ShowcaseStyle( {"gwt-FastTree"})
 public class LazyTreePage extends BasicTreePage {
 
   public LazyTreePage(DemoConstants constants) {
@@ -22,7 +22,7 @@ public class LazyTreePage extends BasicTreePage {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     final FastTree t = new FastTree();
@@ -39,7 +39,7 @@ public class LazyTreePage extends BasicTreePage {
    * @param index
    * @param children
    */
-  @MosaicSource
+  @ShowcaseSource
   private void lazyCreateChild(final HasFastTreeItems parent, final int index,
       final int children) {
     FastTreeItem item = new FastTreeItem("child" + index + " (" + children + " children)") {

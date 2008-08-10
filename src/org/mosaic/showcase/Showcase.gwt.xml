@@ -20,7 +20,7 @@
 	<inherits name='org.mosaic.ui.Mosaic' />
 
 	<!-- Use a generator to create the source code                  -->
-	<generate-with class="org.mosaic.showcase.generator.MosaicGenerator">
+	<generate-with class="org.mosaic.showcase.generator.ShowcaseGenerator">
 		<when-type-assignable
 			class="org.mosaic.showcase.client.Showcase.GeneratorInfo" />
 	</generate-with>

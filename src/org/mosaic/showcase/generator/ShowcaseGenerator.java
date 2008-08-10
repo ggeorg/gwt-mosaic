@@ -23,12 +23,12 @@ import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseRaw;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.showcase.client.pages.MosaicConstants;
 import org.mosaic.showcase.client.pages.Page;
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicRaw;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -38,9 +38,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
 /**
- * Generate the source code, css styles, and raw source used in the examples.
+ * Generate the source code, css styles, and raw source used in the Showcase
+ * examples.
  */
-public class MosaicGenerator extends Generator {
+public class ShowcaseGenerator extends Generator {
 
   /**
    * The paths to the CSS style sheets used in Mosaic. The paths are relative to
@@ -137,7 +138,7 @@ public class MosaicGenerator extends Generator {
    */
   private void generateRawFiles(JClassType type) throws UnableToCompleteException {
     // Look for annotation
-    if (!type.isAnnotationPresent(MosaicRaw.class)) {
+    if (!type.isAnnotationPresent(ShowcaseRaw.class)) {
       return;
     }
 
@@ -146,7 +147,7 @@ public class MosaicGenerator extends Generator {
     final String pkgPath = pkgName.replace('.', '/') + "/";
 
     // Generate each raw source file
-    String[] filenames = type.getAnnotation(MosaicRaw.class).value();
+    String[] filenames = type.getAnnotation(ShowcaseRaw.class).value();
     for (String filename : filenames) {
       // Get the file contents
       String fileContents = getResourceContents(pkgPath + filename);
@@ -178,8 +179,8 @@ public class MosaicGenerator extends Generator {
 
       // Get each data code block
       String formattedSource = "";
-      String dataTag = "@" + MosaicData.class.getSimpleName();
-      String sourceTag = "@" + MosaicSource.class.getSimpleName();
+      String dataTag = "@" + ShowcaseData.class.getSimpleName();
+      String sourceTag = "@" + ShowcaseSource.class.getSimpleName();
       int dataTagIndex = fileContents.indexOf(dataTag);
       int srcTagIndex = fileContents.indexOf(sourceTag);
       while (dataTagIndex >= 0 || srcTagIndex >= 0) {
@@ -238,12 +239,12 @@ public class MosaicGenerator extends Generator {
    */
   private void generateStyleFiles(JClassType type, String styleDefs, String outDir) {
     // Look for annotation
-    if (!type.isAnnotationPresent(MosaicStyle.class)) {
+    if (!type.isAnnotationPresent(ShowcaseStyle.class)) {
       return;
     }
 
     // Generate a style file for each theme/RTL mode pair
-    String[] prefixes = type.getAnnotation(MosaicStyle.class).value();
+    String[] prefixes = type.getAnnotation(ShowcaseStyle.class).value();
     Map<String, String> matched = new LinkedHashMap<String, String>();
     for (String prefix : prefixes) {
       if (prefix != null && prefix.length() == 0) {
@@ -260,7 +261,8 @@ public class MosaicGenerator extends Generator {
 
         // Get the style code
         end = styleDefs.indexOf("}", start) + 1;
-        String styleDef = "<pre class=\"css\" name=\"code\">" + styleDefs.substring(start, end) + "</pre>";
+        String styleDef = "<pre class=\"css\" name=\"code\">"
+            + styleDefs.substring(start, end) + "</pre>";
         matched.put(matchedName, styleDef);
 
         // Goto the next match

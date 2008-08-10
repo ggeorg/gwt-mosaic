@@ -1,8 +1,8 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicData;
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
-import org.mosaic.showcase.client.pages.Annotations.MosaicStyle;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.PopupMenu;
@@ -27,13 +27,13 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  */
-@MosaicStyle( {".gwt-MenuBar", ".mosaic-ToolBar"})
+@ShowcaseStyle( {".gwt-MenuBar", ".mosaic-ToolBar"})
 public class ToolBarPage extends Page implements ClickListener {
 
   /**
    * The constants used in this Page.
    */
-  @MosaicSource
+  @ShowcaseSource
   public static interface DemoConstants extends Constants, Page.DemoConstants {
     String mosaicMenuBarDescription();
 
@@ -61,7 +61,7 @@ public class ToolBarPage extends Page implements ClickListener {
   /**
    * An instance of the constants.
    */
-  @MosaicData
+  @ShowcaseData
   private DemoConstants constants;
 
   public ToolBarPage(DemoConstants constants) {
@@ -72,7 +72,7 @@ public class ToolBarPage extends Page implements ClickListener {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
@@ -294,7 +294,7 @@ public class ToolBarPage extends Page implements ClickListener {
    * 
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
-  @MosaicSource
+  @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
     InfoPanel.show(btn.getHTML(), "Clicked!");

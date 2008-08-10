@@ -79,7 +79,7 @@ import com.google.gwt.user.client.ui.TreeListener;
 public class Showcase implements EntryPoint {
 
   /**
-   * The type passed into the {@link org.mosaic.showcase.generator.MosaicGenerator}.
+   * The type passed into the {@link org.mosaic.showcase.generator.ShowcaseGenerator}.
    */
   private static final class GeneratorInfo {
   }

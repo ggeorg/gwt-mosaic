@@ -1,6 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.BoxLayout;
@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * 
  */
-@org.mosaic.showcase.client.pages.Annotations.MosaicStyle({".mosaic-LayoutPanel"})
+@org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle({".mosaic-LayoutPanel"})
 public class MixedLayoutPage extends Page {
 
   /**
@@ -31,7 +31,7 @@ public class MixedLayoutPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());

@@ -1,6 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
-import org.mosaic.showcase.client.pages.Annotations.MosaicSource;
+import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.BoxLayout;
@@ -57,7 +57,7 @@ public abstract class AbstractLayoutPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   protected void populate2(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
 
@@ -77,7 +77,7 @@ public abstract class AbstractLayoutPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   protected void populate3(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
 
@@ -110,7 +110,7 @@ public abstract class AbstractLayoutPage extends Page {
   /**
    * 
    */
-  @MosaicSource
+  @ShowcaseSource
   protected void populate4(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
 
