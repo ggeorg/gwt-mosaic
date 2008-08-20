@@ -15,6 +15,8 @@
  */
 package org.mosaic.ui.client;
 
+import java.util.Iterator;
+
 import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.layout.FillLayoutData;
 import org.mosaic.ui.client.layout.HasLayoutManager;
@@ -26,26 +28,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class Viewport extends Composite implements WindowResizeListener,
+public class Viewport extends Composite implements HasWidgets, WindowResizeListener,
     WindowCloseListener {
-
-  private static Viewport viewport;
-
-  public final static Viewport get() {
-    if (viewport == null) {
-      viewport = new Viewport();
-    }
-    return viewport;
-  }
 
   private Timer delayedResize = new Timer() {
 
     @Override
     public void run() {
-      final Widget widget = Viewport.get().getWidget();
+      final Widget widget = Viewport.this.getWidget();
 
       final int width = Window.getClientWidth();
       final int height = Window.getClientHeight();
@@ -98,42 +92,35 @@ public class Viewport extends Composite implements WindowResizeListener,
   /**
    * Default constructor.
    */
-  protected Viewport() {
-    // Nothing to do here!
+  public Viewport() {
+    final LayoutPanel panel = new LayoutPanel();
+    initWidget(panel);
+
+    Window.addWindowCloseListener(this);
+    Window.addWindowResizeListener(this);
+    Window.enableScrolling(false);
+  }
+
+  @Override
+  protected LayoutPanel getWidget() {
+    return (LayoutPanel) super.getWidget();
   }
 
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.Composite#initWidget(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
    */
-  @Override
-  public void initWidget(Widget widget) {
-    initWidget(widget, false);
+  public void add(Widget widget) {
+    add(widget, false);
   }
 
-  /**
-   * Sets the widget to be wrapped by the composite. The wrapped widget must be
-   * set before calling any {@link Widget} methods on this object, or adding it
-   * to a panel. This method may only be called once for a given composite.
-   * 
-   * @param widget the widget to be wrapped
-   * @param decorate if the widget should be decorated
-   */
-  public void initWidget(Widget widget, boolean decorate) {
-    if (getWidget() == null) {
-      final LayoutPanel panel = new LayoutPanel();
-      panel.add(widget, new FillLayoutData(decorate));
-      super.initWidget(panel);
-    } else {
-      final LayoutPanel panel = (LayoutPanel) getWidget();
-      panel.clear();
-      panel.add(widget, new FillLayoutData(decorate));
-    }
-    Window.addWindowCloseListener(viewport);
-    Window.addWindowResizeListener(viewport);
-    Window.enableScrolling(false);
-    RootPanel.get().add(viewport);
+  public void add(Widget widget, boolean decorate) {
+    final LayoutPanel panel = getWidget();
+    panel.clear();
+    panel.add(widget, new FillLayoutData(decorate));
+    
+    onLoad();
   }
 
   /*
@@ -175,6 +162,33 @@ public class Viewport extends Composite implements WindowResizeListener,
    */
   public void onWindowResized(int width, int height) {
     delayedResize.schedule(333);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   */
+  public boolean remove(Widget w) {
+    return getWidget().remove(w);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   */
+  public void clear() {
+    getWidget().clear();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+   */
+  public Iterator<Widget> iterator() {
+    return getWidget().iterator();
   }
 
 }

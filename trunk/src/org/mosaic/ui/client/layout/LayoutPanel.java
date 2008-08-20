@@ -23,7 +23,8 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
+    WindowResizeListener*/ {
 
   /**
    * The default style name.
@@ -267,4 +268,5 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public void setWidgetSpacing(int widgetSpacing) {
     this.widgetSpacing = widgetSpacing;
   }
+
 }

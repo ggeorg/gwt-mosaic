@@ -17,21 +17,22 @@
 package org.mosaic.showcase.client;
 
 import org.mosaic.ui.client.TitledLayoutPanel;
+import org.mosaic.ui.client.Viewport;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
+import org.mosaic.ui.client.layout.BoxLayout;
+import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.FillLayout;
 import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -60,7 +61,7 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * <li>.Application-content-wrapper { The scrollable element around the content }</li>
  * </ul>
  */
-public class Application extends Composite implements HasLayoutManager, WindowResizeListener {
+public class Application extends Viewport implements HasLayoutManager {
   /**
    * Images used in the {@link Application}.
    */
@@ -125,37 +126,40 @@ public class Application extends Composite implements HasLayoutManager, WindowRe
    * Constructor.
    */
   public Application() {
-    // Setup the main layout widget
-    final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
-    initWidget(layoutPanel);
-
-    FlowPanel layout = new FlowPanel();
-    layoutPanel.add(layout, new BorderLayoutData(BorderLayoutRegion.NORTH));
+    super();
     
+    // Setup the main layout widget
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+
     // Setup the top panel with the title and links
     createTopPanel();
-    layout.add(topPanel);
+    layoutPanel.add(topPanel, new BoxLayoutData(FillStyle.HORIZONTAL));
     
+    final LayoutPanel bottomPanel = new LayoutPanel(new BorderLayout());
+    layoutPanel.add(bottomPanel, new BoxLayoutData(FillStyle.BOTH));
+
     // Add the main menu
     createMainMenu();
-    
+
     TitledLayoutPanel westPanel = new TitledLayoutPanel("Select demo");
     westPanel.add(new ScrollPanel(mainMenu));
-    
-    layoutPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200, 100, 350, true));
+
+    bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200, 100,
+        350, true));
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());
     contentWrapper.addStyleName(DEFAULT_STYLE_NAME + "-content-wrapper");
-    layoutPanel.add(contentWrapper);
+    bottomPanel.add(contentWrapper);
     if (LocaleInfo.getCurrentLocale().isRTL()) {
-//      bottomPanel.setCellHorizontalAlignment(contentDecorator,
-//          HasHorizontalAlignment.ALIGN_LEFT);
-//      contentDecorator.getElement().setAttribute("align", "LEFT");
+      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
+      // HasHorizontalAlignment.ALIGN_LEFT);
+      // contentDecorator.getElement().setAttribute("align", "LEFT");
     } else {
-//      bottomPanel.setCellHorizontalAlignment(contentDecorator,
-//          HasHorizontalAlignment.ALIGN_RIGHT);
-//      contentDecorator.getElement().setAttribute("align", "RIGHT");
+      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
+      // HasHorizontalAlignment.ALIGN_RIGHT);
+      // contentDecorator.getElement().setAttribute("align", "RIGHT");
     }
     setContent(null);
   }
@@ -193,24 +197,14 @@ public class Application extends Composite implements HasLayoutManager, WindowRe
     return topPanel.getWidget(0, 0);
   }
 
-  public void onWindowResized(int width, int height) {
-    if (width == windowWidth) {
-      return;
-    }
-    windowWidth = width;
-    onWindowResizedImpl(width);
-  }
-
   /**
    * Set the {@link Widget} to display in the content area.
    * 
    * @param content the content widget
    */
   public void setContent(Widget content) {
-    if (content == null) {
-      contentWrapper.add(new HTML("&nbsp;"));
-    } else {
-      contentWrapper.clear();
+    contentWrapper.clear();
+    if (content != null) {
       contentWrapper.add(content);
     }
   }
@@ -241,30 +235,6 @@ public class Application extends Composite implements HasLayoutManager, WindowRe
    */
   public void setTitleWidget(Widget title) {
     topPanel.setWidget(1, 0, title);
-  }
-
-  @Override
-  protected void onLoad() {
-    super.onLoad();
-    Window.addWindowResizeListener(this);
-    onWindowResized(Window.getClientWidth(), Window.getClientHeight());
-  }
-
-  @Override
-  protected void onUnload() {
-    super.onUnload();
-    Window.removeWindowResizeListener(this);
-    windowWidth = -1;
-  }
-
-  protected void onWindowResizedImpl(int width) {
-//    int menuWidth = mainMenu.getOffsetWidth();
-//    int contentWidth = width - menuWidth - 30;
-//    int contentWidthInner = contentWidth - 10;
-//    bottomPanel.setCellWidth(mainMenu, menuWidth + "px");
-//    bottomPanel.setCellWidth(contentDecorator, contentWidth + "px");
-//    contentLayout.getCellFormatter().setWidth(0, 0, contentWidthInner + "px");
-//    contentLayout.getCellFormatter().setWidth(1, 0, contentWidthInner + "px");
   }
 
   /**
@@ -328,20 +298,24 @@ public class Application extends Composite implements HasLayoutManager, WindowRe
     topPanel.getRowFormatter().setVerticalAlign(0, HasVerticalAlignment.ALIGN_TOP);
     topPanel.getRowFormatter().setVerticalAlign(1, HasVerticalAlignment.ALIGN_TOP);
   }
-  
+
   @Override
   protected LayoutPanel getWidget() {
     return (LayoutPanel) super.getWidget();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
   public int[] getPreferredSize() {
     return getWidget().getPreferredSize();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
   public void layout() {
