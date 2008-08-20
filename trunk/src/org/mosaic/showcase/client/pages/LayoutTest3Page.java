@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -49,6 +50,11 @@ public class LayoutTest3Page extends Page {
     grid.setWidget(1, 1, new Button("Bottom Right"));
     
     layoutPanel.add(grid);
+  }
+
+  @Override
+  public String getName() {
+    return "Test3";
   }
 
 }

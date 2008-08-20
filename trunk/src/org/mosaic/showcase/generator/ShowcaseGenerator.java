@@ -27,8 +27,8 @@ import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseRaw;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.mosaic.showcase.client.pages.MosaicConstants;
-import org.mosaic.showcase.client.pages.Page;
+import org.mosaic.showcase.client.Page;
+import org.mosaic.showcase.client.ShowcaseConstants;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -53,7 +53,7 @@ public class ShowcaseGenerator extends Generator {
       "com/google/gwt/user/theme/$THEME/public/gwt/$THEME/$THEME.css",
       "com/allen_sauer/gwt/dnd/public/gwt-dnd.css",
       "org/mosaic/ui/public/gwt/$THEME/Mosaic.css",
-      "org/mosaic/showcase/public/MosaicShowcase.css"};
+      "org/mosaic/showcase/public/$THEME/Showcase.css"};
 
   /**
    * The class loader used to get resources.
@@ -117,11 +117,11 @@ public class ShowcaseGenerator extends Generator {
     }
 
     // Generate the CSS source files
-    for (String theme : MosaicConstants.STYLE_THEMES) {
+    for (String theme : ShowcaseConstants.STYLE_THEMES) {
       String styleDefsLTR = getStyleDefinitions(theme, false);
       String styleDefsRTL = getStyleDefinitions(theme, true);
-      String outDirLTR = MosaicConstants.DST_SOURCE_STYLE + theme + "/";
-      String outDirRTL = MosaicConstants.DST_SOURCE_STYLE + theme + "_rtl/";
+      String outDirLTR = ShowcaseConstants.DST_SOURCE_STYLE + theme + "/";
+      String outDirRTL = ShowcaseConstants.DST_SOURCE_STYLE + theme + "_rtl/";
       for (JClassType type : types) {
         generateStyleFiles(type, styleDefsLTR, outDirLTR);
         generateStyleFiles(type, styleDefsRTL, outDirRTL);
@@ -159,7 +159,7 @@ public class ShowcaseGenerator extends Generator {
       fileContents = "<pre>" + fileContents + "</pre>";
 
       // Save the raw source in the public directory
-      String dstPath = MosaicConstants.DST_SOURCE_RAW + filename + ".html";
+      String dstPath = ShowcaseConstants.DST_SOURCE_RAW + filename + ".html";
       createPublicResource(dstPath, fileContents);
     }
   }
@@ -222,7 +222,7 @@ public class ShowcaseGenerator extends Generator {
       formattedSource = "<pre class=\"java\" name=\"code\">" + formattedSource + "</pre>";
 
       // Save the source code to a file
-      String dstPath = MosaicConstants.DST_SOURCE_EXAMPLE + type.getSimpleSourceName()
+      String dstPath = ShowcaseConstants.DST_SOURCE_EXAMPLE + type.getSimpleSourceName()
           + ".html";
       createPublicResource(dstPath, formattedSource);
     } catch (Exception e) {
@@ -353,7 +353,7 @@ public class ShowcaseGenerator extends Generator {
    *         if not
    */
   private boolean isFirstPass() {
-    String placeholder = MosaicConstants.DST_SOURCE + "generated";
+    String placeholder = ShowcaseConstants.DST_SOURCE + "generated";
     try {
       OutputStream outStream = context.tryCreateResource(logger, placeholder);
       if (outStream == null) {

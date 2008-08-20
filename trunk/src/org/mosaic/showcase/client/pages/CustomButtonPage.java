@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -144,6 +145,11 @@ public class CustomButtonPage extends Page implements ClickListener {
       ToggleButton btn = (ToggleButton) sender;
       InfoPanel.show("Custom Button", "Down = " + new Boolean(btn.isDown()).toString());
     }
+  }
+
+  @Override
+  public String getName() {
+    return "Custom Button";
   }
 
 }

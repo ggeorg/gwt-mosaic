@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -298,6 +299,11 @@ public class ToolBarPage extends Page implements ClickListener {
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
     InfoPanel.show(btn.getHTML(), "Clicked!");
+  }
+
+  @Override
+  public String getName() {
+    return "Tool & MenuBar";
   }
 
 }

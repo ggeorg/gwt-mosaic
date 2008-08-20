@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -253,6 +254,11 @@ public class TableLoadingBenchmarkPage extends Page {
         table.setPendingHTML(i, j, "cell " + i + ", " + j);
       }
     }
+  }
+
+  @Override
+  public String getName() {
+    return "Loading Benchmark";
   }
 
 }

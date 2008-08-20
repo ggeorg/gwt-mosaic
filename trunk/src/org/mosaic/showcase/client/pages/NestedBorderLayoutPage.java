@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.BorderLayout;
@@ -57,6 +58,11 @@ public class NestedBorderLayoutPage extends Page {
     layoutPanel1.add(b13, new BorderLayoutData(BorderLayoutRegion.WEST));
     layoutPanel1.add(b14, new BorderLayoutData(BorderLayoutRegion.EAST));
     layoutPanel1.add(b15, new BorderLayoutData(BorderLayoutRegion.CENTER));
+  }
+
+  @Override
+  public String getName() {
+    return "Nested BorderLayout";
   }
 
 }

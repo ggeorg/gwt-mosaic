@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.BorderLayout;
@@ -43,6 +44,11 @@ public class BorderLayoutPage extends Page {
     layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
     layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
     layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+  }
+
+  @Override
+  public String getName() {
+    return "BorderLayout";
   }
   
 }

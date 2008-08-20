@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -185,6 +186,11 @@ public class BasicButtonPage extends Page implements ClickListener {
 
     hBox2.add(imageButton4, new BoxLayoutData(FillStyle.VERTICAL));
 
+  }
+
+  @Override
+  public String getName() {
+    return "Basic Button";
   }
 
 }

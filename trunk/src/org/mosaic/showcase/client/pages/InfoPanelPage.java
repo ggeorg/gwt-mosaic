@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.InfoPanel;
@@ -128,6 +129,11 @@ public class InfoPanelPage extends Page {
     layoutPanel.add(layout2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
     layoutPanel.add(hpanel2);
 
+  }
+
+  @Override
+  public String getName() {
+    return "InfoPanel";
   }
 
 }

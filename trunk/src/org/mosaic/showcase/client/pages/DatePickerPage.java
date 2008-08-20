@@ -2,6 +2,7 @@ package org.mosaic.showcase.client.pages;
 
 import java.util.Date;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -53,6 +54,11 @@ public class DatePickerPage extends Page {
     picker.setSelectedDate(d);
     
     layoutPanel.add(picker);
+  }
+
+  @Override
+  public String getName() {
+    return "DatePicker";
   }
 
 }

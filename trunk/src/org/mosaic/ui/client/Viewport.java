@@ -58,7 +58,7 @@ public class Viewport extends Composite implements WindowResizeListener,
       }
     }
   };
-  
+
   /**
    * 
    * @param layoutPanel
@@ -68,8 +68,8 @@ public class Viewport extends Composite implements WindowResizeListener,
    * @param width
    * @param height
    */
-  protected void setBounds(final Widget widget,
-      final int x, final int y, final int width, final int height) {
+  protected void setBounds(final Widget widget, final int x, final int y,
+      final int width, final int height) {
     RootPanel.get().setWidgetPosition(this, x, y);
     setSize(widget, width, height);
   }
@@ -84,7 +84,7 @@ public class Viewport extends Composite implements WindowResizeListener,
     Element elem = widget.getElement();
 
     int[] margins = DOM.getMarginSizes(widget.getElement());
-    
+
     if (width != -1) {
       width -= (margins[1] + margins[3]);
       DOM.setContentAreaWidth(elem, Math.max(0, width));
@@ -121,16 +121,18 @@ public class Viewport extends Composite implements WindowResizeListener,
    * @param decorate if the widget should be decorated
    */
   public void initWidget(Widget widget, boolean decorate) {
-    LayoutPanel panel = new LayoutPanel();
-    panel.add(widget, new FillLayoutData(decorate));
-    
-    super.initWidget(panel);
-
+    if (getWidget() == null) {
+      final LayoutPanel panel = new LayoutPanel();
+      panel.add(widget, new FillLayoutData(decorate));
+      super.initWidget(panel);
+    } else {
+      final LayoutPanel panel = (LayoutPanel) getWidget();
+      panel.clear();
+      panel.add(widget, new FillLayoutData(decorate));
+    }
     Window.addWindowCloseListener(viewport);
     Window.addWindowResizeListener(viewport);
-
     Window.enableScrolling(false);
-
     RootPanel.get().add(viewport);
   }
 

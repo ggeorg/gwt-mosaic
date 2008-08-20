@@ -76,4 +76,9 @@ public class DeckLayoutPanelPage extends AbstractLayoutPage {
     deck.showWidget(dropBox.getSelectedIndex());
   }
 
+  @Override
+  public String getName() {
+    return "DeckLayoutPanel";
+  }
+
 }

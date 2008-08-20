@@ -50,4 +50,9 @@ public class BottomTabBarsPage extends AbstractLayoutPage {
     layoutPanel.add(tabPanel);
   }
 
+  @Override
+  public String getName() {
+    return "TabBar @ Bottom";
+  }
+
 }
