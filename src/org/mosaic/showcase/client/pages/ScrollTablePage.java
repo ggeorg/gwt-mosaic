@@ -15,6 +15,7 @@
  */
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -229,6 +230,11 @@ public class ScrollTablePage extends Page {
     for (int cell = 0; cell < 9; cell++) {
       headerTable.setHTML(2, cell, "Header " + cell);
     }
+  }
+
+  @Override
+  public String getName() {
+    return "Scroll Table";
   }
 
 }

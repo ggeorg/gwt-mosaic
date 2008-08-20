@@ -51,4 +51,9 @@ public class TabLayoutPanelPage extends AbstractLayoutPage {
     layoutPanel.add(tabPanel);
   }
 
+  @Override
+  public String getName() {
+    return "TabLayoutPanel";
+  }
+
 }

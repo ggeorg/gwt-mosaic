@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -51,6 +52,11 @@ public class BasicTreePage extends Page {
     layoutPanel.add(panel);
     layoutPanel.setPadding(0);
     panel.add(t);
+  }
+
+  @Override
+  public String getName() {
+    return "Basic Tree";
   }
 
 }

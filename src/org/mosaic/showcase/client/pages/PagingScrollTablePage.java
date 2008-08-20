@@ -354,5 +354,10 @@ public class PagingScrollTablePage extends ScrollTablePage {
     collegeEditor.setLabel("University of");
     table.setCellEditor(7, collegeEditor);
   }
+  
+  @Override
+  public String getName() {
+    return "Paging Scroll Table";
+  }
 
 }

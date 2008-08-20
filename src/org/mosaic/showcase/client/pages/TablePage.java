@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.Table;
@@ -51,6 +52,11 @@ public class TablePage extends Page {
     Table table = new Table(null, cm);
 
     layoutPanel.add(table);
+  }
+
+  @Override
+  public String getName() {
+    return "Fixed Columns Table";
   }
 
 }

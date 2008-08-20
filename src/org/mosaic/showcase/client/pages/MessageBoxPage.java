@@ -1,6 +1,7 @@
 package org.mosaic.showcase.client.pages;
 
 import org.mosaic.core.client.DOM;
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -323,5 +324,10 @@ public class MessageBoxPage extends Page {
         area.setFocus(true);
       }
     });
+  }
+
+  @Override
+  public String getName() {
+    return "MessageBox";
   }
 }

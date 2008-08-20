@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -57,6 +58,11 @@ public class ComboBoxPage extends Page {
     comboBox.ensureDebugId("mosaicAbstractComboBox-normal");
     
     hBox1.add(comboBox, new BoxLayoutData(FillStyle.BOTH));
+  }
+
+  @Override
+  public String getName() {
+    return "ComboBox";
   }
 
 }

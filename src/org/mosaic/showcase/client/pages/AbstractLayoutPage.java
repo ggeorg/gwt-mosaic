@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;

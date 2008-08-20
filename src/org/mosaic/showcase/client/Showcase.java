@@ -1,5 +1,6 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
+ * Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,9 +17,11 @@
 package org.mosaic.showcase.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.mosaic.core.client.DOM;
+import org.mosaic.showcase.client.Application.ApplicationListener;
 import org.mosaic.showcase.client.pages.BasicButtonPage;
 import org.mosaic.showcase.client.pages.BasicTreePage;
 import org.mosaic.showcase.client.pages.BorderLayoutPage;
@@ -28,7 +31,6 @@ import org.mosaic.showcase.client.pages.ComboBoxPage;
 import org.mosaic.showcase.client.pages.CustomButtonPage;
 import org.mosaic.showcase.client.pages.DatePickerPage;
 import org.mosaic.showcase.client.pages.DeckLayoutPanelPage;
-import org.mosaic.showcase.client.pages.DemoConstants;
 import org.mosaic.showcase.client.pages.InfoPanelPage;
 import org.mosaic.showcase.client.pages.LayoutTest1Page;
 import org.mosaic.showcase.client.pages.LayoutTest2Page;
@@ -36,42 +38,43 @@ import org.mosaic.showcase.client.pages.LayoutTest3Page;
 import org.mosaic.showcase.client.pages.LazyTreePage;
 import org.mosaic.showcase.client.pages.MessageBoxPage;
 import org.mosaic.showcase.client.pages.MixedLayoutPage;
-import org.mosaic.showcase.client.pages.ToolBarPage;
-import org.mosaic.showcase.client.pages.ToolButtonPage;
-import org.mosaic.showcase.client.pages.MosaicConstants;
 import org.mosaic.showcase.client.pages.NestedBorderLayoutPage;
-import org.mosaic.showcase.client.pages.Page;
 import org.mosaic.showcase.client.pages.PagingScrollTablePage;
 import org.mosaic.showcase.client.pages.ScrollTablePage;
 import org.mosaic.showcase.client.pages.TabLayoutPanelPage;
 import org.mosaic.showcase.client.pages.TableLoadingBenchmarkPage;
 import org.mosaic.showcase.client.pages.TablePage;
+import org.mosaic.showcase.client.pages.ToolBarPage;
+import org.mosaic.showcase.client.pages.ToolButtonPage;
 import org.mosaic.showcase.client.pages.VerboseTreePage;
 import org.mosaic.showcase.client.pages.WindowPanelPage;
-import org.mosaic.ui.client.TitledLayoutPanel;
 import org.mosaic.ui.client.Viewport;
-import org.mosaic.ui.client.layout.BorderLayout;
-import org.mosaic.ui.client.layout.BorderLayoutData;
-import org.mosaic.ui.client.layout.BoxLayout;
-import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.FillLayout;
-import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
-import org.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.HeadElement;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeImages;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -79,63 +82,47 @@ import com.google.gwt.user.client.ui.TreeListener;
 public class Showcase implements EntryPoint {
 
   /**
-   * The type passed into the {@link org.mosaic.showcase.generator.ShowcaseGenerator}.
+   * The type passed into the
+   * {@link org.mosaic.showcase.generator.ShowcaseGenerator}.
    */
   private static final class GeneratorInfo {
   }
 
-  /**
-   * Images used in the demo.
-   */
-  public interface MosaicTreeImages extends TreeImages {
+  private static final class ThemeButton extends ToggleButton {
+    private static List<ThemeButton> allButtons = null;
 
-    /**
-     * An image indicating a leaf.
-     * 
-     * @return a prototype of this image
-     */
-    @Resource("noimage.png")
-    AbstractImagePrototype treeLeaf();
-  }
+    private String theme;
 
-  private static class TreeBuilder {
+    public ThemeButton(String theme) {
+      super();
+      this.theme = theme;
+      addStyleName("sc-ThemeButton-" + theme);
 
-    public static void buildTree(Tree tree, Element ul) {
-      final int size = DOM.getChildCount(ul);
-      for (int i = 0; i < size; i++) {
-        final Element li = DOM.getChild(ul, i);
-        final TreeItem treeItem = createTreeItem(li);
-        tree.addItem(treeItem);
-        final int childCount = DOM.getChildCount(li);
-        for (int j = 0; j < childCount; j++) {
-          Element subList = DOM.getChild(li, j);
-          buildTree(treeItem, subList);
-        }
+      // Add this button to the static list
+      if (allButtons == null) {
+        allButtons = new ArrayList<ThemeButton>();
+        setDown(true);
       }
+      allButtons.add(this);
     }
 
-    public static void buildTree(TreeItem parent, Element ul) {
-      final int size = DOM.getChildCount(ul);
-      for (int i = 0; i < size; i++) {
-        final Element li = DOM.getChild(ul, i);
-        final TreeItem treeItem = createTreeItem(li);
-        parent.addItem(treeItem);
-        final int childCount = DOM.getChildCount(li);
-        for (int j = 0; j < childCount; j++) {
-          Element subList = DOM.getChild(li, j);
-          buildTree(treeItem, subList);
-        }
-      }
+    public String getTheme() {
+      return theme;
     }
 
-    private static TreeItem createTreeItem(Element li) {
-      final String id = DOM.getElementAttribute(li, "id");
-      final String title = DOM.getElementAttribute(li, "title");
-      final TreeItem treeItem = new TreeItem(title);
-      if (id != null && id.length() > 0) {
-        treeItem.getElement().setId(id);
+    @Override
+    protected void onClick() {
+      if (!isDown()) {
+        // Raise all of the other buttons
+        for (ThemeButton button : allButtons) {
+          if (button != this) {
+            button.setDown(false);
+          }
+        }
+
+        // Fire the click listeners
+        super.onClick();
       }
-      return treeItem;
     }
   }
 
@@ -145,163 +132,441 @@ public class Showcase implements EntryPoint {
   public static final String DEFAULT_STYLE_NAME = "Mosaic";
 
   /**
+   * The static images used throughout the Showcase.
+   */
+  public static final ShowcaseImages images = (ShowcaseImages) GWT.create(ShowcaseImages.class);
+
+  /**
    * The current style theme.
    */
-  public static String CUR_THEME = MosaicConstants.STYLE_THEMES[0];
+  public static String CUR_THEME = ShowcaseConstants.STYLE_THEMES[0];
 
   /**
-   * The main menu.
-   */
-  private Tree mainMenu;
-
-  /**
+   * Get the URL of the page, without an hash of query string.
    * 
+   * @return the location of the page
    */
-  LayoutPanel centerPanel;
+  private static native String getHostPageLocation()
+  /*-{
+    var s = $doc.location.href;
+  
+    // Pull off any hash.
+    var i = s.indexOf('#');
+    if (i != -1)
+      s = s.substring(0, i);
+  
+    // Pull off any query string.
+    i = s.indexOf('?');
+    if (i != -1)
+      s = s.substring(0, i);
+  
+    // Ensure a final slash if non-empty.
+    return s;
+  }-*/;
 
   /**
-   * 
+   * The {@link Application}.
    */
-  private List<Page> pages = new ArrayList<Page>();
+  private Application app = new Application();
 
   /**
-   * 
+   * A mapping of history tokens to their associated menu items.
    */
-  private TreeItem current;
+  private Map<String, TreeItem> itemTokens = new HashMap<String, TreeItem>();
 
   /**
-   * 
+   * A mapping of menu items to the widget display when the item is selected.
    */
-  private Page currentPage;
+  private Map<TreeItem, Page> itemWidgets = new HashMap<TreeItem, Page>();
 
-  public Showcase() {
-    // Create the constants
-    DemoConstants constants = GWT.create(DemoConstants.class);
-    
-    // Widgets
-    pages.add(new BasicButtonPage(constants));
-    pages.add(new CustomButtonPage(constants));
-    pages.add(new ToolButtonPage(constants));
-    pages.add(new ComboBoxPage(constants));
-    pages.add(new DatePickerPage(constants));
-    pages.add(new ToolBarPage(constants));
+  /**
+   * Set the content to the {@link ContentWidget}.
+   * 
+   * @param content the {@link ContentWidget} to display
+   */
+  private void displayContentWidget(final Page content) {
+    if (content != null) {
+      if (!content.isInitialized()) {
+        content.init();
+      }
+      app.setContent(content);
+    }
+  }
 
-    // Widgets/Table
-    pages.add(new ScrollTablePage(constants));
-    pages.add(new PagingScrollTablePage(constants));
-    pages.add(new TableLoadingBenchmarkPage(constants));
-    pages.add(new TablePage(constants));
-    
-    // Widgets/Tree
-    pages.add(new BasicTreePage(constants));
-    pages.add(new LazyTreePage(constants));
-    pages.add(new VerboseTreePage(constants));
+  /**
+   * Get the token for a given content widget.
+   * 
+   * @return the content widget token.
+   */
+  private String getContentWidgetToken(Page content) {
+    String className = content.getClass().getName();
+    className = className.substring(className.lastIndexOf('.') + 1);
+    return className;
+  }
 
-    // Widgets/Tabs
-    pages.add(new TabLayoutPanelPage(constants));
-    pages.add(new BottomTabBarsPage(constants));
-
-    // Widgets/Windows
-    pages.add(new InfoPanelPage(constants));
-    pages.add(new WindowPanelPage(constants));
-    pages.add(new MessageBoxPage(constants));
-
-    // Layout pages
-    pages.add(new BoxLayoutPage(constants));
-    pages.add(new BorderLayoutPage(constants));
-    pages.add(new NestedBorderLayoutPage(constants));
-    pages.add(new MixedLayoutPage(constants));
-    
-    // Layout/Panels
-    pages.add(new DeckLayoutPanelPage(constants));
-    
-    // Layout/Advanced Layout
-    pages.add(new LayoutTest1Page(constants));
-    pages.add(new LayoutTest2Page(constants));
-    pages.add(new LayoutTest3Page(constants));
+  /**
+   * Get the style name of the reference element defined in the current GWT
+   * theme style sheet.
+   * 
+   * @param prefix the prefix of the reference style name
+   * @return the style name
+   */
+  private String getCurrentReferenceStyleName(String prefix) {
+    String gwtRef = prefix + "-Reference-" + CUR_THEME;
+    if (LocaleInfo.getCurrentLocale().isRTL()) {
+      gwtRef += "-rtl";
+    }
+    return gwtRef;
   }
 
   /**
    * This is the entry point method.
    */
   public void onModuleLoad() {
-    try {
-      // Generate the source code and css for the examples
-      GWT.create(GeneratorInfo.class);
+    // Generate the source code and css for the examples
+    GWT.create(GeneratorInfo.class);
 
-      LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    // Create the constants
+    ShowcaseConstants constants = (ShowcaseConstants) GWT.create(ShowcaseConstants.class);
 
-      HorizontalPanel header = new HorizontalPanel();
-      header.setStyleName("header");
-      Label label = new Label("Mosaic Showcase of Features");
-      label.setStyleName("title");
-      header.add(label);
+    // Swap out the style sheets for the RTL versions if needed
+    updateStyleSheets();
 
-      // Setup the main menu
-      TreeImages treeImages = GWT.create(MosaicTreeImages.class);
-      mainMenu = new Tree(treeImages);
-      mainMenu.setAnimationEnabled(true);
-      // mainMenu.addStyleName(DEFAULT_STYLE_NAME + "-menu");
-      mainMenu.addTreeListener(new TreeListener() {
-        public void onTreeItemSelected(TreeItem item) {
-          show(item);
+    // Create the application
+    setupTitlePanel(constants);
+    setupMainLinks(constants);
+    setupOptionsPanel();
+    setupMainMenu(constants);
+
+    // Setup a history listener to reselect the associate menu item
+    final HistoryListener historyListener = new HistoryListener() {
+      public void onHistoryChanged(String historyToken) {
+        TreeItem item = itemTokens.get(historyToken);
+        if (item == null) {
+          item = app.getMainMenu().getItem(0).getChild(0);
         }
 
-        public void onTreeItemStateChanged(TreeItem item) {
-          // Nothing to do here!
+        // Select the associated TreeItem
+        app.getMainMenu().setSelectedItem(item, false);
+        app.getMainMenu().ensureSelectedItemVisible();
+
+        // Show the associated ContentWidget
+        displayContentWidget(itemWidgets.get(item));
+      }
+    };
+    History.addHistoryListener(historyListener);
+
+    // Add an listener that sets the content widget when a menu item is selected
+    app.setListener(new ApplicationListener() {
+      public void onMenuItemSelected(TreeItem item) {
+        Page content = itemWidgets.get(item);
+        if (content != null && !content.equals(app.getContent())) {
+          History.newItem(getContentWidgetToken(content));
         }
-      });
+      }
+    });
 
-      TitledLayoutPanel westPanel = new TitledLayoutPanel("Select demo");
-      westPanel.add(new ScrollPanel(mainMenu));
-
-      Element toc = DOM.getElementById("toc");
-      TreeBuilder.buildTree(mainMenu, toc);
-
-      // Setup center panel
-      centerPanel = new LayoutPanel(new FillLayout());
-
-      LayoutPanel main = new LayoutPanel(new BorderLayout());
-      main.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200.0, 100, 350, true));
-      main.add(centerPanel);
-
-      layoutPanel.add(header, new BoxLayoutData(FillStyle.HORIZONTAL));
-      layoutPanel.add(main, new BoxLayoutData(FillStyle.BOTH));
-
-      Viewport.get().initWidget(layoutPanel, false);
-    } catch (Throwable t) {
-      Window.alert(t.getMessage());
+    // Show the initial example
+    String initToken = History.getToken();
+    if (initToken.length() > 0) {
+      historyListener.onHistoryChanged(initToken);
+    } else { // Use the first token available
+      TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0);
+      app.getMainMenu().setSelectedItem(firstItem, false);
+      app.getMainMenu().ensureSelectedItemVisible();
+      displayContentWidget(itemWidgets.get(firstItem));
     }
   }
 
-  private void show(TreeItem item) {
-    if (current == item) {
-      return;
+  /**
+   * Create the main links at the top of the application.
+   * 
+   * @param constants the constants with text
+   */
+  private void setupMainLinks(ShowcaseConstants constants) {
+    // Link to GWT Mosaic Homepage
+    app.addLink(new HTML("<a href=\"" + ShowcaseConstants.GWT_MOSAIC_HOMEPAGE + "\">"
+        + constants.mainLinkMosaic() + "</a>"));
+
+    // Link to GWT Homepage
+    app.addLink(new HTML("<a href=\"" + ShowcaseConstants.GWT_HOMEPAGE + "\">"
+        + constants.mainLinkHomepage() + "</a>"));
+
+    // Link to More Examples
+    app.addLink(new HTML("<a href=\"" + ShowcaseConstants.GWT_EXAMPLES + "\">"
+        + constants.mainLinkExamples() + "</a>"));
+  }
+
+  /**
+   * Setup all of the options in the main menu.
+   * 
+   * @param constants the constant values to use
+   */
+  private void setupMainMenu(ShowcaseConstants constants) {
+    Tree mainMenu = app.getMainMenu();
+
+    // Widgets
+    TreeItem catWidgets = mainMenu.addItem("Widgets");
+    setupMainMenuOption(catWidgets, new BasicButtonPage(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new CustomButtonPage(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new ToolButtonPage(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new ComboBoxPage(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new DatePickerPage(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new ToolBarPage(constants), images.catWidgets());
+
+    // Popups
+    TreeItem catPopups = mainMenu.addItem("Popups");
+    setupMainMenuOption(catPopups, new InfoPanelPage(constants), images.catPopups());
+    setupMainMenuOption(catPopups, new WindowPanelPage(constants), images.catPopups());
+    setupMainMenuOption(catPopups, new MessageBoxPage(constants), images.catPopups());
+
+    // Panels
+    TreeItem catPanels = mainMenu.addItem("Layout & Panels");
+    setupMainMenuOption(catPanels, new BoxLayoutPage(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new BorderLayoutPage(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new NestedBorderLayoutPage(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new MixedLayoutPage(constants), images.catPanels());
+    
+    setupMainMenuOption(catPanels, new DeckLayoutPanelPage(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new TabLayoutPanelPage(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new BottomTabBarsPage(constants), images.catPanels());
+    
+    TreeItem catLayoutTests = catPanels.addItem("Tests");
+    setupMainMenuOption(catLayoutTests, new LayoutTest1Page(constants), images.catPanels());
+    setupMainMenuOption(catLayoutTests, new LayoutTest2Page(constants), images.catPanels());
+    setupMainMenuOption(catLayoutTests, new LayoutTest3Page(constants), images.catPanels());
+
+    // Trees
+    TreeItem catTrees = mainMenu.addItem("Tress");
+    setupMainMenuOption(catTrees, new BasicTreePage(constants), images.catLists());
+    setupMainMenuOption(catTrees, new LazyTreePage(constants), images.catLists());
+    setupMainMenuOption(catTrees, new VerboseTreePage(constants), images.catLists());
+    
+    // Tables
+    TreeItem catTables = mainMenu.addItem("Tables");
+    setupMainMenuOption(catTables, new ScrollTablePage(constants), images.catTables());
+    setupMainMenuOption(catTables, new PagingScrollTablePage(constants),
+        images.catTables());
+    setupMainMenuOption(catTables, new TableLoadingBenchmarkPage(constants),
+        images.catTables());
+    // setupMainMenuOption(catTables, new TablePage(constants),
+    // images.catTables());
+
+  }
+
+  /**
+   * Add an option to the main menu.
+   * 
+   * @param parent the {@link TreeItem} that is the option
+   * @param content the {@link ContentWidget} to display when selected
+   * @param image the icon to display next to the {@link TreeItem}
+   */
+  private void setupMainMenuOption(TreeItem parent, Page content,
+      AbstractImagePrototype image) {
+    // Create the TreeItem
+    TreeItem option = parent.addItem(image.getHTML() + " " + content.getName());
+
+    // Map the item to its history token and content widget
+    itemWidgets.put(option, content);
+    itemTokens.put(getContentWidgetToken(content), option);
+  }
+
+  /**
+   * Create the options that appear next to the title.
+   */
+  private void setupOptionsPanel() {
+    VerticalPanel vPanel = new VerticalPanel();
+    vPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+    if (LocaleInfo.getCurrentLocale().isRTL()) {
+      vPanel.getElement().setAttribute("align", "left");
+    } else {
+      vPanel.getElement().setAttribute("align", "right");
     }
-    current = item;
-    currentPage = null;
-    String pageId = item.getElement().getId();
-    for (Page page : pages) {
-      if (page.getId().equals(pageId)) {
-        currentPage = page;
-        break;
+    app.setOptionsWidget(vPanel);
+
+    // Add the option to change the locale
+    final ListBox localeBox = new ListBox();
+    String currentLocale = LocaleInfo.getCurrentLocale().getLocaleName();
+    if (currentLocale.equals("default")) {
+      currentLocale = "en";
+    }
+    String[] localeNames = LocaleInfo.getAvailableLocaleNames();
+    for (String localeName : localeNames) {
+      if (!localeName.equals("default")) {
+        String nativeName = LocaleInfo.getLocaleNativeDisplayName(localeName);
+        localeBox.addItem(nativeName, localeName);
+        if (localeName.equals(currentLocale)) {
+          localeBox.setSelectedIndex(localeBox.getItemCount() - 1);
+        }
+      }
+    }
+    localeBox.addChangeListener(new ChangeListener() {
+      public void onChange(Widget sender) {
+        String localeName = localeBox.getValue(localeBox.getSelectedIndex());
+        Window.open(getHostPageLocation() + "?locale=" + localeName, "_self", "");
+      }
+    });
+    HorizontalPanel localeWrapper = new HorizontalPanel();
+    localeWrapper.add(images.locale().createImage());
+    localeWrapper.add(localeBox);
+    vPanel.add(localeWrapper);
+
+    // Add the option to change the style
+    final HorizontalPanel styleWrapper = new HorizontalPanel();
+    vPanel.add(styleWrapper);
+    for (int i = 0; i < ShowcaseConstants.STYLE_THEMES.length; i++) {
+      final ThemeButton button = new ThemeButton(ShowcaseConstants.STYLE_THEMES[i]);
+      styleWrapper.add(button);
+      button.addClickListener(new ClickListener() {
+        public void onClick(Widget sender) {
+          // Update the current theme
+          CUR_THEME = button.getTheme();
+
+          // Reload the current tab, loading the new theme if necessary
+          // TODO TabBar bar = ((TabBar) app.getContentTitle());
+          // TODO bar.selectTab(bar.getSelectedTab());
+
+          // Load the new style sheets
+          updateStyleSheets();
+        }
+      });
+    }
+  }
+
+  /**
+   * Create the title bar at the top of the Application.
+   * 
+   * @param constants the constant values to use
+   */
+  private void setupTitlePanel(ShowcaseConstants constants) {
+    // Get the title from the internationalized constants
+    String pageTitle = "<h1>" + constants.mainTitle() + "</h1><h2>"
+        + constants.mainSubTitle() + "</h2>";
+
+    // Add the title and some images to the title bar
+    HorizontalPanel titlePanel = new HorizontalPanel();
+    titlePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    titlePanel.add(images.gwtLogo().createImage());
+    titlePanel.add(new HTML(pageTitle));
+    app.setTitleWidget(titlePanel);
+  }
+
+  // private void show(TreeItem item) {
+  // if (current == item) {
+  // return;
+  // }
+  // current = item;
+  // currentPage = null;
+  // String pageId = item.getElement().getId();
+  // for (Page page : pages) {
+  // if (page.getId().equals(pageId)) {
+  // currentPage = page;
+  // break;
+  // }
+  // }
+  //
+  // // calculate item path
+  //
+  // if (currentPage == null) {
+  // centerPanel.clear();
+  // centerPanel.layout();
+  // return;
+  // }
+  //
+  // if (!currentPage.isInitialized()) {
+  // currentPage.init();
+  // }
+  //
+  // centerPanel.clear();
+  // centerPanel.add(currentPage);
+  // centerPanel.layout();
+  // }
+
+  /**
+   * Update the style sheets to reflect the current theme and direction.
+   */
+  private void updateStyleSheets() {
+    // Generate the names of the style sheets to include
+    String gwtStyleSheet = "gwt/" + CUR_THEME + "/" + CUR_THEME + ".css";
+    String gwtMosaicStyleSheet = "gwt/" + CUR_THEME + "/Mosaic.css";
+    String showcaseStyleSheet = CUR_THEME + "/Showcase.css";
+    if (LocaleInfo.getCurrentLocale().isRTL()) {
+      gwtStyleSheet = gwtStyleSheet.replace(".css", "_rtl.css");
+      gwtMosaicStyleSheet = gwtMosaicStyleSheet.replace(".css", "_rtl.css");
+      showcaseStyleSheet = showcaseStyleSheet.replace(".css", "_rtl.css");
+    }
+
+    // Find existing style sheets that need to be removed
+    boolean styleSheetsFound = false;
+    final HeadElement headElem = StyleSheetLoader.getHeadElement();
+    final List<Element> toRemove = new ArrayList<Element>();
+    NodeList<Node> children = headElem.getChildNodes();
+    for (int i = 0; i < children.getLength(); i++) {
+      Node node = children.getItem(i);
+      if (node.getNodeType() == Node.ELEMENT_NODE) {
+        Element elem = Element.as(node);
+        if (elem.getTagName().equalsIgnoreCase("link")
+            && elem.getPropertyString("rel").equalsIgnoreCase("stylesheet")) {
+          styleSheetsFound = true;
+          String href = elem.getPropertyString("href");
+          // If the correct style sheets are already loaded, then we should have
+          // nothing to remove.
+          if (!href.contains(gwtStyleSheet) && !href.contains(showcaseStyleSheet)) {
+            toRemove.add(elem);
+          }
+        }
       }
     }
 
-    // calculate item path
-
-    if (currentPage == null) {
-      centerPanel.clear();
-      centerPanel.layout();
+    // Return if we already have the correct style sheets
+    if (styleSheetsFound && toRemove.size() == 0) {
       return;
     }
 
-    if (!currentPage.isInitialized()) {
-      currentPage.init();
+    // Detach the app while we manipulate the styles to avoid rendering issues
+    // RootPanel.get().remove(app);
+    Viewport.get().removeFromParent();
+
+    // Remove the old style sheets
+    for (Element elem : toRemove) {
+      headElem.removeChild(elem);
     }
 
-    centerPanel.clear();
-    centerPanel.add(currentPage);
-    centerPanel.layout();
+    // Load the GWT theme style sheet
+    String modulePath = GWT.getModuleBaseURL();
+    Command callback = new Command() {
+      /**
+       * The number of style sheets that have been loaded and executed this
+       * command.
+       */
+      private int numStyleSheetsLoaded = 0;
+
+      public void execute() {
+        // Wait until all style sheets have loaded before re-attaching the app
+        numStyleSheetsLoaded++;
+        // if (numStyleSheetsLoaded < 2) {
+        // return;
+        // }
+
+        // Different themes use different background colors for the body
+        // element, but IE only changes the background of the visible content
+        // on the page instead of changing the background color of the entire
+        // page. By changing the display style on the body element, we force
+        // IE to redraw the background correctly.
+        RootPanel.getBodyElement().getStyle().setProperty("display", "none");
+        RootPanel.getBodyElement().getStyle().setProperty("display", "");
+        // RootPanel.get().add(app);
+        Viewport.get().initWidget(app);
+      }
+    };
+    StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
+        getCurrentReferenceStyleName("gwt"), callback);
+    StyleSheetLoader.loadStyleSheet(modulePath + gwtMosaicStyleSheet,
+        getCurrentReferenceStyleName("mosaic"), callback);
+
+    // Load the showcase specific style sheet after the GWT theme style sheet so
+    // that custom styles supercede the theme styles.
+    StyleSheetLoader.loadStyleSheet(modulePath + showcaseStyleSheet,
+        getCurrentReferenceStyleName("Application"), callback);
   }
 }

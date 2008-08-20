@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
@@ -60,6 +61,11 @@ public class MixedLayoutPage extends Page {
     layoutPanel1.add(b13, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel1.add(b14, new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel1.add(b15, new BoxLayoutData(FillStyle.HORIZONTAL));
+  }
+
+  @Override
+  public String getName() {
+    return "Mixed Layout";
   }
 
 }

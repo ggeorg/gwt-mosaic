@@ -1,5 +1,6 @@
 package org.mosaic.showcase.client.pages;
 
+import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.BoxLayout;
@@ -59,6 +60,11 @@ public class BoxLayoutPage extends Page {
     layoutPanel.add(b2, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel.add(b3);
     layoutPanel.add(b4, new BoxLayoutData(FillStyle.HORIZONTAL));
+  }
+
+  @Override
+  public String getName() {
+    return "BoxLayout";
   }
 
 }
