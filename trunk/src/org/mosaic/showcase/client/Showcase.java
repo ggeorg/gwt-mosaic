@@ -482,7 +482,8 @@ public class Showcase implements EntryPoint {
           String href = elem.getPropertyString("href");
           // If the correct style sheets are already loaded, then we should have
           // nothing to remove.
-          if (!href.contains(gwtStyleSheet) && !href.contains(showcaseStyleSheet)) {
+          if (!href.contains(gwtStyleSheet) && !href.contains(gwtMosaicStyleSheet)
+              && !href.contains(showcaseStyleSheet)) {
             toRemove.add(elem);
           }
         }
@@ -496,7 +497,6 @@ public class Showcase implements EntryPoint {
 
     // Detach the app while we manipulate the styles to avoid rendering issues
     RootPanel.get().remove(app);
-    // Viewport.get().remove(app);
 
     // Remove the old style sheets
     for (Element elem : toRemove) {
@@ -506,19 +506,7 @@ public class Showcase implements EntryPoint {
     // Load the GWT theme style sheet
     String modulePath = GWT.getModuleBaseURL();
     Command callback = new Command() {
-      /**
-       * The number of style sheets that have been loaded and executed this
-       * command.
-       */
-      private int numStyleSheetsLoaded = 0;
-
       public void execute() {
-        // Wait until all style sheets have loaded before re-attaching the app
-        numStyleSheetsLoaded++;
-        // if (numStyleSheetsLoaded < 2) {
-        // return;
-        // }
-
         // Different themes use different background colors for the body
         // element, but IE only changes the background of the visible content
         // on the page instead of changing the background color of the entire
@@ -527,13 +515,17 @@ public class Showcase implements EntryPoint {
         RootPanel.getBodyElement().getStyle().setProperty("display", "none");
         RootPanel.getBodyElement().getStyle().setProperty("display", "");
         RootPanel.get().add(app);
-        // Viewport.get().add(app);
+      }
+    };
+    Command dummy = new Command() {
+      public void execute() {
+        // do nothing        
       }
     };
     StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
-        getCurrentReferenceStyleName("gwt"), callback);
+        getCurrentReferenceStyleName("gwt"), dummy);
     StyleSheetLoader.loadStyleSheet(modulePath + gwtMosaicStyleSheet,
-        getCurrentReferenceStyleName("mosaic"), callback);
+        getCurrentReferenceStyleName("mosaic"), dummy);
 
     // Load the showcase specific style sheet after the GWT theme style sheet so
     // that custom styles supercede the theme styles.
