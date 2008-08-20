@@ -43,12 +43,10 @@ import org.mosaic.showcase.client.pages.PagingScrollTablePage;
 import org.mosaic.showcase.client.pages.ScrollTablePage;
 import org.mosaic.showcase.client.pages.TabLayoutPanelPage;
 import org.mosaic.showcase.client.pages.TableLoadingBenchmarkPage;
-import org.mosaic.showcase.client.pages.TablePage;
 import org.mosaic.showcase.client.pages.ToolBarPage;
 import org.mosaic.showcase.client.pages.ToolButtonPage;
 import org.mosaic.showcase.client.pages.VerboseTreePage;
 import org.mosaic.showcase.client.pages.WindowPanelPage;
-import org.mosaic.ui.client.Viewport;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -324,24 +322,28 @@ public class Showcase implements EntryPoint {
     TreeItem catPanels = mainMenu.addItem("Layout & Panels");
     setupMainMenuOption(catPanels, new BoxLayoutPage(constants), images.catPanels());
     setupMainMenuOption(catPanels, new BorderLayoutPage(constants), images.catPanels());
-    setupMainMenuOption(catPanels, new NestedBorderLayoutPage(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new NestedBorderLayoutPage(constants),
+        images.catPanels());
     setupMainMenuOption(catPanels, new MixedLayoutPage(constants), images.catPanels());
-    
+
     setupMainMenuOption(catPanels, new DeckLayoutPanelPage(constants), images.catPanels());
     setupMainMenuOption(catPanels, new TabLayoutPanelPage(constants), images.catPanels());
     setupMainMenuOption(catPanels, new BottomTabBarsPage(constants), images.catPanels());
-    
+
     TreeItem catLayoutTests = catPanels.addItem("Tests");
-    setupMainMenuOption(catLayoutTests, new LayoutTest1Page(constants), images.catPanels());
-    setupMainMenuOption(catLayoutTests, new LayoutTest2Page(constants), images.catPanels());
-    setupMainMenuOption(catLayoutTests, new LayoutTest3Page(constants), images.catPanels());
+    setupMainMenuOption(catLayoutTests, new LayoutTest1Page(constants),
+        images.catPanels());
+    setupMainMenuOption(catLayoutTests, new LayoutTest2Page(constants),
+        images.catPanels());
+    setupMainMenuOption(catLayoutTests, new LayoutTest3Page(constants),
+        images.catPanels());
 
     // Trees
-    TreeItem catTrees = mainMenu.addItem("Tress");
+    TreeItem catTrees = mainMenu.addItem("Trees");
     setupMainMenuOption(catTrees, new BasicTreePage(constants), images.catLists());
     setupMainMenuOption(catTrees, new LazyTreePage(constants), images.catLists());
     setupMainMenuOption(catTrees, new VerboseTreePage(constants), images.catLists());
-    
+
     // Tables
     TreeItem catTables = mainMenu.addItem("Tables");
     setupMainMenuOption(catTables, new ScrollTablePage(constants), images.catTables());
@@ -451,37 +453,6 @@ public class Showcase implements EntryPoint {
     app.setTitleWidget(titlePanel);
   }
 
-  // private void show(TreeItem item) {
-  // if (current == item) {
-  // return;
-  // }
-  // current = item;
-  // currentPage = null;
-  // String pageId = item.getElement().getId();
-  // for (Page page : pages) {
-  // if (page.getId().equals(pageId)) {
-  // currentPage = page;
-  // break;
-  // }
-  // }
-  //
-  // // calculate item path
-  //
-  // if (currentPage == null) {
-  // centerPanel.clear();
-  // centerPanel.layout();
-  // return;
-  // }
-  //
-  // if (!currentPage.isInitialized()) {
-  // currentPage.init();
-  // }
-  //
-  // centerPanel.clear();
-  // centerPanel.add(currentPage);
-  // centerPanel.layout();
-  // }
-
   /**
    * Update the style sheets to reflect the current theme and direction.
    */
@@ -524,8 +495,8 @@ public class Showcase implements EntryPoint {
     }
 
     // Detach the app while we manipulate the styles to avoid rendering issues
-    // RootPanel.get().remove(app);
-    Viewport.get().removeFromParent();
+    RootPanel.get().remove(app);
+    // Viewport.get().remove(app);
 
     // Remove the old style sheets
     for (Element elem : toRemove) {
@@ -555,8 +526,8 @@ public class Showcase implements EntryPoint {
         // IE to redraw the background correctly.
         RootPanel.getBodyElement().getStyle().setProperty("display", "none");
         RootPanel.getBodyElement().getStyle().setProperty("display", "");
-        // RootPanel.get().add(app);
-        Viewport.get().initWidget(app);
+        RootPanel.get().add(app);
+        // Viewport.get().add(app);
       }
     };
     StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
