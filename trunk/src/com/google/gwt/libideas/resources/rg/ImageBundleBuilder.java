@@ -17,58 +17,330 @@ package com.google.gwt.libideas.resources.rg;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.dev.util.Util;
 import com.google.gwt.libideas.resources.rebind.ResourceContext;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
 /**
- * Accumulates state for the bundled image. This is a slighly-modified version
- * of the ImageBundleBuilder class from the GWT UI package.
+ * Accumulates state for the bundled image.
  */
 class ImageBundleBuilder {
+  public interface Arranger {
+    Size arrangeImages(Collection<? extends HasRect> rects);
+
+    void place(Size canvasSize, Graphics2D canvas, ImageRect imageRect);
+  }
 
   /**
    * The rectangle at which the original image is placed into the composite
    * image.
    */
-  public static class ImageRect {
+  public static class ImageRect implements HasRect {
 
-    public final int height;
-    public final BufferedImage image;
-    public int left;
-    public final int width;
-    public final String strongName;
+    private final String name;
+    private final int height, width;
+    private final BufferedImage image;
+    private int left, top;
 
-    public ImageRect(BufferedImage image, String strongName) {
+    private boolean hasBeenPositioned;
+
+    public ImageRect(String name, BufferedImage image) {
+      this.name = name;
       this.image = image;
       this.width = image.getWidth();
       this.height = image.getHeight();
-      this.strongName = strongName;
     }
 
-    public boolean equals(Object o) {
-      return ((o instanceof ImageRect) && (((ImageRect) o).strongName.equals(strongName)));
+    public int getHeight() {
+      return height;
     }
 
-    public int hashCode() {
-      return strongName.hashCode();
+    public int getLeft() {
+      return left;
     }
 
-    public String toString() {
-      return strongName + " " + width + "x" + height;
+    public String getName() {
+      return name;
+    }
+
+    public int getTop() {
+      return top;
+    }
+
+    public int getWidth() {
+      return width;
+    }
+
+    public boolean hasBeenPositioned() {
+      return hasBeenPositioned;
+    }
+
+    public void setPosition(int left, int top) {
+      hasBeenPositioned = true;
+      this.left = left;
+      this.top = top;
+    }
+  }
+
+  static class BestFitArranger implements Arranger {
+    private static final Comparator<HasRect> decreasingHeightComparator = new Comparator<HasRect>() {
+      public int compare(HasRect a, HasRect b) {
+        final int c = b.getHeight() - a.getHeight();
+        // If we encounter equal heights, use the name to keep things
+        // deterministic.
+        return (c != 0) ? c : b.getName().compareTo(a.getName());
+      }
+    };
+
+    private static final Comparator<HasRect> decreasingWidthComparator = new Comparator<HasRect>() {
+      public int compare(HasRect a, HasRect b) {
+        final int c = b.getWidth() - a.getWidth();
+        // If we encounter equal heights, use the name to keep things
+        // deterministic.
+        return (c != 0) ? c : b.getName().compareTo(a.getName());
+      }
+    };
+
+    /**
+     * Arranges the images to try to decrease the overall area of the resulting
+     * bundle. This uses a strategy that is basically Next-Fit Decreasing Height
+     * Decreasing Width (NFDHDW). The rectangles to be packed are sorted in
+     * decreasing order by height. The tallest rectangle is placed at the far
+     * left. We attempt to stack the remaining rectangles on top of one another
+     * to construct as many columns as necessary. After finishing each column,
+     * we also attempt to do some horizontal packing to fill up the space left
+     * due to widths of rectangles differing in the column.
+     */
+    public Size arrangeImages(Collection<? extends HasRect> rects) {
+      if (rects.size() == 0) {
+        return new Size(0, 0);
+      }
+
+      // Create a list of ImageRects ordered by decreasing height used for
+      // constructing columns.
+      final ArrayList<HasRect> rectsOrderedByHeight = new ArrayList<HasRect>(
+          rects);
+      Collections.sort(rectsOrderedByHeight, decreasingHeightComparator);
+
+      // Create a list of ImageRects ordered by decreasing width used for
+      // packing
+      // individual columns.
+      final ArrayList<HasRect> rectsOrderedByWidth = new ArrayList<HasRect>(
+          rects);
+      Collections.sort(rectsOrderedByWidth, decreasingWidthComparator);
+
+      // Place the first, tallest image as the first column.
+      final HasRect first = rectsOrderedByHeight.get(0);
+      first.setPosition(0, 0);
+
+      // Setup state for laying things cumulatively.
+      int curX = first.getWidth();
+      final int colH = first.getHeight();
+
+      for (int i = 1, n = rectsOrderedByHeight.size(); i < n; i++) {
+        // If this ImageRect has been positioned already, move on.
+        if (rectsOrderedByHeight.get(i).hasBeenPositioned()) {
+          continue;
+        }
+
+        int colW = 0;
+        int curY = 0;
+
+        final ArrayList<HasRect> rectsInColumn = new ArrayList<HasRect>();
+        for (int j = i; j < n; j++) {
+          final HasRect current = rectsOrderedByHeight.get(j);
+          // Look for rects that have not been positioned with a small enough
+          // height to go in this column.
+          if (!current.hasBeenPositioned()
+              && (curY + current.getHeight()) <= colH) {
+
+            // Set the horizontal position here, the top field will be set in
+            // arrangeColumn after we've collected a full set of ImageRects.
+            current.setPosition(curX, 0);
+            colW = Math.max(colW, current.getWidth());
+            curY += current.getHeight();
+
+            // Keep the ImageRects in this column in decreasing order by width.
+            final int pos = Collections.binarySearch(rectsInColumn, current,
+                decreasingWidthComparator);
+            assert pos < 0;
+            rectsInColumn.add(-1 - pos, current);
+          }
+        }
+
+        // Having selected a set of ImageRects that fill out this column
+        // vertical,
+        // now we'll scan the remaining ImageRects to try to fit some in the
+        // horizontal gaps.
+        if (!rectsInColumn.isEmpty()) {
+          arrangeColumn(rectsInColumn, rectsOrderedByWidth);
+        }
+
+        // We're done with that column, so move the horizontal accumulator by
+        // the
+        // width of the column we just finished.
+        curX += colW;
+      }
+
+      return new Size(curX, colH);
+    }
+
+    public void place(Size canvasSize, Graphics2D canvas, ImageRect imageRect) {
+      canvas.drawImage(imageRect.image, imageRect.left, imageRect.top, null);
+    }
+
+    /**
+     * Companion method to {@link #arrangeImages()}. This method does a best
+     * effort horizontal packing of a column after it was packed vertically.
+     * This is the Decreasing Width part of Next-Fit Decreasing Height
+     * Decreasing Width. The basic strategy is to sort the remaining rectangles
+     * by decreasing width and try to fit them to the left of each of the
+     * rectangles we've already picked for this column.
+     * 
+     * @param rectsInColumn the ImageRects that were already selected for this
+     *          column
+     * @param remainingRectsOrderedByWidth the sub list of ImageRects that may
+     *          not have been positioned yet
+     */
+    private void arrangeColumn(List<HasRect> rectsInColumn,
+        List<HasRect> remainingRectsOrderedByWidth) {
+      final HasRect first = rectsInColumn.get(0);
+
+      final int columnWidth = first.getWidth();
+      int curY = first.getHeight();
+
+      // Skip this first ImageRect because it is guaranteed to consume the full
+      // width of the column.
+      for (int i = 1, m = rectsInColumn.size(); i < m; i++) {
+        final HasRect r = rectsInColumn.get(i);
+        // The ImageRect was previously positioned horizontally, now set the top
+        // field.
+        r.setPosition(r.getLeft(), curY);
+        int curX = r.getWidth();
+
+        // Search for ImageRects that are shorter than the left most ImageRect
+        // and
+        // narrow enough to fit in the column.
+        for (int j = 0, n = remainingRectsOrderedByWidth.size(); j < n; j++) {
+          final HasRect current = remainingRectsOrderedByWidth.get(j);
+          if (!current.hasBeenPositioned()
+              && (curX + current.getWidth()) <= columnWidth
+              && (current.getHeight() <= r.getHeight())) {
+            current.setPosition(r.getLeft() + curX, r.getTop());
+            curX += current.getWidth();
+          }
+        }
+
+        // Update the vertical accumulator so we'll know where to place the next
+        // ImageRect.
+        curY += r.getHeight();
+      }
+    }
+  }
+
+  /**
+   * A mockable interface to test the image arrangement algorithms.
+   */
+  interface HasRect {
+
+    int getHeight();
+
+    int getLeft();
+
+    String getName();
+
+    int getTop();
+
+    int getWidth();
+
+    boolean hasBeenPositioned();
+
+    void setPosition(int left, int top);
+  }
+
+  /**
+   * Performs a simple horizontal arrangement of rectangles. Images will be
+   * tiled vertically to fill to fill the full height of the image.
+   */
+  static class HorizontalArranger implements Arranger {
+    public Size arrangeImages(Collection<? extends HasRect> rects) {
+      int height = 1;
+      int width = 0;
+
+      for (HasRect rect : rects) {
+        rect.setPosition(width, 0);
+        width += rect.getWidth();
+        height = lcm(height, rect.getHeight());
+      }
+
+      return new Size(width, height);
+    }
+
+    /**
+     * Tiles the images vertically.
+     */
+    public void place(Size canvasSize, Graphics2D canvas, ImageRect imageRect) {
+      int y = 0;
+      while (y < canvasSize.height) {
+        canvas.drawImage(imageRect.image, imageRect.left, y, null);
+        y += imageRect.height;
+      }
+    }
+  }
+
+  /**
+   * Used to return the size of the resulting image from the method
+   * {@link ImageBundleBuilder#arrangeImages()}.
+   */
+  static class Size {
+    private final int width, height;
+
+    Size(int width, int height) {
+      this.width = width;
+      this.height = height;
+    }
+  }
+
+  /**
+   * Performs a simple vertical arrangement of rectangles. Images will be tiled
+   * horizontally to fill the full width of the image.
+   */
+  static class VerticalArranger implements Arranger {
+    public Size arrangeImages(Collection<? extends HasRect> rects) {
+      int height = 0;
+      int width = 1;
+
+      for (HasRect rect : rects) {
+        rect.setPosition(0, height);
+        width = lcm(width, rect.getWidth());
+        height += rect.getHeight();
+      }
+
+      return new Size(width, height);
+    }
+
+    /**
+     * Tiles the images horizontally.
+     */
+    public void place(Size canvasSize, Graphics2D canvas, ImageRect imageRect) {
+      int x = 0;
+      while (x < canvasSize.width) {
+        canvas.drawImage(imageRect.image, x, imageRect.top, null);
+        x += imageRect.width;
+      }
     }
   }
 
@@ -78,9 +350,22 @@ class ImageBundleBuilder {
    */
   private static final String BUNDLE_FILE_TYPE = "png";
   private static final String BUNDLE_MIME_TYPE = "image/png";
+  private static final int IMAGE_MAX_SIZE = 256;
 
-  private final Map<String, ImageRect> strongNameToRectMap = new HashMap<String, ImageRect>();
-  private final Map<String, ImageRect> nameToRectMap = new HashMap<String, ImageRect>();
+  static int gcd(int a, int b) {
+    while (b != 0) {
+      int t = b;
+      b = a % b;
+      a = t;
+    }
+    return a;
+  }
+
+  static int lcm(int a, int b) {
+    return b / gcd(a, b) * a;
+  }
+
+  private final Map<String, ImageRect> imageNameToImageRectMap = new HashMap<String, ImageRect>();
 
   /**
    * Assimilates the image associated with a particular image method into the
@@ -89,8 +374,6 @@ class ImageBundleBuilder {
    * 
    * @param logger a hierarchical logger which logs to the hosted console
    * @param imageName the name of an image that can be found on the classpath
-   * @param resource The URL from which the contents of the image can be
-   *          obtained
    * @throws UnableToCompleteException if the image with name
    *           <code>imageName</code> cannot be added to the master composite
    *           image
@@ -107,16 +390,7 @@ class ImageBundleBuilder {
     ImageRect rect = getMapping(imageName);
     if (rect == null) {
       // Assimilate the image into the composite.
-      rect = readImage(logger, resource);
-
-      checkSuitableForStrip(logger, imageName, resource, rect);
-
-      // De-dup the component images
-      if (strongNameToRectMap.containsKey(rect.strongName)) {
-        rect = strongNameToRectMap.get(rect.strongName);
-      } else {
-        strongNameToRectMap.put(rect.strongName, rect);
-      }
+      rect = addImage(logger, imageName, resource);
 
       // Map the URL to its image so that even if the same URL is used more than
       // once, we only include the referenced image once in the bundled image.
@@ -125,16 +399,22 @@ class ImageBundleBuilder {
   }
 
   public ImageRect getMapping(String imageName) {
-    return nameToRectMap.get(imageName);
+    return imageNameToImageRectMap.get(imageName);
   }
 
-  public String writeBundledImage(TreeLogger logger, ResourceContext context)
-      throws UnableToCompleteException {
+  public ImageRect removeMapping(String imageName) {
+    return imageNameToImageRectMap.remove(imageName);
+  }
 
-    logger = logger.branch(TreeLogger.DEBUG, "Writing bundle image", null);
+  public String writeBundledImage(TreeLogger logger, ResourceContext context,
+      Arranger arranger) throws UnableToCompleteException {
+
+    if (imageNameToImageRectMap.isEmpty()) {
+      return null;
+    }
 
     // Create the bundled image from all of the constituent images.
-    BufferedImage bundledImage = drawBundledImage();
+    BufferedImage bundledImage = drawBundledImage(arranger);
 
     // Write the bundled image into a byte array, so that we can compute
     // its strong name.
@@ -150,86 +430,88 @@ class ImageBundleBuilder {
       throw new UnableToCompleteException();
     }
 
-    return context.addToOutput(context.getResourceBundleType().getName()
-        + ".cache.png", BUNDLE_MIME_TYPE, imageBytes, false);
+    String bundleFileName = context.addToOutput(
+        context.getResourceBundleType().getQualifiedSourceName() + ".cache."
+            + BUNDLE_FILE_TYPE, BUNDLE_MIME_TYPE, imageBytes, false);
+
+    return bundleFileName;
+  }
+
+  private ImageRect addImage(TreeLogger logger, String imageName, URL imageUrl)
+      throws UnableToCompleteException, UnsuitableForStripException {
+
+    logger = logger.branch(TreeLogger.TRACE,
+        "Adding image '" + imageName + "'", null);
+
+    BufferedImage image;
+    // Load the image
+    try {
+      image = ImageIO.read(imageUrl);
+    } catch (IllegalArgumentException iex) {
+      if (imageName.toLowerCase().endsWith("png")
+          && iex.getMessage() != null
+          && iex.getStackTrace()[0].getClassName().equals(
+              "javax.imageio.ImageTypeSpecifier$Indexed")) {
+        logger.log(TreeLogger.ERROR,
+            "Unable to read image. The image may not be in valid PNG format. "
+                + "This problem may also be due to a bug in versions of the "
+                + "JRE prior to 1.6. See "
+                + "http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5098176 "
+                + "for more information. If this bug is the cause of the "
+                + "error, try resaving the image using a different image "
+                + "program, or upgrade to a newer JRE.", null);
+        throw new UnableToCompleteException();
+      } else {
+        throw iex;
+      }
+    } catch (IOException e) {
+      logger.log(TreeLogger.ERROR, "Unable to read image resource", null);
+      throw new UnableToCompleteException();
+    }
+
+    if (image == null) {
+      logger.log(TreeLogger.ERROR, "Unrecognized image file format", null);
+      throw new UnableToCompleteException();
+    }
+
+    ImageRect toReturn = new ImageRect(imageName, image);
+
+    if (toReturn.height > IMAGE_MAX_SIZE || toReturn.width > IMAGE_MAX_SIZE) {
+      throw new UnsuitableForStripException(toReturn);
+    }
+
+    return toReturn;
   }
 
   /**
-   * Enforce heuristics about whether or not an image should be added to an
-   * image strip, or left as a separate resource request.
-   * 
-   * @throws UnsuitableForStripException if the resource should not be added to
-   *           an image strip
-   */
-  private void checkSuitableForStrip(TreeLogger logger, String imageName,
-      URL resource, ImageRect rect) throws UnsuitableForStripException {
-
-    // PNG images won't get any bigger, so we may as well include them in the
-    // strip
-    if (resource.getPath().endsWith("png")) {
-      return;
-    }
-
-    if (rect.width * rect.height > 128 * 128) {
-      logger.log(TreeLogger.DEBUG, "Not adding " + imageName
-          + " to strip because it is large.", null);
-      throw new UnsuitableForStripException(rect);
-    }
-  }
-
-  /*
    * This method creates the bundled image through the composition of the other
    * images.
    * 
-   * This method could be implemented in a variety of ways. For example, one
-   * could use a knapsack algorithm to draw these images in an optimal amount of
-   * space.
-   * 
-   * In this particular implementation, we iterate through the image rectangles
-   * in ascending order of associated filename, and draw the rectangles from
-   * left to right in a single row.
+   * In this particular implementation, we use NFDHDW (see
+   * {@link #arrangeImages()}) to get an approximate optimal image packing.
    * 
    * The most important aspect of drawing the bundled image is that it be drawn
    * in a deterministic way. The drawing of the image should not rely on
    * implementation details of the Generator system which may be subject to
-   * change. For example, at the time of this writing, the image names are added
-   * to nameToRectMap based on the alphabetical ordering of their associated
-   * methods. This behavior is the result of the oracle returning the list of a
-   * type's methods in alphabetical order. However, this behavior is
-   * undocumented, and should not be relied on. If this behavior were to change,
-   * it would inadvertently affect the generation of bundled images.
+   * change.
    */
-  private BufferedImage drawBundledImage() {
+  private BufferedImage drawBundledImage(Arranger arranger) {
 
-    // Impose an ordering on the image rectangles, so that we construct
-    // the bundled image in a deterministic way.
-    SortedMap<String, ImageRect> sortedNameToRectMap = new TreeMap<String, ImageRect>();
-    sortedNameToRectMap.putAll(strongNameToRectMap);
-    Collection<ImageRect> orderedImageRects = sortedNameToRectMap.values();
+    // There is no need to impose any order here, because arrangeImages
+    // will position the ImageRects in a deterministic fashion, even though
+    // we might paint them in a non-deterministic order.
+    Collection<ImageRect> imageRects = imageNameToImageRectMap.values();
 
-    // Determine how big the composited image should be by taking the
-    // sum of the widths and the max of the heights.
-    int nextLeft = 0;
-    int maxHeight = 0;
-    for (ImageRect imageRect : orderedImageRects) {
-      imageRect.left = nextLeft;
-      nextLeft += imageRect.width;
-      maxHeight = Math.max(maxHeight, imageRect.height);
-    }
+    // Arrange images and determine the size of the resulting bundle.
+    Size size = arranger.arrangeImages(imageRects);
 
     // Create the bundled image.
-    BufferedImage bundledImage = new BufferedImage(nextLeft, maxHeight,
+    BufferedImage bundledImage = new BufferedImage(size.width, size.height,
         BufferedImage.TYPE_INT_ARGB_PRE);
     Graphics2D g2d = bundledImage.createGraphics();
 
-    for (ImageRect imageRect : orderedImageRects) {
-
-      // We do not need to pass in an ImageObserver, because we are working
-      // with BufferedImages. ImageObservers only need to be used when
-      // the image to be drawn is being loaded asynchronously. See
-      // http://java.sun.com/docs/books/tutorial/2d/images/drawimage.html
-      // for more information.
-      g2d.drawImage(imageRect.image, imageRect.left, 0, null);
+    for (ImageRect imageRect : imageRects) {
+      arranger.place(size, g2d, imageRect);
     }
     g2d.dispose();
 
@@ -237,53 +519,6 @@ class ImageBundleBuilder {
   }
 
   private void putMapping(String imageName, ImageRect rect) {
-    nameToRectMap.put(imageName, rect);
-  }
-
-  private ImageRect readImage(TreeLogger logger, URL imageUrl)
-      throws UnableToCompleteException {
-
-    logger = logger.branch(TreeLogger.TRACE, "Adding image '"
-        + imageUrl.toExternalForm() + "'", null);
-
-    // Fetch the image.
-    byte[] imageBytes = Util.readURLAsBytes(imageUrl);
-
-    try {
-      BufferedImage image;
-      // Decode the image
-      try {
-        image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-      } catch (IllegalArgumentException iex) {
-        if (imageUrl.getPath().toLowerCase().endsWith("png")
-            && iex.getMessage() != null
-            && iex.getStackTrace()[0].getClassName().equals(
-                "javax.imageio.ImageTypeSpecifier$Indexed")) {
-          logger.log(
-              TreeLogger.ERROR,
-              "Unable to read image. The image may not be in valid PNG format. "
-                  + "This problem may also be due to a bug in versions of the "
-                  + "JRE prior to 1.6. See "
-                  + "http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5098176 "
-                  + "for more information. If this bug is the cause of the "
-                  + "error, try resaving the image using a different image "
-                  + "program, or upgrade to a newer JRE.", null);
-          throw new UnableToCompleteException();
-        } else {
-          throw iex;
-        }
-      }
-
-      if (image == null) {
-        logger.log(TreeLogger.ERROR, "Unrecognized image file format", null);
-        throw new UnableToCompleteException();
-      }
-
-      return new ImageRect(image, Util.computeStrongName(imageBytes));
-
-    } catch (IOException e) {
-      logger.log(TreeLogger.ERROR, "Unable to read image resource", null);
-      throw new UnableToCompleteException();
-    }
+    imageNameToImageRectMap.put(imageName, rect);
   }
 }

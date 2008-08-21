@@ -20,12 +20,15 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.libideas.resources.client.ImageResource.ImageOptions;
+import com.google.gwt.libideas.resources.client.ImageResource.RepeatStyle;
 import com.google.gwt.libideas.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.libideas.resources.rebind.AbstractResourceGenerator;
 import com.google.gwt.libideas.resources.rebind.FieldAccumulator;
 import com.google.gwt.libideas.resources.rebind.ResourceContext;
 import com.google.gwt.libideas.resources.rebind.ResourceGeneratorUtil;
 import com.google.gwt.libideas.resources.rebind.StringSourceWriter;
+import com.google.gwt.libideas.resources.rg.ImageBundleBuilder.Arranger;
 import com.google.gwt.libideas.resources.rg.ImageBundleBuilder.ImageRect;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -39,12 +42,10 @@ import java.util.Map;
  */
 public final class ImageResourceGenerator extends AbstractResourceGenerator {
   private ResourceContext context;
-  private ImageBundleBuilder builder;
+  private Map<RepeatStyle, ImageBundleBuilder> builders;
   private Map<String, String> externalLocationExpressions;
   private Map<String, ImageRect> externalImageRects;
-  private int imageStripCount;
-
-  private String imageResourceBundleUrlIdent;
+  private Map<RepeatStyle, String> imageResourceBundleUrlIdents;
 
   @Override
   public String createAssignment(TreeLogger logger, JMethod method)
@@ -59,8 +60,8 @@ public final class ImageResourceGenerator extends AbstractResourceGenerator {
     ImageBundleBuilder.ImageRect rect;
     if (!externalImageRects.containsKey(name)) {
       // This is a reference to a field
-      sw.println(imageResourceBundleUrlIdent + ",");
-      rect = builder.getMapping(method.getName());
+      sw.println(imageResourceBundleUrlIdents.get(getRepeatStyle(method)) + ",");
+      rect = getBuilder(method).getMapping(method.getName());
     } else {
       sw.println(externalLocationExpressions.get(name).toString() + ", ");
       rect = externalImageRects.get(name);
@@ -72,37 +73,65 @@ public final class ImageResourceGenerator extends AbstractResourceGenerator {
       throw new UnableToCompleteException();
     }
 
-    sw.println(rect.left + ", 0, " + rect.width + ", " + rect.height);
+    sw.println(rect.getLeft() + ", " + rect.getTop() + ", " + rect.getWidth()
+        + ", " + rect.getHeight());
 
     sw.outdent();
     sw.print(")");
-    
+
     return sw.toString();
   }
 
   @Override
   public void createFields(TreeLogger logger, FieldAccumulator fields)
       throws UnableToCompleteException {
-    if (imageStripCount > 0) {
+    for (Map.Entry<RepeatStyle, ImageBundleBuilder> entry : builders.entrySet()) {
+      RepeatStyle repeatStyle = entry.getKey();
+      ImageBundleBuilder builder = entry.getValue();
+      Arranger arranger;
+
+      switch (repeatStyle) {
+        case None:
+          arranger = new ImageBundleBuilder.BestFitArranger();
+          break;
+        case Horizontal:
+          arranger = new ImageBundleBuilder.VerticalArranger();
+          break;
+        case Vertical:
+          arranger = new ImageBundleBuilder.HorizontalArranger();
+          break;
+        case Both:
+          // This is taken care of when writing the external images;
+          continue;
+        default:
+          logger.log(TreeLogger.ERROR, "Unknown RepeatStyle" + repeatStyle);
+          throw new UnableToCompleteException();
+      }
+
       String bundleUrlExpression = builder.writeBundledImage(logger.branch(
-          TreeLogger.DEBUG, "Writing image strip", null), context);
+          TreeLogger.DEBUG, "Writing image strip", null), context, arranger);
+
+      if (bundleUrlExpression == null) {
+        continue;
+      }
 
       TypeOracle typeOracle = context.getGeneratorContext().getTypeOracle();
       JClassType stringType = typeOracle.findType(String.class.getName());
       assert stringType != null;
 
-      imageResourceBundleUrlIdent = fields.addField(stringType,
-          "imageResourceBundleUrl", bundleUrlExpression, true, true);
+      imageResourceBundleUrlIdents.put(repeatStyle, fields.addField(stringType,
+          "imageResourceBundleUrl" + repeatStyle, bundleUrlExpression, true,
+          true));
     }
   }
 
   @Override
   public void init(TreeLogger logger, ResourceContext context) {
     this.context = context;
-    builder = new ImageBundleBuilder();
+    builders = new HashMap<RepeatStyle, ImageBundleBuilder>();
     externalLocationExpressions = new HashMap<String, String>();
     externalImageRects = new HashMap<String, ImageRect>();
-    imageStripCount = 0;
+    imageResourceBundleUrlIdents = new HashMap<RepeatStyle, String>();
   }
 
   @Override
@@ -116,23 +145,43 @@ public final class ImageResourceGenerator extends AbstractResourceGenerator {
       throw new UnableToCompleteException();
     }
 
+    ImageBundleBuilder builder = getBuilder(method);
     URL resource = resources[0];
     String name = method.getName();
 
     try {
       builder.assimilate(logger, name, resource);
-      if (context.supportsDataUrls()) {
+      if (context.supportsDataUrls()
+          || getRepeatStyle(method) == RepeatStyle.Both) {
         // Just use the calculated meta-data
-        ImageRect r = builder.getMapping(name);
-        r.left = 0;
+        ImageRect r = builder.removeMapping(name);
+        r.setPosition(0, 0);
         throw new UnsuitableForStripException(r);
       }
-      imageStripCount++;
     } catch (UnsuitableForStripException e) {
       // Add the image to the output as a separate resource
       String urlExpression = context.addToOutput(resource, false);
       externalLocationExpressions.put(name, urlExpression);
       externalImageRects.put(name, e.getImageRect());
+    }
+  }
+
+  private ImageBundleBuilder getBuilder(JMethod method) {
+    RepeatStyle repeatStyle = getRepeatStyle(method);
+    ImageBundleBuilder builder = builders.get(repeatStyle);
+    if (builder == null) {
+      builder = new ImageBundleBuilder();
+      builders.put(repeatStyle, builder);
+    }
+    return builder;
+  }
+
+  private RepeatStyle getRepeatStyle(JMethod method) {
+    ImageOptions options = method.getAnnotation(ImageOptions.class);
+    if (options == null) {
+      return RepeatStyle.None;
+    } else {
+      return options.repeatStyle();
     }
   }
 }

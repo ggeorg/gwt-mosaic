@@ -15,7 +15,6 @@
  */
 package com.google.gwt.libideas.resources.client;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.libideas.resources.rebind.ResourceGeneratorType;
 import com.google.gwt.libideas.resources.rg.CssResourceGenerator;
 
@@ -33,9 +32,6 @@ import java.lang.annotation.Target;
  * <li>{@code String someClassName();} will allow the css class
  * <code>.someClassName</code> to be obfuscated at runtime. The function will
  * return the obfuscated class name.</li>
- * <li>{@code Sprite someSpriteName();} allows bundled images to be used as CSS
- * background images. Use {@link Sprite#apply(Element)} to display the sprite in
- * the given Element.</li>
  * </ul>
  * 
  * <p>
@@ -50,10 +46,19 @@ import java.lang.annotation.Target;
  * CSS rules based on the value of a deferred-binding property.</li>
  * <li>{@code @if Java-expression {ruleBlock}} Include or exclude CSS rules
  * based on a boolean Java expression.</li>
- * <li>{@code @sprite className siblingImageResource;} Return a {@link Sprite}
- * to access the style.</li>
+ * <li>{@code @sprite .any .selector {gwt-image: "imageResourceFunction";}}.</li>
  * <li>{@code @url NAME siblingDataResource; .myClass {background: NAME repeat-x;}}
  * Use a DataResource to generate a <code>url('...'}</code> value.</li>
+ * </ul>
+ * 
+ * <p>
+ * Currently-supported CSS functions:
+ * <ul>
+ * <li>{@code value("bundleFunction.someFunction[.other[...]]" [, "suffix"])}
+ * substitute the value of a sequence of named zero-arg function invocations. An
+ * optional suffix will be appended to the return value of the function. The
+ * first name is resolved relative to the bundle interface passed to
+ * {@link com.google.gwt.core.client.GWT#create(Class)}.</li>
  * </ul>
  * 
  * @see <a
@@ -80,34 +85,6 @@ public interface CssResource extends ResourcePrototype {
   @Target(ElementType.METHOD)
   @interface ClassName {
     String value();
-  }
-
-  /**
-   * Overrides the prefix used for obfuscated CSS class names within a bundle
-   * type. This annotation must be applied to the enclosing
-   * ImmutableResourceBundle because the bundle itself defines the scope in
-   * which the obfuscation of CSS class identifiers is applied.
-   * <p>
-   * The default algorithm is designed to be safe, but will not produce the
-   * shortest possible CSS class identifiers. The developer should choose a
-   * prefix that is known to not conflict with external CSS class names. An
-   * application written by FooBar Inc. might choose to use a prefix
-   * <code>FB</code>.
-   */
-  @Target(ElementType.TYPE)
-  @interface ClassPrefix {
-    String value();
-  }
-
-  /**
-   * Represents a {@literal @sprite} meta-class in the stylesheet.
-   */
-  interface Sprite {
-    /**
-     * Alters an Element to show the sprite. The structure of the Element should
-     * be considered opaque after applying the Sprite function.
-     */
-    void apply(Element e);
   }
 
   /**

@@ -31,6 +31,10 @@ import com.google.gwt.libideas.resources.css.ast.CssStylesheet;
 import com.google.gwt.libideas.resources.css.ast.CssUrl;
 import com.google.gwt.libideas.resources.css.ast.HasNodes;
 import com.google.gwt.libideas.resources.css.ast.HasProperties;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.DotPathValue;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.ListValue;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.StringValue;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.Value;
 
 import org.w3c.css.sac.AttributeCondition;
 import org.w3c.css.sac.CSSException;
@@ -64,7 +68,6 @@ import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -142,10 +145,10 @@ public class GenerateCssAst {
     /**
      * Utility method to concatenate strings.
      */
-    private static String join(Iterable<String> elements, String separator) {
+    private static String join(Iterable<Value> elements, String separator) {
       StringBuilder b = new StringBuilder();
-      for (Iterator<String> i = elements.iterator(); i.hasNext();) {
-        b.append(i.next());
+      for (Iterator<Value> i = elements.iterator(); i.hasNext();) {
+        b.append(((StringValue) i.next()).getValue());
         if (i.hasNext()) {
           b.append(separator);
         }
@@ -172,6 +175,12 @@ public class GenerateCssAst {
      * Used when parsing the contents of meta-styles.
      */
     private final Errors errors;
+
+    /**
+     * Used by {@link #startSelector(SelectorList)} to suppress the creation of
+     * new CssRules in favor of retaining {@link #currentRule}.
+     */
+    private boolean nextSelectorCreatesRule = true;
 
     public GenerationHandler(Errors errors) {
       this.errors = errors;
@@ -233,12 +242,12 @@ public class GenerateCssAst {
 
     public void property(String name, LexicalUnit value, boolean important)
         throws CSSException {
-      List<String> values = new ArrayList<String>();
+      List<Value> values = new ArrayList<Value>();
       if (value != null) {
         extractValueOf(values, value);
       }
       currentRule.getProperties().add(
-          new CssProperty(escapeIdent(name), values, important));
+          new CssProperty(escapeIdent(name), new ListValue(values), important));
     }
 
     public void startDocument(InputSource source) throws CSSException {
@@ -265,22 +274,35 @@ public class GenerateCssAst {
     }
 
     public void startSelector(SelectorList selectors) throws CSSException {
-      CssRule r = new CssRule();
-      addNode(r);
+      CssRule r;
+
+      if (nextSelectorCreatesRule) {
+        r = new CssRule();
+        addNode(r);
+        currentRule = r;
+      } else {
+        r = (CssRule) currentRule;
+        nextSelectorCreatesRule = true;
+      }
+
       for (int i = 0; i < selectors.getLength(); i++) {
         r.getSelectors().add(new CssSelector(valueOf(selectors.item(i))));
       }
-      currentRule = r;
     }
 
     void parseDef(String atRule) {
       // @def key value with strings
       String[] parts = atRule.substring(0, atRule.length() - 1).split("\\s");
 
-      String[] valueParts = new String[parts.length - 2];
-      System.arraycopy(parts, 2, valueParts, 0, valueParts.length);
+      StringBuilder b = new StringBuilder();
+      for (int i = 2; i < parts.length; i++) {
+        b.append(parts[i]);
+        if (i < parts.length - 1) {
+          b.append(" ");
+        }
+      }
 
-      CssDef def = new CssDef(parts[1], join(Arrays.asList(valueParts), " "));
+      CssDef def = new CssDef(parts[1], b.toString());
       addNode(def);
     }
 
@@ -403,16 +425,27 @@ public class GenerateCssAst {
     }
 
     void parseSprite(String atRule) throws CSSException {
-      // @sprite className methodName
-      String[] parts = atRule.substring(0, atRule.length() - 1).split("\\s");
-
-      if (parts.length != 3) {
-        throw new CSSException(CSSException.SAC_SYNTAX_ERR,
-            "Incorrect number of parts for @sprite", null);
-      }
-
-      CssSprite sprite = new CssSprite(parts[1], parts[2]);
+      CssSprite sprite = new CssSprite();
+      currentRule = sprite;
       addNode(sprite);
+
+      // Flag to tell startSelector() to use the CssSprite instead of creating
+      // its own CssRule.
+      nextSelectorCreatesRule = false;
+
+      // parse the inner text
+      InputSource s = new InputSource();
+      s.setCharacterStream(new StringReader(atRule.substring(7)));
+      Parser parser = new Parser();
+      parser.setDocumentHandler(this);
+      parser.setErrorHandler(errors);
+
+      try {
+        parser.parseRule(s);
+      } catch (IOException e) {
+        throw new CSSException(CSSException.SAC_SYNTAX_ERR,
+            "Unable to parse @sprite", e);
+      }
     }
 
     void parseUrl(String atRule) throws CSSException {
@@ -442,7 +475,7 @@ public class GenerateCssAst {
      *          <code>(INT COMMA INT COMMA INT)</code>
      * @return the minimal hex expression for the RGB color values
      */
-    private String colorValue(LexicalUnit colors) {
+    private StringValue colorValue(LexicalUnit colors) {
       LexicalUnit red = colors;
       assert red.getLexicalUnitType() == LexicalUnit.SAC_INTEGER;
       LexicalUnit green = red.getNextLexicalUnit().getNextLexicalUnit();
@@ -477,7 +510,7 @@ public class GenerateCssAst {
         sb = sb.substring(1);
       }
 
-      return "#" + sr + sg + sb;
+      return new StringValue("#" + sr + sg + sb);
     }
 
     private String escapeIdent(String selector) {
@@ -535,9 +568,9 @@ public class GenerateCssAst {
     }
 
     /**
-     * Convert a LexicalUnit list into a List of Strings.
+     * Convert a LexicalUnit list into a List of Values.
      */
-    private void extractValueOf(List<String> accumulator, LexicalUnit value) {
+    private void extractValueOf(List<Value> accumulator, LexicalUnit value) {
       do {
         accumulator.add(valueOf(value));
         value = value.getNextLexicalUnit();
@@ -572,6 +605,13 @@ public class GenerateCssAst {
 
     private boolean isIdentStart(char c) {
       return Character.isLetter(c) || (c == '\\');
+    }
+
+    private String maybeUnquote(String s) {
+      if (s.startsWith("\"") && s.endsWith("\"")) {
+        return s.substring(1, s.length() - 1);
+      }
+      return s;
     }
 
     /**
@@ -629,31 +669,33 @@ public class GenerateCssAst {
           + condition.getConditionType() + " " + condition.getClass().getName());
     }
 
-    private String valueOf(float f) {
+    private StringValue valueOf(float f, String dimension) {
+      String s;
       int i = (int) f;
       if (i == f) {
-        return String.valueOf(i);
+        s = String.valueOf(i);
       } else {
-        return String.valueOf(f);
+        s = String.valueOf(f);
       }
+      return new StringValue(s + dimension);
     }
 
-    private String valueOf(LexicalUnit value) {
-      List<String> parameters = new ArrayList<String>();
+    private Value valueOf(LexicalUnit value) {
       switch (value.getLexicalUnitType()) {
         case LexicalUnit.SAC_ATTR:
-          return "attr(" + value.getStringValue() + ")";
+          return new StringValue("attr(" + value.getStringValue() + ")");
         case LexicalUnit.SAC_IDENT:
-          return value.getStringValue();
+          return new StringValue(value.getStringValue());
         case LexicalUnit.SAC_STRING_VALUE:
-          return '"' + escapeValue(value.getStringValue(), true) + '"';
+          return new StringValue(
+              '"' + escapeValue(value.getStringValue(), true) + '"');
         case LexicalUnit.SAC_RGBCOLOR:
           // flute models the commas as operators so no separator needed
           return colorValue(value.getParameters());
         case LexicalUnit.SAC_INTEGER:
-          return String.valueOf(value.getIntegerValue());
+          return new StringValue(String.valueOf(value.getIntegerValue()));
         case LexicalUnit.SAC_REAL:
-          return valueOf(value.getFloatValue());
+          return valueOf(value.getFloatValue(), "");
         case LexicalUnit.SAC_CENTIMETER:
         case LexicalUnit.SAC_DEGREE:
         case LexicalUnit.SAC_DIMENSION:
@@ -670,43 +712,69 @@ public class GenerateCssAst {
         case LexicalUnit.SAC_POINT:
         case LexicalUnit.SAC_RADIAN:
         case LexicalUnit.SAC_SECOND:
-          return valueOf(value.getFloatValue()) + value.getDimensionUnitText();
+          return valueOf(value.getFloatValue(), value.getDimensionUnitText());
         case LexicalUnit.SAC_URI:
-          return "url(" + value.getStringValue() + ")";
+          return new StringValue("url(" + value.getStringValue() + ")");
         case LexicalUnit.SAC_OPERATOR_COMMA:
-          return ",";
+          return new StringValue(",");
         case LexicalUnit.SAC_COUNTER_FUNCTION:
         case LexicalUnit.SAC_COUNTERS_FUNCTION:
-        case LexicalUnit.SAC_FUNCTION:
-          extractValueOf(parameters, value.getParameters());
-          return value.getFunctionName() + "(" + join(parameters, "") + ")";
+        case LexicalUnit.SAC_FUNCTION: {
+          if (value.getFunctionName().equals(VALUE_FUNCTION_NAME)) {
+            // This is a call to value()
+            List<Value> params = new ArrayList<Value>();
+            extractValueOf(params, value.getParameters());
+
+            if (params.size() != 1 && params.size() != 3) {
+              throw new CSSException(CSSException.SAC_SYNTAX_ERR,
+                  "Incorrect number of parameters to " + VALUE_FUNCTION_NAME,
+                  null);
+            }
+
+            Value dotPathValue = params.get(0);
+            String dotPath = maybeUnquote(((StringValue) dotPathValue).getValue());
+            String suffix = params.size() == 3
+                ? maybeUnquote(((StringValue) params.get(2)).getValue()) : "";
+
+            return new DotPathValue(dotPath, suffix);
+          } else {
+            // Just return a String representation of the original value
+            List<Value> parameters = new ArrayList<Value>();
+            extractValueOf(parameters, value.getParameters());
+            return new StringValue(value.getFunctionName() + "("
+                + join(parameters, "") + ")");
+          }
+        }
         case LexicalUnit.SAC_INHERIT:
-          return "inherit";
+          return new StringValue("inherit");
         case LexicalUnit.SAC_OPERATOR_EXP:
-          return "^";
+          return new StringValue("^");
         case LexicalUnit.SAC_OPERATOR_GE:
-          return ">=";
+          return new StringValue(">=");
         case LexicalUnit.SAC_OPERATOR_GT:
-          return ">";
+          return new StringValue(">");
         case LexicalUnit.SAC_OPERATOR_LE:
-          return "<=";
+          return new StringValue("<=");
         case LexicalUnit.SAC_OPERATOR_LT:
-          return "<";
+          return new StringValue("<");
         case LexicalUnit.SAC_OPERATOR_MINUS:
-          return "-";
+          return new StringValue("-");
         case LexicalUnit.SAC_OPERATOR_MOD:
-          return "%";
+          return new StringValue("%");
         case LexicalUnit.SAC_OPERATOR_MULTIPLY:
-          return "*";
+          return new StringValue("*");
         case LexicalUnit.SAC_OPERATOR_PLUS:
-          return "+";
+          return new StringValue("+");
         case LexicalUnit.SAC_OPERATOR_SLASH:
-          return "/";
+          return new StringValue("/");
         case LexicalUnit.SAC_OPERATOR_TILDE:
-          return "~";
-        case LexicalUnit.SAC_RECT_FUNCTION:
+          return new StringValue("~");
+        case LexicalUnit.SAC_RECT_FUNCTION: {
+          // Just return this as a String
+          List<Value> parameters = new ArrayList<Value>();
           extractValueOf(parameters, value.getParameters());
-          return "rect(" + join(parameters, "") + ")";
+          return new StringValue("rect(" + join(parameters, "") + ")");
+        }
         case LexicalUnit.SAC_SUB_EXPRESSION:
           // Should have been taken care of by our own traversal
         case LexicalUnit.SAC_UNICODERANGE:
@@ -770,6 +838,8 @@ public class GenerateCssAst {
           + selector.getClass().getName());
     }
   }
+
+  private static final String VALUE_FUNCTION_NAME = "value";
 
   /**
    * Create a CssStylesheet from the contents of a URL.

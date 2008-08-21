@@ -15,53 +15,139 @@
  */
 package com.google.gwt.libideas.resources.css.ast;
 
+import com.google.gwt.core.ext.Generator;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- * 
+ * Maps a named property to a Value.
  */
 public class CssProperty extends CssNode {
-  private boolean important;
 
   /**
-   * This is a Java expression which evaluates to the value of the property.
+   * Represents a sequence of no-arg method invocations.
    */
-  private String expression;
+  public static class DotPathValue implements Value {
+    private final String path;
+    private final String suffix;
+
+    public DotPathValue(String path, String suffix) {
+      this.path = path;
+      this.suffix = suffix;
+    }
+
+    public String getExpression() {
+      return path.replace(".", "().") + "() + \"" + Generator.escape(suffix)
+          + "\"";
+    }
+
+    public String getPath() {
+      return path;
+    }
+
+    public String getSuffix() {
+      return suffix;
+    }
+  }
+
+  /**
+   * Represents a literal Java expression.
+   */
+  public static class ExpressionValue implements Value {
+    private final String expression;
+
+    public ExpressionValue(String expression) {
+      this.expression = expression;
+    }
+
+    public String getExpression() {
+      return expression;
+    }
+  }
+
+  /**
+   * Represents a space-separated list of Values.
+   */
+  public static class ListValue implements Value {
+    private final List<Value> values;
+
+    public ListValue(List<Value> values) {
+      this.values = new ArrayList<Value>(values);
+    }
+
+    public ListValue(Value... values) {
+      this(Arrays.asList(values));
+    }
+
+    public String getExpression() {
+      StringBuilder toReturn = new StringBuilder();
+      for (Iterator<Value> i = values.iterator(); i.hasNext();) {
+        toReturn.append(i.next().getExpression());
+        if (i.hasNext()) {
+          toReturn.append("+ \" \" +");
+        }
+      }
+      return toReturn.toString();
+    }
+
+    public List<Value> getValues() {
+      return values;
+    }
+  }
+
+  /**
+   * Represents one or more literal string values.
+   */
+  public static class StringValue implements Value {
+    private final String value;
+
+    public StringValue(String value) {
+      this.value = value;
+    }
+
+    public String getExpression() {
+      return "\"" + Generator.escape(value) + "\"";
+    }
+
+    public String getValue() {
+      return value;
+    }
+  }
+
+  /**
+   * An abstract encapsulation of property values in GWT CSS.
+   */
+  public interface Value {
+    /**
+     * Generate a Java expression whose execution results in the value.
+     */
+    String getExpression();
+  }
+
+  private boolean important;
+
   private String name;
-  private final List<String> values = new ArrayList<String>();
+  private ListValue value;
 
-  public CssProperty(String name, List<String> values, boolean important) {
+  public CssProperty(String name, Value value, boolean important) {
     this.name = name;
-    this.values.addAll(values);
+    setValue(value);
     this.important = important;
-  }
-
-  public CssProperty(String name, String expression, boolean important) {
-    this.name = name;
-    this.expression = expression;
-    this.important = important;
-  }
-
-  public String getExpression() {
-    return expression;
   }
 
   public String getName() {
     return name;
   }
 
-  public List<String> getValues() {
-    return values;
+  public ListValue getValues() {
+    return value;
   }
 
   public boolean isImportant() {
     return important;
-  }
-
-  public void setExpression(String expression) {
-    this.expression = expression;
-    values.clear();
   }
 
   public void setImportant(boolean important) {
@@ -70,6 +156,14 @@ public class CssProperty extends CssNode {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setValue(Value value) {
+    if (value instanceof ListValue) {
+      this.value = (ListValue) value;
+    } else {
+      this.value = new ListValue(value);
+    }
   }
 
   public void traverse(CssVisitor visitor, Context context) {
