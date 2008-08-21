@@ -517,18 +517,14 @@ public class Showcase implements EntryPoint {
         RootPanel.get().add(app);
       }
     };
-    Command dummy = new Command() {
-      public void execute() {
-        // do nothing        
-      }
-    };
-    StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
-        getCurrentReferenceStyleName("gwt"), dummy);
-    StyleSheetLoader.loadStyleSheet(modulePath + gwtMosaicStyleSheet,
-        getCurrentReferenceStyleName("mosaic"), dummy);
 
-    // Load the showcase specific style sheet after the GWT theme style sheet so
-    // that custom styles supercede the theme styles.
+    StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
+        getCurrentReferenceStyleName("gwt"), null);
+    StyleSheetLoader.loadStyleSheet(modulePath + gwtMosaicStyleSheet,
+        getCurrentReferenceStyleName("mosaic"), null);
+
+    // Load the showcase specific style sheet after the GWT & Mosaic theme style
+    // sheet so that custom styles supercede the theme styles.
     StyleSheetLoader.loadStyleSheet(modulePath + showcaseStyleSheet,
         getCurrentReferenceStyleName("Application"), callback);
   }

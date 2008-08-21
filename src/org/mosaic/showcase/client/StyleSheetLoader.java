@@ -72,10 +72,12 @@ public class StyleSheetLoader {
       if (refWidget.getOffsetWidth() > 0) {
         RootPanel.get().remove(refWidget);
 
-        // Fire the callback in a DeferredCommand to ensure the browser has
-        // enough time to parse the styles. Otherwise, we'll get weird styling
-        // issues.
-        DeferredCommand.addCommand(callback);
+        if (callback != null) {
+          // Fire the callback in a DeferredCommand to ensure the browser has
+          // enough time to parse the styles. Otherwise, we'll get weird styling
+          // issues.
+          DeferredCommand.addCommand(callback);
+        }
       } else {
         schedule(10);
       }
