@@ -71,6 +71,12 @@
 	<define-property name="CssResource.enableMerge" values="true,false" />
 	<set-property name="CssResource.enableMerge" value="true" />
 
+	<!-- This allows the developer to use shorter obfuscated class names. -->
+	<!-- Is is valid to extend this property to use a custom name. -->
+	<define-property name="CssResource.globalPrefix"
+		values="default, empty" />
+	<set-property name="CssResource.globalPrefix" value="default" />
+
 	<!-- This can be used to make CssResource produce human-readable CSS -->
 	<define-property name="CssResource.style"
 		values="obf,OBF,pretty,PRETTY" />

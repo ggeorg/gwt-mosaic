@@ -15,6 +15,20 @@
  */
 package com.google.gwt.libideas.resources.tools;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.dev.resource.Resource;
 import com.google.gwt.dev.resource.ResourceOracle;
@@ -37,34 +51,21 @@ import com.google.gwt.util.tools.ArgHandlerFlag;
 import com.google.gwt.util.tools.ArgHandlerString;
 import com.google.gwt.util.tools.ToolBase;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 /**
  * Given a Java package, create an {@link ImmutableResourceBundle} interface.
  */
 public class MakeBundle extends ToolBase {
-  private static final List<String> JAVA_KEYWORDS = Arrays.asList("abstract", "continue",
-      "for", " new", "switch", "assert", "default", "goto", "package", "synchronized",
-      "boolean", "do", "if", " private", "this", "break", "double", "implements",
-      "protected", "throw", "byte", "else", "import", "public", "throws", "case", "enum",
-      "instanceof", "return", "transient", "catch", "extends", "int", "short", "try",
-      "char", "final", "interface", "static", "void", "class", "finally", "long",
-      "strictfp", "volatile", "const", "float", "native", "super", "while");
+  private static final List<String> JAVA_KEYWORDS = Arrays.asList("abstract",
+      "continue", "for", " new", "switch", "assert", "default", "goto",
+      "package", "synchronized", "boolean", "do", "if", " private", "this",
+      "break", "double", "implements", "protected", "throw", "byte", "else",
+      "import", "public", "throws", "case", "enum", "instanceof", "return",
+      "transient", "catch", "extends", "int", "short", "try", "char", "final",
+      "interface", "static", "void", "class", "finally", "long", "strictfp",
+      "volatile", "const", "float", "native", "super", "while");
 
   private static final String[] IMAGE_TYPES = {"gif", "jpg", "png"};
-  // private static final String[] SOUND_TYPES = {"mp3", "wav"};
+  private static final String[] SOUND_TYPES = {"mp3", "wav"};
   private static final String[] TEXT_TYPES = {
       "htm", "html", "java", "json", "txt", "xhtml", "xml"};
 
@@ -77,17 +78,17 @@ public class MakeBundle extends ToolBase {
       typeMap.put(type, ImageResource.class);
     }
 
-    // for (String type : SOUND_TYPES) {
-    // typeMap.put(type, SoundResource.class);
-    // }
+//    for (String type : SOUND_TYPES) {
+//      typeMap.put(type, SoundResource.class);
+//    }
 
     // This loop runs twice
     boolean external = false;
     do {
       external = !external;
       for (String type : TEXT_TYPES) {
-        typeMap.put((external ? "e" : "") + type, external ? ExternalTextResource.class
-            : TextResource.class);
+        typeMap.put((external ? "e" : "") + type, external
+            ? ExternalTextResource.class : TextResource.class);
       }
     } while (external);
   }
@@ -236,7 +237,8 @@ public class MakeBundle extends ToolBase {
   @Override
   protected String getDescription() {
     return "Generate an ImmutableResourceBundle definition.  Run this class "
-        + "with the same classpath used to invoke the GWT compiler on your" + "module.";
+        + "with the same classpath used to invoke the GWT compiler on your"
+        + "module.";
   }
 
   /**
@@ -301,7 +303,8 @@ public class MakeBundle extends ToolBase {
       try {
         outDir = new File(".").getCanonicalFile();
       } catch (IOException e) {
-        logger.log(TreeLogger.ERROR, "Unable to determine current working directory", e);
+        logger.log(TreeLogger.ERROR,
+            "Unable to determine current working directory", e);
         return;
       }
     }
@@ -310,11 +313,12 @@ public class MakeBundle extends ToolBase {
     PrintWriter out = createWriter(logger);
 
     // Sort the entries to provide consistent behavior
-    TreeSet<Resource> sortedResources = new TreeSet<Resource>(new Comparator<Resource>() {
-      public int compare(Resource o1, Resource o2) {
-        return o1.getPath().compareTo(o2.getPath());
-      }
-    });
+    TreeSet<Resource> sortedResources = new TreeSet<Resource>(
+        new Comparator<Resource>() {
+          public int compare(Resource o1, Resource o2) {
+            return o1.getPath().compareTo(o2.getPath());
+          }
+        });
     sortedResources.addAll(oracle.getResources());
 
     writeMethods(logger, out, sortedResources);
@@ -362,7 +366,8 @@ public class MakeBundle extends ToolBase {
   /**
    * Write the contents of the Bundle.
    */
-  private void writeMethods(TreeLogger logger, PrintWriter out, Set<Resource> resources) {
+  private void writeMethods(TreeLogger logger, PrintWriter out,
+      Set<Resource> resources) {
     logger = logger.branch(TreeLogger.DEBUG, "Writing contents");
     out.println("// AUTOMATICALLY GENERATED CLASS -- DO NOT EDIT");
     out.println("package " + packageName + ";");
