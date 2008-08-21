@@ -170,7 +170,7 @@ public class Grid extends HTMLTable {
     } else {
       while (numRows > rows) {
         // Fewer rows. Remove extraneous ones.
-        removeRow(--numRows);
+        removeRow(numRows - 1);
       }
     }
   }
