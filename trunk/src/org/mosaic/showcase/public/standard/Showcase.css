@@ -1,12 +1,31 @@
 /**
- * Applied to the main layout of the page.
+ * The file contains styles for GWT widgets in the standard theme.
+ *
+ * In order to maintain cross-browser compatibility, the following syntax is
+ * used to create IE6 specific style rules:
+ *    html>body .gwt-Widget {
+ *      Rule applies to all browsers (including IE7), except IE6
+ *    }
+ *    * html .gwt-Widget {
+ *      Rule applied to IE6 only (not to IE7)
+ *    }
+ * 
+ * Specifically, IE6 does not support images with multiple transparent colors,
+ * so we need to use the AlphaImageLoader in IE6 only.
  */
-.Application-Reference-standard,
-.mosaic-Reference-standard { 
+
+/**
+ * The reference theme can be used to determine when this style sheet has
+ * loaded.  Create a hidden div element with absolute position, assign the style
+ * name below, and attach it to the DOM.  Use a timer to detect when the
+ * element's height and width are set to 5px.
+ */
+.Application-Reference-standard { 
 	height: 5px;
 	width: 5px;
 	zoom: 1;
 }
+
 .Application-top {
 	width: 100%;
 	margin-bottom: 10px;
