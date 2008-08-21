@@ -19,18 +19,67 @@ import com.google.gwt.libideas.resources.rebind.ResourceGeneratorType;
 import com.google.gwt.libideas.resources.rg.ImageResourceGenerator;
 import com.google.gwt.user.client.ui.Image;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+
 /**
- * Test for ImageBundle optimizations.
+ * Provides access to image resources at runtime.
+ * <p>
+ * <b>Note on deprecated methods:</b> In order to allow ImageResource to be
+ * used with UI toolkits that are not derived from the standard GWT UI library,
+ * the methods relating to {@link Image} have been deprecated in favor of
+ * exposing the ImageResource's metadata in the public API.
  */
 @ResourceGeneratorType(ImageResourceGenerator.class)
 public interface ImageResource extends ResourcePrototype {
+
+  /**
+   * Specifies additional options to control how an image is bundled.
+   */
+  @Documented
+  @Target(ElementType.METHOD)
+  public @interface ImageOptions {
+    RepeatStyle repeatStyle() default RepeatStyle.None;
+  }
+
+  /**
+   * Indicates that an ImageResource should be bundled in such a way as to
+   * support horizontal or vertical repetition.
+   */
+  public enum RepeatStyle {
+    /**
+     * The image is not intended to be tiled.
+     */
+    None,
+
+    /**
+     * The image is intended to be tiled horizontally.
+     */
+    Horizontal,
+
+    /**
+     * The image is intended to be tiled vertically.
+     */
+    Vertical,
+
+    /**
+     * The image is intended to be tiled both horizontally and vertically. Note
+     * that this will prevent compositing of the particular image in most cases.
+     */
+    Both
+  }
 
   /**
    * Transforms an existing {@link Image} into the image represented by this
    * prototype.
    * 
    * @param image the instance to be transformed to match this prototype
+   * @deprecated Use
+   *             {@link Image#setUrlAndVisibleRect(String, int, int, int, int)}
+   *             instead.
    */
+  @Deprecated
   void applyTo(Image image);
 
   /**
@@ -38,8 +87,17 @@ public interface ImageResource extends ResourcePrototype {
    * prototype.
    * 
    * @return a new <code>Image</code> based on this prototype
+   * @deprecated Use
+   *             {@link Image#setUrlAndVisibleRect(String, int, int, int, int)}
+   *             instead.
    */
+  @Deprecated
   Image createImage();
+
+  /**
+   * Returns the height of the image.
+   */
+  int getHeight();
 
   /**
    * Gets an HTML fragment that displays the image represented by this
@@ -48,6 +106,28 @@ public interface ImageResource extends ResourcePrototype {
    * should be treated opaquely.
    * 
    * @return the HTML representation of this prototype
+   * @deprecated See {@link CssResource.Sprite} instead.
    */
+  @Deprecated
   String getHTML();
+
+  /**
+   * Returns the horizontal position of the image within the composite image.
+   */
+  int getLeft();
+
+  /**
+   * Returns the vertical position of the image within the composite image.
+   */
+  int getTop();
+
+  /**
+   * Returns the URL for the composite image that contains the ImageResource.
+   */
+  String getURL();
+
+  /**
+   * Returns the width of the image.
+   */
+  int getWidth();
 }

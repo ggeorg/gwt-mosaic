@@ -31,7 +31,6 @@ import com.google.gwt.libideas.resources.css.ast.CssUrl;
 import com.google.gwt.libideas.resources.css.ast.CssVisitor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -176,17 +175,7 @@ public class CssGenerationVisitor extends CssVisitor {
 
     out.print(x.getName());
     colon();
-    if (x.getExpression() != null) {
-      addSubstitition(x);
-    } else {
-      Iterator<String> i = x.getValues().listIterator();
-      while (i.hasNext()) {
-        out.print(i.next());
-        if (i.hasNext()) {
-          out.print(' ');
-        }
-      }
-    }
+    addSubstitition(x);
 
     if (x.isImportant()) {
       important();

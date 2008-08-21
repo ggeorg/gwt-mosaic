@@ -66,15 +66,6 @@
 		</all>
 	</generate-with>
 
-	<replace-with
-		class="com.google.gwt.libideas.resources.client.impl.SpriteImpl.SpriteImplIE6">
-		<all>
-			<when-type-is
-				class="com.google.gwt.libideas.resources.client.impl.SpriteImpl" />
-			<when-property-is name="user.agent" value="ie6" />
-		</all>
-	</replace-with>
-
 	<!-- This allows merging of CSS rules to be disabled. -->
 	<!-- TODO : Consider whether or not to keep this in the final version -->
 	<define-property name="CssResource.enableMerge" values="true,false" />

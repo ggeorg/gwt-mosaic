@@ -15,20 +15,152 @@
  */
 package com.google.gwt.libideas.resources.css.ast;
 
-/**
- * Represents a sprited image.
- */
-public class CssSprite extends CssNode {
-  private final String cssClass;
-  private final String resourceFunction;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.ListValue;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.StringValue;
+import com.google.gwt.libideas.resources.css.ast.CssProperty.Value;
 
-  public CssSprite(String cssClass, String resourceFunction) {
-    this.cssClass = cssClass;
-    this.resourceFunction = resourceFunction;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+/**
+ * Represents a sprited image. This is basically a normal CssRule, except for
+ * one well-known property {@value CssSprite#IMAGE_PROPERTY_NAME}, which
+ * specifies the name of an ImageResource accessor.
+ */
+public class CssSprite extends CssRule {
+
+  public static final String IMAGE_PROPERTY_NAME = "gwt-image";
+
+  /**
+   * A facade for the underlying CssProperty list maintained by CssRule. We
+   * override the add and set methods to intercept the
+   * {@value CssSprite#IMAGE_PROPERTY_NAME} property.
+   */
+  private class SpritePropertyList implements List<CssProperty> {
+    private final List<CssProperty> source;
+
+    public SpritePropertyList(List<CssProperty> source) {
+      this.source = source;
+    }
+
+    public boolean add(CssProperty o) {
+      if (!processProperty(o)) {
+        return source.add(o);
+      } else {
+        return false;
+      }
+    }
+
+    public void add(int index, CssProperty element) {
+      if (!processProperty(element)) {
+        source.add(index, element);
+      }
+    }
+
+    public boolean addAll(Collection<? extends CssProperty> c) {
+      return source.addAll(c);
+    }
+
+    public boolean addAll(int index, Collection<? extends CssProperty> c) {
+      return source.addAll(index, c);
+    }
+
+    public void clear() {
+      source.clear();
+    }
+
+    public boolean contains(Object o) {
+      return source.contains(o);
+    }
+
+    public boolean containsAll(Collection<?> c) {
+      return source.containsAll(c);
+    }
+
+    public boolean equals(Object o) {
+      return source.equals(o);
+    }
+
+    public CssProperty get(int index) {
+      return source.get(index);
+    }
+
+    public int hashCode() {
+      return source.hashCode();
+    }
+
+    public int indexOf(Object o) {
+      return source.indexOf(o);
+    }
+
+    public boolean isEmpty() {
+      return source.isEmpty();
+    }
+
+    public Iterator<CssProperty> iterator() {
+      return source.iterator();
+    }
+
+    public int lastIndexOf(Object o) {
+      return source.lastIndexOf(o);
+    }
+
+    public ListIterator<CssProperty> listIterator() {
+      return source.listIterator();
+    }
+
+    public ListIterator<CssProperty> listIterator(int index) {
+      return source.listIterator(index);
+    }
+
+    public CssProperty remove(int index) {
+      return source.remove(index);
+    }
+
+    public boolean remove(Object o) {
+      return source.remove(o);
+    }
+
+    public boolean removeAll(Collection<?> c) {
+      return source.removeAll(c);
+    }
+
+    public boolean retainAll(Collection<?> c) {
+      return source.retainAll(c);
+    }
+
+    public CssProperty set(int index, CssProperty element) {
+      if (!processProperty(element)) {
+        return source.set(index, element);
+      } else {
+        return source.remove(index);
+      }
+    }
+
+    public int size() {
+      return source.size();
+    }
+
+    public List<CssProperty> subList(int fromIndex, int toIndex) {
+      return source.subList(fromIndex, toIndex);
+    }
+
+    public Object[] toArray() {
+      return source.toArray();
+    }
+
+    public <T> T[] toArray(T[] a) {
+      return source.toArray(a);
+    }
   }
 
-  public String getCssClass() {
-    return cssClass;
+  private String resourceFunction;
+
+  @Override
+  public List<CssProperty> getProperties() {
+    return new SpritePropertyList(super.getProperties());
   }
 
   public String getResourceFunction() {
@@ -38,5 +170,37 @@ public class CssSprite extends CssNode {
   public void traverse(CssVisitor visitor, Context context) {
     visitor.visit(this, context);
     visitor.endVisit(this, context);
+  }
+
+  private boolean processProperty(CssProperty property) {
+    if (IMAGE_PROPERTY_NAME.equals(property.getName())) {
+      setImageProperty(property.getValues());
+      return true;
+    }
+    return false;
+  }
+
+  private void setImageProperty(Value value) {
+
+    if (value instanceof StringValue) {
+      resourceFunction = ((StringValue) value).getValue();
+
+      // Allow the user to use both raw idents and quoted strings
+      if (resourceFunction.startsWith("\"")) {
+        resourceFunction = resourceFunction.substring(1,
+            resourceFunction.length() - 1);
+      }
+
+    } else if (value instanceof ListValue) {
+      ListValue list = (ListValue) value;
+      List<Value> values = list.getValues();
+      if (values.size() == 1) {
+        setImageProperty(values.get(0));
+      }
+
+    } else {
+      throw new IllegalArgumentException("The " + IMAGE_PROPERTY_NAME
+          + " property of @sprite must have exactly one value");
+    }
   }
 }
