@@ -1,5 +1,5 @@
 #!/bin/sh
 APPDIR=`dirname $0`;
 GWT_HOME=/home/ggeorg/Public/GWT/gwt-linux-1.5.0
-LIBS=$GWT_HOME/gwt-user.jar:$GWT_HOME/gwt-dev-linux.jar
-java  -Xmx256M -cp "$APPDIR/src:$APPDIR/build/classes:$LIBS" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/www" "$@" org.mosaic.ui.Mosaic;
+LIBS=$GWT_HOME/gwt-user.jar:$GWT_HOME/gwt-dev-linux.jar:$APPDIR/lib/gwt-dnd-2.5.4.jar:$APPDIR/lib/gwt-incubator.jar
+java  -Xmx256M -cp "$APPDIR/src:$APPDIR/build/classes:$LIBS" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/www" "$@" org.mosaic.showcase.Showcase;
