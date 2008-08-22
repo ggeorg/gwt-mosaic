@@ -286,6 +286,9 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
 
   private final ButtonWidget button = new ButtonWidget();
 
+  /**
+   * Creates a tool button with no caption.
+   */
   public ToolButton() {
     final LayoutPanel layoutPanel = new LayoutPanel();
 
@@ -295,9 +298,25 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
     setStyleName(DEFAULT_STYLENAME);
   }
 
+  /**
+   * Creates a button with the given HTML caption.
+   * 
+   * @param html the HTML caption
+   */
   public ToolButton(String html) {
     this();
     setHTML(html);
+  }
+
+  /**
+   * Creates a tool button with the given HTML caption and click listener.
+   * 
+   * @param html the HTML caption
+   * @param listener the click listener
+   */
+  public ToolButton(String html, ClickListener listener) {
+    this(html);
+    addClickListener(listener);
   }
 
   /*
@@ -406,25 +425,25 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
   }
 
   public void addKeyboardListener(KeyboardListener listener) {
-   button.addKeyboardListener(listener); 
+    button.addKeyboardListener(listener);
   }
 
   public void removeKeyboardListener(KeyboardListener listener) {
     button.removeKeyboardListener(listener);
   }
-  
+
   public void setEnabled(boolean enabled) {
     button.setEnabled(enabled);
   }
-  
+
   public boolean isEnabled() {
     return button.isEnabled();
   }
-  
+
   public ToolButtonStyle getStyle() {
     return button.getStyle();
   }
-  
+
   public void setStyle(ToolButtonStyle style) {
     button.setStyle(style);
   }
@@ -432,11 +451,11 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
   public PopupMenu getMenu() {
     return button.getMenu();
   }
-  
+
   public void setMenu(PopupMenu menu) {
     button.setMenu(menu);
   }
-  
+
   /**
    * Determines whether this check box is currently checked.
    * 
@@ -445,7 +464,7 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
   public boolean isChecked() {
     return button.isChecked();
   }
-  
+
   /**
    * Checks or unchecks this check box.
    * 
