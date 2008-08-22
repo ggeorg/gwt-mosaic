@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
 public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
