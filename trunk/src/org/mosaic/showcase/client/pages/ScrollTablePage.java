@@ -20,13 +20,13 @@ import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.scrolltable.FixedWidthFlexTable;
-import org.mosaic.ui.client.scrolltable.FixedWidthGrid;
-import org.mosaic.ui.client.scrolltable.ScrollTable;
-import org.mosaic.ui.client.scrolltable.overrides.FlexTable.FlexCellFormatter;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.ScrollTable;
+import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * Test methods in the {@link ScrollTable} class.

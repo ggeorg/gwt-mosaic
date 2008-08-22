@@ -19,10 +19,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.widgetideas.table.client.ClientTableModel;
 
 import java.io.Serializable;
-
-import org.mosaic.ui.client.scrolltable.ClientTableModel;
 
 /**
  * An iterator that serves as the data source for TableOracle requests.

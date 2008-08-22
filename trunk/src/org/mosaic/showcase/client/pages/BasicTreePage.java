@@ -4,14 +4,14 @@ import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.tree.FastTree;
-import org.mosaic.ui.client.tree.FastTreeItem;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.widgetideas.client.FastTree;
+import com.google.gwt.widgetideas.client.FastTreeItem;
 
 /**
  * 

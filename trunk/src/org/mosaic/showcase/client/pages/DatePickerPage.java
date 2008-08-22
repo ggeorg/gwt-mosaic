@@ -6,10 +6,10 @@ import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.mosaic.ui.client.datepicker.DatePicker;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
 /**
  * Example file.

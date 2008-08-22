@@ -11,18 +11,6 @@ import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-import org.mosaic.ui.client.scrolltable.CachedTableModel;
-import org.mosaic.ui.client.scrolltable.FixedWidthGrid;
-import org.mosaic.ui.client.scrolltable.FixedWidthGridBulkRenderer;
-import org.mosaic.ui.client.scrolltable.ListCellEditor;
-import org.mosaic.ui.client.scrolltable.PagingOptions;
-import org.mosaic.ui.client.scrolltable.PagingScrollTable;
-import org.mosaic.ui.client.scrolltable.RadioCellEditor;
-import org.mosaic.ui.client.scrolltable.ScrollTable;
-import org.mosaic.ui.client.scrolltable.TableBulkRenderer;
-import org.mosaic.ui.client.scrolltable.TextCellEditor;
-import org.mosaic.ui.client.scrolltable.PagingScrollTable.CellRenderer;
-import org.mosaic.ui.client.scrolltable.overrides.FlexTable.FlexCellFormatter;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Window;
@@ -32,6 +20,18 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.table.client.CachedTableModel;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.FixedWidthGridBulkRenderer;
+import com.google.gwt.widgetideas.table.client.ListCellEditor;
+import com.google.gwt.widgetideas.table.client.PagingOptions;
+import com.google.gwt.widgetideas.table.client.PagingScrollTable;
+import com.google.gwt.widgetideas.table.client.RadioCellEditor;
+import com.google.gwt.widgetideas.table.client.ScrollTable;
+import com.google.gwt.widgetideas.table.client.TableBulkRenderer;
+import com.google.gwt.widgetideas.table.client.TextCellEditor;
+import com.google.gwt.widgetideas.table.client.PagingScrollTable.CellRenderer;
+import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * 

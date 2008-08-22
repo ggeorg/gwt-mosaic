@@ -16,16 +16,11 @@
 package org.mosaic.showcase.client.pages;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
-import java.io.Serializable;
-
-import org.mosaic.ui.client.scrolltable.TableModel.Request;
-import org.mosaic.ui.client.scrolltable.TableModel.SerializableResponse;
+import com.google.gwt.widgetideas.table.client.TableModel.Request;
 
 /**
  * Asynchronous version of {@link DataSourceService}.
  */
 public interface DataSourceServiceAsync {
-  void requestRows(Request request,
-      AsyncCallback callback);
+  void requestRows(Request request, AsyncCallback callback);
 }
