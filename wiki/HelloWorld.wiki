@@ -4,7 +4,7 @@
 
 Demonstration of Viewport & LayoutPanel.
 
-[http://69.20.122.77:8880/hello-world.jpg http://69.20.122.77:8880/hello-world.jpg]
+Screenshot: http://69.20.122.77:8880/hello-world.jpg
 
 = Details =
 
