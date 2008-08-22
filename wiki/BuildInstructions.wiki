@@ -1,5 +1,7 @@
 #summary Build instructions for building gwt-mosaic.jar and running the demo.
 
+=== Requirements ===
+
  * GWT 1.5.x or later is required.
  * The build requires a *GWT_HOME* enviornment variable
  * Eclipse requires a *GWT15_HOME* classpath variable
