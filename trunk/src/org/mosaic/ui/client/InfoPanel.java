@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * Displays information in the bottom region of the browser for a specified
