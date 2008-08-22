@@ -4,10 +4,12 @@
 	<inherits name='com.google.gwt.user.User' />
 
 	<!-- Inherit gwt-dnd 2.x support                                -->
-    <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
-    
-    <!-- Inherit the libideas from http://code.google.com/p/google-web-toolkit-incubator/ -->
+	<inherits name='com.allen_sauer.gwt.dnd.gwt-dnd' />
+
+	<!-- Inherit the libideas & widgetideas 
+		from http://code.google.com/p/google-web-toolkit-incubator/ -->
 	<inherits name='com.google.gwt.libideas.LibIdeas' />
+	<inherits name='com.google.gwt.widgetideas.WidgetIdeas' />
 
 	<!-- Other module inherits                                      -->
 	<inherits name='org.mosaic.core.CompatMode' />
