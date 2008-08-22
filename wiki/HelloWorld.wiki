@@ -9,6 +9,8 @@ Screenshot: http://69.20.122.77:8880/hello-world.jpg
 
 = Details =
 
+Java code:
+
 {{{
 
 import org.mosaic.ui.client.InfoPanel;
@@ -144,4 +146,25 @@ public class Main implements EntryPoint {
 
 }
 
+}}}
+
+The GWT Module XML should contain:
+
+
+{{{
+<module>
+
+	<!-- Inherit the Mosaic Web Toolkit stuff.                      -->
+	<inherits name='org.mosaic.ui.Mosaic' />
+
+	<!-- Inherit the default GWT style sheet.  You can change       -->
+	<!-- the theme of your GWT application by uncommenting          -->
+	<!-- any one of the following lines.                            -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
+	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
+
+	...
+
+</module>
 }}}
