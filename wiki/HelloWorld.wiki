@@ -1,0 +1,146 @@
+#summary A Hello World demo.
+
+= Introduction =
+
+Demonstration of Viewport & LayoutPanel.
+
+http://69.20.122.77:8880/hello-world.jpg
+
+= Details =
+
+{{{
+
+import org.mosaic.ui.client.InfoPanel;
+import org.mosaic.ui.client.TitledLayoutPanel;
+import org.mosaic.ui.client.ToolBar;
+import org.mosaic.ui.client.ToolButton;
+import org.mosaic.ui.client.Viewport;
+import org.mosaic.ui.client.layout.BorderLayout;
+import org.mosaic.ui.client.layout.BorderLayoutData;
+import org.mosaic.ui.client.layout.BoxLayout;
+import org.mosaic.ui.client.layout.BoxLayoutData;
+import org.mosaic.ui.client.layout.LayoutPanel;
+import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Main implements EntryPoint {
+
+  private final Command menuCommand = new Command() {
+    public void execute() {
+      InfoPanel.show(Window.getTitle(), "Thank you for selecting a menu item.");
+    }
+  };
+
+  private final ClickListener clickListener = new ClickListener() {
+    public void onClick(Widget sender) {
+      final Button btn = (Button) sender;
+      InfoPanel.show(btn.getHTML(), "Stop poking me!");
+    }
+  };
+
+  private Widget newMenuBar() {
+    // Create a menu bar
+    final MenuBar menu = new MenuBar();
+    menu.setAnimationEnabled(true);
+
+    // Create the file menu
+    MenuBar fileMenu = new MenuBar(true);
+    fileMenu.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("File", fileMenu));
+    fileMenu.addItem("New", menuCommand);
+    fileMenu.addItem("Open...", menuCommand);
+    fileMenu.addItem("Open Location...", menuCommand);
+    fileMenu.addSeparator();
+    fileMenu.addItem("Quit", menuCommand);
+
+    // Create the file menu
+    MenuBar editMenu = new MenuBar(true);
+    editMenu.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("Edit", editMenu));
+    editMenu.addItem("Cut", menuCommand);
+    editMenu.addItem("Copy", menuCommand);
+    editMenu.addItem("Paste", menuCommand);
+    editMenu.addSeparator();
+    editMenu.addItem("Preferences", menuCommand);
+
+    // Create the file menu
+    MenuBar helpMenu = new MenuBar(true);
+    helpMenu.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("Help", helpMenu));
+    helpMenu.addItem("About", menuCommand);
+
+    return menu;
+  }
+
+  private Widget newToolBar() {
+    final ToolBar toolBar = new ToolBar();
+
+    ToolButton btn1 = new ToolButton("Push 1");
+    btn1.addClickListener(clickListener);
+    toolBar.add(btn1);
+    
+    ToolButton btn2 = new ToolButton("Push 2");
+    btn2.addClickListener(clickListener);
+    toolBar.add(btn2);
+
+    ToolButton btn3 = new ToolButton("Push 3");
+    btn3.addClickListener(clickListener);
+    toolBar.add(btn3);
+
+    toolBar.addSeparator();
+
+    ToolButton btn4 = new ToolButton("Push 4");
+    btn4.addClickListener(clickListener);
+    toolBar.add(btn4);
+
+    ToolButton btn5 = new ToolButton("Push 5");
+    btn5.addClickListener(clickListener);
+    toolBar.add(btn5);
+
+    ToolButton btn6 = new ToolButton("Push 6");
+    btn6.addClickListener(clickListener);
+    toolBar.add(btn6);
+
+    return toolBar;
+  }
+
+  /**
+   * This is the entry point method.
+   */
+  public void onModuleLoad() {
+    final Viewport viewport = new Viewport();
+    final LayoutPanel content = new LayoutPanel(new BorderLayout());
+    content.setPadding(1);
+    viewport.add(content);
+
+    LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    toolBox.setPadding(0);
+    toolBox.setWidgetSpacing(0);
+    toolBox.add(newMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
+    toolBox.add(newToolBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    content.add(toolBox, new BorderLayoutData(BorderLayoutRegion.NORTH));
+    content.add(new TitledLayoutPanel("West"), new BorderLayoutData(
+        BorderLayoutRegion.WEST, 200, 100, 300, true));
+    content.add(new TitledLayoutPanel("Center"), new BorderLayoutData(true));
+
+    RootPanel.get().add(viewport);
+  }
+
+}
+
+}}}
