@@ -3,7 +3,7 @@
 
 = Introduction =
 
-Demonstration of Viewport & LayoutPanel.
+Demonstration of `Viewport` & `LayoutPanel`.
 
 Screenshot: http://69.20.122.77:8880/hello-world.jpg
 
