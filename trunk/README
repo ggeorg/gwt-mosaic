@@ -14,7 +14,7 @@ To build a JAR and the demo WAR enter:
 Note: please check the build.properties and choose the correct value for the
 'gwt.dev' variable (default is 'gwt-dev-linux').
 
-1. The demo
+2. The demo
 ============================================================================
 To compile and run the demo enter:
 
