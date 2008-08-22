@@ -14,13 +14,6 @@ import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-import org.mosaic.ui.client.scrolltable.ClientTableModel;
-import org.mosaic.ui.client.scrolltable.FlexTableBulkRenderer;
-import org.mosaic.ui.client.scrolltable.PreloadedTable;
-import org.mosaic.ui.client.scrolltable.RendererCallback;
-import org.mosaic.ui.client.scrolltable.overrides.FlexTable;
-import org.mosaic.ui.client.scrolltable.overrides.Grid;
-import org.mosaic.ui.client.scrolltable.overrides.HTMLTable;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.Button;
@@ -31,6 +24,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.table.client.ClientTableModel;
+import com.google.gwt.widgetideas.table.client.FlexTableBulkRenderer;
+import com.google.gwt.widgetideas.table.client.PreloadedTable;
+import com.google.gwt.widgetideas.table.client.RendererCallback;
+import com.google.gwt.widgetideas.table.client.overrides.FlexTable;
+import com.google.gwt.widgetideas.table.client.overrides.Grid;
+import com.google.gwt.widgetideas.table.client.overrides.HTMLTable;
 
 /**
  * 

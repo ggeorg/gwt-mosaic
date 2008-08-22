@@ -17,10 +17,9 @@ package org.mosaic.showcase.client.pages;
 
 import java.io.Serializable;
 
-import org.mosaic.ui.client.scrolltable.TableModel.Request;
-import org.mosaic.ui.client.scrolltable.TableModel.SerializableResponse;
-
 import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.widgetideas.table.client.TableModel.Request;
+import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
 
 /**
  * A {@link RemoteService} to retrieve row data for the

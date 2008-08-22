@@ -2,13 +2,13 @@ package org.mosaic.showcase.client.pages;
 
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.tree.FastTree;
-import org.mosaic.ui.client.tree.FastTreeItem;
-import org.mosaic.ui.client.tree.HasFastTreeItems;
-import org.mosaic.ui.client.tree.ListeningFastTreeItem;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.widgetideas.client.FastTree;
+import com.google.gwt.widgetideas.client.FastTreeItem;
+import com.google.gwt.widgetideas.client.HasFastTreeItems;
+import com.google.gwt.widgetideas.client.ListeningFastTreeItem;
 
 public class VerboseTreePage extends BasicTreePage {
 

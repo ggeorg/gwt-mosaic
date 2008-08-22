@@ -23,11 +23,11 @@ import java.util.Random;
 
 import org.mosaic.showcase.client.pages.DataSourceData;
 import org.mosaic.showcase.client.pages.DataSourceService;
-import org.mosaic.ui.client.scrolltable.TableModel.ColumnSortList;
-import org.mosaic.ui.client.scrolltable.TableModel.Request;
-import org.mosaic.ui.client.scrolltable.TableModel.SerializableResponse;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.widgetideas.table.client.TableModel.ColumnSortList;
+import com.google.gwt.widgetideas.table.client.TableModel.Request;
+import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
 
 /**
  * Implementation of {@link DataSourceService}.
