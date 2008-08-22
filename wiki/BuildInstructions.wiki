@@ -1,3 +1,5 @@
+#summary Build instructions for building a JAR and running the demo.
+
  * GWT 1.5.x or later is required.
  * The build requires a *GWT_HOME* enviornment variable
  * Eclipse requires a *GWT15_HOME* classpath variable
