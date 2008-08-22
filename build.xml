@@ -159,6 +159,7 @@
 		<delete file="${ant.project.name}-${project.version}.jar" />
 		<delete file="${ant.project.name}-showcase-${project.version}.war" />
 		<delete dir="${build}" />
+		<delete dir="${doc}" />
 	</target>
 
 </project>
