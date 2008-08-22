@@ -1,4 +1,4 @@
-#summary Build instructions for building a JAR and running the demo.
+#summary Build instructions for building gwt-mosaic.jar and running the demo.
 
  * GWT 1.5.x or later is required.
  * The build requires a *GWT_HOME* enviornment variable
