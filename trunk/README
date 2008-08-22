@@ -5,16 +5,7 @@
 -- Eclipse requires a GWT15_HOME classpath variable.
 
 
-1. The demo
-============================================================================
-1. To compile and run the demo enter:
-
-	./Mosaic-compile
-	./Mosaic-shell
-
-Note: both scripts are for linux.
-
-2. Building	
+1. Building	
 ============================================================================
 To build a JAR and the demo WAR enter:
 
@@ -22,6 +13,15 @@ To build a JAR and the demo WAR enter:
 	
 Note: please check the build.properties and choose the correct value for the
 'gwt.dev' variable (default is 'gwt-dev-linux').
+
+1. The demo
+============================================================================
+To compile and run the demo enter:
+
+	./Mosaic-compile
+	./Mosaic-shell
+
+Note: both scripts are for linux.
 
 3. Using
 ============================================================================
