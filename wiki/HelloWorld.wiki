@@ -1,4 +1,5 @@
 #summary A Hello World demo.
+#labels Featured
 
 = Introduction =
 
