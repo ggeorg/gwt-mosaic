@@ -1,0 +1,32 @@
+= Build Instructions =
+
+ * GWT 1.5.x or later is required.
+ * The build requires a *GWT_HOME* enviornment variable
+ * Eclipse requires a *GWT15_HOME* classpath variable
+
+=== 1. The demo ===
+----
+To compile and run the demo enter:
+{{{
+	Mosaic-compile
+	Mosaic-shell
+}}}
+_Note: both scripts are for linux._
+
+===2. Building===
+----
+To build a JAR and the demo WAR enter:
+{{{
+	ant
+}}}	
+_Note: please check the build.properties and choose the correct value for the
+'gwt.dev' variable (default is 'gwt-dev-linux')._
+
+===3. Using===
+----
+To use the library you will need also gwt-dnd.jar & gwt-incubator.jar 
+from the lib directory and you have to add:
+{{{
+	<inherits name='org.mosaic.ui.Mosaic' />
+}}}
+in your module gwt.xml file.
