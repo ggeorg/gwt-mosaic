@@ -318,7 +318,7 @@ public class ToolBarPage extends Page implements ClickListener {
 
   @Override
   public String getName() {
-    return "Tool & MenuBar";
+    return "ToolBar";
   }
 
 }
