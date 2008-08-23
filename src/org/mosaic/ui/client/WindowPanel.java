@@ -358,7 +358,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
   private int contentWidth, contentHeight;
   private final WindowController windowController;
 
-  private final TitledLayoutPanel panel;
+  private final CaptionLayoutPanel panel;
 
   private final boolean resizable, modal;
 
@@ -422,7 +422,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       makeResizable();
     }
 
-    panel = new TitledLayoutPanel(caption);
+    panel = new CaptionLayoutPanel(caption);
 
     ImageButton closeBtn = new ImageButton(CAPTION_IMAGES.windowClose());
     closeBtn.addClickListener(new ClickListener() {
