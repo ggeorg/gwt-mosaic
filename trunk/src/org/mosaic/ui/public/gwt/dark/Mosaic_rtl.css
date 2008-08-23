@@ -26,6 +26,16 @@
 	zoom: 1;
 }
 
+/**
+ * If using standards mode, and the body (i.e. RootPanel.get()) is going to be your
+ * boundary panel, you'll want to ensure that the body actually has height; with only
+ * absolute positioned content, the height remains 0px. Usually setting 100% height 
+ * on the HTML and BODY elements does the trick.
+ */ 
+html,body {
+	height: 100%;
+}
+
 body {
 	font-family: arial,sans-serif;
 }
@@ -773,4 +783,122 @@ input {
 .mosaic-WidgetWrapper {
 	/* debug */
 	/*border: 1px solid;*/	
+}
+
+/*** DateTimePicker ***/
+
+.mosaic-DateTimePicker {
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	cursor: default;
+	background: #dbe6de;
+}
+
+/*** DatePicker ***/
+/* most of these will eventually move into a default resource bundle. */
+
+.mosaic-DatePicker {
+	border: 1px solid #f1f1f1;
+	border-bottom: 2px solid #f1f1f1;
+	color: 6b6b6b;
+	cursor: default;
+	padding: 0px;
+}
+.mosaic-DatePicker td {
+	font-family: Arial;
+	/*font-size: 65%;*/
+	padding: 2px;
+	text-align: center;
+	padding: 2px;
+	outline: none;
+	-moz-outline: none;
+	cursor: default;
+}
+.mosaic-DatePicker td,
+.month-selector td:focus {
+	outline: none
+}
+.gwt-DateBox input {
+	width: 8em;
+}
+/* Calendar styles */
+.calendar-view {
+	background-color: white;
+}
+.calendar-view .filler-cell {
+	color: #bfbfbf;
+	padding: 1px;
+	cursor: hand;
+}
+.calendar-view .date-cell {
+	padding: 1px;
+	cursor:hand;
+}
+.calendar-view .selected-cell {
+	background: #aaccee;
+}
+.calendar-view .day-title {
+	background: #dbe6de;
+}
+.mosaic-DatePicker .calendar-view .highlighted-cell {
+	border: 1px solid #eeeeee;
+	padding: 0px;
+}
+.calendar-view .today-cell {
+	border: 1px solid black;
+	padding: 0px;
+}
+.mosaic-DatePicker .calendar-view .weekend {
+	background: #f1f1f1;
+}
+.calendar-view .disabled-cell {
+	color: graytext;
+}
+/* Month selector styles */
+.month-selector {
+	background: #dbe6de;
+	width: 100%;
+	text-align: center;
+}
+.month-selector td {
+	font-weight: bold;
+	/*font-size: 75%;*/
+}
+.month-selector .month-label {
+	text-align: center;
+	background: #dbe6de;
+}
+.month-selector .month-backward {
+	background: transparent;
+	border: none;
+	padding-right: 2em;
+}
+.month-selector .month-forward {
+	background: transparent;
+	border: none;
+	padding-left: 2em;
+}
+/*  Styles demo*/
+.mosaic-DatePicker .red-date {
+	background-color: red;
+}
+.mosaic-DatePicker .blue-background {
+	background-color: blue;
+}
+.mosaic-DatePicker .red-text {
+	color: red;
+}
+.mosaic-DatePicker .green-border {
+	border: 5px solid green;
+}
+.mosaic-DatePicker .big-text {
+	font-size: x-large;
+}
+.mosaic-DatePicker .underlined-and-bold-text {
+	font-weight: bold;
+	text-decoration: underline;
+}
+.mosaic-DatePicker .yellow-background {
+	background-color: yellow;
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2008 Google Inc.
+ * Copyright 2008 Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.mosaic.showcase.client.pages;
 
 import java.util.Date;
@@ -6,22 +22,21 @@ import org.mosaic.showcase.client.Page;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.mosaic.ui.client.CaptionLayoutPanel;
 import org.mosaic.ui.client.InfoPanel;
 import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.ToolButton;
 import org.mosaic.ui.client.MessageBox.PromptCallback;
 import org.mosaic.ui.client.datepicker.DatePicker;
+import org.mosaic.ui.client.datepicker.DateTimePicker;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.FillLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
@@ -56,6 +71,11 @@ public class DatePickerPage extends Page {
     this.constants = constants;
   }
 
+  @Override
+  public String getName() {
+    return "Date & DateTime Picker";
+  }
+
   /**
    * Load this example.
    */
@@ -64,80 +84,52 @@ public class DatePickerPage extends Page {
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout());
 
+    //
+    // DatePicker
+    //
+
+    final CaptionLayoutPanel vPanel1 = new CaptionLayoutPanel("DatePicker");
+    layoutPanel.add(vPanel1, new BoxLayoutData(FillStyle.BOTH, true));
+    
     final DatePicker datePicker = new DatePicker();
     final Date d = new Date();
     d.setMonth(2);
     d.setDate(1);
     datePicker.setSelectedDate(d);
-    layoutPanel.add(datePicker, new BoxLayoutData(FillStyle.BOTH, true));
+    vPanel1.add(datePicker, new BoxLayoutData(FillStyle.BOTH));
 
     // Log select events.
     final ChangeHandler<Date> changeHandler = new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
-        InfoPanel.show("DatePicker ChangeHandler", event.getOldValue()
-            + " --> " + event.getNewValue());
+        InfoPanel.show("DatePicker ChangeHandler", event.getOldValue() + " --> "
+            + event.getNewValue());
       }
     };
     datePicker.addChangeHandler(changeHandler);
-    
-    final LayoutPanel vPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    layoutPanel.add(vPanel);
-    vPanel.add(new ToolButton("DatePicker Prompt", new ClickListener() {
-      public void onClick(Widget sender) {
-        datePickerPrompt(new PromptCallback() {
-          public void onResult(String input) {
-            InfoPanel.show("DatePicker Prompt", input);
-          }
-        });
-      }
-    }));
-  }
 
-  private void datePickerPrompt(final PromptCallback callback) {
-    final DatePicker datePicker = new DatePicker();
-    Date d = new Date();
-    d.setMonth(2);
-    d.setDate(1);
-    datePicker.setSelectedDate(d);
+    //
+    // DateTimePicker
+    //
 
-    final MessageBox prompt = new MessageBox("DatePicker Prompt") {
-      @Override
-      public void onClose(boolean result) {
-        hide();
-        if (result) {
-          callback.onResult(datePicker.getSelectedDate().toString());
-        } else {
-          callback.onResult(null);
-        }
+    final CaptionLayoutPanel vPanel2 = new CaptionLayoutPanel("DateTimePicker");
+    layoutPanel.add(vPanel2, new BoxLayoutData(FillStyle.BOTH, true));
+
+    final DateTimePicker dateTimePicker = new DateTimePicker();
+    // final Date d = new Date();
+    // d.setMonth(2);
+    // d.setDate(1);
+    dateTimePicker.getDatePicker().setSelectedDate(d);
+    vPanel2.add(dateTimePicker, new BoxLayoutData(FillStyle.BOTH));
+
+    // Log select events.
+    final ChangeHandler<Date> changeHandler2 = new ChangeHandler<Date>() {
+      public void onChange(ChangeEvent<Date> event) {
+        InfoPanel.show("DateTimePicker ChangeHandler",
+            dateTimePicker.getDate().toString());
       }
     };
-    prompt.setAnimationEnabled(true);
-    prompt.setWidth("256px");
-
-    Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        prompt.onClose(true);
-      }
-    });
-
-    Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        prompt.onClose(false);
-      }
-    });
-
-    prompt.getButtonPanel().add(buttonOK);
-    prompt.getButtonPanel().add(buttonCancel);
-
-    prompt.setWidget(datePicker, 0);
-    prompt.center();
-  }
-
-  @Override
-  public String getName() {
-    return "DatePicker";
+    dateTimePicker.getDatePicker().addChangeHandler(changeHandler2);
+    dateTimePicker.getTimePicker().addChangeHandler(changeHandler2);
   }
 
 }

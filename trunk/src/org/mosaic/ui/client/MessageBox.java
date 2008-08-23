@@ -15,8 +15,12 @@
  */
 package org.mosaic.ui.client;
 
+import java.util.Date;
+
 import org.mosaic.core.client.DOM;
 import org.mosaic.core.client.UserAgent;
+import org.mosaic.ui.client.datepicker.DatePicker;
+import org.mosaic.ui.client.datepicker.DateTimePicker;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.BoxLayout;
@@ -51,8 +55,8 @@ public abstract class MessageBox extends WindowPanel {
     ALERT, CONFIRM, ERROR, INFO, PASSWORD, PLAIN, PROMPT
   }
 
-  public interface PromptCallback {
-    void onResult(String input);
+  public interface PromptCallback<T> {
+    void onResult(T input);
   };
 
   /**
@@ -147,8 +151,91 @@ public abstract class MessageBox extends WindowPanel {
     alert(MessageBoxType.INFO, caption, message);
   }
 
+  public static void prompt(String caption, Date defaultValue, boolean use24Hours,
+      final PromptCallback<Date> callback) {
+    final DateTimePicker dateTimePicker = new DateTimePicker(use24Hours);
+    // dateTimePicker.getDatePicker().setSelectedDate(defaultValue, true);
+    dateTimePicker.getTimePicker().setDateTime(defaultValue);
+
+    final MessageBox prompt = new MessageBox(caption) {
+      @Override
+      public void onClose(boolean result) {
+        hide();
+        if (result) {
+          callback.onResult(dateTimePicker.getDate());
+        } else {
+          callback.onResult(null);
+        }
+      }
+    };
+    prompt.setAnimationEnabled(true);
+    final int width = Window.getClientWidth();
+    prompt.setWidth(Math.max(width / 3, 256) + "px");
+
+    Button buttonOK = new Button("OK");
+    buttonOK.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        prompt.onClose(true);
+      }
+    });
+
+    Button buttonCancel = new Button("Cancel");
+    buttonCancel.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        prompt.onClose(false);
+      }
+    });
+
+    prompt.getButtonPanel().add(buttonOK);
+    prompt.getButtonPanel().add(buttonCancel);
+
+    prompt.setWidget(dateTimePicker, 0);
+    prompt.center();
+  }
+
+  public static void prompt(String caption, Date defaultValue,
+      final PromptCallback<Date> callback) {
+    final DatePicker datePicker = new DatePicker();
+    datePicker.setSelectedDate(defaultValue);
+
+    final MessageBox prompt = new MessageBox(caption) {
+      @Override
+      public void onClose(boolean result) {
+        hide();
+        if (result) {
+          callback.onResult(datePicker.getSelectedDate());
+        } else {
+          callback.onResult(null);
+        }
+      }
+    };
+    prompt.setAnimationEnabled(true);
+    final int width = Window.getClientWidth();
+    prompt.setWidth(Math.max(width / 3, 256) + "px");
+
+    Button buttonOK = new Button("OK");
+    buttonOK.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        prompt.onClose(true);
+      }
+    });
+
+    Button buttonCancel = new Button("Cancel");
+    buttonCancel.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        prompt.onClose(false);
+      }
+    });
+
+    prompt.getButtonPanel().add(buttonOK);
+    prompt.getButtonPanel().add(buttonCancel);
+
+    prompt.setWidget(datePicker, 0);
+    prompt.center();
+  }
+
   public static void prompt(String caption, String message, String defaultValue,
-      final PromptCallback callback) {
+      final PromptCallback<String> callback) {
     final TextBox input = new TextBox();
     input.setText(defaultValue);
 
@@ -220,7 +307,7 @@ public abstract class MessageBox extends WindowPanel {
   }
 
   public MessageBox(MessageBoxType type, String text, boolean autoHide) {
-    super(text, true, autoHide, true);
+    super(text, false, autoHide, true);
 
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
     super.setWidget(layoutPanel);

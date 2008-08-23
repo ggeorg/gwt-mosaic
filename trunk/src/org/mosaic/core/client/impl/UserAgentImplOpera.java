@@ -24,6 +24,6 @@ public class UserAgentImplOpera extends UserAgentImpl {
    */
   @Override
   public boolean isOpera() {
-    return false;
+    return true;
   }
 }

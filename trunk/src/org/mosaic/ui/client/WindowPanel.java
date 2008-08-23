@@ -133,8 +133,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
           glassPanel.addStyleName("mosaic-GlassPanel-default");
-          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-              DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
+          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", DOM.getStyleAttribute(
+              WindowPanel.this.getElement(), "zIndex"));
         }
         RootPanel.get().add(glassPanel, 0, 0);
       }
@@ -162,8 +162,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
           glassPanel.addStyleName("mosaic-GlassPanel-default");
-          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-              DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
+          final int zIndex = DOM.getIntStyleAttribute(WindowPanel.this.getElement(),
+              "zIndex");
+          DOM.setIntStyleAttribute(glassPanel.getElement(), "zIndex", zIndex - 1);
         }
         RootPanel.get().add(glassPanel, 0, 0);
       }
@@ -645,8 +646,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       if (glassPanel == null) {
         glassPanel = new GlassPanel(false);
         glassPanel.addStyleName("mosaic-GlassPanel-default");
-        DOM.setStyleAttribute(glassPanel.getElement(), "z-index",
-            DOM.getStyleAttribute(WindowPanel.this.getElement(), "z-index"));
+        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", DOM.getStyleAttribute(
+            WindowPanel.this.getElement(), "zIndex"));
       }
       RootPanel.get().add(glassPanel, 0, 0);
     }

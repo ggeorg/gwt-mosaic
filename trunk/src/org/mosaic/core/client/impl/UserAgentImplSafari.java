@@ -24,6 +24,6 @@ public class UserAgentImplSafari extends UserAgentImpl {
    */
   @Override
   public boolean isSafari() {
-    return false;
+    return true;
   }
 }
