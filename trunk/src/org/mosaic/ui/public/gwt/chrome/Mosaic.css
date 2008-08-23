@@ -212,7 +212,7 @@ input {
 
 .mosaic-WindowPanel {
 }
-.mosaic-WindowPanel .mosaic-TitledLayoutPanel {	
+.mosaic-WindowPanel .mosaic-CaptionLayoutPanel {	
 	padding: 0px;
 	margin: 0px;
 	
@@ -663,16 +663,16 @@ input {
 	cursor: hand;
 }
 
-/*** TitledLayoutPanel ***/
+/*** CaptionLayoutPanel ***/
 
-.mosaic-TitledLayoutPanel {
+.mosaic-CaptionLayoutPanel {
 	padding: 0px;
 	margin: 0px;
 
 	/* debug */
 	/*border: 1px dotted #00f;*/
 }
-.mosaic-TitledLayoutPanel .Body {
+.mosaic-CaptionLayoutPanel .Body {
 	
 	/* debug */
 	/*border: 1px dotted #0f0;*/
