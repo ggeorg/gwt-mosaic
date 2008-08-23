@@ -24,20 +24,14 @@ import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.CaptionLayoutPanel;
 import org.mosaic.ui.client.InfoPanel;
-import org.mosaic.ui.client.MessageBox;
-import org.mosaic.ui.client.ToolButton;
-import org.mosaic.ui.client.MessageBox.PromptCallback;
 import org.mosaic.ui.client.datepicker.DatePicker;
 import org.mosaic.ui.client.datepicker.DateTimePicker;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
@@ -73,7 +67,7 @@ public class DatePickerPage extends Page {
 
   @Override
   public String getName() {
-    return "Date & DateTime Picker";
+    return "DatePicker";
   }
 
   /**
