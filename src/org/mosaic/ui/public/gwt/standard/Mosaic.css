@@ -26,6 +26,16 @@
 	zoom: 1;
 }
 
+/**
+ * If using standards mode, and the body (i.e. RootPanel.get()) is going to be your
+ * boundary panel, you'll want to ensure that the body actually has height; with only
+ * absolute positioned content, the height remains 0px. Usually setting 100% height 
+ * on the HTML and BODY elements does the trick.
+ */ 
+html,body {
+	height: 100%;
+}
+
 body {
 	font-family: arial,sans-serif;
 }
@@ -773,6 +783,16 @@ input {
 .mosaic-WidgetWrapper {
 	/* debug */
 	/*border: 1px solid;*/	
+}
+
+/*** DateTimePicker ***/
+
+.mosaic-DateTimePicker {
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	cursor: default;
+	background: #dbe6de;
 }
 
 /*** DatePicker ***/

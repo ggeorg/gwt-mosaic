@@ -1,4 +1,21 @@
+/*
+ * Copyright 2008 Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.mosaic.showcase.client.pages;
+
+import java.util.Date;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.showcase.client.Page;
@@ -78,6 +95,10 @@ public class MessageBoxPage extends Page {
 
     scrollPanel.add(vPanel);
 
+    //
+    // Alert Box
+    //
+
     HTML alertDesc = new HTML(
         "<b>Alert Box</b>"
             + "<br><small>An alert box is often used if you want to make sure information comes through to the user. "
@@ -114,6 +135,10 @@ public class MessageBoxPage extends Page {
 
     vPanel.add(hpanel1);
 
+    //
+    // Confirmation Box
+    //
+
     HTML confirmDesc = new HTML(
         "<b>Confirmation Box</b>"
             + "<br><small>A confirm box is often used if you want the user to verify or accept something. "
@@ -134,6 +159,10 @@ public class MessageBoxPage extends Page {
     });
     vPanel.add(confirmBtn);
 
+    //
+    // Prompt Box
+    //
+
     HTML promptDesc = new HTML(
         "<b>Prompt Box</b>"
             + "<br><small>A prompt box is often used if you want the user to input a value. "
@@ -141,18 +170,62 @@ public class MessageBoxPage extends Page {
             + "If the user clicks \"OK\" the box returns the input value. If the user clicks \"Cancel\" the box returns null.</small>");
     vPanel.add(promptDesc);
 
-    Button promptBtn = new Button("Show Me");
-    promptBtn.addClickListener(new ClickListener() {
+    Button promptBtn1 = new Button("Standard");
+    promptBtn1.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         MessageBox.prompt("Prompt Box", "Please enter your name", "George",
-            new PromptCallback() {
+            new PromptCallback<String>() {
               public void onResult(String input) {
                 InfoPanel.show("Prompt Box", "Your name is: '" + input + "'");
               }
             });
       }
     });
-    vPanel.add(promptBtn);
+
+    Button promptBtn2 = new Button("Multiline");
+    promptBtn2.setEnabled(false);
+
+    Button promptBtn3 = new Button("Rich Text");
+    promptBtn3.setEnabled(false);
+
+    Button promptBtn4 = new Button("DatePicker");
+    promptBtn4.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        MessageBox.prompt("DatePicker Box", new Date(), new PromptCallback<Date>() {
+          public void onResult(Date input) {
+            InfoPanel.show("DatePicker Box", "You entered: '" + input + "'");
+          }
+        });
+      }
+    });
+    
+    Button promptBtn5 = new Button("DateTimePicker");
+    promptBtn5.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        MessageBox.prompt("DateTimePicker Box", new Date(), false, new PromptCallback<Date>() {
+          public void onResult(Date input) {
+            InfoPanel.show("DateTimePicker Box", "You entered: '" + input + "'");
+          }
+        });
+      }
+    });
+
+    HorizontalPanel hpanel2 = new HorizontalPanel();
+    hpanel2.add(promptBtn1);
+    hpanel2.add(new HTML("&nbsp;"));
+    hpanel2.add(promptBtn2);
+    hpanel2.add(new HTML("&nbsp;"));
+    hpanel2.add(promptBtn3);
+    hpanel2.add(new HTML("&nbsp;"));
+    hpanel2.add(promptBtn4);
+    hpanel2.add(new HTML("&nbsp;"));
+    hpanel2.add(promptBtn5);
+
+    vPanel.add(hpanel2);
+    
+    //
+    // Custom
+    //
 
     HTML customDesc = new HTML("<b>Custom</b>"
         + "<br><small>Some custom MessageBox examples.</small>");
@@ -168,7 +241,7 @@ public class MessageBoxPage extends Page {
     Button customBtn2 = new Button("RichTextArea Prompt");
     customBtn2.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        richTextAreaPrompt(new PromptCallback() {
+        richTextAreaPrompt(new PromptCallback<String>() {
           public void onResult(String input) {
             InfoPanel.show("RichTextArea Prompt", input);
           }
@@ -176,12 +249,12 @@ public class MessageBoxPage extends Page {
       }
     });
 
-    HorizontalPanel hpanel2 = new HorizontalPanel();
-    hpanel2.add(customBtn1);
-    hpanel2.add(new HTML("&nbsp;"));
-    hpanel2.add(customBtn2);
+    HorizontalPanel hpanel3 = new HorizontalPanel();
+    hpanel3.add(customBtn1);
+    hpanel3.add(new HTML("&nbsp;"));
+    hpanel3.add(customBtn2);
 
-    vPanel.add(hpanel2);
+    vPanel.add(hpanel3);
   }
 
   /**
@@ -274,7 +347,7 @@ public class MessageBoxPage extends Page {
     area.setSize("100%", "14em");
 
     DOM.setStyleAttribute(area.getElement(), "background", "white");
-    
+
     final MessageBox prompt = new MessageBox("RichTextArea Prompt") {
       @Override
       public void onClose(boolean result) {

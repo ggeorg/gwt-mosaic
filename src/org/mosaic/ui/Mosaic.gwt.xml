@@ -32,10 +32,4 @@
 	<!-- Other module inherits                                      -->
 	<inherits name='org.mosaic.core.Core' />
 
-	<!-- Inherit various widget modules                             -->
-	<inherits name='org.mosaic.ui.GlassPanel' />
-
-	<!-- Specify the application specific style sheet.              -->
-	<stylesheet src="gwt/standard/Mosaic.css" />
-
 </module>

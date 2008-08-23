@@ -46,7 +46,7 @@ public class ComboBox extends Composite implements HasLayoutManager, HasName, Ha
   protected ComboBox(String styleName) {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.HORIZONTAL));
     layoutPanel.setPadding(0);
-    layoutPanel.setWidgetSpacing(1);
+    layoutPanel.setWidgetSpacing(0);
 
     initWidget(layoutPanel);
 
