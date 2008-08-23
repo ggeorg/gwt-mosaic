@@ -31,13 +31,13 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TitledLayoutPanel extends Composite implements HasLayoutManager, HasWidgets,
+public class CaptionLayoutPanel extends Composite implements HasLayoutManager, HasWidgets,
     IndexedPanel {
 
   /**
    * The default style name.
    */
-  private static final String DEFAULT_STYLENAME = "mosaic-TitledLayoutPanel";
+  private static final String DEFAULT_STYLENAME = "mosaic-CaptionLayoutPanel";
 
   private final Caption header;
   private final LayoutPanel body;
@@ -46,7 +46,7 @@ public class TitledLayoutPanel extends Composite implements HasLayoutManager, Ha
   /**
    * 
    */
-  public TitledLayoutPanel() {
+  public CaptionLayoutPanel() {
     this(null);
   }
 
@@ -54,7 +54,7 @@ public class TitledLayoutPanel extends Composite implements HasLayoutManager, Ha
    * 
    * @param text
    */
-  public TitledLayoutPanel(final String text) {
+  public CaptionLayoutPanel(final String text) {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
 

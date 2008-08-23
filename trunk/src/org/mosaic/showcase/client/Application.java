@@ -16,7 +16,7 @@
  */
 package org.mosaic.showcase.client;
 
-import org.mosaic.ui.client.TitledLayoutPanel;
+import org.mosaic.ui.client.CaptionLayoutPanel;
 import org.mosaic.ui.client.Viewport;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
@@ -142,7 +142,7 @@ public class Application extends Viewport implements HasLayoutManager {
     // Add the main menu
     createMainMenu();
 
-    TitledLayoutPanel westPanel = new TitledLayoutPanel("Select demo");
+    CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
     westPanel.add(new ScrollPanel(mainMenu));
 
     bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200, 100,
