@@ -20,6 +20,7 @@ import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.ComboBox;
+import org.mosaic.ui.client.datepicker.DateBox;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -27,6 +28,7 @@ import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Example file.
@@ -62,17 +64,23 @@ public class ComboBoxPage extends Page {
     final BoxLayout vLayout = new BoxLayout(Orientation.VERTICAL);
     layoutPanel.setLayout(vLayout);
     
-    //
-    //
-    //
+    ComboBox comboBox1 = new DateBox();
+    comboBox1.ensureDebugId("mosaicAbstractComboBox-normal");
     
-    final LayoutPanel hBox1 = new LayoutPanel(new BoxLayout());
-    layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.BOTH, true));
+    ComboBox comboBox2 = new DateBox();
+    comboBox2.ensureDebugId("mosaicAbstractComboBox-normal");
     
-    ComboBox comboBox = new ComboBox();
-    comboBox.ensureDebugId("mosaicAbstractComboBox-normal");
+    ComboBox comboBox3 = new DateBox();
+    comboBox3.ensureDebugId("mosaicAbstractComboBox-normal");
     
-    hBox1.add(comboBox, new BoxLayoutData(FillStyle.BOTH));
+    ComboBox comboBox4 = new DateBox();
+    comboBox4.ensureDebugId("mosaicAbstractComboBox-normal");
+    
+    layoutPanel.add(comboBox1, new BoxLayoutData());
+    layoutPanel.add(comboBox2, new BoxLayoutData(FillStyle.HORIZONTAL));
+    layoutPanel.add(comboBox3, new BoxLayoutData(FillStyle.VERTICAL));
+    layoutPanel.add(comboBox4, new BoxLayoutData(FillStyle.BOTH));
+    layoutPanel.add(new SimplePanel(), new BoxLayoutData(FillStyle.BOTH));
   }
 
   @Override

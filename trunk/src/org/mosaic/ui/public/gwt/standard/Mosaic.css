@@ -132,10 +132,10 @@ input {
 
 .mosaic-ComboBox input {
 	border: 0px;
-	vertical-align: middle;	
+	text-align: middle;
 }
 .mosaic-ComboBox button {
-	width: 25px;
+	width: 18px;
 	border: 0px;
 	border-left: 1px solid #ccc;
 	padding: 0px;
@@ -216,6 +216,12 @@ input {
 	padding: 4px 4px 4px 4px;
 	text-align: left !important;
 	font-weight: bold;
+}
+
+/*** DropDownPanel ***/
+
+.mosaic-DropDownPanel {
+	
 }
 
 /*** WindowPanel ***/
