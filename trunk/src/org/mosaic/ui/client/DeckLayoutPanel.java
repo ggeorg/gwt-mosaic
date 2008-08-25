@@ -16,10 +16,8 @@
 package org.mosaic.ui.client;
 
 import org.mosaic.ui.client.layout.FillLayoutData;
-import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -27,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
  * A panel that displays all of its child widgets in a 'deck', where only one
  * can be visible at a time.
  */
-public class DeckLayoutPanel extends Composite implements HasLayoutManager, IndexedPanel {
+public class DeckLayoutPanel extends LayoutComposite implements IndexedPanel {
 
   /**
    * The default style name.
@@ -37,10 +35,7 @@ public class DeckLayoutPanel extends Composite implements HasLayoutManager, Inde
   private Widget visibleWidget;
 
   public DeckLayoutPanel() {
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
-    initWidget(layoutPanel);
-
+    super();
     setStyleName(DEFAULT_STYLENAME);
   }
 
@@ -78,16 +73,6 @@ public class DeckLayoutPanel extends Composite implements HasLayoutManager, Inde
         oldWidget.setVisible(false);
       }
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
   }
 
   /*
@@ -144,15 +129,6 @@ public class DeckLayoutPanel extends Composite implements HasLayoutManager, Inde
   /*
    * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  public void layout() {
-    getWidget().layout();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
    */
   public boolean remove(int index) {
@@ -174,15 +150,6 @@ public class DeckLayoutPanel extends Composite implements HasLayoutManager, Inde
 
   public void setPadding(int padding) {
     getWidget().setPadding(padding);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }

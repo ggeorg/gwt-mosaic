@@ -18,20 +18,19 @@ package org.mosaic.ui.client.datepicker;
 
 import java.util.Date;
 
+import org.mosaic.ui.client.LayoutComposite;
 import org.mosaic.ui.client.WidgetWrapper;
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.TimePicker;
 
-public class DateTimePicker extends Composite implements HasLayoutManager {
+public class DateTimePicker extends LayoutComposite {
   
   /**
    * The default style name.
@@ -77,9 +76,9 @@ public class DateTimePicker extends Composite implements HasLayoutManager {
    * @param timePicker the {@link TimePicker} to be used
    */
   public DateTimePicker(DatePicker datePicker, TimePicker timePicker) {
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(1);
-    initWidget(layoutPanel);
     
     this.datePicker = datePicker;
     this.timePicker = timePicker;
@@ -115,34 +114,6 @@ public class DateTimePicker extends Composite implements HasLayoutManager {
    */
   public TimePicker getTimePicker() {
     return timePicker;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
-   */
-  public void layout() {
-    getWidget().layout();
   }
 
 }

@@ -19,19 +19,17 @@ import java.util.Iterator;
 
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutData;
 import org.mosaic.ui.client.layout.LayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CaptionLayoutPanel extends Composite implements HasLayoutManager, HasWidgets,
+public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     IndexedPanel {
 
   /**
@@ -55,7 +53,8 @@ public class CaptionLayoutPanel extends Composite implements HasLayoutManager, H
    * @param text
    */
   public CaptionLayoutPanel(final String text) {
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
 
     header = new Caption(text);
@@ -64,8 +63,6 @@ public class CaptionLayoutPanel extends Composite implements HasLayoutManager, H
     body = new LayoutPanel();
     body.addStyleName("Body");
     layoutPanel.add(body, new BoxLayoutData(FillStyle.BOTH));
-
-    initWidget(layoutPanel);
 
     setStyleName(DEFAULT_STYLENAME);
   }
@@ -117,25 +114,6 @@ public class CaptionLayoutPanel extends Composite implements HasLayoutManager, H
   /*
    * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
    */
   public Widget getWidget(int index) {
@@ -166,7 +144,7 @@ public class CaptionLayoutPanel extends Composite implements HasLayoutManager, H
 
   void hideContents(boolean flag) {
     body.setVisible(!flag);
-    if(footer != null) {
+    if (footer != null) {
       footer.setVisible(!flag);
     }
   }
@@ -178,15 +156,6 @@ public class CaptionLayoutPanel extends Composite implements HasLayoutManager, H
    */
   public Iterator<Widget> iterator() {
     return body.iterator();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  public void layout() {
-    getWidget().layout();
   }
 
   /*

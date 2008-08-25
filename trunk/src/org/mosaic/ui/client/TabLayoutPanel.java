@@ -20,11 +20,9 @@ import java.util.Map;
 
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.BorderLayoutData;
-import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratedTabBar;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
@@ -32,7 +30,7 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TabLayoutPanel extends Composite implements HasLayoutManager, SourcesTabEvents {
+public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents {
 
   public enum TabBarPosition {
     TOP, BOTTOM
@@ -42,8 +40,6 @@ public class TabLayoutPanel extends Composite implements HasLayoutManager, Sourc
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-TabLayoutPanel";
-
-  private final BorderLayout layout = new BorderLayout();
 
   private TabBar tabBar;
 
@@ -89,7 +85,10 @@ public class TabLayoutPanel extends Composite implements HasLayoutManager, Sourc
   }
 
   protected TabLayoutPanel(TabBarPosition region, boolean decorate, boolean decorateBody) {
-    final LayoutPanel layoutPanel = new LayoutPanel(layout);
+    super();
+
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setWidgetSpacing(0);
 
     if (decorate) {
@@ -108,8 +107,6 @@ public class TabLayoutPanel extends Composite implements HasLayoutManager, Sourc
     layoutPanel.add(deck, new BorderLayoutData(decorateBody));
 
     tabBar.addTabListener(tabListener);
-
-    initWidget(layoutPanel);
 
     setStyleName(DEFAULT_STYLENAME);
   }
@@ -150,23 +147,14 @@ public class TabLayoutPanel extends Composite implements HasLayoutManager, Sourc
    * 
    * @see org.mosaic.ui.client.layout.HasLayout#layout()
    */
+  @Override
   public void layout() {
     int selection = tabBar.getSelectedTab();
     if (selection == -1) {
       selection = 0;
       tabBar.selectTab(0);
     }
-    getWidget().layout();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
+    super.layout();
   }
 
   public void remove(Widget w) {
@@ -192,15 +180,6 @@ public class TabLayoutPanel extends Composite implements HasLayoutManager, Sourc
 
   public void setPadding(int padding) {
     deck.setPadding(padding);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }
