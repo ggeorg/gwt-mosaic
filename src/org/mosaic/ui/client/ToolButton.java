@@ -17,13 +17,10 @@ package org.mosaic.ui.client;
 
 import org.mosaic.core.client.DOM;
 import org.mosaic.core.client.Region;
-import org.mosaic.ui.client.layout.HasLayoutManager;
-import org.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -35,7 +32,7 @@ import com.google.gwt.user.client.ui.SourcesFocusEvents;
 import com.google.gwt.user.client.ui.SourcesKeyboardEvents;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ToolButton extends Composite implements HasHTML, HasLayoutManager, HasName,
+public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     SourcesClickEvents, SourcesFocusEvents, HasFocus, SourcesKeyboardEvents {
 
   public enum ToolButtonStyle {
@@ -305,11 +302,8 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
    * Creates a tool button with no caption.
    */
   public ToolButton() {
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
-    initWidget(layoutPanel);
-    layoutPanel.add(button);
-
+    super();
+    getWidget().add(button);
     setStyleName(DEFAULT_STYLENAME);
   }
 
@@ -332,15 +326,6 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
   public ToolButton(String html, ClickListener listener) {
     this(html);
     addClickListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  public void layout() {
-    getWidget().layout();
   }
 
   /*
@@ -377,16 +362,6 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
    */
   public void setText(String text) {
     button.setText(text);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
   }
 
   /*
@@ -487,15 +462,6 @@ public class ToolButton extends Composite implements HasHTML, HasLayoutManager, 
    */
   public void setChecked(boolean checked) {
     button.setChecked(checked);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }

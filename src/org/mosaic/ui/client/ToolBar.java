@@ -17,17 +17,14 @@ package org.mosaic.ui.client;
 
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ToolBar extends Composite implements HasLayoutManager, HasName, IndexedPanel {
+public class ToolBar extends LayoutComposite implements IndexedPanel {
 
   /**
    * The default style name.
@@ -35,40 +32,9 @@ public class ToolBar extends Composite implements HasLayoutManager, HasName, Ind
   private static final String DEFAULT_STYLENAME = "mosaic-ToolBar";
 
   public ToolBar() {
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
-
-    initWidget(layoutPanel);
-
+    super();
+    getWidget().setLayout(new BoxLayout());
     setStyleName(DEFAULT_STYLENAME);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  public void layout() {
-    getWidget().layout();
-  }
-
-  public String getName() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public void setName(String name) {
-    // TODO Auto-generated method stub
-
   }
 
   /*
@@ -138,15 +104,6 @@ public class ToolBar extends Composite implements HasLayoutManager, HasName, Ind
 
   public BoxLayout.Orientation getOrient() {
     return ((BoxLayout) getWidget().getLayout()).getOrient();
-  }
-  
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }
