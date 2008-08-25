@@ -17,7 +17,6 @@ package org.mosaic.ui.client;
 
 import org.mosaic.ui.client.layout.BoxLayout;
 import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.HasLayoutManager;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
@@ -26,42 +25,43 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ComboBox extends Composite implements HasLayoutManager, HasName, HasText {
+public abstract class ComboBox extends LayoutComposite implements HasName, HasText {
 
-  private static final String DEFAULT_STYLE_NAME = "mosaic-ComboBox";
+  private static final String DEFAULT_STYLENAME = "mosaic-ComboBox";
 
-  private final TextBox input;
-  private final Button button;
+  protected final TextBox input;
+  protected final Button button;
 
   public ComboBox() {
-    this(DEFAULT_STYLE_NAME);
+    this(DEFAULT_STYLENAME);
   }
 
   protected ComboBox(String styleName) {
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.HORIZONTAL));
+    super();
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BoxLayout(Orientation.HORIZONTAL));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
-
-    initWidget(layoutPanel);
 
     input = new TextBox();
     layoutPanel.add(input, new BoxLayoutData(FillStyle.BOTH));
 
     button = new Button("&nbsp;", new ClickListener() {
       public void onClick(Widget sender) {
-        // TODO Auto-generated method stub
+        onButtonClick();
       }
     });
     layoutPanel.add(button, new BoxLayoutData(FillStyle.VERTICAL));
 
     setStyleName(styleName);
   }
+  
+  protected abstract void onButtonClick();
 
   public Direction getDirection() {
     return input.getDirection();
@@ -135,34 +135,6 @@ public class ComboBox extends Composite implements HasLayoutManager, HasName, Ha
     } else {
       removeStyleDependentName(readOnlyStyle);
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  public void layout() {
-    getWidget().layout();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }

@@ -365,7 +365,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
   private boolean initialized;
 
-  private Timer layoutTimer = new Timer() {
+  private final Timer layoutTimer = new Timer() {
     public void run() {
       panel.layout();
     }
