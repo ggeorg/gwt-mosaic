@@ -153,6 +153,10 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
   public FastTreeTable() {
     super();
 
+    setBorderWidth(0);
+    setCellPadding(0);
+    setCellSpacing(0);
+
     focusable = createFocusElement();
     setStyleName(focusable, STYLENAME_SELECTION);
 
@@ -214,6 +218,20 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
   private void insertItem(FastTreeTableItem item, int r) {
     insertRow(r);
     setWidget(r, getTreeColumn(), item);
+    render(item);
+  }
+
+  private FastTreeTableRenderer renderer;
+
+  public void render(FastTreeTableItem item) {
+    if (renderer != null) {
+      final Element tr = item.getElement().getParentElement().getParentElement().cast();
+      if (item.getParentItem() != null) {
+        renderer.renderTreeItem(item.childTable, item, getRowIndex(tr));
+      } else {
+        renderer.renderTreeItem(this, item, getRowIndex(tr));
+      }
+    }
   }
 
   /**
