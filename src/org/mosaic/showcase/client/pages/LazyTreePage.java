@@ -68,5 +68,10 @@ public class LazyTreePage extends BasicTreePage {
     item.becomeInteriorNode();
     parent.addItem(item);
   }
+  
+  @Override
+  public String getName() {
+    return "Lazy Tree";
+  }
 
 }

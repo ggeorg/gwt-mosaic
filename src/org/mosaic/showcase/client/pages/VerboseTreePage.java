@@ -70,6 +70,11 @@ public class VerboseTreePage extends BasicTreePage {
       parent.addItem(item);
       verboseTreeItem(item, children - (i + 1));
     }
-  }  
+  }
+  
+  @Override
+  public String getName() {
+    return "Verbose Tree";
+  }
 
 }

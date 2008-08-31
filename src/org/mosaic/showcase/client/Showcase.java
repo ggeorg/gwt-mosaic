@@ -24,6 +24,7 @@ import java.util.Map;
 import org.mosaic.showcase.client.Application.ApplicationListener;
 import org.mosaic.showcase.client.pages.BasicButtonPage;
 import org.mosaic.showcase.client.pages.BasicTreePage;
+import org.mosaic.showcase.client.pages.BasicTreeTablePage;
 import org.mosaic.showcase.client.pages.BorderLayoutPage;
 import org.mosaic.showcase.client.pages.BottomTabBarsPage;
 import org.mosaic.showcase.client.pages.BoxLayoutPage;
@@ -353,6 +354,10 @@ public class Showcase implements EntryPoint {
         images.catTables());
     // setupMainMenuOption(catTables, new TablePage(constants),
     // images.catTables());
+    
+    // TreeTables
+    TreeItem catTreeTables = mainMenu.addItem("TreeTables");
+    setupMainMenuOption(catTreeTables, new BasicTreeTablePage(constants), images.catLists());
 
   }
 
