@@ -413,6 +413,9 @@ public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTab
         ensureChildren();
         // childElems = DOM.createDiv();
         childTable = new FixedWidthFlexTable();
+        childTable.setBorderWidth(0);
+        childTable.setCellPadding(0);
+        childTable.setCellSpacing(0);
         // UIObject.setStyleName(childElems, STYLENAME_CHILDREN);
         childTable.setStyleName(STYLENAME_CHILDREN);
         convertElementToHaveChildren(childTable);
