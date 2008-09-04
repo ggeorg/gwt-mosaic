@@ -102,7 +102,7 @@ public class ScrollTablePage extends Page {
   /**
    * Get the header table.
    * 
-   * @return the header table.
+   * @return the header table
    */
   @ShowcaseSource
   public FixedWidthFlexTable getHeaderTable() {
@@ -200,10 +200,9 @@ public class ScrollTablePage extends Page {
   @ShowcaseSource
   private void setupScrollTable() {
     // Setup the formatting
-    scrollTable.setSize("95%", "50%");
     scrollTable.setCellPadding(3);
     scrollTable.setCellSpacing(1);
-    // scrollTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
+    scrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
 
     // Level 1 headers
     FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();

@@ -1,6 +1,5 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2006-2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,7 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.widgetideas.client.FastTreeItem;
 import com.google.gwt.widgetideas.client.overrides.DOMHelper;
-import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 
 /**
  * A standard hierarchical tree widget. The tree contains a hierarchy of
@@ -60,7 +59,7 @@ import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
  * selected tree item}</li>
  * </ul>
  */
-public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
+public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     HasFastTreeTableItems {
 
   /**
@@ -153,14 +152,15 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
   public FastTreeTable() {
     super();
 
-    setBorderWidth(0);
+    setBorderWidth(1);
     setCellPadding(0);
     setCellSpacing(0);
 
     focusable = createFocusElement();
     setStyleName(focusable, STYLENAME_SELECTION);
 
-    sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS | Event.MOUSEEVENTS);
+    sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS
+        | Event.MOUSEEVENTS);
 
     // The 'root' item is invisible and serves only as a container
     // for all top-level items.
@@ -227,9 +227,9 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
     if (renderer != null) {
       final Element tr = item.getElement().getParentElement().getParentElement().cast();
       if (item.getParentItem() != null) {
-        renderer.renderTreeItem(item.childTable, item, getRowIndex(tr));
+        // TODO renderer.renderTreeItem(item.childTable, item, getRowIndex(tr));
       } else {
-        renderer.renderTreeItem(this, item, getRowIndex(tr));
+        // TODO renderer.renderTreeItem(this, item, getRowIndex(tr));
       }
     }
   }
@@ -569,7 +569,7 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
    * Selects a specified item.
    * 
    * @param item the item to be selected, or <code>null</code> to deselect all
-   *            items
+   *          items
    */
   public void setSelectedItem(FastTreeTableItem item) {
     setSelectedItem(item, true);
@@ -579,7 +579,7 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
    * Selects a specified item.
    * 
    * @param item the item to be selected, or <code>null</code> to deselect all
-   *            items
+   *          items
    * @param fireEvents <code>true</code> to allow selection events to be fired
    */
   public void setSelectedItem(FastTreeTableItem item, boolean fireEvents) {
@@ -691,7 +691,8 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
     }
   }
 
-  protected void onSelection(FastTreeTableItem item, boolean fireEvents, boolean moveFocus) {
+  protected void onSelection(FastTreeTableItem item, boolean fireEvents,
+      boolean moveFocus) {
     // 'root' isn't a real item, so don't let it be selected
     // (some cases in the keyboard handler will try to do this)
     if (item == root) {
@@ -776,7 +777,8 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
   /**
    * Collects parents going up the element tree, terminated at the tree root.
    */
-  private void collectElementChain(ArrayList<Element> chain, Element hRoot, Element hElem) {
+  private void collectElementChain(ArrayList<Element> chain, Element hRoot,
+      Element hElem) {
     if ((hElem == null) || hElem.equals(hRoot)) {
       return;
     }
@@ -844,7 +846,8 @@ public class FastTreeTable extends FixedWidthFlexTable implements HasFocus,
     for (int i = 0, n = root.getChildCount(); i < n; ++i) {
       final FastTreeTableItem child = root.getChild(i);
       if (child.getElement().equals(hCurElem)
-          || (child.childTable != null && child.childTable.getElement().equals(hCurElem))) {
+          || (child.childTable != null && child.childTable.getElement().equals(
+              hCurElem))) {
         FastTreeTableItem retItem = findItemByChain(chain, idx + 1, child);
         if (retItem == null) {
           return child;
@@ -959,8 +962,8 @@ class WidgetIterators {
    * @param contained the array of widgets
    * @return the iterator
    */
-  static final Iterator<Widget> createWidgetIterator(final HasWidgets container,
-      final Widget[] contained) {
+  static final Iterator<Widget> createWidgetIterator(
+      final HasWidgets container, final Widget[] contained) {
     return new Iterator<Widget>() {
       int index = -1, last = -1;
       boolean widgetsWasCopied = false;
