@@ -15,18 +15,81 @@
  */
 package org.mosaic.ui.client.treetable;
 
+import org.mosaic.core.client.DOM;
 import org.mosaic.ui.client.LayoutComposite;
 import org.mosaic.ui.client.layout.BorderLayout;
 import org.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 public class ScrollTreeTable extends LayoutComposite {
 
+  /**
+   * The header table.
+   */
+  private FixedWidthFlexTable headerTable = null;
+
+  /**
+   * The data table.
+   */
+  private FastTreeTable dataTable;
+
+  /**
+   * The footer table.
+   */
+  private FixedWidthFlexTable footerTable = null;
+
   public ScrollTreeTable(FastTreeTable dataTable,
       FixedWidthFlexTable headerTable) {
     super();
-    LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getWidget();
     layoutPanel.setLayout(new BorderLayout());
+    this.dataTable = dataTable;
+    this.headerTable = headerTable;
+    
+    // Prepare the header and data tables
+    prepareTable(dataTable, "dataTable");
+    prepareTable(headerTable, "headerTable");
+  }
+
+  /**
+   * Sets the amount of padding to be added around all cells.
+   * 
+   * @param padding the cell padding, in pixels
+   */
+  public void setCellPaddind(int padding) {
+    headerTable.setCellPadding(padding);
+    dataTable.setCellPadding(padding);
+    if (footerTable != null) {
+      footerTable.setCellPadding(padding);
+    }
+  }
+
+  /**
+   * Sets the amount of spacing to be added around all cells.
+   * 
+   * @param spacing the cell spacing, in pixels
+   */
+  public void setCellSpacing(int spacing) {
+    headerTable.setCellSpacing(spacing);
+    dataTable.setCellSpacing(spacing);
+    if (footerTable != null) {
+      footerTable.setCellSpacing(spacing);
+    }
+  }
+  
+  /**
+   * Prepare a table to be added to the {@link ScrollTreeTable}.
+   * 
+   * @param table the table to prepare
+   * @param cssName the style name added to the base name
+   */
+  private void prepareTable(Widget table, String cssName) {
+    Element tableElem = table.getElement();
+    DOM.setStyleAttribute(tableElem, "margin", "0px");
+    DOM.setStyleAttribute(tableElem, "border", "0px");
+    table.addStyleName(cssName);
   }
 }
