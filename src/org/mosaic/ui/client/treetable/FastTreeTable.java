@@ -152,7 +152,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   public FastTreeTable() {
     super();
 
-    setBorderWidth(1);
+    setBorderWidth(0);
     setCellPadding(0);
     setCellSpacing(0);
 

@@ -21,7 +21,8 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="com.google.gwt.i18n.I18N" />
 
-	<inherits name='com.google.gwt.user.theme.standard.StandardResources' />
+	<inherits
+		name='com.google.gwt.user.theme.standard.StandardResources' />
 	<inherits name="com.google.gwt.user.theme.chrome.ChromeResources" />
 	<inherits name="com.google.gwt.user.theme.dark.DarkResources" />
 
@@ -31,5 +32,20 @@
 
 	<!-- Other module inherits                                      -->
 	<inherits name='org.mosaic.core.Core' />
+
+	<!-- Fall through to this rule is the browser isn't Opera -->
+	<replace-with
+		class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorker">
+		<when-type-is
+			class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorker" />
+	</replace-with>
+
+	<!-- Opera has a different MouseWorker implementation -->
+	<replace-with
+		class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorkerOpera">
+		<when-type-is
+			class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorker" />
+		<when-property-is name="user.agent" value="opera" />
+	</replace-with>
 
 </module>
