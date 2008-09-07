@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,36 +26,36 @@ import org.mosaic.ui.client.treetable.ScrollTreeTable;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.ScrollTable;
+import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * 
  */
-@ShowcaseStyle({".gwt-FastTreeTable"})
+@ShowcaseStyle( {".gwt-FastTreeTable"})
 public class BasicTreeTablePage extends Page {
-  
+
   /**
    * The data portion of the {@link ScrollTreeTable}.
    */
   @ShowcaseData
   protected FastTreeTable dataTable = null;
-  
+
   /**
    * The header portion of the {@link ScrollTablePage}.
    */
   @ShowcaseData
   protected FixedWidthFlexTable headerTable = null;
-  
+
   /**
    * The footer portion of the {@link ScrollTable}.
    */
   @ShowcaseData
   protected FixedWidthFlexTable footerTable = null;
-  
+
   /**
    * The scroll tree table.
    */
@@ -66,7 +65,7 @@ public class BasicTreeTablePage extends Page {
     super(constants);
     FastTreeTable.addDefaultCSS();
   }
-  
+
   /**
    * The data table.
    * 
@@ -78,7 +77,7 @@ public class BasicTreeTablePage extends Page {
     }
     return dataTable;
   }
-  
+
   /**
    * Get the header table.
    * 
@@ -90,7 +89,7 @@ public class BasicTreeTablePage extends Page {
     }
     return headerTable;
   }
-  
+
   /**
    * Get the header table.
    * 
@@ -102,7 +101,7 @@ public class BasicTreeTablePage extends Page {
     }
     return footerTable;
   }
-  
+
   /**
    * Get the scroll tree table.
    * 
@@ -122,41 +121,45 @@ public class BasicTreeTablePage extends Page {
     getHeaderTable();
     getFooterTable();
     getDataTable();
-    
+
     // Add the scroll tree table to the page
     scrollTreeTable = new ScrollTreeTable(dataTable, headerTable);
-    //scrollTreeTable.setFooterTable(footerTable);
-    
+    scrollTreeTable.setFooterTable(footerTable);
+
     // Setup the header
     setupScrollTreeTable();
-    
+
     // Add some data to the data table
     dataTable.resize(0, 13);
-    
+
     final FastTreeTable t = dataTable;
     final FastTreeTableItem a = t.addItem("A root tree item");
     a.addItem("A child");
     final FastTreeTableItem aXb = a.addItem("Another child");
     aXb.addItem("a grand child");
-    final FastTreeTableItem widgetBranch = a.addItem(new CheckBox("A checkbox child"));
+    final FastTreeTableItem widgetBranch = a.addItem(new CheckBox(
+        "A checkbox child"));
     final FastTreeTableItem textBoxParent = widgetBranch.addItem("A TextBox parent");
     textBoxParent.addItem(new TextBox());
     textBoxParent.addItem("and another one...");
     textBoxParent.addItem(new TextArea());
-    
+
     final ListBox lb = new ListBox();
     for (int i = 0; i < 100; i++) {
       lb.addItem(i + "");
     }
-    
+
     widgetBranch.addItem("A ListBox parent").addItem(lb);
-    
-    ScrollPanel panel = new ScrollPanel();
-    layoutPanel.add(panel);
+
+    // Add some data to the footer table
+    for (int i = 0; i < 13; i++) {
+      footerTable.setText(0, i, "Col " + i);
+    }
+
+    layoutPanel.add(scrollTreeTable);
     layoutPanel.setPadding(0);
-    panel.add(t);
   }
-  
+
   /**
    * Setup the scroll table.
    */
@@ -165,6 +168,34 @@ public class BasicTreeTablePage extends Page {
     // Setup the formatting
     scrollTreeTable.setCellPaddind(3);
     scrollTreeTable.setCellSpacing(1);
+    scrollTreeTable.setResizePolicy(ScrollTreeTable.ResizePolicy.UNCONSTRAINED);
+
+    // Level 1 headers
+    FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
+    headerTable.setHTML(0, 0, "InfoTable");
+    headerFormatter.setColSpan(0, 0, 13);
+
+    // Level 2 headers
+    headerTable.setHTML(1, 0, "Group Header 0<BR>Multiline");
+    headerFormatter.setColSpan(1, 0, 2);
+    headerFormatter.setRowSpan(1, 0, 2);
+    headerTable.setHTML(1, 1, "Group Header 1");
+    headerFormatter.setColSpan(1, 1, 3);
+    headerTable.setHTML(1, 2, "Group Header 2");
+    headerFormatter.setColSpan(1, 2, 1);
+    headerFormatter.setRowSpan(1, 2, 2);
+    headerTable.setHTML(1, 3, "Group Header 3");
+    headerFormatter.setColSpan(1, 3, 1);
+    headerFormatter.setRowSpan(1, 3, 2);
+    headerTable.setHTML(1, 4, "Group Header 4");
+    headerFormatter.setColSpan(1, 4, 3);
+    headerTable.setHTML(1, 5, "Group Header 5");
+    headerFormatter.setColSpan(1, 5, 3);
+
+    // Level 3 headers
+    for (int cell = 0; cell < 9; cell++) {
+      headerTable.setHTML(2, cell, "Header " + cell);
+    }
   }
 
   @Override
