@@ -136,9 +136,9 @@ public abstract class Page extends LayoutPanel {
     LayoutPanel panel2 = new LayoutPanel();
     LayoutPanel panel3 = new LayoutPanel();
 
-    tabPanel.add(constants.mosaicPageExample(), panel1);
-    tabPanel.add(constants.mosaicPageSource(), panel2);
-    tabPanel.add(constants.mosaicPageStyle(), panel3);
+    tabPanel.add(panel1, constants.mosaicPageExample());
+    tabPanel.add(panel2, constants.mosaicPageSource());
+    tabPanel.add(panel3, constants.mosaicPageStyle());
 
     // Add source code tab
     sourceWidget = new HTML();
