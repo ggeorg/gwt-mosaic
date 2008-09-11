@@ -40,8 +40,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.ScrollTable;
-import com.google.gwt.widgetideas.table.client.ScrollTable.ResizePolicy;
-import com.google.gwt.widgetideas.table.client.ScrollTable.ScrollPolicy;
 import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
 
 public class ScrollTreeTable extends LayoutComposite {
@@ -631,9 +629,9 @@ public class ScrollTreeTable extends LayoutComposite {
 
     // Add some event handling
     sinkEvents(Event.ONMOUSEOUT);
-    DOM.setEventListener(dataWrapper.getElement(), this);
+    //DOM.setEventListener(dataWrapper.getElement(), this);
     dataWrapper.sinkEvents(Event.ONSCROLL);
-    DOM.setEventListener(headerWrapper.getElement(), this);
+    //DOM.setEventListener(headerWrapper.getElement(), this);
     headerWrapper.sinkEvents(Event.ONMOUSEMOVE | Event.ONMOUSEDOWN
         | Event.ONMOUSEUP | Event.ONCLICK);
 
@@ -786,7 +784,12 @@ public class ScrollTreeTable extends LayoutComposite {
    * @return a new wrapper element
    */
   private AbsolutePanel createWrapper(String cssName) {
-    final AbsolutePanel wrapper = new AbsolutePanel();
+    final AbsolutePanel wrapper = new AbsolutePanel() {
+      @Override
+      public void onBrowserEvent(Event event) {
+        ScrollTreeTable.this.onBrowserEvent(event);
+      }
+    };
     final Element wrapperElem = wrapper.getElement();
     DOM.setIntStyleAttribute(wrapperElem, "margin", 0);
     DOM.setIntStyleAttribute(wrapperElem, "border", 0);
@@ -1086,6 +1089,11 @@ public class ScrollTreeTable extends LayoutComposite {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt.user.client.Event)
+   */
   @Override
   public void onBrowserEvent(Event event) {
     super.onBrowserEvent(event);
@@ -1207,7 +1215,7 @@ public class ScrollTreeTable extends LayoutComposite {
   @Override
   public void layout() {
     super.layout();
-    
+
     // Force browser to redraw
     if (scrollPolicy == ScrollPolicy.DISABLED) {
       dataWrapper.getElement().getStyle().setProperty("overflow", "auto");

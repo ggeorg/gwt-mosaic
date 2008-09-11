@@ -7,7 +7,7 @@
 }
 
 .gwt-FastTreeTable td {
-	white-space: nowrap;	
+	white-space: nowrap;
 }
 
 .gwt-FastTreeTableItem {
@@ -35,18 +35,20 @@
 /************************************
 Visual styling
 */
-.gwt-FastTreeTable .open .treeItemContent,.gwt-FastTreeTable  .closed .treeItemContent {
+.gwt-FastTreeTable .open .treeItemContent,.gwt-FastTreeTable .closed .treeItemContent {
 	margin-left: 18px;
 }
 
 .gwt-FastTreeTableItem-leaf {
 	display: block;
-	padding: 2px;
+	/* padding: 2px; */
 	padding-left: 18px;
 }
 
 .gwt-FastTreeTableItem-children {
-	margin-left: 10px;
+	/* margin-left: 10px; */
+	
+	margin: 0px;
 }
 
 .gwt-FastTreeTableItem .open,.gwt-FastTreeTableItem .closed,.gwt-FastTreeTableItem-leaf {
@@ -66,7 +68,7 @@ Visual styling
 }
 
 .gwt-FastTreeTable .treeItemContent {
-	padding: 2px;
+	/* padding: 2px; */
 }
 
 .gwt-FastTreeTable .selected .treeItemContent {

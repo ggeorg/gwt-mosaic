@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.overrides.DOMHelper;
-import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
 
 import java.util.ArrayList;
@@ -37,7 +37,8 @@ import java.util.List;
  * {@example com.google.gwt.examples.TreeExample}
  */
 
-public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTableItems {
+public class FastTreeTableItem extends Widget implements HasHTML,
+    HasFastTreeTableItems {
   private static final String STYLENAME_SELECTED = "selected";
 
   // TODO(ECC) change states to enums and move style names to FastTreeTable
@@ -77,12 +78,31 @@ public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTab
   private int state = TREE_NODE_LEAF;
   private ArrayList<FastTreeTableItem> children;
   private Element contentElem;
-  FixedWidthFlexTable childTable;
+  FixedWidthGrid childTable;
   private FastTreeTableItem parent;
   private FastTreeTable treeTable;
   private Widget widget;
 
   private Object userObject;
+
+  /**
+   * Set the width of a column.
+   * 
+   * @param column the index of the column
+   * @param width the width in pixels
+   * @throws IndexOutOfBoundsException
+   * 
+   * @param column
+   * @param width
+   */
+  void setColumnWidth(int column, int width) {
+    if (childTable != null) {
+      childTable.setColumnWidth(column, width);
+    }
+    for (int i = 0; i < getChildCount(); i++) {
+      getChild(i).setColumnWidth(column, width);
+    }
+  }
 
   /**
    * Sets the user-defined object associated with this item.
@@ -397,7 +417,7 @@ public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTab
    * 
    * @param open whether the item is open
    * @param fireEvents <code>true</code> to allow open/close events to be
-   *            fired
+   *          fired
    */
   public void setState(boolean open, boolean fireEvents) {
     if (open == isOpen()) {
@@ -412,10 +432,11 @@ public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTab
       if (state == TREE_NODE_INTERIOR_NEVER_OPENED) {
         ensureChildren();
         // childElems = DOM.createDiv();
-        childTable = new FixedWidthFlexTable();
+        childTable = new FixedWidthGrid();
+        childTable.resize(0, treeTable.getColumnCount());
         childTable.setBorderWidth(0);
-        childTable.setCellPadding(0);
-        childTable.setCellSpacing(0);
+        childTable.setCellPadding(treeTable.getCellPadding());
+        childTable.setCellSpacing(treeTable.getCellSpacing());
         // UIObject.setStyleName(childElems, STYLENAME_CHILDREN);
         childTable.setStyleName(STYLENAME_CHILDREN);
         convertElementToHaveChildren(childTable);
@@ -533,26 +554,29 @@ public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTab
     }
   }
 
-  void convertElementToHaveChildren(FixedWidthFlexTable t) {
-    // DOM.appendChild(getElement(), children);
+  void convertElementToHaveChildren(FixedWidthGrid t) {
     final Element tr = getElement().getParentElement().getParentElement().cast();
     final int r = OverrideDOM.getRowIndex(tr);
     FastTreeTableItem parent = getParentItem();
     if (parent != null) {
       parent.childTable.insertRow(r);
-      // parent.childTable.getFlexCellFormatter().setColSpan(r, 0, 1);
+      final Element td = tr.getNextSiblingElement().getFirstChildElement().cast();
+      DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
       parent.childTable.setWidget(r, 0, t);
     } else {
       treeTable.insertRow(r);
-      // treeTable.childTable.getFlexCellFormatter().setColSpan(r, 0, 1);
+      final Element td = tr.getNextSiblingElement().getFirstChildElement().cast();
+      DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
       treeTable.setWidget(r, 0, t);
+    }
+    for(int i = 0; i < treeTable.getColumnCount(); i++) {
+      t.setColumnWidth(i, treeTable.getColumnWidth(i));
     }
   }
 
   void convertElementToInteriorNode(Element control) {
     setStyleName(getElement(), "gwt-FastTreeTableItem-leaf", false);
     DOM.appendChild(getElement(), control);
-    System.out.println(getElement().getString());
   }
 
   Element createLeafElement() {
@@ -595,7 +619,7 @@ public class FastTreeTableItem extends Widget implements HasHTML, HasFastTreeTab
    * Selects or deselects this item.
    * 
    * @param selected <code>true</code> to select the item, <code>false</code>
-   *            to deselect it
+   *          to deselect it
    */
   void setSelection(boolean selected, boolean fireEvents) {
     setStyleName(getControlElement(), STYLENAME_SELECTED, selected);
