@@ -57,10 +57,10 @@ public class BottomTabBarsPage extends AbstractLayoutPage {
     LayoutPanel panel4 = new LayoutPanel();
     populate4(panel4);
 
-    tabPanel.add("BoxLayout", panel1);
-    tabPanel.add("BorderLayout", panel2);
-    tabPanel.add("Nested BorderLayout", panel3);
-    tabPanel.add("Mixed Layout", panel4);
+    tabPanel.add(panel1, "BoxLayout");
+    tabPanel.add(panel2, "BorderLayout");
+    tabPanel.add(panel3, "Nested BorderLayout");
+    tabPanel.add(panel4, "Mixed Layout");
 
     layoutPanel.add(tabPanel);
   }
