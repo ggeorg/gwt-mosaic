@@ -56,16 +56,18 @@ public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents 
     rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
 
     setText(text);
-
+    
     hpanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+    leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+    rightIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+    
+    hpanel.setCellHorizontalAlignment(leftIconBox, HorizontalPanel.ALIGN_LEFT);
+    hpanel.setCellHorizontalAlignment(caption, HorizontalPanel.ALIGN_CENTER);
+    hpanel.setCellHorizontalAlignment(rightIconBox, HorizontalPanel.ALIGN_RIGHT);
 
     hpanel.add(leftIconBox);
     hpanel.add(caption);
     hpanel.add(rightIconBox);
-
-    hpanel.setCellHorizontalAlignment(leftIconBox, HorizontalPanel.ALIGN_LEFT);
-    hpanel.setCellHorizontalAlignment(caption, HorizontalPanel.ALIGN_CENTER);
-    hpanel.setCellHorizontalAlignment(rightIconBox, HorizontalPanel.ALIGN_RIGHT);
 
     hpanel.setWidth("100%");
     hpanel.setCellWidth(caption, "100%");
