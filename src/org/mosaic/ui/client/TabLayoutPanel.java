@@ -30,6 +30,18 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * A {@link LayoutPanel} that represents a tabbed set of pages, each of which
+ * contains another widget. Its child widgets are shown as the user selects the
+ * various tabs associated with them.
+ * 
+ * <h3>CSS Style Rules</h3>
+ * <ul>
+ * <li>.mosaic-TabLayoutPanel { the tab layout panel itself }</li>
+ * <li>.mosaic-TabLayoutPanelBottom { the bottom section of the tab layout
+ * panel (the deck containing the widget) }</li>
+ * </ul>
+ */
 public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents {
 
   public enum TabBarPosition {
@@ -84,7 +96,8 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     this(region, false, decorateBody);
   }
 
-  protected TabLayoutPanel(TabBarPosition region, boolean decorate, boolean decorateBody) {
+  protected TabLayoutPanel(TabBarPosition region, boolean decorate,
+      boolean decorateBody) {
     super();
 
     final LayoutPanel layoutPanel = getWidget();
@@ -97,7 +110,7 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
       tabBar = new TabBar();
     }
 
-    deck.addStyleName("Body");
+    deck.addStyleName(DEFAULT_STYLENAME + "Bottom");
 
     if (region == TabBarPosition.TOP) {
       layoutPanel.add(tabBar, new BorderLayoutData(BorderLayoutRegion.NORTH));
@@ -111,13 +124,52 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     setStyleName(DEFAULT_STYLENAME);
   }
 
-  public void add(String caption, Widget w) {
+  /**
+   * Adds a widget to the tab panel.
+   * 
+   * @param w the widget to be added
+   * @param tabText the text to be shown on its tab
+   */
+  public void add(Widget w, String tabText) {
+    add(w, tabText, false);
+  }
+
+  /**
+   * Adds a widget to the tab panel.
+   * 
+   * @param w the widget to be added
+   * @param tabText the text to be shown on its tab
+   * @param asHTML <code>true</code> to treat the specified text as HTML
+   */
+  public void add(Widget w, String tabText, boolean asHTML) {
     assert (w != null);
     if (panels.get(w) != null) {
       throw new IllegalArgumentException("Double entry");
     }
 
-    tabBar.addTab(caption);
+    tabBar.addTab(tabText, asHTML);
+
+    final LayoutPanel panel = new LayoutPanel();
+    panel.add(w);
+
+    deck.add(panel);
+
+    panels.put(w, panel);
+  }
+
+  /**
+   * Adds a widget to the tab panel.
+   * 
+   * @param w the widget to be added
+   * @param tabWidget the widget to be shown in the tab
+   */
+  public void add(Widget w, Widget tabWidget) {
+    assert (w != null);
+    if (panels.get(w) != null) {
+      throw new IllegalArgumentException("Double entry");
+    }
+
+    tabBar.addTab(tabWidget);
 
     final LayoutPanel panel = new LayoutPanel();
     panel.add(w);
