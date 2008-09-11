@@ -61,6 +61,12 @@ import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
  */
 public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     HasFastTreeTableItems {
+  
+  @Override
+  public void setColumnWidth(int column, int width) {
+    super.setColumnWidth(column, width);
+    root.setColumnWidth(column, width);
+  }
 
   /**
    * Resources used.
@@ -1024,4 +1030,5 @@ class WidgetIterators {
   private WidgetIterators() {
     // Not instantiable.
   }
+  
 }

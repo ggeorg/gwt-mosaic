@@ -74,6 +74,7 @@ public class BasicTreeTablePage extends Page {
   public FastTreeTable getDataTable() {
     if (dataTable == null) {
       dataTable = new FastTreeTable();
+      dataTable.setTreeColumn(1);
     }
     return dataTable;
   }
