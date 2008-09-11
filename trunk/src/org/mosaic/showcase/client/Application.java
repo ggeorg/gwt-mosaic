@@ -58,7 +58,7 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * <li>.Application-links { The main external links }</li>
  * <li>.Application-options { The options widget }</li>
  * <li>.Application-menu { The main menu }</li>
- * <li>.Application-content-wrapper { The scrollable element around the content }</li>
+ * <li>.Application-content-wrapper { The element around the content }</li>
  * </ul>
  */
 public class Application extends Viewport implements HasLayoutManager {
@@ -111,11 +111,6 @@ public class Application extends Viewport implements HasLayoutManager {
    * The main menu.
    */
   private Tree mainMenu;
-
-  /**
-   * The last known width of the window.
-   */
-  private int windowWidth = -1;
 
   /**
    * The panel that contains the title widget and links.
