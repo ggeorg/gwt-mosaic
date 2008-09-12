@@ -25,6 +25,11 @@ import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ImageButton extends Widget implements SourcesClickEvents {
+  
+  /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
   private ClickListenerCollection clickListeners;
 
@@ -43,7 +48,7 @@ public class ImageButton extends Widget implements SourcesClickEvents {
 //      getElement().setInnerHTML(image.getHTML());
 //    }
 
-    setStyleName("mosaic-ImageButton");
+    setStyleName(DEFAULT_STYLENAME);
   }
 
   public AbstractImagePrototype getImage() {
