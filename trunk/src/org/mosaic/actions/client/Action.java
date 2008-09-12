@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
  * items in tool bars. When the end user triggers the command via its control,
  * the action's <code>execute</code> method is invoked to do the real work.
  */
-public class Action implements Command, HasText {
+public class Action implements Command, HasText, ClickListener {
 
   /**
    * Unique identifier for this action
@@ -60,7 +61,7 @@ public class Action implements Command, HasText {
   /**
    * The action's states properties.
    */
-  private boolean checked, enabled, visible = true;
+  private boolean checked, enabled = true, visible = true;
 
   /**
    * The action's widget factory.
@@ -129,7 +130,6 @@ public class Action implements Command, HasText {
     return text;
   }
 
-  @Override
   public void setText(String text) {
     final String oldValue = this.text;
     this.text = text;
@@ -289,6 +289,15 @@ public class Action implements Command, HasText {
         // ignore
       }
     }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   */
+  public void onClick(Widget sender) {
+    execute();
   }
 
 }

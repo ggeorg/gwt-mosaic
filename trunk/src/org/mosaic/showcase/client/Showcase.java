@@ -22,32 +22,33 @@ import java.util.List;
 import java.util.Map;
 
 import org.mosaic.showcase.client.Application.ApplicationListener;
-import org.mosaic.showcase.client.pages.BasicButtonPage;
-import org.mosaic.showcase.client.pages.BasicTreePage;
-import org.mosaic.showcase.client.pages.BasicTreeTablePage;
-import org.mosaic.showcase.client.pages.BorderLayoutPage;
-import org.mosaic.showcase.client.pages.BottomTabBarsPage;
-import org.mosaic.showcase.client.pages.BoxLayoutPage;
-import org.mosaic.showcase.client.pages.ComboBoxPage;
-import org.mosaic.showcase.client.pages.CustomButtonPage;
-import org.mosaic.showcase.client.pages.DatePickerPage;
-import org.mosaic.showcase.client.pages.DeckLayoutPanelPage;
-import org.mosaic.showcase.client.pages.InfoPanelPage;
-import org.mosaic.showcase.client.pages.LayoutTest1Page;
-import org.mosaic.showcase.client.pages.LayoutTest2Page;
-import org.mosaic.showcase.client.pages.LayoutTest3Page;
-import org.mosaic.showcase.client.pages.LazyTreePage;
-import org.mosaic.showcase.client.pages.MessageBoxPage;
-import org.mosaic.showcase.client.pages.MixedLayoutPage;
-import org.mosaic.showcase.client.pages.NestedBorderLayoutPage;
-import org.mosaic.showcase.client.pages.PagingScrollTablePage;
-import org.mosaic.showcase.client.pages.ScrollTablePage;
-import org.mosaic.showcase.client.pages.TabLayoutPanelPage;
-import org.mosaic.showcase.client.pages.TableLoadingBenchmarkPage;
-import org.mosaic.showcase.client.pages.ToolBarPage;
-import org.mosaic.showcase.client.pages.ToolButtonPage;
-import org.mosaic.showcase.client.pages.VerboseTreePage;
-import org.mosaic.showcase.client.pages.WindowPanelPage;
+import org.mosaic.showcase.client.content.layout.BorderLayoutPage;
+import org.mosaic.showcase.client.content.layout.BoxLayoutPage;
+import org.mosaic.showcase.client.content.layout.LayoutTest1Page;
+import org.mosaic.showcase.client.content.layout.LayoutTest2Page;
+import org.mosaic.showcase.client.content.layout.LayoutTest3Page;
+import org.mosaic.showcase.client.content.layout.MixedLayoutPage;
+import org.mosaic.showcase.client.content.layout.NestedBorderLayoutPage;
+import org.mosaic.showcase.client.content.other.Actions;
+import org.mosaic.showcase.client.content.panels.BottomTabBarsPage;
+import org.mosaic.showcase.client.content.panels.DeckLayoutPanelPage;
+import org.mosaic.showcase.client.content.panels.TabLayoutPanelPage;
+import org.mosaic.showcase.client.content.popups.InfoPanelPage;
+import org.mosaic.showcase.client.content.popups.MessageBoxPage;
+import org.mosaic.showcase.client.content.popups.WindowPanelPage;
+import org.mosaic.showcase.client.content.tables.PagingScrollTablePage;
+import org.mosaic.showcase.client.content.tables.ScrollTablePage;
+import org.mosaic.showcase.client.content.tables.TableLoadingBenchmarkPage;
+import org.mosaic.showcase.client.content.trees.BasicTreePage;
+import org.mosaic.showcase.client.content.trees.LazyTreePage;
+import org.mosaic.showcase.client.content.trees.VerboseTreePage;
+import org.mosaic.showcase.client.content.treetables.BasicTreeTablePage;
+import org.mosaic.showcase.client.content.widgets.BasicButtonPage;
+import org.mosaic.showcase.client.content.widgets.ComboBoxPage;
+import org.mosaic.showcase.client.content.widgets.CustomButtonPage;
+import org.mosaic.showcase.client.content.widgets.DatePickerPage;
+import org.mosaic.showcase.client.content.widgets.ToolBarPage;
+import org.mosaic.showcase.client.content.widgets.ToolButtonPage;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -326,10 +327,11 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catPanels, new NestedBorderLayoutPage(constants),
         images.catPanels());
     setupMainMenuOption(catPanels, new MixedLayoutPage(constants), images.catPanels());
-
-    setupMainMenuOption(catPanels, new DeckLayoutPanelPage(constants), images.catPanels());
-    setupMainMenuOption(catPanels, new TabLayoutPanelPage(constants), images.catPanels());
-    setupMainMenuOption(catPanels, new BottomTabBarsPage(constants), images.catPanels());
+    
+    TreeItem catLayoutPanels =catPanels.addItem("Panels");
+    setupMainMenuOption(catLayoutPanels, new DeckLayoutPanelPage(constants), images.catPanels());
+    setupMainMenuOption(catLayoutPanels, new TabLayoutPanelPage(constants), images.catPanels());
+    setupMainMenuOption(catLayoutPanels, new BottomTabBarsPage(constants), images.catPanels());
 
     TreeItem catLayoutTests = catPanels.addItem("Tests");
     setupMainMenuOption(catLayoutTests, new LayoutTest1Page(constants),
@@ -358,6 +360,10 @@ public class Showcase implements EntryPoint {
     // TreeTables
     TreeItem catTreeTables = mainMenu.addItem("TreeTables");
     setupMainMenuOption(catTreeTables, new BasicTreeTablePage(constants), images.catLists());
+    
+    // Other
+    TreeItem catOther = mainMenu.addItem("Other Features");
+    setupMainMenuOption(catOther, new Actions(constants), images.catOther());
 
   }
 

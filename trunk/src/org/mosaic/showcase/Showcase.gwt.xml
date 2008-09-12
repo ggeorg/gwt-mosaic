@@ -18,6 +18,7 @@
 
 	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
 	<inherits name='org.mosaic.ui.Mosaic' />
+	<inherits name='org.mosaic.actions.Actions' />
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
