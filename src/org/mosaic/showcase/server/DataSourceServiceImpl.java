@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import org.mosaic.showcase.client.pages.DataSourceData;
-import org.mosaic.showcase.client.pages.DataSourceService;
+import org.mosaic.showcase.client.content.tables.DataSourceData;
+import org.mosaic.showcase.client.content.tables.DataSourceService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.widgetideas.table.client.TableModel.ColumnSortList;

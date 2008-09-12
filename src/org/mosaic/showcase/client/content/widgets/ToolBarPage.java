@@ -102,6 +102,10 @@ public class ToolBarPage extends Page implements ClickListener {
     layoutPanel.add(toolBox, new BoxLayoutData(FillStyle.BOTH, true));
   }
 
+  /**
+   * Create the menu bar.
+   */
+  @ShowcaseSource
   private MenuBar createMenuBar() {
     // Create a command that will execute on menu item selection
     Command menuCommand = new Command() {
@@ -170,6 +174,10 @@ public class ToolBarPage extends Page implements ClickListener {
     return menu;
   }
 
+  /**
+   * Create a tool bar.
+   */
+  @ShowcaseSource
   private Widget createToolBar1() {
     final ToolBar toolBar = new ToolBar();
 
@@ -250,6 +258,10 @@ public class ToolBarPage extends Page implements ClickListener {
     return toolBar;
   }
 
+  /**
+   * Create a tool bar.
+   */
+  @ShowcaseSource
   private Widget createToolBar2() {
     final ToolBar toolBar = new ToolBar();
 

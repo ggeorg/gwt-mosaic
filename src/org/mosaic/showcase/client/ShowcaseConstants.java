@@ -16,16 +16,16 @@
  */
 package org.mosaic.showcase.client;
 
-import org.mosaic.showcase.client.pages.BasicButtonPage;
-import org.mosaic.showcase.client.pages.ComboBoxPage;
-import org.mosaic.showcase.client.pages.CustomButtonPage;
-import org.mosaic.showcase.client.pages.DatePickerPage;
-import org.mosaic.showcase.client.pages.MessageBoxPage;
-import org.mosaic.showcase.client.pages.PagingScrollTablePage;
-import org.mosaic.showcase.client.pages.ScrollTablePage;
-import org.mosaic.showcase.client.pages.TableLoadingBenchmarkPage;
-import org.mosaic.showcase.client.pages.ToolBarPage;
-import org.mosaic.showcase.client.pages.ToolButtonPage;
+import org.mosaic.showcase.client.content.popups.MessageBoxPage;
+import org.mosaic.showcase.client.content.tables.PagingScrollTablePage;
+import org.mosaic.showcase.client.content.tables.ScrollTablePage;
+import org.mosaic.showcase.client.content.tables.TableLoadingBenchmarkPage;
+import org.mosaic.showcase.client.content.widgets.BasicButtonPage;
+import org.mosaic.showcase.client.content.widgets.ComboBoxPage;
+import org.mosaic.showcase.client.content.widgets.CustomButtonPage;
+import org.mosaic.showcase.client.content.widgets.DatePickerPage;
+import org.mosaic.showcase.client.content.widgets.ToolBarPage;
+import org.mosaic.showcase.client.content.widgets.ToolButtonPage;
 
 import com.google.gwt.i18n.client.Constants;
 
