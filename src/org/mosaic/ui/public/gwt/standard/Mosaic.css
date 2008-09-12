@@ -389,6 +389,38 @@ input {
 	opacity: 1.0 !important; /* non-IE */
 }
 
+/*** ImageButton ***/
+
+.mosaic-ImageButton {
+	display: block;
+	cursor: pointer;
+	
+	/*
+	 * Unfortunately, in IE, border-color: transparent is rendered as black.
+	 * We get around the border on hover displacement of content by adjusting
+	 * the margin/padding at the same time.
+	 */
+	border: 0px solid transparent;
+	margin: 1px; 
+	
+	width: 16px;
+	height: 16px;
+}
+.mosaic-ImageButton:hover {
+	/*
+	 * Unfortunately, in IE, border-color: transparent is rendered as black.
+	 * We get around the border on hover displacement of content by adjusting
+	 * the margin/padding at the same time.
+	 */
+	border: 1px solid #cdcdcd;
+	margin: 0px;
+	
+	background-color: #ccc;
+}
+.mosaic-ImageButton:active {
+	background-color: #fcc;
+}
+
 /*** InfoPanel ***/
 
 .mosaic-InfoPanel {
