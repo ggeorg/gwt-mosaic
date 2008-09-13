@@ -22,7 +22,8 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class BaseLayout extends LayoutManagerHelper implements LayoutManager {
+public abstract class BaseLayout extends LayoutManagerHelper implements
+    LayoutManager {
 
   /**
    * TODO: move this method to DOM
@@ -35,6 +36,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
+      child.setHeight("auto");
       flowHeight = child.getOffsetHeight() + m[0] + m[2];
     }
     return flowHeight;
@@ -51,6 +53,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
+      child.setWidth("auto");
       flowWidth = child.getOffsetWidth() + m[1] + m[3];
     }
     return flowWidth;
@@ -82,7 +85,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
   /**
    * TODO: move this method to DOM
    */
-  public static void setSize(final Widget widget, final int width, final int height) {
+  public static void setSize(final Widget widget, final int width,
+      final int height) {
     final Element elem = widget.getElement();
     if (width != -1) {
       DOM.setContentAreaWidth(elem, width);
@@ -115,8 +119,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements LayoutMa
     }
   }
 
-  protected void setXY(final LayoutPanel layoutPanel, final Widget widget, final int x,
-      final int y) {
+  protected void setXY(final LayoutPanel layoutPanel, final Widget widget,
+      final int x, final int y) {
     layoutPanel.setWidgetPosition(widget, x, y);
   }
 
