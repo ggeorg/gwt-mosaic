@@ -391,7 +391,7 @@ input {
 
 /*** ImageButton ***/
 
-.mosaic-ImageButton img{
+.mosaic-ImageButton {
 	display: block;
 	cursor: pointer;
 	
@@ -406,7 +406,7 @@ input {
 	width: 16px;
 	height: 16px;
 }
-.mosaic-ImageButton img:hover {
+.mosaic-ImageButton:hover {
 	/*
 	 * Unfortunately, in IE, border-color: transparent is rendered as black.
 	 * We get around the border on hover displacement of content by adjusting
@@ -417,7 +417,7 @@ input {
 	
 	background-color: #ccc;
 }
-.mosaic-ImageButton img:active {
+.mosaic-ImageButton:active {
 	background-color: #fcc;
 }
 

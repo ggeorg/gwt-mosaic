@@ -15,27 +15,41 @@
  */
 package org.mosaic.ui.client;
 
+import org.mosaic.core.client.DOM;
+
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.SourcesClickEvents;
+import com.google.gwt.user.client.ui.Widget;
 
-public class ImageButton extends PushButton {
-
+public class ImageButton extends Widget implements SourcesClickEvents {
+  
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
+  private ClickListenerCollection clickListeners;
+
   private Image image;
 
-  public ImageButton(Image image) {
-    super(image);
-    this.image = image;
+  public ImageButton() {
+    setElement(DOM.createDiv());
+    sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
     setStyleName(DEFAULT_STYLENAME);
   }
 
+  public ImageButton(Image image) {
+    this();
+    setImage(image);
+  }
+  
   public ImageButton(AbstractImagePrototype image) {
-    this(image.createImage());
+    this();
+    setImage(image.createImage());
   }
 
   public Image getImage() {
@@ -44,8 +58,32 @@ public class ImageButton extends PushButton {
 
   public void setImage(Image image) {
     this.image = image;
-    getUpFace().setImage(image);
-    setStyleName(DEFAULT_STYLENAME);
+    DOM.setEventListener(image.getElement(), this);
+    getElement().setInnerHTML(image.getElement().getString());
+  }
+
+  public void addClickListener(ClickListener listener) {
+    if (clickListeners == null) {
+      clickListeners = new ClickListenerCollection();
+    }
+    clickListeners.add(listener);
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    DOM.eventPreventDefault(event);
+    if (DOM.eventGetType(event) == Event.ONCLICK) {
+      if (clickListeners != null) {
+        clickListeners.fireClick(this);
+      }
+    }
+    event.cancelBubble(true);
+  }
+
+  public void removeClickListener(ClickListener listener) {
+    if (clickListeners != null) {
+      clickListeners.remove(listener);
+    }
   }
 
 }
