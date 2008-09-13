@@ -81,7 +81,7 @@ public class Actions extends Page {
     ActionRegistry.get("action-2").addActionListener(actionListener);
 
     // Create the UI
-    LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
     toolBox.setPadding(0);
     toolBox.setWidgetSpacing(0);
     toolBox.add(createMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
@@ -100,6 +100,7 @@ public class Actions extends Page {
               public void onResult(String input) {
                 if (input != null) {
                   action.setText(input);
+                  toolBox.layout();
                 }
               }
             });
@@ -113,6 +114,7 @@ public class Actions extends Page {
               public void onResult(String input) {
                 if (input != null) {
                   action.setText(input);
+                  toolBox.layout();
                 }
               }
             });
