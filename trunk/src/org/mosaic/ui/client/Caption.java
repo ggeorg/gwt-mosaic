@@ -18,22 +18,23 @@ package org.mosaic.ui.client;
 import org.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that is used as a header in e.g. <code>WindowPanel</code>.
  */
-public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents {
+public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   public enum CaptionRegion {
     LEFT, RIGHT
   }
+
   /**
    * The default style name.
    */
@@ -42,50 +43,56 @@ public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents 
   private MouseListenerCollection mouseListeners;
 
   private final HorizontalPanel hpanel = new HorizontalPanel();
-  private final HorizontalPanel leftIconBox = new HorizontalPanel();
 
-  private final HorizontalPanel rightIconBox = new HorizontalPanel();
+  private final HTML caption = new HTML();
 
-  private final HTML caption = new HTML();;
+  private HorizontalPanel leftIconBox, rightIconBox;
 
   public Caption(String text) {
+    initWidget(hpanel);
     sinkEvents(Event.MOUSEEVENTS);
-    
+
     caption.setStyleName(DEFAULT_STYLENAME + "-text");
-    leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
-    rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
 
     setText(text);
-    
-    hpanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-    leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-    rightIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-    
-    hpanel.setCellHorizontalAlignment(leftIconBox, HorizontalPanel.ALIGN_LEFT);
-    hpanel.setCellHorizontalAlignment(caption, HorizontalPanel.ALIGN_CENTER);
-    hpanel.setCellHorizontalAlignment(rightIconBox, HorizontalPanel.ALIGN_RIGHT);
 
-    hpanel.add(leftIconBox);
+    hpanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+    hpanel.setCellHorizontalAlignment(caption, HorizontalPanel.ALIGN_CENTER);
+
     hpanel.add(caption);
-    hpanel.add(rightIconBox);
 
     hpanel.setWidth("100%");
     hpanel.setCellWidth(caption, "100%");
 
-    super.add(hpanel);
+    // super.add(hpanel);
 
     setStyleName(DEFAULT_STYLENAME);
   }
 
-  @Override
   public void add(Widget w) {
     leftIconBox.add(w);
   }
 
   public void add(Widget w, CaptionRegion region) {
     if (CaptionRegion.LEFT == region) {
+      if (leftIconBox == null) {
+        leftIconBox = new HorizontalPanel();
+        leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
+        leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+        hpanel.insert(leftIconBox, 0);
+        hpanel.setCellHorizontalAlignment(leftIconBox,
+            HorizontalPanel.ALIGN_LEFT);
+      }
       leftIconBox.add(w);
     } else {
+      if (rightIconBox == null) {
+        rightIconBox = new HorizontalPanel();
+        rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
+        rightIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+        hpanel.add(rightIconBox);
+        hpanel.setCellHorizontalAlignment(rightIconBox,
+            HorizontalPanel.ALIGN_RIGHT);
+      }
       if (rightIconBox.getWidgetCount() > 0) {
         rightIconBox.insert(w, 0);
       } else {
@@ -102,8 +109,12 @@ public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents 
   }
 
   public void clear() {
-    leftIconBox.clear();
-    rightIconBox.clear();
+    if (leftIconBox != null) {
+      leftIconBox.clear();
+    }
+    if (rightIconBox != null) {
+      rightIconBox.clear();
+    }
   }
 
   /*
@@ -140,12 +151,16 @@ public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents 
   }
 
   public boolean remove(Widget widget) {
-    int index = leftIconBox.getWidgetIndex(widget);
-    if (index != -1) {
-      return leftIconBox.remove(index);
-    } else {
+    if (leftIconBox != null) {
+      int index = leftIconBox.getWidgetIndex(widget);
+      if (index != -1) {
+        return leftIconBox.remove(index);
+      }
+    }
+    if (rightIconBox != null) {
       return rightIconBox.remove(widget);
     }
+    return false;
   }
 
   public void removeMouseListener(MouseListener listener) {
@@ -162,7 +177,7 @@ public class Caption extends SimplePanel implements HasHTML, SourcesMouseEvents 
   public void setHTML(String html) {
     caption.setHTML(html);
   }
-  
+
   /*
    * (non-Javadoc)
    * 
