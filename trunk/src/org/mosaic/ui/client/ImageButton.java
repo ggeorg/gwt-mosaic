@@ -15,72 +15,37 @@
  */
 package org.mosaic.ui.client;
 
-import org.mosaic.core.client.DOM;
-
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
-import com.google.gwt.user.client.ui.SourcesClickEvents;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PushButton;
 
-public class ImageButton extends Widget implements SourcesClickEvents {
-  
+public class ImageButton extends PushButton {
+
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
-  private ClickListenerCollection clickListeners;
+  private Image image;
 
-  private AbstractImagePrototype image;
-
-  public ImageButton() {
-    this(null);
-  }
-
-  public ImageButton(AbstractImagePrototype image) {
-    setElement(image.createElement());
-    sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
-
-//    if (image != null) {
-//      this.image = image;
-//      getElement().setInnerHTML(image.getHTML());
-//    }
-
+  public ImageButton(Image image) {
+    super(image);
+    this.image = image;
     setStyleName(DEFAULT_STYLENAME);
   }
 
-  public AbstractImagePrototype getImage() {
+  public ImageButton(AbstractImagePrototype image) {
+    this(image.createImage());
+  }
+
+  public Image getImage() {
     return image;
   }
 
-//  public void setImage(AbstractImagePrototype image) {
-//    this.image = image;
-//  }
-
-  public void addClickListener(ClickListener listener) {
-    if (clickListeners == null) {
-      clickListeners = new ClickListenerCollection();
-    }
-    clickListeners.add(listener);
-  }
-
-  @Override
-  public void onBrowserEvent(Event event) {
-    DOM.eventPreventDefault(event);
-    if (DOM.eventGetType(event) == Event.ONCLICK) {
-      if (clickListeners != null) {
-        clickListeners.fireClick(this);
-      }
-    }
-    event.cancelBubble(true);
-  }
-
-  public void removeClickListener(ClickListener listener) {
-    if (clickListeners != null) {
-      clickListeners.remove(listener);
-    }
+  public void setImage(Image image) {
+    this.image = image;
+    getUpFace().setImage(image);
+    setStyleName(DEFAULT_STYLENAME);
   }
 
 }
