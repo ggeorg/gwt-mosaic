@@ -13,8 +13,9 @@ Java code:
 
 {{{
 
+import org.mosaic.ui.client.CaptionLayoutPanel;
 import org.mosaic.ui.client.InfoPanel;
-import org.mosaic.ui.client.TitledLayoutPanel;
+import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.ToolBar;
 import org.mosaic.ui.client.ToolButton;
 import org.mosaic.ui.client.Viewport;
@@ -44,7 +45,7 @@ public class Main implements EntryPoint {
 
   private final Command menuCommand = new Command() {
     public void execute() {
-      InfoPanel.show(Window.getTitle(), "Thank you for selecting a menu item.");
+      MessageBox.alert(Window.getTitle(), "Thank you for selecting a menu item.");
     }
   };
 
@@ -92,31 +93,15 @@ public class Main implements EntryPoint {
   private Widget newToolBar() {
     final ToolBar toolBar = new ToolBar();
 
-    ToolButton btn1 = new ToolButton("Push 1");
-    btn1.addClickListener(clickListener);
-    toolBar.add(btn1);
-    
-    ToolButton btn2 = new ToolButton("Push 2");
-    btn2.addClickListener(clickListener);
-    toolBar.add(btn2);
-
-    ToolButton btn3 = new ToolButton("Push 3");
-    btn3.addClickListener(clickListener);
-    toolBar.add(btn3);
+    toolBar.add(new ToolButton("Push 1", clickListener));
+    toolBar.add(new ToolButton("Push 2", clickListener));
+    toolBar.add(new ToolButton("Push 3", clickListener));
 
     toolBar.addSeparator();
 
-    ToolButton btn4 = new ToolButton("Push 4");
-    btn4.addClickListener(clickListener);
-    toolBar.add(btn4);
-
-    ToolButton btn5 = new ToolButton("Push 5");
-    btn5.addClickListener(clickListener);
-    toolBar.add(btn5);
-
-    ToolButton btn6 = new ToolButton("Push 6");
-    btn6.addClickListener(clickListener);
-    toolBar.add(btn6);
+    toolBar.add(new ToolButton("Push 4", clickListener));
+    toolBar.add(new ToolButton("Push 5", clickListener));
+    toolBar.add(new ToolButton("Push 6", clickListener));
 
     return toolBar;
   }
@@ -126,6 +111,7 @@ public class Main implements EntryPoint {
    */
   public void onModuleLoad() {
     final Viewport viewport = new Viewport();
+    
     final LayoutPanel content = new LayoutPanel(new BorderLayout());
     content.setPadding(1);
     viewport.add(content);
@@ -137,15 +123,14 @@ public class Main implements EntryPoint {
     toolBox.add(newToolBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     content.add(toolBox, new BorderLayoutData(BorderLayoutRegion.NORTH));
-    content.add(new TitledLayoutPanel("West"), new BorderLayoutData(
+    content.add(new CaptionLayoutPanel("West"), new BorderLayoutData(
         BorderLayoutRegion.WEST, 200, 100, 300, true));
-    content.add(new TitledLayoutPanel("Center"), new BorderLayoutData(true));
+    content.add(new CaptionLayoutPanel("Center"), new BorderLayoutData(true));
 
     RootPanel.get().add(viewport);
   }
 
 }
-
 }}}
 
 The GWT Module XML should contain:
@@ -154,7 +139,7 @@ The GWT Module XML should contain:
 {{{
 <module>
 
-	<!-- Inherit the Mosaic Web Toolkit stuff.                      -->
+	<!-- Inherit the MosaicWeb Toolkit stuff.                       -->
 	<inherits name='org.mosaic.ui.Mosaic' />
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->
@@ -163,6 +148,13 @@ The GWT Module XML should contain:
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
 	<!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
 	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
+	
+	<!-- Inherit the default GWT-Mosaic style sheet.  You can       -->
+	<!-- change the theme of your GWT application by uncommenting   -->
+	<!-- any one of the following lines.                            -->
+	<stylesheet src="gwt/standard/Mosaic.css" />
+	<!-- <stylesheet src="gwt/chrome/Mosaic.css" /> -->
+	<!-- <stylesheet src="gwt/dark/Mosaic.css" /> -->
 
 	...
 
