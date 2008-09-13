@@ -94,7 +94,8 @@ public class BoxLayout extends BaseLayout {
         }
 
         Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof BoxLayoutData)) {
+        if (layoutDataObject == null
+            || !(layoutDataObject instanceof BoxLayoutData)) {
           layoutDataObject = new BoxLayoutData();
           LayoutManagerHelper.setLayoutData(child, layoutDataObject);
         }
@@ -113,7 +114,7 @@ public class BoxLayout extends BaseLayout {
               flowWidth += decPanelBorderWidth;
             }
             width += flowWidth;
-            layoutData.calcWidth = layoutData.width = flowWidth;
+            layoutData.calcWidth = /* layoutData.width = */flowWidth;
           }
           if (layoutData.height != -1) {
             layoutData.calcHeight = layoutData.height;
@@ -125,9 +126,9 @@ public class BoxLayout extends BaseLayout {
                   - child.getOffsetHeight();
               flowHeight += decPanelBorderHeight;
             }
-            layoutData.calcHeight = layoutData.height = flowHeight;
+            layoutData.calcHeight = /* layoutData.height = */flowHeight;
           }
-          maxHeight = Math.max(maxHeight, (int) layoutData.height);
+          maxHeight = Math.max(maxHeight, (int) layoutData.calcHeight);
         } else {
           if (layoutData.height != -1) {
             height += layoutData.height;
@@ -141,7 +142,7 @@ public class BoxLayout extends BaseLayout {
               flowHeight += decPanelBorderHeight;
             }
             height += flowHeight;
-            layoutData.calcHeight = layoutData.height = flowHeight;
+            layoutData.calcHeight = /* layoutData.height = */flowHeight;
           }
           if (layoutData.width != -1) {
             layoutData.calcWidth = layoutData.width;
@@ -153,9 +154,9 @@ public class BoxLayout extends BaseLayout {
                   - child.getOffsetWidth();
               flowWidth += decPanelBorderWidth;
             }
-            layoutData.calcWidth = layoutData.width = flowWidth;
+            layoutData.calcWidth = /* layoutData.width = */flowWidth;
           }
-          maxWidth = Math.max(maxWidth, (int) layoutData.width);
+          maxWidth = Math.max(maxWidth, (int) layoutData.calcWidth);
         }
       }
 
@@ -168,7 +169,8 @@ public class BoxLayout extends BaseLayout {
       }
 
     } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ".getPreferredSize() : " + e.getMessage());
+      Window.alert(this.getClass().getName() + ".getPreferredSize() : "
+          + e.getMessage());
     }
 
     return result;
@@ -248,7 +250,8 @@ public class BoxLayout extends BaseLayout {
         visibleChildList.add(child);
 
         Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof BoxLayoutData)) {
+        if (layoutDataObject == null
+            || !(layoutDataObject instanceof BoxLayoutData)) {
           layoutDataObject = new BoxLayoutData();
           LayoutManagerHelper.setLayoutData(child, layoutDataObject);
         }
@@ -269,7 +272,7 @@ public class BoxLayout extends BaseLayout {
               flowWidth += decPanelBorderWidth;
             }
             fillWidth -= flowWidth;
-            layoutData.calcWidth = layoutData.width = flowWidth;
+            layoutData.calcWidth = /* layoutData.width = */flowWidth;
           }
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
@@ -283,7 +286,7 @@ public class BoxLayout extends BaseLayout {
                   - child.getOffsetHeight();
               flowHeight += decPanelBorderHeight;
             }
-            layoutData.calcHeight = layoutData.height = flowHeight;
+            layoutData.calcHeight = /* layoutData.height = */flowHeight;
           }
         } else {
           if (layoutData.fillHeight) {
@@ -300,7 +303,7 @@ public class BoxLayout extends BaseLayout {
               flowHeight += decPanelBorderHeight;
             }
             fillHeight -= flowHeight;
-            layoutData.calcHeight = layoutData.height = flowHeight;
+            layoutData.calcHeight = /* layoutData.height = */flowHeight;
           }
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
@@ -314,7 +317,7 @@ public class BoxLayout extends BaseLayout {
                   - child.getOffsetWidth();
               flowWidth += decPanelBorderWidth;
             }
-            layoutData.calcWidth = layoutData.width = flowWidth;
+            layoutData.calcWidth = /* layoutData.width = */flowWidth;
           }
         }
       }
@@ -343,8 +346,13 @@ public class BoxLayout extends BaseLayout {
         top = Math.max(0, top);
 
         // do not set size for normal flow
-        int fw = (!layoutData.fillWidth && layoutData.width == -1) ? -1 : w;
-        int fh = (!layoutData.fillHeight && layoutData.height == -1) ? -1 : h;
+        // boolean normalFlow = !layoutData.fillWidth && !layoutData.fillHeight
+        // && layoutData.width == -1 && layoutData.height == -1;
+        // int fw = normalFlow ? -1 : w;
+        // int fh = normalFlow ? -1 : h;
+        int fw = w;
+        int fh = h;
+        // TODO to check again
 
         if (layoutData.hasDecoratorPanel()) {
           final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
@@ -364,14 +372,16 @@ public class BoxLayout extends BaseLayout {
             setBounds(layoutPanel, child, left, top, fw, fh);
           } else {
             setBounds(layoutPanel, child, box[0] - decPanelBorderWidth
-                - (left + (fw != -1 ? fw : decPanel.getOffsetWidth())), top, fw, fh);
+                - (left + (fw != -1 ? fw : decPanel.getOffsetWidth())), top,
+                fw, fh);
           }
         } else {
           if (orient == Orientation.VERTICAL || isLeftToRight()) {
             setBounds(layoutPanel, child, left, top, fw, fh);
           } else {
             setBounds(layoutPanel, child, box[0]
-                - (left + (fw != -1 ? fw : child.getOffsetWidth())), top, fw, fh);
+                - (left + (fw != -1 ? fw : child.getOffsetWidth())), top, fw,
+                fh);
           }
         }
 
