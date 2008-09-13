@@ -135,7 +135,7 @@ input {
 	text-align: middle;
 }
 .mosaic-ComboBox button {
-	width: 18px;
+	width: 17px !important;
 	border: 0px;
 	border-left: 1px solid #ccc;
 	padding: 0px;
