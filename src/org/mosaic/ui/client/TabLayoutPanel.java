@@ -23,7 +23,9 @@ import org.mosaic.ui.client.layout.BorderLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
+import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
 import com.google.gwt.user.client.ui.DecoratedTabBar;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
@@ -43,6 +45,26 @@ import com.google.gwt.user.client.ui.Widget;
  * </ul>
  */
 public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents {
+
+  public static class DecoratedBottomTabBar extends TabBar {
+    static String[] TAB_ROW_STYLES = {"tabTop", "tabMiddle", "tabBottom"};
+
+    static final String STYLENAME_DEFAULT = "mosaic-DecoratedBottomTabBar";
+
+    /**
+     * Creates an empty {@link DecoratedTabBar}.
+     */
+    public DecoratedBottomTabBar() {
+      super();
+      setStylePrimaryName(STYLENAME_DEFAULT);
+    }
+
+    @Override
+    protected SimplePanel createTabTextWrapper() {
+      return new AbstractDecoratorPanel(TAB_ROW_STYLES, 1) {
+      };
+    }
+  }
 
   public enum TabBarPosition {
     TOP, BOTTOM
@@ -105,7 +127,11 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     layoutPanel.setWidgetSpacing(0);
 
     if (decorate) {
-      tabBar = new DecoratedTabBar();
+      if (region == TabBarPosition.TOP) {
+        tabBar = new DecoratedTabBar();
+      } else {
+        tabBar = new DecoratedBottomTabBar();
+      }
     } else {
       tabBar = new TabBar();
     }
