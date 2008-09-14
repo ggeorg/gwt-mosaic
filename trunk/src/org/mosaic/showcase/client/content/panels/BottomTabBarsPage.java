@@ -18,6 +18,7 @@ package org.mosaic.showcase.client.content.panels;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.showcase.client.content.layout.AbstractLayoutPage;
+import org.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.mosaic.ui.client.TabLayoutPanel;
 import org.mosaic.ui.client.TabLayoutPanel.TabBarPosition;
 import org.mosaic.ui.client.layout.LayoutPanel;
@@ -43,7 +44,7 @@ public class BottomTabBarsPage extends AbstractLayoutPage {
   @ShowcaseSource
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
-    final TabLayoutPanel tabPanel = new TabLayoutPanel(TabBarPosition.BOTTOM, true);
+    final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel(TabBarPosition.BOTTOM, true);
     tabPanel.setPadding(5);
 
     LayoutPanel panel1 = new LayoutPanel();

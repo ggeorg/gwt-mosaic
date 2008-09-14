@@ -951,3 +951,104 @@ input {
 .mosaic-DatePicker .yellow-background {
 	background-color: yellow;
 }
+
+/*** mosaic-DecoratedBottomTabBar ***/
+
+.mosaic-DecoratedBottomTabBar {	
+}
+.mosaic-DecoratedBottomTabBar .gwt-TabBarFirst {
+	width: 5px;  /* first tab distance from the left */
+}
+.mosaic-DecoratedBottomTabBar .gwt-TabBarRest {
+}
+.mosaic-DecoratedBottomTabBar .gwt-TabBarItem {
+	border-collapse: collapse;
+	margin-left: 6px;
+}
+.mosaic-DecoratedBottomTabBar .tabBottomCenter {
+	padding: 0px;
+	background: #d0e4f6;
+}
+.mosaic-DecoratedBottomTabBar .tabBottomLeft,
+.mosaic-DecoratedBottomTabBar .tabBottomRight {
+	padding: 0px;
+	zoom: 1;
+}
+.mosaic-DecoratedBottomTabBar .tabBottomLeftInner,
+.mosaic-DecoratedBottomTabBar .tabBottomRightInner {
+	width: 6px;
+	height: 6px;
+}
+html>body .mosaic-DecoratedBottomTabBar .tabBottomLeft {
+	background: url(images/corner2.png) no-repeat 0px -6px;
+}
+html>body .mosaic-DecoratedBottomTabBar .tabBottomRight {
+	background: url(images/corner2.png) no-repeat -6px -6px;
+}
+* html .mosaic-DecoratedBottomTabBar .tabBottomLeftInner {
+	width: 5px;
+	height: 61px;
+	margin-top: -55px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='gwt/standard/images/corner2.png',sizingMethod='crop');
+}
+* html .mosaic-DecoratedBottomTabBar .tabBottomRightInner {
+	width: 12px;
+	height: 61px;
+	margin-top: -55px;
+	margin-left: -6px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='gwt/standard/images/corner2.png',sizingMethod='crop');
+}
+.mosaic-DecoratedBottomTabBar .tabMiddleLeft,
+.mosaic-DecoratedBottomTabBar .tabMiddleRight {
+	width: 6px;
+	padding: 0px;
+	background: #d0e4f6;
+}
+.mosaic-DecoratedBottomTabBar .tabMiddleLeftInner,
+.mosaic-DecoratedBottomTabBar .tabMiddleRightInner {
+	width: 1px;
+	height: 1px;
+}
+.mosaic-DecoratedBottomTabBar .tabMiddleCenter {
+	padding: 0px 4px 2px 4px;
+	cursor: pointer;
+	cursor: hand;
+	color: black;
+	font-weight: bold;
+	text-align: center;
+	background: #d0e4f6;
+}
+.mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomCenter {
+	background: #92c1f0;
+}
+html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomLeft {
+	background-position: 0px 0px;
+}
+html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight {
+	background-position: -6px 0px;
+}
+* html .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomLeftInner {
+	width: 5px;
+	height: 67px;
+	margin-top: -61px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='gwt/standard/images/corner2.png',sizingMethod='crop');
+}
+* html .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRightInner {
+	width: 12px;
+	height: 67px;
+	margin-top: -61px;
+	margin-left: -6px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='gwt/standard/images/corner2.png',sizingMethod='crop');
+}
+.mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabMiddleLeft,
+.mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabMiddleRight {
+	background: #92c1f0;
+}
+.mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabMiddleCenter {
+	cursor: default;
+	background: #92c1f0;
+}
