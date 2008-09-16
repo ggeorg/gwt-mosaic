@@ -37,28 +37,25 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
    */
   private static final String DEFAULT_STYLENAME = "mosaic-CaptionLayoutPanel";
 
-  private final Caption header;
+  private final Caption caption;
   private final LayoutPanel body;
   private Widget footer;
 
-  /**
-   * 
-   */
   public CaptionLayoutPanel() {
-    this(null);
+    this(null, false);
+  }
+  
+  public CaptionLayoutPanel(final String text) {
+    this(text, false);
   }
 
-  /**
-   * 
-   * @param text
-   */
-  public CaptionLayoutPanel(final String text) {
+  public CaptionLayoutPanel(final String text, boolean asHTML) {
     final LayoutPanel layoutPanel = getWidget();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
 
-    header = new Caption(text);
-    layoutPanel.add(header, new BoxLayoutData(FillStyle.HORIZONTAL));
+    caption = new Caption(text, asHTML);
+    layoutPanel.add(caption, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     body = new LayoutPanel();
     body.addStyleName("Body");
@@ -100,7 +97,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   }
 
   public Caption getHeader() {
-    return header;
+    return caption;
   }
 
   public LayoutManager getLayout() {
@@ -192,6 +189,14 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   public void setPadding(int padding) {
     body.setPadding(padding);
+  }
+
+  public void setCollapsed(boolean collapsed) {
+    body.setVisible(!collapsed);
+  }
+  
+  public boolean isCollapsed() {
+    return !body.isVisible();
   }
 
 }

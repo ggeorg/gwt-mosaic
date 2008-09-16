@@ -392,6 +392,9 @@ input {
 /*** ImageButton ***/
 
 .mosaic-ImageButton {
+}
+
+.mosaic-ImageButton img {
 	display: block;
 	cursor: pointer;
 	
@@ -406,7 +409,7 @@ input {
 	width: 16px;
 	height: 16px;
 }
-.mosaic-ImageButton:hover {
+.mosaic-ImageButton img:hover {
 	/*
 	 * Unfortunately, in IE, border-color: transparent is rendered as black.
 	 * We get around the border on hover displacement of content by adjusting
@@ -417,7 +420,7 @@ input {
 	
 	background-color: #ccc;
 }
-.mosaic-ImageButton:active {
+.mosaic-ImageButton img:active {
 	background-color: #fcc;
 }
 
@@ -1051,4 +1054,23 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabMiddleCenter {
 	cursor: default;
 	background: #92c1f0;
+}
+
+/*** StackLayoutPanel ***/
+
+.mosaic-StackLayoutPanel {
+	/*border: 1px solid #bbbbbb;*/
+}
+.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem {
+	cursor: pointer;
+	cursor: hand;
+	background: #d3def6 url(images/hborder.png) repeat-x 0px -989px;
+}
+.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem-selected {
+	cursor: pointer;
+	cursor: hand;
+}
+.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelContent {
+	/*border: 1px solid #bbbbbb;*/
+	/*border-bottom: 0px;*/
 }

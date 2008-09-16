@@ -16,10 +16,10 @@
 package org.mosaic.showcase.client.content.widgets;
 
 import org.mosaic.showcase.client.Page;
-import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.mosaic.ui.client.InfoPanel;
+import org.mosaic.ui.client.MessageBox;
 import org.mosaic.ui.client.PopupMenu;
 import org.mosaic.ui.client.ToolButton;
 import org.mosaic.ui.client.ToolButton.ToolButtonStyle;
@@ -28,6 +28,8 @@ import org.mosaic.ui.client.layout.BoxLayoutData;
 import org.mosaic.ui.client.layout.LayoutPanel;
 import org.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.mosaic.ui.client.util.ButtonHelper;
+import org.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
@@ -40,8 +42,8 @@ import com.google.gwt.user.client.ui.Widget;
  * Example file.
  */
 @ShowcaseStyle( {
-    ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button", ".mosaic-Split-Button",
-    ".mosaic-Checkbox-Button", ".mosaic-Radio-Button"})
+    ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button",
+    ".mosaic-Split-Button", ".mosaic-Checkbox-Button", ".mosaic-Radio-Button"})
 public class ToolButtonPage extends Page implements ClickListener {
 
   /**
@@ -53,21 +55,14 @@ public class ToolButtonPage extends Page implements ClickListener {
   }
 
   /**
-   * An instance of the constants.
-   */
-  @ShowcaseData
-  private DemoConstants constants;
-
-  /**
    * Constructor.
    * 
    * @param constants the constants
    */
   public ToolButtonPage(DemoConstants constants) {
     super(constants);
-    this.constants = constants;
   }
-  
+
   /**
    * Load this example.
    */
@@ -75,13 +70,13 @@ public class ToolButtonPage extends Page implements ClickListener {
   @Override
   protected void onPageLoad(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
-    //layoutPanel.getElement().getStyle().setProperty("overflow", "auto");
+    // layoutPanel.getElement().getStyle().setProperty("overflow", "auto");
 
     //
     // Push buttons
     //
 
-    layoutPanel.add(new HTML("Push buttons"));
+    layoutPanel.add(new HTML("Push buttons widgets"));
 
     final LayoutPanel hBox1 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -89,83 +84,113 @@ public class ToolButtonPage extends Page implements ClickListener {
     addPushButtons(hBox1);
 
     //
-    // Menu buttons
+    // Push buttons with image
     //
 
-    layoutPanel.add(new HTML("Menu buttons"));
+    layoutPanel.add(new HTML("Push buttons widgets with image"));
 
     final LayoutPanel hBox2 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
-    addMenuButtons(hBox2);
+    addImageButtons(hBox2);
 
     //
-    // Split buttons
+    // Menu & Split buttons
     //
 
-    layoutPanel.add(new HTML("Split buttons"));
+    layoutPanel.add(new HTML("Menu & Split buttons widgets"));
 
     final LayoutPanel hBox3 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
-    addSplitButtons(hBox3);
+    addMenuAndSplitButtons(hBox3);
 
     //
-    // Checkbox buttons
+    // Checkbox & Radio buttons
     //
 
-    layoutPanel.add(new HTML("Checkbox buttons"));
+    layoutPanel.add(new HTML("Checkbox & Radio buttons widgets"));
 
     final LayoutPanel hBox4 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
-    addCheckboxButtons(hBox4);
-
-    //
-    // Radio buttons
-    //
-
-    layoutPanel.add(new HTML("Radio buttons"));
-
-    final LayoutPanel hBox5 = new LayoutPanel(new BoxLayout());
-    layoutPanel.add(hBox5, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-
-    addRadioButtons(hBox5);
+    addCheckboxAndRadioButtons(hBox4);
   }
-  
+
   /**
-   * Push Buttons.
+   * Basic Buttons.
    * 
    * @param layoutPanel
    */
   @ShowcaseSource
   private void addPushButtons(LayoutPanel layoutPanel) {
     // Add a push button
-    ToolButton pushButton = new ToolButton("Hello");
-    pushButton.addClickListener(this);
-    pushButton.ensureDebugId("mosaicPushButton-normal");
+    ToolButton pushButton1 = new ToolButton("Push Button", this);
+    pushButton1.ensureDebugId("mosaicPushButton-normal");
 
-    layoutPanel.add(pushButton);
+    layoutPanel.add(pushButton1);
 
     // Add a disabled push button
-    ToolButton disabledPushButton = new ToolButton("Hello");
+    ToolButton disabledPushButton = new ToolButton("Disabled");
     disabledPushButton.setEnabled(false);
-    pushButton.ensureDebugId("mosaicPushButton-disabled");
+    disabledPushButton.ensureDebugId("mosaicPushButton-disabled");
 
     layoutPanel.add(disabledPushButton);
+
   }
-  
+
+  /**
+   * Image Buttons.
+   * 
+   * @param layoutPanel
+   */
+  @ShowcaseSource
+  private void addImageButtons(LayoutPanel layoutPanel) {
+    // Add a push button with image
+    ToolButton pushButton1 = new ToolButton(ButtonHelper.createButtonLabel(
+        MessageBox.MESSAGEBOX_IMAGES.dialogInformation(), "Image Button",
+        ButtonLabelType.TEXT_ON_TOP), this);
+    pushButton1.ensureDebugId("mosaicPushButton-normal");
+
+    layoutPanel.add(pushButton1, new BoxLayoutData(FillStyle.VERTICAL));
+
+    // Add a push button with image
+    ToolButton pushButton2 = new ToolButton(ButtonHelper.createButtonLabel(
+        MessageBox.MESSAGEBOX_IMAGES.dialogInformation(), "Image Button",
+        ButtonLabelType.TEXT_ON_RIGHT), this);
+    pushButton2.ensureDebugId("mosaicPushButton-normal");
+
+    layoutPanel.add(pushButton2, new BoxLayoutData(FillStyle.VERTICAL));
+
+    // Add a push button with image
+    ToolButton pushButton3 = new ToolButton(ButtonHelper.createButtonLabel(
+        MessageBox.MESSAGEBOX_IMAGES.dialogInformation(), "Image Button",
+        ButtonLabelType.TEXT_ON_BOTTOM), this);
+    pushButton3.ensureDebugId("mosaicPushButton-normal");
+
+    layoutPanel.add(pushButton3, new BoxLayoutData(FillStyle.VERTICAL));
+
+    // Add a push button with image
+    ToolButton pushButton4 = new ToolButton(ButtonHelper.createButtonLabel(
+        MessageBox.MESSAGEBOX_IMAGES.dialogInformation(), "Image Button",
+        ButtonLabelType.TEXT_ON_LEFT), this);
+    pushButton4.setEnabled(false);
+    pushButton4.ensureDebugId("mosaicPushButton-normal");
+
+    layoutPanel.add(pushButton4, new BoxLayoutData(FillStyle.VERTICAL));
+
+  }
+
   /**
    * Menu Buttons.
    * 
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addMenuButtons(LayoutPanel layoutPanel) {
+  private void addMenuAndSplitButtons(LayoutPanel layoutPanel) {
     // Add a menu button
-    ToolButton menuButton = new ToolButton("Hello");
+    ToolButton menuButton = new ToolButton("Menu Button", this);
     menuButton.setStyle(ToolButtonStyle.MENU);
-    menuButton.addClickListener(this);
     menuButton.ensureDebugId("mosaicMenuButton-normal");
 
     // Make a command that we will execute from all menu items.
@@ -178,34 +203,25 @@ public class ToolButtonPage extends Page implements ClickListener {
     PopupMenu menuBtnMenu = new PopupMenu();
     menuBtnMenu.addItem("Item 1", cmd1);
     menuBtnMenu.addItem("Item 2", cmd1);
-    menuBtnMenu.addSeparator();
-    menuBtnMenu.addItem("Item 3", cmd1);
-    menuBtnMenu.addItem("Item 4", cmd1);
 
     menuButton.setMenu(menuBtnMenu);
 
     layoutPanel.add(menuButton);
 
     // Add a disabled menu button
-    ToolButton disabledMenuButton = new ToolButton("Hello");
+    ToolButton disabledMenuButton = new ToolButton("Disabled", this);
     disabledMenuButton.setStyle(ToolButtonStyle.MENU);
     disabledMenuButton.setEnabled(false);
     disabledMenuButton.ensureDebugId("mosaicMenuButton-disabled");
 
     layoutPanel.add(disabledMenuButton);
-  }
-  
-  /**
-   * Split Buttons.
-   * 
-   * @param layoutPanel
-   */
-  @ShowcaseSource
-  private void addSplitButtons(LayoutPanel layoutPanel) {
+    
+    // Add a spacer
+    layoutPanel.add(new HTML("&nbsp;"));
+
     // Add a menu button
-    ToolButton splitButton = new ToolButton("Hello");
+    ToolButton splitButton = new ToolButton("Split Button", this);
     splitButton.setStyle(ToolButtonStyle.SPLIT);
-    splitButton.addClickListener(this);
     splitButton.ensureDebugId("mosaicSplitButton-normal");
 
     // Make a command that we will execute from all menu items.
@@ -218,16 +234,13 @@ public class ToolButtonPage extends Page implements ClickListener {
     PopupMenu splitBtnMenu = new PopupMenu();
     splitBtnMenu.addItem("Item 1", cmd2);
     splitBtnMenu.addItem("Item 2", cmd2);
-    splitBtnMenu.addSeparator();
-    splitBtnMenu.addItem("Item 3", cmd2);
-    splitBtnMenu.addItem("Item 4", cmd2);
 
     splitButton.setMenu(splitBtnMenu);
 
     layoutPanel.add(splitButton);
 
     // Add a disabled menu button
-    ToolButton disabledSplitButton = new ToolButton("Hello");
+    ToolButton disabledSplitButton = new ToolButton("Disabled", this);
     disabledSplitButton.setStyle(ToolButtonStyle.SPLIT);
     disabledSplitButton.setEnabled(false);
     disabledSplitButton.ensureDebugId("mosaicSplitButton-disabled");
@@ -236,101 +249,54 @@ public class ToolButtonPage extends Page implements ClickListener {
   }
 
   /**
-   * Checkbox Buttons.
-   * 
-   * @param layoutPanel
-   */
-  @ShowcaseSource
-  private void addCheckboxButtons(LayoutPanel layoutPanel) {
-    // Add a checkbox button
-    ToolButton checkButton1 = new ToolButton("Hello");
-    checkButton1.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton1.addClickListener(this);
-    checkButton1.ensureDebugId("mosaicCheckboxButton-normal");
-
-    layoutPanel.add(checkButton1);
-
-    // Add a second checkbox button
-    ToolButton checkButton2 = new ToolButton("Hello");
-    checkButton2.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton2.addClickListener(this);
-    checkButton2.ensureDebugId("mosaicCheckboxButton-normal");
-
-    layoutPanel.add(checkButton2);
-
-    // Add a third checkbox button
-    ToolButton checkButton3 = new ToolButton("Hello");
-    checkButton3.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton3.addClickListener(this);
-    checkButton3.ensureDebugId("mosaicCheckboxButton-normal");
-
-    layoutPanel.add(checkButton3);
-
-    // Add a fourth checkbox button
-    ToolButton checkButton4 = new ToolButton("Hello");
-    checkButton4.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton4.setEnabled(false);
-    checkButton4.ensureDebugId("mosaicCheckboxButton-normal");
-
-    layoutPanel.add(checkButton4);
-
-    // Add a fifth checkbox button
-    ToolButton checkButton5 = new ToolButton("Hello");
-    checkButton5.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton5.setEnabled(false);
-    checkButton5.setChecked(true);
-    checkButton5.ensureDebugId("mosaicCheckboxButton-normal");
-
-    layoutPanel.add(checkButton5);
-  }
-  
-  /**
    * Radio Buttons.
    * 
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addRadioButtons(LayoutPanel layoutPanel) {
+  private void addCheckboxAndRadioButtons(LayoutPanel layoutPanel) {
     // Add a checkbox button
-    ToolButton radioButton1 = new ToolButton("Hello");
+    ToolButton checkButton1 = new ToolButton("Checkbox", this);
+    checkButton1.setStyle(ToolButtonStyle.CHECKBOX);
+    checkButton1.ensureDebugId("mosaicCheckboxButton-normal");
+
+    layoutPanel.add(checkButton1);
+
+    // Add a disabled checkbox button
+    ToolButton checkButton2 = new ToolButton("Disabled", this);
+    checkButton2.setStyle(ToolButtonStyle.CHECKBOX);
+    checkButton2.setEnabled(false);
+    checkButton2.setChecked(true);
+    checkButton2.ensureDebugId("mosaicCheckboxButton-normal");
+
+    layoutPanel.add(checkButton2);
+    
+    // Add a spacer
+    layoutPanel.add(new HTML("&nbsp;"));
+
+    // Add a radio button
+    ToolButton radioButton1 = new ToolButton("Radio #1", this);
     radioButton1.setStyle(ToolButtonStyle.RADIO);
-    radioButton1.addClickListener(this);
     radioButton1.ensureDebugId("mosaicRadioButton-normal");
 
     layoutPanel.add(radioButton1);
 
-    // Add a second checkbox button
-    ToolButton radioButton2 = new ToolButton("Hello");
+    // Add a second radio button
+    ToolButton radioButton2 = new ToolButton("Radio #2", this);
     radioButton2.setStyle(ToolButtonStyle.RADIO);
-    radioButton2.addClickListener(this);
     radioButton2.ensureDebugId("mosaicRadioButton-normal");
 
     layoutPanel.add(radioButton2);
 
-    // Add a third checkbox button
-    ToolButton radioButton3 = new ToolButton("Hello");
-    radioButton3.setStyle(ToolButtonStyle.RADIO);
-    radioButton3.addClickListener(this);
-    radioButton3.ensureDebugId("mosaicRadioButton-normal");
-
-    layoutPanel.add(radioButton3);
-
-    // Add a fourth checkbox button
-    ToolButton radioButton4 = new ToolButton("Hello");
+    // Add a fourth radio button
+    ToolButton radioButton4 = new ToolButton("Radio #3", this);
     radioButton4.setStyle(ToolButtonStyle.RADIO);
     radioButton4.setEnabled(false);
-    radioButton4.ensureDebugId("mosaicRadioButton-normal");
+    radioButton4.setChecked(true);
+    radioButton4.ensureDebugId("mosaicRadioButton-disabled");
 
     layoutPanel.add(radioButton4);
-
-    // Add a fifth checkbox button
-    ToolButton radioButton5 = new ToolButton("Hello");
-    radioButton5.setStyle(ToolButtonStyle.RADIO);
-    radioButton5.setEnabled(false);
-    radioButton5.setChecked(true);
-    radioButton5.ensureDebugId("mosaicRadioButton-normal");
-
-    layoutPanel.add(radioButton5);
+    
   }
 
   /**
@@ -340,7 +306,7 @@ public class ToolButtonPage extends Page implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
-    InfoPanel.show(btn.getHTML(), "Clicked!");
+    InfoPanel.show(btn.getText(), "Clicked!");
   }
 
   @Override

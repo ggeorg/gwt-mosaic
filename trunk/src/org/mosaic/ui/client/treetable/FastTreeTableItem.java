@@ -15,6 +15,9 @@
  */
 package org.mosaic.ui.client.treetable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -22,12 +25,9 @@ import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.DecoratedFastTreeItem;
 import com.google.gwt.widgetideas.client.overrides.DOMHelper;
-import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An item that can be contained within a
@@ -78,31 +78,12 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   private int state = TREE_NODE_LEAF;
   private ArrayList<FastTreeTableItem> children;
   private Element contentElem;
-  FixedWidthGrid childTable;
+  // FixedWidthGrid childTable;
   private FastTreeTableItem parent;
   private FastTreeTable treeTable;
   private Widget widget;
 
   private Object userObject;
-
-  /**
-   * Set the width of a column.
-   * 
-   * @param column the index of the column
-   * @param width the width in pixels
-   * @throws IndexOutOfBoundsException
-   * 
-   * @param column
-   * @param width
-   */
-  void setColumnWidth(int column, int width) {
-    if (childTable != null) {
-      childTable.setColumnWidth(column, width);
-    }
-    for (int i = 0; i < getChildCount(); i++) {
-      getChild(i).setColumnWidth(column, width);
-    }
-  }
 
   /**
    * Sets the user-defined object associated with this item.
@@ -174,6 +155,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     // Logical attach.
     item.setParentItem(this);
     children.add(item);
+    item.setDepth(getDepth() + 1);
 
     // Physical attach.
     if (state != TREE_NODE_INTERIOR_NEVER_OPENED) {
@@ -194,8 +176,16 @@ public class FastTreeTableItem extends Widget implements HasHTML,
    * @param r the row to insert the item to
    */
   private void insertItem(FastTreeTableItem item, int r) {
-    childTable.insertRow(r);
-    childTable.setWidget(r, treeTable.getTreeColumn(), item);
+    // childTable.insertRow(r);
+    // childTable.setWidget(r, treeTable.getTreeColumn(), item);
+    final Element tr = getElement().getParentElement().getParentElement().cast();
+    r += OverrideDOM.getRowIndex(tr);
+    treeTable.insertRow(r);
+    treeTable.setWidget(r, treeTable.getTreeColumn(), item);
+    int d = item.getDepth();
+    if (d != 0) {
+      DOM.setStyleAttribute(item.getElement(), "marginLeft", (d * 10) + "px");
+    }
   }
 
   public FastTreeTableItem addItem(String itemText) {
@@ -378,9 +368,15 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     // Physical detach.
     if (state != TREE_NODE_INTERIOR_NEVER_OPENED) {
       // TODO DOM.removeChild(childElems, item.getElement());
-      childTable.remove(item);
-      if (item.childTable != null) {
-        childTable.remove(item.childTable);
+      // childTable.remove(item);
+      // if (item.childTable != null) {
+      // childTable.remove(item.childTable);
+      // }
+      treeTable.remove(item);
+      if (item.state != TREE_NODE_INTERIOR_NEVER_OPENED) {
+        for (int i = 0, n = item.getChildCount(); i < n; i++) {
+          item.removeItem(item.getChild(i));
+        }
       }
     }
 
@@ -432,20 +428,21 @@ public class FastTreeTableItem extends Widget implements HasHTML,
       if (state == TREE_NODE_INTERIOR_NEVER_OPENED) {
         ensureChildren();
         // childElems = DOM.createDiv();
-        childTable = new FixedWidthGrid();
-        childTable.resize(0, treeTable.getColumnCount());
-        childTable.setBorderWidth(0);
-        childTable.setCellPadding(treeTable.getCellPadding());
-        childTable.setCellSpacing(treeTable.getCellSpacing());
+        // childTable = new FixedWidthGrid();
+        // childTable.resize(0, treeTable.getColumnCount());
+        // childTable.setBorderWidth(0);
+        // childTable.setCellPadding(treeTable.getCellPadding());
+        // childTable.setCellSpacing(treeTable.getCellSpacing());
         // UIObject.setStyleName(childElems, STYLENAME_CHILDREN);
-        childTable.setStyleName(STYLENAME_CHILDREN);
-        convertElementToHaveChildren(childTable);
+        // childTable.setStyleName(STYLENAME_CHILDREN);
+        // convertElementToHaveChildren(childTable);
 
         if (children != null) {
           for (int i = 0, n = children.size(); i < n; i++) {
-            FastTreeTableItem item = children.get(i);
+            final FastTreeTableItem item = children.get(i);
             // DOM.appendChild(childElems, item.getElement());
-            insertItem(item, childTable.getRowCount());
+            // insertItem(item, childTable.getRowCount());
+            insertItem(item, i);
           }
         }
       }
@@ -512,7 +509,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
 
   /**
    * Fired when a tree item receives a request to open for the first time.
-   * Should be overridden in child clases.
+   * Should be overridden in child classes.
    */
   protected void ensureChildren() {
   }
@@ -554,25 +551,28 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     }
   }
 
-  void convertElementToHaveChildren(FixedWidthGrid t) {
-    final Element tr = getElement().getParentElement().getParentElement().cast();
-    final int r = OverrideDOM.getRowIndex(tr);
-    FastTreeTableItem parent = getParentItem();
-    if (parent != null) {
-      parent.childTable.insertRow(r);
-      final Element td = tr.getNextSiblingElement().getFirstChildElement().cast();
-      DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
-      parent.childTable.setWidget(r, 0, t);
-    } else {
-      treeTable.insertRow(r);
-      final Element td = tr.getNextSiblingElement().getFirstChildElement().cast();
-      DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
-      treeTable.setWidget(r, 0, t);
-    }
-    for(int i = 0; i < treeTable.getColumnCount(); i++) {
-      t.setColumnWidth(i, treeTable.getColumnWidth(i));
-    }
-  }
+  // void convertElementToHaveChildren(FixedWidthGrid t) {
+  // final Element tr =
+  // getElement().getParentElement().getParentElement().cast();
+  // final int r = OverrideDOM.getRowIndex(tr);
+  // FastTreeTableItem parent = getParentItem();
+  // if (parent != null) {
+  // parent.childTable.insertRow(r);
+  // final Element td =
+  // tr.getNextSiblingElement().getFirstChildElement().cast();
+  // DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
+  // parent.childTable.setWidget(r, 0, t);
+  // } else {
+  // treeTable.insertRow(r);
+  // final Element td =
+  // tr.getNextSiblingElement().getFirstChildElement().cast();
+  // DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
+  // treeTable.setWidget(r, 0, t);
+  // }
+  // for (int i = 0; i < treeTable.getColumnCount(); i++) {
+  // t.setColumnWidth(i, treeTable.getColumnWidth(i));
+  // }
+  // }
 
   void convertElementToInteriorNode(Element control) {
     setStyleName(getElement(), "gwt-FastTreeTableItem-leaf", false);
@@ -655,13 +655,39 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     if (isLeafNode()) {
       return;
     }
-    Element tr = childTable.getElement().getParentElement().getParentElement().cast();
+    // Element tr =
+    // childTable.getElement().getParentElement().getParentElement().cast();
     if (isOpen()) {
       showOpenImage();
-      UIObject.setVisible(tr, true);
+      // UIObject.setVisible(tr, true);
+      for (int i = 0, n = getChildCount(); i < n; i++) {
+        final FastTreeTableItem item = getChild(i);
+        final Element tr = item.getElement().getParentElement().getParentElement().cast();
+        UIObject.setVisible(tr, true);
+        updateVisibility(item, true);
+      }
     } else {
       showClosedImage();
-      UIObject.setVisible(tr, false);
+      // UIObject.setVisible(tr, false);
+      if (state != TREE_NODE_INTERIOR_NEVER_OPENED) {
+        for (int i = 0, n = getChildCount(); i < n; i++) {
+          final FastTreeTableItem item = getChild(i);
+          final Element tr = item.getElement().getParentElement().getParentElement().cast();
+          UIObject.setVisible(tr, false);
+          updateVisibility(item, false);
+        }
+      }
+    }
+  }
+
+  void updateVisibility(final FastTreeTableItem item, final boolean visible) {
+    if (item.state != TREE_NODE_INTERIOR_NEVER_OPENED) {
+      for (int i = 0, n = item.getChildCount(); i < n; i++) {
+        final FastTreeTableItem child = item.getChild(i);
+        final Element tr = child.getElement().getParentElement().getParentElement().cast();
+        UIObject.setVisible(tr, visible);
+        child.updateVisibility(child, visible);
+      }
     }
   }
 
@@ -708,14 +734,14 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     setStyleName(getControlElement(), STYLENAME_OPEN, true);
   }
 
-  private int row;
+  private int depth = -1;
 
-  public int getRow() {
-    return row;
+  private int getDepth() {
+    return depth;
   }
 
-  public void setRow(int r) {
-    row = r;
+  private void setDepth(final int depth) {
+    this.depth = depth;
   }
 
 }

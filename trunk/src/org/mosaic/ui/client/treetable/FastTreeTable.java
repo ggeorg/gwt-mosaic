@@ -65,7 +65,6 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   @Override
   public void setColumnWidth(int column, int width) {
     super.setColumnWidth(column, width);
-    root.setColumnWidth(column, width);
   }
 
   /**
@@ -819,8 +818,6 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     collectElementChain(chain, getElement(), target);
     FastTreeTableItem item = findItemByChain(chain, 0, root);
     if (item != null) {
-      boolean b1 = item.isInteriorNode();
-      boolean b2 = item.getControlElement().equals(target);
       if (item.isInteriorNode() && item.getControlElement().equals(target)) {
         item.setState(!item.isOpen(), true);
         moveSelectionBar(curSelection);
@@ -841,28 +838,35 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     }
     return findDeepestOpenChild(item.getChild(item.getChildCount() - 1));
   }
-
-  private FastTreeTableItem findItemByChain(ArrayList<Element> chain, int idx,
-      FastTreeTableItem root) {
+  
+  private FastTreeTableItem findItemByChain(final ArrayList<Element> chain, int idx, FastTreeTableItem root) {
     if (idx == chain.size()) {
       return root;
     }
 
-    Element hCurElem = chain.get(idx);
-    for (int i = 0, n = root.getChildCount(); i < n; ++i) {
-      final FastTreeTableItem child = root.getChild(i);
-      if (child.getElement().equals(hCurElem)
-          || (child.childTable != null && child.childTable.getElement().equals(
-              hCurElem))) {
-        FastTreeTableItem retItem = findItemByChain(chain, idx + 1, child);
-        if (retItem == null) {
-          return child;
-        }
-        return retItem;
+    for (int i = 0, n = chain.size(); i < n; i++) {
+      final Element elem = (Element) chain.get(i);
+      String nodeName = elem.getNodeName();
+      if ("div".equalsIgnoreCase(nodeName)) {
+        return findItemByElement(root, elem);
       }
     }
 
-    return findItemByChain(chain, idx + 1, root);
+    return null;
+  }
+
+  private FastTreeTableItem findItemByElement(FastTreeTableItem item, Element elem) {
+    if (item.getElement().equals(elem)) {
+      return item;
+    }
+    for (int i = 0, n = item.getChildCount(); i < n; ++i) {
+      FastTreeTableItem child = item.getChild(i);
+      child = findItemByElement(child, elem);
+      if (child != null) {
+        return child;
+      }
+    }
+    return null;
   }
 
   private void moveElementOverTarget(Element movable, Element target) {

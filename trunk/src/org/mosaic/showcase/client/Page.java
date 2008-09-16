@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,6 +28,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
@@ -122,6 +122,17 @@ public abstract class Page extends LayoutPanel {
     return s.substring(s.lastIndexOf('.') + 1, s.length());
   }
 
+  private String createTabBarCaption(AbstractImagePrototype image, String text) {
+    StringBuffer sb = new StringBuffer();
+    sb.append("<table cellspacing='0px' cellpadding='0px' border='0px'><thead><tr>");
+    sb.append("<td valign='middle'>");
+    sb.append(image.getHTML());
+    sb.append("</td><td valign='middle' style='white-space: nowrap;'>&nbsp;");
+    sb.append(text);
+    sb.append("</td></tr></thead></table>");
+    return sb.toString();
+  }
+
   public final void init() {
     if (initialized) {
       return;
@@ -136,9 +147,12 @@ public abstract class Page extends LayoutPanel {
     LayoutPanel panel2 = new LayoutPanel();
     LayoutPanel panel3 = new LayoutPanel();
 
-    tabPanel.add(panel1, constants.mosaicPageExample());
-    tabPanel.add(panel2, constants.mosaicPageSource());
-    tabPanel.add(panel3, constants.mosaicPageStyle());
+    tabPanel.add(panel1, createTabBarCaption(Showcase.images.mediaPlayGreen(),
+        constants.mosaicPageExample()), true);
+    tabPanel.add(panel2, createTabBarCaption(Showcase.images.cup(),
+        constants.mosaicPageSource()), true);
+    tabPanel.add(panel3, createTabBarCaption(Showcase.images.css(),
+        constants.mosaicPageStyle()), true);
 
     // Add source code tab
     sourceWidget = new HTML();
@@ -162,8 +176,8 @@ public abstract class Page extends LayoutPanel {
           sourceLoaded = true;
           String className = Page.this.getClass().getName();
           className = className.substring(className.lastIndexOf(".") + 1);
-          requestSourceContents(ShowcaseConstants.DST_SOURCE_EXAMPLE + className
-              + ".html", sourceWidget, null);
+          requestSourceContents(ShowcaseConstants.DST_SOURCE_EXAMPLE
+              + className + ".html", sourceWidget, null);
         }
 
         // Load the style definitions
@@ -188,8 +202,8 @@ public abstract class Page extends LayoutPanel {
           }
           String className = Page.this.getClass().getName();
           className = className.substring(className.lastIndexOf(".") + 1);
-          requestSourceContents(srcPath + "/" + className + ".html", styleWidget,
-              callback);
+          requestSourceContents(srcPath + "/" + className + ".html",
+              styleWidget, callback);
         }
       }
     });

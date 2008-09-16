@@ -32,6 +32,7 @@ import org.mosaic.showcase.client.content.layout.NestedBorderLayoutPage;
 import org.mosaic.showcase.client.content.other.Actions;
 import org.mosaic.showcase.client.content.panels.BottomTabBarsPage;
 import org.mosaic.showcase.client.content.panels.DeckLayoutPanelPage;
+import org.mosaic.showcase.client.content.panels.StackLayoutPanelPage;
 import org.mosaic.showcase.client.content.panels.TabLayoutPanelPage;
 import org.mosaic.showcase.client.content.popups.InfoPanelPage;
 import org.mosaic.showcase.client.content.popups.MessageBoxPage;
@@ -330,6 +331,7 @@ public class Showcase implements EntryPoint {
     
     TreeItem catLayoutPanels =catPanels.addItem("Panels");
     setupMainMenuOption(catLayoutPanels, new DeckLayoutPanelPage(constants), images.catPanels());
+    setupMainMenuOption(catLayoutPanels, new StackLayoutPanelPage(constants), images.catPanels());
     setupMainMenuOption(catLayoutPanels, new TabLayoutPanelPage(constants), images.catPanels());
     setupMainMenuOption(catLayoutPanels, new BottomTabBarsPage(constants), images.catPanels());
 
