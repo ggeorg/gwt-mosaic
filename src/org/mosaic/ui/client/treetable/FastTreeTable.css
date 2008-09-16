@@ -41,14 +41,12 @@ Visual styling
 
 .gwt-FastTreeTableItem-leaf {
 	display: block;
-	/* padding: 2px; */
+	padding: 2px;
 	padding-left: 18px;
 }
 
 .gwt-FastTreeTableItem-children {
-	/* margin-left: 10px; */
-	
-	margin: 0px;
+	margin-left: 10px;
 }
 
 .gwt-FastTreeTableItem .open,.gwt-FastTreeTableItem .closed,.gwt-FastTreeTableItem-leaf {
@@ -68,7 +66,7 @@ Visual styling
 }
 
 .gwt-FastTreeTable .treeItemContent {
-	/* padding: 2px; */
+	padding: 2px;
 }
 
 .gwt-FastTreeTable .selected .treeItemContent {

@@ -40,12 +40,20 @@ public interface ShowcaseImages extends ImageBundle {
 
   AbstractImagePrototype catWidgets();
 
+  AbstractImagePrototype css();
+  
+  AbstractImagePrototype cup();
+
   AbstractImagePrototype gwtLogo();
-
+  
   AbstractImagePrototype gwtLogoThumb();
-
+  
   /**
    * Indicates the locale selection box.
    */
   AbstractImagePrototype locale();
+  
+  AbstractImagePrototype mediaPlayGreen();
+  
+  AbstractImagePrototype showcaseDemos();
 }
