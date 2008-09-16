@@ -19,6 +19,12 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 
 public interface CaptionImages extends ImageBundle {
+  
+  @Resource("tool-button-minus.png")
+  AbstractImagePrototype toolMinus();
+  
+  @Resource("tool-button-plus.png")
+  AbstractImagePrototype toolPlus();
 
   @Resource("window-button-close.png")
   AbstractImagePrototype windowClose();
