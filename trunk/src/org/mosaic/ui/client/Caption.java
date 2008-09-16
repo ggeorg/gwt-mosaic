@@ -17,7 +17,10 @@ package org.mosaic.ui.client;
 
 import org.mosaic.core.client.DOM;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -40,7 +43,14 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
    */
   private static final String DEFAULT_STYLENAME = "mosaic-Caption";
 
+  /**
+   * The caption images to use.
+   */
+  public static final CaptionImages IMAGES = (CaptionImages) GWT.create(CaptionImages.class);
+
   private MouseListenerCollection mouseListeners;
+
+  private ClickListenerCollection clickListeners;
 
   private final HorizontalPanel hpanel = new HorizontalPanel();
 
@@ -49,12 +59,20 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   private HorizontalPanel leftIconBox, rightIconBox;
 
   public Caption(String text) {
+    this(text, false);
+  }
+
+  public Caption(String text, boolean asHTML) {
     initWidget(hpanel);
-    sinkEvents(Event.MOUSEEVENTS);
+    sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
     caption.setStyleName(DEFAULT_STYLENAME + "-text");
 
-    setText(text);
+    if (asHTML) {
+      setHTML(text);
+    } else {
+      setText(text);
+    }
 
     hpanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
     hpanel.setCellHorizontalAlignment(caption, HorizontalPanel.ALIGN_CENTER);
@@ -70,7 +88,7 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   }
 
   public void add(Widget w) {
-    leftIconBox.add(w);
+    add(w, CaptionRegion.LEFT);
   }
 
   public void add(Widget w, CaptionRegion region) {
@@ -106,6 +124,13 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
       mouseListeners = new MouseListenerCollection();
     }
     mouseListeners.add(listener);
+  }
+
+  public void addClickListener(ClickListener listener) {
+    if (clickListeners == null) {
+      clickListeners = new ClickListenerCollection();
+    }
+    clickListeners.add(listener);
   }
 
   public void clear() {
@@ -147,7 +172,28 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
           mouseListeners.fireMouseEvent(this, event);
         }
         break;
+      case Event.ONCLICK:
+        if (clickListeners != null) {
+          clickListeners.fireClick(this);
+        }
     }
+  }
+  
+  public Widget getWidget(int index) {
+    return getWidget(index, CaptionRegion.LEFT);
+  }
+  
+  public Widget getWidget(int index, CaptionRegion region) {
+    if (region == CaptionRegion.LEFT) {
+      if (leftIconBox != null) {
+        return leftIconBox.getWidget(index);
+      }
+    } else {
+      if (rightIconBox != null) {
+        return rightIconBox.getWidget(index);
+      }
+    }
+    return null;
   }
 
   public boolean remove(Widget widget) {
@@ -166,6 +212,12 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   public void removeMouseListener(MouseListener listener) {
     if (mouseListeners != null) {
       mouseListeners.remove(listener);
+    }
+  }
+
+  public void removeClickListener(ClickListener listener) {
+    if (clickListeners != null) {
+      clickListeners.remove(listener);
     }
   }
 
