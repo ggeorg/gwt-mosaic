@@ -139,6 +139,7 @@ public class Application extends Viewport implements HasLayoutManager {
 
     CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
     westPanel.add(new ScrollPanel(mainMenu));
+    westPanel.getHeader().add(Showcase.images.showcaseDemos().createImage());
 
     bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200, 100,
         350, true));
