@@ -26,6 +26,7 @@ import org.mosaic.ui.client.layout.BaseLayout;
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
+import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
@@ -132,11 +133,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       if (!modal) {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
-          glassPanel.addStyleName("mosaic-GlassPanel-default");
-          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", DOM.getStyleAttribute(
-              WindowPanel.this.getElement(), "zIndex"));
+          glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
+              DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
         }
-        RootPanel.get().add(glassPanel, 0, 0);
+        getBoundaryPanel().add(glassPanel, 0, 0);
       }
       super.dragStart();
     }
@@ -150,7 +151,16 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
     private WindowPanel windowPanel = null;
 
-    public ResizeDragController(AbsolutePanel boundaryPanel, WindowPanel windowPanel) {
+    private int boundaryOffsetX;
+
+    private int boundaryOffsetY;
+
+    private int dropTargetClientHeight;
+
+    private int dropTargetClientWidth;
+
+    public ResizeDragController(AbsolutePanel boundaryPanel,
+        WindowPanel windowPanel) {
       super(boundaryPanel);
       this.windowPanel = windowPanel;
     }
@@ -161,14 +171,30 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       if (!modal) {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
-          glassPanel.addStyleName("mosaic-GlassPanel-default");
-          final int zIndex = DOM.getIntStyleAttribute(WindowPanel.this.getElement(),
-              "zIndex");
-          DOM.setIntStyleAttribute(glassPanel.getElement(), "zIndex", zIndex - 1);
+          glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+          final int zIndex = DOM.getIntStyleAttribute(
+              WindowPanel.this.getElement(), "zIndex");
+          DOM.setIntStyleAttribute(glassPanel.getElement(), "zIndex",
+              zIndex - 1);
         }
-        RootPanel.get().add(glassPanel, 0, 0);
+        getBoundaryPanel().add(glassPanel, 0, 0);
       }
       super.dragStart();
+
+      // one timecalculation of boundary panel location for efficiency during
+      // dragging
+      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
+      boundaryOffsetX = widgetLocation.getLeft()
+          + DOMUtil.getBorderLeft(context.boundaryPanel.getElement());
+      boundaryOffsetY = widgetLocation.getTop()
+          + DOMUtil.getBorderTop(context.boundaryPanel.getElement());
+
+      dropTargetClientWidth = boundaryOffsetX
+          + DOMUtil.getClientWidth(context.boundaryPanel.getElement())
+          - context.draggable.getOffsetWidth();
+      dropTargetClientHeight = boundaryOffsetY
+          + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
+          - context.draggable.getOffsetHeight();
     }
 
     @Override
@@ -184,7 +210,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     public void dragMove() {
       int direction = ((ResizeDragController) context.dragController).getDirection(context.draggable).directionBits;
       if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
-        final int delta = context.draggable.getAbsoluteTop() - context.desiredDraggableY;
+        final int delta = context.draggable.getAbsoluteTop()
+            - Math.max(context.desiredDraggableY, boundaryOffsetY);
         if (delta != 0) {
           int contentHeight = windowPanel.getContentHeight();
           int newHeight = Math.max(contentHeight + delta,
@@ -195,7 +222,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
         }
       } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
-        final int delta = context.desiredDraggableY - context.draggable.getAbsoluteTop();
+        final int delta = Math.min(context.desiredDraggableY,
+            dropTargetClientHeight)
+            - context.draggable.getAbsoluteTop();
+
         if (delta != 0) {
           int contentHeight = windowPanel.getContentHeight();
           int newHeight = Math.max(contentHeight + delta,
@@ -204,7 +234,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         }
       }
       if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
-        int delta = context.draggable.getAbsoluteLeft() - context.desiredDraggableX;
+        int delta = context.draggable.getAbsoluteLeft()
+            - Math.max(context.desiredDraggableX, boundaryOffsetX);
         if (delta != 0) {
           int contentWidth = windowPanel.getContentWidth();
           int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
@@ -214,7 +245,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           windowPanel.setContentSize(newWidth, windowPanel.getContentHeight());
         }
       } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
-        int delta = context.desiredDraggableX - context.draggable.getAbsoluteLeft();
+        int delta = Math.min(context.desiredDraggableX, dropTargetClientWidth)
+            - context.draggable.getAbsoluteLeft();
         if (delta != 0) {
           int contentWidth = windowPanel.getContentWidth();
           int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
@@ -228,7 +260,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       return directionMap.get(draggable);
     }
 
-    public void makeDraggable(Widget widget, WindowPanel.DirectionConstant direction) {
+    public void makeDraggable(Widget widget,
+        WindowPanel.DirectionConstant direction) {
       super.makeDraggable(widget);
       directionMap.put(widget, direction);
     }
@@ -259,7 +292,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       // moveDragController.setBehaviorDragProxy(true);
       moveDragController.setBehaviorMultipleSelection(false);
 
-      resizeDragController = new ResizeDragController(boundaryPanel, windowPanel);
+      resizeDragController = new ResizeDragController(boundaryPanel,
+          windowPanel);
       resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
       resizeDragController.setBehaviorMultipleSelection(false);
     }
@@ -311,46 +345,49 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
   /**
    * Specifies that resizing occur at the east edge.
    */
-  static final DirectionConstant EAST = new WindowPanel.DirectionConstant(DIRECTION_EAST,
-      "e");
+  static final DirectionConstant EAST = new WindowPanel.DirectionConstant(
+      DIRECTION_EAST, "e");
 
   /**
    * Specifies that resizing occur at the both edge.
    */
-  static final DirectionConstant NORTH = new DirectionConstant(DIRECTION_NORTH, "n");
+  static final DirectionConstant NORTH = new DirectionConstant(DIRECTION_NORTH,
+      "n");
 
   /**
    * Specifies that resizing occur at the north-east edge.
    */
-  static final DirectionConstant NORTH_EAST = new DirectionConstant(DIRECTION_NORTH
-      | DIRECTION_EAST, "ne");
+  static final DirectionConstant NORTH_EAST = new DirectionConstant(
+      DIRECTION_NORTH | DIRECTION_EAST, "ne");
 
   /**
    * Specifies that resizing occur at the north-west edge.
    */
-  static final DirectionConstant NORTH_WEST = new DirectionConstant(DIRECTION_NORTH
-      | DIRECTION_WEST, "nw");
+  static final DirectionConstant NORTH_WEST = new DirectionConstant(
+      DIRECTION_NORTH | DIRECTION_WEST, "nw");
 
   /**
    * Specifies that resizing occur at the south edge.
    */
-  static final DirectionConstant SOUTH = new DirectionConstant(DIRECTION_SOUTH, "s");
+  static final DirectionConstant SOUTH = new DirectionConstant(DIRECTION_SOUTH,
+      "s");
 
   /**
    * Specifies that resizing occur at the south-east edge.
    */
-  static final DirectionConstant SOUTH_EAST = new DirectionConstant(DIRECTION_SOUTH
-      | DIRECTION_EAST, "se");
+  static final DirectionConstant SOUTH_EAST = new DirectionConstant(
+      DIRECTION_SOUTH | DIRECTION_EAST, "se");
 
   /**
    * Specifies that resizing occur at the south-west edge.
    */
-  static final DirectionConstant SOUTH_WEST = new DirectionConstant(DIRECTION_SOUTH
-      | DIRECTION_WEST, "sw");
+  static final DirectionConstant SOUTH_WEST = new DirectionConstant(
+      DIRECTION_SOUTH | DIRECTION_WEST, "sw");
   /**
    * Specifies that resizing occur at the west edge.
    */
-  static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST, "w");
+  static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST,
+      "w");
 
   private ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
   private ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
@@ -406,8 +443,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     return windowPanelOrder.lastElement().equals(this);
   }
 
-  protected WindowPanel(AbsolutePanel boundaryPanel, String caption, boolean resizable,
-      boolean autoHide, boolean modal) {
+  protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
+      boolean resizable, boolean autoHide, boolean modal) {
     super(autoHide, modal);
 
     this.resizable = resizable;
@@ -433,7 +470,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     });
     panel.getHeader().add(closeBtn, CaptionRegion.RIGHT);
 
-    windowController.getMoveDragController().makeDraggable(this, panel.getHeader());
+    windowController.getMoveDragController().makeDraggable(this,
+        panel.getHeader());
 
     super.setWidget(panel);
 
@@ -459,7 +497,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     this(caption, resizable, false, modal);
   }
 
-  protected WindowPanel(String caption, boolean resizable, boolean autoHide, boolean modal) {
+  protected WindowPanel(String caption, boolean resizable, boolean autoHide,
+      boolean modal) {
     this(RootPanel.get(), caption, resizable, autoHide, modal);
   }
 
@@ -570,7 +609,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     parent.setWidgetPosition(this, left, top);
   }
 
-  private ElementDragHandle newResizeHandle(int row, int col, DirectionConstant direction) {
+  private ElementDragHandle newResizeHandle(int row, int col,
+      DirectionConstant direction) {
     final Element td = getCellElement(row, col).getParentElement().cast();
     final ElementDragHandle widget = new ElementDragHandle(td);
     adopt(widget);
@@ -646,16 +686,20 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       if (glassPanel == null) {
         glassPanel = new GlassPanel(false);
         glassPanel.addStyleName("mosaic-GlassPanel-default");
-        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", DOM.getStyleAttribute(
-            WindowPanel.this.getElement(), "zIndex"));
+        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
+            DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
       }
-      RootPanel.get().add(glassPanel, 0, 0);
+      windowController.getBoundaryPanel().add(glassPanel, 0, 0);
     }
     super.show();
 
     if (!isActive()) {
       bringToFront();
     }
+  }
+
+  public Caption getHeader() {
+    return panel.getHeader();
   }
 
 }

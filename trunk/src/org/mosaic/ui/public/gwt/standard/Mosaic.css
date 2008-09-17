@@ -327,6 +327,15 @@ input {
       'width/height: 100%' or similar constructs.
 	*/
 }
+.mosaic-GlassPanel-invisible {
+	/* Override glass panel color to be `green` */
+	background-color: #000 !important;
+	background-repeat: repeat;
+	
+	/* Override glass panel to 0% opacity (= 100% transparency) */
+	filter: alpha(opacity = 0) !important; /* IE */
+	opacity: 0.0 !important; /* non-IE */
+}
 .mosaic-GlassPanel-default,
 .mosaic-GlassPanel-blue_ridge {
 	background-image: url("images/glasspanel/blue_ridge.png");
