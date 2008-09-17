@@ -109,10 +109,19 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   }
 
-  final class MoveDragController extends PickupDragController {
+  final class MoveDragController extends AbstractDragController {
+
+    private int boundaryOffsetX;
+
+    private int boundaryOffsetY;
+
+    private int dropTargetClientHeight;
+
+    private int dropTargetClientWidth;
 
     public MoveDragController(AbsolutePanel boundaryPanel) {
-      super(boundaryPanel, true);
+      // super(boundaryPanel, true);
+      super(boundaryPanel);
     }
 
     @Override
@@ -140,6 +149,35 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         getBoundaryPanel().add(glassPanel, 0, 0);
       }
       super.dragStart();
+
+      // one time calculation of boundary panel location for efficiency during
+      // dragging
+      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
+      boundaryOffsetX = widgetLocation.getLeft()
+          + DOMUtil.getBorderLeft(context.boundaryPanel.getElement());
+      boundaryOffsetY = widgetLocation.getTop()
+          + DOMUtil.getBorderTop(context.boundaryPanel.getElement());
+
+      dropTargetClientWidth = boundaryOffsetX
+          + DOMUtil.getClientWidth(context.boundaryPanel.getElement())
+          - context.draggable.getOffsetWidth();
+      dropTargetClientHeight = boundaryOffsetY
+          + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
+          - context.draggable.getOffsetHeight();
+    }
+
+    public void dragMove() {
+      int desiredLeft = context.desiredDraggableX;
+      int desiredTop = context.desiredDraggableY;
+      if (getBehaviorConstrainedToBoundaryPanel()) {
+        desiredLeft = Math.max(boundaryOffsetX, Math.min(desiredLeft,
+            dropTargetClientWidth));
+        desiredTop = Math.max(boundaryOffsetY, Math.min(desiredTop,
+            dropTargetClientHeight));
+      }
+
+      DOMUtil.fastSetElementPosition(context.draggable.getElement(),
+          desiredLeft, desiredTop);
     }
   }
 
@@ -210,8 +248,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     public void dragMove() {
       int direction = ((ResizeDragController) context.dragController).getDirection(context.draggable).directionBits;
       if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
-        final int delta = context.draggable.getAbsoluteTop()
-            - Math.max(context.desiredDraggableY, boundaryOffsetY);
+        final int delta = getBehaviorConstrainedToBoundaryPanel()
+            ? context.draggable.getAbsoluteTop()
+                - Math.max(context.desiredDraggableY, boundaryOffsetY)
+            : context.draggable.getAbsoluteTop() - context.desiredDraggableY;
         if (delta != 0) {
           int contentHeight = windowPanel.getContentHeight();
           int newHeight = Math.max(contentHeight + delta,
@@ -222,10 +262,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
         }
       } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
-        final int delta = Math.min(context.desiredDraggableY,
-            dropTargetClientHeight)
+        final int delta = getBehaviorConstrainedToBoundaryPanel() ? Math.min(
+            context.desiredDraggableY, dropTargetClientHeight)
+            - context.draggable.getAbsoluteTop() : context.desiredDraggableY
             - context.draggable.getAbsoluteTop();
-
         if (delta != 0) {
           int contentHeight = windowPanel.getContentHeight();
           int newHeight = Math.max(contentHeight + delta,
@@ -234,8 +274,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         }
       }
       if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
-        int delta = context.draggable.getAbsoluteLeft()
-            - Math.max(context.desiredDraggableX, boundaryOffsetX);
+        int delta = getBehaviorConstrainedToBoundaryPanel()
+            ? context.draggable.getAbsoluteLeft()
+                - Math.max(context.desiredDraggableX, boundaryOffsetX)
+            : context.draggable.getAbsoluteLeft() - context.desiredDraggableX;
         if (delta != 0) {
           int contentWidth = windowPanel.getContentWidth();
           int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
@@ -245,7 +287,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           windowPanel.setContentSize(newWidth, windowPanel.getContentHeight());
         }
       } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
-        int delta = Math.min(context.desiredDraggableX, dropTargetClientWidth)
+        int delta = getBehaviorConstrainedToBoundaryPanel() ? Math.min(
+            context.desiredDraggableX, dropTargetClientWidth)
+            - context.draggable.getAbsoluteLeft() : context.desiredDraggableX
             - context.draggable.getAbsoluteLeft();
         if (delta != 0) {
           int contentWidth = windowPanel.getContentWidth();
