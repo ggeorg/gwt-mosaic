@@ -95,6 +95,11 @@ public class Action implements Command, HasText, ClickListener {
   }
 
   public Action(String id, String text, String title,
+      AbstractImagePrototype image) {
+    this(id, text, title, image, null, new DefaultActionWidgetFactory());
+  }
+
+  public Action(String id, String text, String title,
       AbstractImagePrototype image, String description) {
     this(id, text, title, image, description, new DefaultActionWidgetFactory());
   }
