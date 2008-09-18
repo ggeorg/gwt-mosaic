@@ -143,3 +143,13 @@
 	zoom: 1;
 	filter: alpha(opacity=40);
 }
+
+/*** FastTree ***/
+
+.gwt-FastTree .selection-bar {
+	background: #E3E8F3 !important;
+	font-size: 0;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}

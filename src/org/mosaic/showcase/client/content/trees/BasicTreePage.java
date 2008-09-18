@@ -30,18 +30,23 @@ import com.google.gwt.widgetideas.client.FastTree;
 import com.google.gwt.widgetideas.client.FastTreeItem;
 
 /**
- * 
+ * Example file.
  */
 @ShowcaseStyle({".gwt-FastTree"})
 public class BasicTreePage extends Page {
 
+  /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
   public BasicTreePage(DemoConstants constants) {
     super(constants);
-    FastTree.addDefaultCSS();
+    //FastTree.addDefaultCSS();
   }
 
   /**
-   * 
+   * Load this example.
    */
   @ShowcaseSource
   @Override
@@ -61,7 +66,6 @@ public class BasicTreePage extends Page {
     for (int i = 0; i < 100; i++) {
       lb.addItem(i + "");
     }
-    
     widgetBranch.addItem("A ListBox parent").addItem(lb);
     
     ScrollPanel panel = new ScrollPanel();

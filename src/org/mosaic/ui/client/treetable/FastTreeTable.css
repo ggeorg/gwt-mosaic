@@ -5,19 +5,15 @@
 	-moz-user-select: none;
 	position: relative;
 }
-
 .gwt-FastTreeTable td {
 	white-space: nowrap;
 }
-
 .gwt-FastTreeTableItem {
 	min-width: 18px;
 }
-
 .gwt-FastTreeTableItem .open,.gwt-FastTreeTableItem .closed {
 	width: 100%;
 }
-
 .gwt-FastTreeTable .selection-bar {
 	font-size: 0;
 	position: absolute;
@@ -27,7 +23,6 @@
 	outline: none;
 	-moz-outline: none;
 }
-
 .gwt-FastTreeTable .selection-bar :focus {
 	outline: none
 }
@@ -38,37 +33,28 @@ Visual styling
 .gwt-FastTreeTable .open .treeItemContent,.gwt-FastTreeTable .closed .treeItemContent {
 	margin-left: 18px;
 }
-
 .gwt-FastTreeTableItem-leaf {
 	display: block;
 	padding: 2px;
 	padding-left: 18px;
 }
-
 .gwt-FastTreeTableItem-children {
 	margin-left: 10px;
 }
-
 .gwt-FastTreeTableItem .open,.gwt-FastTreeTableItem .closed,.gwt-FastTreeTableItem-leaf {
 	color: black;
 }
-
 .gwt-FastTreeTableItem .open {
 	background: url('%treeOpen%') no-repeat center left;
 }
-
 .gwt-FastTreeTableItem .closed {
 	background: url('%treeClosed%') no-repeat center left;
 }
-
 .gwt-FastTreeTableItem-leaf {
-	background: url('%treeClosed%') no-repeat center left;
 }
-
 .gwt-FastTreeTable .treeItemContent {
 	padding: 2px;
 }
-
 .gwt-FastTreeTable .selected .treeItemContent {
 	background: #e3e8f3 url('%selectionBar%') repeat-x;
 }
