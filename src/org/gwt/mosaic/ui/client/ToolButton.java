@@ -133,8 +133,12 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
           }
           if (style == ToolButtonStyle.MENU) {
             if (menu != null) {
-              Region r = DOM.getRegion(ToolButton.this.getElement());
-              menu.setPopupPosition(r.left, r.bottom);
+              // TODO fix that code
+              // Region r = DOM.getRegion(ToolButton.this.getElement());
+              final int box[] = DOM.getBoxSize(getElement());
+              final int left = DOM.getAbsoluteLeft(getElement());
+              final int top = DOM.getAbsoluteTop(getElement()) + box[1];
+              menu.setPopupPosition(left, top);
               menu.show();
             }
             return;
@@ -151,8 +155,9 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
                 if (widget instanceof ToolButton) {
                   final ToolButton button = (ToolButton) widget;
                   final String name = button.getName();
-                  if (button.getStyle() == ToolButtonStyle.RADIO && button.isChecked()
-                      && name != null && name.equals(getName())) {
+                  if (button.getStyle() == ToolButtonStyle.RADIO
+                      && button.isChecked() && name != null
+                      && name.equals(getName())) {
                     button.setChecked(false);
                   }
                 }
@@ -163,9 +168,11 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
           super.onBrowserEvent(event);
           break;
         case Event.ONMOUSEDOWN:
-          if (style == ToolButtonStyle.SPLIT && event.getTarget() == getElement()) {
+          if (style == ToolButtonStyle.SPLIT
+              && event.getTarget() == getElement()) {
             final int[] p = DOM.getPaddingSizes(getElement());
-            if (getElement().getAbsoluteLeft() + (getElement().getOffsetWidth() - p[1]) < event.getClientX()) {
+            if (getElement().getAbsoluteLeft()
+                + (getElement().getOffsetWidth() - p[1]) < event.getClientX()) {
               addStyleName("mosaic-Split-Button-activeoption");
               return;
             }
@@ -173,12 +180,18 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
           super.onBrowserEvent(event);
           break;
         case Event.ONMOUSEUP:
-          if (style == ToolButtonStyle.SPLIT && event.getTarget() == getElement()) {
+          if (style == ToolButtonStyle.SPLIT
+              && event.getTarget() == getElement()) {
             final int[] m = DOM.getPaddingSizes(getElement());
-            if (getElement().getAbsoluteLeft() + (getElement().getOffsetWidth() - m[1]) < event.getClientX()) {
+            if (getElement().getAbsoluteLeft()
+                + (getElement().getOffsetWidth() - m[1]) < event.getClientX()) {
               if (menu != null) {
-                Region r = DOM.getRegion(getElement());
-                menu.setPopupPosition(r.left, r.bottom);
+                // TODO fix that code
+                // Region r = DOM.getRegion(getElement());
+                final int box[] = DOM.getBoxSize(getElement());
+                final int left = DOM.getAbsoluteLeft(getElement());
+                final int top = DOM.getAbsoluteTop(getElement()) + box[1];
+                menu.setPopupPosition(left, top);
                 menu.show();
               }
               removeStyleName("mosaic-Split-Button-activeoption");
@@ -228,7 +241,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
      * Sets whether this widget is enabled.
      * 
      * @param enabled <code>true</code> to enable the widget,
-     *            <code>false</code> to disable it
+     *          <code>false</code> to disable it
      */
     public void setEnabled(boolean enabled) {
       super.setEnabled(enabled);

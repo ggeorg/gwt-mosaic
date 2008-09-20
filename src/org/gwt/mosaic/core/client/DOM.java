@@ -463,6 +463,15 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
+   * Gets the first child. You must *KNOW* that the first child exists and is an
+   * element to use this method safely.
+   */
+  public static native Element rawFirstChild(Element elem)
+  /*-{
+    return elem.firstChild;
+  }-*/;
+
+  /**
    * Sets the height of the element based on the border and padding size of the
    * element.
    * 
@@ -641,14 +650,5 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
     return code;
   }
-
-  /**
-   * Gets the first child. You must *KNOW* that the first child exists and is an
-   * element to use this method safely.
-   */
-  public static native Element rawFirstChild(Element elem)
-  /*-{
-    return elem.firstChild;
-  }-*/;
 
 }
