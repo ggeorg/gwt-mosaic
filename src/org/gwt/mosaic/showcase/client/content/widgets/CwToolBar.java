@@ -21,7 +21,6 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
@@ -38,8 +37,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -52,42 +49,22 @@ public class CwToolBar extends ContentWidget implements ClickListener {
    * The constants used in this Page.
    */
   @ShowcaseSource
-  public static interface DemoConstants extends Constants, ContentWidget.CwConstants {
-    String mosaicMenuBarDescription();
+  public static interface CwConstants extends Constants, ContentWidget.CwConstants {
 
-    String mosaicMenuBarEditCategory();
-
-    String[] mosaicMenuBarEditOptions();
-
-    String mosaicMenuBarFileCategory();
-
-    String[] mosaicMenuBarFileOptions();
-
-    String[] mosaicMenuBarFileRecents();
-
-    String[] mosaicMenuBarGWTOptions();
-
-    String mosaicMenuBarHelpCategory();
-
-    String[] mosaicMenuBarHelpOptions();
-
-    String mosaicMenuBarName();
-
-    String[] mosaicMenuBarPrompts();
   }
 
   /**
    * An instance of the constants.
    */
   @ShowcaseData
-  private DemoConstants constants;
+  private CwConstants constants;
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwToolBar(DemoConstants constants) {
+  public CwToolBar(CwConstants constants) {
     super(constants);
     this.constants = constants;
   }
@@ -120,78 +97,6 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     layoutPanel.add(toolBox, new FillLayoutData(true));
     
     return layoutPanel;
-  }
-
-  /**
-   * Create the menu bar.
-   */
-  @ShowcaseSource
-  private MenuBar createMenuBar() {
-    // Create a command that will execute on menu item selection
-    Command menuCommand = new Command() {
-      private int curPhrase = 0;
-      private final String[] phrases = constants.mosaicMenuBarPrompts();
-
-      public void execute() {
-        MessageBox.alert(Window.getTitle(), phrases[curPhrase]);
-        curPhrase = (curPhrase + 1) % phrases.length;
-      }
-    };
-
-    // Create a menu bar
-    MenuBar menu = new MenuBar();
-    menu.setAnimationEnabled(true);
-
-    // Create a sub menu of recent documents
-    MenuBar recentDocsMenu = new MenuBar(true);
-    String[] recentDocs = constants.mosaicMenuBarFileRecents();
-    for (int i = 0; i < recentDocs.length; i++) {
-      recentDocsMenu.addItem(recentDocs[i], menuCommand);
-    }
-
-    // Create the file menu
-    MenuBar fileMenu = new MenuBar(true);
-    fileMenu.setAnimationEnabled(true);
-    menu.addItem(new MenuItem(constants.mosaicMenuBarFileCategory(), fileMenu));
-    String[] fileOptions = constants.mosaicMenuBarFileOptions();
-    for (int i = 0; i < fileOptions.length; i++) {
-      if (i == 3) {
-        fileMenu.addSeparator();
-        fileMenu.addItem(fileOptions[i], recentDocsMenu);
-        fileMenu.addSeparator();
-      } else {
-        fileMenu.addItem(fileOptions[i], menuCommand);
-      }
-    }
-
-    // Create the edit menu
-    MenuBar editMenu = new MenuBar(true);
-    menu.addItem(new MenuItem(constants.mosaicMenuBarEditCategory(), editMenu));
-    String[] editOptions = constants.mosaicMenuBarEditOptions();
-    for (int i = 0; i < editOptions.length; i++) {
-      editMenu.addItem(editOptions[i], menuCommand);
-    }
-
-    // Create the GWT menu
-    MenuBar gwtMenu = new MenuBar(true);
-    menu.addItem(new MenuItem("GWT", true, gwtMenu));
-    String[] gwtOptions = constants.mosaicMenuBarGWTOptions();
-    for (int i = 0; i < gwtOptions.length; i++) {
-      gwtMenu.addItem(gwtOptions[i], menuCommand);
-    }
-
-    // Create the help menu
-    MenuBar helpMenu = new MenuBar(true);
-    menu.addSeparator();
-    menu.addItem(new MenuItem(constants.mosaicMenuBarHelpCategory(), helpMenu));
-    String[] helpOptions = constants.mosaicMenuBarHelpOptions();
-    for (int i = 0; i < helpOptions.length; i++) {
-      helpMenu.addItem(helpOptions[i], menuCommand);
-    }
-
-    // Return the menu
-    menu.ensureDebugId("mosaicMenuBar");
-    return menu;
   }
 
   /**

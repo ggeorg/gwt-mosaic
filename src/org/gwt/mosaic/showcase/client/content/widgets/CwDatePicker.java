@@ -45,7 +45,7 @@ public class CwDatePicker extends ContentWidget {
    * The constants used in this Page.
    */
   @ShowcaseSource
-  public static interface DemoConstants extends Constants,
+  public static interface CwConstants extends Constants,
       ContentWidget.CwConstants {
 
   }
@@ -54,14 +54,14 @@ public class CwDatePicker extends ContentWidget {
    * An instance of the constants.
    */
   @ShowcaseData
-  private DemoConstants constants;
+  private CwConstants constants;
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwDatePicker(DemoConstants constants) {
+  public CwDatePicker(CwConstants constants) {
     super(constants);
     this.constants = constants;
   }

@@ -26,6 +26,7 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
+import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 
 import com.google.gwt.i18n.client.Constants;
 
@@ -34,9 +35,9 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface ShowcaseConstants extends Constants, ContentWidget.CwConstants,
     CwBasicButton.CwConstants, CwCustomButton.CwConstants,
-    CwToolButton.CwConstants, CwComboBox.CwConstants, CwToolBar.DemoConstants,
+    CwToolButton.CwConstants, CwComboBox.CwConstants, CwToolBar.CwConstants, CwMenuBar.CwConstants,
     CwScrollTable.CwConstants, CwPagingScrollTable.CwConstants,
-    CwTableLoadingBenchmark.CwConstants, CwDatePicker.DemoConstants,
+    CwTableLoadingBenchmark.CwConstants, CwDatePicker.CwConstants,
     CwMessageBox.CwConstants {
 
   /**
