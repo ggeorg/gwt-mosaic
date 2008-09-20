@@ -2,13 +2,13 @@
 
 <!-- NOTE: Requires GWT_HOME environment variable set -->
 
-<project name="gwt-mosaic" default="all" basedir=".">
+<project name="gwt-mosaic" default="jar" basedir=".">
 
 	<description>
 		Ant Build File for GWT-MOSAIC
 	</description>
 
-	<property name="gwt.module" value="org.mosaic.showcase.Showcase" />
+	<property name="gwt.module" value="org.gwt.mosaic.showcase.Showcase" />
 	<property name="source.path" value="src" />
 	<property name="webapp.path" value="${source.path}/org/mosaic/showcase/public" />
 
