@@ -10,7 +10,7 @@
 
 	<property name="gwt.module" value="org.gwt.mosaic.showcase.Showcase" />
 	<property name="source.path" value="src" />
-	<property name="webapp.path" value="${source.path}/org/mosaic/showcase/public" />
+	<property name="webapp.path" value="${source.path}/org/gwt/mosaic/showcase/public" />
 
 	<!-- ant properties -->
 	<property environment="env" />
