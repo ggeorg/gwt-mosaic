@@ -13,20 +13,20 @@ Java code:
 
 {{{
 
-import org.mosaic.ui.client.CaptionLayoutPanel;
-import org.mosaic.ui.client.InfoPanel;
-import org.mosaic.ui.client.MessageBox;
-import org.mosaic.ui.client.ToolBar;
-import org.mosaic.ui.client.ToolButton;
-import org.mosaic.ui.client.Viewport;
-import org.mosaic.ui.client.layout.BorderLayout;
-import org.mosaic.ui.client.layout.BorderLayoutData;
-import org.mosaic.ui.client.layout.BoxLayout;
-import org.mosaic.ui.client.layout.BoxLayoutData;
-import org.mosaic.ui.client.layout.LayoutPanel;
-import org.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
-import org.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.ToolBar;
+import org.gwt.mosaic.ui.client.ToolButton;
+import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
+import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -140,7 +140,7 @@ The GWT Module XML should contain:
 <module>
 
 	<!-- Inherit the MosaicWeb Toolkit stuff.                       -->
-	<inherits name='org.mosaic.ui.Mosaic' />
+	<inherits name='org.gwt.mosaic.Mosaic' />
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
