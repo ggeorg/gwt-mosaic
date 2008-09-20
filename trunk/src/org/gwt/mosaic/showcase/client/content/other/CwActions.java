@@ -181,5 +181,10 @@ public class CwActions extends ContentWidget {
     toolBar.ensureDebugId("mosaicToolBar");
     return toolBar;
   }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
+  }
 
 }

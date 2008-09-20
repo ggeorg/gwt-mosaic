@@ -49,6 +49,7 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
+import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
 
@@ -317,6 +318,7 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catWidgets, new CwComboBox(constants), images.catWidgets());
     setupMainMenuOption(catWidgets, new CwDatePicker(constants), images.catWidgets());
     setupMainMenuOption(catWidgets, new CwToolBar(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwMenuBar(constants), images.catWidgets());
 
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
