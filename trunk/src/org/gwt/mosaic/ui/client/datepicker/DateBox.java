@@ -17,7 +17,6 @@ package org.gwt.mosaic.ui.client.datepicker;
 
 import java.util.Date;
 
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
 import org.gwt.mosaic.ui.client.ComboBox;
 import org.gwt.mosaic.ui.client.DropDownPanel;
 
