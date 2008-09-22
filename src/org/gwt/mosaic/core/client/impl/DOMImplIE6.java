@@ -49,7 +49,8 @@ public class DOMImplIE6 extends DOMImpl {
         default:
           // test currentStyle before touching
           var value = elem.currentStyle ? elem.currentStyle[attr] : null;
-          return ( elem.style[attr] || value );
+          // FIX by ArekZ (exception in DOMImplIE6/Sep 22)
+          return ( ''+elem.style[attr] || value );
       }
     } else { // default to inline only
       return elem.style[attr];
@@ -79,18 +80,18 @@ public class DOMImplIE6 extends DOMImpl {
         elem.style[attr] = value;
     };
   }-*/;
-  
+
   public Point getXY(Element elem) {
     return new Point(getX(elem), getY(elem));
   }
-  
+
   public native int getX(Element elem)
   /*-{
     var box = elem.getBoundingClientRect();
     var rootNode = elem.ownerDocument;
     return box.left + this.@org.gwt.mosaic.core.client.impl.DOMImpl::getDocumenScrollLeft(Lcom/google/gwt/user/client/Element;)(rootNode);
   }-*/;
-  
+
   public native int getY(Element elem)
   /*-{
     var box = elem.getBoundingClientRect();
