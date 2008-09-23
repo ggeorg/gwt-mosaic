@@ -20,9 +20,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTable;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTableItem;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
@@ -63,6 +61,7 @@ public class CwBasicTreeTable extends ContentWidget {
   /**
    * The scroll tree table.
    */
+  @ShowcaseData
   protected ScrollTreeTable scrollTreeTable = null;
 
   /**
@@ -74,7 +73,7 @@ public class CwBasicTreeTable extends ContentWidget {
     super(constants);
     FastTreeTable.addDefaultCSS();
   }
-  
+
   @Override
   public String getDescription() {
     return "Basic TreeTable description";
@@ -90,10 +89,11 @@ public class CwBasicTreeTable extends ContentWidget {
    * 
    * @return the data table.
    */
+  @ShowcaseSource
   public FastTreeTable getDataTable() {
     if (dataTable == null) {
       dataTable = new FastTreeTable();
-      dataTable.setTreeColumn(1);
+      dataTable.setTreeColumn(2);
     }
     return dataTable;
   }
@@ -103,6 +103,7 @@ public class CwBasicTreeTable extends ContentWidget {
    * 
    * @return the header table
    */
+  @ShowcaseSource
   public FixedWidthFlexTable getHeaderTable() {
     if (headerTable == null) {
       headerTable = new FixedWidthFlexTable();
@@ -115,6 +116,7 @@ public class CwBasicTreeTable extends ContentWidget {
    * 
    * @return the header table
    */
+  @ShowcaseSource
   public FixedWidthFlexTable getFooterTable() {
     if (footerTable == null) {
       footerTable = new FixedWidthFlexTable();
@@ -127,6 +129,7 @@ public class CwBasicTreeTable extends ContentWidget {
    * 
    * @return the scroll tree table
    */
+  @ShowcaseSource
   public ScrollTreeTable getScrollTreeTable() {
     return scrollTreeTable;
   }
@@ -156,23 +159,45 @@ public class CwBasicTreeTable extends ContentWidget {
     dataTable.resize(0, 13);
 
     final FastTreeTable t = dataTable;
-    final FastTreeTableItem a = t.addItem("A root tree item");
-    a.addItem("A child");
+    final FastTreeTableItem a = new FastTreeTableItem("A root tree item");
+    a.setUserObject(new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+    t.addItem(a);
+
+    final FastTreeTableItem aa = new FastTreeTableItem("A child");
+    aa.setUserObject(new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+    a.addItem(aa);
+
     final FastTreeTableItem aXb = a.addItem("Another child");
+    aXb.setUserObject(new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
     aXb.addItem("a grand child");
+
     final FastTreeTableItem widgetBranch = a.addItem(new CheckBox(
         "A checkbox child"));
+    widgetBranch.setUserObject(new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+
     final FastTreeTableItem textBoxParent = widgetBranch.addItem("A TextBox parent");
-    textBoxParent.addItem(new TextBox());
+    textBoxParent.setUserObject(new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+
+    textBoxParent.addItem(new TextBox(), new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
     textBoxParent.addItem("and another one...");
-    textBoxParent.addItem(new TextArea());
+    textBoxParent.addItem(new TextArea(), new String[] {
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
 
     final ListBox lb = new ListBox();
     for (int i = 0; i < 100; i++) {
       lb.addItem(i + "");
     }
 
-    widgetBranch.addItem("A ListBox parent").addItem(lb);
+    widgetBranch.addItem("A ListBox parent").addItem(
+        lb,
+        new String[] {
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
 
     // Add some data to the footer table
     for (int i = 0; i < 13; i++) {
@@ -181,7 +206,7 @@ public class CwBasicTreeTable extends ContentWidget {
 
     layoutPanel.add(scrollTreeTable);
     layoutPanel.setPadding(0);
-    
+
     return layoutPanel;
   }
 

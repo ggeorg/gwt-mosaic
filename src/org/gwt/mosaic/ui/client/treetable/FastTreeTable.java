@@ -61,7 +61,7 @@ import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
  */
 public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     HasFastTreeTableItems {
-  
+
   @Override
   public void setColumnWidth(int column, int width) {
     super.setColumnWidth(column, width);
@@ -223,18 +223,56 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   private void insertItem(FastTreeTableItem item, int r) {
     insertRow(r);
     setWidget(r, getTreeColumn(), item);
-    render(item);
+    render(item, r);
   }
 
-  private FastTreeTableRenderer renderer;
+  private TreeTableLabelProvider labelProvider;
 
-  public void render(FastTreeTableItem item) {
-    if (renderer != null) {
-      final Element tr = item.getElement().getParentElement().getParentElement().cast();
-      if (item.getParentItem() != null) {
-        // TODO renderer.renderTreeItem(item.childTable, item, getRowIndex(tr));
-      } else {
-        // TODO renderer.renderTreeItem(this, item, getRowIndex(tr));
+  class DefaultTreeTableLabelProvider implements TreeTableLabelProvider {
+    public Object getItemLabel(FastTreeTableItem item, int col) {
+      final Object obj = item.getUserObject();
+      if (obj instanceof Widget) {
+        return obj;
+      } else if (obj instanceof Object[]) {
+        Object[] objs = (Object[]) obj;
+        if (objs.length > col) {
+          Object o = objs[col];
+          if (o instanceof Widget) {
+            return o;
+          } else if (o != null) {
+            return o.toString();
+          } else {
+            return null;
+          }
+        }
+      } else if (obj != null) {
+        return obj.toString();
+      }
+      return null;
+    }
+  }
+
+  public TreeTableLabelProvider getTreeTableLabelProvider() {
+    if (labelProvider == null) {
+      labelProvider = new DefaultTreeTableLabelProvider();
+    }
+    return labelProvider;
+  }
+
+  public void setTreeTableLabelProvider(TreeTableLabelProvider renderer) {
+    this.labelProvider = renderer;
+  }
+
+  public void render(FastTreeTableItem item, int row) {
+    for (int i = 0, n = getColumnCount(); i < n; i++) {
+      if (i == getTreeColumn()) {
+        continue;
+      }
+      final Object obj = getTreeTableLabelProvider().getItemLabel(item, i);
+      if (obj instanceof Widget) {
+        setWidget(row, i, (Widget) obj);
+      } else if (obj != null) {
+        setHTML(row, i, obj.toString());
       }
     }
   }
@@ -838,8 +876,9 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     }
     return findDeepestOpenChild(item.getChild(item.getChildCount() - 1));
   }
-  
-  private FastTreeTableItem findItemByChain(final ArrayList<Element> chain, int idx, FastTreeTableItem root) {
+
+  private FastTreeTableItem findItemByChain(final ArrayList<Element> chain,
+      int idx, FastTreeTableItem root) {
     if (idx == chain.size()) {
       return root;
     }
@@ -855,7 +894,8 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     return null;
   }
 
-  private FastTreeTableItem findItemByElement(FastTreeTableItem item, Element elem) {
+  private FastTreeTableItem findItemByElement(FastTreeTableItem item,
+      Element elem) {
     if (item.getElement().equals(elem)) {
       return item;
     }
@@ -1034,5 +1074,5 @@ class WidgetIterators {
   private WidgetIterators() {
     // Not instantiable.
   }
-  
+
 }
