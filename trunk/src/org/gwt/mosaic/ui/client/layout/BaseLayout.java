@@ -36,11 +36,18 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
+      forceFlowLayout(child.getElement());
       child.setHeight("auto");
       flowHeight = child.getOffsetHeight() + m[0] + m[2];
     }
     return flowHeight;
   }
+
+  private native static void forceFlowLayout(Element elem)
+  /*-{
+    elem.style['top'] = '';
+    elem.style['left'] = '';
+  }-*/;
 
   /**
    * TODO: move this method to DOM
@@ -53,6 +60,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
+      forceFlowLayout(child.getElement());
       child.setWidth("auto");
       flowWidth = child.getOffsetWidth() + m[1] + m[3];
     }
