@@ -100,7 +100,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
    * @return the item's user-defined object
    */
   public Object getUserObject() {
-    return this.userObject;
+    return userObject;
   }
 
   /**
@@ -186,6 +186,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     if (d != 0) {
       DOM.setStyleAttribute(item.getElement(), "marginLeft", (d * 10) + "px");
     }
+    treeTable.render(item, r);
   }
 
   public FastTreeTableItem addItem(String itemText) {
@@ -195,7 +196,12 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   }
 
   public FastTreeTableItem addItem(Widget widget) {
+    return addItem(widget, null);
+  }
+  
+  public FastTreeTableItem addItem(Widget widget, Object userObject) {
     FastTreeTableItem ret = new FastTreeTableItem(widget);
+    ret.setUserObject(userObject);
     addItem(ret);
     return ret;
   }
