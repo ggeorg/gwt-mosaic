@@ -25,6 +25,7 @@ import org.gwt.mosaic.ui.client.treetable.FastTreeTable;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTableItem;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
 
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
@@ -39,6 +40,23 @@ import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellForma
  */
 @ShowcaseStyle( {".gwt-FastTreeTable"})
 public class CwBasicTreeTable extends ContentWidget {
+  
+  /**
+   * The constants used in this <code>ContentWidget</code>.
+   */
+  @ShowcaseSource
+  public static interface CwConstants extends Constants,
+  ContentWidget.CwConstants {
+    String mosaicBasicTreeTableDescription();
+
+    String mosaicBasicTreeTableName();
+  }
+  
+  /**
+   * An instance of the constants.
+   */
+  @ShowcaseData
+  private CwConstants constants;
 
   /**
    * The data portion of the {@link ScrollTreeTable}.
@@ -71,17 +89,9 @@ public class CwBasicTreeTable extends ContentWidget {
    */
   public CwBasicTreeTable(CwConstants constants) {
     super(constants);
+    this.constants = constants;
+    
     FastTreeTable.addDefaultCSS();
-  }
-
-  @Override
-  public String getDescription() {
-    return "Basic TreeTable description";
-  }
-
-  @Override
-  public String getName() {
-    return "BasicTreeTable";
   }
 
   /**
@@ -98,17 +108,9 @@ public class CwBasicTreeTable extends ContentWidget {
     return dataTable;
   }
 
-  /**
-   * Get the header table.
-   * 
-   * @return the header table
-   */
-  @ShowcaseSource
-  public FixedWidthFlexTable getHeaderTable() {
-    if (headerTable == null) {
-      headerTable = new FixedWidthFlexTable();
-    }
-    return headerTable;
+  @Override
+  public String getDescription() {
+    return constants.mosaicBasicTreeTableDescription();
   }
 
   /**
@@ -122,6 +124,24 @@ public class CwBasicTreeTable extends ContentWidget {
       footerTable = new FixedWidthFlexTable();
     }
     return footerTable;
+  }
+
+  /**
+   * Get the header table.
+   * 
+   * @return the header table
+   */
+  @ShowcaseSource
+  public FixedWidthFlexTable getHeaderTable() {
+    if (headerTable == null) {
+      headerTable = new FixedWidthFlexTable();
+    }
+    return headerTable;
+  }
+
+  @Override
+  public String getName() {
+    return constants.mosaicBasicTreeTableName();
   }
 
   /**

@@ -67,6 +67,11 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     super.setColumnWidth(column, width);
   }
 
+  @Override
+  protected void hoverCell(Element cellElem) {
+    super.hoverCell(cellElem);
+  }
+  
   /**
    * Resources used.
    */
