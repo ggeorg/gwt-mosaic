@@ -1,5 +1,7 @@
 /*
- * Copyright 2006-2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2006-2008 Google Inc. 
+ * 
+ * Copyright 2008 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,7 +16,6 @@
  * the License.
  */
 package org.gwt.mosaic.ui.client.treetable;
-
 
 public interface TreeTableLabelProvider {
   Object getItemLabel(FastTreeTableItem item, int col);

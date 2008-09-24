@@ -85,23 +85,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
 
   private Object userObject;
 
-  /**
-   * Sets the user-defined object associated with this item.
-   * 
-   * @param userObject the item's user-defined object
-   */
-  public void setUserObject(Object userObject) {
-    this.userObject = userObject;
-  }
-
-  /**
-   * Gets the user-defined object associated with this item.
-   * 
-   * @return the item's user-defined object
-   */
-  public Object getUserObject() {
-    return userObject;
-  }
+  private int depth = -1;
 
   /**
    * Creates an empty tree item.
@@ -109,6 +93,15 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   public FastTreeTableItem() {
     Element elem = createLeafElement();
     setElement(elem);
+  }
+
+  /**
+   * This constructor is only for use by {@link DecoratedFastTreeItem}.
+   * 
+   * @param element element
+   */
+  FastTreeTableItem(Element element) {
+    setElement(element);
   }
 
   /**
@@ -129,15 +122,6 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   public FastTreeTableItem(Widget widget) {
     this();
     addWidget(widget);
-  }
-
-  /**
-   * This constructor is only for use by {@link DecoratedFastTreeItem}.
-   * 
-   * @param element element
-   */
-  FastTreeTableItem(Element element) {
-    setElement(element);
   }
 
   public void addItem(FastTreeTableItem item) {
@@ -169,26 +153,6 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     }
   }
 
-  /**
-   * Updates table rows to include children.
-   * 
-   * @param item the item to insert
-   * @param r the row to insert the item to
-   */
-  private void insertItem(FastTreeTableItem item, int r) {
-    // childTable.insertRow(r);
-    // childTable.setWidget(r, treeTable.getTreeColumn(), item);
-    final Element tr = getElement().getParentElement().getParentElement().cast();
-    r += OverrideDOM.getRowIndex(tr);
-    treeTable.insertRow(r);
-    treeTable.setWidget(r, treeTable.getTreeColumn(), item);
-    int d = item.getDepth();
-    if (d != 0) {
-      DOM.setStyleAttribute(item.getElement(), "marginLeft", (d * 10) + "px");
-    }
-    treeTable.render(item, r);
-  }
-
   public FastTreeTableItem addItem(String itemText) {
     FastTreeTableItem ret = new FastTreeTableItem(itemText);
     addItem(ret);
@@ -198,12 +162,46 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   public FastTreeTableItem addItem(Widget widget) {
     return addItem(widget, null);
   }
-  
+
   public FastTreeTableItem addItem(Widget widget, Object userObject) {
     FastTreeTableItem ret = new FastTreeTableItem(widget);
     ret.setUserObject(userObject);
     addItem(ret);
     return ret;
+  }
+
+  /**
+   * Adds a widget to an already empty {@link FastTreeTableItem}.
+   */
+  private void addWidget(Widget newWidget) {
+    // Detach new child from old parent.
+    if (newWidget != null) {
+      newWidget.removeFromParent();
+    }
+
+    // Logical detach old/attach new.
+    widget = newWidget;
+
+    if (newWidget != null) {
+      DOM.appendChild(getElementToAttach(), widget.getElement());
+      bidiSupport();
+      // Attach child to tree.
+      if (treeTable != null) {
+        treeTable.adopt(widget, this);
+      }
+    }
+  }
+  
+  /**
+   * Called after the tree item is closed.
+   */
+  protected void afterClose() {
+  }
+
+  /**
+   * Called after the tree item is opened.
+   */
+  protected void afterOpen() {
   }
 
   /**
@@ -218,6 +216,81 @@ public class FastTreeTableItem extends Widget implements HasHTML,
       DOM.appendChild(control, contentElem);
       convertElementToInteriorNode(control);
     }
+  }
+
+  /**
+   * Called before the tree item is closed.
+   */
+  protected void beforeClose() {
+  }
+
+  /**
+   * Called before the tree item is opened.
+   */
+  protected void beforeOpen() {
+  }
+
+  /**
+   * Called when tree item is being unselected. Returning <code>false</code>
+   * cancels the unselection.
+   * 
+   */
+  protected boolean beforeSelectionLost() {
+    return true;
+  }
+
+  private void bidiSupport() {
+  }
+
+  void clearTree() {
+    if (treeTable != null) {
+      if (widget != null) {
+        treeTable.treeOrphan(widget);
+      }
+      if (treeTable.getSelectedItem() == this) {
+        treeTable.setSelectedItem(null);
+      }
+      treeTable = null;
+      for (int i = 0, n = getChildCount(); i < n; ++i) {
+        children.get(i).clearTree();
+      }
+    }
+  }
+
+  private void clearWidget() {
+    // Detach old child from tree.
+    if (widget != null && treeTable != null) {
+      treeTable.treeOrphan(widget);
+      widget = null;
+    }
+  }
+
+  void convertElementToInteriorNode(Element control) {
+    setStyleName(getElement(), "gwt-FastTreeTableItem-leaf", false);
+    DOM.appendChild(getElement(), control);
+  }
+
+  Element createLeafElement() {
+    Element elem = DOMHelper.clone(TREE_LEAF, true);
+    contentElem = DOMHelper.rawFirstChild(elem);
+    return elem;
+  }
+
+  void dumpTreeTableItems(List<FastTreeTableItem> accum) {
+    if (isInteriorNode() && getChildCount() > 0) {
+      for (int i = 0; i < children.size(); i++) {
+        FastTreeTableItem item = children.get(i);
+        accum.add(item);
+        item.dumpTreeTableItems(accum);
+      }
+    }
+  }
+
+  /**
+   * Fired when a tree item receives a request to open for the first time.
+   * Should be overridden in child classes.
+   */
+  protected void ensureChildren() {
   }
 
   public FastTreeTableItem getChild(int index) {
@@ -241,6 +314,18 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     return children.indexOf(child);
   }
 
+  ArrayList<FastTreeTableItem> getChildren() {
+    return children;
+  }
+
+  Element getContentElem() {
+    return contentElem;
+  }
+
+  Element getControlElement() {
+    return DOM.getParent(contentElem);
+  }
+
   /**
    * Returns the width of the control open/close image. Must be overridden if
    * the TreeItem is using a control image that is <i>not</i> 16 pixels wide.
@@ -249,6 +334,29 @@ public class FastTreeTableItem extends Widget implements HasHTML,
    */
   public int getControlImageWidth() {
     return 16;
+  }
+
+  private int getDepth() {
+    return depth;
+  }
+
+  Element getElementToAttach() {
+    return contentElem;
+  }
+
+  /**
+   * Returns the widget, if any, that should be focused on if this TreeItem is
+   * selected.
+   * 
+   * @return widget to be focused.
+   */
+  protected HasFocus getFocusableWidget() {
+    Widget w = getWidget();
+    if (w instanceof HasFocus) {
+      return (HasFocus) w;
+    } else {
+      return null;
+    }
   }
 
   public String getHTML() {
@@ -278,6 +386,15 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   }
 
   /**
+   * Gets the user-defined object associated with this item.
+   * 
+   * @return the item's user-defined object
+   */
+  public Object getUserObject() {
+    return userObject;
+  }
+
+  /**
    * Gets the <code>Widget</code> associated with this tree item.
    */
   public Widget getWidget() {
@@ -291,6 +408,26 @@ public class FastTreeTableItem extends Widget implements HasHTML,
    */
   public boolean hasBeenOpened() {
     return state == TREE_NODE_INTERIOR_OPEN;
+  }
+
+  /**
+   * Updates table rows to include children.
+   * 
+   * @param item the item to insert
+   * @param r the row to insert the item to
+   */
+  private void insertItem(FastTreeTableItem item, int r) {
+    // childTable.insertRow(r);
+    // childTable.setWidget(r, treeTable.getTreeColumn(), item);
+    final Element tr = getElement().getParentElement().getParentElement().cast();
+    r += OverrideDOM.getRowIndex(tr);
+    treeTable.insertRow(r);
+    treeTable.setWidget(r, treeTable.getTreeColumn(), item);
+    int d = item.getDepth();
+    if (d != 0) {
+      DOM.setStyleAttribute(item.getElement(), "marginLeft", (d * 10) + "px");
+    }
+    treeTable.render(item, r);
   }
 
   /**
@@ -314,6 +451,29 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   public boolean isOpen() {
     return state == TREE_NODE_INTERIOR_OPEN;
   }
+
+  // void convertElementToHaveChildren(FixedWidthGrid t) {
+  // final Element tr =
+  // getElement().getParentElement().getParentElement().cast();
+  // final int r = OverrideDOM.getRowIndex(tr);
+  // FastTreeTableItem parent = getParentItem();
+  // if (parent != null) {
+  // parent.childTable.insertRow(r);
+  // final Element td =
+  // tr.getNextSiblingElement().getFirstChildElement().cast();
+  // DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
+  // parent.childTable.setWidget(r, 0, t);
+  // } else {
+  // treeTable.insertRow(r);
+  // final Element td =
+  // tr.getNextSiblingElement().getFirstChildElement().cast();
+  // DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
+  // treeTable.setWidget(r, 0, t);
+  // }
+  // for (int i = 0; i < treeTable.getColumnCount(); i++) {
+  // t.setColumnWidth(i, treeTable.getColumnWidth(i));
+  // }
+  // }
 
   /**
    * Determines whether this item is currently selected.
@@ -342,6 +502,13 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     } else {
       return parent.isShowing();
     }
+  }
+
+  /**
+   * Called when a tree item is selected.
+   * 
+   */
+  protected void onSelected() {
   }
 
   /**
@@ -400,9 +567,30 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     }
   }
 
+  private void setDepth(final int depth) {
+    this.depth = depth;
+  }
+
   public void setHTML(String html) {
     clearWidget();
     DOM.setInnerHTML(getElementToAttach(), html);
+  }
+
+  void setParentItem(FastTreeTableItem parent) {
+    this.parent = parent;
+  }
+
+  /**
+   * Selects or deselects this item.
+   * 
+   * @param selected <code>true</code> to select the item, <code>false</code>
+   *          to deselect it
+   */
+  void setSelection(boolean selected, boolean fireEvents) {
+    setStyleName(getControlElement(), STYLENAME_SELECTED, selected);
+    if (selected && fireEvents) {
+      onSelected();
+    }
   }
 
   /**
@@ -471,169 +659,6 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     DOM.setInnerText(getElementToAttach(), text);
   }
 
-  public void setWidget(Widget widget) {
-    // Physical detach old from self.
-    // Clear out any existing content before adding a widget.
-
-    DOM.setInnerHTML(getElementToAttach(), "");
-    clearWidget();
-    addWidget(widget);
-  }
-
-  /**
-   * Called after the tree item is closed.
-   */
-  protected void afterClose() {
-  }
-
-  /**
-   * Called after the tree item is opened.
-   */
-  protected void afterOpen() {
-  }
-
-  /**
-   * Called before the tree item is closed.
-   */
-  protected void beforeClose() {
-  }
-
-  /**
-   * Called before the tree item is opened.
-   */
-  protected void beforeOpen() {
-  }
-
-  /**
-   * Called when tree item is being unselected. Returning <code>false</code>
-   * cancels the unselection.
-   * 
-   */
-  protected boolean beforeSelectionLost() {
-    return true;
-  }
-
-  /**
-   * Fired when a tree item receives a request to open for the first time.
-   * Should be overridden in child classes.
-   */
-  protected void ensureChildren() {
-  }
-
-  /**
-   * Returns the widget, if any, that should be focused on if this TreeItem is
-   * selected.
-   * 
-   * @return widget to be focused.
-   */
-  protected HasFocus getFocusableWidget() {
-    Widget w = getWidget();
-    if (w instanceof HasFocus) {
-      return (HasFocus) w;
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Called when a tree item is selected.
-   * 
-   */
-  protected void onSelected() {
-  }
-
-  void clearTree() {
-    if (treeTable != null) {
-      if (widget != null) {
-        treeTable.treeOrphan(widget);
-      }
-      if (treeTable.getSelectedItem() == this) {
-        treeTable.setSelectedItem(null);
-      }
-      treeTable = null;
-      for (int i = 0, n = getChildCount(); i < n; ++i) {
-        children.get(i).clearTree();
-      }
-    }
-  }
-
-  // void convertElementToHaveChildren(FixedWidthGrid t) {
-  // final Element tr =
-  // getElement().getParentElement().getParentElement().cast();
-  // final int r = OverrideDOM.getRowIndex(tr);
-  // FastTreeTableItem parent = getParentItem();
-  // if (parent != null) {
-  // parent.childTable.insertRow(r);
-  // final Element td =
-  // tr.getNextSiblingElement().getFirstChildElement().cast();
-  // DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
-  // parent.childTable.setWidget(r, 0, t);
-  // } else {
-  // treeTable.insertRow(r);
-  // final Element td =
-  // tr.getNextSiblingElement().getFirstChildElement().cast();
-  // DOM.setElementPropertyInt(td, "colSpan", treeTable.getColumnCount());
-  // treeTable.setWidget(r, 0, t);
-  // }
-  // for (int i = 0; i < treeTable.getColumnCount(); i++) {
-  // t.setColumnWidth(i, treeTable.getColumnWidth(i));
-  // }
-  // }
-
-  void convertElementToInteriorNode(Element control) {
-    setStyleName(getElement(), "gwt-FastTreeTableItem-leaf", false);
-    DOM.appendChild(getElement(), control);
-  }
-
-  Element createLeafElement() {
-    Element elem = DOMHelper.clone(TREE_LEAF, true);
-    contentElem = DOMHelper.rawFirstChild(elem);
-    return elem;
-  }
-
-  void dumpTreeTableItems(List<FastTreeTableItem> accum) {
-    if (isInteriorNode() && getChildCount() > 0) {
-      for (int i = 0; i < children.size(); i++) {
-        FastTreeTableItem item = children.get(i);
-        accum.add(item);
-        item.dumpTreeTableItems(accum);
-      }
-    }
-  }
-
-  ArrayList<FastTreeTableItem> getChildren() {
-    return children;
-  }
-
-  Element getContentElem() {
-    return contentElem;
-  }
-
-  Element getControlElement() {
-    return DOM.getParent(contentElem);
-  }
-
-  Element getElementToAttach() {
-    return contentElem;
-  }
-
-  void setParentItem(FastTreeTableItem parent) {
-    this.parent = parent;
-  }
-
-  /**
-   * Selects or deselects this item.
-   * 
-   * @param selected <code>true</code> to select the item, <code>false</code>
-   *          to deselect it
-   */
-  void setSelection(boolean selected, boolean fireEvents) {
-    setStyleName(getControlElement(), STYLENAME_SELECTED, selected);
-    if (selected && fireEvents) {
-      onSelected();
-    }
-  }
-
   void setTreeTable(FastTreeTable newTreeTable) {
     if (treeTable == newTreeTable) {
       return;
@@ -654,6 +679,34 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     for (int i = 0, n = getChildCount(); i < n; ++i) {
       children.get(i).setTreeTable(newTreeTable);
     }
+  }
+
+  /**
+   * Sets the user-defined object associated with this item.
+   * 
+   * @param userObject the item's user-defined object
+   */
+  public void setUserObject(Object userObject) {
+    this.userObject = userObject;
+  }
+
+  public void setWidget(Widget widget) {
+    // Physical detach old from self.
+    // Clear out any existing content before adding a widget.
+
+    DOM.setInnerHTML(getElementToAttach(), "");
+    clearWidget();
+    addWidget(widget);
+  }
+
+  private void showClosedImage() {
+    setStyleName(getControlElement(), STYLENAME_OPEN, false);
+    setStyleName(getControlElement(), STYLENAME_CLOSED, true);
+  }
+
+  private void showOpenImage() {
+    setStyleName(getControlElement(), STYLENAME_CLOSED, false);
+    setStyleName(getControlElement(), STYLENAME_OPEN, true);
   }
 
   void updateState() {
@@ -695,59 +748,6 @@ public class FastTreeTableItem extends Widget implements HasHTML,
         child.updateVisibility(child, visible);
       }
     }
-  }
-
-  /**
-   * Adds a widget to an already empty {@link FastTreeTableItem}.
-   */
-  private void addWidget(Widget newWidget) {
-    // Detach new child from old parent.
-    if (newWidget != null) {
-      newWidget.removeFromParent();
-    }
-
-    // Logical detach old/attach new.
-    widget = newWidget;
-
-    if (newWidget != null) {
-      DOM.appendChild(getElementToAttach(), widget.getElement());
-      bidiSupport();
-      // Attach child to tree.
-      if (treeTable != null) {
-        treeTable.adopt(widget, this);
-      }
-    }
-  }
-
-  private void bidiSupport() {
-  }
-
-  private void clearWidget() {
-    // Detach old child from tree.
-    if (widget != null && treeTable != null) {
-      treeTable.treeOrphan(widget);
-      widget = null;
-    }
-  }
-
-  private void showClosedImage() {
-    setStyleName(getControlElement(), STYLENAME_OPEN, false);
-    setStyleName(getControlElement(), STYLENAME_CLOSED, true);
-  }
-
-  private void showOpenImage() {
-    setStyleName(getControlElement(), STYLENAME_CLOSED, false);
-    setStyleName(getControlElement(), STYLENAME_OPEN, true);
-  }
-
-  private int depth = -1;
-
-  private int getDepth() {
-    return depth;
-  }
-
-  private void setDepth(final int depth) {
-    this.depth = depth;
   }
 
 }
