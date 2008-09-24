@@ -62,16 +62,6 @@ import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     HasFastTreeTableItems {
 
-  @Override
-  public void setColumnWidth(int column, int width) {
-    super.setColumnWidth(column, width);
-  }
-
-  @Override
-  protected void hoverCell(Element cellElem) {
-    super.hoverCell(cellElem);
-  }
-  
   /**
    * Resources used.
    */
@@ -114,6 +104,30 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     DataResource treeOpen();
   }
 
+  class DefaultTreeTableLabelProvider implements TreeTableLabelProvider {
+    public Object getItemLabel(FastTreeTableItem item, int col) {
+      final Object obj = item.getUserObject();
+      if (obj instanceof Widget) {
+        return obj;
+      } else if (obj instanceof Object[]) {
+        Object[] objs = (Object[]) obj;
+        if (objs.length > col) {
+          Object o = objs[col];
+          if (o instanceof Widget) {
+            return o;
+          } else if (o != null) {
+            return o.toString();
+          } else {
+            return null;
+          }
+        }
+      } else if (obj != null) {
+        return obj.toString();
+      }
+      return null;
+    }
+  }
+  
   private static final String STYLENAME_DEFAULT = "gwt-FastTreeTable";
 
   private static final String STYLENAME_SELECTION = "selection-bar";
@@ -142,6 +156,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   }
 
   private boolean lostMouseDown = true;
+
   /**
    * Map of TreeItem.widget -> TreeItem.
    */
@@ -153,8 +168,11 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   private MouseListenerCollection mouseListeners;
   private final FastTreeTableItem root;
   private Event keyDown;
-
   private Event lastKeyDown;
+
+  private int treeColumn = 0;
+
+  private TreeTableLabelProvider labelProvider;
 
   /**
    * Constructs a tree.
@@ -207,79 +225,6 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
 
     setStyleName(STYLENAME_DEFAULT);
     moveSelectionBar(curSelection);
-  }
-
-  private int treeColumn = 0;
-
-  public int getTreeColumn() {
-    return treeColumn;
-  }
-
-  public void setTreeColumn(int treeColumn) {
-    this.treeColumn = treeColumn;
-  }
-
-  /**
-   * Updates table rows to include children.
-   * 
-   * @param item the item to insert
-   * @param r the row to insert the item to
-   */
-  private void insertItem(FastTreeTableItem item, int r) {
-    insertRow(r);
-    setWidget(r, getTreeColumn(), item);
-    render(item, r);
-  }
-
-  private TreeTableLabelProvider labelProvider;
-
-  class DefaultTreeTableLabelProvider implements TreeTableLabelProvider {
-    public Object getItemLabel(FastTreeTableItem item, int col) {
-      final Object obj = item.getUserObject();
-      if (obj instanceof Widget) {
-        return obj;
-      } else if (obj instanceof Object[]) {
-        Object[] objs = (Object[]) obj;
-        if (objs.length > col) {
-          Object o = objs[col];
-          if (o instanceof Widget) {
-            return o;
-          } else if (o != null) {
-            return o.toString();
-          } else {
-            return null;
-          }
-        }
-      } else if (obj != null) {
-        return obj.toString();
-      }
-      return null;
-    }
-  }
-
-  public TreeTableLabelProvider getTreeTableLabelProvider() {
-    if (labelProvider == null) {
-      labelProvider = new DefaultTreeTableLabelProvider();
-    }
-    return labelProvider;
-  }
-
-  public void setTreeTableLabelProvider(TreeTableLabelProvider renderer) {
-    this.labelProvider = renderer;
-  }
-
-  public void render(FastTreeTableItem item, int row) {
-    for (int i = 0, n = getColumnCount(); i < n; i++) {
-      if (i == getTreeColumn()) {
-        continue;
-      }
-      final Object obj = getTreeTableLabelProvider().getItemLabel(item, i);
-      if (obj instanceof Widget) {
-        setWidget(row, i, (Widget) obj);
-      } else if (obj != null) {
-        setHTML(row, i, obj.toString());
-      }
-    }
   }
 
   /**
@@ -345,6 +290,12 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     mouseListeners.add(listener);
   }
 
+  void adopt(Widget widget, FastTreeTableItem treeItem) {
+    assert (!childWidgets.containsKey(widget));
+    childWidgets.put(widget, treeItem);
+    super.adopt(widget);
+  }
+
   /**
    * Clears all tree items from the current tree.
    */
@@ -354,6 +305,78 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     for (int i = size - 1; i >= 0; i--) {
       root.getChild(i).remove();
     }
+  }
+
+  private void clickedOnFocus(Element e) {
+    // An element was clicked on that is not focusable, so we use the hidden
+    // focusable to not shift focus.
+    moveElementOverTarget(focusable, e);
+    impl.focus(focusable);
+  }
+
+  /**
+   * Collects parents going up the element tree, terminated at the tree root.
+   */
+  private void collectElementChain(ArrayList<Element> chain, Element hRoot,
+      Element hElem) {
+    if ((hElem == null) || hElem.equals(hRoot)) {
+      return;
+    }
+
+    collectElementChain(chain, hRoot, DOM.getParent(hElem));
+    chain.add(hElem);
+  }
+
+  private Element createFocusElement() {
+    Element e = impl.createFocusable();
+    DOM.setStyleAttribute(e, "position", "absolute");
+    DOM.appendChild(getElement(), e);
+    DOM.sinkEvents(e, Event.FOCUSEVENTS | Event.ONMOUSEDOWN);
+    // Needed for IE only
+    DOM.setElementAttribute(e, "focus", "false");
+    return e;
+  }
+
+  /**
+   * Disables the selection text on IE.
+   */
+  private native void disableSelection(Element element)
+  /*-{
+    element.onselectstart = function() {
+      return false;
+    };  
+  }-*/;
+
+  @Override
+  protected void doAttachChildren() {
+    super.doAttachChildren();
+    DOM.setEventListener(focusable, this);
+  }
+
+  @Override
+  protected void doDetachChildren() {
+    super.doDetachChildren();
+    DOM.setEventListener(focusable, null);
+  }
+
+  private boolean elementClicked(FastTreeTableItem root, Event event) {
+    Element target = DOM.eventGetTarget(event).cast();
+    ArrayList<Element> chain = new ArrayList<Element>();
+    collectElementChain(chain, getElement(), target);
+    FastTreeTableItem item = findItemByChain(chain, 0, root);
+    if (item != null) {
+      if (item.isInteriorNode() && item.getControlElement().equals(target)) {
+        item.setState(!item.isOpen(), true);
+        moveSelectionBar(curSelection);
+        disableSelection(target);
+        return false;
+      }
+      if (processElementClicked(item)) {
+        onSelection(item, true, !shouldTreeDelegateFocusToElement(target));
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -373,6 +396,45 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     moveFocus(curSelection);
   }
 
+  private FastTreeTableItem findDeepestOpenChild(FastTreeTableItem item) {
+    if (!item.isOpen()) {
+      return item;
+    }
+    return findDeepestOpenChild(item.getChild(item.getChildCount() - 1));
+  }
+
+  private FastTreeTableItem findItemByChain(final ArrayList<Element> chain,
+      int idx, FastTreeTableItem root) {
+    if (idx == chain.size()) {
+      return root;
+    }
+
+    for (int i = 0, n = chain.size(); i < n; i++) {
+      final Element elem = (Element) chain.get(i);
+      String nodeName = elem.getNodeName();
+      if ("div".equalsIgnoreCase(nodeName)) {
+        return findItemByElement(root, elem);
+      }
+    }
+
+    return null;
+  }
+
+  private FastTreeTableItem findItemByElement(FastTreeTableItem item,
+      Element elem) {
+    if (item.getElement().equals(elem)) {
+      return item;
+    }
+    for (int i = 0, n = item.getChildCount(); i < n; ++i) {
+      FastTreeTableItem child = item.getChild(i);
+      child = findItemByElement(child, elem);
+      if (child != null) {
+        return child;
+      }
+    }
+    return null;
+  }
+
   public FastTreeTableItem getChild(int index) {
     return root.getChild(index);
   }
@@ -383,6 +445,13 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
 
   public int getChildIndex(FastTreeTableItem child) {
     return root.getChildIndex(child);
+  }
+
+  /*
+   * This method exists solely to support unit tests.
+   */
+  Map<Widget, FastTreeTableItem> getChildWidgets() {
+    return childWidgets;
   }
 
   /**
@@ -404,6 +473,10 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     return root.getChildCount();
   }
 
+  protected FastTreeTableItem getRoot() {
+    return root;
+  }
+
   /**
    * Gets the currently selected item.
    * 
@@ -417,10 +490,172 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     return impl.getTabIndex(focusable);
   }
 
+  public int getTreeColumn() {
+    return treeColumn;
+  }
+
+  public TreeTableLabelProvider getTreeTableLabelProvider() {
+    if (labelProvider == null) {
+      labelProvider = new DefaultTreeTableLabelProvider();
+    }
+    return labelProvider;
+  }
+
+  @Override
+  protected void hoverCell(Element cellElem) {
+    super.hoverCell(cellElem);
+  }
+
+  /**
+   * Updates table rows to include children.
+   * 
+   * @param item the item to insert
+   * @param r the row to insert the item to
+   */
+  private void insertItem(FastTreeTableItem item, int r) {
+    insertRow(r);
+    setWidget(r, getTreeColumn(), item);
+    render(item, r);
+  }
+
   public Iterator<Widget> iterator() {
     final Widget[] widgets = new Widget[childWidgets.size()];
     childWidgets.keySet().toArray(widgets);
     return WidgetIterators.createWidgetIterator(this, widgets);
+  }
+
+  protected void keyboardNavigation(Event event) {
+    // If nothing's selected, select the first item.
+    if (curSelection == null) {
+      if (root.getChildCount() > 0) {
+        onSelection(root.getChild(0), true, true);
+      }
+      super.onBrowserEvent(event);
+    } else {
+
+      // Handle keyboard events if keyboard navigation is enabled
+
+      switch (DOMHelper.standardizeKeycode(DOM.eventGetKeyCode(event))) {
+        case KeyboardListener.KEY_UP: {
+          moveSelectionUp(curSelection);
+          break;
+        }
+        case KeyboardListener.KEY_DOWN: {
+          moveSelectionDown(curSelection, true);
+          break;
+        }
+        case KeyboardListener.KEY_LEFT: {
+          if (curSelection.isOpen()) {
+            curSelection.setState(false);
+          } else {
+            FastTreeTableItem parent = curSelection.getParentItem();
+            if (parent != null) {
+              setSelectedItem(parent);
+            }
+          }
+          break;
+        }
+        case KeyboardListener.KEY_RIGHT: {
+          if (!curSelection.isOpen()) {
+            curSelection.setState(true);
+          }
+          // Do nothing if the element is already open.
+          break;
+        }
+      }
+    }
+  }
+
+  private void moveElementOverTarget(Element movable, Element target) {
+    int containerTop = getAbsoluteTop();
+
+    int top = DOM.getAbsoluteTop(target) - containerTop;
+    int height = DOM.getElementPropertyInt(target, "offsetHeight");
+
+    // Set the element's position and size to exactly underlap the
+    // item's content element.
+
+    DOM.setStyleAttribute(movable, "height", height + "px");
+    DOM.setStyleAttribute(movable, "top", top + "px");
+  }
+
+  /**
+   * Move the tree focus to the specified selected item.
+   * 
+   * @param selection
+   */
+  private void moveFocus(FastTreeTableItem selection) {
+    moveSelectionBar(selection);
+    DOM.scrollIntoView(focusable);
+    HasFocus focusableWidget = selection.getFocusableWidget();
+    if (focusableWidget != null) {
+      focusableWidget.setFocus(true);
+    } else {
+      // Ensure Focus is set, as focus may have been previously delegated by
+      // tree.
+
+      impl.focus(focusable);
+    }
+  }
+
+  /**
+   * Moves the selection bar around the given {@link FastTreeItem}.
+   * 
+   * @param item the item to move selection bar to
+   */
+  protected void moveSelectionBar(FastTreeTableItem item) {
+    if (item == null || item.isShowing() == false) {
+      UIObject.setVisible(focusable, false);
+      return;
+    }
+    // focusable is being used for highlight as well.
+    // Get the location and size of the given item's content element relative
+    // to the tree.
+    Element selectedElem = item.getContentElem();
+    moveElementOverTarget(focusable, selectedElem);
+    UIObject.setVisible(focusable, true);
+  }
+
+  /**
+   * Moves to the next item, going into children as if dig is enabled.
+   */
+  private void moveSelectionDown(FastTreeTableItem sel, boolean dig) {
+    if (sel == root) {
+      return;
+    }
+    FastTreeTableItem parent = sel.getParentItem();
+    if (parent == null) {
+      parent = root;
+    }
+    int idx = parent.getChildIndex(sel);
+
+    if (!dig || !sel.isOpen()) {
+      if (idx < parent.getChildCount() - 1) {
+        onSelection(parent.getChild(idx + 1), true, true);
+      } else {
+        moveSelectionDown(parent, false);
+      }
+    } else if (sel.getChildCount() > 0) {
+      onSelection(sel.getChild(0), true, true);
+    }
+  }
+
+  /**
+   * Moves the selected item up one.
+   */
+  private void moveSelectionUp(FastTreeTableItem sel) {
+    FastTreeTableItem parent = sel.getParentItem();
+    if (parent == null) {
+      parent = root;
+    }
+    int idx = parent.getChildIndex(sel);
+
+    if (idx > 0) {
+      FastTreeTableItem sibling = parent.getChild(idx - 1);
+      onSelection(findDeepestOpenChild(sibling), true, true);
+    } else {
+      onSelection(parent, true, true);
+    }
   }
 
   @Override
@@ -559,180 +794,6 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   }
 
   @Override
-  public boolean remove(Widget w) {
-    // Validate.
-    FastTreeTableItem item = childWidgets.get(w);
-    if (item == null) {
-      return false;
-    }
-
-    // Delegate to TreeItem.setWidget, which performs correct removal.
-    item.setWidget(null);
-    return true;
-  }
-
-  public void removeFocusListener(FocusListener listener) {
-    if (focusListeners != null) {
-      focusListeners.remove(listener);
-    }
-  }
-
-  /**
-   * Removes an item from the root level of this tree.
-   * 
-   * @param item the item to be removed
-   */
-  public void removeItem(FastTreeTableItem item) {
-    root.removeItem(item);
-  }
-
-  /**
-   * Removes all items from the root level of this tree.
-   */
-  public void removeItems() {
-    while (getItemCount() > 0) {
-      removeItem(getItem(0));
-    }
-  }
-
-  public void removeKeyboardListener(KeyboardListener listener) {
-    if (keyboardListeners != null) {
-      keyboardListeners.remove(listener);
-    }
-  }
-
-  public void setAccessKey(char key) {
-    impl.setAccessKey(focusable, key);
-  }
-
-  public void setFocus(boolean focus) {
-    if (focus) {
-      impl.focus(focusable);
-    } else {
-      impl.blur(focusable);
-    }
-  }
-
-  /**
-   * Selects a specified item.
-   * 
-   * @param item the item to be selected, or <code>null</code> to deselect all
-   *          items
-   */
-  public void setSelectedItem(FastTreeTableItem item) {
-    setSelectedItem(item, true);
-  }
-
-  /**
-   * Selects a specified item.
-   * 
-   * @param item the item to be selected, or <code>null</code> to deselect all
-   *          items
-   * @param fireEvents <code>true</code> to allow selection events to be fired
-   */
-  public void setSelectedItem(FastTreeTableItem item, boolean fireEvents) {
-    if (item == null) {
-      if (curSelection == null) {
-        return;
-      }
-      curSelection.setSelection(false, fireEvents);
-      curSelection = null;
-      return;
-    }
-
-    onSelection(item, fireEvents, true);
-  }
-
-  public void setTabIndex(int index) {
-    impl.setTabIndex(focusable, index);
-  }
-
-  /**
-   * Iterator of tree items.
-   */
-  public Iterator<FastTreeTableItem> treeItemIterator() {
-    List<FastTreeTableItem> accum = new ArrayList<FastTreeTableItem>();
-    root.dumpTreeTableItems(accum);
-    return accum.iterator();
-  }
-
-  @Override
-  protected void doAttachChildren() {
-    super.doAttachChildren();
-    DOM.setEventListener(focusable, this);
-  }
-
-  @Override
-  protected void doDetachChildren() {
-    super.doDetachChildren();
-    DOM.setEventListener(focusable, null);
-  }
-
-  protected FastTreeTableItem getRoot() {
-    return root;
-  }
-
-  protected void keyboardNavigation(Event event) {
-    // If nothing's selected, select the first item.
-    if (curSelection == null) {
-      if (root.getChildCount() > 0) {
-        onSelection(root.getChild(0), true, true);
-      }
-      super.onBrowserEvent(event);
-    } else {
-
-      // Handle keyboard events if keyboard navigation is enabled
-
-      switch (DOMHelper.standardizeKeycode(DOM.eventGetKeyCode(event))) {
-        case KeyboardListener.KEY_UP: {
-          moveSelectionUp(curSelection);
-          break;
-        }
-        case KeyboardListener.KEY_DOWN: {
-          moveSelectionDown(curSelection, true);
-          break;
-        }
-        case KeyboardListener.KEY_LEFT: {
-          if (curSelection.isOpen()) {
-            curSelection.setState(false);
-          } else {
-            FastTreeTableItem parent = curSelection.getParentItem();
-            if (parent != null) {
-              setSelectedItem(parent);
-            }
-          }
-          break;
-        }
-        case KeyboardListener.KEY_RIGHT: {
-          if (!curSelection.isOpen()) {
-            curSelection.setState(true);
-          }
-          // Do nothing if the element is already open.
-          break;
-        }
-      }
-    }
-  }
-
-  /**
-   * Moves the selection bar around the given {@link FastTreeItem}.
-   * 
-   * @param item the item to move selection bar to
-   */
-  protected void moveSelectionBar(FastTreeTableItem item) {
-    if (item == null || item.isShowing() == false) {
-      UIObject.setVisible(focusable, false);
-      return;
-    }
-    // focusable is being used for highlight as well.
-    // Get the location and size of the given item's content element relative
-    // to the tree.
-    Element selectedElem = item.getContentElem();
-    moveElementOverTarget(focusable, selectedElem);
-    UIObject.setVisible(focusable, true);
-  }
-
-  @Override
   protected void onLoad() {
     if (getSelectedItem() != null) {
       moveSelectionBar(getSelectedItem());
@@ -795,197 +856,120 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     return true;
   }
 
-  void adopt(Widget widget, FastTreeTableItem treeItem) {
-    assert (!childWidgets.containsKey(widget));
-    childWidgets.put(widget, treeItem);
-    super.adopt(widget);
-  }
-
-  /*
-   * This method exists solely to support unit tests.
-   */
-  Map<Widget, FastTreeTableItem> getChildWidgets() {
-    return childWidgets;
-  }
-
-  void treeOrphan(Widget widget) {
-    super.orphan(widget);
-
-    // Logical detach.
-    childWidgets.remove(widget);
-  }
-
-  private void clickedOnFocus(Element e) {
-    // An element was clicked on that is not focusable, so we use the hidden
-    // focusable to not shift focus.
-    moveElementOverTarget(focusable, e);
-    impl.focus(focusable);
-  }
-
-  /**
-   * Collects parents going up the element tree, terminated at the tree root.
-   */
-  private void collectElementChain(ArrayList<Element> chain, Element hRoot,
-      Element hElem) {
-    if ((hElem == null) || hElem.equals(hRoot)) {
-      return;
-    }
-
-    collectElementChain(chain, hRoot, DOM.getParent(hElem));
-    chain.add(hElem);
-  }
-
-  private Element createFocusElement() {
-    Element e = impl.createFocusable();
-    DOM.setStyleAttribute(e, "position", "absolute");
-    DOM.appendChild(getElement(), e);
-    DOM.sinkEvents(e, Event.FOCUSEVENTS | Event.ONMOUSEDOWN);
-    // Needed for IE only
-    DOM.setElementAttribute(e, "focus", "false");
-    return e;
-  }
-
-  /**
-   * Disables the selection text on IE.
-   */
-  private native void disableSelection(Element element)
-  /*-{
-    element.onselectstart = function() {
+  @Override
+  public boolean remove(Widget w) {
+    // Validate.
+    FastTreeTableItem item = childWidgets.get(w);
+    if (item == null) {
       return false;
-    };  
-  }-*/;
-
-  private boolean elementClicked(FastTreeTableItem root, Event event) {
-    Element target = DOM.eventGetTarget(event).cast();
-    ArrayList<Element> chain = new ArrayList<Element>();
-    collectElementChain(chain, getElement(), target);
-    FastTreeTableItem item = findItemByChain(chain, 0, root);
-    if (item != null) {
-      if (item.isInteriorNode() && item.getControlElement().equals(target)) {
-        item.setState(!item.isOpen(), true);
-        moveSelectionBar(curSelection);
-        disableSelection(target);
-        return false;
-      }
-      if (processElementClicked(item)) {
-        onSelection(item, true, !shouldTreeDelegateFocusToElement(target));
-        return true;
-      }
     }
-    return false;
+
+    // Delegate to TreeItem.setWidget, which performs correct removal.
+    item.setWidget(null);
+    return true;
   }
 
-  private FastTreeTableItem findDeepestOpenChild(FastTreeTableItem item) {
-    if (!item.isOpen()) {
-      return item;
+  public void removeFocusListener(FocusListener listener) {
+    if (focusListeners != null) {
+      focusListeners.remove(listener);
     }
-    return findDeepestOpenChild(item.getChild(item.getChildCount() - 1));
-  }
-
-  private FastTreeTableItem findItemByChain(final ArrayList<Element> chain,
-      int idx, FastTreeTableItem root) {
-    if (idx == chain.size()) {
-      return root;
-    }
-
-    for (int i = 0, n = chain.size(); i < n; i++) {
-      final Element elem = (Element) chain.get(i);
-      String nodeName = elem.getNodeName();
-      if ("div".equalsIgnoreCase(nodeName)) {
-        return findItemByElement(root, elem);
-      }
-    }
-
-    return null;
-  }
-
-  private FastTreeTableItem findItemByElement(FastTreeTableItem item,
-      Element elem) {
-    if (item.getElement().equals(elem)) {
-      return item;
-    }
-    for (int i = 0, n = item.getChildCount(); i < n; ++i) {
-      FastTreeTableItem child = item.getChild(i);
-      child = findItemByElement(child, elem);
-      if (child != null) {
-        return child;
-      }
-    }
-    return null;
-  }
-
-  private void moveElementOverTarget(Element movable, Element target) {
-    int containerTop = getAbsoluteTop();
-
-    int top = DOM.getAbsoluteTop(target) - containerTop;
-    int height = DOM.getElementPropertyInt(target, "offsetHeight");
-
-    // Set the element's position and size to exactly underlap the
-    // item's content element.
-
-    DOM.setStyleAttribute(movable, "height", height + "px");
-    DOM.setStyleAttribute(movable, "top", top + "px");
   }
 
   /**
-   * Move the tree focus to the specified selected item.
+   * Removes an item from the root level of this tree.
    * 
-   * @param selection
+   * @param item the item to be removed
    */
-  private void moveFocus(FastTreeTableItem selection) {
-    moveSelectionBar(selection);
-    DOM.scrollIntoView(focusable);
-    HasFocus focusableWidget = selection.getFocusableWidget();
-    if (focusableWidget != null) {
-      focusableWidget.setFocus(true);
-    } else {
-      // Ensure Focus is set, as focus may have been previously delegated by
-      // tree.
+  public void removeItem(FastTreeTableItem item) {
+    root.removeItem(item);
+  }
 
+  /**
+   * Removes all items from the root level of this tree.
+   */
+  public void removeItems() {
+    while (getItemCount() > 0) {
+      removeItem(getItem(0));
+    }
+  }
+
+  public void removeKeyboardListener(KeyboardListener listener) {
+    if (keyboardListeners != null) {
+      keyboardListeners.remove(listener);
+    }
+  }
+
+  public void render(FastTreeTableItem item, int row) {
+    for (int i = 0, n = getColumnCount(); i < n; i++) {
+      if (i == getTreeColumn()) {
+        continue;
+      }
+      final Object obj = getTreeTableLabelProvider().getItemLabel(item, i);
+      if (obj instanceof Widget) {
+        setWidget(row, i, (Widget) obj);
+      } else if (obj != null) {
+        setHTML(row, i, obj.toString());
+      }
+    }
+  }
+
+  public void setAccessKey(char key) {
+    impl.setAccessKey(focusable, key);
+  }
+
+  @Override
+  public void setColumnWidth(int column, int width) {
+    super.setColumnWidth(column, width);
+  }
+
+  public void setFocus(boolean focus) {
+    if (focus) {
       impl.focus(focusable);
+    } else {
+      impl.blur(focusable);
     }
   }
 
   /**
-   * Moves to the next item, going into children as if dig is enabled.
+   * Selects a specified item.
+   * 
+   * @param item the item to be selected, or <code>null</code> to deselect all
+   *          items
    */
-  private void moveSelectionDown(FastTreeTableItem sel, boolean dig) {
-    if (sel == root) {
+  public void setSelectedItem(FastTreeTableItem item) {
+    setSelectedItem(item, true);
+  }
+
+  /**
+   * Selects a specified item.
+   * 
+   * @param item the item to be selected, or <code>null</code> to deselect all
+   *          items
+   * @param fireEvents <code>true</code> to allow selection events to be fired
+   */
+  public void setSelectedItem(FastTreeTableItem item, boolean fireEvents) {
+    if (item == null) {
+      if (curSelection == null) {
+        return;
+      }
+      curSelection.setSelection(false, fireEvents);
+      curSelection = null;
       return;
     }
-    FastTreeTableItem parent = sel.getParentItem();
-    if (parent == null) {
-      parent = root;
-    }
-    int idx = parent.getChildIndex(sel);
 
-    if (!dig || !sel.isOpen()) {
-      if (idx < parent.getChildCount() - 1) {
-        onSelection(parent.getChild(idx + 1), true, true);
-      } else {
-        moveSelectionDown(parent, false);
-      }
-    } else if (sel.getChildCount() > 0) {
-      onSelection(sel.getChild(0), true, true);
-    }
+    onSelection(item, fireEvents, true);
   }
 
-  /**
-   * Moves the selected item up one.
-   */
-  private void moveSelectionUp(FastTreeTableItem sel) {
-    FastTreeTableItem parent = sel.getParentItem();
-    if (parent == null) {
-      parent = root;
-    }
-    int idx = parent.getChildIndex(sel);
+  public void setTabIndex(int index) {
+    impl.setTabIndex(focusable, index);
+  }
 
-    if (idx > 0) {
-      FastTreeTableItem sibling = parent.getChild(idx - 1);
-      onSelection(findDeepestOpenChild(sibling), true, true);
-    } else {
-      onSelection(parent, true, true);
-    }
+  public void setTreeColumn(int treeColumn) {
+    this.treeColumn = treeColumn;
+  }
+
+  public void setTreeTableLabelProvider(TreeTableLabelProvider renderer) {
+    this.labelProvider = renderer;
   }
 
   private native boolean shouldTreeDelegateFocusToElement(Element elem)
@@ -999,6 +983,22 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
        (name == "LABEL") 
     );
   }-*/;
+
+  /**
+   * Iterator of tree items.
+   */
+  public Iterator<FastTreeTableItem> treeItemIterator() {
+    List<FastTreeTableItem> accum = new ArrayList<FastTreeTableItem>();
+    root.dumpTreeTableItems(accum);
+    return accum.iterator();
+  }
+
+  void treeOrphan(Widget widget) {
+    super.orphan(widget);
+
+    // Logical detach.
+    childWidgets.remove(widget);
+  }
 }
 
 /**
@@ -1007,6 +1007,14 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
  * implement their own {@link Iterator}.
  */
 class WidgetIterators {
+
+  private static Widget[] copyWidgetArray(final Widget[] widgets) {
+    final Widget[] clone = new Widget[widgets.length];
+    for (int i = 0; i < widgets.length; i++) {
+      clone[i] = widgets[i];
+    }
+    return clone;
+  }
 
   /**
    * Wraps an array of widgets to be returned during iteration.
@@ -1026,6 +1034,16 @@ class WidgetIterators {
 
       {
         gotoNextIndex();
+      }
+
+      private void gotoNextIndex() {
+        ++index;
+        while (index < contained.length) {
+          if (contained[index] != null) {
+            return;
+          }
+          ++index;
+        }
       }
 
       public boolean hasNext() {
@@ -1055,25 +1073,7 @@ class WidgetIterators {
         container.remove(contained[last]);
         last = -1;
       }
-
-      private void gotoNextIndex() {
-        ++index;
-        while (index < contained.length) {
-          if (contained[index] != null) {
-            return;
-          }
-          ++index;
-        }
-      }
     };
-  }
-
-  private static Widget[] copyWidgetArray(final Widget[] widgets) {
-    final Widget[] clone = new Widget[widgets.length];
-    for (int i = 0; i < widgets.length; i++) {
-      clone[i] = widgets[i];
-    }
-    return clone;
   }
 
   private WidgetIterators() {
