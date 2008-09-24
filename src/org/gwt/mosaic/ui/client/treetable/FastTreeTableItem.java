@@ -42,8 +42,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   private static final String STYLENAME_SELECTED = "selected";
 
   // TODO(ECC) change states to enums and move style names to FastTreeTable
-  // where
-  // they below.
+  // where they below.
   private static final int TREE_NODE_LEAF = 1;
   private static final int TREE_NODE_INTERIOR_NEVER_OPENED = 2;
   private static final int TREE_NODE_INTERIOR_OPEN = 3;
@@ -191,7 +190,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
       }
     }
   }
-  
+
   /**
    * Called after the tree item is closed.
    */
@@ -744,8 +743,13 @@ public class FastTreeTableItem extends Widget implements HasHTML,
       for (int i = 0, n = item.getChildCount(); i < n; i++) {
         final FastTreeTableItem child = item.getChild(i);
         final Element tr = child.getElement().getParentElement().getParentElement().cast();
-        UIObject.setVisible(tr, visible);
-        child.updateVisibility(child, visible);
+        if (item.isOpen() && visible) {
+          UIObject.setVisible(tr, true);
+          child.updateVisibility(child, true);
+        } else {
+          UIObject.setVisible(tr, false);
+          child.updateVisibility(child, false);
+        }
       }
     }
   }
