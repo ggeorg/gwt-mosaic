@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +19,7 @@ import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
+import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -33,12 +33,13 @@ import com.google.gwt.i18n.client.Constants;
 /**
  * The constants used in this Page.
  */
-public interface ShowcaseConstants extends Constants, ContentWidget.CwConstants,
-    CwBasicButton.CwConstants, CwCustomButton.CwConstants,
-    CwToolButton.CwConstants, CwComboBox.CwConstants, CwToolBar.CwConstants, CwMenuBar.CwConstants,
+public interface ShowcaseConstants extends Constants,
+    ContentWidget.CwConstants, CwBasicButton.CwConstants,
+    CwCustomButton.CwConstants, CwToolButton.CwConstants,
+    CwComboBox.CwConstants, CwToolBar.CwConstants, CwMenuBar.CwConstants,
     CwScrollTable.CwConstants, CwPagingScrollTable.CwConstants,
-    CwTableLoadingBenchmark.CwConstants, CwDatePicker.CwConstants,
-    CwMessageBox.CwConstants {
+    CwTableLoadingBenchmark.CwConstants, CwBasicTreeTable.CwConstants,
+    CwDatePicker.CwConstants, CwMessageBox.CwConstants {
 
   /**
    * The path to source code for examples, raw files, and style definitions.
