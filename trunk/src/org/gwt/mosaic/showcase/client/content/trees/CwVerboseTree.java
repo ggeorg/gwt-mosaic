@@ -46,12 +46,12 @@ public class CwVerboseTree extends CwBasicTree {
   
   @Override
   public String getDescription() {
-    return "Lazy FastTree description";
+    return "Verbose GWT Incubator FastTree demo";
   }
 
   @Override
   public String getName() {
-    return "Lazy FastTree";
+    return "Verbose Tree";
   }
 
   /**
@@ -78,27 +78,42 @@ public class CwVerboseTree extends CwBasicTree {
       final int index = i;
 
       FastTreeItem item = new ListeningFastTreeItem("child " + i) {
+        @Override
+        public void afterClose() {
+          InfoPanel.show(this.getText(), "Item" + index + " is closed");
+        }
+        
+        @Override
+        public void afterOpen() {
+          InfoPanel.show(this.getText(), "Item " + index + " is open");
+        }        
 
+        @Override
         public void beforeClose() {
           InfoPanel.show(this.getText(), "Close item" + index);
         }
 
+        @Override
         public void beforeOpen() {
           InfoPanel.show(this.getText(), "Open item " + index);
         }
 
+        @Override
         protected boolean beforeSelectionLost() {
-          return Window.confirm("Are you sure you want to leave me?");
+          return Window.confirm(this.getText() + ": Are you sure you want to leave me?");
         }
 
+        @Override
         protected void ensureChildren() {
           InfoPanel.show(this.getText(), "You are about to open my children for the first time");
         }
 
+        @Override
         protected void onSelected() {
           InfoPanel.show(this.getText(), "You selected item " + index);
         }
       };
+
       parent.addItem(item);
       verboseTreeItem(item, children - (i + 1));
     }

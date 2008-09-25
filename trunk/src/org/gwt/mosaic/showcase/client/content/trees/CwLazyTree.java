@@ -43,12 +43,12 @@ public class CwLazyTree extends CwBasicTree {
 
   @Override
   public String getDescription() {
-    return "Lazy FastTree description";
+    return "Lazy GWT Incubator FastTree demo";
   }
 
   @Override
   public String getName() {
-    return "Lazy FastTree";
+    return "Lazy Tree";
   }
 
   /**
