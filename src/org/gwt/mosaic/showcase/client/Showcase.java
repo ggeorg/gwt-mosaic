@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,6 +44,7 @@ import org.gwt.mosaic.showcase.client.content.trees.CwBasicTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
+import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -279,7 +279,7 @@ public class Showcase implements EntryPoint {
       app.getMainMenu().ensureSelectedItemVisible();
       displayContentWidget(itemWidgets.get(firstItem));
     }
-    
+
     DOM.getElementById("splash").getStyle().setProperty("display", "none");
   }
 
@@ -290,8 +290,8 @@ public class Showcase implements EntryPoint {
    */
   private void setupMainLinks(ShowcaseConstants constants) {
     // Link to GWT Mosaic Homepage
-    app.addLink(new HTML("<a href=\"" + ShowcaseConstants.GWT_MOSAIC_HOMEPAGE + "\">"
-        + constants.mainLinkMosaic() + "</a>"));
+    app.addLink(new HTML("<a href=\"" + ShowcaseConstants.GWT_MOSAIC_HOMEPAGE
+        + "\">" + constants.mainLinkMosaic() + "</a>"));
 
     // Link to GWT Homepage
     app.addLink(new HTML("<a href=\"" + ShowcaseConstants.GWT_HOMEPAGE + "\">"
@@ -312,33 +312,50 @@ public class Showcase implements EntryPoint {
 
     // Widgets
     TreeItem catWidgets = mainMenu.addItem("Widgets");
-    setupMainMenuOption(catWidgets, new CwBasicButton(constants), images.catWidgets());
-    setupMainMenuOption(catWidgets, new CwCustomButton(constants), images.catWidgets());
-    setupMainMenuOption(catWidgets, new CwToolButton(constants), images.catWidgets());
-    setupMainMenuOption(catWidgets, new CwComboBox(constants), images.catWidgets());
-    setupMainMenuOption(catWidgets, new CwDatePicker(constants), images.catWidgets());
-    setupMainMenuOption(catWidgets, new CwToolBar(constants), images.catWidgets());
-    setupMainMenuOption(catWidgets, new CwMenuBar(constants), images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwBasicButton(constants),
+        images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwCustomButton(constants),
+        images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwToolButton(constants),
+        images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwComboBox(constants),
+        images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwDatePicker(constants),
+        images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwToolBar(constants),
+        images.catWidgets());
+    setupMainMenuOption(catWidgets, new CwMenuBar(constants),
+        images.catWidgets());
 
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
-    setupMainMenuOption(catPopups, new CwInfoPanel(constants), images.catPopups());
-    setupMainMenuOption(catPopups, new CwWindowPanel(constants), images.catPopups());
-    setupMainMenuOption(catPopups, new CwMessageBox(constants), images.catPopups());
+    setupMainMenuOption(catPopups, new CwInfoPanel(constants),
+        images.catPopups());
+    setupMainMenuOption(catPopups, new CwWindowPanel(constants),
+        images.catPopups());
+    setupMainMenuOption(catPopups, new CwMessageBox(constants),
+        images.catPopups());
 
     // Panels
     TreeItem catPanels = mainMenu.addItem("Layout & Panels");
-    setupMainMenuOption(catPanels, new CwBoxLayout(constants), images.catPanels());
-    setupMainMenuOption(catPanels, new CwBorderLayout(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new CwBoxLayout(constants),
+        images.catPanels());
+    setupMainMenuOption(catPanels, new CwBorderLayout(constants),
+        images.catPanels());
     setupMainMenuOption(catPanels, new CwNestedBorderLayout(constants),
         images.catPanels());
-    setupMainMenuOption(catPanels, new CwMixedLayout(constants), images.catPanels());
-    
-    TreeItem catLayoutPanels =catPanels.addItem("Panels");
-    setupMainMenuOption(catLayoutPanels, new CwDeckLayoutPanel(constants), images.catPanels());
-    setupMainMenuOption(catLayoutPanels, new CwStackLayoutPanel(constants), images.catPanels());
-    setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants), images.catPanels());
-    setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants), images.catPanels());
+    setupMainMenuOption(catPanels, new CwMixedLayout(constants),
+        images.catPanels());
+
+    TreeItem catLayoutPanels = catPanels.addItem("Panels");
+    setupMainMenuOption(catLayoutPanels, new CwDeckLayoutPanel(constants),
+        images.catPanels());
+    setupMainMenuOption(catLayoutPanels, new CwStackLayoutPanel(constants),
+        images.catPanels());
+    setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants),
+        images.catPanels());
+    setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
+        images.catPanels());
 
     TreeItem catLayoutTests = catPanels.addItem("Tests");
     setupMainMenuOption(catLayoutTests, new CwLayoutTest1(constants),
@@ -352,22 +369,27 @@ public class Showcase implements EntryPoint {
     TreeItem catTrees = mainMenu.addItem("Trees");
     setupMainMenuOption(catTrees, new CwBasicTree(constants), images.catLists());
     setupMainMenuOption(catTrees, new CwLazyTree(constants), images.catLists());
-    setupMainMenuOption(catTrees, new CwVerboseTree(constants), images.catLists());
+    setupMainMenuOption(catTrees, new CwVerboseTree(constants),
+        images.catLists());
 
     // Tables
     TreeItem catTables = mainMenu.addItem("Tables");
-    setupMainMenuOption(catTables, new CwScrollTable(constants), images.catTables());
+    setupMainMenuOption(catTables, new CwScrollTable(constants),
+        images.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
         images.catTables());
     setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
         images.catTables());
     // setupMainMenuOption(catTables, new TablePage(constants),
     // images.catTables());
-    
+
     // TreeTables
     TreeItem catTreeTables = mainMenu.addItem("TreeTables");
-    setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants), images.catLists());
-    
+    setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants),
+        images.catLists());
+    setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
+        images.catLists());
+
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
     setupMainMenuOption(catOther, new CwActions(constants), images.catOther());
@@ -423,7 +445,8 @@ public class Showcase implements EntryPoint {
     localeBox.addChangeListener(new ChangeListener() {
       public void onChange(Widget sender) {
         String localeName = localeBox.getValue(localeBox.getSelectedIndex());
-        Window.open(getHostPageLocation() + "?locale=" + localeName, "_self", "");
+        Window.open(getHostPageLocation() + "?locale=" + localeName, "_self",
+            "");
       }
     });
     HorizontalPanel localeWrapper = new HorizontalPanel();
@@ -435,7 +458,8 @@ public class Showcase implements EntryPoint {
     final HorizontalPanel styleWrapper = new HorizontalPanel();
     vPanel.add(styleWrapper);
     for (int i = 0; i < ShowcaseConstants.STYLE_THEMES.length; i++) {
-      final ThemeButton button = new ThemeButton(ShowcaseConstants.STYLE_THEMES[i]);
+      final ThemeButton button = new ThemeButton(
+          ShowcaseConstants.STYLE_THEMES[i]);
       styleWrapper.add(button);
       button.addClickListener(new ClickListener() {
         public void onClick(Widget sender) {
@@ -500,7 +524,8 @@ public class Showcase implements EntryPoint {
           String href = elem.getPropertyString("href");
           // If the correct style sheets are already loaded, then we should have
           // nothing to remove.
-          if (!href.contains(gwtStyleSheet) && !href.contains(gwtMosaicStyleSheet)
+          if (!href.contains(gwtStyleSheet)
+              && !href.contains(gwtMosaicStyleSheet)
               && !href.contains(showcaseStyleSheet)) {
             toRemove.add(elem);
           }

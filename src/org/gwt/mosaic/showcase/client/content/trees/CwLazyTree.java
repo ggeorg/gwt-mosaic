@@ -81,6 +81,7 @@ public class CwLazyTree extends CwBasicTree {
       final int children) {
     final FastTreeItem item = new FastTreeItem("child" + index + " ("
         + children + " children)") {
+      
       private Timer t = new Timer() {
         public void run() {
           lazyCreateChilds();

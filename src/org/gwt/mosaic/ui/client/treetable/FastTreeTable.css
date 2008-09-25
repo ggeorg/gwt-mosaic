@@ -50,6 +50,9 @@ Visual styling
 .gwt-FastTreeTableItem .closed {
 	background: url('%treeClosed%') no-repeat center left;
 }
+.gwt-FastTreeTableItem-loading .open {
+	background: url('%treeLoading*') no-repeat center left;
+}
 .gwt-FastTreeTableItem-leaf {
 }
 .gwt-FastTreeTable .treeItemContent {
