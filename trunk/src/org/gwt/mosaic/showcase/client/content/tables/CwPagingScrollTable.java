@@ -1,5 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
+ * 
  * Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,26 +57,15 @@ import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellForma
 public class CwPagingScrollTable extends CwScrollTable {
 
   /**
-   * The constants used in this Page.
-   */
-  @ShowcaseSource
-  public static interface CwConstants extends Constants, CwScrollTable.CwConstants {
-  }
-
-  /**
-   * An instance of the constants.
-   */
-  @ShowcaseData
-  private CwConstants constants;
-
-  /**
    * A custom cell renderer.
    */
   @ShowcaseSource
-  private static class CustomBulkRenderer extends TableBulkRenderer.CellRenderer {
+  private static class CustomBulkRenderer extends
+      TableBulkRenderer.CellRenderer {
 
     @Override
-    public void renderCell(int row, int column, Object cellData, StringBuffer accum) {
+    public void renderCell(int row, int column, Object cellData,
+        StringBuffer accum) {
       if (cellData == null) {
         return;
       }
@@ -104,13 +94,28 @@ public class CwPagingScrollTable extends CwScrollTable {
 
       switch (column) {
         case 5:
-          grid.setHTML(row, column, "<font color=\"" + data + "\">" + data + "</font>");
+          grid.setHTML(row, column, "<font color=\"" + data + "\">" + data
+              + "</font>");
           break;
         default:
           grid.setHTML(row, column, data.toString());
       }
     }
   }
+
+  /**
+   * The constants used in this Page.
+   */
+  @ShowcaseSource
+  public static interface CwConstants extends Constants,
+      CwScrollTable.CwConstants {
+  }
+
+  /**
+   * An instance of the constants.
+   */
+  @ShowcaseData
+  private CwConstants constants;
 
   /**
    * The {@link CachedTableModel} around the main table model.
@@ -123,12 +128,32 @@ public class CwPagingScrollTable extends CwScrollTable {
   protected DataSourceTableModel tableModel = null;
 
   /**
+   * Constructor.
+   * 
+   * @param constants the constants
+   */
+  public CwPagingScrollTable(CwConstants constants) {
+    super(constants);
+    this.constants = constants;
+  }
+
+  /**
    * Get the cached table model.
    * 
    * @return the cached table model
    */
   public CachedTableModel<Serializable> getCachedTableModel() {
     return cachedTableModel;
+  }
+
+  @Override
+  public String getDescription() {
+    return "Paging Scroll Table description";
+  }
+
+  @Override
+  public String getName() {
+    return "Paging Scroll Table";
   }
 
   /**
@@ -161,26 +186,6 @@ public class CwPagingScrollTable extends CwScrollTable {
   }
 
   /**
-   * Constructor.
-   * 
-   * @param constants the constants
-   */
-  public CwPagingScrollTable(CwConstants constants) {
-    super(constants);
-    this.constants = constants;
-  }
-  
-  @Override
-  public String getDescription() {
-    return "Paging Scroll Table description";
-  }
-
-  @Override
-  public String getName() {
-    return "Paging Scroll Table";
-  }
-
-  /**
    * Initialize this example.
    */
   @ShowcaseSource
@@ -188,7 +193,7 @@ public class CwPagingScrollTable extends CwScrollTable {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
-    
+
     // Create the inner tables
     getHeaderTable();
     getFooterTable();
@@ -204,16 +209,16 @@ public class CwPagingScrollTable extends CwScrollTable {
     dataTable = new FixedWidthGrid();
 
     // Create the scroll table
-    scrollTable = new PagingScrollTable<Serializable>(cachedTableModel, dataTable,
-        headerTable);
+    scrollTable = new PagingScrollTable<Serializable>(cachedTableModel,
+        dataTable, headerTable);
     getPagingScrollTable().setCellRenderer(new CustomCellRenderer());
     getPagingScrollTable().setPageSize(20);
     scrollTable.setFooterTable(getFooterTable());
     setupCellEditors(getPagingScrollTable());
 
     // Setup the bulk renderer
-    FixedWidthGridBulkRenderer bulkRenderer = new FixedWidthGridBulkRenderer(dataTable,
-        DataSourceTableModel.COLUMN_COUNT);
+    FixedWidthGridBulkRenderer bulkRenderer = new FixedWidthGridBulkRenderer(
+        dataTable, DataSourceTableModel.COLUMN_COUNT);
     bulkRenderer.setCellRenderer(new CustomBulkRenderer());
     getPagingScrollTable().setBulkRenderer(bulkRenderer);
 
@@ -232,67 +237,12 @@ public class CwPagingScrollTable extends CwScrollTable {
     BoxLayout boxLayout = new BoxLayout(Orientation.VERTICAL);
     boxLayout.setLeftToRight(true);
     layoutPanel.setLayout(boxLayout);
-    //layoutPanel.setWidgetSpacing(0);
+    // layoutPanel.setWidgetSpacing(0);
     layoutPanel.add(scrollTable, new BoxLayoutData(FillStyle.BOTH));
-    layoutPanel.add(new WidgetWrapper(pagingOptions), new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    
+    layoutPanel.add(new WidgetWrapper(pagingOptions), new BoxLayoutData(
+        FillStyle.HORIZONTAL, true));
+
     return layoutPanel;
-  }
-
-  /**
-   * Setup the scroll table.
-   */
-  private void setupScrollTable() {
-    // Setup the formatting
-    scrollTable.setCellPadding(3);
-    scrollTable.setCellSpacing(0);
-    scrollTable.setSize("95%", "50%");
-    scrollTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
-
-    // Set column widths
-    scrollTable.setColumnWidth(1, 100);
-    scrollTable.setColumnWidth(2, 35);
-    scrollTable.setColumnWidth(3, 45);
-    scrollTable.setColumnWidth(4, 110);
-    scrollTable.setColumnWidth(5, 80);
-    scrollTable.setColumnWidth(6, 110);
-    scrollTable.setColumnWidth(7, 180);
-    scrollTable.setColumnWidth(8, 35);
-    scrollTable.setColumnWidth(9, 35);
-    scrollTable.setColumnWidth(10, 55);
-    scrollTable.setColumnWidth(11, 45);
-
-    // Level 1 headers
-    FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
-    headerTable.setHTML(0, 0, "User Information");
-    headerFormatter.setColSpan(0, 0, 12);
-
-    // Level 2 headers
-    headerTable.setHTML(1, 0, "First and Last Name");
-    headerFormatter.setColSpan(1, 0, 2);
-    headerFormatter.setRowSpan(1, 0, 2);
-    headerTable.setHTML(1, 1, "General Info");
-    headerFormatter.setColSpan(1, 1, 3);
-    headerTable.setHTML(1, 2, "Favorite Color");
-    headerFormatter.setColSpan(1, 2, 1);
-    headerFormatter.setRowSpan(1, 2, 2);
-    headerTable.setHTML(1, 3, "Preferred Sport");
-    headerFormatter.setColSpan(1, 3, 1);
-    headerFormatter.setRowSpan(1, 3, 2);
-    headerTable.setHTML(1, 4, "School Info");
-    headerFormatter.setColSpan(1, 4, 3);
-    headerTable.setHTML(1, 5, "Login Info");
-    headerFormatter.setColSpan(1, 5, 2);
-
-    // Level 3 headers
-    headerTable.setHTML(2, 0, "Age");
-    headerTable.setHTML(2, 1, "Gender");
-    headerTable.setHTML(2, 2, "Race");
-    headerTable.setHTML(2, 3, "College");
-    headerTable.setHTML(2, 4, "Year");
-    headerTable.setHTML(2, 5, "GPA");
-    headerTable.setHTML(2, 6, "ID");
-    headerTable.setHTML(2, 7, "Pin");
   }
 
   /**
@@ -306,11 +256,11 @@ public class CwPagingScrollTable extends CwScrollTable {
       @Override
       public void onKeyPress(Widget sender, char keyCode, int modifiers) {
         if ((!Character.isDigit(keyCode)) && (keyCode != (char) KEY_TAB)
-            && (keyCode != (char) KEY_BACKSPACE) && (keyCode != (char) KEY_DELETE)
-            && (keyCode != (char) KEY_ENTER) && (keyCode != (char) KEY_HOME)
-            && (keyCode != (char) KEY_END) && (keyCode != (char) KEY_LEFT)
-            && (keyCode != (char) KEY_UP) && (keyCode != (char) KEY_RIGHT)
-            && (keyCode != (char) KEY_DOWN)) {
+            && (keyCode != (char) KEY_BACKSPACE)
+            && (keyCode != (char) KEY_DELETE) && (keyCode != (char) KEY_ENTER)
+            && (keyCode != (char) KEY_HOME) && (keyCode != (char) KEY_END)
+            && (keyCode != (char) KEY_LEFT) && (keyCode != (char) KEY_UP)
+            && (keyCode != (char) KEY_RIGHT) && (keyCode != (char) KEY_DOWN)) {
           ((TextBox) sender).cancelKey();
         }
       }
@@ -384,6 +334,62 @@ public class CwPagingScrollTable extends CwScrollTable {
     };
     collegeEditor.setLabel("University of");
     table.setCellEditor(7, collegeEditor);
+  }
+
+  /**
+   * Setup the scroll table.
+   */
+  private void setupScrollTable() {
+    // Setup the formatting
+    scrollTable.setCellPadding(3);
+    scrollTable.setCellSpacing(0);
+    scrollTable.setSize("95%", "50%");
+    scrollTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
+
+    // Set column widths
+    scrollTable.setColumnWidth(1, 100);
+    scrollTable.setColumnWidth(2, 35);
+    scrollTable.setColumnWidth(3, 45);
+    scrollTable.setColumnWidth(4, 110);
+    scrollTable.setColumnWidth(5, 80);
+    scrollTable.setColumnWidth(6, 110);
+    scrollTable.setColumnWidth(7, 180);
+    scrollTable.setColumnWidth(8, 35);
+    scrollTable.setColumnWidth(9, 35);
+    scrollTable.setColumnWidth(10, 55);
+    scrollTable.setColumnWidth(11, 45);
+
+    // Level 1 headers
+    FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
+    headerTable.setHTML(0, 0, "User Information");
+    headerFormatter.setColSpan(0, 0, 12);
+
+    // Level 2 headers
+    headerTable.setHTML(1, 0, "First and Last Name");
+    headerFormatter.setColSpan(1, 0, 2);
+    headerFormatter.setRowSpan(1, 0, 2);
+    headerTable.setHTML(1, 1, "General Info");
+    headerFormatter.setColSpan(1, 1, 3);
+    headerTable.setHTML(1, 2, "Favorite Color");
+    headerFormatter.setColSpan(1, 2, 1);
+    headerFormatter.setRowSpan(1, 2, 2);
+    headerTable.setHTML(1, 3, "Preferred Sport");
+    headerFormatter.setColSpan(1, 3, 1);
+    headerFormatter.setRowSpan(1, 3, 2);
+    headerTable.setHTML(1, 4, "School Info");
+    headerFormatter.setColSpan(1, 4, 3);
+    headerTable.setHTML(1, 5, "Login Info");
+    headerFormatter.setColSpan(1, 5, 2);
+
+    // Level 3 headers
+    headerTable.setHTML(2, 0, "Age");
+    headerTable.setHTML(2, 1, "Gender");
+    headerTable.setHTML(2, 2, "Race");
+    headerTable.setHTML(2, 3, "College");
+    headerTable.setHTML(2, 4, "Year");
+    headerTable.setHTML(2, 5, "GPA");
+    headerTable.setHTML(2, 6, "ID");
+    headerTable.setHTML(2, 7, "Pin");
   }
 
 }
