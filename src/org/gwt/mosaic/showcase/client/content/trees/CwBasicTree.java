@@ -48,12 +48,12 @@ public class CwBasicTree extends ContentWidget {
   
   @Override
   public String getDescription() {
-    return "Basic FastTree description";
+    return "Basic GWT Incubator FastTree demo";
   }
 
   @Override
   public String getName() {
-    return "Basic FastTree";
+    return "Basic Tree";
   }
 
   /**
