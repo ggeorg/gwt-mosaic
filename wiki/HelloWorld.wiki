@@ -5,7 +5,7 @@
 
 Demonstration of `Viewport` & `LayoutPanel`.
 
-Screenshot: http://gwt-mosaic.googlecode.com/svn/wiki/hello-world.jpg
+http://gwt-mosaic.googlecode.com/svn/wiki/hello-world.jpg
 
 = Details =
 
