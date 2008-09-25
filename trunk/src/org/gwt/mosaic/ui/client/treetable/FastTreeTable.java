@@ -102,6 +102,13 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
      * @gwt.resource treeOpen.gif
      */
     DataResource treeOpen();
+
+    /**
+     * "*" gif.
+     * 
+     * @gwt.resource treeLoading.gif
+     */
+    DataResource treeLoading();
   }
 
   class DefaultTreeTableLabelProvider implements TreeTableLabelProvider {
@@ -127,7 +134,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
       return null;
     }
   }
-  
+
   private static final String STYLENAME_DEFAULT = "gwt-FastTreeTable";
 
   private static final String STYLENAME_SELECTION = "selection-bar";
@@ -501,6 +508,10 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     return labelProvider;
   }
 
+  public void addTreeTableLabelProvider(TreeTableLabelProvider labelProvider) {
+    this.labelProvider = labelProvider;
+  }
+
   @Override
   protected void hoverCell(Element cellElem) {
     super.hoverCell(cellElem);
@@ -512,7 +523,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
    * @param item the item to insert
    * @param r the row to insert the item to
    */
-  private void insertItem(FastTreeTableItem item, int r) {
+  void insertItem(FastTreeTableItem item, int r) {
     insertRow(r);
     setWidget(r, getTreeColumn(), item);
     render(item, r);
@@ -999,6 +1010,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     // Logical detach.
     childWidgets.remove(widget);
   }
+
 }
 
 /**

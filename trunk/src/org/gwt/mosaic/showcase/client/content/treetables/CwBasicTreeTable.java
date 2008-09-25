@@ -1,5 +1,7 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. 
+ * 
+ * Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,7 +93,7 @@ public class CwBasicTreeTable extends ContentWidget {
     super(constants);
     this.constants = constants;
     
-    FastTreeTable.addDefaultCSS();
+    //FastTreeTable.addDefaultCSS();
   }
 
   /**
@@ -225,7 +227,6 @@ public class CwBasicTreeTable extends ContentWidget {
     }
 
     layoutPanel.add(scrollTreeTable);
-    layoutPanel.setPadding(0);
 
     return layoutPanel;
   }
@@ -237,7 +238,7 @@ public class CwBasicTreeTable extends ContentWidget {
   private void setupScrollTreeTable() {
     // Setup the formatting
     scrollTreeTable.setCellPaddind(3);
-    scrollTreeTable.setCellSpacing(1);
+    scrollTreeTable.setCellSpacing(0);
     scrollTreeTable.setResizePolicy(ScrollTreeTable.ResizePolicy.UNCONSTRAINED);
 
     // Level 1 headers

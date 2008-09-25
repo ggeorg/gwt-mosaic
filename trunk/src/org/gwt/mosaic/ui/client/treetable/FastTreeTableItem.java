@@ -143,7 +143,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     // Physical attach.
     if (state != TREE_NODE_INTERIOR_NEVER_OPENED) {
       // DOM.appendChild(childElems, item.getElement());
-      insertItem(item, getChildCount());
+      insertItem(item, getChildCount() - 1);
     }
 
     // Adopt.
@@ -420,13 +420,13 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     // childTable.setWidget(r, treeTable.getTreeColumn(), item);
     final Element tr = getElement().getParentElement().getParentElement().cast();
     r += OverrideDOM.getRowIndex(tr);
-    treeTable.insertRow(r);
-    treeTable.setWidget(r, treeTable.getTreeColumn(), item);
+    
     int d = item.getDepth();
     if (d != 0) {
       DOM.setStyleAttribute(item.getElement(), "marginLeft", (d * 10) + "px");
     }
-    treeTable.render(item, r);
+    
+    treeTable.insertItem(item, r);
   }
 
   /**
