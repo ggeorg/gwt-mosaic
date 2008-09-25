@@ -1101,6 +1101,9 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 .gwt-FastTreeItem .closed {
 	background: url('images/fasttree/treeClosed.gif') no-repeat center left;
 }
+.gwt-FastTreeItem-loading .open {
+	background: url('images/fasttree/treeLoading.gif') no-repeat center left;
+}
 .gwt-FastTreeItem-leaf { 
 }
 .gwt-FastTree .treeItemContent {
