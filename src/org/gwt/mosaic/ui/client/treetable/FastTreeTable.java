@@ -46,6 +46,8 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.widgetideas.client.FastTreeItem;
 import com.google.gwt.widgetideas.client.overrides.DOMHelper;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.SourceTableSelectionEvents;
+import com.google.gwt.widgetideas.table.client.TableSelectionListener;
 
 /**
  * A standard hierarchical tree widget. The tree contains a hierarchy of
@@ -230,8 +232,68 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     };
     root.setTreeTable(this);
 
+    addTableSelectionListener(new TableSelectionListener() {
+      /** Fired when all rows are deselected. */
+      public void onAllRowsDeselected(SourceTableSelectionEvents sender) {
+        setSelectedItem(null);
+      }
+
+      /** Fired when a cell is hovered. */
+      public void onCellHover(SourceTableSelectionEvents sender, int row,
+          int cell) {
+        // Nothing to do here.
+      }
+
+      /** Fired when a cell is unhovered. */
+      public void onCellUnhover(SourceTableSelectionEvents sender, int row,
+          int cell) {
+        // Nothing to do here.
+      }
+
+      /**
+       * Fired when a single row is deselected. This method will not fire when
+       * all rows are deselected. In that case, use the onAllRowsDeselected
+       * events.
+       */
+      public void onRowDeselected(SourceTableSelectionEvents sender, int row) {
+        final FastTreeTableItem item = findItemByRow(row);
+        if (item instanceof FastTreeTableItem) {
+          //System.out.println("DeSelect item: " + item);
+        }
+      }
+
+      public void onRowHover(SourceTableSelectionEvents sender, int row) {
+        // Nothing to do here.
+      }
+
+      public void onRowUnhover(SourceTableSelectionEvents sender, int row) {
+        // Nothing to do here.
+      }
+
+      public void onRowsSelected(SourceTableSelectionEvents sender,
+          int firstRow, int numRows) {
+        final FastTreeTableItem item = findItemByRow(firstRow);
+        if (item instanceof FastTreeTableItem) {
+          setSelectedItem(item);
+        }
+      }
+    });
+
     setStyleName(STYLENAME_DEFAULT);
     moveSelectionBar(curSelection);
+  }
+  
+  /**
+   * Finds an item in the tree structure by row.
+   * 
+   * @param row the item row
+   * @return the item, or <code>null</code>
+   */
+  public FastTreeTableItem findItemByRow(final int row) {
+    final ArrayList<Element> chain = new ArrayList<Element>();
+    final Element elem = getCellFormatter().getElement(row, getTreeColumn()).getFirstChild().cast(); 
+    collectElementChain(chain, getElement(), elem);
+    return findItemByChain(chain, 0, root);
   }
 
   /**
