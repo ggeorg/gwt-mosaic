@@ -58,6 +58,8 @@ Visual styling
 .gwt-FastTreeTable .treeItemContent {
 	padding: 2px;
 }
+/*
 .gwt-FastTreeTable .selected .treeItemContent {
 	background: #e3e8f3 url('%selectionBar%') repeat-x;
 }
+*/
