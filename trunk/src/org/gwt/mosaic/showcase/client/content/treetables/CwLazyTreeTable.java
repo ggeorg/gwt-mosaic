@@ -36,6 +36,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.ScrollTable;
+import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
 
 /**
  * Example file.
@@ -208,6 +209,7 @@ public class CwLazyTreeTable extends ContentWidget {
 
     // Add some data to the data table
     dataTable.resize(0, 5);
+    dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
     lazyCreateChild(dataTable, 0, 50);
 
     return layoutPanel;
@@ -221,7 +223,6 @@ public class CwLazyTreeTable extends ContentWidget {
     // Setup the formatting
     scrollTreeTable.setCellPaddind(3);
     scrollTreeTable.setCellSpacing(0);
-    // scrollTreeTable.setSize("95%", "50%");
     scrollTreeTable.setResizePolicy(ScrollTreeTable.ResizePolicy.UNCONSTRAINED);
 
     // header & footer data
