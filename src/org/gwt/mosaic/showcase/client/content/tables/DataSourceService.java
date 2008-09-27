@@ -1,6 +1,5 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,16 +15,17 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import java.io.Serializable;
+import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 
+import com.google.gwt.gen2.table.client.TableModelHelper.Request;
+import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.widgetideas.table.client.TableModel.Request;
-import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
+
 
 /**
- * A {@link RemoteService} to retrieve row data for the
- * {@link PagingScrollTableDemo}.
+ * A <code>RemoteService</code> to retrieve row data for the
+ * <code> PagingScrollTableDemo</code>.
  */
 public interface DataSourceService extends RemoteService {
-  SerializableResponse<Serializable> requestRows(Request request);
+  SerializableResponse<Student> requestRows(Request request);
 }

@@ -1,6 +1,5 @@
 /*
  * Copyright 2007 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,19 +15,16 @@
  */
 package org.gwt.mosaic.showcase.server;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
-import org.gwt.mosaic.showcase.client.content.tables.DataSourceData;
 import org.gwt.mosaic.showcase.client.content.tables.DataSourceService;
+import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
+import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
 
+import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
+import com.google.gwt.gen2.table.client.TableModelHelper.Request;
+import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.google.gwt.widgetideas.table.client.TableModel.ColumnSortList;
-import com.google.gwt.widgetideas.table.client.TableModel.Request;
-import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
 
 /**
  * Implementation of {@link DataSourceService}.
@@ -40,9 +36,9 @@ public class DataSourceServiceImpl extends RemoteServiceServlet implements
   /**
    * The source of the data.
    */
-  private DataSourceData data = new DataSourceData() {
+  private StudentGenerator data = new StudentGenerator() {
     @Override
-    public int getRandomInt(int max) {
+    protected int getRandomInt(int max) {
       return random.nextInt(max);
     }
   };
@@ -52,25 +48,14 @@ public class DataSourceServiceImpl extends RemoteServiceServlet implements
    */
   private Random random = new Random();
 
-  public SerializableResponse<Serializable> requestRows(Request request) {
+  public SerializableResponse<Student> requestRows(Request request) {
     // Get the sort info, even though we ignore it
     ColumnSortList sortList = request.getColumnSortList();
     sortList.getPrimaryColumn();
     sortList.isPrimaryAscending();
 
-    // Create some fake data
-    List<Collection<Serializable>> rowData = new ArrayList<Collection<Serializable>>();
-    int startRow = request.getStartRow();
-    int lastRow = startRow + request.getNumRows();
-    for (int row = startRow; row < lastRow; row++) {
-      List<Serializable> cellData = new ArrayList<Serializable>();
-      for (int col = 0; col < 12; col++) {
-        cellData.add(data.getCell(row, col));
-      }
-      rowData.add(cellData);
-    }
-
-    // Return the data in a Default Response
-    return new SerializableResponse<Serializable>(rowData);
+    // Return the data
+    int numRows = request.getNumRows();
+    return new SerializableResponse<Student>(data.generateStudents(numRows));
   }
 }
