@@ -66,7 +66,15 @@ public class DateComboBox extends ComboBox<DatePicker> {
       }
 
       public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        updateTimer.schedule(333);
+        switch (keyCode) {
+          case KEY_ENTER:
+          case KEY_TAB:
+          case KEY_ESCAPE:
+          case KEY_UP:
+            break;
+          default:
+            updateTimer.schedule(333);
+        }
       }
     });
 

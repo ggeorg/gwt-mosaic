@@ -20,21 +20,27 @@ import org.gwt.mosaic.core.client.Region;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DropDownPanel<T extends Widget> extends AbstractDecoratedPopupPanel {
+/**
+ * A popup panel that can position itself relative to another widget.
+ * 
+ * @param <R> relative widget type
+ */
+public class DropDownPanel extends AbstractDecoratedPopupPanel {
 
-  private static final String DEFAULT_STYLENAME = "mosaic-DropDownPanel";
+  private static final String DEFAULT_STYLENAME = "mosaic-DropDownPanel gwt-MenuBarPopup";
 
   private final LayoutPanel panel;
 
-  private final Timer layoutTimer = new Timer() {
-    public void run() {
-      panel.layout();
-    }
-  };
+  // private final Timer layoutTimer = new Timer() {
+  // public void run() {
+  // panel.layout();
+  // }
+  // };
 
   private Widget relativeWidget;
 
@@ -42,25 +48,47 @@ public class DropDownPanel<T extends Widget> extends AbstractDecoratedPopupPanel
    * Default constructor.
    */
   public DropDownPanel(Widget relativeWidget) {
-    super(true, false, "menuPopup");
+    super(false, false, "menuPopup");
     this.relativeWidget = relativeWidget;
     panel = new LayoutPanel();
     panel.setPadding(0);
     super.setWidget(panel);
     setStyleName(DEFAULT_STYLENAME);
-    addStyleName("gwt-MenuBarPopup");
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public T getWidget() {
+  public Widget getWidget() {
     if (panel.getWidgetCount() > 0) {
-      return (T) panel.getWidget(0);
+      return panel.getWidget(0);
     } else {
       return null;
     }
   }
 
+  @Override
+  public boolean onEventPreview(Event event) {
+    final Element target = event.getTarget();
+
+    boolean eventTargetsPopup = (target != null)
+        && getElement().isOrHasChild(target);
+
+    boolean eventTargetsAnchor = (target != null) && (relativeWidget != null)
+        && relativeWidget.getElement().isOrHasChild(target);
+
+    final int type = DOM.eventGetType(event);
+    switch (type) {
+      case Event.ONMOUSEDOWN:
+        if (!eventTargetsPopup && !eventTargetsAnchor) {
+          hide(true);
+          return true;
+        }
+        break;
+    }
+    return super.onEventPreview(event);
+  }
+
+  @Override
   protected void onLoad() {
     final int[] box1 = DOM.getClientSize(relativeWidget.getElement());
     final int[] box2 = DOM.getClientSize(getElement());
@@ -68,7 +96,8 @@ public class DropDownPanel<T extends Widget> extends AbstractDecoratedPopupPanel
     final int widthDelta = getOffsetWidth() - panel.getOffsetWidth();
     final int heightDelta = panel.getOffsetHeight() + m[0] + m[2]
         - BaseLayout.getFlowHeight(panel);
-    setContentSize(box1[0] - widthDelta, box2[1] - heightDelta + 1); // FIXME why (+ 1) ?
+    // FIXME why (+ 1) ?
+    setContentSize(box1[0] - widthDelta, box2[1] - heightDelta + 1);
     setSize("auto", "auto");
     panel.layout();
   }
@@ -76,7 +105,8 @@ public class DropDownPanel<T extends Widget> extends AbstractDecoratedPopupPanel
   private void setContentSize(int width, int height) {
     DOM.setContentAreaWidth(panel.getElement(), width);
     DOM.setContentAreaHeight(panel.getElement(), height);
-    layoutTimer.schedule(333);
+    // layoutTimer.schedule(333);
+    panel.layout();
   }
 
   @Override
