@@ -20,7 +20,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.ComboBox;
-import org.gwt.mosaic.ui.client.datepicker.DateBox;
+import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -81,16 +81,16 @@ public class CwComboBox extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     
-    ComboBox comboBox1 = new DateBox();
+    ComboBox comboBox1 = new DateComboBox();
     comboBox1.ensureDebugId("mosaicAbstractComboBox-normal");
     
-    ComboBox comboBox2 = new DateBox();
+    ComboBox comboBox2 = new DateComboBox();
     comboBox2.ensureDebugId("mosaicAbstractComboBox-normal");
     
-    ComboBox comboBox3 = new DateBox();
+    ComboBox comboBox3 = new DateComboBox();
     comboBox3.ensureDebugId("mosaicAbstractComboBox-normal");
     
-    ComboBox comboBox4 = new DateBox();
+    ComboBox comboBox4 = new DateComboBox();
     comboBox4.ensureDebugId("mosaicAbstractComboBox-normal");
     
     layoutPanel.add(comboBox1, new BoxLayoutData());
