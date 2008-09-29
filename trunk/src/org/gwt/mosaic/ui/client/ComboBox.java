@@ -84,7 +84,6 @@ public abstract class ComboBox<T extends Widget> extends LayoutComposite
             }
             break;
           default:
-            // dirtyText = false;
         }
       }
 
