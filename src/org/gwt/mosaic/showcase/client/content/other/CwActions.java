@@ -19,9 +19,9 @@ import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ActionListener;
 import org.gwt.mosaic.actions.client.ActionRegistry;
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
@@ -55,7 +55,7 @@ public class CwActions extends ContentWidget {
 
     actionListener = new ActionListener() {
       public void handleAction(Action action) {
-        InfoPanel.show("Action", action.getId());
+	  Showcase.notifyTrayEvent("Action", action.getId());
       }
     };
   }

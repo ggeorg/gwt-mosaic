@@ -16,6 +16,7 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -90,7 +91,7 @@ public class CwBasicButton extends ContentWidget implements ClickListener {
    */
   @ShowcaseSource
   public void onClick(Widget sender) {
-    InfoPanel.show(((Button) sender).getText(),
+      Showcase.notifyTrayEvent(((Button) sender).getText(),
         constants.mosaicBasicButtonClickMessage());
   }
 

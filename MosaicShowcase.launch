@@ -20,5 +20,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out  build/www org.gwt.mosaic.showcase.Showcase/Showcase.html"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.gwt.mosaic"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256M"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx384M"/>
 </launchConfiguration>

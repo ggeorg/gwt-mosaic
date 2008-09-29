@@ -16,6 +16,7 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -94,11 +95,11 @@ public class CwCustomButton extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     if (sender instanceof PushButton) {
-      InfoPanel.show(constants.mosaicCustomButtonName(),
+      Showcase.notifyTrayEvent(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonClicked());
     } else {
       ToggleButton btn = (ToggleButton) sender;
-      InfoPanel.show(constants.mosaicCustomButtonName(),
+      Showcase.notifyTrayEvent(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonDown()
               + new Boolean(btn.isDown()).toString());
     }

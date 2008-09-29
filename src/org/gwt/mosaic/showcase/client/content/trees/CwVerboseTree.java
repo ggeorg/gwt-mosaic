@@ -16,9 +16,9 @@
  */
 package org.gwt.mosaic.showcase.client.content.trees;
 
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Window;
@@ -80,22 +80,22 @@ public class CwVerboseTree extends CwBasicTree {
       FastTreeItem item = new ListeningFastTreeItem("child " + i) {
         @Override
         public void afterClose() {
-          InfoPanel.show(this.getText(), "Item" + index + " is closed");
+            Showcase.notifyTrayEvent(this.getText(), "Item" + index + " is closed");
         }
         
         @Override
         public void afterOpen() {
-          InfoPanel.show(this.getText(), "Item " + index + " is open");
+            Showcase.notifyTrayEvent(this.getText(), "Item " + index + " is open");
         }        
 
         @Override
         public void beforeClose() {
-          InfoPanel.show(this.getText(), "Close item" + index);
+            Showcase.notifyTrayEvent(this.getText(), "Close item" + index);
         }
 
         @Override
         public void beforeOpen() {
-          InfoPanel.show(this.getText(), "Open item " + index);
+            Showcase.notifyTrayEvent(this.getText(), "Open item " + index);
         }
 
         @Override
@@ -105,12 +105,12 @@ public class CwVerboseTree extends CwBasicTree {
 
         @Override
         protected void ensureChildren() {
-          InfoPanel.show(this.getText(), "You are about to open my children for the first time");
+            Showcase.notifyTrayEvent(this.getText(), "You are about to open my children for the first time");
         }
 
         @Override
         protected void onSelected() {
-          InfoPanel.show(this.getText(), "You selected item " + index);
+            Showcase.notifyTrayEvent(this.getText(), "You selected item " + index);
         }
       };
 
