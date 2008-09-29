@@ -102,8 +102,8 @@ public class CwDatePicker extends ContentWidget {
     // Log select events.
     final ChangeHandler<Date> changeHandler = new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
-	  Showcase.notifyTrayEvent("DatePicker ChangeHandler", event.getOldValue()
-            + " --> " + event.getNewValue());
+        Showcase.notifyTrayEvent("DatePicker ChangeHandler",
+            event.getOldValue() + " --> " + event.getNewValue());
       }
     };
     datePicker.addChangeHandler(changeHandler);
@@ -125,7 +125,7 @@ public class CwDatePicker extends ContentWidget {
     // Log select events.
     final ChangeHandler<Date> changeHandler2 = new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
-	  Showcase.notifyTrayEvent("DateTimePicker ChangeHandler",
+        Showcase.notifyTrayEvent("DateTimePicker ChangeHandler",
             dateTimePicker.getDate().toString());
       }
     };

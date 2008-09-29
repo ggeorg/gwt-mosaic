@@ -101,6 +101,14 @@ public class DateTimePicker extends LayoutComposite {
   }
   
   /**
+   * This method causes the DatePicker to show the given date.
+   */
+  public final void showDate(Date date) {
+    getDatePicker().showDate(date);
+    getTimePicker().setDate(date);
+  }
+  
+  /**
    * 
    * @return the {@link DatePicker}
    */
