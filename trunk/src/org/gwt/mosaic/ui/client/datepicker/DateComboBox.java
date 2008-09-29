@@ -39,7 +39,7 @@ public class DateComboBox extends ComboBox<DatePicker> {
       if (!isPopupVisible()) {
         showPopup();
       } else {
-        DateComboBox.this.onShowPopup();
+        onShowPopup();
       }
     }
   };
@@ -106,39 +106,9 @@ public class DateComboBox extends ComboBox<DatePicker> {
     return datePicker;
   }
 
-  /**
-   * Sets the date format to the given format. If date box is not empty,
-   * contents of date box will be replaced with current date in new format.
-   * 
-   * @param formatter
-   */
-  public void setDateFormat(DateTimeFormat formatter) {
-    if (formatter != this.formatter) {
-      this.formatter = formatter;
-      String current = super.getText();
-      if (current != null && current.length() != 0) {
-        try {
-          super.setText(this.formatter.format(datePicker.getSelectedDate()));
-        } catch (IllegalArgumentException e) {
-          super.setText(""); // TODO use EMPTY_STRING
-        }
-      }
-    }
-  }
-
-  /**
-   * Show the given date in the date picker.
-   * 
-   * @param date picker
-   */
-  public void showDate(Date date) {
-    datePicker.setSelectedDate(date, false);
-    datePicker.showDate(date);
-    setText(date);
-  }
-
-  protected void setText(Date value) {
-    super.setText(formatter.format(value));
+  @Override
+  protected boolean onHidePopup() {
+    return true;
   }
 
   @Override
@@ -162,9 +132,39 @@ public class DateComboBox extends ComboBox<DatePicker> {
     return datePicker;
   }
 
-  @Override
-  protected boolean onHidePopup() {
-    return true;
+  /**
+   * Sets the date format to the given format. If date box is not empty,
+   * contents of date box will be replaced with current date in new format.
+   * 
+   * @param formatter
+   */
+  public void setDateFormat(DateTimeFormat formatter) {
+    if (formatter != this.formatter) {
+      this.formatter = formatter;
+      String current = super.getText();
+      if (current != null && current.length() != 0) {
+        try {
+          super.setText(this.formatter.format(datePicker.getSelectedDate()));
+        } catch (IllegalArgumentException e) {
+          super.setText(""); // TODO use EMPTY_STRING
+        }
+      }
+    }
+  }
+
+  protected void setText(Date value) {
+    super.setText(formatter.format(value));
+  }
+
+  /**
+   * Show the given date in the date picker.
+   * 
+   * @param date picker
+   */
+  public void showDate(Date date) {
+    datePicker.setSelectedDate(date, false);
+    datePicker.showDate(date);
+    setText(date);
   }
 
 }
