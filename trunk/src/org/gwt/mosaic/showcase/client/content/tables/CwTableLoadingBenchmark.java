@@ -17,11 +17,10 @@
 package org.gwt.mosaic.showcase.client.content.tables;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -245,7 +244,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
 
     table.setWidget(0, 3, new Button("A widget"));
 
-    InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption, "Finished in "
+    Showcase.notifyModalEvent(caption, "Finished in "
         + (System.currentTimeMillis() - milli) + " milliseconds");
   }
 

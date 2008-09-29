@@ -18,11 +18,11 @@ package org.gwt.mosaic.showcase.client.content.widgets;
 import java.util.Date;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.datepicker.DatePicker;
 import org.gwt.mosaic.ui.client.datepicker.DateTimePicker;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -102,7 +102,7 @@ public class CwDatePicker extends ContentWidget {
     // Log select events.
     final ChangeHandler<Date> changeHandler = new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
-        InfoPanel.show("DatePicker ChangeHandler", event.getOldValue()
+	  Showcase.notifyTrayEvent("DatePicker ChangeHandler", event.getOldValue()
             + " --> " + event.getNewValue());
       }
     };
@@ -125,7 +125,7 @@ public class CwDatePicker extends ContentWidget {
     // Log select events.
     final ChangeHandler<Date> changeHandler2 = new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
-        InfoPanel.show("DateTimePicker ChangeHandler",
+	  Showcase.notifyTrayEvent("DateTimePicker ChangeHandler",
             dateTimePicker.getDate().toString());
       }
     };

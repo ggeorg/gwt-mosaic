@@ -19,10 +19,10 @@ import java.util.Date;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.MessageBoxType;
@@ -172,7 +172,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.confirm("Confirmation Box", "I am a confirmation box!",
             new ConfirmationCallback() {
               public void onResult(boolean result) {
-                InfoPanel.show("Prompt Box", "Result is '" + result + "'");
+        	  Showcase.notifyTrayEvent("Prompt Box", "Result is '" + result + "'");
               }
             });
       }
@@ -196,7 +196,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("Prompt Box", "Please enter your name", "George",
             new PromptCallback<String>() {
               public void onResult(String input) {
-                InfoPanel.show("Prompt Box", "Your name is: '" + input + "'");
+        	  Showcase.notifyTrayEvent("Prompt Box", "Your name is: '" + input + "'");
               }
             });
       }
@@ -214,7 +214,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DatePicker Box", new Date(),
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-                InfoPanel.show("DatePicker Box", "You entered: '" + input + "'");
+        	  Showcase.notifyTrayEvent("DatePicker Box", "You entered: '" + input + "'");
               }
             });
       }
@@ -226,7 +226,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DateTimePicker Box", new Date(), false,
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-                InfoPanel.show("DateTimePicker Box", "You entered: '" + input
+        	  Showcase.notifyTrayEvent("DateTimePicker Box", "You entered: '" + input
                     + "'");
               }
             });
@@ -266,7 +266,7 @@ public class CwMessageBox extends ContentWidget {
       public void onClick(Widget sender) {
         richTextAreaPrompt(new PromptCallback<String>() {
           public void onResult(String input) {
-            InfoPanel.show("RichTextArea Prompt", input);
+              Showcase.notifyTrayEvent("RichTextArea Prompt", input);
           }
         });
       }
@@ -296,9 +296,9 @@ public class CwMessageBox extends ContentWidget {
       public void onClose(boolean result) {
         hide();
         if (result) {
-          InfoPanel.show("Login Form", "Form submitted!");
+            Showcase.notifyTrayEvent("Login Form", "Form submitted!");
         } else {
-          InfoPanel.show("Login Form", "You clicked 'Cancel'.");
+            Showcase.notifyTrayEvent("Login Form", "You clicked 'Cancel'.");
         }
       }
     };

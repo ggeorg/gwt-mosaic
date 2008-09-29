@@ -17,9 +17,9 @@ package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolButton;
@@ -211,7 +211,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
-        InfoPanel.show("Menu Button", "You selected a menu item!");
+	  Showcase.notifyTrayEvent("Menu Button", "You selected a menu item!");
       }
     };
 
@@ -242,7 +242,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd2 = new Command() {
       public void execute() {
-        InfoPanel.show("Split Button", "You selected a menu item!");
+	  Showcase.notifyTrayEvent("Split Button", "You selected a menu item!");
       }
     };
 
@@ -322,7 +322,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
-    InfoPanel.show(btn.getText(), "Clicked!");
+    Showcase.notifyTrayEvent(btn.getText(), "Clicked!");
   }
 
 }
