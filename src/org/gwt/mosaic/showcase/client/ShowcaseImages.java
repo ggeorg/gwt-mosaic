@@ -56,4 +56,6 @@ public interface ShowcaseImages extends ImageBundle {
   AbstractImagePrototype mediaPlayGreen();
   
   AbstractImagePrototype showcaseDemos();
+  
+  AbstractImagePrototype calendar();
 }

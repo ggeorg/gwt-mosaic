@@ -197,7 +197,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
         Orientation.VERTICAL));
     panel1.setPadding(0);
     panel1.setWidgetSpacing(0);
-    tabPanel.add(panel1, createTabBarCaption(Showcase.images.mediaPlayGreen(),
+    tabPanel.add(panel1, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
         constants.mosaicPageExample()), true);
 
     // Add the name
@@ -216,7 +216,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
       sourceWidget = new HTML();
       sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
       panel2.add(sourceWidget);
-      tabPanel.add(panel2, createTabBarCaption(Showcase.images.cup(),
+      tabPanel.add(panel2, createTabBarCaption(Showcase.IMAGES.cup(),
           constants.mosaicPageSource()), true);
     } else {
       sourceLoaded = true;
@@ -229,7 +229,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
       styleWidget = new HTML();
       styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
       panel3.add(styleWidget);
-      tabPanel.add(panel3, createTabBarCaption(Showcase.images.css(),
+      tabPanel.add(panel3, createTabBarCaption(Showcase.IMAGES.css(),
           constants.mosaicPageStyle()), true);
     }
 
