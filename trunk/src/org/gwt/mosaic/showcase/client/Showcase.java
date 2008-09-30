@@ -151,7 +151,7 @@ public class Showcase implements EntryPoint {
   /**
    * The static images used throughout the Showcase.
    */
-  public static final ShowcaseImages images = (ShowcaseImages) GWT.create(ShowcaseImages.class);
+  public static final ShowcaseImages IMAGES = (ShowcaseImages) GWT.create(ShowcaseImages.class);
 
   /**
    * The current style theme.
@@ -327,86 +327,86 @@ public class Showcase implements EntryPoint {
     // Widgets
     TreeItem catWidgets = mainMenu.addItem("Widgets");
     setupMainMenuOption(catWidgets, new CwBasicButton(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwCustomButton(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwToolButton(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwComboBox(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwDatePicker(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwToolBar(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwMenuBar(constants),
-        images.catWidgets());
+        IMAGES.catWidgets());
 
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
     setupMainMenuOption(catPopups, new CwInfoPanel(constants),
-        images.catPopups());
+        IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwWindowPanel(constants),
-        images.catPopups());
+        IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwMessageBox(constants),
-        images.catPopups());
+        IMAGES.catPopups());
 
     // Panels
     TreeItem catPanels = mainMenu.addItem("Layout & Panels");
     setupMainMenuOption(catPanels, new CwBoxLayout(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwBorderLayout(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwNestedBorderLayout(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwMixedLayout(constants),
-        images.catPanels());
+        IMAGES.catPanels());
 
     TreeItem catLayoutPanels = catPanels.addItem("Panels");
     setupMainMenuOption(catLayoutPanels, new CwDeckLayoutPanel(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwStackLayoutPanel(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
-        images.catPanels());
+        IMAGES.catPanels());
 
     TreeItem catLayoutTests = catPanels.addItem("Tests");
     setupMainMenuOption(catLayoutTests, new CwLayoutTest1(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catLayoutTests, new CwLayoutTest2(constants),
-        images.catPanels());
+        IMAGES.catPanels());
     setupMainMenuOption(catLayoutTests, new CwLayoutTest3(constants),
-        images.catPanels());
+        IMAGES.catPanels());
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");
-    setupMainMenuOption(catTrees, new CwBasicTree(constants), images.catLists());
-    setupMainMenuOption(catTrees, new CwLazyTree(constants), images.catLists());
+    setupMainMenuOption(catTrees, new CwBasicTree(constants), IMAGES.catLists());
+    setupMainMenuOption(catTrees, new CwLazyTree(constants), IMAGES.catLists());
     setupMainMenuOption(catTrees, new CwVerboseTree(constants),
-        images.catLists());
+        IMAGES.catLists());
 
     // Tables
     TreeItem catTables = mainMenu.addItem("Tables");
     setupMainMenuOption(catTables, new CwScrollTable(constants),
-        images.catTables());
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
-        images.catTables());
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
-        images.catTables());
+        IMAGES.catTables());
     // setupMainMenuOption(catTables, new TablePage(constants),
     // images.catTables());
 
     // TreeTables
     TreeItem catTreeTables = mainMenu.addItem("TreeTables");
     setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants),
-        images.catLists());
+        IMAGES.catLists());
     setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
-        images.catLists());
+        IMAGES.catLists());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
-    setupMainMenuOption(catOther, new CwActions(constants), images.catOther());
+    setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
 
   }
 
@@ -464,7 +464,7 @@ public class Showcase implements EntryPoint {
       }
     });
     HorizontalPanel localeWrapper = new HorizontalPanel();
-    localeWrapper.add(images.locale().createImage());
+    localeWrapper.add(IMAGES.locale().createImage());
     localeWrapper.add(localeBox);
     vPanel.add(localeWrapper);
 
@@ -504,7 +504,7 @@ public class Showcase implements EntryPoint {
     // Add the title and some images to the title bar
     HorizontalPanel titlePanel = new HorizontalPanel();
     titlePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-    titlePanel.add(images.gwtLogo().createImage());
+    titlePanel.add(IMAGES.gwtLogo().createImage());
     titlePanel.add(new HTML(pageTitle));
     app.setTitleWidget(titlePanel);
   }

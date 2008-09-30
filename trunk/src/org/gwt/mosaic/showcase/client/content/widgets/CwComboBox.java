@@ -22,7 +22,6 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.ComboBox;
 import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
 import org.gwt.mosaic.ui.client.datepicker.DateTimeComboBox;
-import org.gwt.mosaic.ui.client.datepicker.DateTimePicker;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
