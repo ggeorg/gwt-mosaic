@@ -689,7 +689,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       }
       fireClosedImpl();
     } else {
-      
+      // TODO
     }
   }
 
