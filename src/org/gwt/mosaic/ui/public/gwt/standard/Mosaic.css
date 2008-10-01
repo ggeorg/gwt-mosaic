@@ -228,6 +228,12 @@ input {
 
 .mosaic-WindowPanel {
 }
+.mosaic-WindowPanel .mosaic-CaptionLayoutPanel .dragdrop-handle {
+	cursor: move;
+	user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+}
 .mosaic-WindowPanel .mosaic-CaptionLayoutPanel {	
 	padding: 0px;
 	margin: 0px;
@@ -274,12 +280,7 @@ input {
 	cursor: w-resize;
 }
 
-.dragdrop-positioner {
-  border: none; /*1px dashed #1E90FF;*/ /* blue */
-  margin: 0px !important;
-  zoom: 1; /* IE gain hasLayout */
-  z-index: 100;
-}
+/*** GlassPanel ***/
 
 .gwt-GlassPanel {
 	/* Override glass panel color to be `green` */
