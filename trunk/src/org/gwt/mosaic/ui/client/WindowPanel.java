@@ -15,7 +15,9 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -32,12 +34,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.WindowCloseListener;
+import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HasCaption;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
+import com.google.gwt.user.client.ui.PopupListener;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
@@ -132,6 +138,20 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
       panel.hideContents(false);
     }
 
+    public void dragMove() {
+      int desiredLeft = context.desiredDraggableX;
+      int desiredTop = context.desiredDraggableY;
+      if (getBehaviorConstrainedToBoundaryPanel()) {
+        desiredLeft = Math.max(boundaryOffsetX, Math.min(desiredLeft,
+            dropTargetClientWidth));
+        desiredTop = Math.max(boundaryOffsetY, Math.min(desiredTop,
+            dropTargetClientHeight));
+      }
+
+      DOMUtil.fastSetElementPosition(context.draggable.getElement(),
+          desiredLeft, desiredTop);
+    }
+
     @Override
     public void dragStart() {
       if (!isActive()) {
@@ -164,20 +184,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
           - context.draggable.getOffsetHeight();
     }
-
-    public void dragMove() {
-      int desiredLeft = context.desiredDraggableX;
-      int desiredTop = context.desiredDraggableY;
-      if (getBehaviorConstrainedToBoundaryPanel()) {
-        desiredLeft = Math.max(boundaryOffsetX, Math.min(desiredLeft,
-            dropTargetClientWidth));
-        desiredTop = Math.max(boundaryOffsetY, Math.min(desiredTop,
-            dropTargetClientHeight));
-      }
-
-      DOMUtil.fastSetElementPosition(context.draggable.getElement(),
-          desiredLeft, desiredTop);
-    }
   }
 
   final class ResizeDragController extends AbstractDragController {
@@ -200,38 +206,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         WindowPanel windowPanel) {
       super(boundaryPanel);
       this.windowPanel = windowPanel;
-    }
-
-    @Override
-    public void dragStart() {
-      panel.hideContents(true);
-      if (!modal) {
-        if (glassPanel == null) {
-          glassPanel = new GlassPanel(false);
-          glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-          final int zIndex = DOM.getIntStyleAttribute(
-              WindowPanel.this.getElement(), "zIndex");
-          DOM.setIntStyleAttribute(glassPanel.getElement(), "zIndex",
-              zIndex - 1);
-        }
-        getBoundaryPanel().add(glassPanel, 0, 0);
-      }
-      super.dragStart();
-
-      // one timecalculation of boundary panel location for efficiency during
-      // dragging
-      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
-      boundaryOffsetX = widgetLocation.getLeft()
-          + DOMUtil.getBorderLeft(context.boundaryPanel.getElement());
-      boundaryOffsetY = widgetLocation.getTop()
-          + DOMUtil.getBorderTop(context.boundaryPanel.getElement());
-
-      dropTargetClientWidth = boundaryOffsetX
-          + DOMUtil.getClientWidth(context.boundaryPanel.getElement())
-          - context.draggable.getOffsetWidth();
-      dropTargetClientHeight = boundaryOffsetY
-          + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
-          - context.draggable.getOffsetHeight();
     }
 
     @Override
@@ -297,6 +271,38 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
         }
       }
 
+    }
+
+    @Override
+    public void dragStart() {
+      panel.hideContents(true);
+      if (!modal) {
+        if (glassPanel == null) {
+          glassPanel = new GlassPanel(false);
+          glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+          final int zIndex = DOM.getIntStyleAttribute(
+              WindowPanel.this.getElement(), "zIndex");
+          DOM.setIntStyleAttribute(glassPanel.getElement(), "zIndex",
+              zIndex - 1);
+        }
+        getBoundaryPanel().add(glassPanel, 0, 0);
+      }
+      super.dragStart();
+
+      // one timecalculation of boundary panel location for efficiency during
+      // dragging
+      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
+      boundaryOffsetX = widgetLocation.getLeft()
+          + DOMUtil.getBorderLeft(context.boundaryPanel.getElement());
+      boundaryOffsetY = widgetLocation.getTop()
+          + DOMUtil.getBorderTop(context.boundaryPanel.getElement());
+
+      dropTargetClientWidth = boundaryOffsetX
+          + DOMUtil.getClientWidth(context.boundaryPanel.getElement())
+          - context.draggable.getOffsetWidth();
+      dropTargetClientHeight = boundaryOffsetY
+          + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
+          - context.draggable.getOffsetHeight();
     }
 
     private DirectionConstant getDirection(Widget draggable) {
@@ -432,11 +438,21 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
   static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST,
       "w");
 
+  private static final int Z_INDEX_BASE = 10000;
+  private static final int Z_INDEX_MODAL_OFFSET = 1000;
+  private static Vector<WindowPanel> windowPanelOrder = new Vector<WindowPanel>();
+
+  private List<WindowCloseListener> closingListeners;
+  private List<WindowResizeListener> resizeListeners;
+
   private ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
+
   private ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
+
   private ElementDragHandle wResizeHandle, eResizeHandle;
 
   private int contentWidth, contentHeight;
+
   private final WindowController windowController;
 
   private final CaptionLayoutPanel panel;
@@ -448,6 +464,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
   private final Timer layoutTimer = new Timer() {
     public void run() {
       panel.layout();
+      fireResizedImpl();
     }
   };
 
@@ -455,35 +472,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
   public WindowPanel() {
     this(null);
-  }
-
-  private static final int Z_INDEX_BASE = 10000;
-
-  private static final int Z_INDEX_MODAL_OFFSET = 1000;
-
-  private static Vector<WindowPanel> windowPanelOrder = new Vector<WindowPanel>();
-
-  private void setWindowOrder(int order) {
-    int zIndex = (order + Z_INDEX_BASE);
-    if (modal) {
-      zIndex += Z_INDEX_MODAL_OFFSET;
-    }
-    DOM.setStyleAttribute(getElement(), "zIndex", Integer.toString(zIndex));
-  }
-
-  public void bringToFront() {
-    int curIndex = windowPanelOrder.indexOf(this);
-    if (curIndex + 1 < windowPanelOrder.size()) {
-      windowPanelOrder.remove(this);
-      windowPanelOrder.add(this);
-      for (; curIndex < windowPanelOrder.size(); curIndex++) {
-        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
-      }
-    }
-  }
-
-  public boolean isActive() {
-    return windowPanelOrder.lastElement().equals(this);
   }
 
   protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
@@ -545,6 +533,43 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     this(RootPanel.get(), caption, resizable, autoHide, modal);
   }
 
+  /**
+   * Adds a listener to receive window closing events.
+   * 
+   * @param listener the listener to be informed when the window panel is
+   *          closing
+   */
+  public void addWindowCloseListener(WindowCloseListener listener) {
+    if (closingListeners == null) {
+      closingListeners = new ArrayList<WindowCloseListener>();
+    }
+    closingListeners.add(listener);
+  }
+
+  /**
+   * Adds a listener to receive window resize events.
+   * 
+   * @param listener the listener to be informed when the window panel is
+   *          resized
+   */
+  public void addWindowResizeListener(WindowResizeListener listener) {
+    if (resizeListeners == null) {
+      resizeListeners = new ArrayList<WindowResizeListener>();
+    }
+    resizeListeners.add(listener);
+  }
+
+  public void bringToFront() {
+    int curIndex = windowPanelOrder.indexOf(this);
+    if (curIndex + 1 < windowPanelOrder.size()) {
+      windowPanelOrder.remove(this);
+      windowPanelOrder.add(this);
+      for (; curIndex < windowPanelOrder.size(); curIndex++) {
+        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
+      }
+    }
+  }
+
   @Override
   protected void doAttachChildren() {
     super.doAttachChildren();
@@ -582,6 +607,38 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   }
 
+  private void fireClosedImpl() {
+    if (closingListeners != null) {
+      for (WindowCloseListener listener : closingListeners) {
+        listener.onWindowClosed();
+      }
+    }
+  }
+
+  private String fireClosingImpl() {
+    String ret = null;
+    if (closingListeners != null) {
+      for (WindowCloseListener listener : closingListeners) {
+        // If any listener wants to suppress the window closing event, then do
+        // so.
+        String msg = listener.onWindowClosing();
+        if (ret == null) {
+          ret = msg;
+        }
+      }
+    }
+
+    return ret;
+  }
+
+  private void fireResizedImpl() {
+    if (resizeListeners != null) {
+      for (WindowResizeListener listener : resizeListeners) {
+        listener.onWindowResized(contentWidth, contentHeight);
+      }
+    }
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -603,6 +660,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     return panel.getFooter();
   }
 
+  public Caption getHeader() {
+    return panel.getHeader();
+  }
+
   @Override
   public Widget getWidget() {
     if (panel.getWidgetCount() > 0) {
@@ -614,13 +675,26 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
 
   /**
    * Hides the popup. This has no effect if it is not currently visible.
+   * 
+   * @param autoClosed the value that will be passed to
+   *          {@link PopupListener#onPopupClosed(PopupPanel, boolean)} when the
+   *          popup is closed
    */
   @Override
-  public void hide() {
-    super.hide();
-    if (modal && glassPanel != null) {
-      glassPanel.removeFromParent();
+  public void hide(boolean autoHide) {
+    if (fireClosingImpl() == null) {
+      super.hide(autoHide);
+      if (modal && glassPanel != null) {
+        glassPanel.removeFromParent();
+      }
+      fireClosedImpl();
+    } else {
+      
     }
+  }
+
+  public boolean isActive() {
+    return windowPanelOrder.lastElement().equals(this);
   }
 
   public boolean isModal() {
@@ -680,6 +754,28 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     }
   }
 
+  /**
+   * Removes a window closing listener.
+   * 
+   * @param listener the listener to be removed
+   */
+  public void removeWindowCloseListener(WindowCloseListener listener) {
+    if (closingListeners != null) {
+      closingListeners.remove(listener);
+    }
+  }
+
+  /**
+   * Removes a window panel resize listener.
+   * 
+   * @param listener the listener to be removed
+   */
+  public void removeWindowResizeListener(WindowResizeListener listener) {
+    if (resizeListeners != null) {
+      resizeListeners.remove(listener);
+    }
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -720,6 +816,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     // maybeUpdateSize();
   }
 
+  private void setWindowOrder(int order) {
+    int zIndex = (order + Z_INDEX_BASE);
+    if (modal) {
+      zIndex += Z_INDEX_MODAL_OFFSET;
+    }
+    DOM.setStyleAttribute(getElement(), "zIndex", Integer.toString(zIndex));
+  }
+
   /**
    * Shows the popup. It must have a child widget before this method is called.
    */
@@ -739,10 +843,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     if (!isActive()) {
       bringToFront();
     }
-  }
-
-  public Caption getHeader() {
-    return panel.getHeader();
   }
 
 }
