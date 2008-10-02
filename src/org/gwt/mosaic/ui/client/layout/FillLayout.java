@@ -19,7 +19,6 @@ import org.gwt.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FillLayout extends BaseLayout {
@@ -49,10 +48,10 @@ public class FillLayout extends BaseLayout {
           continue;
         }
 
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+        Object layoutDataObject = getLayoutData(child);
         if (layoutDataObject == null || !(layoutDataObject instanceof FillLayoutData)) {
           layoutDataObject = new FillLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+          setLayoutData(child, layoutDataObject);
         }
         FillLayoutData layoutData = (FillLayoutData) layoutDataObject;
 
@@ -106,10 +105,10 @@ public class FillLayout extends BaseLayout {
           continue;
         }
 
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+        Object layoutDataObject = getLayoutData(child);
         if (layoutDataObject == null || !(layoutDataObject instanceof FillLayoutData)) {
           layoutDataObject = new FillLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+          setLayoutData(child, layoutDataObject);
         }
         FillLayoutData layoutData = (FillLayoutData) layoutDataObject;
 

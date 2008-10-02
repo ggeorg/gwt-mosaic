@@ -19,7 +19,6 @@ import org.gwt.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 public class BorderLayout extends BaseLayout {
@@ -67,7 +66,7 @@ public class BorderLayout extends BaseLayout {
       int height = paddings[0] + paddings[2];
 
       if (north != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(north);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
         if (layoutData.collapse) {
           // TODO collapse
@@ -90,7 +89,7 @@ public class BorderLayout extends BaseLayout {
       }
 
       if (south != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(south);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
 
         if (layoutData.collapse) {
           // TODO collapse
@@ -113,7 +112,7 @@ public class BorderLayout extends BaseLayout {
       }
 
       if (west != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(west);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
 
         if (layoutData.collapse) {
           // TODO collapse
@@ -136,7 +135,7 @@ public class BorderLayout extends BaseLayout {
       }
 
       if (east != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(east);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
 
         if (layoutData.collapse) {
           // TODO collapse
@@ -161,7 +160,7 @@ public class BorderLayout extends BaseLayout {
       width += getFlowWidth(center);
       height += getFlowHeight(center);
 
-      BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(center);
+      BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData.hasDecoratorPanel()) {
         final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
         width += decPanel.getOffsetWidth() - center.getOffsetWidth();
@@ -214,7 +213,7 @@ public class BorderLayout extends BaseLayout {
       int bottom = top + height;
 
       if (north != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(north);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
         if (layoutData.resizable) {
           if (northSplitBar == null) {
@@ -266,7 +265,7 @@ public class BorderLayout extends BaseLayout {
       }
 
       if (south != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(south);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
 
         if (layoutData.resizable) {
           if (southSplitBar == null) {
@@ -318,7 +317,7 @@ public class BorderLayout extends BaseLayout {
       }
 
       if (west != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(west);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
 
         if (layoutData.resizable) {
           if (westSplitBar == null) {
@@ -367,7 +366,7 @@ public class BorderLayout extends BaseLayout {
       }
 
       if (east != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(east);
+        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
 
         if (layoutData.resizable) {
           if (eastSplitBar == null) {
@@ -420,7 +419,7 @@ public class BorderLayout extends BaseLayout {
         right -= (w + spacing);
       }
 
-      BorderLayoutData layoutData = (BorderLayoutData) LayoutManagerHelper.getLayoutData(center);
+      BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData.hasDecoratorPanel()) {
         final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
         final int decPanelBorderWidth = decPanel.getOffsetWidth()
@@ -452,10 +451,10 @@ public class BorderLayout extends BaseLayout {
         continue;
       }
 
-      Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+      Object layoutDataObject = getLayoutData(child);
       if (layoutDataObject == null || !(layoutDataObject instanceof BorderLayoutData)) {
         layoutDataObject = new BorderLayoutData();
-        LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+        setLayoutData(child, layoutDataObject);
       }
       BorderLayoutData layoutData = (BorderLayoutData) layoutDataObject;
 

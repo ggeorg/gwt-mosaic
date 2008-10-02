@@ -23,7 +23,6 @@ import org.gwt.mosaic.core.client.DOM;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 public class BoxLayout extends BaseLayout {
@@ -93,11 +92,11 @@ public class BoxLayout extends BaseLayout {
           continue;
         }
 
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+        Object layoutDataObject = getLayoutData(child);
         if (layoutDataObject == null
             || !(layoutDataObject instanceof BoxLayoutData)) {
           layoutDataObject = new BoxLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+          setLayoutData(child, layoutDataObject);
         }
         BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
 
@@ -249,11 +248,11 @@ public class BoxLayout extends BaseLayout {
 
         visibleChildList.add(child);
 
-        Object layoutDataObject = LayoutManagerHelper.getLayoutData(child);
+        Object layoutDataObject = getLayoutData(child);
         if (layoutDataObject == null
             || !(layoutDataObject instanceof BoxLayoutData)) {
           layoutDataObject = new BoxLayoutData();
-          LayoutManagerHelper.setLayoutData(child, layoutDataObject);
+          setLayoutData(child, layoutDataObject);
         }
         BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
 
@@ -328,7 +327,7 @@ public class BoxLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        BoxLayoutData layoutData = (BoxLayoutData) LayoutManagerHelper.getLayoutData(child);
+        BoxLayoutData layoutData = (BoxLayoutData) getLayoutData(child);
 
         int w = (int) layoutData.calcWidth;
         int h = (int) layoutData.calcHeight;

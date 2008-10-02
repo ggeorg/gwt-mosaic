@@ -74,7 +74,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
    * @return the widget's layout data
    */
   protected final static Object getLayoutData(Widget widget) {
-    return LayoutManagerHelper.getLayoutData(widget);
+    return LayoutManagerHelper._getLayoutData(widget);
   }
 
   /**
@@ -87,7 +87,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
    * @param layoutData the widget's layout data
    */
   protected final static void setLayoutData(Widget widget, Object layoutData) {
-    LayoutManagerHelper.setLayoutData(widget, layoutData);
+    LayoutManagerHelper._setLayoutData(widget, layoutData);
   }
 
   /**
