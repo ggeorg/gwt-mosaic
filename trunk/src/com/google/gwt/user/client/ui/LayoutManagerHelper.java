@@ -8,7 +8,7 @@ public abstract class LayoutManagerHelper {
    * @param widget the widget
    * @return the widget's layout data
    */
-  protected static Object getLayoutData(Widget widget) {
+  protected static Object _getLayoutData(Widget widget) {
     return widget.getLayoutData();
   }
 
@@ -21,7 +21,7 @@ public abstract class LayoutManagerHelper {
    * @param widget the widget
    * @param layoutData the widget's layout data
    */
-  protected static void setLayoutData(Widget widget, Object layoutData) {
+  protected static void _setLayoutData(Widget widget, Object layoutData) {
     widget.setLayoutData(layoutData);
   }
 
