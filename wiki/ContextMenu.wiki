@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Demonstration of `PopupMenu` and one can add a context menu into a GWT widget.
+Demonstration of `PopupMenu` and how to add a context menu into a GWT widget.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/context-menu.jpg
 
