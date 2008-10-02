@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,10 +16,10 @@
 package org.gwt.mosaic.showcase.client.content.tables;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -57,7 +56,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
    * The constants used in this Page.
    */
   @ShowcaseSource
-  public static interface CwConstants extends Constants, ContentWidget.CwConstants {
+  public static interface CwConstants extends Constants,
+      ContentWidget.CwConstants {
   }
 
   int numColumns = 15;
@@ -107,7 +107,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
     super(constants);
     this.constants = constants;
   }
-  
+
   @Override
   public String getDescription() {
     return "Loading Benchmark description";
@@ -135,7 +135,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
 
-    panel.add(new Label("Number of rows:"), new BoxLayoutData(FillStyle.HORIZONTAL));
+    panel.add(new Label("Number of rows:"), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     final TextBox rows = new TextBox();
     panel.add(rows, new BoxLayoutData(FillStyle.HORIZONTAL));
     rows.setText(numRows + "");
@@ -145,7 +146,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
       }
     });
 
-    panel.add(new Label("Number of columns"), new BoxLayoutData(FillStyle.HORIZONTAL));
+    panel.add(new Label("Number of columns"), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     final TextBox columns = new TextBox();
     panel.add(columns, new BoxLayoutData(FillStyle.HORIZONTAL));
     columns.addChangeListener(new ChangeListener() {
@@ -154,7 +156,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
       }
     });
     columns.setText(numColumns + "");
-    
+
     Button clearBtn = new Button("Clear Table now", new ClickListener() {
       public void onClick(Widget sender) {
         clearTable();
@@ -176,53 +178,58 @@ public class CwTableLoadingBenchmark extends ContentWidget {
         });
     panel.add(flexTableAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    Button gridAPI = new Button("Use the traditional Grid API", new ClickListener() {
-      public void onClick(Widget sender) {
-        clearTable();
-        long milli = System.currentTimeMillis();
-        Grid newTable = new Grid();
-        usingGridAPI(newTable);
-        finishTable("Traditional Grid API", newTable, milli);
-      }
+    Button gridAPI = new Button("Use the traditional Grid API",
+        new ClickListener() {
+          public void onClick(Widget sender) {
+            clearTable();
+            long milli = System.currentTimeMillis();
+            Grid newTable = new Grid();
+            usingGridAPI(newTable);
+            finishTable("Traditional Grid API", newTable, milli);
+          }
 
-    });
+        });
     panel.add(gridAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    Button detachedGridAPI = new Button("Use the attached Grid API", new ClickListener() {
-      public void onClick(Widget sender) {
-        clearTable();
-        long milli = System.currentTimeMillis();
-        Grid table = new Grid();
-        usingGridAPI(table);
-        finishTable("Attached Grid API", table, milli);
-      }
-    });
+    Button detachedGridAPI = new Button("Use the attached Grid API",
+        new ClickListener() {
+          public void onClick(Widget sender) {
+            clearTable();
+            long milli = System.currentTimeMillis();
+            Grid table = new Grid();
+            usingGridAPI(table);
+            finishTable("Attached Grid API", table, milli);
+          }
+        });
     panel.add(detachedGridAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    Button asyncAPI = new Button("Use Async BulkLoadedTable API", new ClickListener() {
-      public void onClick(Widget sender) {
-        clearTable();
-        long milli = System.currentTimeMillis();
-        FlexTable table = new FlexTable();
-        usingBulkLoadedTableAPI(table, milli);
-      }
-    });
+    Button asyncAPI = new Button("Use Async BulkLoadedTable API",
+        new ClickListener() {
+          public void onClick(Widget sender) {
+            clearTable();
+            long milli = System.currentTimeMillis();
+            FlexTable table = new FlexTable();
+            usingBulkLoadedTableAPI(table, milli);
+          }
+        });
     panel.add(asyncAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    Button pendingAPI = new Button("Using the preloadedTable  API", new ClickListener() {
-      public void onClick(Widget sender) {
-        clearTable();
-        long milli = System.currentTimeMillis();
-        PreloadedTable table = new PreloadedTable();
-        usingPreloadedTableAPI(table);
-        finishTable("PreloadedTable  API", table, milli);
-      }
-    });
+    Button pendingAPI = new Button("Using the preloadedTable  API",
+        new ClickListener() {
+          public void onClick(Widget sender) {
+            clearTable();
+            long milli = System.currentTimeMillis();
+            PreloadedTable table = new PreloadedTable();
+            usingPreloadedTableAPI(table);
+            finishTable("PreloadedTable  API", table, milli);
+          }
+        });
     panel.add(pendingAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    layoutPanel.add(panel, new BorderLayoutData(BorderLayoutRegion.WEST, 250, true));
+    layoutPanel.add(panel, new BorderLayoutData(BorderLayoutRegion.WEST, 250,
+        true));
     layoutPanel.add(center, new BorderLayoutData(true));
-    
+
     return layoutPanel;
   }
 
@@ -233,7 +240,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
     }
   }
 
-  private void finishTable(final String caption, final HTMLTable table, final long milli) {
+  private void finishTable(final String caption, final HTMLTable table,
+      final long milli) {
 
     // In order to compare apples-to-apples for rendering time letting event cue
     // flush once.
@@ -244,7 +252,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
 
     table.setWidget(0, 3, new Button("A widget"));
 
-    Showcase.notifyModalEvent(caption, "Finished in "
+    TrayInfoPanelNotifier.notifyModalEvent(caption, "Finished in "
         + (System.currentTimeMillis() - milli) + " milliseconds");
   }
 

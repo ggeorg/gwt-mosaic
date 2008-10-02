@@ -19,13 +19,13 @@ import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ActionListener;
 import org.gwt.mosaic.actions.client.ActionRegistry;
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -55,11 +55,11 @@ public class CwActions extends ContentWidget {
 
     actionListener = new ActionListener() {
       public void handleAction(Action action) {
-	  Showcase.notifyTrayEvent("Action", action.getId());
+        TrayInfoPanelNotifier.notifyTrayEvent("Action", action.getId());
       }
     };
   }
-  
+
   @Override
   public String getDescription() {
     return "Actions description";
@@ -86,7 +86,7 @@ public class CwActions extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     layoutPanel.setPadding(0);
-    
+
     // Action registration
     ActionRegistry.register(new Action("action-1", "Action 1 Text"));
     ActionRegistry.register(new Action("action-2", "Action 2 Text"));
@@ -96,7 +96,8 @@ public class CwActions extends ContentWidget {
     ActionRegistry.get("action-2").addActionListener(actionListener);
 
     // Create the UI
-    final LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel toolBox = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
     toolBox.setPadding(0);
     toolBox.setWidgetSpacing(0);
     toolBox.add(createMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
@@ -134,9 +135,9 @@ public class CwActions extends ContentWidget {
             });
       }
     }));
-    
+
     layoutPanel.add(hPanel);
-    
+
     return layoutPanel;
   }
 
@@ -176,12 +177,12 @@ public class CwActions extends ContentWidget {
 
     toolBar.add((ToolButton) ActionRegistry.get("action-2").createWidget(
         ToolButton.class));
-    
+
     // Return the menu
     toolBar.ensureDebugId("mosaicToolBar");
     return toolBar;
   }
-  
+
   @Override
   public boolean hasStyle() {
     return false;

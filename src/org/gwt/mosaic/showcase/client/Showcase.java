@@ -52,9 +52,6 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
 import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
-import org.gwt.mosaic.ui.client.infopanel.InfoPanelNotifier;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -91,17 +88,6 @@ public class Showcase implements EntryPoint {
    * The type passed into the
    * {@link org.gwt.mosaic.showcase.generator.ShowcaseGenerator}.
    */
-    
-  private static InfoPanelNotifier trayEventNotifier = new TrayInfoPanelNotifier();
-  
-  public static void notifyTrayEvent(String caption , String text){
-      trayEventNotifier.show(InfoPanelType.TRAY_NOTIFICATION, caption, text);
-  }
-
-  public static void notifyModalEvent(String caption , String text){
-      trayEventNotifier.show(InfoPanelType.HUMANIZED_MESSAGE, caption, text);
-  }
-    
   private static final class GeneratorInfo {
   }
 

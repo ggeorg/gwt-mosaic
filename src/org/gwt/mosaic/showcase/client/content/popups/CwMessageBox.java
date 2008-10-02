@@ -19,7 +19,6 @@ import java.util.Date;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -27,6 +26,7 @@ import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.MessageBoxType;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
@@ -66,7 +66,7 @@ public class CwMessageBox extends ContentWidget {
   public static interface CwConstants extends Constants,
       ContentWidget.CwConstants {
     String mosaicMessageBoxName();
-    
+
     String mosaicMessageBoxDescription();
   }
 
@@ -172,7 +172,8 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.confirm("Confirmation Box", "I am a confirmation box!",
             new ConfirmationCallback() {
               public void onResult(boolean result) {
-        	  Showcase.notifyTrayEvent("Prompt Box", "Result is '" + result + "'");
+                TrayInfoPanelNotifier.notifyTrayEvent("Prompt Box",
+                    "Result is '" + result + "'");
               }
             });
       }
@@ -196,7 +197,8 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("Prompt Box", "Please enter your name", "George",
             new PromptCallback<String>() {
               public void onResult(String input) {
-        	  Showcase.notifyTrayEvent("Prompt Box", "Your name is: '" + input + "'");
+                TrayInfoPanelNotifier.notifyTrayEvent("Prompt Box",
+                    "Your name is: '" + input + "'");
               }
             });
       }
@@ -214,7 +216,8 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DatePicker Box", new Date(),
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-        	  Showcase.notifyTrayEvent("DatePicker Box", "You entered: '" + input + "'");
+                TrayInfoPanelNotifier.notifyTrayEvent("DatePicker Box",
+                    "You entered: '" + input + "'");
               }
             });
       }
@@ -226,8 +229,8 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DateTimePicker Box", new Date(), false,
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-        	  Showcase.notifyTrayEvent("DateTimePicker Box", "You entered: '" + input
-                    + "'");
+                TrayInfoPanelNotifier.notifyTrayEvent("DateTimePicker Box",
+                    "You entered: '" + input + "'");
               }
             });
       }
@@ -266,7 +269,7 @@ public class CwMessageBox extends ContentWidget {
       public void onClick(Widget sender) {
         richTextAreaPrompt(new PromptCallback<String>() {
           public void onResult(String input) {
-              Showcase.notifyTrayEvent("RichTextArea Prompt", input);
+            TrayInfoPanelNotifier.notifyTrayEvent("RichTextArea Prompt", input);
           }
         });
       }
@@ -296,9 +299,10 @@ public class CwMessageBox extends ContentWidget {
       public void onClose(boolean result) {
         hide();
         if (result) {
-            Showcase.notifyTrayEvent("Login Form", "Form submitted!");
+          TrayInfoPanelNotifier.notifyTrayEvent("Login Form", "Form submitted!");
         } else {
-            Showcase.notifyTrayEvent("Login Form", "You clicked 'Cancel'.");
+          TrayInfoPanelNotifier.notifyTrayEvent("Login Form",
+              "You clicked 'Cancel'.");
         }
       }
     };

@@ -16,7 +16,6 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -25,6 +24,7 @@ import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
@@ -49,7 +49,8 @@ public class CwToolBar extends ContentWidget implements ClickListener {
    * The constants used in this Page.
    */
   @ShowcaseSource
-  public static interface CwConstants extends Constants, ContentWidget.CwConstants {
+  public static interface CwConstants extends Constants,
+      ContentWidget.CwConstants {
 
   }
 
@@ -68,7 +69,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     super(constants);
     this.constants = constants;
   }
-  
+
   @Override
   public String getDescription() {
     return "ToolBar description";
@@ -88,14 +89,14 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
     layoutPanel.setPadding(5);
-    
+
     final CaptionLayoutPanel toolBox = new CaptionLayoutPanel(Window.getTitle());
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
     toolBox.add(createToolBar1(), new BoxLayoutData(FillStyle.HORIZONTAL));
     toolBox.add(createToolBar2(), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     layoutPanel.add(toolBox, new FillLayoutData(true));
-    
+
     return layoutPanel;
   }
 
@@ -131,7 +132,8 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
-	  Showcase.notifyTrayEvent("Menu Button", "You selected a menu item!");
+        TrayInfoPanelNotifier.notifyTrayEvent("Menu Button",
+            "You selected a menu item!");
       }
     };
 
@@ -165,7 +167,8 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd2 = new Command() {
       public void execute() {
-	  Showcase.notifyTrayEvent("Split Button", "You selected a menu item!");
+        TrayInfoPanelNotifier.notifyTrayEvent("Split Button",
+            "You selected a menu item!");
       }
     };
 
@@ -242,7 +245,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
 
     return toolBar;
   }
-  
+
   /**
    * 
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
@@ -250,7 +253,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
-    Showcase.notifyTrayEvent(btn.getHTML(), "Clicked!");
+    TrayInfoPanelNotifier.notifyTrayEvent(btn.getHTML(), "Clicked!");
   }
 
 }

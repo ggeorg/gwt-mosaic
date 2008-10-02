@@ -18,7 +18,6 @@ package org.gwt.mosaic.showcase.client.content.popups;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
@@ -59,11 +58,6 @@ public class CwInfoPanel extends ContentWidget {
   public String getName() {
     return "InfoPanel";
   }
-  
-  
-  private TrayInfoPanelNotifier eventNotifier = new TrayInfoPanelNotifier();
-  
-  private int cpt;
 
   /**
    * Initialize this example.
@@ -71,7 +65,7 @@ public class CwInfoPanel extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
- // Create a layout panel to align the widgets
+    // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
 
@@ -95,10 +89,11 @@ public class CwInfoPanel extends ContentWidget {
     btn1.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (type1.isChecked()) {
-            eventNotifier.show(InfoPanelType.HUMANIZED_MESSAGE, caption1.getText(),
+          TrayInfoPanelNotifier.notifyModalEvent(caption1.getText(),
               description1.getText());
         } else {
-            eventNotifier.show(InfoPanelType.TRAY_NOTIFICATION,caption1.getText(), description1.getText());
+          TrayInfoPanelNotifier.notifyTrayEvent(caption1.getText(),
+              description1.getText());
         }
       }
     });
@@ -144,10 +139,9 @@ public class CwInfoPanel extends ContentWidget {
     btn2.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (type2.isChecked()) {
-            eventNotifier.show(InfoPanelType.HUMANIZED_MESSAGE, caption2,
-              description2);
+          TrayInfoPanelNotifier.notifyModalEvent(caption2, description2);
         } else {
-            eventNotifier.show(InfoPanelType.TRAY_NOTIFICATION, caption2, description2);
+          TrayInfoPanelNotifier.notifyTrayEvent(caption2, description2);
         }
       }
     });

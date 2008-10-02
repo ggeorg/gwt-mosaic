@@ -16,14 +16,13 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -95,11 +94,11 @@ public class CwCustomButton extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     if (sender instanceof PushButton) {
-      Showcase.notifyTrayEvent(constants.mosaicCustomButtonName(),
+      TrayInfoPanelNotifier.notifyTrayEvent(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonClicked());
     } else {
       ToggleButton btn = (ToggleButton) sender;
-      Showcase.notifyTrayEvent(constants.mosaicCustomButtonName(),
+      TrayInfoPanelNotifier.notifyTrayEvent(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonDown()
               + new Boolean(btn.isDown()).toString());
     }
@@ -147,7 +146,8 @@ public class CwCustomButton extends ContentWidget implements ClickListener {
     // toggle buttons
     //
 
-    final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonToggle());
+    final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(
+        constants.mosaicCustomButtonToggle());
     toggleBtnPanel.setLayout(new BoxLayout());
     toggleBtnPanel.setPadding(5);
 

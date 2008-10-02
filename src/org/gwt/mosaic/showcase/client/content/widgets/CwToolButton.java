@@ -17,13 +17,13 @@ package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -51,7 +51,8 @@ public class CwToolButton extends ContentWidget implements ClickListener {
    * The constants used in this Page.
    */
   @ShowcaseSource
-  public static interface CwConstants extends Constants, ContentWidget.CwConstants {
+  public static interface CwConstants extends Constants,
+      ContentWidget.CwConstants {
 
   }
 
@@ -63,7 +64,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
   public CwToolButton(CwConstants constants) {
     super(constants);
   }
-  
+
   @Override
   public String getDescription() {
     return "Tool Button description";
@@ -128,7 +129,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     addCheckboxAndRadioButtons(hBox4);
-    
+
     return layoutPanel;
   }
 
@@ -211,7 +212,8 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
-	  Showcase.notifyTrayEvent("Menu Button", "You selected a menu item!");
+        TrayInfoPanelNotifier.notifyTrayEvent("Menu Button",
+            "You selected a menu item!");
       }
     };
 
@@ -230,7 +232,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     disabledMenuButton.ensureDebugId("mosaicMenuButton-disabled");
 
     layoutPanel.add(disabledMenuButton);
-    
+
     // Add a spacer
     layoutPanel.add(new HTML("&nbsp;"));
 
@@ -242,7 +244,8 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd2 = new Command() {
       public void execute() {
-	  Showcase.notifyTrayEvent("Split Button", "You selected a menu item!");
+        TrayInfoPanelNotifier.notifyTrayEvent("Split Button",
+            "You selected a menu item!");
       }
     };
 
@@ -285,7 +288,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     checkButton2.ensureDebugId("mosaicCheckboxButton-normal");
 
     layoutPanel.add(checkButton2);
-    
+
     // Add a spacer
     layoutPanel.add(new HTML("&nbsp;"));
 
@@ -311,7 +314,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     radioButton4.ensureDebugId("mosaicRadioButton-disabled");
 
     layoutPanel.add(radioButton4);
-    
+
   }
 
   /**
@@ -322,7 +325,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
-    Showcase.notifyTrayEvent(btn.getText(), "Clicked!");
+    TrayInfoPanelNotifier.notifyTrayEvent(btn.getText(), "Clicked!");
   }
 
 }
