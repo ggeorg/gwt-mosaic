@@ -21,12 +21,9 @@ import java.util.List;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.widgetideas.client.GlassPanel;
 /**
  * This is the default implementation for rendering system events in the right bottom of your application.
  * if InfoPanelType.HUMANIZED_MESSAGE is used then the event is showed in modal mode and centered to the screen.
@@ -40,6 +37,30 @@ public class TrayInfoPanelNotifier implements InfoPanelNotifier, PopupListener {
     List<InfoPanel> waintingInfoPanel = new ArrayList<InfoPanel>();
     List<InfoPanel> visibleInfoPanel = new ArrayList<InfoPanel>();
     int currentLevel = 1;
+    
+    private static TrayInfoPanelNotifier instance = null;
+    
+    public static TrayInfoPanelNotifier getInstance() {
+      if (instance == null) {
+        instance = new TrayInfoPanelNotifier();
+      }
+      return instance;
+    }
+    
+    public static void notifyTrayEvent(String caption , String text){
+      getInstance().show(InfoPanelType.TRAY_NOTIFICATION, caption, text);
+    }
+
+    public static void notifyModalEvent(String caption , String text){
+      getInstance().show(InfoPanelType.HUMANIZED_MESSAGE, caption, text);
+    }
+    
+    /**
+     * Default constructor.
+     */
+    protected TrayInfoPanelNotifier() {
+      // Nothing to do here!
+    }
 
     public void show(InfoPanelType infoPanelType, String caption, String content) {
 	if (infoPanelType == InfoPanelType.TRAY_NOTIFICATION) {

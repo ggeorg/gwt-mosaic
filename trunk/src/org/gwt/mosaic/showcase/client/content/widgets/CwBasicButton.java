@@ -16,11 +16,11 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -90,7 +90,7 @@ public class CwBasicButton extends ContentWidget implements ClickListener {
    */
   @ShowcaseSource
   public void onClick(Widget sender) {
-    Showcase.notifyTrayEvent(((Button) sender).getText(),
+    TrayInfoPanelNotifier.notifyTrayEvent(((Button) sender).getText(),
         constants.mosaicBasicButtonClickMessage());
   }
 

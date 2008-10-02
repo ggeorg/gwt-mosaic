@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,9 +15,9 @@
  */
 package org.gwt.mosaic.showcase.client.content.trees;
 
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Window;
@@ -43,7 +42,7 @@ public class CwVerboseTree extends CwBasicTree {
   public CwVerboseTree(CwConstants constants) {
     super(constants);
   }
-  
+
   @Override
   public String getDescription() {
     return "Verbose GWT Incubator FastTree demo";
@@ -62,17 +61,17 @@ public class CwVerboseTree extends CwBasicTree {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
-    
+
     FastTree tree = new FastTree();
     verboseTreeItem(tree, 10);
 
     final ScrollPanel panel = new ScrollPanel();
     layoutPanel.add(panel);
     panel.add(tree);
-    
+
     return layoutPanel;
   }
-  
+
   private void verboseTreeItem(HasFastTreeItems parent, int children) {
     for (int i = 0; i < children; i++) {
       final int index = i;
@@ -80,37 +79,44 @@ public class CwVerboseTree extends CwBasicTree {
       FastTreeItem item = new ListeningFastTreeItem("child " + i) {
         @Override
         public void afterClose() {
-            Showcase.notifyTrayEvent(this.getText(), "Item" + index + " is closed");
+          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Item" + index
+              + " is closed");
         }
-        
+
         @Override
         public void afterOpen() {
-            Showcase.notifyTrayEvent(this.getText(), "Item " + index + " is open");
-        }        
+          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Item " + index
+              + " is open");
+        }
 
         @Override
         public void beforeClose() {
-            Showcase.notifyTrayEvent(this.getText(), "Close item" + index);
+          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Close item"
+              + index);
         }
 
         @Override
         public void beforeOpen() {
-            Showcase.notifyTrayEvent(this.getText(), "Open item " + index);
+          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Open item "
+              + index);
         }
 
         @Override
         protected boolean beforeSelectionLost() {
-          return Window.confirm(this.getText() + ": Are you sure you want to leave me?");
+          return Window.confirm(this.getText()
+              + ": Are you sure you want to leave me?");
         }
 
         @Override
         protected void ensureChildren() {
-            Showcase.notifyTrayEvent(this.getText(), "You are about to open my children for the first time");
+          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(),
+              "You are about to open my children for the first time");
         }
 
         @Override
         protected void onSelected() {
-            Showcase.notifyTrayEvent(this.getText(), "You selected item " + index);
+          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(),
+              "You selected item " + index);
         }
       };
 
