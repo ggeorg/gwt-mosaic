@@ -1,0 +1,111 @@
+#summary A Context Menu demo.
+
+= Introduction =
+
+Demonstration of `PopupMenu` and one can add a context menu into a GWT widget.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/context-menu.jpg
+
+= Details =
+
+Java code (requires SVN version of gwt-mosaic because of the `InfoPanel` API change):
+
+{{{
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.PopupMenu;
+import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Main implements EntryPoint {
+
+  /**
+   * The context menu.
+   */
+  private PopupMenu contextMenu;
+
+  /**
+   * Make a command that we will execute from all menu items.
+   */
+  private Command cmd = new Command() {
+    public void execute() {
+      TrayInfoPanelNotifier.notifyTrayEvent("Menu Button", "You selected a menu item!");
+    }
+  };
+
+  /**
+   * This is the entry point method.
+   */
+  public void onModuleLoad() {
+    final Viewport viewport = new Viewport();
+
+    final Tree tree = new Tree() {
+      @Override
+      public void onBrowserEvent(Event event) {
+        if (getSelectedItem() != null) {
+          if (event.getTypeInt() == Event.ONCONTEXTMENU) {
+            DOM.eventPreventDefault(event);
+            showContextMenu(event);
+          }
+        }
+        super.onBrowserEvent(event);
+      }
+
+      @Override
+      protected void setElement(Element elem) {
+        super.setElement(elem);
+        sinkEvents(Event.ONCONTEXTMENU);
+      }
+    };
+    viewport.add(tree, true);
+
+    final TreeItem item1 = tree.addItem("TreeItem1");
+    item1.addItem("TreeItem1-1");
+    item1.addItem("TreeItem1-2");
+    final TreeItem item2 = tree.addItem("TreeItem2");
+    item2.addItem("TreeItem2-1");
+    item2.addItem("TreeItem2-2");
+    final TreeItem item3 = tree.addItem("TreeItem3");
+    item3.addItem("TreeItem3-1");
+    item3.addItem("TreeItem3-2");
+    final TreeItem item4 = tree.addItem("TreeItem4");
+    item4.addItem("TreeItem4-1");
+    item4.addItem("TreeItem4-2");
+
+    RootPanel.get().add(viewport);
+  }
+
+  private void showContextMenu(final Event event) {
+    if (contextMenu == null) {
+      contextMenu = new PopupMenu();
+
+      contextMenu.addItem("MenuItem 1", cmd);
+      contextMenu.addItem("MenuItem 2", cmd);
+
+      contextMenu.addSeparator();
+
+      contextMenu.addItem("MenuItem 3", cmd);
+      contextMenu.addItem("MenuItem 4", cmd);
+    }
+
+    contextMenu.setPopupPositionAndShow(new PositionCallback() {
+      public void setPosition(int offsetWidth, int offsetHeight) {
+        contextMenu.setPopupPosition(event.getClientX(), event.getClientY());
+      }
+    });
+  }
+}
+
+}}}
