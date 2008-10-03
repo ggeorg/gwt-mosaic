@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,7 +36,6 @@ import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -59,6 +58,8 @@ import com.google.gwt.user.client.ui.Widget;
  * <li>.sc-ContentWidget-name { Applied to the name }</li>
  * <li>.sc-ContentWidget-description { Applied to the description }</li>
  * </ul>
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public abstract class ContentWidget extends LayoutPanel implements TabListener {
 
@@ -81,7 +82,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
   /**
    * The static loading image displayed when loading CSS or source code.
    */
-  private static Image loadingImage;
+  private static String loadingImage;
 
   /**
    * An instance of the constants
@@ -146,7 +147,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
    * @return a description for this example
    */
   public abstract String getDescription();
-  
+
   public final String getId() {
     final String s = this.getClass().getName();
     return s.substring(s.lastIndexOf('.') + 1, s.length());
@@ -274,7 +275,8 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
 
   public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
     // Load the source code
-    if (!sourceLoaded) {
+    final String tabHTML = tabPanel.getTabHTML(tabIndex);    
+    if (!sourceLoaded && tabHTML.contains(constants.mosaicPageSource())) {
       sourceLoaded = true;
       String className = this.getClass().getName();
       className = className.substring(className.lastIndexOf(".") + 1);
@@ -283,32 +285,34 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     }
 
     // Load the style definitions
-    final String theme = Showcase.CUR_THEME;
-    if (styleDefs.containsKey(theme)) {
-      styleWidget.setHTML(styleDefs.get(theme));
-    } else {
-      styleDefs.put(theme, "");
-      RequestCallback callback = new RequestCallback() {
-        public void onError(Request request, Throwable exception) {
-          styleDefs.put(theme, "Style not available.");
-        }
+    if (hasStyle() && tabHTML.contains(constants.mosaicPageStyle())) {
+      final String theme = Showcase.CUR_THEME;
+      if (styleDefs.containsKey(theme)) {
+        styleWidget.setHTML(styleDefs.get(theme));
+      } else {
+        styleDefs.put(theme, "");
+        RequestCallback callback = new RequestCallback() {
+          public void onError(Request request, Throwable exception) {
+            styleDefs.put(theme, "Style not available.");
+          }
 
-        public void onResponseReceived(Request request, Response response) {
-          styleDefs.put(theme, response.getText());
-        }
-      };
+          public void onResponseReceived(Request request, Response response) {
+            styleDefs.put(theme, response.getText());
+          }
+        };
 
-      String srcPath = ShowcaseConstants.DST_SOURCE_STYLE + theme;
-      if (LocaleInfo.getCurrentLocale().isRTL()) {
-        srcPath += "_rtl";
+        String srcPath = ShowcaseConstants.DST_SOURCE_STYLE + theme;
+        if (LocaleInfo.getCurrentLocale().isRTL()) {
+          srcPath += "_rtl";
+        }
+        String className = this.getClass().getName();
+        className = className.substring(className.lastIndexOf(".") + 1);
+        requestSourceContents(srcPath + "/" + className + ".html", styleWidget,
+            callback);
       }
-      String className = ContentWidget.this.getClass().getName();
-      className = className.substring(className.lastIndexOf(".") + 1);
-      requestSourceContents(srcPath + "/" + className + ".html", styleWidget,
-          callback);
     }
   }
-  
+
   /**
    * Load the contents of a remote file into the specified widget.
    * 
@@ -320,7 +324,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
       final RequestCallback callback) {
     // Show the loading image
     if (loadingImage == null) {
-      loadingImage = new Image("loading.gif");
+      loadingImage = "<img src=\"loading.gif\">";
     }
     target.setDirection(HasDirection.Direction.LTR);
     DOM.setStyleAttribute(target.getElement(), "textAlign", "left");
