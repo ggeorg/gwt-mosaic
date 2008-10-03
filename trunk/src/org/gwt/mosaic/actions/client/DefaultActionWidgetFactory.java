@@ -84,7 +84,13 @@ public class DefaultActionWidgetFactory implements ActionWidgetFactory {
   }
 
   private MenuItem createMenuItem(Action action) {
-    MenuItem menuItem = new MenuItem(action.getText(), action);
+    String html;
+    if (action.getImage() != null) {
+      html = action.getImage().getHTML() + "&nbsp;" + action.getText();
+    } else {
+      html = action.getText();
+    }
+    MenuItem menuItem = new MenuItem(html, true, action);
     if (action.getTitle() != null) {
       menuItem.getTitle();
     }
