@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -25,6 +26,8 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
 import com.google.gwt.user.client.ui.DecoratedTabBar;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
@@ -43,8 +46,11 @@ import com.google.gwt.user.client.ui.Widget;
  * <li>.mosaic-TabLayoutPanelBottom { the bottom section of the tab layout
  * panel (the deck containing the widget) }</li>
  * </ul>
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
-public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents {
+public class TabLayoutPanel extends LayoutComposite implements TabListener,
+    SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel {
 
   public static class DecoratedBottomTabBar extends TabBar {
     static String[] TAB_ROW_STYLES = {"tabTop", "tabMiddle", "tabBottom"};
@@ -80,25 +86,6 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
   private final DeckLayoutPanel deck = new DeckLayoutPanel();
 
   private final Map<Widget, LayoutPanel> panels = new HashMap<Widget, LayoutPanel>();
-
-  private TabListener tabListener = new TabListener() {
-    public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-      if (tabListeners != null) {
-        if (!tabListeners.fireBeforeTabSelected(TabLayoutPanel.this, tabIndex)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
-      deck.showWidget(tabIndex);
-      TabLayoutPanel.this.layout();
-      if (tabListeners != null) {
-        tabListeners.fireTabSelected(TabLayoutPanel.this, tabIndex);
-      }
-    }
-  };
 
   private TabListenerCollection tabListeners;
 
@@ -145,9 +132,19 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     }
     layoutPanel.add(deck, new BorderLayoutData(decorateBody));
 
-    tabBar.addTabListener(tabListener);
+    tabBar.addTabListener(this);
 
     setStyleName(DEFAULT_STYLENAME);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
+   */
+  public void add(Widget w) {
+    throw new UnsupportedOperationException(
+        "A tabText parameter must be specified with add().");
   }
 
   /**
@@ -205,6 +202,11 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     panels.put(w, panel);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.SourcesTabEvents#addTabListener(com.google.gwt.user.client.ui.TabListener)
+   */
   public void addTabListener(TabListener listener) {
     if (tabListeners == null) {
       tabListeners = new TabListenerCollection();
@@ -212,12 +214,79 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     tabListeners.add(listener);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   */
   public void clear() {
-    // TODO
+    while (getWidgetCount() > 0) {
+      remove(getWidget(0));
+    }
   }
 
   public int getPadding() {
     return deck.getPadding();
+  }
+
+  /**
+   * Gets the specified tab's HTML.
+   * 
+   * @param index the index of the tab whose HTML is to be retrieved
+   * @return the tab's HTML
+   */
+  public String getTabHTML(int tabIndex) {
+    return tabBar.getTabHTML(tabIndex);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
+   */
+  public Widget getWidget(int index) {
+    return deck.getWidget(index);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetCount()
+   */
+  public int getWidgetCount() {
+    return deck.getWidgetCount();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   */
+  public int getWidgetIndex(Widget widget) {
+    return deck.getWidgetIndex(widget);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+   */
+  public Iterator<Widget> iterator() {
+    return new Iterator<Widget>() {
+      public boolean hasNext() {
+        return deck.iterator().hasNext();
+      }
+
+      public Widget next() {
+        return deck.iterator().next();
+      }
+
+      public void remove() {
+        // TODO
+        throw new UnsupportedOperationException(
+            "Use TabLayoutPanel.remove() to alter the TabBar");
+      }
+    };
   }
 
   /*
@@ -235,21 +304,71 @@ public class TabLayoutPanel extends LayoutComposite implements SourcesTabEvents 
     super.layout();
   }
 
-  public void remove(Widget w) {
-    assert (w != null);
-    if (panels.get(w) == null) {
-      return;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents,
+   *      int)
+   */
+  public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
+    if (tabListeners != null) {
+      return tabListeners.fireBeforeTabSelected(TabLayoutPanel.this, tabIndex);
+    }
+    return true;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.TabListener#onTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents,
+   *      int)
+   */
+  public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
+    deck.showWidget(tabIndex);
+    TabLayoutPanel.this.layout();
+    if (tabListeners != null) {
+      tabListeners.fireTabSelected(TabLayoutPanel.this, tabIndex);
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
+   */
+  public boolean remove(int index) {
+    final Widget widget = deck.getWidget(index);
+    return remove(widget);
+  }
+
+  /**
+   * Removes the given widget, and its associated tab.
+   * 
+   * @param widget the widget to be removed
+   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   */
+  public boolean remove(Widget widget) {
+    assert (widget != null);
+    if (panels.get(widget) == null) {
+      return false;
     }
 
-    final LayoutPanel panel = panels.get(w);
+    final LayoutPanel panel = panels.get(widget);
     tabBar.removeTab(deck.getWidgetIndex(panel));
-    deck.remove(panel);
+    final boolean result = deck.remove(panel);
 
     panel.clear();
 
-    panels.remove(w);
+    panels.remove(widget);
+
+    return result;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google.gwt.user.client.ui.TabListener)
+   */
   public void removeTabListener(TabListener listener) {
     if (tabListeners != null) {
       tabListeners.remove(listener);
