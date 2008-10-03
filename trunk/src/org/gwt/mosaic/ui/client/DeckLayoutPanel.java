@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,23 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.Iterator;
+
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A panel that displays all of its child widgets in a 'deck', where only one
  * can be visible at a time.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
-public class DeckLayoutPanel extends LayoutComposite implements IndexedPanel {
+public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
+    IndexedPanel {
 
   /**
    * The default style name.
@@ -43,10 +49,29 @@ public class DeckLayoutPanel extends LayoutComposite implements IndexedPanel {
    * Adds the specified widget to the deck.
    * 
    * @param w the widget to be added
+   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
    */
   public void add(Widget w) {
     w.setVisible(false);
-    getWidget().add(w);
+    super.getWidget().add(w);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   */
+  public void clear() {
+    super.getWidget().clear();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.layout.LayoutPanel#getPadding()
+   */
+  public int getPadding() {
+    return super.getWidget().getPadding();
   }
 
   /**
@@ -56,23 +81,6 @@ public class DeckLayoutPanel extends LayoutComposite implements IndexedPanel {
    */
   public int getVisibleWidget() {
     return getWidgetIndex(visibleWidget);
-  }
-
-  /**
-   * Shows the widget at the specified index. This causes the currently visible
-   * widget to be hidden.
-   * 
-   * @param index the index of the widget to be shown
-   */
-  public void showWidget(int index) {
-    Widget oldWidget = visibleWidget;
-    visibleWidget = getWidget(index);
-    if (oldWidget != visibleWidget) {
-      visibleWidget.setVisible(true);
-      if (oldWidget != null) {
-        oldWidget.setVisible(false);
-      }
-    }
   }
 
   /*
@@ -108,22 +116,21 @@ public class DeckLayoutPanel extends LayoutComposite implements IndexedPanel {
    * @param w the widget to be inserted
    * @param beforeIndex the index before which it will be inserted
    * @throws IndexOutOfBoundsException if <code>beforeIndex</code> is out of
-   *             range
+   *           range
    */
   public void insert(Widget w, int beforeIndex) {
-    insert(w, beforeIndex, false);
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.insert(w, new FillLayoutData(), beforeIndex);
+    w.setVisible(false);
   }
 
-  /**
+  /*
+   * (non-Javadoc)
    * 
-   * @param w
-   * @param beforeIndex
-   * @param decorate
+   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
    */
-  public void insert(Widget w, int beforeIndex, boolean decorate) {
-    final LayoutPanel layoutPanel = getWidget();
-    layoutPanel.insert(w, new FillLayoutData(decorate), beforeIndex);
-    w.setVisible(false);
+  public Iterator<Widget> iterator() {
+    return super.getWidget().iterator();
   }
 
   /*
@@ -135,21 +142,39 @@ public class DeckLayoutPanel extends LayoutComposite implements IndexedPanel {
     return getWidget().remove(index);
   }
 
-  /**
-   * Removes the given widget.
+  /*
+   * (non-Javadoc)
    * 
-   * @param w the widget to be removed
+   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
    */
-  public void remove(Widget w) {
-    getWidget().remove(w);
+  public boolean remove(Widget w) {
+    return super.getWidget().remove(w);
   }
 
-  public int getPadding() {
-    return getWidget().getPadding();
-  }
-
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.layout.LayoutPanel#setPadding(int)
+   */
   public void setPadding(int padding) {
     getWidget().setPadding(padding);
+  }
+
+  /**
+   * Shows the widget at the specified index. This causes the currently visible
+   * widget to be hidden.
+   * 
+   * @param index the index of the widget to be shown
+   */
+  public void showWidget(int index) {
+    Widget oldWidget = visibleWidget;
+    visibleWidget = getWidget(index);
+    if (oldWidget != visibleWidget) {
+      visibleWidget.setVisible(true);
+      if (oldWidget != null) {
+        oldWidget.setVisible(false);
+      }
+    }
   }
 
 }
