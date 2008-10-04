@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +15,11 @@
  */
 package org.gwt.mosaic.showcase.client;
 
+import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
+import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -32,6 +34,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -122,7 +125,7 @@ public class Application extends Viewport implements HasLayoutManager {
    */
   public Application() {
     super();
-    
+
     // Setup the main layout widget
     final LayoutPanel layoutPanel = getWidget();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
@@ -130,19 +133,29 @@ public class Application extends Viewport implements HasLayoutManager {
     // Setup the top panel with the title and links
     createTopPanel();
     layoutPanel.add(topPanel, new BoxLayoutData(FillStyle.HORIZONTAL));
-    
+
     final LayoutPanel bottomPanel = new LayoutPanel(new BorderLayout());
     layoutPanel.add(bottomPanel, new BoxLayoutData(FillStyle.BOTH));
 
     // Add the main menu
     createMainMenu();
 
-    CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
+    final CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
     westPanel.add(new ScrollPanel(mainMenu));
     westPanel.getHeader().add(Showcase.IMAGES.showcaseDemos().createImage());
+    final ImageButton collapseBtn = new ImageButton(
+        Caption.IMAGES.toolCollapseLeft());
+    westPanel.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
+    
+    collapseBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        bottomPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
+        bottomPanel.layout();
+      }
+    });
 
-    bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST, 200, 100,
-        350, true));
+    bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST,
+        200, 100, 350, true));
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());
@@ -291,8 +304,10 @@ public class Application extends Viewport implements HasLayoutManager {
     }
 
     // Align the content to the top
-    topPanel.getRowFormatter().setVerticalAlign(0, HasVerticalAlignment.ALIGN_TOP);
-    topPanel.getRowFormatter().setVerticalAlign(1, HasVerticalAlignment.ALIGN_TOP);
+    topPanel.getRowFormatter().setVerticalAlign(0,
+        HasVerticalAlignment.ALIGN_TOP);
+    topPanel.getRowFormatter().setVerticalAlign(1,
+        HasVerticalAlignment.ALIGN_TOP);
   }
 
   @Override
