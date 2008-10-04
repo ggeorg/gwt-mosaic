@@ -373,11 +373,11 @@ input {
 /*** ImageButton ***/
 
 .mosaic-ImageButton {
+	cursor: pointer;
 }
 
 .mosaic-ImageButton img {
 	display: block;
-	cursor: pointer;
 	
 	/*
 	 * Unfortunately, in IE, border-color: transparent is rendered as black.
@@ -736,6 +736,40 @@ input {
 .mosaic-LayoutPanel-BoxLayout {
 }
 .mosaic-LayoutPanel-BorderLayout {
+}
+.mosaic-LayoutPanel-BorderLayout .NorthCollapsedImageButton {
+	border: 1px solid #d0e4f6;
+	border-top: none;
+	height: 18px !important;
+	padding: 0px 1px 1px 1px;
+	overflow: hidden;
+}
+.mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton {
+	border: 1px solid #d0e4f6;
+	border-bottom: none;
+	height: 18px !important;
+	padding: 1px 1px 0px 1px;
+	overflow: hidden;
+}
+.mosaic-LayoutPanel-BorderLayout .NorthCollapsedImageButton img,
+.mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+.mosaic-LayoutPanel-BorderLayout .WestCollapsedImageButton {
+	border: 1px solid #d0e4f6;
+	border-left: none;
+	width: 18px !important;
+	padding: 1px 1px 1px 0px;
+	overflow: hidden;
+}
+.mosaic-LayoutPanel-BorderLayout .EastCollapsedImageButton {
+	border: 1px solid #d0e4f6;
+	border-right: none;
+	width: 18px !important;
+	padding: 1px 0px 1px 1px;
+	overflow: hidden;
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
 	overflow: hidden; /* required by IE6 */

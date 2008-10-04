@@ -27,8 +27,10 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
-    WindowResizeListener*/ {
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*
+                                                                           * ,
+                                                                           * WindowResizeListener
+                                                                           */{
 
   /**
    * The default style name.
@@ -70,7 +72,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
    */
   public void add(Widget widget, LayoutData layoutData) {
     if (widget instanceof DecoratorPanel) {
-      throw new IllegalArgumentException("Adding a DecoratorPanel is not allowed!");
+      throw new IllegalArgumentException(
+          "Adding a DecoratorPanel is not allowed!");
     }
     BaseLayout.setLayoutData(widget, layoutData);
     if (layoutData.hasDecoratorPanel()) {
@@ -173,7 +176,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
    */
   public void insert(Widget w, LayoutData layoutData, int beforeIndex) {
     if (w instanceof DecoratorPanel) {
-      throw new IllegalArgumentException("Adding a DecoratorPanel is not allowed!");
+      throw new IllegalArgumentException(
+          "Adding a DecoratorPanel is not allowed!");
     }
     BaseLayout.setLayoutData(w, layoutData);
     if (layoutData.hasDecoratorPanel()) {
@@ -223,7 +227,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
       if (child instanceof DecoratorPanel) {
         child = ((DecoratorPanel) child).getWidget();
       }
-      if (child instanceof HasLayoutManager && DOM.isVisible(child.getElement())) {
+      if (child instanceof HasLayoutManager
+          && DOM.isVisible(child.getElement())) {
         ((HasLayoutManager) child).layout();
       }
     }
@@ -246,7 +251,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
     }
     layoutClassName = layout.getClass().getName();
     final int dotPos = layoutClassName.lastIndexOf('.');
-    layoutClassName = layoutClassName.substring(dotPos + 1, layoutClassName.length());
+    layoutClassName = layoutClassName.substring(dotPos + 1,
+        layoutClassName.length());
     addStyleName(getStylePrimaryName() + "-" + layoutClassName);
 
     // System.out.println(getStyleName());
@@ -271,6 +277,21 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*,
 
   public void setWidgetSpacing(int widgetSpacing) {
     this.widgetSpacing = widgetSpacing;
+  }
+
+  public boolean isCollapsed(Widget widget) {
+    if (getLayout() instanceof BorderLayout) {
+      final BorderLayout borderLayout = (BorderLayout) getLayout();
+      return borderLayout.isCollapsed(this, getUnDecoratedWidget(widget));
+    }
+    return false;
+  }
+
+  public void setCollapsed(Widget widget, boolean collapse) {
+    if (getLayout() instanceof BorderLayout) {
+      final BorderLayout borderLayout = (BorderLayout) getLayout();
+      borderLayout.setCollapsed(this, getUnDecoratedWidget(widget), collapse);
+    }
   }
 
 }
