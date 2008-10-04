@@ -17,10 +17,14 @@ package org.gwt.mosaic.showcase.client.content.popups;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.Caption;
+import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.WindowPanel;
+import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -54,7 +58,7 @@ public class CwWindowPanel extends ContentWidget {
     super(constants);
     // TODO Auto-generated constructor stub
   }
-  
+
   @Override
   public String getDescription() {
     return "WindowPanel description";
@@ -77,30 +81,48 @@ public class CwWindowPanel extends ContentWidget {
     final WindowPanel basic = new WindowPanel("Basic");
     basic.setAnimationEnabled(true);
     basic.setWidget(new HTML("Hello World!"));
+    
+    basic.getHeader().add(Showcase.IMAGES.window().createImage());
 
     final WindowPanel layout = new WindowPanel("Layout");
     layout.setAnimationEnabled(true);
     LayoutPanel panel = new LayoutPanel();
     layout.setWidget(panel);
     createLayoutContent(panel);
+    
+    layout.getHeader().add(Showcase.IMAGES.window().createImage());
 
     final WindowPanel sized = new WindowPanel("Sized");
     sized.setAnimationEnabled(true);
     sized.setSize("512px", "385px");
-    Frame frame = new Frame("http://www.google.com");
+    final Frame frame = new Frame("http://www.google.com");
     DOM.setStyleAttribute(frame.getElement(), "border", "none");
     sized.setWidget(frame);
+    
+    sized.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
+    refreshBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        frame.setUrl(frame.getUrl());
+      }
+    });
+    sized.getHeader().add(refreshBtn, CaptionRegion.RIGHT);
 
     final WindowPanel fixed = new WindowPanel("Fixed", false, false);
     fixed.setAnimationEnabled(true);
     Image img = new Image("MeteoraGreece.JPG");
     fixed.setWidget(img);
+    
+    fixed.getHeader().add(Showcase.IMAGES.window().createImage());
 
     final WindowPanel modal = new WindowPanel("Modal", false, true);
     modal.setAnimationEnabled(true);
     LayoutPanel upload = new LayoutPanel();
     modal.setWidget(upload);
     createUploadFileContent(upload);
+    
+    modal.getHeader().add(Showcase.IMAGES.window().createImage());
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {

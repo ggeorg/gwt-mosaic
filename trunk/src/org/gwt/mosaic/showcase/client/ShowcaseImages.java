@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.ImageBundle;
  */
 public interface ShowcaseImages extends ImageBundle {
 
+  AbstractImagePrototype calendar();
+
   AbstractImagePrototype catI18N();
 
   AbstractImagePrototype catLists();
@@ -39,11 +41,11 @@ public interface ShowcaseImages extends ImageBundle {
   AbstractImagePrototype catTextInput();
 
   AbstractImagePrototype catWidgets();
-
-  AbstractImagePrototype css();
   
-  AbstractImagePrototype cup();
+  AbstractImagePrototype css();
 
+  AbstractImagePrototype cup();
+  
   AbstractImagePrototype gwtLogo();
   
   AbstractImagePrototype gwtLogoThumb();
@@ -57,5 +59,5 @@ public interface ShowcaseImages extends ImageBundle {
   
   AbstractImagePrototype showcaseDemos();
   
-  AbstractImagePrototype calendar();
+  AbstractImagePrototype window();
 }
