@@ -25,6 +25,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,7 +46,19 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   public CaptionLayoutPanel() {
     this(null, false);
   }
-  
+
+  @Override
+  public void layout() {
+    getWidget().layout();
+    // XXX (ggeorg) the Caption widget requires a second execution of
+    // layoutChildren(), so we call layout() twice.
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        getWidget().layout();
+      }
+    });
+  }
+
   public CaptionLayoutPanel(final String text) {
     this(text, false);
   }
@@ -194,7 +208,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   public void setCollapsed(boolean collapsed) {
     body.setVisible(!collapsed);
   }
-  
+
   public boolean isCollapsed() {
     return !body.isVisible();
   }
