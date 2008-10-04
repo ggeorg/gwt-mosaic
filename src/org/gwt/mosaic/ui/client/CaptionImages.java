@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,13 +18,32 @@ package org.gwt.mosaic.ui.client;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public interface CaptionImages extends ImageBundle {
   
+  @Resource("tool-button-collapse-down.png")
+  AbstractImagePrototype toolCollapseDown();
+
+  @Resource("tool-button-collapse-left.png")
+  AbstractImagePrototype toolCollapseLeft();
+
+  @Resource("tool-button-collapse-right.png")
+  AbstractImagePrototype toolCollapseRight();
+
+  @Resource("tool-button-collapse-up.png")
+  AbstractImagePrototype toolCollapseUp();
+
   @Resource("tool-button-minus.png")
   AbstractImagePrototype toolMinus();
-  
+
   @Resource("tool-button-plus.png")
   AbstractImagePrototype toolPlus();
+
+  @Resource("tool-button-refresh.png")
+  AbstractImagePrototype toolRefresh();
 
   @Resource("window-button-close.png")
   AbstractImagePrototype windowClose();
@@ -32,10 +51,9 @@ public interface CaptionImages extends ImageBundle {
   @Resource("window-button-maximize.png")
   AbstractImagePrototype windowMaximize();
 
-  @Resource("window-button-maximized.png")
-  AbstractImagePrototype windowMaximized();
-
   @Resource("window-button-minimize.png")
   AbstractImagePrototype windowMinimize();
 
+  @Resource("window-button-restore.png")
+  AbstractImagePrototype windowRestore();
 }
