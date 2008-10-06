@@ -18,14 +18,17 @@ package org.gwt.mosaic.ui.client.layout;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
+import org.gwt.mosaic.ui.client.PopupLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.PopupListener;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -260,25 +263,17 @@ public class BorderLayout extends BaseLayout {
                 northCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.getDecoratorPanel().setVisible(true);
-                } else {
-                  north.setVisible(true);
                 }
+                north.setVisible(true);
                 layoutPanel.layout();
-                // XXX (ggeorg)
-                DeferredCommand.addCommand(new Command() {
-                  public void execute() {
-                    layoutPanel.layout();
-                  }
-                });
                 return;
               }
             });
             layoutPanel.add(northCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.getDecoratorPanel().setVisible(false);
-            } else {
-              north.setVisible(false);
             }
+            north.setVisible(false);
           }
           h = getFlowHeight(northCollapsedImageButton);
           setBounds(layoutPanel, northCollapsedImageButton, left, top,
@@ -345,25 +340,17 @@ public class BorderLayout extends BaseLayout {
                 southCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.getDecoratorPanel().setVisible(true);
-                } else {
-                  south.setVisible(true);
                 }
+                south.setVisible(true);
                 layoutPanel.layout();
-                // XXX (ggeorg)
-                DeferredCommand.addCommand(new Command() {
-                  public void execute() {
-                    layoutPanel.layout();
-                  }
-                });
                 return;
               }
             });
             layoutPanel.add(southCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.getDecoratorPanel().setVisible(false);
-            } else {
-              south.setVisible(false);
             }
+            south.setVisible(false);
           }
           h = getFlowHeight(southCollapsedImageButton);
           setBounds(layoutPanel, southCollapsedImageButton, left, Math.max(0,
@@ -420,7 +407,40 @@ public class BorderLayout extends BaseLayout {
         if (layoutData.collapse) {
           if (westCollapsedImageButton == null) {
             westCollapsedImageButton = new ImageButton(
-                Caption.IMAGES.toolCollapseRight());
+                Caption.IMAGES.toolCollapseRight()) {
+              @Override
+              public void onBrowserEvent(Event event) {
+                final Element target = event.getTarget();
+                if (target == getElement()
+                    && Event.ONCLICK == event.getTypeInt()) {
+                  DOM.eventPreventDefault(event);
+
+                  final PopupLayoutPanel popup = new PopupLayoutPanel(true);
+                  if (!layoutData.hasDecoratorPanel()) {
+                    west.setVisible(true);
+                  }
+                  final int index = layoutPanel.getWidgetIndex(west);
+                  popup.setWidget(west);
+
+                  popup.addPopupListener(new PopupListener() {
+                    public void onPopupClosed(PopupPanel sender,
+                        boolean autoClosed) {
+                      if (layoutData.hasDecoratorPanel()) {
+                        layoutData.getDecoratorPanel().add(west);
+                      } else {
+                        layoutPanel.insert(west, layoutData, index);
+                      }
+                    }
+                  });
+
+                  popup.show();
+
+                  event.cancelBubble(true);
+                } else {
+                  super.onBrowserEvent(event);
+                }
+              }
+            };
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
             westCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
@@ -429,9 +449,8 @@ public class BorderLayout extends BaseLayout {
                 westCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.getDecoratorPanel().setVisible(true);
-                } else {
-                  west.setVisible(true);
                 }
+                west.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -439,9 +458,8 @@ public class BorderLayout extends BaseLayout {
             layoutPanel.add(westCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.getDecoratorPanel().setVisible(false);
-            } else {
-              west.setVisible(false);
             }
+            west.setVisible(false);
           }
           w = getFlowWidth(westCollapsedImageButton);
           setBounds(layoutPanel, westCollapsedImageButton, left, top, w,
@@ -504,25 +522,17 @@ public class BorderLayout extends BaseLayout {
                 eastCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.getDecoratorPanel().setVisible(true);
-                } else {
-                  east.setVisible(true);
                 }
+                east.setVisible(true);
                 layoutPanel.layout();
-                // XXX (ggeorg)
-                DeferredCommand.addCommand(new Command() {
-                  public void execute() {
-                    layoutPanel.layout();
-                  }
-                });
                 return;
               }
             });
             layoutPanel.add(eastCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.getDecoratorPanel().setVisible(false);
-            } else {
-              east.setVisible(false);
             }
+            east.setVisible(false);
           }
           w = getFlowWidth(eastCollapsedImageButton);
           setBounds(layoutPanel, eastCollapsedImageButton, Math.max(0, right
