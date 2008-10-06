@@ -407,40 +407,7 @@ public class BorderLayout extends BaseLayout {
         if (layoutData.collapse) {
           if (westCollapsedImageButton == null) {
             westCollapsedImageButton = new ImageButton(
-                Caption.IMAGES.toolCollapseRight()) {
-              @Override
-              public void onBrowserEvent(Event event) {
-                final Element target = event.getTarget();
-                if (target == getElement()
-                    && Event.ONCLICK == event.getTypeInt()) {
-                  DOM.eventPreventDefault(event);
-
-                  final PopupLayoutPanel popup = new PopupLayoutPanel(true);
-                  if (!layoutData.hasDecoratorPanel()) {
-                    west.setVisible(true);
-                  }
-                  final int index = layoutPanel.getWidgetIndex(west);
-                  popup.setWidget(west);
-
-                  popup.addPopupListener(new PopupListener() {
-                    public void onPopupClosed(PopupPanel sender,
-                        boolean autoClosed) {
-                      if (layoutData.hasDecoratorPanel()) {
-                        layoutData.getDecoratorPanel().add(west);
-                      } else {
-                        layoutPanel.insert(west, layoutData, index);
-                      }
-                    }
-                  });
-
-                  popup.show();
-
-                  event.cancelBubble(true);
-                } else {
-                  super.onBrowserEvent(event);
-                }
-              }
-            };
+                Caption.IMAGES.toolCollapseRight());
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
             westCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
