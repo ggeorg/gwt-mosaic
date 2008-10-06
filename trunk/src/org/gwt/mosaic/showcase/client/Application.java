@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -63,6 +63,8 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * <li>.Application-menu { The main menu }</li>
  * <li>.Application-content-wrapper { The element around the content }</li>
  * </ul>
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public class Application extends Viewport implements HasLayoutManager {
   /**
@@ -146,7 +148,7 @@ public class Application extends Viewport implements HasLayoutManager {
     final ImageButton collapseBtn = new ImageButton(
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
-    
+
     collapseBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         bottomPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
@@ -156,6 +158,7 @@ public class Application extends Viewport implements HasLayoutManager {
 
     bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST,
         200, 100, 350, true));
+    //bottomPanel.setCollapsed(westPanel, true);
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());

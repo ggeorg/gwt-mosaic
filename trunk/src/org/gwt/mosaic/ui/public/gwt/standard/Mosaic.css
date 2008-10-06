@@ -751,8 +751,8 @@ input {
 	padding: 1px 1px 0px 1px;
 	overflow: hidden;
 }
-.mosaic-LayoutPanel-BorderLayout .NorthCollapsedImageButton img,
-.mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
+html>body .mosaic-LayoutPanel-BorderLayout .NorthCollapsedImageButton img,
+html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	position: absolute;
 	top: 0px;
 	right: 0px;
@@ -760,14 +760,22 @@ input {
 .mosaic-LayoutPanel-BorderLayout .WestCollapsedImageButton {
 	border: 1px solid #d0e4f6;
 	border-left: none;
+	
+	/* required by Safari to handle the 'width' attribute */
+	position: absolute;
 	width: 18px !important;
+	
 	padding: 1px 1px 1px 0px;
 	overflow: hidden;
 }
 .mosaic-LayoutPanel-BorderLayout .EastCollapsedImageButton {
 	border: 1px solid #d0e4f6;
 	border-right: none;
+	
+	/* required by Safari to handle the 'width' attribute */
+	position: absolute;
 	width: 18px !important;
+
 	padding: 1px 0px 1px 1px;
 	overflow: hidden;
 }

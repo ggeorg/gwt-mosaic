@@ -52,11 +52,11 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     getWidget().layout();
     // XXX (ggeorg) the Caption widget requires a second execution of
     // layoutChildren(), so we call layout() twice.
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        getWidget().layout();
-      }
-    });
+//    DeferredCommand.addCommand(new Command() {
+//      public void execute() {
+//        getWidget().layout();
+//      }
+//    });
   }
 
   public CaptionLayoutPanel(final String text) {
