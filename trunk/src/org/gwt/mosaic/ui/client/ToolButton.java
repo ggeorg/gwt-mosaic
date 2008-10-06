@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Region;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -32,6 +31,10 @@ import com.google.gwt.user.client.ui.SourcesFocusEvents;
 import com.google.gwt.user.client.ui.SourcesKeyboardEvents;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     SourcesClickEvents, SourcesFocusEvents, HasFocus, SourcesKeyboardEvents {
 
