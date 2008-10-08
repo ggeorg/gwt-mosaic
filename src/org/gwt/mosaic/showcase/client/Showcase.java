@@ -24,6 +24,7 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwCalculatorLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest2;
@@ -346,6 +347,8 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catPanels, new CwBorderLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwGridLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catPanels, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwNestedBorderLayout(constants),
         IMAGES.catPanels());
