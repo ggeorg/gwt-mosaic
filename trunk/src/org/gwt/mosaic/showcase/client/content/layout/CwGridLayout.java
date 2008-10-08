@@ -18,10 +18,9 @@ package org.gwt.mosaic.showcase.client.content.layout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.layout.BorderLayout;
-import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.GridLayout;
+import org.gwt.mosaic.ui.client.layout.GridLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,26 +30,26 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle({".mosaic-LayoutPanel"})
-public class CwBorderLayout extends ContentWidget {
+@ShowcaseStyle( {".mosaic-LayoutPanel"})
+public class CwGridLayout extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwBorderLayout(CwConstants constants) {
+  public CwGridLayout(CwConstants constants) {
     super(constants);
   }
-  
+
   @Override
   public String getDescription() {
-    return "BorderLayout description";
+    return "GridLayout description";
   }
 
   @Override
   public String getName() {
-    return "BorderLayout";
+    return "GridLayout";
   }
 
   /**
@@ -60,21 +59,25 @@ public class CwBorderLayout extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
+    final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(3, 3));
+
+    final Button b11 = new Button("Button 1-1");
+    final Button b12 = new Button("Button 1-2");
+    final Button b13 = new Button("Button 1-3");
     
-    final Button b1 = new Button("Button 1");
-    final Button b2 = new Button("Button 2");
-    final Button b3 = new Button("Button 3");
-    final Button b4 = new Button("Button 4");
-    final Button b5 = new Button("Button 5");
+    final Button b21 = new Button("Button 2-1");
     
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
-    layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
-    
+    final Button b31 = new Button("Button 3-1");
+    final Button b32 = new Button("Button 3-2");;
+
+    layoutPanel.add(b11, new GridLayoutData(1, 3, true));
+    layoutPanel.add(b12);
+    layoutPanel.add(b13, new GridLayoutData(1, 2));
+    layoutPanel.add(b21);
+    layoutPanel.add(b31);
+    layoutPanel.add(b32, new GridLayoutData(true));
+
     return layoutPanel;
   }
-  
+
 }

@@ -18,17 +18,12 @@ package org.gwt.mosaic.ui.client.layout;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
-import org.gwt.mosaic.ui.client.PopupLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.PopupListener;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
