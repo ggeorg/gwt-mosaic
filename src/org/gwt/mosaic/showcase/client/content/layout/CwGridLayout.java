@@ -68,14 +68,12 @@ public class CwGridLayout extends ContentWidget {
     final Button b21 = new Button("Button 2-1");
     
     final Button b31 = new Button("Button 3-1");
-    final Button b32 = new Button("Button 3-2");;
 
     layoutPanel.add(b11, new GridLayoutData(1, 3, true));
     layoutPanel.add(b12);
     layoutPanel.add(b13, new GridLayoutData(1, 2));
     layoutPanel.add(b21);
-    layoutPanel.add(b31);
-    layoutPanel.add(b32, new GridLayoutData(true));
+    layoutPanel.add(b31, new GridLayoutData(2, 1, true));
 
     return layoutPanel;
   }
