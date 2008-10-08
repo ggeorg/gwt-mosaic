@@ -64,6 +64,65 @@ public class GridLayout extends BaseLayout {
     setRows(rows);
   }
 
+  private void buildWidgetMatrix(LayoutPanel layoutPanel) {
+    final int size = layoutPanel.getWidgetCount();
+
+    int cursorX = 0;
+    int cursorY = 0;
+
+    widgetMatrix = new Widget[cols][rows];
+
+    for (int i = 0; i < size; i++) {
+      Widget child = layoutPanel.getWidget(i);
+      if (child instanceof DecoratorPanel) {
+        child = ((DecoratorPanel) child).getWidget();
+      }
+
+      if (!DOM.isVisible(child.getElement())) {
+        continue;
+      }
+
+      Object layoutDataObject = getLayoutData(child);
+      if (layoutDataObject == null
+          || !(layoutDataObject instanceof GridLayoutData)) {
+        layoutDataObject = new GridLayoutData();
+        setLayoutData(child, layoutDataObject);
+      }
+      GridLayoutData layoutData = (GridLayoutData) layoutDataObject;
+
+      while (widgetMatrix[cursorX][cursorY] != null) {
+        if (++cursorX >= cols) {
+          cursorX = 0;
+          if (++cursorY >= rows) {
+            break;
+          }
+        }
+      }
+
+      for (int r = cursorY; r < (cursorY + layoutData.rowspan); r++) {
+        if (r >= rows) {
+          break;
+        }
+        for (int c = cursorX; c < (cursorX + layoutData.colspan); c++) {
+          if (c >= cols) {
+            break;
+          }
+          widgetMatrix[c][r] = SPAN;
+        }
+      }
+
+      widgetMatrix[cursorX][cursorY] = child;
+
+      cursorX += layoutData.colspan;
+      if (cursorX >= cols) {
+        cursorX = 0;
+        if (++cursorY >= rows) {
+          break;
+        }
+      }
+    }
+  }
+
   /**
    * Get the number of columns in the grid.
    * 
@@ -119,72 +178,6 @@ public class GridLayout extends BaseLayout {
    */
   public final int getRows() {
     return rows;
-  }
-
-  private void buildWidgetMatrix(LayoutPanel layoutPanel) {
-    final int size = layoutPanel.getWidgetCount();
-
-    int cursorX = 0;
-    int cursorY = 0;
-
-    widgetMatrix = new Widget[cols][rows];
-
-    for (int i = 0; i < size; i++) {
-      Widget child = layoutPanel.getWidget(i);
-      if (child instanceof DecoratorPanel) {
-        child = ((DecoratorPanel) child).getWidget();
-      }
-
-      if (!DOM.isVisible(child.getElement())) {
-        continue;
-      }
-
-      Object layoutDataObject = getLayoutData(child);
-      if (layoutDataObject == null
-          || !(layoutDataObject instanceof GridLayoutData)) {
-        layoutDataObject = new GridLayoutData();
-        setLayoutData(child, layoutDataObject);
-      }
-      GridLayoutData layoutData = (GridLayoutData) layoutDataObject;
-
-      while (widgetMatrix[cursorX][cursorY] != null) {
-        if (++cursorX >= cols) {
-          cursorX = 0;
-          if (++cursorY >= rows) {
-            break;
-          }
-        }
-      }
-
-      for (int r = cursorY; r < (cursorY+layoutData.rowspan); r++) {
-        if (r >= rows) {
-          break;
-        }
-        for (int c = cursorX; c < (cursorX+layoutData.colspan); c++) {
-          if (c >= cols) {
-            break;
-          }
-          widgetMatrix[c][r] = SPAN;
-        }
-      }
-
-      widgetMatrix[cursorX][cursorY] = child;
-
-      cursorX += layoutData.colspan;
-      if (cursorX >= cols) {
-        cursorX = 0;
-        if (++cursorY >= rows) {
-          break;
-        }
-      }
-    }
-
-    for (int r = 0; r < rows; r++) {
-      for (int c = 0; c < cols; c++) {
-        System.out.print("[  " + (widgetMatrix[c][r] != SPAN) + "  ]");
-      }
-      System.out.println();
-    }
   }
 
   /*
