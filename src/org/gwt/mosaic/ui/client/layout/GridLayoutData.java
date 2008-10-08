@@ -21,14 +21,46 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class FillLayoutData extends LayoutData {
+public class GridLayoutData extends LayoutData {
 
-  public FillLayoutData() {
-    // Nothing to do here!
+  public int rowspan;
+  public int colspan;
+
+  public GridLayoutData() {
+    this(1, 1);
   }
   
-  public FillLayoutData(boolean decorate) {
+  public GridLayoutData(boolean decorate) {
+    this(1, 1, decorate);
+  }
+
+  public GridLayoutData(int colSpan, int rowSpan) {
+    super();
+    setColspan(colSpan);
+    setRowspan(rowSpan);
+  }
+  
+  public GridLayoutData(int colSpan, int rowSpan, boolean decorate) {
+    super();
+    setColspan(colSpan);
+    setRowspan(rowSpan);
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
+  }
+
+  protected int getRowspan() {
+    return rowspan;
+  }
+
+  protected void setRowspan(int rowspan) {
+    this.rowspan = Math.max(1, rowspan);
+  }
+
+  protected int getColspan() {
+    return colspan;
+  }
+
+  protected void setColspan(int colspan) {
+    this.colspan = Math.max(1, colspan);
   }
 
 }

@@ -191,8 +191,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*
 
   @Override
   public Iterator<Widget> iterator() {
-    final Iterator<Widget> iter = super.iterator();
     return new Iterator<Widget>() {
+      final Iterator<Widget> iter = LayoutPanel.super.iterator();
+      
       public boolean hasNext() {
         return iter.hasNext();
       }
@@ -236,7 +237,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*
 
   @Override
   public boolean remove(Widget w) {
-    return super.remove(getDecoratorWidget(w));
+    final Widget widget = getDecoratorWidget(w);
+    if (w != widget) {
+      ((DecoratorPanel)widget).remove(w);
+    }
+    return super.remove(widget);
   }
 
   /*

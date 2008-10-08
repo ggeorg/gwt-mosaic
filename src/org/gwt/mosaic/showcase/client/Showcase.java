@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest2;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest3;
@@ -81,6 +82,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
 
@@ -341,6 +344,8 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catPanels, new CwBoxLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwBorderLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catPanels, new CwGridLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwNestedBorderLayout(constants),
         IMAGES.catPanels());
