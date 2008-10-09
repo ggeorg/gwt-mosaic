@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,11 @@
  */
 package org.gwt.mosaic.core.client.impl;
 
-public abstract class UserAgentImpl {
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public class UserAgentImpl {
 
   public boolean isGecko() {
     return false;
