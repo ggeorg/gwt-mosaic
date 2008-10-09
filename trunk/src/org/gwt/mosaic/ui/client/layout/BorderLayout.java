@@ -47,8 +47,15 @@ public class BorderLayout extends BaseLayout {
 
   private Widget placeHolder;
 
+  private boolean runTwiceFlag;
+
   public BorderLayout() {
     // Nothing to do here!
+  }
+  
+  @Override
+  public boolean runTwice() {
+    return runTwiceFlag;
   }
 
   /*
@@ -227,6 +234,8 @@ public class BorderLayout extends BaseLayout {
 
       int top = paddings[0];
       int bottom = top + height;
+      
+      runTwiceFlag = false;
 
       if (north != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
@@ -277,6 +286,7 @@ public class BorderLayout extends BaseLayout {
           double northHeight = layoutData.preferredSize;
           if (northHeight == -1.0) {
             /* layoutData.preferredSize = */northHeight = getFlowHeight(north);
+            runTwiceFlag = true;
           } else if (northHeight > 0 && northHeight <= 1.0) {
             northHeight = height * northHeight;
           }
@@ -354,6 +364,7 @@ public class BorderLayout extends BaseLayout {
           double southHeight = layoutData.preferredSize;
           if (southHeight == -1.0) {
             /* layoutData.preferredSize = */southHeight = getFlowHeight(south);
+            runTwiceFlag = true;
           } else if (southHeight > 0 && southHeight <= 1.0) {
             southHeight = height * southHeight;
           }

@@ -29,6 +29,12 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
 
+  private native static void forceFlowLayout(Element elem)
+  /*-{
+    elem.style['top'] = '';
+    elem.style['left'] = '';
+  }-*/;
+
   /**
    * TODO: move this method to DOM
    */
@@ -46,12 +52,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     }
     return flowHeight;
   }
-
-  private native static void forceFlowLayout(Element elem)
-  /*-{
-    elem.style['top'] = '';
-    elem.style['left'] = '';
-  }-*/;
 
   /**
    * TODO: move this method to DOM
@@ -106,6 +106,15 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     if (height != -1) {
       DOM.setContentAreaHeight(elem, height);
     }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#runTwice()
+   */
+  public boolean runTwice() {
+    return false;
   }
 
   protected void setBounds(final LayoutPanel layoutPanel, final Widget widget,

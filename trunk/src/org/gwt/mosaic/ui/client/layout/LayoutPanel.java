@@ -190,7 +190,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public Iterator<Widget> iterator() {
     return new Iterator<Widget>() {
       final Iterator<Widget> iter = LayoutPanel.super.iterator();
-      
+
       public boolean hasNext() {
         return iter.hasNext();
       }
@@ -212,6 +212,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    */
   public void layout() {
     layout.layoutPanel(this);
+    if (layout.runTwice()) {
+      layout.layoutPanel(this);
+    }
     layoutChildren();
   }
 
@@ -236,7 +239,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public boolean remove(Widget w) {
     final Widget widget = getDecoratorWidget(w);
     if (w != widget) {
-      ((DecoratorPanel)widget).remove(w);
+      ((DecoratorPanel) widget).remove(w);
     }
     return super.remove(widget);
   }
