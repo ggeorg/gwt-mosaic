@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,12 +25,14 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     IndexedPanel {
 
@@ -50,13 +52,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   @Override
   public void layout() {
     getWidget().layout();
-    // XXX (ggeorg) the Caption widget requires a second execution of
-    // layoutChildren(), so we call layout() twice.
-//    DeferredCommand.addCommand(new Command() {
-//      public void execute() {
-//        getWidget().layout();
-//      }
-//    });
   }
 
   public CaptionLayoutPanel(final String text) {

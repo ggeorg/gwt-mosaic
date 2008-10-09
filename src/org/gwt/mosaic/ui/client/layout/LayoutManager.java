@@ -36,5 +36,11 @@ public interface LayoutManager {
    * @return
    */
   int[] getPreferredSize(LayoutPanel layoutPanel);
+  
+  /**
+   * 
+   * @return
+   */
+  boolean runTwice();
 
 }

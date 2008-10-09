@@ -39,6 +39,8 @@ public class BoxLayout extends BaseLayout {
 
   boolean leftToRight = true;
 
+  private boolean runTwiceFlag;
+
   public BoxLayout() {
     this(Orientation.HORIZONTAL);
   }
@@ -51,6 +53,11 @@ public class BoxLayout extends BaseLayout {
     return orient;
   }
 
+  @Override
+  public boolean runTwice() {
+    return runTwiceFlag;
+  }
+  
   /*
    * (non-Javadoc)
    * 
@@ -237,6 +244,8 @@ public class BoxLayout extends BaseLayout {
       int fillingWidth = 0;
       int fillingHeight = 0;
 
+      runTwiceFlag = false;
+      
       final List<Widget> visibleChildList = new ArrayList<Widget>();
 
       // 1st pass
@@ -276,6 +285,7 @@ public class BoxLayout extends BaseLayout {
             }
             fillWidth -= flowWidth;
             layoutData.calcWidth = /* layoutData.width = */flowWidth;
+            runTwiceFlag = true;
           }
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
@@ -290,6 +300,7 @@ public class BoxLayout extends BaseLayout {
               flowHeight += decPanelBorderHeight;
             }
             layoutData.calcHeight = /* layoutData.height = */flowHeight;
+            runTwiceFlag = true;
           }
         } else {
           if (layoutData.fillHeight) {
@@ -307,6 +318,7 @@ public class BoxLayout extends BaseLayout {
             }
             fillHeight -= flowHeight;
             layoutData.calcHeight = /* layoutData.height = */flowHeight;
+            runTwiceFlag = true;
           }
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
@@ -321,6 +333,7 @@ public class BoxLayout extends BaseLayout {
               flowWidth += decPanelBorderWidth;
             }
             layoutData.calcWidth = /* layoutData.width = */flowWidth;
+            runTwiceFlag = true;
           }
         }
       }
