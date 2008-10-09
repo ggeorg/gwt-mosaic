@@ -25,6 +25,7 @@ import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwCalculatorLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest2;
@@ -342,6 +343,8 @@ public class Showcase implements EntryPoint {
 
     // Panels
     TreeItem catPanels = mainMenu.addItem("Layout & Panels");
+    setupMainMenuOption(catPanels, new CwFillLayout(constants),
+        IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwBoxLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwBorderLayout(constants),
