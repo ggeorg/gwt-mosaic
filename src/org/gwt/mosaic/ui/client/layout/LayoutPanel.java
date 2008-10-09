@@ -27,10 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class LayoutPanel extends AbsolutePanel implements HasLayoutManager/*
-                                                                           * ,
-                                                                           * WindowResizeListener
-                                                                           */{
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   /**
    * The default style name.

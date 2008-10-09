@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,13 +23,13 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.MessageBoxType;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
 import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
@@ -48,13 +48,14 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RichTextArea;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-WindowPanel", ".dragdrop-positioner"})
 public class CwMessageBox extends ContentWidget {
@@ -103,17 +104,14 @@ public class CwMessageBox extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
+    final ScrollLayoutPanel layoutPanel = new ScrollLayoutPanel();
     layoutPanel.setPadding(0);
-
-    ScrollPanel scrollPanel = new ScrollPanel();
-    layoutPanel.add(scrollPanel, new FillLayoutData(false));
 
     // Add the button and list to a panel
     VerticalPanel vPanel = new VerticalPanel();
     vPanel.setSpacing(4);
 
-    scrollPanel.add(vPanel);
+    layoutPanel.add(vPanel);
 
     //
     // Alert Box
@@ -160,7 +158,7 @@ public class CwMessageBox extends ContentWidget {
     //
 
     HTML confirmDesc = new HTML(
-        "<b>Confirmation Box</b>"
+        "<hr><b>Confirmation Box</b>"
             + "<br><small>A confirm box is often used if you want the user to verify or accept something. "
             + "When a confirm box pops up, the user will have to click either \"OK\" or \"Cancel\" to proceed."
             + "If the user clicks \"OK\", the box returns true. If the user clicks \"Cancel\", the box returns false.</small>");
@@ -185,7 +183,7 @@ public class CwMessageBox extends ContentWidget {
     //
 
     HTML promptDesc = new HTML(
-        "<b>Prompt Box</b>"
+        "<hr><b>Prompt Box</b>"
             + "<br><small>A prompt box is often used if you want the user to input a value. "
             + "When a prompt box pops up, the user will have to click either \"OK\" or \"Cancel\" to proceed after entering an input value. "
             + "If the user clicks \"OK\" the box returns the input value. If the user clicks \"Cancel\" the box returns null.</small>");
@@ -253,7 +251,7 @@ public class CwMessageBox extends ContentWidget {
     // Custom
     //
 
-    HTML customDesc = new HTML("<b>Custom</b>"
+    HTML customDesc = new HTML("<hr><b>Custom</b>"
         + "<br><small>Some custom MessageBox examples.</small>");
     vPanel.add(customDesc);
 

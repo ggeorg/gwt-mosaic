@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package org.gwt.mosaic.ui.client.layout;
 /**
  * Defines the interface for classes that know how to lay out a
  * <code>LayoutPanel</code>.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public interface LayoutManager {
 
@@ -27,12 +29,12 @@ public interface LayoutManager {
    * @param layoutPanel the <code>LayoutPanel</code> to be laid out
    */
   void layoutPanel(LayoutPanel layoutPanel);
-  
+
   /**
    * 
    * @param layoutPanel
    * @return
    */
   int[] getPreferredSize(LayoutPanel layoutPanel);
-  
+
 }
