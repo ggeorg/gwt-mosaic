@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,6 +34,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
 /**
  * Displays information in the bottom region of the browser for a specified
  * amount of time.
+ * 
+ * @author luciano.broussal(at)gmail.com
  */
 public class InfoPanel extends DecoratedPopupPanel implements HasText, WindowResizeListener, PopupListener {
 
@@ -63,6 +65,8 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText, WindowRes
 	}
     };
 
+  private boolean autoHide;
+
     public InfoPanel() {
 	this(null);
     }
@@ -80,6 +84,8 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText, WindowRes
 	ensureDebugId("mosaicInfoPanel-simplePopup");
 
 	setAnimationEnabled(true);
+
+    this.autoHide = autoHide;
 
 	this.caption = new Label(caption);
 	this.caption.setStyleName(DEFAULT_STYLENAME + "-caption");
@@ -153,8 +159,10 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText, WindowRes
     @Override
     public void show() {
 	super.show();
+    if (!autoHide) {
 	hideTimer.schedule(DEFAULT_DELAY);
     }
+  }
 
     public void showModal() {
 	if (glassPanel == null) {
