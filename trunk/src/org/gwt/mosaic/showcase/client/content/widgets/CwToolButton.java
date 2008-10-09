@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,18 @@
  */
 package org.gwt.mosaic.showcase.client.content.widgets;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
@@ -41,6 +40,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {
     ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button",
@@ -82,9 +83,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
-        Orientation.VERTICAL));
-    DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
+    final ScrollLayoutPanel layoutPanel = new ScrollLayoutPanel();
 
     //
     // Push buttons
