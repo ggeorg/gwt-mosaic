@@ -29,6 +29,8 @@ public class BorderLayoutData extends LayoutData {
 
   boolean resizable, collapse;
 
+  int minSize = 0, maxSize = -1;
+
   public BorderLayoutData() {
     this(BorderLayoutRegion.CENTER, false);
   }
@@ -57,22 +59,13 @@ public class BorderLayoutData extends LayoutData {
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize) {
-    this(region, -1.0, minSize, maxSize, false);
-  }
-
-  public BorderLayoutData(BorderLayoutRegion region, double preferredSize, int minSize,
-      int maxSize) {
+  public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
+      int minSize, int maxSize) {
     this(region, preferredSize, minSize, maxSize, false);
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize,
-      boolean decorate) {
-    this(region, -1.0, minSize, maxSize, decorate);
-  }
-
-  public BorderLayoutData(BorderLayoutRegion region, double preferredSize, int minSize,
-      int maxSize, boolean decorate) {
+  public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
+      int minSize, int maxSize, boolean decorate) {
     this.region = region;
     this.preferredSize = preferredSize;
     this.minSize = Math.max(0, minSize);
@@ -86,12 +79,37 @@ public class BorderLayoutData extends LayoutData {
     // }
   }
 
+  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize) {
+    this(region, -1.0, minSize, maxSize, false);
+  }
+
+  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize,
+      boolean decorate) {
+    this(region, -1.0, minSize, maxSize, decorate);
+  }
+
+  public int getMaxSize() {
+    return maxSize;
+  }
+
+  public int getMinSize() {
+    return minSize;
+  }
+
   public BorderLayoutRegion getRegion() {
     return region;
   }
 
   public boolean isResizable() {
     return resizable;
+  }
+
+  protected void setMaxSize(int maxSize) {
+    this.maxSize = maxSize;
+  }
+
+  protected void setMinSize(int minSize) {
+    this.minSize = minSize;
   }
 
 }
