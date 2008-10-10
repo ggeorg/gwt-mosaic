@@ -27,20 +27,20 @@ public final class BoxLayoutData extends LayoutData {
     BOTH, HORIZONTAL, VERTICAL
   }
 
-  float width = -1, height = -1;
+  int width = -1, height = -1;
 
   boolean fillWidth, fillHeight;
 
-  float calcWidth, calcHeight;
+  int calcWidth, calcHeight;
 
   public BoxLayoutData() {
     // Nothing to do here!
   }
-  
+
   public BoxLayoutData(boolean decorate) {
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
-  
+
   public BoxLayoutData(FillStyle fillStyle) {
     this(fillStyle, false);
   }
@@ -57,24 +57,29 @@ public final class BoxLayoutData extends LayoutData {
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
-//  public BoxLayoutData(float width, float height) {
-//    this.width = width;
-//    this.height = height;
-//  }
+  public BoxLayoutData(int width, int height) {
+    this(width, height, false);
+  }
 
-  float getCalcHeight() {
+  public BoxLayoutData(int width, int height, boolean decorate) {
+    this.width = width;
+    this.height = height;
+    this.decoratorPanel = decorate ? new DecoratorPanel() : null;
+  }
+
+  int getCalcHeight() {
     return calcHeight;
   }
 
-  float getCalcWidth() {
+  int getCalcWidth() {
     return calcWidth;
   }
 
-  public float getHeight() {
+  public int getHeight() {
     return height;
   }
 
-  public float getWidth() {
+  public int getWidth() {
     return width;
   }
 
@@ -86,11 +91,11 @@ public final class BoxLayoutData extends LayoutData {
     return fillWidth;
   }
 
-  void setCalcHeight(float calcHeight) {
+  void setCalcHeight(int calcHeight) {
     this.calcHeight = calcHeight;
   }
 
-  void setCalcWidth(float calcWidth) {
+  void setCalcWidth(int calcWidth) {
     this.calcWidth = calcWidth;
   }
 
@@ -102,11 +107,11 @@ public final class BoxLayoutData extends LayoutData {
     this.fillWidth = fillWidth;
   }
 
-  public void setHeight(float height) {
+  public void setHeight(int height) {
     this.height = height;
   }
 
-  public void setWidth(float width) {
+  public void setWidth(int width) {
     this.width = width;
   }
 
