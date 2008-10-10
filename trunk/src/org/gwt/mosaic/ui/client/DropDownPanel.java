@@ -54,6 +54,8 @@ public class DropDownPanel extends AbstractDecoratedPopupPanel {
     panel.setPadding(0);
     super.setWidget(panel);
     setStyleName(DEFAULT_STYLENAME);
+    // Issue 5 fix (ggeorg)
+    DOM.setIntStyleAttribute(getElement(), "zIndex", Integer.MAX_VALUE);
   }
 
   @SuppressWarnings("unchecked")
