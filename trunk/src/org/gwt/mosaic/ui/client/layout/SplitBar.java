@@ -91,13 +91,13 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
       dropTargetClientWidth = box[0];
       dropTargetClientHeight = box[1];
 
-      layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+      layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
       draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
       draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
     }
 
     private int draggableOldAbsoluteLeft, draggableOldAbsoluteTop;
-    private LayoutData layoutData = null;
+    private BorderLayoutData layoutData = null;
     private int boundaryOffsetX, boundaryOffsetY;
     private int dropTargetClientHeight, dropTargetClientWidth;
 
