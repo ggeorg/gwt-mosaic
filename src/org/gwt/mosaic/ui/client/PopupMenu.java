@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,10 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public class PopupMenu extends AbstractDecoratedPopupPanel implements HasAnimation {
 
   private final MenuBar menu;
@@ -37,6 +41,8 @@ public class PopupMenu extends AbstractDecoratedPopupPanel implements HasAnimati
     setAnimationEnabled(true);
     sinkEvents(Event.ONCLICK);
     setStyleName("gwt-MenuBarPopup");
+    // Issue 5 fix (ggeorg)
+    DOM.setIntStyleAttribute(getElement(), "zIndex", Integer.MAX_VALUE);
   }
 
   @Override
