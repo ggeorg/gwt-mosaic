@@ -68,7 +68,7 @@ public class CwCalculatorLayout extends ContentWidget implements ClickListener {
 
   @Override
   public String getName() {
-    return "Calculator Layout";
+    return "Calculator";
   }
 
   /**

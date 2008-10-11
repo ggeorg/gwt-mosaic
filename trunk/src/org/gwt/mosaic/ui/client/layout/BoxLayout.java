@@ -57,7 +57,7 @@ public class BoxLayout extends BaseLayout {
   public boolean runTwice() {
     return runTwiceFlag;
   }
-  
+
   /*
    * (non-Javadoc)
    * 
@@ -113,8 +113,12 @@ public class BoxLayout extends BaseLayout {
 
         if (orient == Orientation.HORIZONTAL) {
           if (layoutData.width != -1) {
-            width += layoutData.width;
-            layoutData.calcWidth = layoutData.width;
+            if (layoutData.width > 0 && layoutData.width <= 1.0) {
+              layoutData.calcWidth = 1; // FIXME
+            } else {
+              layoutData.calcWidth = (int) layoutData.width;
+            }
+            width += layoutData.calcWidth;
           } else {
             int flowWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -127,7 +131,11 @@ public class BoxLayout extends BaseLayout {
             layoutData.calcWidth = /* layoutData.width = */flowWidth;
           }
           if (layoutData.height != -1) {
-            layoutData.calcHeight = layoutData.height;
+            if (layoutData.height > 0 && layoutData.height <= 1.0) {
+              layoutData.calcHeight = 1; // FIXME
+            } else {
+              layoutData.calcHeight = (int) layoutData.height;
+            }
           } else {
             int flowHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -141,8 +149,12 @@ public class BoxLayout extends BaseLayout {
           maxHeight = Math.max(maxHeight, (int) layoutData.calcHeight);
         } else {
           if (layoutData.height != -1) {
-            height += layoutData.height;
-            layoutData.calcHeight = layoutData.height;
+            if (layoutData.height > 0 && layoutData.height <= 1.0) {
+              layoutData.calcHeight = 1; // FIXME
+            } else {
+              layoutData.calcHeight = (int) layoutData.height;
+            }
+            height += layoutData.calcHeight;
           } else {
             int flowHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -155,7 +167,11 @@ public class BoxLayout extends BaseLayout {
             layoutData.calcHeight = /* layoutData.height = */flowHeight;
           }
           if (layoutData.width != -1) {
-            layoutData.calcWidth = layoutData.width;
+            if (layoutData.width > 0 && layoutData.width <= 1.0) {
+              layoutData.calcWidth = 1; // FIXME
+            } else {
+              layoutData.calcWidth = (int) layoutData.width;
+            }
           } else {
             int flowWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -245,7 +261,7 @@ public class BoxLayout extends BaseLayout {
       int fillingHeight = 0;
 
       runTwiceFlag = false;
-      
+
       final List<Widget> visibleChildList = new ArrayList<Widget>();
 
       // 1st pass
@@ -273,8 +289,12 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillWidth) {
             fillingWidth++;
           } else if (layoutData.width != -1) {
-            fillWidth -= layoutData.width;
-            layoutData.calcWidth = layoutData.width;
+            if (layoutData.width > 0 && layoutData.width <= 1.0) {
+              layoutData.calcWidth = (int) (layoutData.width * width);
+            } else {
+              layoutData.calcWidth = (int) layoutData.width;
+            }
+            fillWidth -= layoutData.calcWidth;
           } else {
             int flowWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -290,7 +310,11 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
           } else if (layoutData.height != -1) {
-            layoutData.calcHeight = layoutData.height;
+            if (layoutData.height > 0 && layoutData.height <= 1.0) {
+              layoutData.calcHeight = (int) (layoutData.height * height);
+            } else {
+              layoutData.calcHeight = (int) layoutData.height;
+            }
           } else {
             int flowHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -306,8 +330,12 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillHeight) {
             fillingHeight++;
           } else if (layoutData.height != -1) {
-            fillHeight -= layoutData.height;
-            layoutData.calcHeight = layoutData.height;
+            if (layoutData.height > 0 && layoutData.height <= 1.0) {
+              layoutData.calcHeight = (int) (layoutData.height * height);
+            } else {
+              layoutData.calcHeight = (int) layoutData.height;
+            }
+            fillHeight -= layoutData.calcHeight;
           } else {
             int flowHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
@@ -323,7 +351,11 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
           } else if (layoutData.width != -1) {
-            layoutData.calcWidth = layoutData.width;
+            if (layoutData.width > 0 && layoutData.width <= 1.0) {
+              layoutData.calcWidth = (int) (layoutData.width * width);
+            } else {
+              layoutData.calcWidth = (int) layoutData.width;
+            }
           } else {
             int flowWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {

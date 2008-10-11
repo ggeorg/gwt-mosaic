@@ -27,7 +27,7 @@ public final class BoxLayoutData extends LayoutData {
     BOTH, HORIZONTAL, VERTICAL
   }
 
-  int width = -1, height = -1;
+  double width = -1.0, height = -1.0;
 
   boolean fillWidth, fillHeight;
 
@@ -57,11 +57,11 @@ public final class BoxLayoutData extends LayoutData {
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
-  public BoxLayoutData(int width, int height) {
+  public BoxLayoutData(double width, double height) {
     this(width, height, false);
   }
 
-  public BoxLayoutData(int width, int height, boolean decorate) {
+  public BoxLayoutData(double width, double height, boolean decorate) {
     this.width = width;
     this.height = height;
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
@@ -75,11 +75,11 @@ public final class BoxLayoutData extends LayoutData {
     return calcWidth;
   }
 
-  public int getHeight() {
+  public double getHeight() {
     return height;
   }
 
-  public int getWidth() {
+  public double getWidth() {
     return width;
   }
 
@@ -107,11 +107,11 @@ public final class BoxLayoutData extends LayoutData {
     this.fillWidth = fillWidth;
   }
 
-  public void setHeight(int height) {
+  public void setHeight(double height) {
     this.height = height;
   }
 
-  public void setWidth(int width) {
+  public void setWidth(double width) {
     this.width = width;
   }
 

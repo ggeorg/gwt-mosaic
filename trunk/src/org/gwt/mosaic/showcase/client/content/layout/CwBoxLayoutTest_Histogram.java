@@ -15,12 +15,16 @@
  */
 package org.gwt.mosaic.showcase.client.content.layout;
 
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -29,25 +33,25 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
-public class CwFillLayout extends ContentWidget {
+public class CwBoxLayoutTest_Histogram extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwFillLayout(CwConstants constants) {
+  public CwBoxLayoutTest_Histogram(CwConstants constants) {
     super(constants);
   }
 
   @Override
   public String getDescription() {
-    return "FillLayout description";
+    return "A Vertical BoxLayout test";
   }
 
   @Override
   public String getName() {
-    return "FillLayout";
+    return "Histogram";
   }
 
   /**
@@ -56,11 +60,26 @@ public class CwFillLayout extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets, default is FillLayout
-    final LayoutPanel layoutPanel = new LayoutPanel();
-    
-    final Image img = new Image("MeteoraGreece.JPG");
-    layoutPanel.add(img);
+    // Create a layout panel to align the widgets
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
+    layoutPanel.setWidgetSpacing(1);
+    DOM.setStyleAttribute(layoutPanel.getElement(), "border",
+        "1px dotted #000");
+
+    final int nBins = 33;
+    final double binHeight = 1.0 / (double) nBins;
+    final double mean = (nBins - 1) / 2;
+
+    for (int i = 0; i < nBins; i++) {
+      final double value = Math.exp(-Math.pow((i - mean), 2) / mean);
+      final Widget w = new SimplePanel();
+      w.setTitle(Math.round(value * 100) + "%");
+      DOM.setStyleAttribute(w.getElement(), "border", "1px solid #000");
+      DOM.setStyleAttribute(w.getElement(), "background", "#f4f");
+      DOM.setStyleAttribute(w.getElement(), "color", "#fff");
+      layoutPanel.add(w, new BoxLayoutData(value, binHeight));
+    }
 
     return layoutPanel;
   }
