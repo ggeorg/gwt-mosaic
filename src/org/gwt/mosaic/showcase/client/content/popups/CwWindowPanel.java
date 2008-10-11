@@ -15,6 +15,8 @@
  */
 package org.gwt.mosaic.showcase.client.content.popups;
 
+import java.util.Date;
+
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.Showcase;
@@ -23,14 +25,23 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.PopupMenu;
+import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
+import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
+import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
+import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -47,7 +58,7 @@ import com.google.gwt.user.client.ui.Widget;
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
     ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
     ".dragdrop-movable-panel"})
-public class CwWindowPanel extends ContentWidget {
+public class CwWindowPanel extends ContentWidget implements ClickListener {
 
   /**
    * Constructor.
@@ -81,7 +92,7 @@ public class CwWindowPanel extends ContentWidget {
     final WindowPanel basic = new WindowPanel("Basic");
     basic.setAnimationEnabled(true);
     basic.setWidget(new HTML("Hello World!"));
-    
+
     basic.getHeader().add(Showcase.IMAGES.window().createImage());
 
     final WindowPanel layout = new WindowPanel("Layout");
@@ -89,7 +100,7 @@ public class CwWindowPanel extends ContentWidget {
     LayoutPanel panel = new LayoutPanel();
     layout.setWidget(panel);
     createLayoutContent(panel);
-    
+
     layout.getHeader().add(Showcase.IMAGES.window().createImage());
 
     final WindowPanel sized = new WindowPanel("Sized");
@@ -98,9 +109,9 @@ public class CwWindowPanel extends ContentWidget {
     final Frame frame = new Frame("http://www.google.com");
     DOM.setStyleAttribute(frame.getElement(), "border", "none");
     sized.setWidget(frame);
-    
+
     sized.getHeader().add(Showcase.IMAGES.window().createImage());
-    
+
     final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
     refreshBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
@@ -113,7 +124,7 @@ public class CwWindowPanel extends ContentWidget {
     fixed.setAnimationEnabled(true);
     Image img = new Image("MeteoraGreece.JPG");
     fixed.setWidget(img);
-    
+
     fixed.getHeader().add(Showcase.IMAGES.window().createImage());
 
     final WindowPanel modal = new WindowPanel("Modal", false, true);
@@ -121,8 +132,16 @@ public class CwWindowPanel extends ContentWidget {
     LayoutPanel upload = new LayoutPanel();
     modal.setWidget(upload);
     createUploadFileContent(upload);
-    
+
     modal.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    final WindowPanel zIndex = new WindowPanel("z-index Test", false, false);
+    zIndex.setAnimationEnabled(true);
+    final LayoutPanel zIndexContent = new LayoutPanel();
+    zIndex.setWidget(zIndexContent);
+    createZIndexTestContent(zIndexContent);
+
+    zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {
@@ -164,9 +183,21 @@ public class CwWindowPanel extends ContentWidget {
     });
     layoutPanel.add(btn5);
 
+    Button btn6 = new Button("z-index Test");
+    btn6.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        zIndex.center();
+      }
+    });
+    layoutPanel.add(btn6);
+
     return layoutPanel;
   }
 
+  /**
+   * Create content for layout.
+   */
+  @ShowcaseSource
   private void createLayoutContent(LayoutPanel layoutPanel) {
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setPadding(5);
@@ -184,6 +215,10 @@ public class CwWindowPanel extends ContentWidget {
     layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
   }
 
+  /**
+   * Create content for upload.
+   */
+  @ShowcaseSource
   private void createUploadFileContent(LayoutPanel layoutPanel) {
     // Create a vertical panel to align the content
     VerticalPanel vPanel = new VerticalPanel();
@@ -213,6 +248,50 @@ public class CwWindowPanel extends ContentWidget {
 
     layoutPanel.add(vPanel);
     layoutPanel.setPadding(5);
+  }
+
+  /**
+   * Create content for z-index test.
+   */
+  @ShowcaseSource
+  private void createZIndexTestContent(LayoutPanel layoutPanel) {
+    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    layoutPanel.setPadding(5);
+
+    ToolButton menuButton = new ToolButton("Menu Button", this);
+    menuButton.setStyle(ToolButtonStyle.MENU);
+    menuButton.ensureDebugId("mosaicMenuButton-normal");
+
+    // Make a command that we will execute from all menu items.
+    Command cmd1 = new Command() {
+      public void execute() {
+        TrayInfoPanelNotifier.notifyTrayEvent("Menu Button",
+            "You selected a menu item!");
+      }
+    };
+
+    PopupMenu menuBtnMenu = new PopupMenu();
+    menuBtnMenu.addItem("Item 1", cmd1);
+    menuBtnMenu.addItem("Item 2", cmd1);
+
+    menuButton.setMenu(menuBtnMenu);
+
+    layoutPanel.add(menuButton, new BoxLayoutData(FillStyle.HORIZONTAL));
+    
+    final DateComboBox dateComboBox = new DateComboBox();
+    dateComboBox.showDate(new Date());
+    layoutPanel.add(dateComboBox, new BoxLayoutData(FillStyle.HORIZONTAL));
+  }
+
+  /**
+   * Fired when the user clicks on a button.
+   * 
+   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   */
+  @ShowcaseSource
+  public void onClick(Widget sender) {
+    final Button btn = (Button) sender;
+    TrayInfoPanelNotifier.notifyTrayEvent(btn.getText(), "Clicked!");
   }
 
 }
