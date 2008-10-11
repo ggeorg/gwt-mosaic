@@ -18,7 +18,6 @@ package org.gwt.mosaic.showcase.client.content.layout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -32,26 +31,27 @@ import com.google.gwt.user.client.ui.Widget;
  * Example file.
  */
 @ShowcaseStyle({".mosaic-LayoutPanel"})
-public class CwLayoutTest1 extends ContentWidget {
+public class CwBoxLayoutTest2 extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwLayoutTest1(CwConstants constants) {
+  public CwBoxLayoutTest2(CwConstants constants) {
     super(constants);
   }
   
 
+
   @Override
   public String getDescription() {
-    return "Test1 description";
+    return "Test2 description";
   }
 
   @Override
   public String getName() {
-    return "Test1";
+    return "Test2";
   }
 
   /**
@@ -61,8 +61,9 @@ public class CwLayoutTest1 extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
-    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
+    
     layoutPanel.setWidgetSpacing(5);
 
     final Button b11 = new Button("Button 11");
@@ -73,10 +74,10 @@ public class CwLayoutTest1 extends ContentWidget {
     BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
     final LayoutPanel layoutPanel1 = new LayoutPanel(boxLayout1);
 
-    layoutPanel1.add(b11, new BoxLayoutData(FillStyle.VERTICAL));
-    layoutPanel1.add(b12, new BoxLayoutData(FillStyle.VERTICAL));
-    layoutPanel1.add(b13, new BoxLayoutData(FillStyle.VERTICAL));
-    layoutPanel1.add(b14, new BoxLayoutData(FillStyle.VERTICAL));
+    layoutPanel1.add(b11);
+    layoutPanel1.add(b12);
+    layoutPanel1.add(b13);
+    layoutPanel1.add(b14);
 
     final Button b21 = new Button("Button 21");
     final Button b22 = new Button("Button 22");
@@ -87,13 +88,13 @@ public class CwLayoutTest1 extends ContentWidget {
     boxLayout2.setLeftToRight(false);
     final LayoutPanel layoutPanel2 = new LayoutPanel(boxLayout2);
 
-    layoutPanel2.add(b21, new BoxLayoutData(FillStyle.VERTICAL));
-    layoutPanel2.add(b22, new BoxLayoutData(FillStyle.VERTICAL));
-    layoutPanel2.add(b23, new BoxLayoutData(FillStyle.VERTICAL));
-    layoutPanel2.add(b24, new BoxLayoutData(FillStyle.VERTICAL));
+    layoutPanel2.add(b21);
+    layoutPanel2.add(b22);
+    layoutPanel2.add(b23);
+    layoutPanel2.add(b24);
 
     layoutPanel.add(layoutPanel1, new BoxLayoutData(FillStyle.BOTH, true));
-    layoutPanel.add(layoutPanel2, new BoxLayoutData(FillStyle.BOTH, true));
+    layoutPanel.add(layoutPanel2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
     
     return layoutPanel;
   }

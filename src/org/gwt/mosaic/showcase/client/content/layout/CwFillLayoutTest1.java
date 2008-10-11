@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,48 +20,65 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
- * 
- * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
-public class CwFillLayout extends ContentWidget {
+public class CwFillLayoutTest1 extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwFillLayout(CwConstants constants) {
+  public CwFillLayoutTest1(CwConstants constants) {
     super(constants);
   }
-
+  
   @Override
   public String getDescription() {
-    return "FillLayout description";
+    return "A FillLayout test";
   }
 
   @Override
   public String getName() {
-    return "FillLayout";
+    return "Test1";
   }
-
+  
   /**
    * Initialize this example.
    */
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets, default is FillLayout
+    // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
     
-    final Image img = new Image("MeteoraGreece.JPG");
-    layoutPanel.add(img);
-
+    final Grid grid = new Grid(2, 2);
+    
+    grid.getCellFormatter().setAlignment(0, 0, HasAlignment.ALIGN_LEFT,
+        HasAlignment.ALIGN_TOP);
+    grid.setWidget(0, 0, new Button("Top Left"));
+    
+    grid.getCellFormatter().setAlignment(0, 1, HasAlignment.ALIGN_RIGHT,
+        HasAlignment.ALIGN_TOP);
+    grid.setWidget(0, 1, new Button("Top Right"));
+    
+    grid.getCellFormatter().setAlignment(1, 0, HasAlignment.ALIGN_LEFT,
+        HasAlignment.ALIGN_BOTTOM);
+    grid.setWidget(1, 0, new Button("Bottom Left"));
+    
+    grid.getCellFormatter().setAlignment(1, 1, HasAlignment.ALIGN_RIGHT,
+        HasAlignment.ALIGN_BOTTOM);
+    grid.setWidget(1, 1, new Button("Bottom Right"));
+    
+    layoutPanel.add(grid);
+    
     return layoutPanel;
   }
 
