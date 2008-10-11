@@ -23,13 +23,17 @@ import java.util.Map;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Horizontal;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Vertical;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Histogram;
 import org.gwt.mosaic.showcase.client.content.layout.CwCalculatorLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
-import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest1;
-import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest2;
-import org.gwt.mosaic.showcase.client.content.layout.CwLayoutTest3;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest1;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest2;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
 import org.gwt.mosaic.showcase.client.content.other.CwActions;
@@ -351,8 +355,6 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwGridLayout(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catPanels, new CwCalculatorLayout(constants),
-        IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwNestedBorderLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwMixedLayout(constants),
@@ -368,12 +370,26 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
         IMAGES.catPanels());
 
-    TreeItem catLayoutTests = catPanels.addItem("Tests");
-    setupMainMenuOption(catLayoutTests, new CwLayoutTest1(constants),
+    TreeItem catLayoutTests = catPanels.addItem("Tests & Demos");
+    TreeItem catFillLayoutTests = catLayoutTests.addItem("FillLayout");
+    setupMainMenuOption(catFillLayoutTests, new CwFillLayoutTest1(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catLayoutTests, new CwLayoutTest2(constants),
+    TreeItem catBoxLayoutTests = catLayoutTests.addItem("BoxLayout");
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest1(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catLayoutTests, new CwLayoutTest3(constants),
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest2(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Horizontal(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Vertical(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(constants),
+        IMAGES.catPanels());
+    TreeItem catBorderLayoutTests = catLayoutTests.addItem("BorderLayout");
+    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(constants),
+        IMAGES.catPanels());
+    TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
+    setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
 
     // Trees
