@@ -48,6 +48,8 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -258,10 +260,6 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setPadding(5);
 
-    ToolButton menuButton = new ToolButton("Menu Button", this);
-    menuButton.setStyle(ToolButtonStyle.MENU);
-    menuButton.ensureDebugId("mosaicMenuButton-normal");
-
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
@@ -270,6 +268,35 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
       }
     };
 
+    // Create a menu bar
+    MenuBar menu = new MenuBar();
+    menu.setAnimationEnabled(true);
+
+    MenuBar menu1 = new MenuBar(true);
+    menu1.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("Menu 1", menu1));
+    menu1.addItem("Item 1", cmd1);
+    menu1.addItem("Item 2", cmd1);
+    menu1.addSeparator();
+    menu1.addItem("Item 3", cmd1);
+    menu1.addItem("Item 4", cmd1);
+    
+    MenuBar menu2 = new MenuBar(true);
+    menu2.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("Menu 2", menu2));
+    menu2.addItem("Item 1", cmd1);
+    menu2.addItem("Item 2", cmd1);
+    menu2.addSeparator();
+    menu2.addItem("Item 3", cmd1);
+    menu2.addItem("Item 4", cmd1);
+
+    layoutPanel.add(menu, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Create a tool button
+    ToolButton menuButton = new ToolButton("Menu Button", this);
+    menuButton.setStyle(ToolButtonStyle.MENU);
+    menuButton.ensureDebugId("mosaicMenuButton-normal");
+
     PopupMenu menuBtnMenu = new PopupMenu();
     menuBtnMenu.addItem("Item 1", cmd1);
     menuBtnMenu.addItem("Item 2", cmd1);
@@ -277,7 +304,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     menuButton.setMenu(menuBtnMenu);
 
     layoutPanel.add(menuButton, new BoxLayoutData(FillStyle.HORIZONTAL));
-    
+
+    // Create a date combo box
     final DateComboBox dateComboBox = new DateComboBox();
     dateComboBox.showDate(new Date());
     layoutPanel.add(dateComboBox, new BoxLayoutData(FillStyle.HORIZONTAL));
