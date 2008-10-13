@@ -39,8 +39,10 @@ import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
 import org.gwt.mosaic.showcase.client.content.other.CwActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwHorizontalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwVerticalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
@@ -379,17 +381,22 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest2(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Horizontal(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Vertical(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(constants),
-        IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Horizontal(
+        constants), IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Vertical(
+        constants), IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(
+        constants), IMAGES.catPanels());
     TreeItem catBorderLayoutTests = catLayoutTests.addItem("BorderLayout");
-    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(constants),
-        IMAGES.catPanels());
+    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(
+        constants), IMAGES.catPanels());
     TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
     setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
+        IMAGES.catPanels());
+    TreeItem catGWTPanelsTests = catLayoutTests.addItem("GWT Panels");
+    setupMainMenuOption(catGWTPanelsTests, new CwHorizontalSplitPanel(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catGWTPanelsTests, new CwVerticalSplitPanel(constants),
         IMAGES.catPanels());
 
     // Trees

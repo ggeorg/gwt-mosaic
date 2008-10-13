@@ -24,7 +24,8 @@ import com.google.gwt.user.client.ui.Composite;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public abstract class LayoutComposite extends Composite implements HasLayoutManager {
+public abstract class LayoutComposite extends Composite implements
+    HasLayoutManager {
 
   /**
    * Default constructor.

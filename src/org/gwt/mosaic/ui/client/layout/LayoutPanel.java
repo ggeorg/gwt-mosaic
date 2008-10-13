@@ -19,9 +19,14 @@ import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.ResizableWidget;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * 
@@ -297,6 +302,45 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       final BorderLayout borderLayout = (BorderLayout) getLayout();
       borderLayout.setCollapsed(this, getUnDecoratedWidget(widget), collapse);
     }
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    Widget parent = getParent();
+
+    if (parent == getDecoratorWidget(this)) {
+      parent = parent.getParent();
+    }
+
+    if (parent instanceof HasLayoutManager) {
+      return;
+    }
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        // Set the initial size
+        final int[] size = getPreferredSize();
+        BaseLayout.setSize(LayoutPanel.this, size[0], size[1]);
+      }
+    });
+
+    // Add to Resizable Collection
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return LayoutPanel.this.getElement();
+      }
+
+      public boolean isAttached() {
+        return LayoutPanel.this.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        LayoutPanel.this.layout();
+      }
+    });
+
   }
 
 }
