@@ -50,12 +50,12 @@ public class CwHorizontalSplitPanel extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "Give users the freedom to decide how to allocate space using this split panel.";
+    return "Give users the freedom to decide how to allocate space using this split panel  (a HorizontalSplitPanel demo).";
   }
 
   @Override
   public String getName() {
-    return "GWT Horizontal Split Panel";
+    return "HorizontalSplitPanel";
   }
 
   /**
