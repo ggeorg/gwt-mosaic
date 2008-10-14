@@ -15,9 +15,7 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
@@ -84,8 +82,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   private TabBar tabBar;
 
   private final DeckLayoutPanel deck = new DeckLayoutPanel();
-
-  private final Map<Widget, LayoutPanel> panels = new HashMap<Widget, LayoutPanel>();
 
   private TabListenerCollection tabListeners;
 
@@ -166,9 +162,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void add(Widget w, String tabText, boolean asHTML) {
     assert (w != null);
-    if (panels.get(w) != null) {
-      throw new IllegalArgumentException("Double entry");
-    }
 
     tabBar.addTab(tabText, asHTML);
 
@@ -176,8 +169,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     panel.add(w);
 
     deck.add(panel);
-
-    panels.put(w, panel);
   }
 
   /**
@@ -188,9 +179,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void add(Widget w, Widget tabWidget) {
     assert (w != null);
-    if (panels.get(w) != null) {
-      throw new IllegalArgumentException("Double entry");
-    }
 
     tabBar.addTab(tabWidget);
 
@@ -198,8 +186,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     panel.add(w);
 
     deck.add(panel);
-
-    panels.put(w, panel);
   }
 
   /*
@@ -416,19 +402,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public boolean remove(Widget widget) {
     assert (widget != null);
-    if (panels.get(widget) == null) {
-      return false;
-    }
 
-    final LayoutPanel panel = panels.get(widget);
-    tabBar.removeTab(deck.getWidgetIndex(panel));
-    final boolean result = deck.remove(panel);
-
-    panel.clear();
-
-    panels.remove(widget);
-
-    return result;
+    tabBar.removeTab(deck.getWidgetIndex(widget));
+    return deck.remove(widget);
   }
 
   /*
@@ -442,10 +418,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
   }
 
-  public void setPadding(int padding) {
-    deck.setPadding(padding);
-  }
-
   /**
    * Programmatically selects the specified tab.
    * 
@@ -453,6 +425,10 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void selectTab(int index) {
     tabBar.selectTab(index);
+  }
+
+  public void setPadding(int padding) {
+    deck.setPadding(padding);
   }
 
 }
