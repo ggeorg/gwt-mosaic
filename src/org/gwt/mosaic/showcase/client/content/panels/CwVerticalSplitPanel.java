@@ -28,7 +28,6 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,12 +50,12 @@ public class CwVerticalSplitPanel extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "Give users the freedom to decide how to allocate space using this split panel.";
+    return "Give users the freedom to decide how to allocate space using this split panel (a VerticalSplitPanel demo).";
   }
 
   @Override
   public String getName() {
-    return "GWT Horizontal Split Panel";
+    return "HorizontalSplitPanel";
   }
 
   /**
