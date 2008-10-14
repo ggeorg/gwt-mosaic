@@ -266,6 +266,73 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     return deck.getWidgetIndex(widget);
   }
 
+  /**
+   * Inserts a widget into the tab panel. If the Widget is already attached to
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested
+   * index.
+   * 
+   * @param widget the widget to be inserted
+   * @param tabText the text to be shown on its tab
+   * @param asHTML <code>true</code> to treat the specified text as HTML
+   * @param beforeIndex the index before which it will be inserted
+   */
+  public void insert(Widget widget, String tabText, boolean asHTML,
+      int beforeIndex) {
+    assert (widget != null);
+
+    // Check to see if the tab panel already contains the widget. If so, remove
+    // it and see if we need to shift the position to the left.
+    int idx = getWidgetIndex(widget);
+    if (idx != -1) {
+      remove(widget);
+      if (idx < beforeIndex) {
+        beforeIndex--;
+      }
+    }
+
+    tabBar.insertTab(tabText, asHTML, beforeIndex);
+    deck.insert(widget, beforeIndex);
+  }
+
+  /**
+   * Inserts a widget into the tab panel. If the Widget is already attached to
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested
+   * index.
+   * 
+   * @param widget the widget to be inserted
+   * @param tabText the text to be shown on its tab
+   * @param beforeIndex the index before which it will be inserted
+   */
+  public void insert(Widget widget, String tabText, int beforeIndex) {
+    insert(widget, tabText, false, beforeIndex);
+  }
+
+  /**
+   * Inserts a widget into the tab panel. If the Widget is already attached to
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested
+   * index.
+   * 
+   * @param widget the widget to be inserted
+   * @param tabWidget the widget to be shown on its tabs
+   * @param beforeIndex the index before which it will be inserted
+   */
+  public void insert(Widget widget, Widget tabWidget, int beforeIndex) {
+    assert (widget != null);
+
+    // Check to see if the tab panel already contains the widget. If so, remove
+    // it and see if we need to shift the position to the left.
+    int idx = getWidgetIndex(widget);
+    if (idx != -1) {
+      remove(widget);
+      if (idx < beforeIndex) {
+        beforeIndex--;
+      }
+    }
+
+    tabBar.insertTab(tabWidget, beforeIndex);
+    deck.insert(widget, beforeIndex);
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -377,6 +444,15 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
   public void setPadding(int padding) {
     deck.setPadding(padding);
+  }
+
+  /**
+   * Programmatically selects the specified tab.
+   * 
+   * @param index the index of the tab to be selected
+   */
+  public void selectTab(int index) {
+    tabBar.selectTab(index);
   }
 
 }
