@@ -42,6 +42,7 @@ import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwHorizontalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwTabPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwVerticalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
@@ -371,6 +372,14 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
         IMAGES.catPanels());
+    
+    TreeItem catGWTPanels = catPanels.addItem("GWT Panels");
+    setupMainMenuOption(catGWTPanels, new CwTabPanel(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catGWTPanels, new CwHorizontalSplitPanel(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catGWTPanels, new CwVerticalSplitPanel(constants),
+        IMAGES.catPanels());
 
     TreeItem catLayoutTests = catPanels.addItem("Tests & Demos");
     TreeItem catFillLayoutTests = catLayoutTests.addItem("FillLayout");
@@ -392,11 +401,6 @@ public class Showcase implements EntryPoint {
         constants), IMAGES.catPanels());
     TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
     setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
-        IMAGES.catPanels());
-    TreeItem catGWTPanelsTests = catLayoutTests.addItem("GWT Panels");
-    setupMainMenuOption(catGWTPanelsTests, new CwHorizontalSplitPanel(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catGWTPanelsTests, new CwVerticalSplitPanel(constants),
         IMAGES.catPanels());
 
     // Trees

@@ -323,6 +323,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
         // Set the initial size
         final int[] size = getPreferredSize();
         BaseLayout.setSize(LayoutPanel.this, size[0], size[1]);
+        if (width != null && height != null) {
+          LayoutPanel.super.setWidth(width);
+          LayoutPanel.super.setHeight(height);
+        } else if (width != null) {
+          LayoutPanel.super.setWidth(width);
+          BaseLayout.setSize(LayoutPanel.this, -1, size[1]);
+        } else if (height != null) {
+          BaseLayout.setSize(LayoutPanel.this, size[0], -1);
+          LayoutPanel.super.setHeight(height);
+        }
       }
     });
 
@@ -341,6 +351,22 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       }
     });
 
+  }
+
+  private String height;
+
+  @Override
+  public void setHeight(String height) {
+    super.setHeight(height);
+    this.height = height;
+  }
+
+  private String width;
+
+  @Override
+  public void setWidth(String width) {
+    super.setWidth(width);
+    this.width = width;
   }
 
 }
