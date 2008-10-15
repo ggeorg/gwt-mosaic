@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client.layout;
 import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.LayoutComposite;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -312,6 +313,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
     if (parent == getDecoratorWidget(this)) {
       parent = parent.getParent();
+    }
+    
+    if (parent instanceof LayoutComposite) {
+      parent = parent.getParent();
+      if (parent == getDecoratorWidget(parent)) {
+        parent = parent.getParent();
+      } 
     }
 
     if (parent instanceof HasLayoutManager) {
