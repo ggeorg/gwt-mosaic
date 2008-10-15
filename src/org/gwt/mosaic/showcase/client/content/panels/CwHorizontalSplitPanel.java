@@ -25,8 +25,6 @@ import org.gwt.mosaic.ui.client.layout.GridLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,17 +71,8 @@ public class CwHorizontalSplitPanel extends ContentWidget {
     hSplit.setSplitPosition("50%");
 
     // Add some content
-    LayoutPanel p1 = new LayoutPanel(new BorderLayout()) {
-      @Override
-      protected void onLoad() {
-        super.onLoad();
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            setSize("100%", "100%");
-          }
-        });
-      }
-    };
+    LayoutPanel p1 = new LayoutPanel(new BorderLayout());
+    p1.setSize("100%", "100%");
     p1.setPadding(0);
     p1.add(new Button("NORTH"), new BorderLayoutData(BorderLayoutRegion.NORTH));
     p1.add(new Button("SOUTH"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
@@ -92,17 +81,8 @@ public class CwHorizontalSplitPanel extends ContentWidget {
     p1.add(new Button("CENTER"));
     hSplit.setLeftWidget(p1);
 
-    LayoutPanel p2 = new LayoutPanel(new GridLayout(2, 2)) {
-      @Override
-      protected void onLoad() {
-        super.onLoad();
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            setSize("100%", "100%");
-          }
-        });
-      }
-    };
+    LayoutPanel p2 = new LayoutPanel(new GridLayout(2, 2));
+    p2.setSize("100%", "100%");
     p2.setPadding(0);
     p2.add(new Button("(0,0)"));
     p2.add(new Button("(0,1)"));
