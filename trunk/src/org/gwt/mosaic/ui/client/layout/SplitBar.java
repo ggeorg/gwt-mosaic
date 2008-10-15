@@ -82,7 +82,7 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
       movablePanel.addStyleName(getStylePrimaryName() + "-Movable");
 
       // one time calculation of boundary panel location for efficiency during
-      // gradding
+      // dragging
       Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
       final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
       boundaryOffsetX = widgetLocation.getLeft() + border[3];
@@ -155,17 +155,17 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
       int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
       if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
         int delta = context.draggable.getAbsoluteTop() - draggableOldAbsoluteTop;
-        layoutData.preferredSize += delta;
+        layoutData.preferredSize = widget.getOffsetHeight() + delta;
       } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
         int delta = draggableOldAbsoluteTop - context.draggable.getAbsoluteTop();
-        layoutData.preferredSize += delta;
+        layoutData.preferredSize = widget.getOffsetHeight() + delta;
       }
       if ((direction & SplitBar.DIRECTION_WEST) != 0) {
         int delta = context.draggable.getAbsoluteLeft() - draggableOldAbsoluteLeft;
-        layoutData.preferredSize += delta;
+        layoutData.preferredSize = widget.getOffsetWidth() + delta;
       } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
         int delta = draggableOldAbsoluteLeft - context.draggable.getAbsoluteLeft();
-        layoutData.preferredSize += delta;
+        layoutData.preferredSize = widget.getOffsetWidth() + delta;
       }
 
       layoutData.preferredSize = Math.max((int) layoutData.preferredSize,
