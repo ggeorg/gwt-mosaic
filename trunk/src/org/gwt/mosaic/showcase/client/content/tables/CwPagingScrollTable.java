@@ -30,6 +30,8 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.gen2.table.client.AbstractColumnDefinition;
 import com.google.gwt.gen2.table.client.CachedTableModel;
+import com.google.gwt.gen2.table.client.CellRenderer;
+import com.google.gwt.gen2.table.client.ColumnDefinition;
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
@@ -69,26 +71,6 @@ public class CwPagingScrollTable extends ContentWidget {
     String mosaicPagingScrollTableDescription();
 
     String mosaicPagingScrollTableName();
-  }
-
-  /**
-   * A <code>AbstractColumnDefinition</code> applied to Integer columns in
-   * {@link Student} row values.
-   */
-  @ShowcaseSource
-  private abstract static class IntegerColumnDefinition extends
-      StudentColumnDefinition<Integer> {
-    @Override
-    public void renderRowValue(Student rowValue, HTMLCellView<Student> view) {
-      view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-      super.renderRowValue(rowValue, view);
-    }
-
-    @Override
-    public void renderRowValue(Student rowValue, TableCellView<Student> view) {
-      view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-      super.renderRowValue(rowValue, view);
-    }
   }
 
   /**
@@ -174,7 +156,7 @@ public class CwPagingScrollTable extends ContentWidget {
     // Level 1 headers
     FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
     headerTable.setHTML(0, 0, "User Information");
-    headerFormatter.setColSpan(0, 0, 12);
+    headerFormatter.setColSpan(0, 0, 13);
 
     // Create the select all checkbox
     final CheckBox selectAll = new CheckBox();
@@ -188,22 +170,26 @@ public class CwPagingScrollTable extends ContentWidget {
       }
     });
 
-    // Level 2 headers
-    headerTable.setHTML(1, 0, "First and Last Name");
-    headerFormatter.setColSpan(1, 0, 2);
+ // Level 2 headers
+    headerTable.setWidget(1, 0, selectAll);
     headerFormatter.setRowSpan(1, 0, 2);
-    headerTable.setHTML(1, 1, "General Info");
-    headerFormatter.setColSpan(1, 1, 3);
-    headerTable.setHTML(1, 2, "Favorite Color");
-    headerFormatter.setColSpan(1, 2, 1);
-    headerFormatter.setRowSpan(1, 2, 2);
-    headerTable.setHTML(1, 3, "Preferred Sport");
+    headerFormatter.setHorizontalAlignment(1, 0,
+        HasHorizontalAlignment.ALIGN_CENTER);
+    headerTable.setHTML(1, 1, "First and Last Name");
+    headerFormatter.setColSpan(1, 1, 2);
+    headerFormatter.setRowSpan(1, 1, 2);
+    headerTable.setHTML(1, 2, "General Info");
+    headerFormatter.setColSpan(1, 2, 3);
+    headerTable.setHTML(1, 3, "Favorite Color");
     headerFormatter.setColSpan(1, 3, 1);
     headerFormatter.setRowSpan(1, 3, 2);
-    headerTable.setHTML(1, 4, "School Info");
-    headerFormatter.setColSpan(1, 4, 3);
-    headerTable.setHTML(1, 5, "Login Info");
-    headerFormatter.setColSpan(1, 5, 2);
+    headerTable.setHTML(1, 4, "Preferred Sport");
+    headerFormatter.setColSpan(1, 4, 1);
+    headerFormatter.setRowSpan(1, 4, 2);
+    headerTable.setHTML(1, 5, "School Info");
+    headerFormatter.setColSpan(1, 5, 3);
+    headerTable.setHTML(1, 6, "Login Info");
+    headerFormatter.setColSpan(1, 6, 2);
 
     // Level 3 headers
     headerTable.setHTML(2, 0, "Age");
@@ -235,20 +221,21 @@ public class CwPagingScrollTable extends ContentWidget {
     cachedTableModel.setRowCount(1000);
 
     // Create a TableCellRenderer
-    TableDefinition<Student> tcr = createTableCellRenderer();
+    TableDefinition<Student> tableDef = createTableDefinition();
 
     // Create the scroll table
     scrollTable = new PagingScrollTable<Student>(cachedTableModel, dataTable,
-        headerTable, tcr);
-    getPagingScrollTable().setPageSize(50);
-    getPagingScrollTable().setEmptyTableWidget(
-        new HTML("There is no data to display"));
+        headerTable, tableDef);
+    PagingScrollTable<Student> pagingScrollTable = getPagingScrollTable();
+    pagingScrollTable.setPageSize(50);
+    pagingScrollTable.setEmptyTableWidget(new HTML(
+        "There is no data to display"));
     scrollTable.setFooterTable(getFooterTable());
 
     // Setup the bulk renderer
     FixedWidthGridBulkRenderer<Student> bulkRenderer = new FixedWidthGridBulkRenderer<Student>(
-        dataTable, tcr);
-    getPagingScrollTable().setBulkRenderer(bulkRenderer);
+        dataTable, pagingScrollTable);
+    pagingScrollTable.setBulkRenderer(bulkRenderer);
 
     // Setup the scroll table
     setupScrollTable();
@@ -258,8 +245,27 @@ public class CwPagingScrollTable extends ContentWidget {
    * @return the {@link TableDefinition} with all {@link ColumnDefinition}.
    */
   @ShowcaseSource
-  private TableDefinition<Student> createTableCellRenderer() {
+  private TableDefinition<Student> createTableDefinition() {
+    // Define some cell renderers
+    CellRenderer<Student, Integer> intCellRenderer = new CellRenderer<Student, Integer>() {
+      public void renderRowValue(Student rowValue,
+          ColumnDefinition<Student, Integer> columnDef,
+          HTMLCellView<Student> view) {
+        view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+        view.addHTML(columnDef.getCellValue(rowValue).toString());
+      }
+
+      public void renderRowValue(Student rowValue,
+          ColumnDefinition<Student, Integer> columnDef,
+          TableCellView<Student> view) {
+        view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+        view.setHTML(columnDef.getCellValue(rowValue).toString());
+      }
+    };
+
+    // Create the table definition
     DefaultTableDefinition<Student> tcr = new DefaultTableDefinition<Student>();
+
     // First name
     tcr.addColumnDefinition(new StudentColumnDefinition<String>() {
       @Override
@@ -271,7 +277,6 @@ public class CwPagingScrollTable extends ContentWidget {
       public void setCellValue(Student rowValue, String cellValue) {
         rowValue.setFirstName(cellValue);
       }
-
     });
 
     // Last name
@@ -288,17 +293,21 @@ public class CwPagingScrollTable extends ContentWidget {
     });
 
     // Age
-    tcr.addColumnDefinition(new IntegerColumnDefinition() {
-      @Override
-      public Integer getCellValue(Student rowValue) {
-        return rowValue.getAge();
-      }
+    {
+      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
+        @Override
+        public Integer getCellValue(Student rowValue) {
+          return rowValue.getAge();
+        }
 
-      @Override
-      public void setCellValue(Student rowValue, Integer cellValue) {
-        rowValue.setAge(cellValue);
-      }
-    });
+        @Override
+        public void setCellValue(Student rowValue, Integer cellValue) {
+          rowValue.setAge(cellValue);
+        }
+      };
+      columnDef.setCellRenderer(intCellRenderer);
+      tcr.addColumnDefinition(columnDef);
+    }
 
     // Gender
     {
@@ -309,7 +318,14 @@ public class CwPagingScrollTable extends ContentWidget {
         }
 
         @Override
-        public void renderRowValue(Student rowValue, HTMLCellView<Student> view) {
+        public void setCellValue(Student rowValue, Boolean cellValue) {
+          rowValue.setMale(cellValue);
+        }
+      };
+      columnDef.setCellRenderer(new CellRenderer<Student, Boolean>() {
+        public void renderRowValue(Student rowValue,
+            ColumnDefinition<Student, Boolean> columnDef,
+            HTMLCellView<Student> view) {
           if (rowValue.isMale()) {
             view.addHTML("male");
           } else {
@@ -317,20 +333,16 @@ public class CwPagingScrollTable extends ContentWidget {
           }
         }
 
-        @Override
-        public void renderRowValue(Student rowValue, TableCellView<Student> view) {
+        public void renderRowValue(Student rowValue,
+            ColumnDefinition<Student, Boolean> columnDef,
+            TableCellView<Student> view) {
           if (rowValue.isMale()) {
             view.setHTML("male");
           } else {
             view.setHTML("female");
           }
         }
-
-        @Override
-        public void setCellValue(Student rowValue, Boolean cellValue) {
-          rowValue.setMale(cellValue);
-        }
-      };
+      });
       tcr.addColumnDefinition(columnDef);
 
       // Setup the cellEditor
@@ -375,24 +387,27 @@ public class CwPagingScrollTable extends ContentWidget {
         }
 
         @Override
-        public void renderRowValue(Student rowValue, HTMLCellView<Student> view) {
-          final String color = rowValue.getFavoriteColor();
-          view.setStyleAttribute("color", color);
-          view.addHTML(color);
-        }
-
-        @Override
-        public void renderRowValue(Student rowValue, TableCellView<Student> view) {
-          String color = rowValue.getFavoriteColor();
-          view.setStyleAttribute("color", color);
-          view.setHTML(color);
-        }
-
-        @Override
         public void setCellValue(Student rowValue, String cellValue) {
           rowValue.setFavoriteColor(cellValue);
         }
       };
+      columnDef.setCellRenderer(new CellRenderer<Student, String>() {
+        public void renderRowValue(Student rowValue,
+            ColumnDefinition<Student, String> columnDef,
+            HTMLCellView<Student> view) {
+          String color = rowValue.getFavoriteColor();
+          view.setStyleAttribute("color", color);
+          view.addHTML(color);
+        }
+
+        public void renderRowValue(Student rowValue,
+            ColumnDefinition<Student, String> columnDef,
+            TableCellView<Student> view) {
+          String color = rowValue.getFavoriteColor();
+          view.setStyleAttribute("color", color);
+          view.setHTML(color);
+        }
+      });
       tcr.addColumnDefinition(columnDef);
 
       // Setup the cell editor
@@ -434,7 +449,7 @@ public class CwPagingScrollTable extends ContentWidget {
 
     // College
     {
-      StudentColumnDefinition<String> colDef = new StudentColumnDefinition<String>() {
+      StudentColumnDefinition<String> columnDef = new StudentColumnDefinition<String>() {
         @Override
         public String getCellValue(Student rowValue) {
           return rowValue.getCollege();
@@ -445,7 +460,7 @@ public class CwPagingScrollTable extends ContentWidget {
           rowValue.setCollege(cellValue);
         }
       };
-      tcr.addColumnDefinition(colDef);
+      tcr.addColumnDefinition(columnDef);
 
       // Setup the cell editor
       TextCellEditor cellEditor = new TextCellEditor() {
@@ -468,103 +483,122 @@ public class CwPagingScrollTable extends ContentWidget {
           return true;
         }
       };
-      colDef.setCellEditor(cellEditor);
+      columnDef.setCellEditor(cellEditor);
     }
 
     // Graduation year
-    tcr.addColumnDefinition(new IntegerColumnDefinition() {
-      @Override
-      public Integer getCellValue(Student rowValue) {
-        return rowValue.getGraduationYear();
-      }
+    {
+      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
+        @Override
+        public Integer getCellValue(Student rowValue) {
+          return rowValue.getGraduationYear();
+        }
 
-      @Override
-      public void setCellValue(Student rowValue, Integer cellValue) {
-        rowValue.setGraduationYear(cellValue);
-      }
-    });
+        @Override
+        public void setCellValue(Student rowValue, Integer cellValue) {
+          rowValue.setGraduationYear(cellValue);
+        }
+      };
+      columnDef.setCellRenderer(intCellRenderer);
+      tcr.addColumnDefinition(columnDef);
+    }
 
     // GPA
-    tcr.addColumnDefinition(new StudentColumnDefinition<Double>() {
-      @Override
-      public Double getCellValue(Student rowValue) {
-        return rowValue.getGpa();
-      }
-
-      /**
-       * Convert a double to human readable format with a max of 2 significant
-       * digits.
-       * 
-       * @param gpa the GPA as a double
-       * @return a more readable format of the GPA
-       */
-      private String gpaToString(Double gpa) {
-        String gpaString = gpa.toString();
-        if (gpaString.length() > 4) {
-          gpaString = gpaString.substring(0, 4);
+    {
+      StudentColumnDefinition<Double> columnDef = new StudentColumnDefinition<Double>() {
+        @Override
+        public Double getCellValue(Student rowValue) {
+          return rowValue.getGpa();
         }
-        return gpaString;
-      }
 
-      @Override
-      public void renderRowValue(Student rowValue, HTMLCellView<Student> view) {
-        view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-        double gpa = rowValue.getGpa();
-        if (gpa < 2) {
-          view.setStyleName("badGPA");
-        } else if (gpa < 3) {
-          view.setStyleName("goodGPA");
-        } else {
-          view.setStyleName("greatGPA");
+        @Override
+        public void setCellValue(Student rowValue, Double cellValue) {
+          rowValue.setGpa(cellValue);
         }
-        view.addHTML(gpaToString(gpa));
-      }
-
-      @Override
-      public void renderRowValue(Student rowValue, TableCellView<Student> view) {
-        view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-        double gpa = rowValue.getGpa();
-        if (gpa < 2) {
-          view.setStyleName("badGPA");
-        } else if (gpa < 3) {
-          view.setStyleName("goodGPA");
-        } else {
-          view.setStyleName("greatGPA");
+      };
+      columnDef.setCellRenderer(new CellRenderer<Student, Double>() {
+        /**
+         * Convert a double to human readable format with a max of 2 significant
+         * digits.
+         * 
+         * @param gpa the GPA as a double
+         * @return a more readable format of the GPA
+         */
+        private String gpaToString(Double gpa) {
+          String gpaString = gpa.toString();
+          if (gpaString.length() > 4) {
+            gpaString = gpaString.substring(0, 4);
+          }
+          return gpaString;
         }
-        view.setHTML(gpaToString(gpa));
-      }
 
-      @Override
-      public void setCellValue(Student rowValue, Double cellValue) {
-        rowValue.setGpa(cellValue);
-      }
-    });
+        public void renderRowValue(Student rowValue,
+            ColumnDefinition<Student, Double> columnDef,
+            HTMLCellView<Student> view) {
+          view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+          double gpa = rowValue.getGpa();
+          if (gpa < 2) {
+            view.setStyleName("badGPA");
+          } else if (gpa < 3) {
+            view.setStyleName("goodGPA");
+          } else {
+            view.setStyleName("greatGPA");
+          }
+          view.addHTML(gpaToString(gpa));
+        }
+
+        public void renderRowValue(Student rowValue,
+            ColumnDefinition<Student, Double> columnDef,
+            TableCellView<Student> view) {
+          view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+          double gpa = rowValue.getGpa();
+          if (gpa < 2) {
+            view.setStyleName("badGPA");
+          } else if (gpa < 3) {
+            view.setStyleName("goodGPA");
+          } else {
+            view.setStyleName("greatGPA");
+          }
+          view.setHTML(gpaToString(gpa));
+        }
+      });
+      tcr.addColumnDefinition(columnDef);
+    }
 
     // ID
-    tcr.addColumnDefinition(new IntegerColumnDefinition() {
-      @Override
-      public Integer getCellValue(Student rowValue) {
-        return rowValue.getId();
-      }
+    {
+      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
+        @Override
+        public Integer getCellValue(Student rowValue) {
+          return rowValue.getId();
+        }
 
-      @Override
-      public void setCellValue(Student rowValue, Integer cellValue) {
-        rowValue.setId(cellValue);
-      }
-    });
+        @Override
+        public void setCellValue(Student rowValue, Integer cellValue) {
+          rowValue.setId(cellValue);
+        }
+      };
+      columnDef.setCellRenderer(intCellRenderer);
+      tcr.addColumnDefinition(columnDef);
+    }
 
     // Pin
-    tcr.addColumnDefinition(new IntegerColumnDefinition() {
-      @Override
-      public Integer getCellValue(Student rowValue) {
-        return rowValue.getPin();
-      }
+    {
+      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
+        @Override
+        public Integer getCellValue(Student rowValue) {
+          return rowValue.getPin();
+        }
 
-      @Override
-      public void setCellValue(Student rowValue, Integer cellValue) {
-        rowValue.setPin(cellValue);
-      }
-    });
+        @Override
+        public void setCellValue(Student rowValue, Integer cellValue) {
+          rowValue.setPin(cellValue);
+        }
+      };
+      columnDef.setCellRenderer(intCellRenderer);
+      tcr.addColumnDefinition(columnDef);
+    }
+
     return tcr;
   }
 
@@ -697,6 +731,7 @@ public class CwPagingScrollTable extends ContentWidget {
     scrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
 
     // Set column widths
+    scrollTable.setColumnWidth(0, 100);
     scrollTable.setColumnWidth(1, 100);
     scrollTable.setColumnWidth(2, 35);
     scrollTable.setColumnWidth(3, 45);
