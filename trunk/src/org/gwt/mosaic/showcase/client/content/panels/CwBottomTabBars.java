@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwBottomTabBars extends AbstractLayoutPage {
@@ -81,7 +83,7 @@ public class CwBottomTabBars extends AbstractLayoutPage {
     tabPanel.add(panel4, "Mixed Layout");
 
     layoutPanel.add(tabPanel);
-    
+
     return layoutPanel;
   }
 
