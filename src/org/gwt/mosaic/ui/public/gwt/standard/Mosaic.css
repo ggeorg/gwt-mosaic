@@ -1223,3 +1223,9 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	background: #e3e8f3 url('images/fasttree/selectionBar.gif') repeat-x;
 }
 */
+
+/*** gwt-MenuBarPopup ***/
+
+.gwt-MenuBarPopup {
+	z-index: 2147483647; /* Integer.MAX_VALUE */
+}
