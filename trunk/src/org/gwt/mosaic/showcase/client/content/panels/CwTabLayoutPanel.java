@@ -60,7 +60,7 @@ public class CwTabLayoutPanel extends AbstractLayoutPage {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
 
-    final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel(true);
+    final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.setPadding(5);
 
     LayoutPanel panel1 = new LayoutPanel();

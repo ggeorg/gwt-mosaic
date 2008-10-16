@@ -62,7 +62,7 @@ public class CwBottomTabBars extends AbstractLayoutPage {
     final LayoutPanel layoutPanel = new LayoutPanel();
 
     final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel(
-        TabBarPosition.BOTTOM, true);
+        TabBarPosition.BOTTOM);
     tabPanel.setPadding(5);
 
     LayoutPanel panel1 = new LayoutPanel();
