@@ -24,6 +24,7 @@ import java.util.Vector;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
@@ -53,7 +54,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
+public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
+    HasLayoutManager {
 
   /**
    * WindowPanel direction constant, used in {@link ResizeDragController}.
@@ -754,7 +756,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
           - BaseLayout.getFlowHeight(panel);
       setContentSize(box[0], box[1] - delta + 1); // FIXME why (+ 1) ?
       setSize("auto", "auto");
-      panel.layout();
+      layout();
     }
   }
 
@@ -847,6 +849,24 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption {
     if (!isActive()) {
       bringToFront();
     }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
+   */
+  public int[] getPreferredSize() {
+    return panel.getPreferredSize();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout()
+   */
+  public void layout() {
+    panel.layout();
   }
 
 }

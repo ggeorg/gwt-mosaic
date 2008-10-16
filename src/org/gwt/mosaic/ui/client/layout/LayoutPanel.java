@@ -19,12 +19,14 @@ import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.LayoutComposite;
+import org.gwt.mosaic.ui.client.WindowPanel;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
@@ -234,6 +236,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       if (child instanceof DecoratorPanel) {
         child = ((DecoratorPanel) child).getWidget();
       }
+      if (child instanceof FormPanel) {
+        child = ((FormPanel) child).getWidget();
+      }
       if (child instanceof HasLayoutManager
           && DOM.isVisible(child.getElement())) {
         ((HasLayoutManager) child).layout();
@@ -313,13 +318,19 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
     if (parent == getDecoratorWidget(this)) {
       parent = parent.getParent();
-    }
-    
-    if (parent instanceof LayoutComposite) {
-      parent = parent.getParent();
-      if (parent == getDecoratorWidget(parent)) {
+    } else {
+      if (parent instanceof LayoutComposite) {
         parent = parent.getParent();
-      } 
+        if (parent == getDecoratorWidget(parent)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof FormPanel) {
+        parent = parent.getParent();
+        if (parent == getDecoratorWidget(parent)) {
+          parent = parent.getParent();
+        }
+      }
     }
 
     if (parent instanceof HasLayoutManager) {
