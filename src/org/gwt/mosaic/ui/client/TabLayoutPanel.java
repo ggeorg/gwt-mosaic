@@ -120,6 +120,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
 
     deck.addStyleName(DEFAULT_STYLENAME + "Bottom");
+    if (!decorateBody) {
+      deck.addStyleName("gwt-TabPanelBottom"); // use GWT's TabPanel style
+    }
 
     if (region == TabBarPosition.TOP) {
       layoutPanel.add(tabBar, new BorderLayoutData(BorderLayoutRegion.NORTH));

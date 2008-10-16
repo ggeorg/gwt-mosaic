@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,20 +15,24 @@
  */
 package org.gwt.mosaic.ui.client;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public class DecoratedTabLayoutPanel extends TabLayoutPanel {
 
   public DecoratedTabLayoutPanel() {
     this(TabBarPosition.TOP, false);
   }
-  
+
   public DecoratedTabLayoutPanel(boolean decorateBody) {
     this(TabBarPosition.TOP, decorateBody);
   }
-  
+
   public DecoratedTabLayoutPanel(TabBarPosition region) {
     this(region, false);
   }
-  
+
   public DecoratedTabLayoutPanel(TabBarPosition region, boolean decorateBody) {
     super(region, true, decorateBody);
   }
