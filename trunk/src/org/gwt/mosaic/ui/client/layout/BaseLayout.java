@@ -131,11 +131,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
 
     if (widget instanceof FormPanel) {
       final Widget child = ((FormPanel) widget).getWidget();
-      if (child != null) {
-        if (child instanceof HasLayoutManager) {
+      if (child != null && (child instanceof HasLayoutManager)) {
           setSize(child, width, height);
-          ((HasLayoutManager) child).layout();
-        }
       }
     }
   }
