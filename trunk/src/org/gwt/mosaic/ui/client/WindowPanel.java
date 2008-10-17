@@ -748,13 +748,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    * @see com.google.gwt.user.client.ui.Panel#onLoad()
    */
   protected void onLoad() {
+    super.onLoad();
     if (!initialized) {
       initialized = true;
       final int[] box = DOM.getClientSize(getElement());
       final int[] m = DOM.getMarginSizes(panel.getElement());
-      final int delta = panel.getOffsetHeight() + m[0] + m[2]
-          - BaseLayout.getFlowHeight(panel);
-      setContentSize(box[0], box[1] - delta + 1); // FIXME why (+ 1) ?
+      final int deltaH = panel.getOffsetHeight()
+          - BaseLayout.getFlowHeight(panel) - (m[0] + m[2]);
+      setContentSize(box[0], box[1] - deltaH);
       setSize("auto", "auto");
       layout();
     }
@@ -789,6 +790,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    */
   public void setCaption(final String text) {
     panel.getHeader().setText(text);
+  }
+
+  public void resizeToFitContent() {
+    panel.setSize("0px", "0px");
+    setContentSize(BaseLayout.getFlowWidth(panel),
+        BaseLayout.getFlowHeight(panel));
+    setSize("auto", "auto");
+    layout();
   }
 
   public void setContentSize(int width, int height) {
