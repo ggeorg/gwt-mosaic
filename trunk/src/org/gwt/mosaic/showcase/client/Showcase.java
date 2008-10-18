@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
+import org.gwt.mosaic.showcase.client.content.forms.CwComplexForm;
+import org.gwt.mosaic.showcase.client.content.forms.CwSimpleForm;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
@@ -402,6 +404,13 @@ public class Showcase implements EntryPoint {
     TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
     setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
+
+    // Forms
+    TreeItem catForms = mainMenu.addItem("Forms");
+    setupMainMenuOption(catForms, new CwSimpleForm(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catForms, new CwComplexForm(constants),
+        IMAGES.catForms());
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");

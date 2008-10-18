@@ -1229,3 +1229,9 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 .gwt-MenuBarPopup {
 	z-index: 2147483647; /* Integer.MAX_VALUE */
 }
+
+/*** mosaic-FormSeparator **/
+
+.mosaic-FormSeparator td {
+	font-weight: bold;
+}

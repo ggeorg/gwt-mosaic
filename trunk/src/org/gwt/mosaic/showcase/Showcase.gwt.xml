@@ -19,6 +19,7 @@
 	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
+	<inherits name='org.gwt.mosaic.forms.Forms' />
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
