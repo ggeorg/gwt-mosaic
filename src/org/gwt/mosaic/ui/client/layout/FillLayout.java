@@ -70,6 +70,14 @@ public class FillLayout extends BaseLayout {
 
         break;
       }
+      
+      final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
+      result[0] += (margins[1] + margins[3]);
+      result[1] += (margins[0] + margins[2]);
+      
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+      result[0] += (paddings[1] + paddings[3]);
+      result[1] += (paddings[0] + paddings[2]);
 
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());

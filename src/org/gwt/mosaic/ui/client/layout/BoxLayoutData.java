@@ -27,7 +27,7 @@ public final class BoxLayoutData extends LayoutData {
     BOTH, HORIZONTAL, VERTICAL
   }
 
-  double width = -1.0, height = -1.0;
+  double preferredWidth = -1.0, preferredHeight = -1.0;
 
   boolean fillWidth, fillHeight;
 
@@ -62,8 +62,8 @@ public final class BoxLayoutData extends LayoutData {
   }
 
   public BoxLayoutData(double width, double height, boolean decorate) {
-    this.width = width;
-    this.height = height;
+    this.preferredWidth = width;
+    this.preferredHeight = height;
     this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
@@ -75,12 +75,12 @@ public final class BoxLayoutData extends LayoutData {
     return calcWidth;
   }
 
-  public double getHeight() {
-    return height;
+  public double getPreferredHeight() {
+    return preferredHeight;
   }
 
-  public double getWidth() {
-    return width;
+  public double getPreferredWidth() {
+    return preferredWidth;
   }
 
   public boolean isFillHeight() {
@@ -107,12 +107,12 @@ public final class BoxLayoutData extends LayoutData {
     this.fillWidth = fillWidth;
   }
 
-  public void setHeight(double height) {
-    this.height = height;
+  public void setPreferredHeight(double height) {
+    this.preferredHeight = height;
   }
 
-  public void setWidth(double width) {
-    this.width = width;
+  public void setPreferredWidth(double width) {
+    this.preferredWidth = width;
   }
 
 }
