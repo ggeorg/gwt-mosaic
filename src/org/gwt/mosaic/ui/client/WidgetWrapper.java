@@ -47,7 +47,7 @@ public class WidgetWrapper extends Composite {
    * 
    * @see com.google.gwt.user.client.ui.Composite#getWidget()
    */
-  protected Grid getWidget() {
+  public Grid getWidget() {
     return (Grid) super.getWidget();
   }
 

@@ -26,6 +26,8 @@ public interface ShowcaseImages extends ImageBundle {
 
   AbstractImagePrototype calendar();
 
+  AbstractImagePrototype catForms();
+  
   AbstractImagePrototype catI18N();
 
   AbstractImagePrototype catLists();
