@@ -107,7 +107,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
 
     final WindowPanel sized = new WindowPanel("Sized");
     sized.setAnimationEnabled(true);
-    sized.setSize("512px", "385px");
+    sized.setSize("512px", "384px");
     final Frame frame = new Frame("http://www.google.com");
     DOM.setStyleAttribute(frame.getElement(), "border", "none");
     sized.setWidget(frame);
@@ -280,7 +280,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     menu1.addSeparator();
     menu1.addItem("Item 3", cmd1);
     menu1.addItem("Item 4", cmd1);
-    
+
     MenuBar menu2 = new MenuBar(true);
     menu2.setAnimationEnabled(true);
     menu.addItem(new MenuItem("Menu 2", menu2));

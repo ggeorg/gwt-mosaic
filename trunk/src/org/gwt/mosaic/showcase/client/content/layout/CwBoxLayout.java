@@ -78,7 +78,7 @@ public class CwBoxLayout extends ContentWidget {
     final Button b14 = new Button("Button 14");
 
     final BoxLayoutData blData = new BoxLayoutData(FillStyle.VERTICAL);
-    blData.setWidth(100);
+    blData.setPreferredWidth(100);
     layoutPanel1.add(b11, blData);
     layoutPanel1.add(b12, new BoxLayoutData(FillStyle.VERTICAL));
     layoutPanel1.add(b13);
