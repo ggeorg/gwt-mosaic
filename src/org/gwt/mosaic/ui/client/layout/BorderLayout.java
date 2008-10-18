@@ -184,8 +184,6 @@ public class BorderLayout extends BaseLayout {
       result[0] = width;
       result[1] = height;
 
-      System.out.println("PreferredSize : " + result[0] + "x" + result[1]);
-
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }

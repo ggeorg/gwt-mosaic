@@ -23,7 +23,6 @@ import java.util.Vector;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
-import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
@@ -469,7 +468,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   private final Timer layoutTimer = new Timer() {
     public void run() {
-      panel.layout();
+      layout();
       fireResizedImpl();
     }
   };
@@ -511,17 +510,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         panel.getHeader());
 
     super.setWidget(panel);
-
-    // addClickListener(new ClickListener() {
-    // public void onClick(Widget sender) {
-    // // TODO force out panel to the top of our z-index context
-    // AbsolutePanel boundaryPanel = windowController.getBoundaryPanel();
-    // WidgetLocation location = new WidgetLocation(WindowPanel.this,
-    // boundaryPanel);
-    // boundaryPanel.add(WindowPanel.this, location.getLeft(),
-    // location.getTop());
-    // }
-    // });
 
     addStyleName(DEFAULT_STYLENAME);
   }
@@ -751,14 +739,61 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     super.onLoad();
     if (!initialized) {
       initialized = true;
-      final int[] box = DOM.getClientSize(getElement());
-      final int[] m = DOM.getMarginSizes(panel.getElement());
-      final int deltaH = panel.getOffsetHeight()
-          - BaseLayout.getFlowHeight(panel) - (m[0] + m[2]);
-      setContentSize(box[0], box[1] - deltaH);
-      setSize("auto", "auto");
-      layout();
+
+      resizeToFitContent();
+
+      if (width != null && height != null) {
+        panel.setSize("0px", "0px");
+
+        final int[] box = DOM.getClientSize(getElement());
+        WindowPanel.super.setSize("auto", "auto");
+        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+        setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1] - box3[1]);
+        layout();
+      } else if (width != null) {
+        panel.setSize("0px", "0px");
+
+        final int[] box = DOM.getClientSize(getElement());
+        WindowPanel.super.setWidth("auto");
+        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+        final int[] size = panel.getPreferredSize();
+        setContentSize(box[0] - box2[0] - box3[0], size[1]);
+        layout();
+      } else if (height != null) {
+        panel.setSize("0px", "0px");
+
+        final int[] box = DOM.getClientSize(getElement());
+        WindowPanel.super.setHeight("auto");
+        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+        final int[] size = panel.getPreferredSize();
+        setContentSize(size[0], box[1] - box2[1] - box3[1]);
+        layout();
+      } else {
+        resizeToFitContent();
+      }
+
+      // final int[] _box = DOM.getClientSize(getElement());
+      // System.out.println("\t" + _box[0] + "x" + _box[1]);
     }
+  }
+
+  private String height = null;
+
+  @Override
+  public void setHeight(String height) {
+    super.setHeight(height);
+    this.height = height;
+  }
+
+  private String width = null;
+
+  @Override
+  public void setWidth(String width) {
+    super.setWidth(width);
+    this.width = width;
   }
 
   /**
@@ -794,23 +829,20 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   public void resizeToFitContent() {
     panel.setSize("0px", "0px");
-    setContentSize(BaseLayout.getFlowWidth(panel),
-        BaseLayout.getFlowHeight(panel));
-    setSize("auto", "auto");
+    final int[] size = panel.getPreferredSize();
+    setContentSize(size[0], size[1]);
     layout();
   }
 
   public void setContentSize(int width, int height) {
     if (isResizable()) {
-      if (width != contentWidth) {
-        contentWidth = width;
-      }
-      if (height != contentHeight) {
-        contentHeight = height;
-      }
+      contentWidth = width;
+      contentHeight = height;
     }
+
     DOM.setContentAreaWidth(panel.getElement(), width);
     DOM.setContentAreaHeight(panel.getElement(), height);
+
     layoutTimer.schedule(333);
   }
 
