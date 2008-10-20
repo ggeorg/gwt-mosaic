@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,7 @@ import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
+import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
 import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
 import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -55,6 +56,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
@@ -70,130 +72,6 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   public CwWindowPanel(CwConstants constants) {
     super(constants);
     // TODO Auto-generated constructor stub
-  }
-
-  @Override
-  public String getDescription() {
-    return "WindowPanel description";
-  }
-
-  @Override
-  public String getName() {
-    return "WindowPanel";
-  }
-
-  /**
-   * Initialize this example.
-   */
-  @ShowcaseSource
-  @Override
-  protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
-
-    final WindowPanel basic = new WindowPanel("Basic");
-    basic.setAnimationEnabled(true);
-    basic.setWidget(new HTML("Hello World!"));
-
-    basic.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    final WindowPanel layout = new WindowPanel("Layout");
-    layout.setAnimationEnabled(true);
-    LayoutPanel panel = new LayoutPanel();
-    layout.setWidget(panel);
-    createLayoutContent(panel);
-
-    layout.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    final WindowPanel sized = new WindowPanel("Sized");
-    sized.setAnimationEnabled(true);
-    sized.setSize("512px", "384px");
-    final Frame frame = new Frame("http://www.google.com");
-    DOM.setStyleAttribute(frame.getElement(), "border", "none");
-    sized.setWidget(frame);
-
-    sized.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
-    refreshBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        frame.setUrl(frame.getUrl());
-      }
-    });
-    sized.getHeader().add(refreshBtn, CaptionRegion.RIGHT);
-
-    final WindowPanel fixed = new WindowPanel("Fixed", false, false);
-    fixed.setAnimationEnabled(true);
-    Image img = new Image("MeteoraGreece.JPG");
-    fixed.setWidget(img);
-
-    fixed.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    final WindowPanel modal = new WindowPanel("Modal", false, true);
-    modal.setAnimationEnabled(true);
-    LayoutPanel upload = new LayoutPanel();
-    modal.setWidget(upload);
-    createUploadFileContent(upload);
-
-    modal.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    final WindowPanel zIndex = new WindowPanel("z-index Test", false, false);
-    zIndex.setAnimationEnabled(true);
-    final LayoutPanel zIndexContent = new LayoutPanel();
-    zIndex.setWidget(zIndexContent);
-    createZIndexTestContent(zIndexContent);
-
-    zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    Button btn1 = new Button("Basic");
-    btn1.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        basic.center();
-      }
-    });
-    layoutPanel.add(btn1);
-
-    Button btn2 = new Button("Layout");
-    btn2.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        layout.center();
-      }
-    });
-    layoutPanel.add(btn2);
-
-    Button btn3 = new Button("Sized");
-    btn3.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        sized.center();
-      }
-    });
-    layoutPanel.add(btn3);
-
-    Button btn4 = new Button("Fixed");
-    btn4.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        fixed.center();
-      }
-    });
-    layoutPanel.add(btn4);
-
-    Button btn5 = new Button("Modal");
-    btn5.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        modal.center();
-      }
-    });
-    layoutPanel.add(btn5);
-
-    Button btn6 = new Button("z-index Test");
-    btn6.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        zIndex.center();
-      }
-    });
-    layoutPanel.add(btn6);
-
-    return layoutPanel;
   }
 
   /**
@@ -311,6 +189,16 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(dateComboBox, new BoxLayoutData(FillStyle.HORIZONTAL));
   }
 
+  @Override
+  public String getDescription() {
+    return "WindowPanel description";
+  }
+
+  @Override
+  public String getName() {
+    return "WindowPanel";
+  }
+
   /**
    * Fired when the user clicks on a button.
    * 
@@ -320,6 +208,171 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
     TrayInfoPanelNotifier.notifyTrayEvent(btn.getText(), "Clicked!");
+  }
+
+  /**
+   * 
+   * @param windowPanel
+   */
+  @ShowcaseSource
+  private void addMaximizeButton(final WindowPanel windowPanel) {
+    final ImageButton maximizeBtn = new ImageButton(
+        Caption.IMAGES.windowMaximize());
+    maximizeBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (windowPanel.getWindowState() == WindowState.Maximized) {
+          windowPanel.setWindowState(WindowState.Normal);
+          maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
+        } else {
+          windowPanel.setWindowState(WindowState.Maximized);
+          maximizeBtn.setImage(Caption.IMAGES.windowRestore().createImage());
+        }
+      }
+    });
+    windowPanel.getHeader().add(maximizeBtn, CaptionRegion.RIGHT);
+  }
+
+  /**
+   * 
+   * @param windowPanel
+   */
+  @ShowcaseSource
+  private void addMinimizeButton(final WindowPanel windowPanel) {
+    final ImageButton minimizeBtn = new ImageButton(
+        Caption.IMAGES.windowMinimize());
+    minimizeBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        windowPanel.setWindowState(WindowState.Minimized);
+      }
+    });
+    windowPanel.getHeader().add(minimizeBtn, CaptionRegion.RIGHT);
+  }
+
+  /**
+   * Initialize this example.
+   */
+  @ShowcaseSource
+  @Override
+  protected Widget onInitialize() {
+    // Create a layout panel to align the widgets
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
+
+    final WindowPanel basic = new WindowPanel("Basic");
+    basic.setAnimationEnabled(true);
+    basic.setWidget(new HTML("Hello World!"));
+
+    basic.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    addMaximizeButton(basic);
+    addMinimizeButton(basic);
+
+    final WindowPanel layout = new WindowPanel("Layout");
+    layout.setAnimationEnabled(true);
+    LayoutPanel panel = new LayoutPanel();
+    layout.setWidget(panel);
+    createLayoutContent(panel);
+
+    layout.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    addMaximizeButton(layout);
+    addMinimizeButton(layout);
+
+    final WindowPanel sized = new WindowPanel("Sized");
+    sized.setAnimationEnabled(true);
+    sized.setSize("512px", "384px");
+    final Frame frame = new Frame("http://www.google.com");
+    DOM.setStyleAttribute(frame.getElement(), "border", "none");
+    sized.setWidget(frame);
+
+    sized.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    addMaximizeButton(sized);
+    addMinimizeButton(sized);
+
+    final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
+    refreshBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        frame.setUrl(frame.getUrl());
+      }
+    });
+    sized.getHeader().add(refreshBtn, CaptionRegion.RIGHT);
+
+    final WindowPanel fixed = new WindowPanel("Fixed", false, false);
+    fixed.setAnimationEnabled(true);
+    Image img = new Image("MeteoraGreece.JPG");
+    fixed.setWidget(img);
+
+    fixed.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    addMinimizeButton(fixed);
+
+    final WindowPanel modal = new WindowPanel("Modal", false, true);
+    modal.setAnimationEnabled(true);
+    LayoutPanel upload = new LayoutPanel();
+    modal.setWidget(upload);
+    createUploadFileContent(upload);
+
+    modal.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    final WindowPanel zIndex = new WindowPanel("z-index Test", false, false);
+    zIndex.setAnimationEnabled(true);
+    final LayoutPanel zIndexContent = new LayoutPanel();
+    zIndex.setWidget(zIndexContent);
+    createZIndexTestContent(zIndexContent);
+
+    zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    addMinimizeButton(zIndex);
+
+    Button btn1 = new Button("Basic");
+    btn1.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        basic.center();
+      }
+    });
+    layoutPanel.add(btn1);
+
+    Button btn2 = new Button("Layout");
+    btn2.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        layout.center();
+      }
+    });
+    layoutPanel.add(btn2);
+
+    Button btn3 = new Button("Sized");
+    btn3.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        sized.center();
+      }
+    });
+    layoutPanel.add(btn3);
+
+    Button btn4 = new Button("Fixed");
+    btn4.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        fixed.center();
+      }
+    });
+    layoutPanel.add(btn4);
+
+    Button btn5 = new Button("Modal");
+    btn5.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        modal.center();
+      }
+    });
+    layoutPanel.add(btn5);
+
+    Button btn6 = new Button("z-index Test");
+    btn6.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        zIndex.center();
+      }
+    });
+    layoutPanel.add(btn6);
+
+    return layoutPanel;
   }
 
 }
