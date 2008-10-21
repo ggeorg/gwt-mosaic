@@ -31,6 +31,7 @@ import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
+import org.gwt.mosaic.ui.client.WindowPanel.WindowStateListener;
 import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
 import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -72,6 +73,75 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   public CwWindowPanel(CwConstants constants) {
     super(constants);
     // TODO Auto-generated constructor stub
+  }
+
+  /**
+   * 
+   * @param windowPanel
+   */
+  @ShowcaseSource
+  private void addMaximizeButton(final WindowPanel windowPanel,
+      CaptionRegion captionRegion) {
+    final ImageButton maximizeBtn = new ImageButton(
+        Caption.IMAGES.windowMaximize());
+    maximizeBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (windowPanel.getWindowState() == WindowState.MAXIMIZED) {
+          windowPanel.setWindowState(WindowState.NORMAL);
+        } else {
+          windowPanel.setWindowState(WindowState.MAXIMIZED);
+        }
+      }
+    });
+    windowPanel.addWindowStateListener(new WindowStateListener() {
+      public void onWindowStateChange(WindowPanel sender) {
+        if (sender.getWindowState() == WindowState.MAXIMIZED) {
+          maximizeBtn.setImage(Caption.IMAGES.windowRestore().createImage());
+        } else {
+          maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
+        }
+        
+      }});
+    windowPanel.getHeader().add(maximizeBtn, captionRegion);
+  }
+
+  /**
+   * 
+   * @param windowPanel
+   */
+  @ShowcaseSource
+  private void addMinimizeButton(final WindowPanel windowPanel,
+      CaptionRegion captionRegion) {
+    final ImageButton minimizeBtn = new ImageButton(
+        Caption.IMAGES.windowMinimize());
+    minimizeBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        windowPanel.setWindowState(WindowState.MINIMIZED);
+      }
+    });
+    windowPanel.getHeader().add(minimizeBtn, captionRegion);
+  }
+
+  /**
+   * 
+   * @param windowPanel
+   */
+  @ShowcaseSource
+  private void addCollapseButton(final WindowPanel windowPanel,
+      CaptionRegion captionRegion) {
+    final ImageButton collapseBtn = new ImageButton(Caption.IMAGES.toolMinus());
+    collapseBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (windowPanel.isCollapsed()) {
+          windowPanel.setCollapsed(false);
+          collapseBtn.setImage(Caption.IMAGES.toolMinus().createImage());
+        } else {
+          windowPanel.setCollapsed(true);
+          collapseBtn.setImage(Caption.IMAGES.toolPlus().createImage());
+        }
+      }
+    });
+    windowPanel.getHeader().add(collapseBtn, captionRegion);
   }
 
   /**
@@ -211,44 +281,6 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   }
 
   /**
-   * 
-   * @param windowPanel
-   */
-  @ShowcaseSource
-  private void addMaximizeButton(final WindowPanel windowPanel) {
-    final ImageButton maximizeBtn = new ImageButton(
-        Caption.IMAGES.windowMaximize());
-    maximizeBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (windowPanel.getWindowState() == WindowState.Maximized) {
-          windowPanel.setWindowState(WindowState.Normal);
-          maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
-        } else {
-          windowPanel.setWindowState(WindowState.Maximized);
-          maximizeBtn.setImage(Caption.IMAGES.windowRestore().createImage());
-        }
-      }
-    });
-    windowPanel.getHeader().add(maximizeBtn, CaptionRegion.RIGHT);
-  }
-
-  /**
-   * 
-   * @param windowPanel
-   */
-  @ShowcaseSource
-  private void addMinimizeButton(final WindowPanel windowPanel) {
-    final ImageButton minimizeBtn = new ImageButton(
-        Caption.IMAGES.windowMinimize());
-    minimizeBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        windowPanel.setWindowState(WindowState.Minimized);
-      }
-    });
-    windowPanel.getHeader().add(minimizeBtn, CaptionRegion.RIGHT);
-  }
-
-  /**
    * Initialize this example.
    */
   @ShowcaseSource
@@ -262,9 +294,10 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     basic.setWidget(new HTML("Hello World!"));
 
     basic.getHeader().add(Showcase.IMAGES.window().createImage());
-    
-    addMaximizeButton(basic);
-    addMinimizeButton(basic);
+
+    addMaximizeButton(basic, CaptionRegion.RIGHT);
+    //addMinimizeButton(basic, CaptionRegion.RIGHT);
+    addCollapseButton(basic, CaptionRegion.RIGHT);
 
     final WindowPanel layout = new WindowPanel("Layout");
     layout.setAnimationEnabled(true);
@@ -273,9 +306,10 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     createLayoutContent(panel);
 
     layout.getHeader().add(Showcase.IMAGES.window().createImage());
-    
-    addMaximizeButton(layout);
-    addMinimizeButton(layout);
+
+    addMaximizeButton(layout, CaptionRegion.RIGHT);
+    //addMinimizeButton(layout, CaptionRegion.RIGHT);
+    addCollapseButton(layout, CaptionRegion.RIGHT);
 
     final WindowPanel sized = new WindowPanel("Sized");
     sized.setAnimationEnabled(true);
@@ -285,9 +319,10 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     sized.setWidget(frame);
 
     sized.getHeader().add(Showcase.IMAGES.window().createImage());
-    
-    addMaximizeButton(sized);
-    addMinimizeButton(sized);
+
+    addMaximizeButton(sized, CaptionRegion.RIGHT);
+    //addMinimizeButton(sized, CaptionRegion.RIGHT);
+    addCollapseButton(sized, CaptionRegion.RIGHT);
 
     final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
     refreshBtn.addClickListener(new ClickListener() {
@@ -303,8 +338,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     fixed.setWidget(img);
 
     fixed.getHeader().add(Showcase.IMAGES.window().createImage());
-    
-    addMinimizeButton(fixed);
+
+    //addMinimizeButton(fixed, CaptionRegion.RIGHT);
+    addCollapseButton(fixed, CaptionRegion.RIGHT);
 
     final WindowPanel modal = new WindowPanel("Modal", false, true);
     modal.setAnimationEnabled(true);
@@ -313,6 +349,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     createUploadFileContent(upload);
 
     modal.getHeader().add(Showcase.IMAGES.window().createImage());
+    
+    addCollapseButton(modal, CaptionRegion.RIGHT);
 
     final WindowPanel zIndex = new WindowPanel("z-index Test", false, false);
     zIndex.setAnimationEnabled(true);
@@ -321,8 +359,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     createZIndexTestContent(zIndexContent);
 
     zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
-    
-    addMinimizeButton(zIndex);
+
+    //addMinimizeButton(zIndex, CaptionRegion.RIGHT);
+    addCollapseButton(zIndex, CaptionRegion.RIGHT);
 
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {

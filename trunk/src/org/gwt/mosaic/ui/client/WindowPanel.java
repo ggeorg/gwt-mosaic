@@ -817,9 +817,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
       resizeToFitContent();
 
-      if (windowState == WindowState.Maximized) {
+      if (windowState == WindowState.MAXIMIZED) {
         maximize();
-      } else if (windowState == WindowState.Minimized) {
+      } else if (windowState == WindowState.MINIMIZED) {
       } else {
 
         if (width != null && height != null) {
@@ -953,7 +953,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    */
   @Override
   public void show() {
-    if (windowState == WindowState.Minimized) {
+    if (windowState == WindowState.MINIMIZED) {
       return;
     }
     if (modal) {
@@ -973,10 +973,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   }
 
   public enum WindowState {
-    Normal, Minimized, Maximized
+    NORMAL, MINIMIZED, MAXIMIZED
   }
 
-  private WindowState windowState = WindowState.Normal;
+  private WindowState windowState = WindowState.NORMAL;
 
   private int restoredLeft;
   private int restoredTop;
@@ -989,51 +989,109 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       this.windowState = windowState;
 
       if (isAttached()) {
-        if (windowState == WindowState.Normal) {
+        if (windowState == WindowState.NORMAL) {
           restore(oldState);
-        } else if (windowState == WindowState.Maximized) {
+        } else if (windowState == WindowState.MAXIMIZED) {
           maximize();
-        } else if (windowState == WindowState.Minimized) {
+        } else if (windowState == WindowState.MINIMIZED) {
           minimize();
         }
       }
+
+      fireWindowStateChangeImpl();
     }
   }
 
+  public void setCollapsed(boolean collapsed) {
+    if (collapsed) {
+      if (getWindowState() != WindowState.MAXIMIZED) {
+        final int[] box = DOM.getClientSize(getElement());
+        final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
+        final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
+        final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
+        restoredWidth = box[0] - (boxTL[0] + boxTR[0]);
+        restoredHeight = box[1] - (boxTL[1] + boxBL[1]);
+      }
+      panel.setCollapsed(true);
+      final int[] size = panel.getPreferredSize();
+      setContentSize(size[0], size[1]);
+      if (isResizable()) {
+        makeNotResizable();
+      }
+    } else {
+      panel.setCollapsed(false);
+      if (getWindowState() != WindowState.MAXIMIZED) {
+        setContentSize(restoredWidth, restoredHeight);
+      } else {
+        final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
+        final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
+        final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
+        final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
+        setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
+            - (boxTL[1] + boxBL[1]));
+      }
+      if (isResizable()) {
+        makeResizable();
+      }
+    }
+
+    layout();
+  }
+
+  public boolean isCollapsed() {
+    return panel.isCollapsed();
+  }
+
   protected void restore(WindowState oldState) {
-    if (isResizable() && oldState == WindowState.Maximized) {
-      setPopupPosition(restoredLeft, restoredTop);
-      panel.setSize("0px", "0px");
-      setContentSize(restoredWidth, restoredHeight);
-      layout();
+    if (isResizable() && oldState == WindowState.MAXIMIZED) {
+      if (isCollapsed()) {
+        setPopupPosition(restoredLeft, restoredTop);
+        panel.setSize("0px", "0px");
+        setContentSize(restoredWidth, panel.getPreferredSize()[1]);
+        makeResizable();
+      } else {
+        setPopupPosition(restoredLeft, restoredTop);
+        panel.setSize("0px", "0px");
+        setContentSize(restoredWidth, restoredHeight);
+        makeResizable();
+      }
       windowController.getMoveDragController().makeDraggable(this,
           panel.getHeader());
-      makeResizable();
-    } else if (!isModal() && oldState == WindowState.Minimized) {
+
+      layout();
+    } else if (!isModal() && oldState == WindowState.MINIMIZED) {
       show();
     }
   }
 
   protected void maximize() {
     if (isResizable()) {
-      restoredLeft = getAbsoluteLeft();
-      restoredTop = getAbsoluteTop();
-      // final int[] box = DOM.getClientSize(getElement());
-      restoredWidth = contentWidth;// box[0];
-      restoredHeight = contentHeight;// box[1];
-      panel.setSize("0px", "0px");
-      final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
-      final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
-      final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
-      final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
-      // final int[] boxBR = DOM.getClientSize(getCellElement(2, 2));
-      setPopupPosition(0, 0);
-      setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
-          - (boxTL[1] + boxBL[1]));
-      layout();
-
+      if (isCollapsed()) {
+        restoredLeft = getAbsoluteLeft();
+        restoredTop = getAbsoluteTop();
+        final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
+        final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
+        final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
+        setPopupPosition(0, 0);
+        setContentSize(size[0] - (boxTL[0] + boxTR[0]),
+            panel.getPreferredSize()[1]);
+      } else {
+        restoredLeft = getAbsoluteLeft();
+        restoredTop = getAbsoluteTop();
+        restoredWidth = contentWidth;
+        restoredHeight = contentHeight;
+        final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
+        final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
+        final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
+        final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
+        setPopupPosition(0, 0);
+        setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
+            - (boxTL[1] + boxBL[1]));
+        makeNotResizable();
+      }
       windowController.getMoveDragController().makeNotDraggable(this);
-      makeNotResizable();
+
+      layout();
     }
   }
 
@@ -1071,6 +1129,36 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   public WindowState getWindowState() {
     return windowState;
+  }
+
+  private List<WindowStateListener> windowStateListeners;
+
+  public void addWindowStateListener(WindowStateListener listener) {
+    if (windowStateListeners == null) {
+      windowStateListeners = new ArrayList<WindowStateListener>();
+    }
+    windowStateListeners.add(listener);
+  }
+
+  public void removeWindowStateListener(WindowStateListener listener) {
+    if (windowStateListeners != null) {
+      windowStateListeners.remove(listener);
+    }
+  }
+
+  private void fireWindowStateChangeImpl() {
+    if (windowStateListeners != null) {
+      for (WindowStateListener listener : windowStateListeners) {
+        listener.onWindowStateChange(this);
+      }
+    }
+  }
+
+  /**
+   * Event handler for a change in the window state.
+   */
+  public interface WindowStateListener {
+    void onWindowStateChange(WindowPanel sender);
   }
 
 }
