@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that is used as a header in e.g. <code>WindowPanel</code>.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   public enum CaptionRegion {
@@ -52,6 +54,8 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
 
   private ClickListenerCollection clickListeners;
 
+  private DoubleClickListenerCollection dblClickListeners;
+
   private final HorizontalPanel hpanel = new HorizontalPanel();
 
   private final HTML caption = new HTML();
@@ -64,7 +68,6 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
 
   public Caption(String text, boolean asHTML) {
     initWidget(hpanel);
-    sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
     caption.setStyleName(DEFAULT_STYLENAME + "-text");
 
@@ -122,6 +125,7 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   public void addMouseListener(MouseListener listener) {
     if (mouseListeners == null) {
       mouseListeners = new MouseListenerCollection();
+      sinkEvents(Event.MOUSEEVENTS);
     }
     mouseListeners.add(listener);
   }
@@ -129,8 +133,17 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   public void addClickListener(ClickListener listener) {
     if (clickListeners == null) {
       clickListeners = new ClickListenerCollection();
+      sinkEvents(Event.ONCLICK);
     }
     clickListeners.add(listener);
+  }
+
+  public void addDoubleClickListener(DoubleClickListener listener) {
+    if (dblClickListeners == null) {
+      dblClickListeners = new DoubleClickListenerCollection();
+      sinkEvents(Event.ONDBLCLICK);
+    }
+    dblClickListeners.add(listener);
   }
 
   public void clear() {
@@ -176,13 +189,19 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
         if (clickListeners != null) {
           clickListeners.fireClick(this);
         }
+        break;
+      case Event.ONDBLCLICK:
+        if (dblClickListeners != null) {
+          dblClickListeners.fireDblClick(this);
+        }
+        break;
     }
   }
-  
+
   public Widget getWidget(int index) {
     return getWidget(index, CaptionRegion.LEFT);
   }
-  
+
   public Widget getWidget(int index, CaptionRegion region) {
     if (region == CaptionRegion.LEFT) {
       if (leftIconBox != null) {
@@ -218,6 +237,12 @@ public class Caption extends Composite implements HasHTML, SourcesMouseEvents {
   public void removeClickListener(ClickListener listener) {
     if (clickListeners != null) {
       clickListeners.remove(listener);
+    }
+  }
+
+  public void removeDoubleClickListener(DoubleClickListener listener) {
+    if (dblClickListeners != null) {
+      dblClickListeners.remove(listener);
     }
   }
 

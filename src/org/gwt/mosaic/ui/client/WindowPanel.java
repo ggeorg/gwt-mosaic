@@ -130,7 +130,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     private int dropTargetClientWidth;
 
     public MoveDragController(AbsolutePanel boundaryPanel) {
-      // super(boundaryPanel, true);
       super(boundaryPanel);
     }
 
@@ -509,6 +508,12 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
     });
     panel.getHeader().add(closeBtn, CaptionRegion.RIGHT);
+    
+    panel.getHeader().addDoubleClickListener(new DoubleClickListener() {
+      public void onDoubleClick(Widget sender) {
+        setCollapsed(!isCollapsed());
+      }
+    });
 
     windowController.getMoveDragController().makeDraggable(this,
         panel.getHeader());
@@ -1003,6 +1008,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   }
 
   public void setCollapsed(boolean collapsed) {
+    if (collapsed == isCollapsed()) {
+      return;
+    }
+
     if (collapsed) {
       if (getWindowState() != WindowState.MAXIMIZED) {
         final int[] box = DOM.getClientSize(getElement());
