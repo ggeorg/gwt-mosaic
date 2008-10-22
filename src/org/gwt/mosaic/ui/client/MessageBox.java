@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,6 +45,10 @@ import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public abstract class MessageBox extends WindowPanel {
 
   public interface ConfirmationCallback {
@@ -88,7 +92,7 @@ public abstract class MessageBox extends WindowPanel {
     final HTML html = new HTML(message);
     alert.setWidget(new WidgetWrapper(html, HasAlignment.ALIGN_LEFT,
         HasAlignment.ALIGN_TOP));
-    alert.center();
+    alert.showModal();
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -134,7 +138,7 @@ public abstract class MessageBox extends WindowPanel {
     final HTML html = new HTML(message);
     confirm.setWidget(new WidgetWrapper(html, HasAlignment.ALIGN_LEFT,
         HasAlignment.ALIGN_TOP));
-    confirm.center();
+    confirm.showModal();
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -190,7 +194,7 @@ public abstract class MessageBox extends WindowPanel {
     prompt.getButtonPanel().add(buttonCancel);
 
     prompt.setWidget(dateTimePicker, 0);
-    prompt.center();
+    prompt.showModal();
   }
 
   public static void prompt(String caption, Date defaultValue,
@@ -231,7 +235,7 @@ public abstract class MessageBox extends WindowPanel {
     prompt.getButtonPanel().add(buttonCancel);
 
     prompt.setWidget(datePicker, 0);
-    prompt.center();
+    prompt.showModal();
   }
 
   public static void prompt(String caption, String message, String defaultValue,
@@ -277,7 +281,7 @@ public abstract class MessageBox extends WindowPanel {
     prompt.getButtonPanel().add(buttonCancel);
 
     prompt.setWidget(panel);
-    prompt.center();
+    prompt.showModal();
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -307,7 +311,7 @@ public abstract class MessageBox extends WindowPanel {
   }
 
   public MessageBox(MessageBoxType type, String text, boolean autoHide) {
-    super(text, false, autoHide, true);
+    super(text, false, autoHide);
 
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
     super.setWidget(layoutPanel);
