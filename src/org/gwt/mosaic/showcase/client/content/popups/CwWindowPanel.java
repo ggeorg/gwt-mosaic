@@ -468,7 +468,11 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (layout == null) {
           createLayoutWindowPanel();
         }
-        layout.center();
+        if (layout.getWindowState() == WindowState.MINIMIZED) {
+          layout.setWindowState(WindowState.NORMAL);
+        } else {
+          layout.center();
+        }
       }
     });
     layoutPanel.add(btn2);
@@ -479,7 +483,11 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (sized == null) {
           createSizedWindowPanel();
         }
-        sized.center();
+        if (sized.getWindowState() == WindowState.MINIMIZED) {
+          sized.setWindowState(WindowState.NORMAL);
+        } else {
+          sized.center();
+        }
       }
     });
     layoutPanel.add(btn3);
@@ -490,7 +498,11 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (fixed == null) {
           createFixedWindowPanel();
         }
-        fixed.center();
+        if (fixed.getWindowState() == WindowState.MINIMIZED) {
+          fixed.setWindowState(WindowState.NORMAL);
+        } else {
+          fixed.center();
+        }
       }
     });
     layoutPanel.add(btn4);
@@ -512,7 +524,11 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (zIndex == null) {
           createZIndexWindowPanel();
         }
-        zIndex.center();
+        if (zIndex.getWindowState() == WindowState.MINIMIZED) {
+          zIndex.setWindowState(WindowState.NORMAL);
+        } else {
+          zIndex.center();
+        }
       }
     });
     layoutPanel.add(btn6);
