@@ -44,6 +44,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -65,6 +66,18 @@ import com.google.gwt.user.client.ui.Widget;
     ".dragdrop-movable-panel"})
 public class CwWindowPanel extends ContentWidget implements ClickListener {
 
+  private WindowPanel basic;
+
+  private WindowPanel sized;
+
+  private WindowPanel fixed;
+
+  private WindowPanel modal;
+
+  private WindowPanel zIndex;
+
+  private WindowPanel layout;
+
   /**
    * Constructor.
    * 
@@ -72,7 +85,6 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
    */
   public CwWindowPanel(CwConstants constants) {
     super(constants);
-    // TODO Auto-generated constructor stub
   }
 
   /**
@@ -100,8 +112,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         } else {
           maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
         }
-        
-      }});
+
+      }
+    });
     windowPanel.getHeader().add(maximizeBtn, captionRegion);
   }
 
@@ -123,25 +136,54 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   }
 
   /**
-   * 
-   * @param windowPanel
+   * The 'basic' window panel.
    */
   @ShowcaseSource
-  private void addCollapseButton(final WindowPanel windowPanel,
-      CaptionRegion captionRegion) {
-    final ImageButton collapseBtn = new ImageButton(Caption.IMAGES.toolMinus());
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (windowPanel.isCollapsed()) {
-          windowPanel.setCollapsed(false);
-          collapseBtn.setImage(Caption.IMAGES.toolMinus().createImage());
-        } else {
-          windowPanel.setCollapsed(true);
-          collapseBtn.setImage(Caption.IMAGES.toolPlus().createImage());
-        }
+  private void createBasicWindowPanel() {
+    basic = new WindowPanel("Basic");
+    basic.setAnimationEnabled(true);
+    basic.setWidget(new HTML("Hello World!"));
+
+    basic.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    addMaximizeButton(basic, CaptionRegion.RIGHT);
+    addMinimizeButton(basic, CaptionRegion.RIGHT);
+
+    basic.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        basic = null;
+      }
+
+      public String onWindowClosing() {
+        return null;
       }
     });
-    windowPanel.getHeader().add(collapseBtn, captionRegion);
+  }
+
+  /**
+   * The 'fixed' window panel.
+   */
+  @ShowcaseSource
+  private void createFixedWindowPanel() {
+    fixed = new WindowPanel("Fixed");
+    fixed.setResizable(false);
+    fixed.setAnimationEnabled(true);
+    Image img = new Image("MeteoraGreece.JPG");
+    fixed.setWidget(img);
+
+    fixed.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    addMinimizeButton(fixed, CaptionRegion.RIGHT);
+
+    fixed.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        fixed = null;
+      }
+
+      public String onWindowClosing() {
+        return null;
+      }
+    });
   }
 
   /**
@@ -163,6 +205,94 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
     layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
     layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+  }
+
+  /**
+   * The 'layout' window panel.
+   */
+  @ShowcaseSource
+  private void createLayoutWindowPanel() {
+    layout = new WindowPanel("Layout");
+    layout.setAnimationEnabled(true);
+    LayoutPanel panel = new LayoutPanel();
+    layout.setWidget(panel);
+    createLayoutContent(panel);
+
+    layout.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    addMaximizeButton(layout, CaptionRegion.RIGHT);
+    addMinimizeButton(layout, CaptionRegion.RIGHT);
+
+    layout.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        layout = null;
+      }
+
+      public String onWindowClosing() {
+        return null;
+      }
+    });
+  }
+
+  /**
+   * The 'modal' window panel.
+   */
+  @ShowcaseSource
+  private void createModalWindowPanel() {
+    modal = new WindowPanel("Modal");
+    modal.setResizable(false);
+    modal.setAnimationEnabled(true);
+    LayoutPanel upload = new LayoutPanel();
+    modal.setWidget(upload);
+    createUploadFileContent(upload);
+
+    modal.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    modal.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        modal = null;
+      }
+
+      public String onWindowClosing() {
+        return null;
+      }
+    });
+  }
+
+  /**
+   * The 'sized' window panel.
+   */
+  @ShowcaseSource
+  private void createSizedWindowPanel() {
+    sized = new WindowPanel("Sized");
+    sized.setAnimationEnabled(true);
+    sized.setSize("512px", "384px");
+    final Frame frame = new Frame("http://www.google.com");
+    DOM.setStyleAttribute(frame.getElement(), "border", "none");
+    sized.setWidget(frame);
+
+    sized.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    addMaximizeButton(sized, CaptionRegion.RIGHT);
+    addMinimizeButton(sized, CaptionRegion.RIGHT);
+
+    final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
+    refreshBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        frame.setUrl(frame.getUrl());
+      }
+    });
+    sized.getHeader().add(refreshBtn, CaptionRegion.RIGHT);
+
+    sized.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        sized = null;
+      }
+
+      public String onWindowClosing() {
+        return null;
+      }
+    });
   }
 
   /**
@@ -259,6 +389,34 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(dateComboBox, new BoxLayoutData(FillStyle.HORIZONTAL));
   }
 
+  /**
+   * The 'zIndex' window panel.
+   */
+  @ShowcaseSource
+  private void createZIndexWindowPanel() {
+    zIndex = new WindowPanel("z-index Test");
+    zIndex.setResizable(false);
+    zIndex.setAnimationEnabled(true);
+    final LayoutPanel zIndexContent = new LayoutPanel();
+    zIndex.setWidget(zIndexContent);
+    createZIndexTestContent(zIndexContent);
+
+    zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
+
+    addMaximizeButton(zIndex, CaptionRegion.RIGHT);
+    addMinimizeButton(zIndex, CaptionRegion.RIGHT);
+
+    zIndex.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        zIndex = null;
+      }
+
+      public String onWindowClosing() {
+        return null;
+      }
+    });
+  }
+
   @Override
   public String getDescription() {
     return "WindowPanel description";
@@ -289,84 +447,17 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
 
-    final WindowPanel basic = new WindowPanel("Basic");
-    basic.setAnimationEnabled(true);
-    basic.setWidget(new HTML("Hello World!"));
-
-    basic.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    addMaximizeButton(basic, CaptionRegion.RIGHT);
-    //addMinimizeButton(basic, CaptionRegion.RIGHT);
-    addCollapseButton(basic, CaptionRegion.RIGHT);
-
-    final WindowPanel layout = new WindowPanel("Layout");
-    layout.setAnimationEnabled(true);
-    LayoutPanel panel = new LayoutPanel();
-    layout.setWidget(panel);
-    createLayoutContent(panel);
-
-    layout.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    addMaximizeButton(layout, CaptionRegion.RIGHT);
-    //addMinimizeButton(layout, CaptionRegion.RIGHT);
-    addCollapseButton(layout, CaptionRegion.RIGHT);
-
-    final WindowPanel sized = new WindowPanel("Sized");
-    sized.setAnimationEnabled(true);
-    sized.setSize("512px", "384px");
-    final Frame frame = new Frame("http://www.google.com");
-    DOM.setStyleAttribute(frame.getElement(), "border", "none");
-    sized.setWidget(frame);
-
-    sized.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    addMaximizeButton(sized, CaptionRegion.RIGHT);
-    //addMinimizeButton(sized, CaptionRegion.RIGHT);
-    addCollapseButton(sized, CaptionRegion.RIGHT);
-
-    final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
-    refreshBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        frame.setUrl(frame.getUrl());
-      }
-    });
-    sized.getHeader().add(refreshBtn, CaptionRegion.RIGHT);
-
-    final WindowPanel fixed = new WindowPanel("Fixed", false, false);
-    fixed.setAnimationEnabled(true);
-    Image img = new Image("MeteoraGreece.JPG");
-    fixed.setWidget(img);
-
-    fixed.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    //addMinimizeButton(fixed, CaptionRegion.RIGHT);
-    addCollapseButton(fixed, CaptionRegion.RIGHT);
-
-    final WindowPanel modal = new WindowPanel("Modal", false, true);
-    modal.setAnimationEnabled(true);
-    LayoutPanel upload = new LayoutPanel();
-    modal.setWidget(upload);
-    createUploadFileContent(upload);
-
-    modal.getHeader().add(Showcase.IMAGES.window().createImage());
-    
-    addCollapseButton(modal, CaptionRegion.RIGHT);
-
-    final WindowPanel zIndex = new WindowPanel("z-index Test", false, false);
-    zIndex.setAnimationEnabled(true);
-    final LayoutPanel zIndexContent = new LayoutPanel();
-    zIndex.setWidget(zIndexContent);
-    createZIndexTestContent(zIndexContent);
-
-    zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
-
-    //addMinimizeButton(zIndex, CaptionRegion.RIGHT);
-    addCollapseButton(zIndex, CaptionRegion.RIGHT);
-
     Button btn1 = new Button("Basic");
     btn1.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        basic.center();
+        if (basic == null) {
+          createBasicWindowPanel();
+        }
+        if (basic.getWindowState() == WindowState.MINIMIZED) {
+          basic.setWindowState(WindowState.NORMAL);
+        } else {
+          basic.center();
+        }
       }
     });
     layoutPanel.add(btn1);
@@ -374,6 +465,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     Button btn2 = new Button("Layout");
     btn2.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
+        if (layout == null) {
+          createLayoutWindowPanel();
+        }
         layout.center();
       }
     });
@@ -382,6 +476,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     Button btn3 = new Button("Sized");
     btn3.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
+        if (sized == null) {
+          createSizedWindowPanel();
+        }
         sized.center();
       }
     });
@@ -390,6 +487,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     Button btn4 = new Button("Fixed");
     btn4.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
+        if (fixed == null) {
+          createFixedWindowPanel();
+        }
         fixed.center();
       }
     });
@@ -398,7 +498,10 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     Button btn5 = new Button("Modal");
     btn5.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        modal.center();
+        if (modal == null) {
+          createModalWindowPanel();
+        }
+        modal.showModal();
       }
     });
     layoutPanel.add(btn5);
@@ -406,6 +509,9 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     Button btn6 = new Button("z-index Test");
     btn6.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
+        if (zIndex == null) {
+          createZIndexWindowPanel();
+        }
         zIndex.center();
       }
     });
