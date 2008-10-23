@@ -15,9 +15,12 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import org.gwt.mosaic.ui.client.CollapsedListener;
+import org.gwt.mosaic.ui.client.CollapsedListenerCollection;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -110,6 +113,27 @@ public class BorderLayoutData extends LayoutData {
 
   protected void setMinSize(int minSize) {
     this.minSize = minSize;
+  }
+
+  private CollapsedListenerCollection collapsedListeners;
+
+  protected void addCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners == null) {
+      collapsedListeners = new CollapsedListenerCollection();
+    }
+    collapsedListeners.add(listener);
+  }
+
+  protected void removeCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
+  }
+
+  protected void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
   }
 
 }
