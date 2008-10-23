@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client.layout;
 import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 
 import com.google.gwt.user.client.Command;
@@ -129,9 +130,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   }
 
   private Widget getUnDecoratedWidget(Widget widget) {
-    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
-    if (layoutData != null && layoutData.hasDecoratorPanel()) {
-      return layoutData.getDecoratorPanel().getWidget();
+    if (widget instanceof DecoratorPanel) {
+      widget = ((DecoratorPanel) widget).getWidget();
+      LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+      if (layoutData != null && layoutData.hasDecoratorPanel()) {
+        return layoutData.getDecoratorPanel().getWidget();
+      }
     }
     return widget;
   }
@@ -297,7 +301,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public boolean isCollapsed(Widget widget) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayout borderLayout = (BorderLayout) getLayout();
-      return borderLayout.isCollapsed(this, getUnDecoratedWidget(widget));
+      return borderLayout.isCollapsed(this, widget);
     }
     return false;
   }
@@ -305,7 +309,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public void setCollapsed(Widget widget, boolean collapse) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayout borderLayout = (BorderLayout) getLayout();
-      borderLayout.setCollapsed(this, getUnDecoratedWidget(widget), collapse);
+      borderLayout.setCollapsed(this, widget, collapse);
     }
   }
 
@@ -387,4 +391,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     this.width = width;
   }
 
+  public void addCollapsedListener(Widget widget, CollapsedListener listener) {
+    if (getLayout() instanceof BorderLayout) {
+      final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
+      layoutData.addCollapsedListener(listener);
+    }
+  }
+
+  public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
+    if (getLayout() instanceof BorderLayout) {
+      final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
+      layoutData.removeCollapsedListener(listener);
+    }
+  }
 }

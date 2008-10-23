@@ -194,18 +194,13 @@ public class BorderLayout extends BaseLayout {
   protected boolean isCollapsed(LayoutPanel layoutPanel, Widget widget) {
     try {
       if (layoutPanel != null) {
-        scanForPanels(layoutPanel);
-        if (widget == west || widget == east || widget == north
-            || widget == south) {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
           return layoutData.collapse;
-        }
       }
-      return false;
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
-      return false;
     }
+    return false;
   }
 
   /*
@@ -650,6 +645,7 @@ public class BorderLayout extends BaseLayout {
             || widget == south) {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
           layoutData.collapse = collapse;
+          layoutData.fireCollapsedChange(widget);
         }
       };
     } catch (Exception e) {
