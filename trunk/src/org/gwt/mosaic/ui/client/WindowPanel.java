@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.util.DelayedRunnable;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
@@ -374,7 +375,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   }
 
   /**
-   * Event handler for a change in the window state.
+   * Event listener for a change in the window state.
    */
   public interface WindowStateListener {
     void onWindowStateChange(WindowPanel sender);
@@ -915,12 +916,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   protected void minimize(WindowState oldState) {
     if (!isModal()) {
-      if (oldState != WindowState.MAXIMIZED) {
-        restoredLeft = getAbsoluteLeft();
-        restoredTop = getAbsoluteTop();
-      }
       restoredState = oldState;
-      super.hide(false);
+      setVisible(false);
     }
   }
 
@@ -988,9 +985,19 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
 
       if (windowState == WindowState.MAXIMIZED) {
-        // maximize();
+        new DelayedRunnable(333) {
+          @Override
+          public void run() {
+            maximize(WindowState.NORMAL);
+          }
+        };
       } else if (windowState == WindowState.MINIMIZED) {
-        // minimize();
+        new DelayedRunnable(333) {
+          @Override
+          public void run() {
+            minimize(WindowState.NORMAL);
+          }
+        };
       }
 
       // final int[] _box = DOM.getClientSize(getElement());
@@ -1051,15 +1058,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
       layout();
     } else if (!isModal() && oldState == WindowState.MINIMIZED) {
-      setPopupPositionAndShow(new PositionCallback() {
-        public void setPosition(int offsetWidth, int offsetHeight) {
-          if (getWindowState() == WindowState.MAXIMIZED) {
-            setPopupPosition(0, 0);
-          } else {
-            setPopupPosition(restoredLeft, restoredTop);
-          }
-        }
-      });
+      setVisible(true);
+      if (getWindowState() == WindowState.MAXIMIZED) {
+        setPopupPosition(0, 0);
+      }
     }
   }
 
@@ -1074,6 +1076,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   public void setCollapsed(boolean collapsed) {
     if (collapsed == isCollapsed()) {
+      return;
+    }
+
+    if (!isAttached()) {
+      panel.setCollapsed(true);
       return;
     }
 
@@ -1203,10 +1210,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    */
   @Override
   public void show() {
-    if (windowState == WindowState.MINIMIZED) {
-      return;
-    }
-
     if (modal) {
       if (glassPanel == null) {
         glassPanel = new GlassPanel(false);
