@@ -403,7 +403,6 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
 
     zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
 
-    addMaximizeButton(zIndex, CaptionRegion.RIGHT);
     addMinimizeButton(zIndex, CaptionRegion.RIGHT);
 
     zIndex.addWindowCloseListener(new WindowCloseListener() {

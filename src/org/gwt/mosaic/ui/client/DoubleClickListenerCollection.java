@@ -30,7 +30,7 @@ public class DoubleClickListenerCollection extends
   /**
    * Fires a double click to all listeners.
    * 
-   * @param sender the widget sending the event.
+   * @param sender the widget sending the event
    */
   public void fireDblClick(Widget sender) {
     for (DoubleClickListener listener : this) {
