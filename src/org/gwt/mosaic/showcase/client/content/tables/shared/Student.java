@@ -15,12 +15,13 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import java.io.Serializable;
 
 /**
  * A representation of a college student.
  */
-public class Student implements IsSerializable {
+public class Student implements Serializable {
+  private static final long serialVersionUID = -3076629464840968878L;
 
   /**
    * The number of fields in this class.

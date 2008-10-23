@@ -15,28 +15,34 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import java.util.List;
-
-import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
-import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
+import java.io.Serializable;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.gen2.table.client.MutableTableModel;
-import com.google.gwt.gen2.table.client.TableModelHelper.Request;
-import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.widgetideas.table.client.ClientTableModel;
 
 /**
  * An iterator that serves as the data source for TableOracle requests.
  */
-public class DataSourceTableModel extends MutableTableModel<Student> {
+public class DataSourceTableModel extends ClientTableModel<Serializable> {
+
+  /**
+   * The column count.
+   */
+  public static final int COLUMN_COUNT = 12;
 
   /**
    * The source of the data.
    */
-  private StudentGenerator data = new StudentGenerator() {
+//  private StudentGenerator data = new StudentGenerator() {
+//    @Override
+//    public int getRandomInt(int max) {
+//      return Random.nextInt(max);
+//    }
+//  };
+  private DataSourceData data = new DataSourceData() {
     @Override
     public int getRandomInt(int max) {
       return Random.nextInt(max);
@@ -96,14 +102,14 @@ public class DataSourceTableModel extends MutableTableModel<Student> {
    */
   @Override
   public void requestRows(final Request request,
-      final Callback<Student> callback) {
+      final Callback<Serializable> callback) {
     if (errorMode) {
       // Return an error
       callback.onFailure(new Exception("An error has occured."));
     } else if (zeroMode) {
       // Return an empty result
-      List<Student> students = data.generateStudents(0);
-      callback.onRowsReady(request, new SerializableResponse<Student>(students));
+      //List<Serializable> students = data.generateStudents(0);
+      //callback.onRowsReady(request, new SerializableResponse<Serializable>(students));
     } else if (rpcMode) {
       // Create the service if needed
       if (dataService == null) {
@@ -115,22 +121,24 @@ public class DataSourceTableModel extends MutableTableModel<Student> {
 
       // Send RPC request for data
       dataService.requestRows(request,
-          new AsyncCallback<SerializableResponse<Student>>() {
+          new AsyncCallback<SerializableResponse<Serializable>>() {
             public void onFailure(Throwable caught) {
               callback.onFailure(new Exception("RPC Failure"));
             }
 
-            public void onSuccess(SerializableResponse<Student> result) {
+            public void onSuccess(SerializableResponse<Serializable> result) {
               callback.onRowsReady(request, result);
             }
           });
     } else {
    // Generate data locally
-      int numRows = request.getNumRows();
-      List<Student> students = data.generateStudents(numRows);
-      SerializableResponse<Student> response = new SerializableResponse<Student>(
-          students);
-      callback.onRowsReady(request, response);
+//      int numRows = request.getNumRows();
+//      List<Serializable> students = data.generateStudents(numRows);
+//      SerializableResponse<Serializable> response = new SerializableResponse<Serializable>(
+//          students);
+//      callback.onRowsReady(request, response);
+   // Request rows from the local client
+      super.requestRows(request, callback);
     }
   }
 
@@ -170,9 +178,16 @@ public class DataSourceTableModel extends MutableTableModel<Student> {
   protected boolean onRowRemoved(int row) {
     return true;
   }
+  
+  //-------------------------
 
   @Override
-  protected boolean onSetRowValue(int row, Student rowValue) {
+  public Object getCell(int rowNum, int colNum) {
+    return data.getCell(rowNum, colNum);
+  }
+
+  @Override
+  protected boolean onSetData(int row, int cell, Object data) {
     return true;
   }
 }

@@ -1,8 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Copyright 2008 Georgios J. Georgopoulos
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -25,20 +23,19 @@ import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
-import com.google.gwt.gen2.table.client.FixedWidthGrid;
-import com.google.gwt.gen2.table.client.ScrollTable;
-import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.ScrollTable;
+import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-ScrollTable"})
 public class CwScrollTable extends ContentWidget {
@@ -111,9 +108,8 @@ public class CwScrollTable extends ContentWidget {
   @ShowcaseSource
   protected void createFooterTable() {
     footerTable = new FixedWidthFlexTable();
-    footerTable.setHTML(0, 0, "&nbsp;");
     for (int i = 0; i < 12; i++) {
-      footerTable.setText(0, i + 1, "Col " + i);
+      footerTable.setText(0, i, "Col " + i);
     }
   }
 
@@ -129,38 +125,22 @@ public class CwScrollTable extends ContentWidget {
     headerTable.setHTML(0, 0, "User Information");
     headerFormatter.setColSpan(0, 0, 13);
 
-    // Create the select all checkbox
-    final CheckBox selectAll = new CheckBox();
-    selectAll.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (selectAll.isChecked()) {
-          dataTable.selectAllRows();
-        } else {
-          dataTable.deselectAllRows();
-        }
-      }
-    });
-
     // Level 2 headers
-    headerTable.setWidget(1, 0, selectAll);
+    headerTable.setHTML(1, 0, "First and Last Name");
+    headerFormatter.setColSpan(1, 0, 2);
     headerFormatter.setRowSpan(1, 0, 2);
-    headerFormatter.setHorizontalAlignment(1, 0,
-        HasHorizontalAlignment.ALIGN_CENTER);
-    headerTable.setHTML(1, 1, "First and Last Name");
-    headerFormatter.setColSpan(1, 1, 2);
-    headerFormatter.setRowSpan(1, 1, 2);
-    headerTable.setHTML(1, 2, "General Info");
-    headerFormatter.setColSpan(1, 2, 3);
-    headerTable.setHTML(1, 3, "Favorite Color");
+    headerTable.setHTML(1, 1, "General Info");
+    headerFormatter.setColSpan(1, 1, 3);
+    headerTable.setHTML(1, 2, "Favorite Color");
+    headerFormatter.setColSpan(1, 2, 1);
+    headerFormatter.setRowSpan(1, 2, 2);
+    headerTable.setHTML(1, 3, "Preferred Sport");
     headerFormatter.setColSpan(1, 3, 1);
     headerFormatter.setRowSpan(1, 3, 2);
-    headerTable.setHTML(1, 4, "Preferred Sport");
-    headerFormatter.setColSpan(1, 4, 1);
-    headerFormatter.setRowSpan(1, 4, 2);
-    headerTable.setHTML(1, 5, "School Info");
-    headerFormatter.setColSpan(1, 5, 3);
-    headerTable.setHTML(1, 6, "Login Info");
-    headerFormatter.setColSpan(1, 6, 2);
+    headerTable.setHTML(1, 4, "School Info");
+    headerFormatter.setColSpan(1, 4, 3);
+    headerTable.setHTML(1, 5, "Login Info");
+    headerFormatter.setColSpan(1, 5, 2);
 
     // Level 3 headers
     headerTable.setHTML(2, 0, "Age");
@@ -182,7 +162,7 @@ public class CwScrollTable extends ContentWidget {
     createHeaderTable();
     createFooterTable();
     dataTable = new FixedWidthGrid();
-    //dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
+    dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
 
     // Add the scroll table to the page
     scrollTable = new ScrollTable(dataTable, headerTable);

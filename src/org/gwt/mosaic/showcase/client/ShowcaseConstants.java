@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,14 +24,16 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
+import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
-import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 
 import com.google.gwt.i18n.client.Constants;
 
 /**
  * The constants used in this Page.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public interface ShowcaseConstants extends Constants,
     ContentWidget.CwConstants, CwBasicButton.CwConstants,
