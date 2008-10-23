@@ -22,6 +22,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Provides helper methods for DOM elements.
@@ -40,6 +41,21 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static final int OTHER_KEY_LEFT = 63234;
 
   public static final int OTHER_KEY_RIGHT = 63235;
+
+  /**
+   * If using standards mode, and the body (i.e. RootPanel.get()) is going to be
+   * your boundary panel, you'll want to ensure that the body actually has
+   * height; with only absolute positioned content, the height remains 0px.
+   * Usually setting 100% height on the HTML and BODY elements does the trick.
+   * 
+   * html,body { height: 100%; }
+   */
+  static {
+    if (CompatMode.isStandardsMode()) {
+      Element elem = RootPanel.get().getElement();
+      elem.getStyle().setProperty("height", "100%");
+    }
+  }
 
   /**
    * Fixes the box calculations for IE in QuirksMode.
@@ -428,7 +444,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * 
    * @param str the string to be parsed
    * @param radix a number (from 2 to 36) that represents the numeric system to
-   *            be used
+   *          be used
    * @return the parsed value
    */
   protected native static Integer parseInt(String str, int radix)
@@ -452,9 +468,9 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * 
    * @param str the string to be parsed
    * @param radix a number (from 2 to 36) that represents the numeric system to
-   *            be used
+   *          be used
    * @param defaultValue the value to return if the parsed value was
-   *            <code>null</code>
+   *          <code>null</code>
    * @return the parsed value
    */
   protected static int parseInt(String str, int radix, int defaultValue) {
@@ -546,7 +562,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * 
    * @param elem the element whose current XY position we want to set
    * @param pos contains the X & Y values for new position (coordinates are
-   *            page-based)
+   *          page-based)
    * @return the new XY position of the element
    */
   public static Point setXY(Element elem, Point pos) {
@@ -561,9 +577,9 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * 
    * @param elem the element whose current XY position we want to set
    * @param pos contains the X & Y values for new position (coordinates are
-   *            page-based)
+   *          page-based)
    * @param noRetry by default we try and set the position a second time if the
-   *            first fails
+   *          first fails
    * @return the new XY position of the element
    */
   public static Point setXY(Element elem, Point pos, boolean noRetry) {
