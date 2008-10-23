@@ -15,17 +15,16 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
+import java.io.Serializable;
 
-import com.google.gwt.gen2.table.client.TableModelHelper.Request;
-import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.rpc.RemoteService;
-
+import com.google.gwt.widgetideas.table.client.TableModel.Request;
+import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
 
 /**
  * A <code>RemoteService</code> to retrieve row data for the
  * <code> PagingScrollTableDemo</code>.
  */
 public interface DataSourceService extends RemoteService {
-  SerializableResponse<Student> requestRows(Request request);
+  SerializableResponse<Serializable> requestRows(Request request);
 }

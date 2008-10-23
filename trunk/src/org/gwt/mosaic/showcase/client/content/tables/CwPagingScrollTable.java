@@ -15,12 +15,12 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
+import java.io.Serializable;
+
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
-import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
@@ -28,33 +28,28 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.gen2.table.client.AbstractColumnDefinition;
-import com.google.gwt.gen2.table.client.CachedTableModel;
-import com.google.gwt.gen2.table.client.CellRenderer;
-import com.google.gwt.gen2.table.client.ColumnDefinition;
-import com.google.gwt.gen2.table.client.DefaultTableDefinition;
-import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
-import com.google.gwt.gen2.table.client.FixedWidthGrid;
-import com.google.gwt.gen2.table.client.FixedWidthGridBulkRenderer;
-import com.google.gwt.gen2.table.client.ListCellEditor;
-import com.google.gwt.gen2.table.client.PagingOptions;
-import com.google.gwt.gen2.table.client.PagingScrollTable;
-import com.google.gwt.gen2.table.client.RadioCellEditor;
-import com.google.gwt.gen2.table.client.ScrollTable;
-import com.google.gwt.gen2.table.client.TableDefinition;
-import com.google.gwt.gen2.table.client.TextCellEditor;
-import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.gen2.table.client.TableDefinition.HTMLCellView;
-import com.google.gwt.gen2.table.client.TableDefinition.TableCellView;
-import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.table.client.CachedTableModel;
+import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.FixedWidthGridBulkRenderer;
+import com.google.gwt.widgetideas.table.client.ListCellEditor;
+import com.google.gwt.widgetideas.table.client.PagingOptions;
+import com.google.gwt.widgetideas.table.client.PagingScrollTable;
+import com.google.gwt.widgetideas.table.client.RadioCellEditor;
+import com.google.gwt.widgetideas.table.client.ScrollTable;
+import com.google.gwt.widgetideas.table.client.TableBulkRenderer;
+import com.google.gwt.widgetideas.table.client.TextCellEditor;
+import com.google.gwt.widgetideas.table.client.PagingScrollTable.CellRenderer;
+import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * Example file.
@@ -74,13 +69,47 @@ public class CwPagingScrollTable extends ContentWidget {
   }
 
   /**
-   * A <code>ColumnDefinition</code> applied to {@link Student} row values.
-   * 
-   * @param <ColType> the data type of the column
+   * A custom cell renderer.
    */
-  @ShowcaseSource
-  private abstract static class StudentColumnDefinition<ColType> extends
-      AbstractColumnDefinition<Student, ColType> {
+  private static class CustomBulkRenderer extends
+      TableBulkRenderer.CellRenderer {
+    @Override
+    public void renderCell(final int row, final int column, final Object cellData,
+        final StringBuffer accum) {
+      if (cellData == null) {
+        return;
+      }
+
+      switch (column) {
+        case 5:
+          accum.append("<FONT color=\"" + cellData + "\">" + cellData
+              + "</FONT>");
+          return;
+        default:
+          accum.append(cellData + "");
+      }
+    }
+  }
+  
+  /**
+   * A custom cell renderer.
+   */
+  private static class CustomCellRenderer implements CellRenderer {
+    public void renderCell(FixedWidthGrid grid, int row, int column, Object data) {
+      if (data == null) {
+        grid.clearCell(row, column);
+        return;
+      }
+
+      switch (column) {
+        case 5:
+          grid.setHTML(row, column, "<FONT color=\"" + data + "\">" + data
+              + "</FONT>");
+          break;
+        default:
+          grid.setHTML(row, column, data + "");
+      }
+    }
   }
 
   /**
@@ -117,7 +146,7 @@ public class CwPagingScrollTable extends ContentWidget {
    * The <code>CachedTableModel</code> around the main table model.
    */
   @ShowcaseSource
-  private CachedTableModel<Student> cachedTableModel = null;
+  private CachedTableModel<Serializable> cachedTableModel = null;
 
   /**
    * The {@link DataSourceTableModel}.
@@ -158,38 +187,22 @@ public class CwPagingScrollTable extends ContentWidget {
     headerTable.setHTML(0, 0, "User Information");
     headerFormatter.setColSpan(0, 0, 13);
 
-    // Create the select all checkbox
-    final CheckBox selectAll = new CheckBox();
-    selectAll.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (selectAll.isChecked()) {
-          dataTable.selectAllRows();
-        } else {
-          dataTable.deselectAllRows();
-        }
-      }
-    });
-
- // Level 2 headers
-    headerTable.setWidget(1, 0, selectAll);
+    // Level 2 headers
+    headerTable.setHTML(1, 0, "First and Last Name");
+    headerFormatter.setColSpan(1, 0, 2);
     headerFormatter.setRowSpan(1, 0, 2);
-    headerFormatter.setHorizontalAlignment(1, 0,
-        HasHorizontalAlignment.ALIGN_CENTER);
-    headerTable.setHTML(1, 1, "First and Last Name");
-    headerFormatter.setColSpan(1, 1, 2);
-    headerFormatter.setRowSpan(1, 1, 2);
-    headerTable.setHTML(1, 2, "General Info");
-    headerFormatter.setColSpan(1, 2, 3);
-    headerTable.setHTML(1, 3, "Favorite Color");
+    headerTable.setHTML(1, 1, "General Info");
+    headerFormatter.setColSpan(1, 1, 3);
+    headerTable.setHTML(1, 2, "Favorite Color");
+    headerFormatter.setColSpan(1, 2, 1);
+    headerFormatter.setRowSpan(1, 2, 2);
+    headerTable.setHTML(1, 3, "Preferred Sport");
     headerFormatter.setColSpan(1, 3, 1);
     headerFormatter.setRowSpan(1, 3, 2);
-    headerTable.setHTML(1, 4, "Preferred Sport");
-    headerFormatter.setColSpan(1, 4, 1);
-    headerFormatter.setRowSpan(1, 4, 2);
-    headerTable.setHTML(1, 5, "School Info");
-    headerFormatter.setColSpan(1, 5, 3);
-    headerTable.setHTML(1, 6, "Login Info");
-    headerFormatter.setColSpan(1, 6, 2);
+    headerTable.setHTML(1, 4, "School Info");
+    headerFormatter.setColSpan(1, 4, 3);
+    headerTable.setHTML(1, 5, "Login Info");
+    headerFormatter.setColSpan(1, 5, 2);
 
     // Level 3 headers
     headerTable.setHTML(2, 0, "Age");
@@ -211,30 +224,27 @@ public class CwPagingScrollTable extends ContentWidget {
     createHeaderTable();
     createFooterTable();
     dataTable = new FixedWidthGrid();
-    dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
+    dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
 
     // Setup the controller
     tableModel = new DataSourceTableModel();
-    cachedTableModel = new CachedTableModel<Student>(tableModel);
+    cachedTableModel = new CachedTableModel<Serializable>(tableModel);
     cachedTableModel.setPreCachedRowCount(50);
     cachedTableModel.setPostCachedRowCount(50);
     cachedTableModel.setRowCount(1000);
 
-    // Create a TableCellRenderer
-    TableDefinition<Student> tableDef = createTableDefinition();
-
     // Create the scroll table
-    scrollTable = new PagingScrollTable<Student>(cachedTableModel, dataTable,
-        headerTable, tableDef);
-    PagingScrollTable<Student> pagingScrollTable = getPagingScrollTable();
-    pagingScrollTable.setPageSize(50);
-    pagingScrollTable.setEmptyTableWidget(new HTML(
-        "There is no data to display"));
-    scrollTable.setFooterTable(getFooterTable());
+    scrollTable = new PagingScrollTable<Serializable>(cachedTableModel, dataTable,
+        headerTable);
+    PagingScrollTable<Serializable> pagingScrollTable = getPagingScrollTable();
+    pagingScrollTable.setCellRenderer(new CustomCellRenderer());
+    pagingScrollTable.setPageSize(20);
+    setupCellEditors(pagingScrollTable);
 
     // Setup the bulk renderer
-    FixedWidthGridBulkRenderer<Student> bulkRenderer = new FixedWidthGridBulkRenderer<Student>(
-        dataTable, pagingScrollTable);
+    FixedWidthGridBulkRenderer bulkRenderer = new FixedWidthGridBulkRenderer(
+        dataTable, DataSourceTableModel.COLUMN_COUNT);
+    bulkRenderer.setCellRenderer(new CustomBulkRenderer());
     pagingScrollTable.setBulkRenderer(bulkRenderer);
 
     // Setup the scroll table
@@ -242,364 +252,95 @@ public class CwPagingScrollTable extends ContentWidget {
   }
 
   /**
-   * @return the {@link TableDefinition} with all {@link ColumnDefinition}.
+   * Setup the cell editors on the scroll table.
    */
   @ShowcaseSource
-  private TableDefinition<Student> createTableDefinition() {
-    // Define some cell renderers
-    CellRenderer<Student, Integer> intCellRenderer = new CellRenderer<Student, Integer>() {
-      public void renderRowValue(Student rowValue,
-          ColumnDefinition<Student, Integer> columnDef,
-          HTMLCellView<Student> view) {
-        view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-        view.addHTML(columnDef.getCellValue(rowValue).toString());
+  private void setupCellEditors(PagingScrollTable<Serializable> table) {
+    // Integer only cell editor for age
+    TextBox intOnlyTextBox = new TextBox();
+    intOnlyTextBox.setWidth("4em");
+    intOnlyTextBox.addKeyboardListener(new KeyboardListenerAdapter() {
+      @Override
+      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+        if ((!Character.isDigit(keyCode)) && (keyCode != (char) KEY_TAB)
+            && (keyCode != (char) KEY_BACKSPACE)
+            && (keyCode != (char) KEY_DELETE) && (keyCode != (char) KEY_ENTER)
+            && (keyCode != (char) KEY_HOME) && (keyCode != (char) KEY_END)
+            && (keyCode != (char) KEY_LEFT) && (keyCode != (char) KEY_UP)
+            && (keyCode != (char) KEY_RIGHT) && (keyCode != (char) KEY_DOWN)) {
+          ((TextBox) sender).cancelKey();
+        }
       }
+    });
+    table.setCellEditor(2, new TextCellEditor<Serializable>(intOnlyTextBox));
 
-      public void renderRowValue(Student rowValue,
-          ColumnDefinition<Student, Integer> columnDef,
-          TableCellView<Student> view) {
-        view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-        view.setHTML(columnDef.getCellValue(rowValue).toString());
+    // Gender cell editor
+    RadioCellEditor<Serializable> genderEditor = new RadioCellEditor<Serializable>();
+    genderEditor.setLabel("Select a gender:");
+    genderEditor.addRadioButton(new RadioButton("editorGender", "male"));
+    genderEditor.addRadioButton(new RadioButton("editorGender", "female"));
+    table.setCellEditor(3, genderEditor);
+
+    // Race cell editor
+    ListCellEditor<Serializable> raceEditor = new ListCellEditor<Serializable>();
+    ListBox raceBox = raceEditor.getListBox();
+    for (int i = 0; i < DataSourceData.races.length; i++) {
+      raceBox.addItem(DataSourceData.races[i]);
+    }
+    table.setCellEditor(4, raceEditor);
+
+    // Color cell editor
+    RadioCellEditor<Serializable> colorEditor = new RadioCellEditor<Serializable>() {
+      /**
+       * An element used to string the HTML portion of the color.
+       */
+      private HTML html = new HTML();
+
+      @Override
+      protected void setValue(Object value) {
+        html.setHTML(value.toString());
+        super.setValue(html.getText());
       }
     };
+    colorEditor.setLabel("Select a color:");
+    for (int i = 0; i < DataSourceData.colors.length; i++) {
+      String color = DataSourceData.colors[i];
+      colorEditor.addRadioButton(new RadioButton("editorColor", color));
+    }
+    table.setCellEditor(5, colorEditor);
 
-    // Create the table definition
-    DefaultTableDefinition<Student> tcr = new DefaultTableDefinition<Student>();
+    // Sport cell editor
+    ListCellEditor<Serializable> sportEditor = new ListCellEditor<Serializable>();
+    sportEditor.setLabel("Select a sport:");
+    ListBox sportBox = sportEditor.getListBox();
+    for (int i = 0; i < DataSourceData.sports.length; i++) {
+      sportBox.addItem(DataSourceData.sports[i]);
+    }
+    table.setCellEditor(6, sportEditor);
 
-    // First name
-    tcr.addColumnDefinition(new StudentColumnDefinition<String>() {
+    // College cell editor
+    TextCellEditor<Serializable> collegeEditor = new TextCellEditor<Serializable>() {
       @Override
-      public String getCellValue(Student rowValue) {
-        return rowValue.getFirstName();
+      protected Object getValue() {
+        return "University of " + super.getValue();
       }
 
       @Override
-      public void setCellValue(Student rowValue, String cellValue) {
-        rowValue.setFirstName(cellValue);
-      }
-    });
-
-    // Last name
-    tcr.addColumnDefinition(new StudentColumnDefinition<String>() {
-      @Override
-      public String getCellValue(Student rowValue) {
-        return rowValue.getLastName();
+      public boolean onAccept() {
+        if (getValue().equals("")) {
+          Window.alert("You must enter a school");
+          return false;
+        }
+        return true;
       }
 
       @Override
-      public void setCellValue(Student rowValue, String cellValue) {
-        rowValue.setLastName(cellValue);
+      protected void setValue(Object value) {
+        super.setValue(value.toString().substring(14));
       }
-    });
-
-    // Age
-    {
-      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
-        @Override
-        public Integer getCellValue(Student rowValue) {
-          return rowValue.getAge();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, Integer cellValue) {
-          rowValue.setAge(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(intCellRenderer);
-      tcr.addColumnDefinition(columnDef);
-    }
-
-    // Gender
-    {
-      StudentColumnDefinition<Boolean> columnDef = new StudentColumnDefinition<Boolean>() {
-        @Override
-        public Boolean getCellValue(Student rowValue) {
-          return rowValue.isMale();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, Boolean cellValue) {
-          rowValue.setMale(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(new CellRenderer<Student, Boolean>() {
-        public void renderRowValue(Student rowValue,
-            ColumnDefinition<Student, Boolean> columnDef,
-            HTMLCellView<Student> view) {
-          if (rowValue.isMale()) {
-            view.addHTML("male");
-          } else {
-            view.addHTML("female");
-          }
-        }
-
-        public void renderRowValue(Student rowValue,
-            ColumnDefinition<Student, Boolean> columnDef,
-            TableCellView<Student> view) {
-          if (rowValue.isMale()) {
-            view.setHTML("male");
-          } else {
-            view.setHTML("female");
-          }
-        }
-      });
-      tcr.addColumnDefinition(columnDef);
-
-      // Setup the cellEditor
-      RadioCellEditor<Boolean> cellEditor = new RadioCellEditor<Boolean>();
-      cellEditor.setLabel("Select a gender:");
-      cellEditor.addRadioButton(new RadioButton("editorGender", "male"), true);
-      cellEditor.addRadioButton(new RadioButton("editorGender", "female"),
-          false);
-      columnDef.setCellEditor(cellEditor);
-    }
-
-    // Race
-    {
-      StudentColumnDefinition<String> columnDef = new StudentColumnDefinition<String>() {
-        @Override
-        public String getCellValue(Student rowValue) {
-          return rowValue.getRace();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, String cellValue) {
-          rowValue.setRace(cellValue);
-        }
-      };
-      tcr.addColumnDefinition(columnDef);
-
-      // Setup the cell editor
-      ListCellEditor<String> cellEditor = new ListCellEditor<String>();
-      for (int i = 0; i < StudentGenerator.races.length; i++) {
-        String race = StudentGenerator.races[i];
-        cellEditor.addItem(race, race);
-      }
-      columnDef.setCellEditor(cellEditor);
-    }
-
-    // Favorite color
-    {
-      StudentColumnDefinition<String> columnDef = new StudentColumnDefinition<String>() {
-        @Override
-        public String getCellValue(Student rowValue) {
-          return rowValue.getFavoriteColor();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, String cellValue) {
-          rowValue.setFavoriteColor(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(new CellRenderer<Student, String>() {
-        public void renderRowValue(Student rowValue,
-            ColumnDefinition<Student, String> columnDef,
-            HTMLCellView<Student> view) {
-          String color = rowValue.getFavoriteColor();
-          view.setStyleAttribute("color", color);
-          view.addHTML(color);
-        }
-
-        public void renderRowValue(Student rowValue,
-            ColumnDefinition<Student, String> columnDef,
-            TableCellView<Student> view) {
-          String color = rowValue.getFavoriteColor();
-          view.setStyleAttribute("color", color);
-          view.setHTML(color);
-        }
-      });
-      tcr.addColumnDefinition(columnDef);
-
-      // Setup the cell editor
-      RadioCellEditor<String> cellEditor = new RadioCellEditor<String>();
-      cellEditor.setLabel("Select a color:");
-      for (int i = 0; i < StudentGenerator.colors.length; i++) {
-        String color = StudentGenerator.colors[i];
-        String text = "<FONT color=\"" + color + "\">" + color + "</FONT>";
-        cellEditor.addRadioButton(new RadioButton("editorColor", text, true),
-            color);
-      }
-      columnDef.setCellEditor(cellEditor);
-    }
-
-    // Favorite Sport
-    {
-      StudentColumnDefinition<String> columnDef = new StudentColumnDefinition<String>() {
-        @Override
-        public String getCellValue(Student rowValue) {
-          return rowValue.getFavoriteSport();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, String cellValue) {
-          rowValue.setFavoriteSport(cellValue);
-        }
-      };
-      tcr.addColumnDefinition(columnDef);
-
-      // Setup the cell editor
-      ListCellEditor<String> cellEditor = new ListCellEditor<String>();
-      cellEditor.setLabel("Select a sport:");
-      for (int i = 0; i < StudentGenerator.sports.length; i++) {
-        String sport = StudentGenerator.sports[i];
-        cellEditor.addItem(sport, sport);
-      }
-      columnDef.setCellEditor(cellEditor);
-    }
-
-    // College
-    {
-      StudentColumnDefinition<String> columnDef = new StudentColumnDefinition<String>() {
-        @Override
-        public String getCellValue(Student rowValue) {
-          return rowValue.getCollege();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, String cellValue) {
-          rowValue.setCollege(cellValue);
-        }
-      };
-      tcr.addColumnDefinition(columnDef);
-
-      // Setup the cell editor
-      TextCellEditor cellEditor = new TextCellEditor() {
-        @Override
-        protected int getOffsetLeft() {
-          return -8;
-        }
-
-        @Override
-        protected int getOffsetTop() {
-          return -10;
-        }
-
-        @Override
-        public boolean onAccept() {
-          if (getValue().equals("")) {
-            Window.alert("You must enter a school");
-            return false;
-          }
-          return true;
-        }
-      };
-      columnDef.setCellEditor(cellEditor);
-    }
-
-    // Graduation year
-    {
-      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
-        @Override
-        public Integer getCellValue(Student rowValue) {
-          return rowValue.getGraduationYear();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, Integer cellValue) {
-          rowValue.setGraduationYear(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(intCellRenderer);
-      tcr.addColumnDefinition(columnDef);
-    }
-
-    // GPA
-    {
-      StudentColumnDefinition<Double> columnDef = new StudentColumnDefinition<Double>() {
-        @Override
-        public Double getCellValue(Student rowValue) {
-          return rowValue.getGpa();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, Double cellValue) {
-          rowValue.setGpa(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(new CellRenderer<Student, Double>() {
-        /**
-         * Convert a double to human readable format with a max of 2 significant
-         * digits.
-         * 
-         * @param gpa the GPA as a double
-         * @return a more readable format of the GPA
-         */
-        private String gpaToString(Double gpa) {
-          String gpaString = gpa.toString();
-          if (gpaString.length() > 4) {
-            gpaString = gpaString.substring(0, 4);
-          }
-          return gpaString;
-        }
-
-        public void renderRowValue(Student rowValue,
-            ColumnDefinition<Student, Double> columnDef,
-            HTMLCellView<Student> view) {
-          view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-          double gpa = rowValue.getGpa();
-          if (gpa < 2) {
-            view.setStyleName("badGPA");
-          } else if (gpa < 3) {
-            view.setStyleName("goodGPA");
-          } else {
-            view.setStyleName("greatGPA");
-          }
-          view.addHTML(gpaToString(gpa));
-        }
-
-        public void renderRowValue(Student rowValue,
-            ColumnDefinition<Student, Double> columnDef,
-            TableCellView<Student> view) {
-          view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-          double gpa = rowValue.getGpa();
-          if (gpa < 2) {
-            view.setStyleName("badGPA");
-          } else if (gpa < 3) {
-            view.setStyleName("goodGPA");
-          } else {
-            view.setStyleName("greatGPA");
-          }
-          view.setHTML(gpaToString(gpa));
-        }
-      });
-      tcr.addColumnDefinition(columnDef);
-    }
-
-    // ID
-    {
-      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
-        @Override
-        public Integer getCellValue(Student rowValue) {
-          return rowValue.getId();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, Integer cellValue) {
-          rowValue.setId(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(intCellRenderer);
-      tcr.addColumnDefinition(columnDef);
-    }
-
-    // Pin
-    {
-      StudentColumnDefinition<Integer> columnDef = new StudentColumnDefinition<Integer>() {
-        @Override
-        public Integer getCellValue(Student rowValue) {
-          return rowValue.getPin();
-        }
-
-        @Override
-        public void setCellValue(Student rowValue, Integer cellValue) {
-          rowValue.setPin(cellValue);
-        }
-      };
-      columnDef.setCellRenderer(intCellRenderer);
-      tcr.addColumnDefinition(columnDef);
-    }
-
-    return tcr;
+    };
+    collegeEditor.setLabel("University of");
+    table.setCellEditor(7, collegeEditor);
   }
 
   /**
@@ -608,7 +349,7 @@ public class CwPagingScrollTable extends ContentWidget {
    * @return the cached table model
    */
   @ShowcaseSource
-  public CachedTableModel<Student> getCachedTableModel() {
+  public CachedTableModel<Serializable> getCachedTableModel() {
     return cachedTableModel;
   }
 
@@ -658,8 +399,8 @@ public class CwPagingScrollTable extends ContentWidget {
    * @return the scroll table.
    */
   @ShowcaseSource
-  public PagingScrollTable<Student> getPagingScrollTable() {
-    return (PagingScrollTable<Student>) scrollTable;
+  public PagingScrollTable<Serializable> getPagingScrollTable() {
+    return (PagingScrollTable<Serializable>) scrollTable;
   }
 
   /**
