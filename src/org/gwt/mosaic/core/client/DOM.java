@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,15 +20,13 @@ import org.gwt.mosaic.core.client.impl.DOMImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Provides helper methods for DOM elements.
  * 
- * @author ggeorg
- * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public class DOM extends com.google.gwt.user.client.DOM {
 
