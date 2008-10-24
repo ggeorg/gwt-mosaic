@@ -606,6 +606,21 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  /**
+   * Close the window panel.
+   */
+  public void close() {
+    final String msg = fireClosingImpl();
+    if (msg == null) {
+      super.hide();
+      fireClosedImpl();
+    } else {
+      if (Window.confirm(msg)) {
+        fireClosedImpl();
+      }
+    }
+  }
+
   @Override
   protected void doAttachChildren() {
     super.doAttachChildren();
@@ -749,21 +764,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
-  /**
-   * Close the window panel.
-   */
-  public void close() {
-    final String msg = fireClosingImpl();
-    if (msg == null) {
-      super.hide();
-      fireClosedImpl();
-    } else {
-      if (Window.confirm(msg)) {
-        fireClosedImpl();
-      }
-    }
-  }
-
   public boolean isActive() {
     return windowPanelOrder.lastElement().equals(this);
   }
@@ -883,13 +883,15 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   protected void maximize(WindowState oldState) {
     if (isResizable()) {
+      final Widget boundaryPanel = windowController.getBoundaryPanel();
       if (isCollapsed()) {
         restoredLeft = getAbsoluteLeft();
         restoredTop = getAbsoluteTop();
-        final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
         final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
-        setPopupPosition(0, 0);
+        setPopupPosition(boundaryPanel.getAbsoluteLeft(),
+            boundaryPanel.getAbsoluteTop());
         setContentSize(size[0] - (boxTL[0] + boxTR[0]),
             panel.getPreferredSize()[1]);
       } else {
@@ -899,11 +901,12 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
           restoredWidth = contentWidth;
           restoredHeight = contentHeight;
         }
-        final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
         final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
         final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
-        setPopupPosition(0, 0);
+        setPopupPosition(boundaryPanel.getAbsoluteLeft(),
+            boundaryPanel.getAbsoluteTop());
         setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
             - (boxTL[1] + boxBL[1]));
         makeNotResizable();
@@ -1060,7 +1063,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     } else if (!isModal() && oldState == WindowState.MINIMIZED) {
       setVisible(true);
       if (getWindowState() == WindowState.MAXIMIZED) {
-        setPopupPosition(0, 0);
+        Widget boundaryPanel = windowController.getBoundaryPanel();
+        setPopupPosition(boundaryPanel.getAbsoluteLeft(),
+            boundaryPanel.getAbsoluteTop());
       }
     }
   }
