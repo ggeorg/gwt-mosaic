@@ -32,8 +32,6 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -966,62 +964,57 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     if (!initialized) {
       initialized = true;
 
-      DeferredCommand.addCommand(new Command() {
-        public void execute() {
-          resizeToFitContent();
+      resizeToFitContent();
 
-          if (width != null && height != null) {
-            panel.setSize("0px", "0px");
+      if (width != null && height != null) {
+        panel.setSize("0px", "0px");
 
-            final int[] box = DOM.getClientSize(getElement());
-            WindowPanel.super.setSize("auto", "auto");
-            final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-            final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-            setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1]
-                - box3[1]);
-            layout();
-          } else if (width != null) {
-            panel.setSize("0px", "0px");
+        final int[] box = DOM.getClientSize(getElement());
+        WindowPanel.super.setSize("auto", "auto");
+        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+        setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1] - box3[1]);
+        layout();
+      } else if (width != null) {
+        panel.setSize("0px", "0px");
 
-            final int[] box = DOM.getClientSize(getElement());
-            WindowPanel.super.setWidth("auto");
-            final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-            final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-            final int[] size = panel.getPreferredSize();
-            setContentSize(box[0] - box2[0] - box3[0], size[1]);
-            layout();
-          } else if (height != null) {
-            panel.setSize("0px", "0px");
+        final int[] box = DOM.getClientSize(getElement());
+        WindowPanel.super.setWidth("auto");
+        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+        final int[] size = panel.getPreferredSize();
+        setContentSize(box[0] - box2[0] - box3[0], size[1]);
+        layout();
+      } else if (height != null) {
+        panel.setSize("0px", "0px");
 
-            final int[] box = DOM.getClientSize(getElement());
-            WindowPanel.super.setHeight("auto");
-            final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-            final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-            final int[] size = panel.getPreferredSize();
-            setContentSize(size[0], box[1] - box2[1] - box3[1]);
-            layout();
-          } else {
-            resizeToFitContent();
+        final int[] box = DOM.getClientSize(getElement());
+        WindowPanel.super.setHeight("auto");
+        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+        final int[] size = panel.getPreferredSize();
+        setContentSize(size[0], box[1] - box2[1] - box3[1]);
+        layout();
+      } else {
+        resizeToFitContent();
+      }
+
+      if (windowState == WindowState.MAXIMIZED) {
+        new DelayedRunnable(333) {
+          @Override
+          public void run() {
+            maximize(WindowState.NORMAL);
           }
-
-          if (windowState == WindowState.MAXIMIZED) {
-            new DelayedRunnable(333) {
-              @Override
-              public void run() {
-                maximize(WindowState.NORMAL);
-              }
-            };
-          } else if (windowState == WindowState.MINIMIZED) {
-            new DelayedRunnable(333) {
-              @Override
-              public void run() {
-                minimize(WindowState.NORMAL);
-              }
-            };
+        };
+      } else if (windowState == WindowState.MINIMIZED) {
+        new DelayedRunnable(333) {
+          @Override
+          public void run() {
+            minimize(WindowState.NORMAL);
           }
+        };
+      }
 
-        }
-      });
     }
   }
 
@@ -1267,12 +1260,16 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    */
   @Override
   public void setPopupPosition(int left, int top) {
-    if (windowController != null) {
-      final Widget boundaryPanel = windowController.getBoundaryPanel();
-      super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
-          + boundaryPanel.getAbsoluteTop());
-    } else {
-      super.setPopupPosition(left, top);
+    try {
+      if (windowController != null) {
+        final Widget boundaryPanel = windowController.getBoundaryPanel();
+        super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
+            + boundaryPanel.getAbsoluteTop());
+      } else {
+        super.setPopupPosition(left, top);
+      }
+    } catch (Exception ex) {
+      Window.alert(ex.getMessage());
     }
   }
 

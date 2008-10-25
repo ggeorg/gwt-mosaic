@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Provides helper methods for DOM elements.
