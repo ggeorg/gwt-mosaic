@@ -18,6 +18,9 @@ package org.gwt.mosaic.core.client;
 import org.gwt.mosaic.core.client.impl.DOMImpl;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.KeyboardListener;
@@ -50,8 +53,14 @@ public class DOM extends com.google.gwt.user.client.DOM {
    */
   static {
     if (CompatMode.isStandardsMode()) {
-      Element elem = RootPanel.get().getElement();
-      elem.getStyle().setProperty("height", "100%");
+      Document doc = Document.get();
+      NodeList<com.google.gwt.dom.client.Element> nodeList = doc.getElementsByTagName("html");
+      if (nodeList != null && nodeList.getLength() > 0) {
+        Element elem = Document.get().getElementsByTagName("html").getItem(0).cast();
+        elem.getStyle().setProperty("height", "100%");
+      }
+      BodyElement body = Document.get().getBody();
+      body.getStyle().setProperty("height", "100%");
     }
   }
 
@@ -173,13 +182,13 @@ public class DOM extends com.google.gwt.user.client.DOM {
       elem.getStyle().setProperty("zoom", "1");
     }
 
-//    if (elem == elem.getOwnerDocument().getBody().cast()) {
-//      size[0] = Window.getClientWidth();
-//      size[1] = Window.getClientHeight();
-//    } else {
-      size[0] = getClientWidth(elem);
-      size[1] = getClientHeight(elem);
-//    }
+    // if (elem == elem.getOwnerDocument().getBody().cast()) {
+    // size[0] = Window.getClientWidth();
+    // size[1] = Window.getClientHeight();
+    // } else {
+    size[0] = getClientWidth(elem);
+    size[1] = getClientHeight(elem);
+    // }
 
     return size;
   }
