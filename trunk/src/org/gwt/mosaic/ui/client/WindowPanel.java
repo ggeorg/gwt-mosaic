@@ -32,6 +32,8 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -531,6 +533,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
 
     panel = new CaptionLayoutPanel(caption);
+    panel.addCollapsedListener(new CollapsedListener() {
+      public void onCollapsedChange(Widget sender) {
+        fireCollapsedChange(WindowPanel.this);
+      }
+    });
 
     final ImageButton closeBtn = new ImageButton(CAPTION_IMAGES.windowClose());
     closeBtn.addClickListener(new ClickListener() {
@@ -925,8 +932,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   protected void minimize(WindowState oldState) {
     if (!isModal()) {
-      System.out.println("=============================="
-          + (oldState == WindowState.MAXIMIZED));
       restoredState = oldState;
       setVisible(false);
     }
@@ -957,62 +962,66 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    */
   protected void onLoad() {
     super.onLoad();
+
     if (!initialized) {
       initialized = true;
 
-      resizeToFitContent();
+      DeferredCommand.addCommand(new Command() {
+        public void execute() {
+          resizeToFitContent();
 
-      if (width != null && height != null) {
-        panel.setSize("0px", "0px");
+          if (width != null && height != null) {
+            panel.setSize("0px", "0px");
 
-        final int[] box = DOM.getClientSize(getElement());
-        WindowPanel.super.setSize("auto", "auto");
-        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-        setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1] - box3[1]);
-        layout();
-      } else if (width != null) {
-        panel.setSize("0px", "0px");
+            final int[] box = DOM.getClientSize(getElement());
+            WindowPanel.super.setSize("auto", "auto");
+            final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+            final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+            setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1]
+                - box3[1]);
+            layout();
+          } else if (width != null) {
+            panel.setSize("0px", "0px");
 
-        final int[] box = DOM.getClientSize(getElement());
-        WindowPanel.super.setWidth("auto");
-        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-        final int[] size = panel.getPreferredSize();
-        setContentSize(box[0] - box2[0] - box3[0], size[1]);
-        layout();
-      } else if (height != null) {
-        panel.setSize("0px", "0px");
+            final int[] box = DOM.getClientSize(getElement());
+            WindowPanel.super.setWidth("auto");
+            final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+            final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+            final int[] size = panel.getPreferredSize();
+            setContentSize(box[0] - box2[0] - box3[0], size[1]);
+            layout();
+          } else if (height != null) {
+            panel.setSize("0px", "0px");
 
-        final int[] box = DOM.getClientSize(getElement());
-        WindowPanel.super.setHeight("auto");
-        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-        final int[] size = panel.getPreferredSize();
-        setContentSize(size[0], box[1] - box2[1] - box3[1]);
-        layout();
-      } else {
-        resizeToFitContent();
-      }
-
-      if (windowState == WindowState.MAXIMIZED) {
-        new DelayedRunnable(333) {
-          @Override
-          public void run() {
-            maximize(WindowState.NORMAL);
+            final int[] box = DOM.getClientSize(getElement());
+            WindowPanel.super.setHeight("auto");
+            final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
+            final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
+            final int[] size = panel.getPreferredSize();
+            setContentSize(size[0], box[1] - box2[1] - box3[1]);
+            layout();
+          } else {
+            resizeToFitContent();
           }
-        };
-      } else if (windowState == WindowState.MINIMIZED) {
-        new DelayedRunnable(333) {
-          @Override
-          public void run() {
-            minimize(WindowState.NORMAL);
-          }
-        };
-      }
 
-      // final int[] _box = DOM.getClientSize(getElement());
-      // System.out.println("\t" + _box[0] + "x" + _box[1]);
+          if (windowState == WindowState.MAXIMIZED) {
+            new DelayedRunnable(333) {
+              @Override
+              public void run() {
+                maximize(WindowState.NORMAL);
+              }
+            };
+          } else if (windowState == WindowState.MINIMIZED) {
+            new DelayedRunnable(333) {
+              @Override
+              public void run() {
+                minimize(WindowState.NORMAL);
+              }
+            };
+          }
+
+        }
+      });
     }
   }
 
@@ -1267,4 +1276,24 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  private CollapsedListenerCollection collapsedListeners;
+
+  public void addCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners == null) {
+      collapsedListeners = new CollapsedListenerCollection();
+    }
+    collapsedListeners.add(listener);
+  }
+
+  public void removeCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
+  }
+
+  protected void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
+  }
 }

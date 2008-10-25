@@ -45,13 +45,12 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   private final LayoutPanel body;
   private Widget footer;
 
+  private CollapsedListenerCollection collapsedListeners;
+
+  private boolean collapsed;
+
   public CaptionLayoutPanel() {
     this(null, false);
-  }
-
-  @Override
-  public void layout() {
-    getWidget().layout();
   }
 
   public CaptionLayoutPanel(final String text) {
@@ -92,6 +91,13 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     body.add(widget, layoutData);
   }
 
+  public void addCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners == null) {
+      collapsedListeners = new CollapsedListenerCollection();
+    }
+    collapsedListeners.add(listener);
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -99,6 +105,12 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
    */
   public void clear() {
     body.clear();
+  }
+
+  protected void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
   }
 
   protected Widget getFooter() {
@@ -155,6 +167,10 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     }
   }
 
+  public boolean isCollapsed() {
+    return collapsed;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -162,6 +178,11 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
    */
   public Iterator<Widget> iterator() {
     return body.iterator();
+  }
+
+  @Override
+  public void layout() {
+    getWidget().layout();
   }
 
   /*
@@ -182,6 +203,18 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.remove(w);
   }
 
+  public void removeCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
+  }
+
+  public void setCollapsed(boolean collapsed) {
+    this.collapsed = collapsed;
+    hideContents(collapsed);
+    fireCollapsedChange(this);
+  }
+
   protected void setFooter(Widget footer) {
     if (this.footer != null) {
       getWidget().remove(this.footer);
@@ -198,17 +231,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   public void setPadding(int padding) {
     body.setPadding(padding);
-  }
-
-  private boolean collapsed;
-
-  public void setCollapsed(boolean collapsed) {
-    this.collapsed = collapsed;
-    hideContents(collapsed);
-  }
-
-  public boolean isCollapsed() {
-    return collapsed;
   }
 
 }
