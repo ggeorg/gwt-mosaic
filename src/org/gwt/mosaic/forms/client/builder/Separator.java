@@ -28,7 +28,9 @@ public class Separator extends Composite {
     final HorizontalPanel panel = new HorizontalPanel();
     panel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
     //panel.setWidth("100%");
-    panel.add(new Label(text));
+    final Label l = new Label(text);
+    l.setWordWrap(false);
+    panel.add(l);
     panel.add(new HTML("&nbsp;"));
     final HTML hr = new HTML("<hr></hr>");
     panel.add(hr);
