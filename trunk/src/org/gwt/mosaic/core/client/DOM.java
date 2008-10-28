@@ -509,7 +509,11 @@ public class DOM extends com.google.gwt.user.client.DOM {
     elem.getStyle().setPropertyPx("height", Math.max(0, fixedHeight));
     // Intrinsic height?
     if (height != elem.getOffsetHeight()) {
-      elem.getStyle().setPropertyPx("height", Math.max(0, height));
+      elem.getStyle().setPropertyPx("height",
+          Math.max(0, fixedHeight + (height - elem.getOffsetHeight())));
+      if (height != elem.getOffsetHeight()) {
+        elem.getStyle().setPropertyPx("height", Math.max(0, height));
+      }
     }
     return height;
   }
@@ -530,7 +534,11 @@ public class DOM extends com.google.gwt.user.client.DOM {
     elem.getStyle().setPropertyPx("width", Math.max(0, fixedWidth));
     // Intrinsic width?
     if (width != elem.getOffsetWidth()) {
-      elem.getStyle().setPropertyPx("width", Math.max(0, width));
+      elem.getStyle().setPropertyPx("width",
+          Math.max(0, fixedWidth + (width - elem.getOffsetWidth())));
+      if (width != elem.getOffsetWidth()) {
+        elem.getStyle().setPropertyPx("width", Math.max(0, width));
+      }
     }
     return width;
   }
