@@ -33,7 +33,7 @@ public class FillLayout extends BaseLayout {
    * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
    */
   public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = { 0, 0 };
+    int[] result = {0, 0};
 
     try {
       if (layoutPanel == null) {
@@ -53,7 +53,8 @@ public class FillLayout extends BaseLayout {
         }
 
         Object layoutDataObject = getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof FillLayoutData)) {
+        if (layoutDataObject == null
+            || !(layoutDataObject instanceof FillLayoutData)) {
           layoutDataObject = new FillLayoutData();
           setLayoutData(child, layoutDataObject);
         }
@@ -61,7 +62,7 @@ public class FillLayout extends BaseLayout {
 
         result[0] = getFlowWidth(child);
         result[1] = getFlowHeight(child);
-        
+
         if (layoutData.hasDecoratorPanel()) {
           final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
           result[0] += decPanel.getOffsetWidth() - child.getOffsetWidth();
@@ -70,11 +71,11 @@ public class FillLayout extends BaseLayout {
 
         break;
       }
-      
+
       final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
       result[0] += (margins[1] + margins[3]);
       result[1] += (margins[0] + margins[2]);
-      
+
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
       result[0] += (paddings[1] + paddings[3]);
       result[1] += (paddings[0] + paddings[2]);
@@ -82,7 +83,7 @@ public class FillLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
-    
+
     return result;
   }
 
@@ -99,7 +100,7 @@ public class FillLayout extends BaseLayout {
 
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
-      
+
       final int left = paddings[3];
       final int top = paddings[0];
       int width = box[0] - (paddings[1] + paddings[3]);
@@ -118,7 +119,8 @@ public class FillLayout extends BaseLayout {
         }
 
         Object layoutDataObject = getLayoutData(child);
-        if (layoutDataObject == null || !(layoutDataObject instanceof FillLayoutData)) {
+        if (layoutDataObject == null
+            || !(layoutDataObject instanceof FillLayoutData)) {
           layoutDataObject = new FillLayoutData();
           setLayoutData(child, layoutDataObject);
         }
@@ -126,8 +128,10 @@ public class FillLayout extends BaseLayout {
 
         if (layoutData.hasDecoratorPanel()) {
           final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
-          final int offsetWidth = decPanel.getOffsetWidth() - child.getOffsetWidth();
-          final int offsetHeight = decPanel.getOffsetHeight() - child.getOffsetHeight();
+          final int offsetWidth = decPanel.getOffsetWidth()
+              - child.getOffsetWidth();
+          final int offsetHeight = decPanel.getOffsetHeight()
+              - child.getOffsetHeight();
           width -= offsetWidth;
           height -= offsetHeight;
           setBounds(layoutPanel, child, left, top, width, height);
