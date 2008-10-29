@@ -83,6 +83,8 @@ public class FillLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
+    
+    layoutPanel.setPreferredSize(result[0], result[1]);
 
     return result;
   }
@@ -145,6 +147,8 @@ public class FillLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
+    
+    layoutPanel.setPreferredSize(-1, -1);
   }
 
 }
