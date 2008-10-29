@@ -168,7 +168,7 @@ public class GridLayout extends BaseLayout {
         result[0] = Math.max(result[0], width);
         result[1] += height;
       }
-      
+
       final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
       result[0] += (margins[1] + margins[3]);
       result[1] += (margins[0] + margins[2]);
@@ -184,6 +184,8 @@ public class GridLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
+
+    layoutPanel.setPreferredSize(result[0], result[1]);
 
     return result;
   }
@@ -221,12 +223,12 @@ public class GridLayout extends BaseLayout {
       // adjust for spacing
       width -= ((cols - 1) * spacing);
       height -= ((rows - 1) * spacing);
-      
+
       final int colWidth = width / cols;
       final int rowHeight = height / rows;
 
       buildWidgetMatrix(layoutPanel);
-      
+
       for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
           Widget widget = widgetMatrix[c][r];
@@ -261,6 +263,8 @@ public class GridLayout extends BaseLayout {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
+    
+    layoutPanel.setPreferredSize(-1, -1);
   }
 
   /**

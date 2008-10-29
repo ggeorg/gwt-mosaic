@@ -194,7 +194,9 @@ public class BoxLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ".getPreferredSize() : "
           + e.getMessage());
     }
-
+    
+    layoutPanel.setPreferredSize(result[0], result[1]);
+    
     return result;
   }
 
@@ -438,6 +440,8 @@ public class BoxLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
     }
+    
+    layoutPanel.setPreferredSize(-1, -1);
   }
 
   public void setLeftToRight(boolean leftToRight) {

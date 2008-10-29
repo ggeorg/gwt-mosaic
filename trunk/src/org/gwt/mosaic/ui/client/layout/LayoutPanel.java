@@ -120,13 +120,24 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return DOM.getIntStyleAttribute(getElement(), "padding");
   }
 
+  private int[] preferredSizeCache = {-1, -1};
+
+  void setPreferredSize(int width, int height) {
+    preferredSizeCache[0] = width;
+    preferredSizeCache[1] = height;
+  }
+
   /*
    * (non-Javadoc)
    * 
    * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
    */
   public int[] getPreferredSize() {
-    return layout.getPreferredSize(this);
+    if (preferredSizeCache[0] >= -1 && preferredSizeCache[1] >= 0) {
+      return preferredSizeCache;
+    } else {
+      return layout.getPreferredSize(this);
+    }
   }
 
   private Widget getUnDecoratedWidget(Widget widget) {
