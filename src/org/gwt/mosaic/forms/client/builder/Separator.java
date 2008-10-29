@@ -20,6 +20,10 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public class Separator extends Composite {
   
   private static final String DEFAULT_STYLENAME = "mosaic-FormSeparator";

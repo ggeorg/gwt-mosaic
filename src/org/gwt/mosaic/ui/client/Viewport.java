@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,11 +32,14 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public class Viewport extends Composite implements HasWidgets, WindowResizeListener,
     WindowCloseListener {
 
   private Timer delayedResize = new Timer() {
-
     @Override
     public void run() {
       final Widget widget = Viewport.this.getWidget();
@@ -54,42 +57,6 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
   };
 
   /**
-   * 
-   * @param layoutPanel
-   * @param widget
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   */
-  protected void setBounds(final Widget widget, final int x, final int y,
-      final int width, final int height) {
-    RootPanel.get().setWidgetPosition(this, x, y);
-    setSize(widget, width, height);
-  }
-
-  /**
-   * 
-   * @param widget
-   * @param width
-   * @param height
-   */
-  protected void setSize(final Widget widget, int width, int height) {
-    Element elem = widget.getElement();
-
-    int[] margins = DOM.getMarginSizes(widget.getElement());
-
-    if (width != -1) {
-      width -= (margins[1] + margins[3]);
-      DOM.setContentAreaWidth(elem, Math.max(0, width));
-    }
-    if (height != -1) {
-      height -= (margins[0] + margins[2]);
-      DOM.setContentAreaHeight(elem, Math.max(0, height));
-    }
-  }
-
-  /**
    * Default constructor.
    */
   public Viewport() {
@@ -99,11 +66,6 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
     Window.addWindowCloseListener(this);
     Window.addWindowResizeListener(this);
     Window.enableScrolling(false);
-  }
-
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
   }
 
   /*
@@ -121,6 +83,29 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
     panel.add(widget, new FillLayoutData(decorate));
     
     onLoad();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   */
+  public void clear() {
+    getWidget().clear();
+  }
+
+  @Override
+  protected LayoutPanel getWidget() {
+    return (LayoutPanel) super.getWidget();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+   */
+  public Iterator<Widget> iterator() {
+    return getWidget().iterator();
   }
 
   /*
@@ -173,22 +158,40 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
     return getWidget().remove(w);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   * @param layoutPanel
+   * @param widget
+   * @param x
+   * @param y
+   * @param width
+   * @param height
    */
-  public void clear() {
-    getWidget().clear();
+  protected void setBounds(final Widget widget, final int x, final int y,
+      final int width, final int height) {
+    RootPanel.get().setWidgetPosition(this, x, y);
+    setSize(widget, width, height);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+   * @param widget
+   * @param width
+   * @param height
    */
-  public Iterator<Widget> iterator() {
-    return getWidget().iterator();
+  protected void setSize(final Widget widget, int width, int height) {
+    Element elem = widget.getElement();
+
+    int[] margins = DOM.getMarginSizes(widget.getElement());
+
+    if (width != -1) {
+      width -= (margins[1] + margins[3]);
+      DOM.setContentAreaWidth(elem, Math.max(0, width));
+    }
+    if (height != -1) {
+      height -= (margins[0] + margins[2]);
+      DOM.setContentAreaHeight(elem, Math.max(0, height));
+    }
   }
 
 }
