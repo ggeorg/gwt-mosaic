@@ -73,7 +73,7 @@ public class CwComplexForm extends ContentWidget {
       }
     });
     builder.setHorizontalAlignment(PanelBuilder.ALIGN_RIGHT);
-    builder.setDebug(true);
+    builder.setDebug(false);
 
     // Fill the grid with components; the builder can create frequently used
     // components, e.g. separators and labels.

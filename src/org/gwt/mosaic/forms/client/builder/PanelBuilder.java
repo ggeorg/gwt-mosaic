@@ -103,7 +103,7 @@ public class PanelBuilder extends AbstractFormBuilder implements
     if (debug) {
       DOM.setStyleAttribute(separator.getElement(), "border", "1px solid #f00");
     }
-    layoutPanel.add(separator, layoutData);
+    layoutPanel.add(new WidgetWrapper(separator), layoutData);
     return null;
   }
 
