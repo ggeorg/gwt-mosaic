@@ -346,11 +346,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       moveDragController.setBehaviorConstrainedToBoundaryPanel(true);
       // moveDragController.setBehaviorDragProxy(true);
       moveDragController.setBehaviorMultipleSelection(false);
+      moveDragController.setBehaviorDragStartSensitivity(3);
 
       resizeDragController = new ResizeDragController(boundaryPanel,
           windowPanel);
       resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
       resizeDragController.setBehaviorMultipleSelection(false);
+      resizeDragController.setBehaviorDragStartSensitivity(3);
     }
 
     AbsolutePanel getBoundaryPanel() {
