@@ -104,7 +104,7 @@ public class PanelBuilder extends AbstractFormBuilder implements
       DOM.setStyleAttribute(separator.getElement(), "border", "1px solid #f00");
     }
     layoutPanel.add(new WidgetWrapper(separator), layoutData);
-    return null;
+    return separator;
   }
 
   public Separator addSeparator(String text, int colspan) {

@@ -19,11 +19,9 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.GridLayout;
 import org.gwt.mosaic.ui.client.layout.GridLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -67,6 +65,7 @@ public class CwSimpleForm extends ContentWidget {
     final LayoutPanel layoutPanel = new ScrollLayoutPanel();
     
     final LayoutPanel formLayout = new LayoutPanel(new GridLayout(7, 3));
+    formLayout.setWidgetSpacing(10);
     
     formLayout.add(new Label("Label1"));
     formLayout.add(new TextBox(), new GridLayoutData(6, 1));
@@ -79,7 +78,7 @@ public class CwSimpleForm extends ContentWidget {
     formLayout.add(new TextBox(), new GridLayoutData(5, 1));
     formLayout.add(new Button("..."));
     
-    layoutPanel.add(formLayout, new BoxLayoutData(FillStyle.HORIZONTAL));
+    layoutPanel.add(formLayout);
 
     return layoutPanel;
   }
