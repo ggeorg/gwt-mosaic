@@ -155,15 +155,11 @@ public class GridLayout extends BaseLayout {
           if (widget == null || widget == SPAN) {
             continue;
           }
-          final GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
           if (widget instanceof DecoratorPanel) {
             widget = ((DecoratorPanel) widget).getWidget();
           }
-          width += Math.ceil((double) getFlowWidth(widget)
-              / (double) layoutData.colspan);
-          height = Math.max(height,
-              (int) Math.ceil((double) getFlowHeight(widget)
-                  / (double) layoutData.rowspan));
+          width += getFlowWidth(widget);
+          height = Math.max(height, getFlowHeight(widget));
         }
         result[0] = Math.max(result[0], width);
         result[1] += height;
@@ -180,6 +176,9 @@ public class GridLayout extends BaseLayout {
       final int spacing = layoutPanel.getWidgetSpacing();
       result[0] += ((cols - 1) * spacing);
       result[1] += ((rows - 1) * spacing);
+
+      result[0] = cols * (int) (Math.ceil((double) result[0] / (double) cols));
+      result[1] = rows * (int) (Math.ceil((double) result[1] / (double) rows));
 
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
@@ -263,7 +262,7 @@ public class GridLayout extends BaseLayout {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
-    
+
     layoutPanel.setPreferredSize(-1, -1);
   }
 
