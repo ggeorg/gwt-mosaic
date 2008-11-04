@@ -41,6 +41,12 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   public static int getFlowHeight(Widget child) {
     final int[] m = DOM.getMarginSizes(child.getElement());
     int flowHeight;
+    if (child instanceof FormPanel) {
+      final Widget _child = ((FormPanel) child).getWidget();
+      if (_child != null && (_child instanceof HasLayoutManager)) {
+          child = _child;
+      }
+    }
     if (child instanceof HasLayoutManager) {
       final HasLayoutManager lp = (HasLayoutManager) child;
       final int[] preferredSize = lp.getPreferredSize();
@@ -59,6 +65,12 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   public static int getFlowWidth(Widget child) {
     final int[] m = DOM.getMarginSizes(child.getElement());
     int flowWidth;
+    if (child instanceof FormPanel) {
+      final Widget _child = ((FormPanel) child).getWidget();
+      if (_child != null && (_child instanceof HasLayoutManager)) {
+          child = _child;
+      }
+    }
     if (child instanceof HasLayoutManager) {
       final HasLayoutManager lp = (HasLayoutManager) child;
       final int[] preferredSize = lp.getPreferredSize();
