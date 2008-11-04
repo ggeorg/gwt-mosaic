@@ -37,7 +37,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
@@ -90,8 +89,7 @@ public abstract class MessageBox extends WindowPanel {
     alert.getButtonPanel().add(buttonOK);
 
     final HTML html = new HTML(message);
-    alert.setWidget(new WidgetWrapper(html, HasAlignment.ALIGN_LEFT,
-        HasAlignment.ALIGN_TOP));
+    alert.setWidget(html);
     alert.showModal();
 
     DeferredCommand.addCommand(new Command() {
@@ -136,8 +134,7 @@ public abstract class MessageBox extends WindowPanel {
     confirm.getButtonPanel().add(buttonCancel);
 
     final HTML html = new HTML(message);
-    confirm.setWidget(new WidgetWrapper(html, HasAlignment.ALIGN_LEFT,
-        HasAlignment.ALIGN_TOP));
+    confirm.setWidget(html);
     confirm.showModal();
 
     DeferredCommand.addCommand(new Command() {
