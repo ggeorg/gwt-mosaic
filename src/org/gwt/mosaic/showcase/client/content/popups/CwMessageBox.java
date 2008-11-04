@@ -356,7 +356,7 @@ public class CwMessageBox extends ContentWidget {
     });
 
     prompt.setWidget(form);
-    prompt.center();
+    prompt.showModal();
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -419,7 +419,7 @@ public class CwMessageBox extends ContentWidget {
     prompt.getButtonPanel().add(buttonCancel);
 
     prompt.setWidget(panel, 0);
-    prompt.center();
+    prompt.showModal();
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
