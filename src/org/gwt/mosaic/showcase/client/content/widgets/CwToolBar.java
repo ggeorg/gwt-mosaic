@@ -51,7 +51,13 @@ public class CwToolBar extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public static interface CwConstants extends Constants,
       ContentWidget.CwConstants {
-
+    String mosaicToolBarName();
+    String mosaicToolBarDescription();
+    String mosaicToolBarPushBtn1();
+    String mosaicToolBarPushBtn2();
+    String mosaicToolBarMenuBtn1();
+    String mosaicToolBarMenuBtn2();
+    String mosaicToolBarSplitBtn();
   }
 
   /**
@@ -72,12 +78,12 @@ public class CwToolBar extends ContentWidget implements ClickListener {
 
   @Override
   public String getDescription() {
-    return "ToolBar description";
+    return constants.mosaicToolBarDescription();
   }
 
   @Override
   public String getName() {
-    return "ToolBar";
+    return constants.mosaicToolBarName();
   }
 
   /**
@@ -108,14 +114,14 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     final ToolBar toolBar = new ToolBar();
 
     // Add a push button
-    ToolButton pushButton = new ToolButton("Push 1");
+    ToolButton pushButton = new ToolButton(constants.mosaicToolBarPushBtn1());
     pushButton.addClickListener(this);
     pushButton.ensureDebugId("mosaicPushButton-normal");
 
     toolBar.add(pushButton);
 
     // Add a disabled push button
-    ToolButton disabledPushButton = new ToolButton("Push 2");
+    ToolButton disabledPushButton = new ToolButton(constants.mosaicToolBarPushBtn2());
     disabledPushButton.setEnabled(false);
     pushButton.ensureDebugId("mosaicPushButton-disabled");
 
@@ -124,7 +130,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     toolBar.addSeparator();
 
     // Add a menu button
-    ToolButton menuButton = new ToolButton("Menu 1");
+    ToolButton menuButton = new ToolButton(constants.mosaicToolBarMenuBtn1());
     menuButton.setStyle(ToolButtonStyle.MENU);
     menuButton.addClickListener(this);
     menuButton.ensureDebugId("mosaicMenuButton-normal");
@@ -149,7 +155,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     toolBar.add(menuButton);
 
     // Add a disabled menu button
-    ToolButton disabledMenuButton = new ToolButton("Menu 2");
+    ToolButton disabledMenuButton = new ToolButton(constants.mosaicToolBarPushBtn2());
     disabledMenuButton.setStyle(ToolButtonStyle.MENU);
     disabledMenuButton.setEnabled(false);
     disabledMenuButton.ensureDebugId("mosaicMenuButton-disabled");
@@ -159,7 +165,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     toolBar.addSeparator();
 
     // Add a menu button
-    ToolButton splitButton = new ToolButton("Split");
+    ToolButton splitButton = new ToolButton(constants.mosaicToolBarSplitBtn());
     splitButton.setStyle(ToolButtonStyle.SPLIT);
     splitButton.addClickListener(this);
     splitButton.ensureDebugId("mosaicSplitButton-normal");
