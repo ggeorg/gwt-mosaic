@@ -1176,7 +1176,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       panel.setCollapsed(true);
       final int[] size = panel.getPreferredSize();
       setContentSize(size[0], size[1]);
-      if (isResizable()) {
+      if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeNotResizable();
       }
     } else {
@@ -1195,7 +1195,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         // setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
         // - (boxTL[1] + boxBL[1]));
       }
-      if (isResizable()) {
+      if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeResizable();
       }
     }
