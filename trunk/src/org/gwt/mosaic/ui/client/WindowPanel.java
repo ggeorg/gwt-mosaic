@@ -1136,7 +1136,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     } else if (!isModal() && oldState == WindowState.MINIMIZED) {
       setVisible(true);
       if (getWindowState() == WindowState.MAXIMIZED) {
-        setPopupPosition(0, 0);
+        windowResizeListener.onWindowResized(-1, -1);
       }
     }
   }
@@ -1304,7 +1304,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
           minimize(oldState);
         }
 
-        if (windowState == WindowState.MAXIMIZED) {
+        if (this.windowState == WindowState.MAXIMIZED) {
           Window.addWindowResizeListener(windowResizeListener);
         } else {
           Window.removeWindowResizeListener(windowResizeListener);
