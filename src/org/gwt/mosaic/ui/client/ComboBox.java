@@ -196,10 +196,6 @@ public abstract class ComboBox<T extends Widget> extends LayoutComposite
   protected void hidePopup() {
     hidePopup(false);
   }
-  
-  protected boolean isPopupVisible() {
-    return popup.isAttached();
-  }
 
   protected void hidePopup(boolean autoHide) {
     if (autoHide) {
@@ -213,6 +209,19 @@ public abstract class ComboBox<T extends Widget> extends LayoutComposite
     return popup.isAnimationEnabled();
   }
 
+  /**
+   * Gets whether this widget is enabled.
+   * 
+   * @return <code>true</code> if the widget is enabled
+   */
+  public boolean isEnabled() {
+    return input.isEnabled() && button.isEnabled();
+  }
+
+  protected boolean isPopupVisible() {
+    return popup.isAttached();
+  }
+  
   /**
    * Determines whether or not the widget is read-only.
    * 
@@ -229,9 +238,9 @@ public abstract class ComboBox<T extends Widget> extends LayoutComposite
     super.layout();
   }
 
-  protected abstract T onShowPopup();
-
   protected abstract boolean onHidePopup();
+
+  protected abstract T onShowPopup();
 
   /*
    * (non-Javadoc)
@@ -289,6 +298,17 @@ public abstract class ComboBox<T extends Widget> extends LayoutComposite
    */
   public void setDirection(Direction direction) {
     input.setDirection(direction);
+  }
+
+  /**
+   * Sets whether this widget is enabled.
+   * 
+   * @param enabled <code>true</code> to enable the widget, <code>false</code>
+   *          to disable it
+   */
+  public void setEnabled(boolean enabled) {
+    input.setEnabled(enabled);
+    button.setEnabled(enabled);
   }
 
   /*
