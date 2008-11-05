@@ -116,6 +116,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText, WindowRes
 	setWidget(panel);
 
 	addStyleName(DEFAULT_STYLENAME);
+	DOM.setIntStyleAttribute(getElement(), "zIndex", Integer.MAX_VALUE);
     }
 
     public String getCaption() {
