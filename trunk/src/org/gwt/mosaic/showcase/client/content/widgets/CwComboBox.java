@@ -93,7 +93,7 @@ public class CwComboBox extends ContentWidget {
 
     ComboBox comboBox3 = new DateComboBox();
     comboBox3.ensureDebugId("mosaicAbstractComboBox-normal");
-    // comboBox3.setEnabled(false);
+    comboBox3.setEnabled(false);
 
     ComboBox comboBox4 = new DateComboBox();
     comboBox4.ensureDebugId("mosaicAbstractComboBox-normal");
