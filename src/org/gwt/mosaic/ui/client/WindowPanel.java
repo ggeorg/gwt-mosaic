@@ -32,6 +32,8 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -517,25 +519,28 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   private WindowResizeListener windowResizeListener = new WindowResizeListener() {
     public void onWindowResized(int width, int height) {
       final Widget boundaryPanel = windowController.getBoundaryPanel();
-      panel.setSize("0px", "0px");
-      if (isCollapsed()) {
-        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-        final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(panel.getElement());
-        setPopupPosition(0, 0);
-        panel.setSize("0px", "0px");
-        setContentSize(size[0] - (size2[0] - size3[0]),
-            panel.getPreferredSize()[1]);
-      } else {
-        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-        final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(panel.getElement());
-        setPopupPosition(0, 0);
-        setContentSize(size[0] - (size2[0] - size3[0]), size[1]
-            - (size2[1] - size3[1]));
-      }
-
-      layout();
+      DeferredCommand.addCommand(new Command() {
+        public void execute() {
+          panel.setSize("0px", "0px");
+          if (isCollapsed()) {
+            final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+            final int[] size2 = DOM.getBoxSize(getElement());
+            final int[] size3 = DOM.getBoxSize(panel.getElement());
+            setPopupPosition(0, 0);
+            panel.setSize("0px", "0px");
+            setContentSize(size[0] - (size2[0] - size3[0]),
+                panel.getPreferredSize()[1]);
+          } else {
+            final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+            final int[] size2 = DOM.getBoxSize(getElement());
+            final int[] size3 = DOM.getBoxSize(panel.getElement());
+            setPopupPosition(0, 0);
+            setContentSize(size[0] - (size2[0] - size3[0]), size[1]
+                - (size2[1] - size3[1]));
+          }
+          layout();
+        }
+      });
     }
   };
 
