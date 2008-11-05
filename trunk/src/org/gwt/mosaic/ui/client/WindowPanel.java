@@ -52,6 +52,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
+ * A {@code DecoratedPopupPanel} that has a caption area at the top and can be
+ * dragged and resized by the user.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -512,6 +514,36 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   private List<WindowStateListener> windowStateListeners;
 
+  private WindowResizeListener windowResizeListener = new WindowResizeListener() {
+    public void onWindowResized(int width, int height) {
+      final Widget boundaryPanel = windowController.getBoundaryPanel();
+      panel.setSize("0px", "0px");
+      if (isCollapsed()) {
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+        final int[] size2 = DOM.getBoxSize(getElement());
+        final int[] size3 = DOM.getBoxSize(panel.getElement());
+        setPopupPosition(0, 0);
+        panel.setSize("0px", "0px");
+        setContentSize(size[0] - (size2[0] - size3[0]),
+            panel.getPreferredSize()[1]);
+      } else {
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+        final int[] size2 = DOM.getBoxSize(getElement());
+        final int[] size3 = DOM.getBoxSize(panel.getElement());
+        setPopupPosition(0, 0);
+        setContentSize(size[0] - (size2[0] - size3[0]), size[1]
+            - (size2[1] - size3[1]));
+      }
+
+      layout();
+    }
+  };
+
+  private CollapsedListenerCollection collapsedListeners;
+
+  /**
+   * Creates a new empty window with default layout ({@link org.gwt.mosaic.ui.client.layout.FillLayout}).
+   */
   public WindowPanel() {
     this(null);
   }
@@ -561,12 +593,24 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     addStyleName(DEFAULT_STYLENAME);
   }
 
+  /**
+   * Creates a new empty window with default layout.
+   * 
+   * @param caption
+   */
   public WindowPanel(String caption) {
     this(caption, true, false);
   }
 
   protected WindowPanel(String caption, boolean resizable, boolean autoHide) {
     this(RootPanel.get(), caption, resizable, autoHide);
+  }
+
+  public void addCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners == null) {
+      collapsedListeners = new CollapsedListenerCollection();
+    }
+    collapsedListeners.add(listener);
   }
 
   /**
@@ -687,6 +731,12 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
 
     return ret;
+  }
+
+  protected void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
   }
 
   private void fireResizedImpl() {
@@ -1020,6 +1070,12 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  public void removeCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
+  }
+
   /**
    * Removes a window closing listener.
    * 
@@ -1170,6 +1226,26 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     this.height = height;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.PopupPanel#setPopupPosition(int, int)
+   */
+  @Override
+  public void setPopupPosition(int left, int top) {
+    try {
+      if (windowController != null) {
+        final Widget boundaryPanel = windowController.getBoundaryPanel();
+        super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
+            + boundaryPanel.getAbsoluteTop());
+      } else {
+        super.setPopupPosition(left, top);
+      }
+    } catch (Exception ex) {
+      Window.alert(ex.getMessage());
+    }
+  }
+
   public void setResizable(boolean resizable) {
     this.resizable = resizable;
     if (resizable) {
@@ -1222,6 +1298,12 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         } else if (windowState == WindowState.MINIMIZED) {
           minimize(oldState);
         }
+
+        if (windowState == WindowState.MAXIMIZED) {
+          Window.addWindowResizeListener(windowResizeListener);
+        } else {
+          Window.removeWindowResizeListener(windowResizeListener);
+        }
       }
 
       fireWindowStateChangeImpl();
@@ -1253,46 +1335,5 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   public void showModal() {
     modal = true;
     center();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.PopupPanel#setPopupPosition(int, int)
-   */
-  @Override
-  public void setPopupPosition(int left, int top) {
-    try {
-      if (windowController != null) {
-        final Widget boundaryPanel = windowController.getBoundaryPanel();
-        super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
-            + boundaryPanel.getAbsoluteTop());
-      } else {
-        super.setPopupPosition(left, top);
-      }
-    } catch (Exception ex) {
-      Window.alert(ex.getMessage());
-    }
-  }
-
-  private CollapsedListenerCollection collapsedListeners;
-
-  public void addCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners == null) {
-      collapsedListeners = new CollapsedListenerCollection();
-    }
-    collapsedListeners.add(listener);
-  }
-
-  public void removeCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners != null) {
-      collapsedListeners.remove(listener);
-    }
-  }
-
-  protected void fireCollapsedChange(Widget sender) {
-    if (collapsedListeners != null) {
-      collapsedListeners.fireCollapsedChange(sender);
-    }
   }
 }
