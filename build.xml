@@ -84,7 +84,7 @@
 	<!-- ===================== -->
 	<!--  create all packages  -->
 	<!-- ===================== -->
-	<target name="all" depends="init,jar,war" />
+	<target name="all" depends="init,jar,war,javadoc" />
 
 	<!-- ========================================================== -->
 	<!--  create Module JAR (includes source and compiled classes)  -->
@@ -98,6 +98,20 @@
 				<include name="**" />
 			</fileset>
 		</jar>
+	</target>
+
+	<!-- ============== -->
+	<!-- create JAVADOC -->
+	<!-- ============== -->
+	<target name="javadoc">
+		<!-- Capture the path as a delimited property using the refid attribute -->
+		<property name="classpath" refid="gwt.classpath" />
+		<!-- Emit the property to the ant console -->
+		<echo>env.GWT_HOME=${env.GWT_HOME}</echo>
+		<echo>---------------------------------</echo>
+		<echo message="Classpath = ${classpath}" />
+		<echo>---------------------------------</echo>
+		<javadoc access="protected" classpath="${classpath}" author="true" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.gwt.mosaic.actions.*,org.gwt.mosaic.core.*,org.gwt.mosaic.forms.*,org.gwt.mosaic.ui.*" source="1.6" sourcepath="test:src" splitindex="true" use="true" version="true" />
 	</target>
 
 	<!-- ===================================== -->
@@ -159,7 +173,6 @@
 		<delete file="${ant.project.name}-${project.version}.jar" />
 		<delete file="${ant.project.name}-showcase-${project.version}.war" />
 		<delete dir="${build}" />
-		<delete dir="${doc}" />
 	</target>
 
 </project>
