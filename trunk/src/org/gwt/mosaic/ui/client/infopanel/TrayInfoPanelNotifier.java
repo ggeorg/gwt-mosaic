@@ -18,8 +18,7 @@ package org.gwt.mosaic.ui.client.infopanel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
+import org.gwt.mosaic.ui.client.infopanel.InfoPanel.InfoPanelType;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupListener;

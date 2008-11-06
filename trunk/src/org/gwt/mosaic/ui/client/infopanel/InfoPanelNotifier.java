@@ -15,7 +15,7 @@
  */
 package org.gwt.mosaic.ui.client.infopanel;
 
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
+import org.gwt.mosaic.ui.client.infopanel.InfoPanel.InfoPanelType;
 
 /**
  * @author luciano.broussal(at)gmail.com
