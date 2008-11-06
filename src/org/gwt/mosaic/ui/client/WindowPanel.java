@@ -55,7 +55,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * A {@code DecoratedPopupPanel} that has a caption area at the top and can be
- * dragged and resized by the user.
+ * dragged and resized by the user. The default layout for a window is
+ * {@link org.gwt.mosaic.ui.client.layout.FillLayout}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -546,13 +547,23 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   private CollapsedListenerCollection collapsedListeners;
 
+  private boolean fireWindowCloseEvents = true;
+
   /**
-   * Creates a new empty window with default layout ({@link org.gwt.mosaic.ui.client.layout.FillLayout}).
+   * Creates a new empty window with default layout.
    */
   public WindowPanel() {
     this(null);
   }
 
+  /**
+   * Creates a new empty window with default layout.
+   * 
+   * @param boundaryPanel
+   * @param caption the caption of the window
+   * @param resizable
+   * @param autoHide
+   */
   protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
       boolean resizable, boolean autoHide) {
     super(autoHide);
@@ -579,7 +590,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     final ImageButton closeBtn = new ImageButton(CAPTION_IMAGES.windowClose());
     closeBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        close();
+        hide();
       }
     });
     panel.getHeader().add(closeBtn, CaptionRegion.RIGHT);
@@ -599,14 +610,21 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   }
 
   /**
-   * Creates a new empty window with default layout.
+   * Creates a new empty window with the specified caption and default layout.
    * 
-   * @param caption
+   * @param caption the caption of the window
    */
   public WindowPanel(String caption) {
     this(caption, true, false);
   }
 
+  /**
+   * Creates a new empty window with default layout.
+   * 
+   * @param caption the caption of the window
+   * @param resizable
+   * @param autoHide
+   */
   protected WindowPanel(String caption, boolean resizable, boolean autoHide) {
     this(RootPanel.get(), caption, resizable, autoHide);
   }
@@ -651,32 +669,51 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     windowStateListeners.add(listener);
   }
 
+  /**
+   * If this {@code WindowPanel} is visible, brings this {@code WindowPanel} to
+   * the front.
+   * 
+   * @deprecated Replaced by {@link #toFront()}.
+   */
   public void bringToFront() {
-    int curIndex = windowPanelOrder.indexOf(this);
-    if (curIndex + 1 < windowPanelOrder.size()) {
-      windowPanelOrder.remove(this);
-      windowPanelOrder.add(this);
-      for (; curIndex < windowPanelOrder.size(); curIndex++) {
-        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
-      }
+    toFront();
+  }
+
+  /**
+   * Centers the {@code WindowPanel} in the browser window and shows it (
+   * centers the popup in the browser window by adding it to the
+   * {@code RootPanel}). The {@link #layout()} is called after the
+   * {@code WindowPanel} is attached (in {@link #onLoad()}). If the
+   * {@code WindowPanel} was already showing, then the {@code WindowPanel} is
+   * centered. If the {@code WindowPanel} is set to not visible by calling
+   * {@link #setVisible(boolean)} before {@link #show()} the {@code WindowPanel}
+   * will be attached and visible (not like {@link #show()}).
+   * 
+   * @see #show()
+   */
+  public void center() {
+    try {
+      fireWindowCloseEvents = false;
+      super.center();
+    } finally {
+      fireWindowCloseEvents = true;
     }
   }
 
   /**
    * Close the window panel.
+   * 
+   * @deprecated Replaced by {@link #hide()}
    */
   public void close() {
-    final String msg = fireClosingImpl();
-    if (msg == null) {
-      super.hide();
-      fireClosedImpl();
-    } else {
-      if (Window.confirm(msg)) {
-        fireClosedImpl();
-      }
-    }
+    super.hide();
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.DecoratedPopupPanel#doAttachChildren()
+   */
   @Override
   protected void doAttachChildren() {
     super.doAttachChildren();
@@ -694,6 +731,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.DecoratedPopupPanel#doDetachChildren()
+   */
   @Override
   protected void doDetachChildren() {
     super.doDetachChildren();
@@ -760,10 +802,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Gets the caption of the {@code WindowPanel}. The caption is displayed in
+   * the {@code WindowPanel}'s frame.
+   * 
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.HasCaption#getCaption()
+   * @see #setCaption(String)
    */
   public String getCaption() {
     return panel.getHeader().getText();
@@ -812,18 +858,30 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   }
 
   /**
-   * Hides the popup. This has no effect if it is not currently visible.
+   * Hides the {@code WindowPanel} (hides the popup by removing it from the
+   * {@code RootPanel}). This has no effect if it is not currently visible.
    * 
    * @param autoClosed the value that will be passed to
    *          {@link PopupListener#onPopupClosed(PopupPanel, boolean)} when the
    *          popup is closed
+   * 
+   * @see #hide()
    */
   @Override
   public void hide(boolean autoHide) {
+    if (!fireWindowCloseEvents) {
+      super.hide(autoHide);
+      return;
+    }
+    final String msg = fireClosingImpl();
+    if (msg != null && !Window.confirm(msg)) {
+      return;
+    }
     super.hide(autoHide);
     if (modal && glassPanel != null) {
       glassPanel.removeFromParent();
     }
+    fireClosedImpl();
   }
 
   public boolean isActive() {
@@ -834,6 +892,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     return panel.isCollapsed();
   }
 
+  /**
+   * Indicates whether the {@code WindowPanel} is modal.
+   * 
+   * @return {@code true} if this {@code WindowPanel} is modal; {@code false}
+   *         otherwise
+   * 
+   * @see #showModal()
+   */
   public boolean isModal() {
     return modal;
   }
@@ -1057,14 +1123,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
 
       if (windowState == WindowState.MAXIMIZED) {
-        new DelayedRunnable(333) {
+        new DelayedRunnable() {
           @Override
           public void run() {
             maximize(WindowState.NORMAL);
           }
         };
       } else if (windowState == WindowState.MINIMIZED) {
-        new DelayedRunnable(333) {
+        new DelayedRunnable() {
           @Override
           public void run() {
             minimize(WindowState.NORMAL);
@@ -1073,6 +1139,27 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
 
     }
+  }
+
+  /**
+   * Causes this {@code WindowPanel} to be sized to fit the preferred size and
+   * layouts of its subcomponents. The {@link #layout()} method is called after
+   * the preferred size is calculated.
+   * 
+   * @see #show()
+   * @see #showModal()
+   */
+  public void pack() {
+    if (!isAttached()) {
+      show();
+    }
+    panel.setSize("0px", "0px");
+    final int[] size = panel.getPreferredSize();
+    setContentSize(size[0], size[1]); // FIXME we call layout in
+    // setContentSize() too!!!
+
+    // schedule for layout
+    layoutTimer.schedule(1);
   }
 
   public void removeCollapsedListener(CollapsedListener listener) {
@@ -1109,11 +1196,15 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  /**
+   * Causes this {@code WindowPanel} to be sized to fit the preferred size and
+   * layouts of its subcomponents. {@link #layout()} is called after the
+   * preferred size is calculated.
+   * 
+   * @deprecated Replaced by {@link #pack()}.
+   */
   public void resizeToFitContent() {
-    panel.setSize("0px", "0px");
-    final int[] size = panel.getPreferredSize();
-    setContentSize(size[0], size[1]);
-    layout();
+    pack();
   }
 
   protected void restore(WindowState oldState) {
@@ -1141,10 +1232,16 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Sets the caption for this {@code WindowPanel} to the specified string.
+   * 
+   * {@inheritDoc}
+   * 
+   * @param text the caption to be displayed in the {@code WindowPanel}'s
+   *          border. A {@code null} value is treated as an empty string, "".
    * 
    * @see com.google.gwt.user.client.ui.HasCaption#setCaption(java.lang.String)
+   * @see #getCaption()
    */
   public void setCaption(final String text) {
     panel.getHeader().setText(text);
@@ -1165,13 +1262,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         final int[] box = DOM.getClientSize(getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
         final int[] size3 = DOM.getBoxSize(panel.getElement());
-        // final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
-        // final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
-        // final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
         restoredWidth = box[0] - (size2[0] - size3[0]);
         restoredHeight = box[1] - (size2[1] - size3[1]);
-        // restoredWidth = box[0] - (boxTL[0] + boxTR[0]);
-        // restoredHeight = box[1] - (boxTL[1] + boxBL[1]);
       }
       panel.setCollapsed(true);
       final int[] size = panel.getPreferredSize();
@@ -1187,13 +1279,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
         final int[] size3 = DOM.getBoxSize(panel.getElement());
-        // final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
-        // final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
-        // final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
         setContentSize(size[0] - (size2[0] - size3[0]), size[1]
             - (size2[1] - size3[1]));
-        // setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
-        // - (boxTL[1] + boxBL[1]));
       }
       if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeResizable();
@@ -1316,7 +1403,18 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   }
 
   /**
-   * Shows the popup. It must have a child widget before this method is called.
+   * Makes the {@code WindowPanel} visible (shows the popup by adding it to the
+   * {@code RootPanel}). The {@link #layout()} is called after the
+   * {@code WindowPanel} is attached (in {@link #onLoad()}). If the
+   * {@code WindowPanel} is already attached, this will bring the
+   * {@code WindowPanel} to the front. If the {@code WindowPanel} is set to not
+   * visible by calling {@link #setVisible(boolean)} before {@link #show()} the
+   * {@code WindowPanel} will be attached but not visible.
+   * 
+   * @see #center()
+   * @see #pack()
+   * @see #setPopupPositionAndShow(com.google.gwt.user.client.ui.PopupPanel.PositionCallback)
+   * @see #showModal()
    */
   @Override
   public void show() {
@@ -1337,8 +1435,63 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  /**
+   * Centers the {@code WindowPanel} in the browser window and shows it modal
+   * (centers the popup in the browser window by adding it to the
+   * {@code RootPanel} and displays a
+   * {@code com.google.gwt.widgetideas.client.GlassPanel} under it). The
+   * {@link #layout()} is called after the {@code WindowPanel} is attached (in
+   * {@link #onLoad()}). If the {@code WindowPanel} is already attached, then
+   * the {@code WindowPanel} is centered. If the {@code WindowPanel} is set to
+   * not visible by calling {@link #setVisible(boolean)} before {@link #show()}
+   * the {@code WindowPanel} will be attached and visible (not like
+   * {@link #show()}).
+   * 
+   * @see #center()
+   * @see #isModal()
+   */
   public void showModal() {
     modal = true;
     center();
+  }
+
+  /**
+   * If this {@code WindowPanel} is visible, sends this {@code WindowPanel} to
+   * the back.
+   * <p>
+   * Places this {@code WindowPanel} at the bottom of the stacking order and
+   * shows it behind any other {@code WindowPanels}.
+   * 
+   * @see #toFront()
+   */
+  public void toBack() {
+    int curIndex = windowPanelOrder.indexOf(this);
+    if (curIndex + 1 <= windowPanelOrder.size()) {
+      windowPanelOrder.remove(this);
+      windowPanelOrder.insertElementAt(this, 0);
+      for (curIndex = 0; curIndex < windowPanelOrder.size(); curIndex++) {
+        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
+      }
+    }
+  }
+
+  /**
+   * If this {@code WindowPanel} is visible, brings this {@code WindowPanel} to
+   * the front.
+   * <p>
+   * Places this {@code WindowPanel} at the top of the stacking order and shows
+   * it in front of any other {@code WindowPanels}.
+   * 
+   * @see #toBack()
+   */
+  public void toFront() {
+    int curIndex = windowPanelOrder.indexOf(this);
+    if (curIndex + 1 < windowPanelOrder.size()) {
+      windowPanelOrder.remove(this);
+      windowPanelOrder.add(this);
+      for (; curIndex < windowPanelOrder.size(); curIndex++) {
+        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
+      }
+    }
   }
 }

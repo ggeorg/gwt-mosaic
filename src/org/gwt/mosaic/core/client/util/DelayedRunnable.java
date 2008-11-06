@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,28 @@
  */
 package org.gwt.mosaic.core.client.util;
 
+import org.gwt.mosaic.core.client.CoreConstants;
+
 import com.google.gwt.user.client.Timer;
 
-public abstract class DelayedRunnable {
+/**
+ * A helper class for delayed execution based on
+ * {@code com.google.gwt.user.client.Timer}.
+ * 
+ * <p>
+ * Example:
+ * <pre>
+ * new DelayedRunnable() {
+ *   &#64;Override
+ *   public void run() {
+ *    maximize(WindowState.NORMAL);
+ *   }
+ * };
+ * </pre>
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public abstract class DelayedRunnable implements CoreConstants {
 
   private Timer timer = new Timer() {
     public void run() {
@@ -25,16 +44,35 @@ public abstract class DelayedRunnable {
     }
   };
 
+  /**
+   * Creates a {@code com.google.gwt.user.client.Timer} and calls
+   * {@code com.google.gwt.user.client.Timer#schedule(int)} with the default
+   * {@link CoreConstants#DEFAULT_DELAY_MILLIS} value.
+   */
   public DelayedRunnable() {
-    this(333);
+    this(DEFAULT_DELAY_MILLIS);
   }
 
-  public DelayedRunnable(int delay) {
-    timer.schedule(delay);
+  /**
+   * Creates a {@code com.google.gwt.user.client.Timer} and calls
+   * {@code com.google.gwt.user.client.Timer#schedule(int)} with a given value.
+   * 
+   * @param delayMillis how long to wait before the timer elapses, in
+   *          milliseconds
+   */
+  public DelayedRunnable(int delayMillis) {
+    timer.schedule(delayMillis);
   }
 
+  /**
+   * This method will be called when the timer fires. Override it to implement
+   * the timer's logic.
+   */
   public abstract void run();
 
+  /**
+   * Cancels the timer.
+   */
   public void cancel() {
     timer.cancel();
   }
