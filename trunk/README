@@ -35,7 +35,7 @@ Note: both scripts are for linux.
 To use the library you will need also gwt-dnd.jar & gwt-incubator.jar 
 from the lib directory and you have to add:
 
-	<inherits name='org.mosaic.ui.Mosaic' />
+	<inherits name='org.gwt.mosaic.ui.Mosaic' />
  
 in your module gwt.xml file.
 	
