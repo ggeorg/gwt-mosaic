@@ -35,7 +35,15 @@ Note: both scripts are for linux.
 To use the library you will need also gwt-dnd.jar & gwt-incubator.jar 
 from the lib directory and you have to add:
 
-	<inherits name='org.gwt.mosaic.ui.Mosaic' />
+	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
+	<inherits name='org.gwt.mosaic.Mosaic' />
+
+	<!-- Inherit the default GWT style sheet.  You can change       -->
+	<!-- the theme of your GWT application by uncommenting          -->
+	<!-- any one of the following lines.                            -->
+	<stylesheet src="gwt/standard/Mosaic.css" />
+	<!-- <stylesheet src="gwt/chrome/Mosaic.css" />                 -->
+	<!-- <stylesheet src="gwt/dark/Mosaic.css" />                   -->
  
 in your module gwt.xml file.
 	
