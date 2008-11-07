@@ -54,9 +54,18 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
- * A {@code DecoratedPopupPanel} that has a caption area at the top and can be
- * dragged and resized by the user. The default layout for a window is
+ * A {@code WindowPanel} is a {@code DecoratedPopupPanel} that has a caption
+ * area at the top and can be dragged and resized by the user. The default
+ * layout for a {@code WindowPanel} is
  * {@link org.gwt.mosaic.ui.client.layout.FillLayout}.
+ * <p>
+ * Example:
+ * 
+ * <pre>
+ * WindowPanel windowPanel = new WindowPanel("CaptionText");
+ * windowPanel.add(new Button("Click me!"));
+ * windowPanel.show();
+ * </pre>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -780,7 +789,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     return ret;
   }
 
-  protected void fireCollapsedChange(Widget sender) {
+  private void fireCollapsedChange(Widget sender) {
     if (collapsedListeners != null) {
       collapsedListeners.fireCollapsedChange(sender);
     }
@@ -831,9 +840,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     return panel.getHeader();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Returns the preferred size of this {@code WindowPanel} calculated by the
+   * {@code WindowPanel}'s layout manager.
    * 
+   * {@inheritDoc}
+   * 
+   * @returns the preferred size of this container.
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
   public int[] getPreferredSize() {
@@ -904,6 +917,14 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     return modal;
   }
 
+  /**
+   * Indicates whether this {@code WindowPanel} is resizable by the user. By
+   * default, all {@code WindowPanels} are initially resizable.
+   * 
+   * @return {@code true} if the user can resize this {@code WindowPanel};
+   *         {@code false} otherwise.
+   * @see #setResizable(boolean)
+   */
   public boolean isResizable() {
     return resizable;
   }
@@ -1158,8 +1179,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     setContentSize(size[0], size[1]); // FIXME we call layout in
     // setContentSize() too!!!
 
-    // schedule for layout
-    layoutTimer.schedule(1);
+    layout();
   }
 
   public void removeCollapsedListener(CollapsedListener listener) {
@@ -1338,6 +1358,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
   }
 
+  /**
+   * Sets whether this {@code WindowPanel} is resizable by the user.
+   * 
+   * @param resizable {@code true} if this {@code WindowPanel} is resizable;
+   *          {@code false} otherwise.
+   * @see #isResizable()
+   */
   public void setResizable(boolean resizable) {
     this.resizable = resizable;
     if (resizable) {
