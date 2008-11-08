@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,11 +20,11 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
@@ -41,6 +41,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-MenuBar", ".mosaic-ToolBar"})
 public class CwToolBar extends ContentWidget implements ClickListener {
@@ -52,11 +54,17 @@ public class CwToolBar extends ContentWidget implements ClickListener {
   public static interface CwConstants extends Constants,
       ContentWidget.CwConstants {
     String mosaicToolBarName();
+
     String mosaicToolBarDescription();
+
     String mosaicToolBarPushBtn1();
+
     String mosaicToolBarPushBtn2();
+
     String mosaicToolBarMenuBtn1();
+
     String mosaicToolBarMenuBtn2();
+
     String mosaicToolBarSplitBtn();
   }
 
@@ -121,7 +129,8 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     toolBar.add(pushButton);
 
     // Add a disabled push button
-    ToolButton disabledPushButton = new ToolButton(constants.mosaicToolBarPushBtn2());
+    ToolButton disabledPushButton = new ToolButton(
+        constants.mosaicToolBarPushBtn2());
     disabledPushButton.setEnabled(false);
     pushButton.ensureDebugId("mosaicPushButton-disabled");
 
@@ -138,8 +147,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
-        TrayInfoPanelNotifier.notifyTrayEvent("Menu Button",
-            "You selected a menu item!");
+        InfoPanel.show("Menu Button", "You selected a menu item!");
       }
     };
 
@@ -155,7 +163,8 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     toolBar.add(menuButton);
 
     // Add a disabled menu button
-    ToolButton disabledMenuButton = new ToolButton(constants.mosaicToolBarPushBtn2());
+    ToolButton disabledMenuButton = new ToolButton(
+        constants.mosaicToolBarPushBtn2());
     disabledMenuButton.setStyle(ToolButtonStyle.MENU);
     disabledMenuButton.setEnabled(false);
     disabledMenuButton.ensureDebugId("mosaicMenuButton-disabled");
@@ -173,8 +182,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd2 = new Command() {
       public void execute() {
-        TrayInfoPanelNotifier.notifyTrayEvent("Split Button",
-            "You selected a menu item!");
+        InfoPanel.show("Split Button", "You selected a menu item!");
       }
     };
 
@@ -259,7 +267,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
-    TrayInfoPanelNotifier.notifyTrayEvent(btn.getHTML(), "Clicked!");
+    InfoPanel.show(btn.getHTML(), "Clicked!");
   }
 
 }

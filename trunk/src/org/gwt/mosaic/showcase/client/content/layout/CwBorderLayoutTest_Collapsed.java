@@ -24,9 +24,9 @@ import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.ImageButton;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -120,7 +120,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     layoutPanel.add(southPanel, new BorderLayoutData(BorderLayoutRegion.SOUTH,
         0.20, true));
     layoutPanel.setCollapsed(southPanel, true);
-    
+
     layoutPanel.addCollapsedListener(southPanel, this);
 
     // west panel
@@ -137,13 +137,13 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
         layoutPanel.layout();
       }
     });
-    
+
     layoutPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST,
         0.2, true));
     layoutPanel.setCollapsed(westPanel, true);
-    
+
     layoutPanel.addCollapsedListener(westPanel, this);
-    
+
     // east panel
 
     final CaptionLayoutPanel eastPanel = new CaptionLayoutPanel("East");
@@ -158,11 +158,11 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
         layoutPanel.layout();
       }
     });
-    
+
     layoutPanel.add(eastPanel, new BorderLayoutData(BorderLayoutRegion.EAST,
         0.2, true));
     layoutPanel.setCollapsed(eastPanel, true);
-    
+
     layoutPanel.addCollapsedListener(eastPanel, this);
 
     // center panel
@@ -182,8 +182,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
    */
   @ShowcaseSource
   public void onCollapsedChange(Widget sender) {
-    TrayInfoPanelNotifier.notifyTrayEvent("Collapsed", ""
-        + layoutPanel.isCollapsed(sender));
+    InfoPanel.show("Collapsed", "" + layoutPanel.isCollapsed(sender));
   }
 
 }

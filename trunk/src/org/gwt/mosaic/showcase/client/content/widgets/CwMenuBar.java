@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,6 +37,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-MenuBar"})
 public class CwMenuBar extends ContentWidget {
@@ -45,7 +47,8 @@ public class CwMenuBar extends ContentWidget {
    * The constants used in this Page.
    */
   @ShowcaseSource
-  public static interface CwConstants extends Constants, ContentWidget.CwConstants {
+  public static interface CwConstants extends Constants,
+      ContentWidget.CwConstants {
     String mosaicMenuBarDescription();
 
     String mosaicMenuBarEditCategory();
@@ -84,7 +87,7 @@ public class CwMenuBar extends ContentWidget {
     super(constants);
     this.constants = constants;
   }
-  
+
   @Override
   public String getDescription() {
     return "MenuBar description";
@@ -104,13 +107,13 @@ public class CwMenuBar extends ContentWidget {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
     layoutPanel.setPadding(5);
-    
+
     final CaptionLayoutPanel toolBox = new CaptionLayoutPanel(Window.getTitle());
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
     toolBox.add(createMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     layoutPanel.add(toolBox, new FillLayoutData(true));
-    
+
     return layoutPanel;
   }
 
