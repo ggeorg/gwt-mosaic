@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,9 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -37,6 +37,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-CustomButton", ".gwt-PushButton", ".gwt-ToggleButton"})
 public class CwCustomButton extends ContentWidget implements ClickListener {
@@ -94,11 +96,11 @@ public class CwCustomButton extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     if (sender instanceof PushButton) {
-      TrayInfoPanelNotifier.notifyTrayEvent(constants.mosaicCustomButtonName(),
+      InfoPanel.show(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonClicked());
     } else {
       ToggleButton btn = (ToggleButton) sender;
-      TrayInfoPanelNotifier.notifyTrayEvent(constants.mosaicCustomButtonName(),
+      InfoPanel.show(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonDown()
               + new Boolean(btn.isDown()).toString());
     }

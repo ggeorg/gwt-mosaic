@@ -24,6 +24,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolButton;
@@ -33,7 +34,6 @@ import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowStateListener;
 import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -57,6 +57,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Example file.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -341,7 +342,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
-        TrayInfoPanelNotifier.notifyTrayEvent("Menu Button",
+        InfoPanel.show("Menu Button",
             "You selected a menu item!");
       }
     };
@@ -434,7 +435,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   @ShowcaseSource
   public void onClick(Widget sender) {
     final Button btn = (Button) sender;
-    TrayInfoPanelNotifier.notifyTrayEvent(btn.getText(), "Clicked!");
+    InfoPanel.show(btn.getText(), "Clicked!");
   }
 
   /**

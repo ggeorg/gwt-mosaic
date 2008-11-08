@@ -18,7 +18,8 @@ package org.gwt.mosaic.showcase.client.content.popups;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -91,11 +92,10 @@ public class CwInfoPanel extends ContentWidget {
     btn1.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (type1.isChecked()) {
-          TrayInfoPanelNotifier.notifyModalEvent(caption1.getText(),
+          InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption1.getText(),
               description1.getText());
         } else {
-          TrayInfoPanelNotifier.notifyTrayEvent(caption1.getText(),
-              description1.getText());
+          InfoPanel.show(caption1.getText(), description1.getText());
         }
       }
     });
@@ -141,9 +141,10 @@ public class CwInfoPanel extends ContentWidget {
     btn2.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (type2.isChecked()) {
-          TrayInfoPanelNotifier.notifyModalEvent(caption2, description2);
+          InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption2,
+              description2);
         } else {
-          TrayInfoPanelNotifier.notifyTrayEvent(caption2, description2);
+          InfoPanel.show(caption2, description2);
         }
       }
     });

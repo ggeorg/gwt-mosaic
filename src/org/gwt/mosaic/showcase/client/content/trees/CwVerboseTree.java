@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package org.gwt.mosaic.showcase.client.content.trees;
 
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Window;
@@ -30,6 +30,8 @@ import com.google.gwt.widgetideas.client.ListeningFastTreeItem;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-FastTree"})
 public class CwVerboseTree extends CwBasicTree {
@@ -79,25 +81,25 @@ public class CwVerboseTree extends CwBasicTree {
       FastTreeItem item = new ListeningFastTreeItem("child " + i) {
         @Override
         public void afterClose() {
-          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Item" + index
+          InfoPanel.show(this.getText(), "Item" + index
               + " is closed");
         }
 
         @Override
         public void afterOpen() {
-          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Item " + index
+          InfoPanel.show(this.getText(), "Item " + index
               + " is open");
         }
 
         @Override
         public void beforeClose() {
-          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Close item"
+          InfoPanel.show(this.getText(), "Close item"
               + index);
         }
 
         @Override
         public void beforeOpen() {
-          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(), "Open item "
+          InfoPanel.show(this.getText(), "Open item "
               + index);
         }
 
@@ -109,13 +111,13 @@ public class CwVerboseTree extends CwBasicTree {
 
         @Override
         protected void ensureChildren() {
-          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(),
+          InfoPanel.show(this.getText(),
               "You are about to open my children for the first time");
         }
 
         @Override
         protected void onSelected() {
-          TrayInfoPanelNotifier.notifyTrayEvent(this.getText(),
+          InfoPanel.show(this.getText(),
               "You selected item " + index);
         }
       };

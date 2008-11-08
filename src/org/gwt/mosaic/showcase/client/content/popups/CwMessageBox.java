@@ -22,12 +22,12 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.MessageBoxType;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -126,7 +126,7 @@ public class CwMessageBox extends ContentWidget {
     Button alertBtn = new Button("Warning");
     alertBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.alert("Warning", "I am a warning box!");
+        MessageBox.alert("Warning", "I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!");
       }
     });
 
@@ -170,7 +170,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.confirm("Confirmation Box", "I am a confirmation box!",
             new ConfirmationCallback() {
               public void onResult(boolean result) {
-                TrayInfoPanelNotifier.notifyTrayEvent("Prompt Box",
+                InfoPanel.show("Prompt Box",
                     "Result is '" + result + "'");
               }
             });
@@ -195,7 +195,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("Prompt Box", "Please enter your name", "George",
             new PromptCallback<String>() {
               public void onResult(String input) {
-                TrayInfoPanelNotifier.notifyTrayEvent("Prompt Box",
+                InfoPanel.show("Prompt Box",
                     "Your name is: '" + input + "'");
               }
             });
@@ -214,7 +214,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DatePicker Box", new Date(),
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-                TrayInfoPanelNotifier.notifyTrayEvent("DatePicker Box",
+                InfoPanel.show("DatePicker Box",
                     "You entered: '" + input + "'");
               }
             });
@@ -227,7 +227,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DateTimePicker Box", new Date(), false,
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-                TrayInfoPanelNotifier.notifyTrayEvent("DateTimePicker Box",
+                InfoPanel.show("DateTimePicker Box",
                     "You entered: '" + input + "'");
               }
             });
@@ -267,7 +267,7 @@ public class CwMessageBox extends ContentWidget {
       public void onClick(Widget sender) {
         richTextAreaPrompt(new PromptCallback<String>() {
           public void onResult(String input) {
-            TrayInfoPanelNotifier.notifyTrayEvent("RichTextArea Prompt", input);
+            InfoPanel.show("RichTextArea Prompt", input);
           }
         });
       }
@@ -297,9 +297,9 @@ public class CwMessageBox extends ContentWidget {
       public void onClose(boolean result) {
         hide();
         if (result) {
-          TrayInfoPanelNotifier.notifyTrayEvent("Login Form", "Form submitted!");
+          InfoPanel.show("Login Form", "Form submitted!");
         } else {
-          TrayInfoPanelNotifier.notifyTrayEvent("Login Form",
+          InfoPanel.show("Login Form",
               "You clicked 'Cancel'.");
         }
       }

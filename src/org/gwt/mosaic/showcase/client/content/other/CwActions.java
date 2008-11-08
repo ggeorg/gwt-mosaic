@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,11 +21,11 @@ import org.gwt.mosaic.actions.client.ActionRegistry;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -41,7 +41,9 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Example file;
+ * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public class CwActions extends ContentWidget {
 
@@ -55,7 +57,7 @@ public class CwActions extends ContentWidget {
 
     actionListener = new ActionListener() {
       public void handleAction(Action action) {
-        TrayInfoPanelNotifier.notifyTrayEvent("Action", action.getId());
+        InfoPanel.show("Action", action.getId());
       }
     };
   }

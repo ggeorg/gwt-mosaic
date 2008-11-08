@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,8 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.infopanel.TrayInfoPanelNotifier;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -48,6 +49,8 @@ import com.google.gwt.widgetideas.table.client.overrides.HTMLTable;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-ScrollTable"})
 public class CwTableLoadingBenchmark extends ContentWidget {
@@ -252,7 +255,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
 
     table.setWidget(0, 3, new Button("A widget"));
 
-    TrayInfoPanelNotifier.notifyModalEvent(caption, "Finished in "
+    InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption, "Finished in "
         + (System.currentTimeMillis() - milli) + " milliseconds");
   }
 
