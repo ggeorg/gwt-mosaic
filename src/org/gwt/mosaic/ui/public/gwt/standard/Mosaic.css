@@ -206,6 +206,8 @@ input {
 	padding: 4px 4px 4px 4px;
 	text-align: left !important;
 	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 /*** DropDownPanel ***/
