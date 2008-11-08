@@ -126,7 +126,7 @@ public class CwMessageBox extends ContentWidget {
     Button alertBtn = new Button("Warning");
     alertBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.alert("Warning", "I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!");
+        MessageBox.alert("Warning", "I am a warning box!");
       }
     });
 
@@ -170,8 +170,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.confirm("Confirmation Box", "I am a confirmation box!",
             new ConfirmationCallback() {
               public void onResult(boolean result) {
-                InfoPanel.show("Prompt Box",
-                    "Result is '" + result + "'");
+                InfoPanel.show("Prompt Box", "Result is '" + result + "'");
               }
             });
       }
@@ -195,8 +194,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("Prompt Box", "Please enter your name", "George",
             new PromptCallback<String>() {
               public void onResult(String input) {
-                InfoPanel.show("Prompt Box",
-                    "Your name is: '" + input + "'");
+                InfoPanel.show("Prompt Box", "Your name is: '" + input + "'");
               }
             });
       }
@@ -214,8 +212,7 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DatePicker Box", new Date(),
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-                InfoPanel.show("DatePicker Box",
-                    "You entered: '" + input + "'");
+                InfoPanel.show("DatePicker Box", "You entered: '" + input + "'");
               }
             });
       }
@@ -227,8 +224,8 @@ public class CwMessageBox extends ContentWidget {
         MessageBox.prompt("DateTimePicker Box", new Date(), false,
             new PromptCallback<Date>() {
               public void onResult(Date input) {
-                InfoPanel.show("DateTimePicker Box",
-                    "You entered: '" + input + "'");
+                InfoPanel.show("DateTimePicker Box", "You entered: '" + input
+                    + "'");
               }
             });
       }
@@ -299,8 +296,7 @@ public class CwMessageBox extends ContentWidget {
         if (result) {
           InfoPanel.show("Login Form", "Form submitted!");
         } else {
-          InfoPanel.show("Login Form",
-              "You clicked 'Cancel'.");
+          InfoPanel.show("Login Form", "You clicked 'Cancel'.");
         }
       }
     };
