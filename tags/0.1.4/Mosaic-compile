@@ -1,0 +1,4 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+LIBS=$GWT_HOME/gwt-user.jar:$GWT_HOME/gwt-dev-linux.jar:$APPDIR/lib/gwt-dnd-2.5.6.jar:$APPDIR/lib/gwt-incubator.jar
+java  -Xmx256M -cp "$APPDIR/src:$APPDIR/build/classes:$LIBS" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/www" "$@" org.gwt.mosaic.showcase.Showcase;
