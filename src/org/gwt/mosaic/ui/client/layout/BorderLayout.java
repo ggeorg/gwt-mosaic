@@ -172,7 +172,17 @@ public class BorderLayout extends BaseLayout {
       }
 
       width += getFlowWidth(center);
-      height += getFlowHeight(center);
+
+      if (west != null && east != null) {
+        height += Math.max(Math.max(getFlowHeight(west), getFlowHeight(east)),
+            getFlowHeight(center));
+      } else if (west != null) {
+        height += Math.max(getFlowHeight(west), getFlowHeight(center));
+      } else if (east != null) {
+        height += Math.max(getFlowHeight(east), getFlowHeight(center));
+      } else {
+        height += getFlowHeight(center);
+      }
 
       BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
@@ -194,8 +204,8 @@ public class BorderLayout extends BaseLayout {
   protected boolean isCollapsed(LayoutPanel layoutPanel, Widget widget) {
     try {
       if (layoutPanel != null) {
-          final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
-          return layoutData.collapse;
+        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
+        return layoutData.collapse;
       }
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
