@@ -175,8 +175,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     @Override
     public void dragStart() {
       if (!isActive()) {
-        bringToFront();
+        toFront();
       }
+
       panel.hideContents(true);
       if (!modal) {
         if (glassPanel == null) {
@@ -609,6 +610,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         setCollapsed(!isCollapsed());
       }
     });
+    panel.getHeader().addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (!isActive()) {
+          toFront();
+        }
+      }
+    });
 
     windowController.getMoveDragController().makeDraggable(this,
         panel.getHeader());
@@ -1032,6 +1040,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   protected void maximize(WindowState oldState) {
     if (isResizable()) {
+      if (!isActive()) {
+        toFront();
+      }
+
       final Widget boundaryPanel = windowController.getBoundaryPanel();
       if (isCollapsed()) {
         restoredLeft = getAbsoluteLeft() - boundaryPanel.getAbsoluteLeft();
@@ -1039,11 +1051,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
         final int[] size3 = DOM.getBoxSize(panel.getElement());
-        // final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
-        // final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
         setPopupPosition(0, 0);
-        // setContentSize(size[0] - (boxTL[0] + boxTR[0]),
-        // panel.getPreferredSize()[1]);
         setContentSize(size[0] - (size2[0] - size3[0]),
             panel.getPreferredSize()[1]);
       } else {
@@ -1056,12 +1064,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
         final int[] size3 = DOM.getBoxSize(panel.getElement());
-        // final int[] boxTL = DOM.getClientSize(getCellElement(0, 0));
-        // final int[] boxTR = DOM.getClientSize(getCellElement(0, 2));
-        // final int[] boxBL = DOM.getClientSize(getCellElement(2, 0));
         setPopupPosition(0, 0);
-        // setContentSize(size[0] - (boxTL[0] + boxTR[0]), size[1]
-        // - (boxTL[1] + boxBL[1]));
         setContentSize(size[0] - (size2[0] - size3[0]), size[1]
             - (size2[1] - size3[1]));
         makeNotResizable();
@@ -1108,40 +1111,40 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     if (!initialized) {
       initialized = true;
 
-      resizeToFitContent();
+      final int[] __size = panel.getPreferredSize();
+      DOM.setContentAreaWidth(panel.getElement(), __size[0]);
+      DOM.setContentAreaHeight(panel.getElement(), __size[1]);
+
+      layout();
+
+      panel.setSize("0px", "0px");
 
       if (width != null && height != null) {
-        panel.setSize("0px", "0px");
-
         final int[] box = DOM.getClientSize(getElement());
         WindowPanel.super.setSize("auto", "auto");
         final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
         final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
         setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1] - box3[1]);
-        layout();
       } else if (width != null) {
-        panel.setSize("0px", "0px");
-
         final int[] box = DOM.getClientSize(getElement());
         WindowPanel.super.setWidth("auto");
         final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
         final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
         final int[] size = panel.getPreferredSize();
         setContentSize(box[0] - box2[0] - box3[0], size[1]);
-        layout();
       } else if (height != null) {
-        panel.setSize("0px", "0px");
-
         final int[] box = DOM.getClientSize(getElement());
         WindowPanel.super.setHeight("auto");
         final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
         final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
         final int[] size = panel.getPreferredSize();
         setContentSize(size[0], box[1] - box2[1] - box3[1]);
-        layout();
       } else {
-        resizeToFitContent();
+        final int[] size = panel.getPreferredSize();
+        setContentSize(size[0], size[1]);
       }
+
+      layout();
 
       if (windowState == WindowState.MAXIMIZED) {
         new DelayedRunnable() {
@@ -1159,6 +1162,11 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         };
       }
 
+//      DeferredCommand.addCommand(new Command() {
+//        public void execute() {
+//          System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
+//        }
+//      });
     }
   }
 
@@ -1287,7 +1295,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
       panel.setCollapsed(true);
       final int[] size = panel.getPreferredSize();
-      setContentSize(size[0], size[1]);
+      setContentSize(panel.getOffsetWidth(), size[1]);
       if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeNotResizable();
       }
