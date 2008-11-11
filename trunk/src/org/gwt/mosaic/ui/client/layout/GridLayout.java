@@ -146,10 +146,10 @@ public class GridLayout extends BaseLayout {
       }
 
       buildWidgetMatrix(layoutPanel);
-
+      
       for (int r = 0; r < rows; r++) {
-        int width = 0;
-        int height = 0;
+        int cellWidth = 0;
+        int cellHeight = 0;
         for (int c = 0; c < cols; c++) {
           Widget widget = widgetMatrix[c][r];
           if (widget == null || widget == SPAN) {
@@ -158,12 +158,22 @@ public class GridLayout extends BaseLayout {
           if (widget instanceof DecoratorPanel) {
             widget = ((DecoratorPanel) widget).getWidget();
           }
-          width += getFlowWidth(widget);
-          height = Math.max(height, getFlowHeight(widget));
+
+          GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
+
+          int flowWidth = getFlowWidth(widget);
+          cellWidth = Math.max(cellWidth, (int) Math.ceil((double) flowWidth
+              / (double) layoutData.colspan));
+
+          int flowHeight = getFlowHeight(widget);
+          cellHeight = Math.max(cellHeight, (int) Math.ceil((double) flowHeight
+              / (double) layoutData.rowspan));
         }
-        result[0] = Math.max(result[0], width);
-        result[1] += height;
+        result[0] = Math.max(result[0], cellWidth);
+        result[1] = Math.max(result[1], cellHeight);
       }
+      result[0] *= cols;
+      result[1] *= rows;
 
       final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
       result[0] += (margins[1] + margins[3]);
@@ -176,10 +186,6 @@ public class GridLayout extends BaseLayout {
       final int spacing = layoutPanel.getWidgetSpacing();
       result[0] += ((cols - 1) * spacing);
       result[1] += ((rows - 1) * spacing);
-
-      result[0] = cols * (int) (Math.ceil((double) result[0] / (double) cols));
-      result[1] = rows * (int) (Math.ceil((double) result[1] / (double) rows));
-
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
