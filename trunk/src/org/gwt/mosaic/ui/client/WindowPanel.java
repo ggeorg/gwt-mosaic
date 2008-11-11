@@ -1401,6 +1401,9 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       zIndex += Z_INDEX_MODAL_OFFSET;
     }
     DOM.setStyleAttribute(getElement(), "zIndex", Integer.toString(zIndex));
+    if (glassPanel != null && glassPanel.isAttached()) {
+      DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", Integer.toString(zIndex));  
+    }
   }
 
   /**
@@ -1488,6 +1491,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   public void showModal() {
     modal = true;
     center();
+    toFront();
   }
 
   /**
@@ -1527,6 +1531,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       for (; curIndex < windowPanelOrder.size(); curIndex++) {
         windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
       }
+    } else {
+      setWindowOrder(curIndex);
     }
   }
 }
