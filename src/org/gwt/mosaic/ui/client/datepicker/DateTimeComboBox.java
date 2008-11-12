@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package org.gwt.mosaic.ui.client.datepicker;
 
 import java.util.Date;
 
-import org.gwt.mosaic.ui.client.ComboBox;
+import org.gwt.mosaic.ui.client.ComboBoxBase;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Timer;
@@ -26,7 +26,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
-public class DateTimeComboBox extends ComboBox<DateTimePicker> {
+/**
+ *
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
 
   private static final String DEFAULT_STYLENAME = "mosaic-DateTimeBox";
 

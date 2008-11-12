@@ -23,9 +23,11 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.GridLayout;
 import org.gwt.mosaic.ui.client.layout.GridLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
@@ -88,7 +90,7 @@ public class CwComplexForm extends ContentWidget {
       public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
         if (tabIndex == 0) {
           if (form1.getWidgetCount() == 0) {
-            form1.add(createForm1());
+            form1.add(createForm1(), new BoxLayoutData(FillStyle.HORIZONTAL));
             DeferredCommand.addCommand(new Command() {
               public void execute() {
                 form1.layout();
@@ -97,7 +99,7 @@ public class CwComplexForm extends ContentWidget {
           }
         } else if (tabIndex == 1) {
           if (form2.getWidgetCount() == 0) {
-            form2.add(createForm2());
+            form2.add(createForm2(), new BoxLayoutData(FillStyle.HORIZONTAL));
             DeferredCommand.addCommand(new Command() {
               public void execute() {
                 form2.layout();
