@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,76 +15,49 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-
-import com.google.gwt.i18n.client.HasDirection;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FocusListener;
-import com.google.gwt.user.client.ui.HasFocus;
-import com.google.gwt.user.client.ui.HasName;
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.PopupListener;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.SourcesChangeEvents;
-import com.google.gwt.user.client.ui.SourcesClickEvents;
-import com.google.gwt.user.client.ui.SourcesFocusEvents;
-import com.google.gwt.user.client.ui.SourcesKeyboardEvents;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class ComboBox<T extends Widget> extends LayoutComposite
-    implements HasFocus, HasDirection, HasName, HasText, SourcesClickEvents,
-    SourcesChangeEvents, SourcesFocusEvents, SourcesKeyboardEvents {
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public class ComboBox extends ComboBoxBase<ListBox> {
 
-  private static final String DEFAULT_STYLENAME = "mosaic-ComboBox";
+  private final ListBox listBox;
 
-  private final TextBox input;
-  private final Button button;
-  private final DropDownPanel popup;
+  private Timer updateTimer = new Timer() {
+    public void run() {
+      if (!isPopupVisible()) {
+        showPopup();
+      } else {
+        onShowPopup();
+      }
+    }
+  };
 
-  private boolean cancelNextClick;
-
+  /**
+   * Default constructor.
+   */
   public ComboBox() {
-    this(DEFAULT_STYLENAME);
+    this(new ListBox());
   }
 
-  protected ComboBox(String styleName) {
+  protected ComboBox(final ListBox listBox) {
     super();
-    final LayoutPanel layoutPanel = super.getWidget();
-    layoutPanel.setLayout(new BoxLayout(Orientation.HORIZONTAL));
-    layoutPanel.setPadding(0);
-    layoutPanel.setWidgetSpacing(0);
 
-    input = new TextBox();
-    layoutPanel.add(input, new BoxLayoutData(FillStyle.BOTH));
-    input.addKeyboardListener(new KeyboardListener() {
+    this.listBox = listBox;
+    this.listBox.setMultipleSelect(false);
+    this.listBox.setVisibleItemCount(10);
+    this.listBox.addStyleName("mosaic-ComboBoxList");
+
+    super.addKeyboardListener(new KeyboardListener() {
       public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-            hidePopup();
-            break;
-          case KEY_DOWN:
-            if (!popup.isAttached()) {
-              new DelayedRunnable(1) {
-                @Override
-                public void run() {
-                  showPopup();
-                }
-              };
-            }
-            break;
-          default:
-        }
+        // Nothing to do here!
       }
 
       public void onKeyPress(Widget sender, char keyCode, int modifiers) {
@@ -92,289 +65,203 @@ public abstract class ComboBox<T extends Widget> extends LayoutComposite
       }
 
       public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-    });
-
-    button = new Button();
-    button.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (cancelNextClick) {
-          cancelNextClick = false;
-        } else {
-          showPopup();
-        }
-      }
-    });
-    layoutPanel.add(button, new BoxLayoutData(FillStyle.VERTICAL));
-
-    popup = new DropDownPanel(this);
-    popup.addPopupListener(new PopupListener() {
-      public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-        if (!autoClosed) {
-          input.setFocus(true);
+        switch (keyCode) {
+          case KEY_ENTER:
+          case KEY_TAB:
+          case KEY_ESCAPE:
+          case KEY_UP:
+            break;
+          default:
+            updateTimer.schedule(333);
         }
       }
     });
 
-    setStyleName(styleName);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesChangeEvents#addChangeListener(com.google.gwt.user.client.ui.ChangeListener)
-   */
-  public void addChangeListener(ChangeListener listener) {
-    input.addChangeListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesClickEvents#addClickListener(com.google.gwt.user.client.ui.ClickListener)
-   */
-  public void addClickListener(ClickListener listener) {
-    input.addClickListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesFocusEvents#addFocusListener(com.google.gwt.user.client.ui.FocusListener)
-   */
-  public void addFocusListener(FocusListener listener) {
-    input.addFocusListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesKeyboardEvents#addKeyboardListener(com.google.gwt.user.client.ui.KeyboardListener)
-   */
-  public void addKeyboardListener(KeyboardListener listener) {
-    input.addKeyboardListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.i18n.client.HasDirection#getDirection()
-   */
-  public Direction getDirection() {
-    return input.getDirection();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasName#getName()
-   */
-  public String getName() {
-    return input.getName();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasFocus#getTabIndex()
-   */
-  public int getTabIndex() {
-    return input.getTabIndex();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasText#getText()
-   */
-  public String getText() {
-    return input.getText();
-  }
-
-  protected void hidePopup() {
-    hidePopup(false);
-  }
-
-  protected void hidePopup(boolean autoHide) {
-    if (autoHide) {
-      popup.hide(true);
-    } else if (onHidePopup()) {
-      popup.hide();
-    }
-  }
-
-  public boolean isAnimationEnabled() {
-    return popup.isAnimationEnabled();
-  }
-
-  /**
-   * Gets whether this widget is enabled.
-   * 
-   * @return <code>true</code> if the widget is enabled
-   */
-  public boolean isEnabled() {
-    return input.isEnabled() && button.isEnabled();
-  }
-
-  protected boolean isPopupVisible() {
-    return popup.isAttached();
-  }
-  
-  /**
-   * Determines whether or not the widget is read-only.
-   * 
-   * @return <code>true</code> if the widget is currently read-only,
-   *         <code>false</code> if the widget is currently editable
-   */
-  public boolean isReadOnly() {
-    return input.isReadOnly();
+    listBox.addChangeListener(new ChangeListener() {
+      public void onChange(Widget sender) {
+        setText(listBox.getItemText(listBox.getSelectedIndex()));
+        hidePopup();
+      }
+    });
   }
 
   @Override
-  public void layout() {
-    hidePopup(true);
-    super.layout();
+  protected boolean onHidePopup() {
+    return true;
   }
 
-  protected abstract boolean onHidePopup();
-
-  protected abstract T onShowPopup();
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesChangeEvents#removeChangeListener(com.google.gwt.user.client.ui.ChangeListener)
-   */
-  public void removeChangeListener(ChangeListener listener) {
-    input.removeChangeListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesClickEvents#removeClickListener(com.google.gwt.user.client.ui.ClickListener)
-   */
-  public void removeClickListener(ClickListener listener) {
-    input.removeClickListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesFocusEvents#removeFocusListener(com.google.gwt.user.client.ui.FocusListener)
-   */
-  public void removeFocusListener(FocusListener listener) {
-    input.removeFocusListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesKeyboardEvents#removeKeyboardListener(com.google.gwt.user.client.ui.KeyboardListener)
-   */
-  public void removeKeyboardListener(KeyboardListener listener) {
-    input.removeKeyboardListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasFocus#setAccessKey(char)
-   */
-  public void setAccessKey(char key) {
-    input.setAccessKey(key);
-  }
-
-  public void setAnimationEnabled(boolean enable) {
-    popup.setAnimationEnabled(enable);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.i18n.client.HasDirection#setDirection(com.google.gwt.i18n.client.HasDirection.Direction)
-   */
-  public void setDirection(Direction direction) {
-    input.setDirection(direction);
+  @Override
+  protected ListBox onShowPopup() {
+    return listBox;
   }
 
   /**
-   * Sets whether this widget is enabled.
+   * Adds an item to the list box. This method has the same effect as
    * 
-   * @param enabled <code>true</code> to enable the widget, <code>false</code>
-   *          to disable it
-   */
-  public void setEnabled(boolean enabled) {
-    input.setEnabled(enabled);
-    button.setEnabled(enabled);
-  }
-
-  /*
-   * (non-Javadoc)
+   * <pre>
+   * addItem(item, item)
+   * </pre>
    * 
-   * @see com.google.gwt.user.client.ui.HasFocus#setFocus(boolean)
+   * @param item the text of the item to be added
    */
-  public void setFocus(boolean focused) {
-    input.setFocus(focused);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String)
-   */
-  public void setName(String name) {
-    input.setName(name);
+  public void addItem(String item) {
+    listBox.addItem(item);
   }
 
   /**
-   * Turns read-only mode on or off.
+   * Adds an item to the list box, specifying an initial value for the item.
    * 
-   * @param readOnly if <code>true</code>, the widget becomes read-only; if
-   *          <code>false</code> the widget becomes editable
+   * @param item the text of the item to be added
+   * @param value the item's value, to be submitted if it is part of a
+   *          {@link FormPanel}; cannot be <code>null</code>
    */
-  public void setReadOnly(boolean readOnly) {
-    input.setReadOnly(readOnly);
-    String readOnlyStyle = "readonly";
-    if (readOnly) {
-      addStyleDependentName(readOnlyStyle);
-    } else {
-      removeStyleDependentName(readOnlyStyle);
+  public void addItem(String item, String value) {
+    listBox.addItem(item, value);
+  }
+
+  /**
+   * Removes all items from the list box.
+   */
+  public void clear() {
+    listBox.clear();
+    setText("");
+  }
+
+  /**
+   * Gets the number of items present in the list box.
+   * 
+   * @return the number of items
+   */
+  public int getItemCount() {
+    return listBox.getItemCount();
+  }
+
+  /**
+   * Gets the currently-selected item. If multiple items are selected, this
+   * method will return the first selected item ({@link #isItemSelected(int)}
+   * can be used to query individual items).
+   * 
+   * @return the selected index, or <code>-1</code> if none is selected
+   */
+  public int getSelectedIndex() {
+    return listBox.getSelectedIndex();
+  }
+
+  /**
+   * Gets the number of items that are visible. If only one item is visible,
+   * then the box will be displayed as a drop-down list.
+   * 
+   * @return the visible item count
+   */
+  public int getVisibleItemCount() {
+    return listBox.getVisibleItemCount();
+  }
+
+  /**
+   * Inserts an item into the list box. Has the same effect as
+   * 
+   * <pre>
+   * insertItem(item, item, index)
+   * </pre>
+   * 
+   * @param item the text of the item to be inserted
+   * @param index the index at which to insert it
+   */
+  public void insertItem(String item, int index) {
+    listBox.insertItem(item, index);
+  }
+
+  /**
+   * Inserts an item into the list box, specifying an initial value for the
+   * item. If the index is less than zero, or greater than or equal to the
+   * length of the list, then the item will be appended to the end of the list.
+   * 
+   * @param item the text of the item to be inserted
+   * @param value the item's value, to be submitted if it is part of a
+   *          {@link FormPanel}.
+   * @param index the index at which to insert it
+   */
+  public void insertItem(String item, String value, int index) {
+    listBox.insertItem(item, value, index);
+  }
+
+  /**
+   * Determines whether an individual list item is selected.
+   * 
+   * @param index the index of the item to be tested
+   * @return <code>true</code> if the item is selected
+   * @throws IndexOutOfBoundsException if the index is out of range
+   */
+  public boolean isItemSelected(int index) {
+    return listBox.isItemSelected(index);
+  }
+
+  /**
+   * Removes the item at the specified index.
+   * 
+   * @param index the index of the item to be removed
+   * @throws IndexOutOfBoundsException if the index is out of range
+   */
+  public void removeItem(int index) {
+    listBox.removeItem(index);
+  }
+
+  /**
+   * Sets whether an individual list item is selected.
+   * 
+   * <p>
+   * Note that setting the selection programmatically does <em>not</em> cause
+   * the {@link ChangeListener#onChange(Widget)} event to be fired.
+   * </p>
+   * 
+   * @param index the index of the item to be selected or unselected
+   * @param selected <code>true</code> to select the item
+   * @throws IndexOutOfBoundsException if the index is out of range
+   */
+  public void setItemSelected(int index, boolean selected) {
+    listBox.setItemSelected(index, selected);
+  }
+
+  /**
+   * Sets the text associated with the item at a given index.
+   * 
+   * @param index the index of the item to be set
+   * @param text the item's new text
+   * @throws IndexOutOfBoundsException if the index is out of range
+   */
+  public void setItemText(int index, String text) {
+    listBox.setItemText(index, text);
+  }
+  
+  /**
+   * Sets the currently selected index.
+   * 
+   * After calling this method, only the specified item in the list will
+   * remain selected.  For a ListBox with multiple selection enabled, see
+   * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
+   * 
+   * <p>
+   * Note that setting the selected index programmatically does <em>not</em>
+   * cause the {@link ChangeListener#onChange(Widget)} event to be fired.
+   * </p>
+   * 
+   * @param index the index of the item to be selected
+   */
+  public void setSelectedIndex(int index) {
+    listBox.setSelectedIndex(index);
+  }
+  
+  /**
+   * Sets the number of items that are visible. If only one item is visible,
+   * then the box will be displayed as a drop-down list.
+   * 
+   * @param visibleItems the visible item count
+   */
+  public void setVisibleItemCount(int visibleItems) {
+    if (visibleItems < 2) {
+      throw new IllegalArgumentException();
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasFocus#setTabIndex(int)
-   */
-  public void setTabIndex(int index) {
-    input.setTabIndex(index);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
-   */
-  public void setText(String text) {
-    input.setText(text);
-  }
-
-  protected void showPopup() {
-    if (popup.isAttached()) {
-      hidePopup(true);
-    } else {
-      final T w = onShowPopup();
-      if (w != null) {
-        if (w != popup.getWidget()) {
-          popup.setWidget(w);
-        }
-        popup.show();
-      }
-    }
+    listBox.setVisibleItemCount(visibleItems);
   }
 
 }

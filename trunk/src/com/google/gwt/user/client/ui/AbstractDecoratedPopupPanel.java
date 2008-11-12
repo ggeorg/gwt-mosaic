@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,10 @@
  */
 package com.google.gwt.user.client.ui;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public abstract class AbstractDecoratedPopupPanel extends DecoratedPopupPanel {
 
   /**
@@ -26,7 +30,8 @@ public abstract class AbstractDecoratedPopupPanel extends DecoratedPopupPanel {
    *          target the PopupPanel or its children should be ignored
    * @param prefix the prefix applied to child style names
    */
-  protected AbstractDecoratedPopupPanel(boolean autoHide, boolean modal, String prefix) {
+  protected AbstractDecoratedPopupPanel(boolean autoHide, boolean modal,
+      String prefix) {
     super(autoHide, modal, prefix);
     setAnimationType(AnimationType.ONE_WAY_CORNER);
   }
