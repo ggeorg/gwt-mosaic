@@ -1,6 +1,5 @@
 package org.gwt.mosaic.ui.client;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.Composite;
