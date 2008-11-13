@@ -615,6 +615,7 @@ input {
 /*** ScrollTable ***/
 
 .gwt-ScrollTable,
+.mosaic-ColumnWidget,
 .mosaic-ScrollTreeTable {
 	border-color: #aaa;
 	border-style: solid;
@@ -622,11 +623,13 @@ input {
 }
 
 .gwt-ScrollTable .headerWrapper,
+.mosaic-ColumnWidget .headerWrapper,
 .mosaic-ScrollTreeTable .headerWrapper {
 	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
 }
 
 .gwt-ScrollTable .footerWrapper,
+.mosaic-ColumnWidget .footerWrapper,
 .mosaic-ScrollTreeTable .footerWrapper {
 	border-top: 1px solid #aaa;
 	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
@@ -635,6 +638,9 @@ input {
 .gwt-ScrollTable .dataTable td,
 .gwt-ScrollTable .headerTable td,
 .gwt-ScrollTable .footerTable td,
+.mosaic-ColumnWidget .dataTable td,
+.mosaic-ColumnWidget .headerTable td,
+.mosaic-ColumnWidget .footerTable td,
 .mosaic-ScrollTreeTable .dataTable td,
 .mosaic-ScrollTreeTable .headerTable td,
 .mosaic-ScrollTreeTable .footerTable td {
@@ -648,17 +654,21 @@ input {
 
 .gwt-ScrollTable .headerTable td,
 .gwt-ScrollTable .footerTable td,
+.mosaic-ColumnWidget .headerTable td,
+.mosaic-ColumnWidget .footerTable td,
 .mosaic-ScrollTreeTable .headerTable td,
 .mosaic-ScrollTreeTable .footerTable td {
 	color: #fff;
 }
     
 .gwt-ScrollTable .dataTable tr.hovering,
+.mosaic-ColumnWidget .dataTable tr.hovering,
 .mosaic-ScrollTreeTable .dataTable tr.hovering {
 	background: #C3D9FF;
 }
 
 .gwt-ScrollTable .dataTable td.hovering,
+.mosaic-ColumnWidget .dataTable td.hovering,
 .mosaic-ScrollTreeTable .dataTable td.hovering {
 	background: #FFFFAA;
 	cursor: hand;
@@ -666,6 +676,7 @@ input {
 }
 
 .gwt-ScrollTable .dataTable tr.selected,
+.mosaic-ColumnWidget .dataTable tr.selected,
 .mosaic-ScrollTreeTable .dataTable tr.selected {
 	background: #7AA5D6;
 }

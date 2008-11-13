@@ -49,6 +49,7 @@ import org.gwt.mosaic.showcase.client.content.panels.CwVerticalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
+import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
@@ -420,7 +421,9 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Tables
-    TreeItem catTables = mainMenu.addItem("Tables");
+    TreeItem catTables = mainMenu.addItem("Lists & Tables");
+    setupMainMenuOption(catTables, new CwListBox(constants),
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwScrollTable(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
