@@ -104,6 +104,8 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
       if (infoPanel.glassPanel == null) {
         infoPanel.glassPanel = new GlassPanel(false);
         infoPanel.glassPanel.addStyleName("mosaic-GlassPanel-default");
+        DOM.setStyleAttribute(infoPanel.glassPanel.getElement(), "zIndex",
+            DOM.getStyleAttribute(infoPanel.getElement(), "zIndex"));
       }
       RootPanel.get().add(infoPanel.glassPanel, 0, 0);
       infoPanel.center();
