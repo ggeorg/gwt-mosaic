@@ -19,15 +19,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.ColumnWidget.ResizePolicy;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ChangeListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.table.client.SourceTableSelectionEvents;
@@ -67,6 +70,85 @@ public class ListBox<T extends Object> extends LayoutComposite {
     @Override
     protected void hoverCell(Element cellElem) {
       super.hoverCell(cellElem);
+    }
+
+    private Event onMouseDownEvent = null;
+
+    /**
+     * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
+     */
+    @Override
+    public void onBrowserEvent(Event event) {
+      Element targetRow = null;
+      Element targetCell = null;
+
+      switch (DOM.eventGetType(event)) {
+        // Select a row on click
+        case Event.ONMOUSEDOWN:
+          onMouseDownEvent = event;
+          super.onBrowserEvent(event);
+          break;
+
+        // Fire double click event
+        case Event.ONDBLCLICK:
+          doubleClickListeners.fireDblClick(this);
+          break;
+
+        // Show context menu
+        case Event.ONCONTEXTMENU:
+          targetCell = getEventTargetCell(event);
+          if (targetCell == null) {
+            return;
+          }
+          targetRow = DOM.getParent(targetCell);
+          int targetRowIndex = getRowIndex(targetRow);
+          if (!isRowSelected(targetRowIndex)) {
+            super.onBrowserEvent(onMouseDownEvent);
+          }
+          DOM.eventPreventDefault(event);
+          showContextMenu(event);
+          break;
+
+        default:
+          super.onBrowserEvent(event);
+      }
+    }
+
+    private DoubleClickListenerCollection doubleClickListeners;
+
+    public void addDoubleClickListener(DoubleClickListener listener) {
+      if (doubleClickListeners == null) {
+        doubleClickListeners = new DoubleClickListenerCollection();
+        sinkEvents(Event.ONDBLCLICK);
+      }
+      doubleClickListeners.add(listener);
+    }
+
+    public void removeDoubleClickListener(DoubleClickListener listener) {
+      if (doubleClickListeners != null) {
+        doubleClickListeners.remove(listener);
+      }
+    }
+
+    private PopupMenu contextMenu;
+
+    public PopupMenu getContextMenu() {
+      return contextMenu;
+    }
+
+    public void setContextMenu(PopupMenu contextMenu) {
+      this.contextMenu = contextMenu;
+      if (this.contextMenu != null) {
+        sinkEvents(Event.ONCONTEXTMENU);
+      }
+    }
+
+    private void showContextMenu(final Event event) {
+      contextMenu.setPopupPositionAndShow(new PositionCallback() {
+        public void setPosition(int offsetWidth, int offsetHeight) {
+          contextMenu.setPopupPosition(event.getClientX(), event.getClientY());
+        }
+      });
     }
   }
 
@@ -357,6 +439,26 @@ public class ListBox<T extends Object> extends LayoutComposite {
     return dataTable.getColumnCount();
   }
 
+  private DoubleClickListenerCollection doubleClickListeners;
+
+  public void addDoubleClickListener(DoubleClickListener listener) {
+    if (doubleClickListeners == null) {
+      doubleClickListeners = new DoubleClickListenerCollection();
+      dataTable.addDoubleClickListener(new DoubleClickListener() {
+        public void onDoubleClick(Widget sender) {
+          doubleClickListeners.fireDblClick(ListBox.this);
+        }
+      });
+    }
+    doubleClickListeners.add(listener);
+  }
+
+  public void removeDoubleClickListener(DoubleClickListener listener) {
+    if (doubleClickListeners != null) {
+      doubleClickListeners.remove(listener);
+    }
+  }
+
   private ChangeListenerCollection changeListeners;
 
   public void addChangeListener(ChangeListener listener) {
@@ -402,6 +504,14 @@ public class ListBox<T extends Object> extends LayoutComposite {
     if (changeListeners != null) {
       changeListeners.remove(listener);
     }
+  }
+
+  public PopupMenu getContextMenu() {
+    return dataTable.getContextMenu();
+  }
+
+  public void setContextMenu(PopupMenu contextMenu) {
+    dataTable.setContextMenu(contextMenu);
   }
 
 }

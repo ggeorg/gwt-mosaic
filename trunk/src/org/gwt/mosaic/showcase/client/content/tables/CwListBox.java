@@ -19,11 +19,14 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.DoubleClickListener;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.ListBox;
 import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
+import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.ListBox.DataGrid;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
@@ -34,6 +37,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -86,12 +90,39 @@ public class CwListBox extends ContentWidget {
    * @return
    */
   @ShowcaseSource
+  private PopupMenu createContextMenu() {
+    Command cmd = new Command() {
+      public void execute() {
+        InfoPanel.show("Menu Button", "You selected a menu item!");
+      }
+    };
+
+    PopupMenu contextMenu = new PopupMenu();
+
+    contextMenu.addItem("MenuItem 1", cmd);
+    contextMenu.addItem("MenuItem 2", cmd);
+
+    contextMenu.addSeparator();
+
+    contextMenu.addItem("MenuItem 3", cmd);
+    contextMenu.addItem("MenuItem 4", cmd);
+
+    return contextMenu;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  @ShowcaseSource
   public Widget createDemo1() {
-    final LayoutPanel vBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel vBox = new LayoutPanel(
+        new BoxLayout(Orientation.VERTICAL));
     vBox.setPadding(0);
     vBox.setWidgetSpacing(0);
 
     final ListBox<String> listBox = new ListBox<String>();
+    listBox.setContextMenu(createContextMenu());
     listBox.addItem("foo");
     listBox.addItem("bar");
     listBox.addItem("baz");
@@ -100,15 +131,23 @@ public class CwListBox extends ContentWidget {
 
     listBox.addChangeListener(new ChangeListener() {
       public void onChange(Widget sender) {
-        InfoPanel.show("ChangeListener", listBox.getItem(listBox.getSelectedIndex()));
+        InfoPanel.show("ChangeListener",
+            listBox.getItem(listBox.getSelectedIndex()));
+      }
+    });
+
+    listBox.addDoubleClickListener(new DoubleClickListener() {
+      public void onDoubleClick(Widget sender) {
+        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
+            listBox.getItem(listBox.getSelectedIndex()));
       }
     });
 
     final ToolBar toolBar = new ToolBar();
     toolBar.add(new ToolButton("Insert", new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.prompt("ListBox Insert", "Please enter a new value to add", null,
-            new PromptCallback<String>() {
+        MessageBox.prompt("ListBox Insert", "Please enter a new value to add",
+            null, new PromptCallback<String>() {
               public void onResult(String input) {
                 if (input != null) {
                   final int index = listBox.getSelectedIndex();
@@ -130,8 +169,8 @@ public class CwListBox extends ContentWidget {
         }
         String item = listBox.getItem(listBox.getSelectedIndex());
         MessageBox.confirm("ListBox Remove",
-            "Are you sure you want to permanently delete '" + item + "' from the list?",
-            new ConfirmationCallback() {
+            "Are you sure you want to permanently delete '" + item
+                + "' from the list?", new ConfirmationCallback() {
               public void onResult(boolean result) {
                 if (result) {
                   listBox.removeItem(listBox.getSelectedIndex());
@@ -147,15 +186,15 @@ public class CwListBox extends ContentWidget {
           return;
         }
         String item = listBox.getItem(listBox.getSelectedIndex());
-        MessageBox.prompt("ListBox Edit", "Please enter a new value for '" + item + "'",
-            item, new PromptCallback<String>() {
-              public void onResult(String input) {
-                if (input != null) {
-                  final int index = listBox.getSelectedIndex();
-                  listBox.setItem(index, input);
-                }
-              }
-            });
+        MessageBox.prompt("ListBox Edit", "Please enter a new value for '"
+            + item + "'", item, new PromptCallback<String>() {
+          public void onResult(String input) {
+            if (input != null) {
+              final int index = listBox.getSelectedIndex();
+              listBox.setItem(index, input);
+            }
+          }
+        });
       }
     }));
 
@@ -171,11 +210,14 @@ public class CwListBox extends ContentWidget {
    */
   @ShowcaseSource
   public Widget createDemo2() {
-    final LayoutPanel vBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel vBox = new LayoutPanel(
+        new BoxLayout(Orientation.VERTICAL));
     vBox.setPadding(0);
     vBox.setWidgetSpacing(0);
-    
-    final ListBox<Person> listBox = new ListBox<Person>(new String[] {"Name", "Gender", "Married"});
+
+    final ListBox<Person> listBox = new ListBox<Person>(new String[] {
+        "Name", "Gender", "Married"});
+    listBox.setContextMenu(createContextMenu());
     listBox.setCellRenderer(new CellRenderer<Person>() {
       public void renderCell(DataGrid grid, int row, int column, Person item) {
         switch (column) {
@@ -193,7 +235,7 @@ public class CwListBox extends ContentWidget {
         }
       }
     });
-    
+
     listBox.addItem(new Person("Rainer Zufall", "male", true));
     listBox.addItem(new Person("Marie Darms", "female", false));
     listBox.addItem(new Person("Holger Adams", "male", true));
@@ -201,7 +243,14 @@ public class CwListBox extends ContentWidget {
 
     listBox.addChangeListener(new ChangeListener() {
       public void onChange(Widget sender) {
-        InfoPanel.show("ChangeListener",
+        InfoPanel.show("ChangeListener", listBox.getItem(
+            listBox.getSelectedIndex()).getName());
+      }
+    });
+
+    listBox.addDoubleClickListener(new DoubleClickListener() {
+      public void onDoubleClick(Widget sender) {
+        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
             listBox.getItem(listBox.getSelectedIndex()).getName());
       }
     });
@@ -209,8 +258,8 @@ public class CwListBox extends ContentWidget {
     final ToolBar toolBar = new ToolBar();
     toolBar.add(new ToolButton("Insert", new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.prompt("ListBox Insert", "Please enter a new value to add", null,
-            new PromptCallback<String>() {
+        MessageBox.prompt("ListBox Insert", "Please enter a new value to add",
+            null, new PromptCallback<String>() {
               public void onResult(String input) {
                 if (input != null) {
                   final int index = listBox.getSelectedIndex();
@@ -224,7 +273,7 @@ public class CwListBox extends ContentWidget {
             });
       }
     }));
-    ((ToolButton)toolBar.getWidget(0)).setEnabled(false);
+    ((ToolButton) toolBar.getWidget(0)).setEnabled(false);
     toolBar.add(new ToolButton("Remove", new ClickListener() {
       public void onClick(Widget sender) {
         if (listBox.getSelectedIndex() == -1) {
@@ -233,8 +282,8 @@ public class CwListBox extends ContentWidget {
         }
         Person item = listBox.getItem(listBox.getSelectedIndex());
         MessageBox.confirm("ListBox Remove",
-            "Are you sure you want to permanently delete '" + item + "' from the list?",
-            new ConfirmationCallback() {
+            "Are you sure you want to permanently delete '" + item.getName()
+                + "' from the list?", new ConfirmationCallback() {
               public void onResult(boolean result) {
                 if (result) {
                   listBox.removeItem(listBox.getSelectedIndex());
@@ -251,15 +300,16 @@ public class CwListBox extends ContentWidget {
         }
         final Person item = listBox.getItem(listBox.getSelectedIndex());
         MessageBox.prompt("ListBox Edit", "Please enter a new name for '"
-            + item.getName() + "'", item.getName(), new PromptCallback<String>() {
-          public void onResult(String input) {
-            if (input != null) {
-              final int index = listBox.getSelectedIndex();
-              item.setName(input);
-              listBox.setItem(index, item);
-            }
-          }
-        });
+            + item.getName() + "'", item.getName(),
+            new PromptCallback<String>() {
+              public void onResult(String input) {
+                if (input != null) {
+                  final int index = listBox.getSelectedIndex();
+                  item.setName(input);
+                  listBox.setItem(index, item);
+                }
+              }
+            });
       }
     }));
 
@@ -268,7 +318,7 @@ public class CwListBox extends ContentWidget {
 
     return vBox;
   }
-  
+
   /**
    * 
    * @return
