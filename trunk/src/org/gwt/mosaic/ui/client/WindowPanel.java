@@ -21,10 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
-import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
@@ -32,8 +31,6 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -42,7 +39,6 @@ import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HasCaption;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
@@ -69,8 +65,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
-    HasLayoutManager {
+public class WindowPanel extends DecoratedLayoutPopupPanel implements
+    HasCaption, CoreConstants {
 
   /**
    * WindowPanel direction constant, used in {@link ResizeDragController}.
@@ -237,6 +233,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
       panel.hideContents(false);
       setContentSize(contentWidth, contentHeight);
+      windowPanel.delayedLayout(MIN_DELAY_MILLIS);
     }
 
     public void dragMove() {
@@ -254,6 +251,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
             windowPanel.moveBy(0, contentHeight - newHeight);
           }
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
+          windowPanel.delayedLayout(DEFAULT_DELAY_MILLIS);
         }
       } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
         final int delta = getBehaviorConstrainedToBoundaryPanel() ? Math.min(
@@ -265,6 +263,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
           int newHeight = Math.max(contentHeight + delta,
               windowPanel.panel.getHeader().getOffsetHeight());
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
+          windowPanel.delayedLayout(DEFAULT_DELAY_MILLIS);
         }
       }
       if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
@@ -279,6 +278,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
             windowPanel.moveBy(contentWidth - newWidth, 0);
           }
           windowPanel.setContentSize(newWidth, windowPanel.getContentHeight());
+          windowPanel.delayedLayout(DEFAULT_DELAY_MILLIS);
         }
       } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
         int delta = getBehaviorConstrainedToBoundaryPanel() ? Math.min(
@@ -289,6 +289,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
           int contentWidth = windowPanel.getContentWidth();
           int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
           windowPanel.setContentSize(newWidth, windowPanel.getContentHeight());
+          windowPanel.delayedLayout(DEFAULT_DELAY_MILLIS);
         }
       }
 
@@ -498,8 +499,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
 
   private boolean modal;
 
-  private boolean initialized;
-
   private final Timer layoutTimer = new Timer() {
     public void run() {
       layout();
@@ -508,10 +507,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   };
 
   private GlassPanel glassPanel;
-
-  private String height = null;
-
-  private String width = null;
 
   private WindowState windowState = WindowState.NORMAL;
 
@@ -530,28 +525,28 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   private WindowResizeListener windowResizeListener = new WindowResizeListener() {
     public void onWindowResized(int width, int height) {
       final Widget boundaryPanel = windowController.getBoundaryPanel();
-      DeferredCommand.addCommand(new Command() {
-        public void execute() {
-          panel.setSize("0px", "0px");
-          if (isCollapsed()) {
-            final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-            final int[] size2 = DOM.getBoxSize(getElement());
-            final int[] size3 = DOM.getBoxSize(panel.getElement());
-            setPopupPosition(0, 0);
-            panel.setSize("0px", "0px");
-            setContentSize(size[0] - (size2[0] - size3[0]),
-                panel.getPreferredSize()[1]);
-          } else {
-            final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-            final int[] size2 = DOM.getBoxSize(getElement());
-            final int[] size3 = DOM.getBoxSize(panel.getElement());
-            setPopupPosition(0, 0);
-            setContentSize(size[0] - (size2[0] - size3[0]), size[1]
-                - (size2[1] - size3[1]));
-          }
-          layout();
-        }
-      });
+      // DeferredCommand.addCommand(new Command() {
+      // public void execute() {
+      getLayoutPanel().setSize("0px", "0px");
+      if (isCollapsed()) {
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+        final int[] size2 = DOM.getBoxSize(getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
+        setPopupPosition(0, 0);
+        // panel.setSize("0px", "0px");
+        setContentSize(size[0] - (size2[0] - size3[0]),
+            getLayoutPanel().getPreferredSize()[1]);
+      } else {
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+        final int[] size2 = DOM.getBoxSize(getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
+        setPopupPosition(0, 0);
+        setContentSize(size[0] - (size2[0] - size3[0]), size[1]
+            - (size2[1] - size3[1]));
+      }
+      delayedLayout(MIN_DELAY_MILLIS);
+      // }
+      // });
     }
   };
 
@@ -848,19 +843,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     return panel.getHeader();
   }
 
-  /**
-   * Returns the preferred size of this {@code WindowPanel} calculated by the
-   * {@code WindowPanel}'s layout manager.
-   * 
-   * {@inheritDoc}
-   * 
-   * @returns the preferred size of this container.
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return panel.getPreferredSize();
-  }
-
   @Override
   public Widget getWidget() {
     if (panel.getWidgetCount() > 0) {
@@ -935,15 +917,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
    */
   public boolean isResizable() {
     return resizable;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout()
-   */
-  public void layout() {
-    panel.layout();
   }
 
   private void makeNotResizable() {
@@ -1050,10 +1023,10 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         restoredTop = getAbsoluteTop() - boundaryPanel.getAbsoluteTop();
         final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(panel.getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
         setPopupPosition(0, 0);
         setContentSize(size[0] - (size2[0] - size3[0]),
-            panel.getPreferredSize()[1]);
+            getLayoutPanel().getPreferredSize()[1]);
       } else {
         if (oldState != WindowState.MINIMIZED) {
           restoredLeft = getAbsoluteLeft() - boundaryPanel.getAbsoluteLeft();
@@ -1063,7 +1036,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
         }
         final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(panel.getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
         setPopupPosition(0, 0);
         setContentSize(size[0] - (size2[0] - size3[0]), size[1]
             - (size2[1] - size3[1]));
@@ -1071,7 +1044,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       }
       windowController.getMoveDragController().makeNotDraggable(this);
 
-      layout();
+      delayedLayout(MIN_DELAY_MILLIS);
     }
   }
 
@@ -1100,75 +1073,28 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     return widget;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Panel#onLoad()
-   */
-  protected void onLoad() {
-    super.onLoad();
+  @Override
+  protected void afterLoad() {
+    super.afterLoad();
 
-    if (!initialized) {
-      initialized = true;
-
-      final int[] __size = panel.getPreferredSize();
-      DOM.setContentAreaWidth(panel.getElement(), __size[0]);
-      DOM.setContentAreaHeight(panel.getElement(), __size[1]);
-
-      layout();
-
-      panel.setSize("0px", "0px");
-
-      if (width != null && height != null) {
-        final int[] box = DOM.getClientSize(getElement());
-        WindowPanel.super.setSize("auto", "auto");
-        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-        setContentSize(box[0] - box2[0] - box3[0], box[1] - box2[1] - box3[1]);
-      } else if (width != null) {
-        final int[] box = DOM.getClientSize(getElement());
-        WindowPanel.super.setWidth("auto");
-        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-        final int[] size = panel.getPreferredSize();
-        setContentSize(box[0] - box2[0] - box3[0], size[1]);
-      } else if (height != null) {
-        final int[] box = DOM.getClientSize(getElement());
-        WindowPanel.super.setHeight("auto");
-        final int[] box2 = DOM.getClientSize(getCellElement(0, 0));
-        final int[] box3 = DOM.getClientSize(getCellElement(2, 0));
-        final int[] size = panel.getPreferredSize();
-        setContentSize(size[0], box[1] - box2[1] - box3[1]);
-      } else {
-        final int[] size = panel.getPreferredSize();
-        setContentSize(size[0], size[1]);
-      }
-
-      layout();
-
-      if (windowState == WindowState.MAXIMIZED) {
-        new DelayedRunnable() {
-          @Override
-          public void run() {
-            maximize(WindowState.NORMAL);
-          }
-        };
-      } else if (windowState == WindowState.MINIMIZED) {
-        new DelayedRunnable() {
-          @Override
-          public void run() {
-            minimize(WindowState.NORMAL);
-          }
-        };
-      }
-
-//      DeferredCommand.addCommand(new Command() {
-//        public void execute() {
-//          System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
-//        }
-//      });
+    if (windowState == WindowState.MAXIMIZED) {
+      maximizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
+    } else if (windowState == WindowState.MINIMIZED) {
+      minimizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
     }
   }
+
+  final private Timer maximizeTimer = new Timer() {
+    public void run() {
+      maximize(WindowState.NORMAL);
+    }
+  };
+
+  final private Timer minimizeTimer = new Timer() {
+    public void run() {
+      minimize(WindowState.NORMAL);
+    }
+  };
 
   /**
    * Causes this {@code WindowPanel} to be sized to fit the preferred size and
@@ -1181,12 +1107,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   public void pack() {
     if (!isAttached()) {
       show();
+      return;
     }
-    panel.setSize("0px", "0px");
-    final int[] size = panel.getPreferredSize();
-    setContentSize(size[0], size[1]); // FIXME we call layout in
-    // setContentSize() too!!!
-
+//    setSize("auto", "auto");
+//    getLayoutPanel().setSize("0px", "0px");
+    final int[] size = getLayoutPanel().getPreferredSize();
+    setContentSize(size[0], size[1]);
+    //delayedLayout(MIN_DELAY_MILLIS);
     layout();
   }
 
@@ -1239,19 +1166,18 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     if (isResizable() && oldState == WindowState.MAXIMIZED) {
       if (isCollapsed()) {
         setPopupPosition(restoredLeft, restoredTop);
-        panel.setSize("0px", "0px");
-        setContentSize(restoredWidth, panel.getPreferredSize()[1]);
+        getLayoutPanel().setSize("0px", "0px");
+        setContentSize(restoredWidth, getLayoutPanel().getPreferredSize()[1]);
         makeResizable();
       } else {
         setPopupPosition(restoredLeft, restoredTop);
-        panel.setSize("0px", "0px");
+        getLayoutPanel().setSize("0px", "0px");
         setContentSize(restoredWidth, restoredHeight);
         makeResizable();
       }
       windowController.getMoveDragController().makeDraggable(this,
           panel.getHeader());
-
-      layout();
+      delayedLayout(MIN_DELAY_MILLIS);
     } else if (!isModal() && oldState == WindowState.MINIMIZED) {
       setVisible(true);
       if (getWindowState() == WindowState.MAXIMIZED) {
@@ -1289,13 +1215,13 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       if (getWindowState() != WindowState.MAXIMIZED) {
         final int[] box = DOM.getClientSize(getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(panel.getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
         restoredWidth = box[0] - (size2[0] - size3[0]);
         restoredHeight = box[1] - (size2[1] - size3[1]);
       }
       panel.setCollapsed(true);
-      final int[] size = panel.getPreferredSize();
-      setContentSize(panel.getOffsetWidth(), size[1]);
+      final int[] size = getLayoutPanel().getPreferredSize();
+      setContentSize(getLayoutPanel().getOffsetWidth(), size[1]);
       if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeNotResizable();
       }
@@ -1306,7 +1232,7 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
       } else {
         final int[] size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(panel.getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
         setContentSize(size[0] - (size2[0] - size3[0]), size[1]
             - (size2[1] - size3[1]));
       }
@@ -1318,16 +1244,18 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     layout();
   }
 
+  @Override
   public void setContentSize(int width, int height) {
     if (isResizable()) {
       contentWidth = width;
       contentHeight = height;
     }
 
-    DOM.setContentAreaWidth(panel.getElement(), width);
-    DOM.setContentAreaHeight(panel.getElement(), height);
+    super.setContentSize(width, height);
+  }
 
-    layoutTimer.schedule(333);
+  protected void delayedLayout(int delayMillis) {
+    layoutTimer.schedule(delayMillis);
   }
 
   public void setFooter(Widget footer) {
@@ -1338,12 +1266,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     if (getFooter() != null) {
       getFooter().addStyleName("Footer");
     }
-  }
-
-  @Override
-  public void setHeight(String height) {
-    super.setHeight(height);
-    this.height = height;
   }
 
   /*
@@ -1386,13 +1308,6 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   public void setWidget(Widget w) {
     panel.clear();
     panel.add(w);
-    // maybeUpdateSize();
-  }
-
-  @Override
-  public void setWidth(String width) {
-    super.setWidth(width);
-    this.width = width;
   }
 
   private void setWindowOrder(int order) {
@@ -1402,7 +1317,8 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
     }
     DOM.setStyleAttribute(getElement(), "zIndex", Integer.toString(zIndex));
     if (glassPanel != null && glassPanel.isAttached()) {
-      DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", Integer.toString(zIndex));  
+      DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
+          Integer.toString(zIndex));
     }
   }
 
@@ -1491,6 +1407,27 @@ public class WindowPanel extends DecoratedPopupPanel implements HasCaption,
   public void showModal() {
     modal = true;
     center();
+    
+//    boolean initiallyShowing = showing;
+//    boolean initiallyAnimated = isAnimationEnabled;
+//
+//    if (!initiallyShowing) {
+//      setVisible(false);
+//      setAnimationEnabled(false);
+//      show();
+//    }
+//
+//    int left = (Window.getClientWidth() - getOffsetWidth()) >> 1;
+//    int top = (Window.getClientHeight() - getOffsetHeight()) >> 1;
+//    setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop() + top);
+//
+//    if (!initiallyShowing) {
+//      hide();
+//      setVisible(true);
+//      setAnimationEnabled(initiallyAnimated);
+//      show();
+//    }
+    
     toFront();
   }
 

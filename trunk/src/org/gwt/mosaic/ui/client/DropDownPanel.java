@@ -19,16 +19,11 @@ import java.util.ArrayList;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Region;
-import org.gwt.mosaic.ui.client.layout.BaseLayout;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
-import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -36,11 +31,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class DropDownPanel extends AbstractDecoratedPopupPanel {
+public class DropDownPanel extends DecoratedLayoutPopupPanel {
 
   private static final String DEFAULT_STYLENAME = "mosaic-DropDownPanel gwt-MenuBarPopup";
-
-  private final LayoutPanel panel;
 
   private Widget relativeWidget;
 
@@ -62,22 +55,10 @@ public class DropDownPanel extends AbstractDecoratedPopupPanel {
   public DropDownPanel(Widget relativeWidget) {
     super(false, false, "menuPopup");
     this.relativeWidget = relativeWidget;
-    panel = new LayoutPanel();
-    panel.setPadding(0);
-    super.setWidget(panel);
     setStyleName(DEFAULT_STYLENAME);
     // Issue 5 fix (ggeorg)
     // Note: z-index is already set in CSS file (see: .gwt-MenuBarPopup)
     // DOM.setIntStyleAttribute(getElement(), "zIndex", Integer.MAX_VALUE);
-  }
-
-  @Override
-  public Widget getWidget() {
-    if (panel.getWidgetCount() > 0) {
-      return panel.getWidget(0);
-    } else {
-      return null;
-    }
   }
 
   @Override
@@ -103,34 +84,26 @@ public class DropDownPanel extends AbstractDecoratedPopupPanel {
   }
 
   @Override
-  protected void onLoad() {
-    DeferredCommand.addCommand(renderCmd);
-  }
-
-  private final Command renderCmd = new Command() {
-    public void execute() {
-      final int[] box1 = DOM.getClientSize(relativeWidget.getElement());
-      final int[] box2 = DOM.getClientSize(getElement());
-      final int[] m = DOM.getMarginSizes(panel.getElement());
-      final int widthDelta = getOffsetWidth() - panel.getOffsetWidth();
-      final int heightDelta = panel.getOffsetHeight() + m[0] + m[2]
-          - BaseLayout.getFlowHeight(panel);
-      // FIXME why (+ 1) ?
-      setContentSize(box1[0] - widthDelta, box2[1] - heightDelta + 1);
-      setSize("auto", "auto");
-    }
-  };
-
-  private void setContentSize(int width, int height) {
-    DOM.setContentAreaWidth(panel.getElement(), width);
-    DOM.setContentAreaHeight(panel.getElement(), height);
-    panel.layout();
-  }
-
-  @Override
-  public void setWidget(Widget w) {
-    panel.clear();
-    panel.add(w);
+  protected void afterLoad() {
+    getLayoutPanel().setWidth(relativeWidget.getOffsetWidth() + "px");
+    System.out.println(relativeWidget.getOffsetWidth());
+    final int[] box = DOM.getClientSize(getElement());
+    final int[] size = DOM.getBoxSize(getLayoutPanel().getElement());
+    System.out.println("\t"+size[0]);
+    final int w = size[0] - (box[0] - size[0]);
+    System.out.println("\t\t"+w);
+    final int h = size[1] - (box[1] - size[1]);
+    setContentSize(w, h);
+    layout();
+    // final int[] box1 = DOM.getClientSize(relativeWidget.getElement());
+    // final int[] box2 = DOM.getClientSize(getElement());
+    // final int[] m = DOM.getMarginSizes(getLayoutPanel().getElement());
+    // final int widthDelta = getOffsetWidth() -
+    // getLayoutPanel().getOffsetWidth();
+    // final int heightDelta = getLayoutPanel().getOffsetHeight() + m[0] + m[2]
+    // - BaseLayout.getFlowHeight(getLayoutPanel());
+    // // FIXME why (+ 1) ?
+    // setContentSize(box1[0] - widthDelta, box2[1] - heightDelta + 1);
   }
 
   /**
@@ -154,7 +127,7 @@ public class DropDownPanel extends AbstractDecoratedPopupPanel {
 
     // Add this to the set of open panels.
     if (openPanels == null) {
-      openPanels = new ArrayList();
+      openPanels = new ArrayList<DropDownPanel>();
       Window.addWindowResizeListener(resizeListener);
     }
     openPanels.add(this);
