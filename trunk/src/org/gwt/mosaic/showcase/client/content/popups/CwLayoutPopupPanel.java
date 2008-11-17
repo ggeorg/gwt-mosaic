@@ -51,7 +51,6 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.LoadListener;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -66,7 +65,7 @@ import com.google.gwt.user.client.ui.Widget;
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
     ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
     ".dragdrop-movable-panel"})
-public class CwWindowPanel extends ContentWidget implements ClickListener {
+public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
 
   private WindowPanel basic;
 
@@ -85,7 +84,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
    * 
    * @param constants the constants
    */
-  public CwWindowPanel(CwConstants constants) {
+  public CwLayoutPopupPanel(CwConstants constants) {
     super(constants);
   }
 
@@ -166,26 +165,12 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
    * The 'fixed' window panel.
    */
   @ShowcaseSource
-  private void createFixedWindowPanel(boolean enableLoadListener) {
+  private void createFixedWindowPanel() {
     fixed = new WindowPanel("Fixed");
     fixed.setResizable(false);
     fixed.setAnimationEnabled(true);
-    final Image img = new Image("MeteoraGreece.JPG");
+    Image img = new Image("MeteoraGreece.JPG");
     fixed.setWidget(img);
-
-    if (enableLoadListener) {
-    img.addLoadListener(new LoadListener() {
-      public void onError(Widget sender) {
-        // Ignore
-      }
-
-      public void onLoad(Widget sender) {
-        fixed.hide();
-        createFixedWindowPanel(false);
-        fixed.center();
-      }
-    });
-    }
 
     fixed.getHeader().add(Showcase.IMAGES.window().createImage());
 
@@ -357,7 +342,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
       public void execute() {
-        InfoPanel.show("Menu Button", "You selected a menu item!");
+        InfoPanel.show("Menu Button",
+            "You selected a menu item!");
       }
     };
 
@@ -510,7 +496,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     btn4.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (fixed == null) {
-          createFixedWindowPanel(true);
+          createFixedWindowPanel();
         }
         if (fixed.getWindowState() == WindowState.MINIMIZED) {
           fixed.setWindowState(WindowState.NORMAL);

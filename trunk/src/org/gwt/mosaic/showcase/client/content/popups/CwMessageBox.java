@@ -126,7 +126,7 @@ public class CwMessageBox extends ContentWidget {
     Button alertBtn = new Button("Warning");
     alertBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.alert("Warning", "I am a warning box!");
+        MessageBox.alert("Warning", "I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!");
       }
     });
 
