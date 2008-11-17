@@ -18,7 +18,6 @@ package org.gwt.mosaic.ui.client;
 import java.util.Date;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.datepicker.DatePicker;
 import org.gwt.mosaic.ui.client.datepicker.DateTimePicker;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -152,8 +151,8 @@ public abstract class MessageBox extends WindowPanel {
     alert(MessageBoxType.INFO, caption, message);
   }
 
-  public static void prompt(String caption, Date defaultValue, boolean use24Hours,
-      final PromptCallback<Date> callback) {
+  public static void prompt(String caption, Date defaultValue,
+      boolean use24Hours, final PromptCallback<Date> callback) {
     final DateTimePicker dateTimePicker = new DateTimePicker(use24Hours);
     // dateTimePicker.getDatePicker().setSelectedDate(defaultValue, true);
     dateTimePicker.getTimePicker().setDateTime(defaultValue);
@@ -235,8 +234,8 @@ public abstract class MessageBox extends WindowPanel {
     prompt.showModal();
   }
 
-  public static void prompt(String caption, String message, String defaultValue,
-      final PromptCallback<String> callback) {
+  public static void prompt(String caption, String message,
+      String defaultValue, final PromptCallback<String> callback) {
     final TextBox input = new TextBox();
     input.setText(defaultValue);
 
@@ -255,7 +254,8 @@ public abstract class MessageBox extends WindowPanel {
     final int width = Window.getClientWidth();
     prompt.setWidth(Math.max(width / 3, 256) + "px");
 
-    final LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel panel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
     panel.setPadding(0);
     panel.add(new HTML(message), new BoxLayoutData(FillStyle.HORIZONTAL));
     panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
@@ -313,9 +313,9 @@ public abstract class MessageBox extends WindowPanel {
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
     super.setWidget(layoutPanel);
     layoutPanel.setWidgetSpacing(10);
-    if (UserAgent.isGecko()) {
-      DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
-    }
+    // if (UserAgent.isGecko()) {
+    DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
+    // }
 
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);
@@ -404,7 +404,8 @@ public abstract class MessageBox extends WindowPanel {
       }
       this.image = image;
       imageWrapper = new WidgetWrapper(image);
-      layoutPanel.add(imageWrapper, new BorderLayoutData(BorderLayoutRegion.WEST));
+      layoutPanel.add(imageWrapper, new BorderLayoutData(
+          BorderLayoutRegion.WEST));
     }
   }
 
