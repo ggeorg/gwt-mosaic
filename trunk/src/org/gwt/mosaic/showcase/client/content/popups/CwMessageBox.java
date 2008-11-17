@@ -126,7 +126,9 @@ public class CwMessageBox extends ContentWidget {
     Button alertBtn = new Button("Warning");
     alertBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.alert("Warning", "I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!");
+        MessageBox.alert(
+            "Warning",
+            "I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!I am a warning box!");
       }
     });
 
@@ -144,12 +146,30 @@ public class CwMessageBox extends ContentWidget {
       }
     });
 
+    Button longInfoBtn = new Button("Long text Info");
+    longInfoBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        MessageBox.info(
+            "Long text info",
+            "<h1>Faster AJAX than you'd write by hand</h1>"
+                + "Writing web apps today is a tedious and error-prone process. "
+                + "Developers can spend 90% of their time working around browser quirks. "
+                + "In addition, building, reusing, and maintaining large JavaScript code "
+                + "bases and AJAX components can be difficult and fragile. "
+                + "Google Web Toolkit (GWT) eases this burden by allowing developers "
+                + "to quickly build and maintain complex yet highly performant JavaScript "
+                + "front-end applications in the Java programming language.");
+      }
+    });
+
     HorizontalPanel hpanel1 = new HorizontalPanel();
     hpanel1.add(alertBtn);
     hpanel1.add(new HTML("&nbsp;"));
     hpanel1.add(errorBtn);
     hpanel1.add(new HTML("&nbsp;"));
     hpanel1.add(infoBtn);
+    hpanel1.add(new HTML("&nbsp;"));
+    hpanel1.add(longInfoBtn);
 
     vPanel.add(hpanel1);
 
@@ -365,7 +385,7 @@ public class CwMessageBox extends ContentWidget {
    * 
    */
   @ShowcaseSource
-  public static void richTextAreaPrompt(final PromptCallback callback) {
+  public static void richTextAreaPrompt(final PromptCallback<String> callback) {
     // Create the text area and toolbar
     final RichTextArea area = new RichTextArea();
     area.ensureDebugId("cwRichText-area");
