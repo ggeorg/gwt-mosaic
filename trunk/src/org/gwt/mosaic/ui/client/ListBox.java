@@ -27,8 +27,15 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ChangeListenerCollection;
+import com.google.gwt.user.client.ui.FocusListener;
+import com.google.gwt.user.client.ui.FocusListenerCollection;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HasFocus;
+import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
@@ -47,7 +54,8 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
  * 
  * @param <T>
  */
-public class ListBox<T extends Object> extends LayoutComposite {
+public class ListBox<T extends Object> extends LayoutComposite implements
+    HasFocus {
 
   /**
    * The render used to set cell contents.
@@ -67,9 +75,10 @@ public class ListBox<T extends Object> extends LayoutComposite {
   }
 
   public static class DataGrid extends FixedWidthGrid {
-    @Override
-    protected void hoverCell(Element cellElem) {
-      super.hoverCell(cellElem);
+
+    public DataGrid() {
+      super();
+      sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS);
     }
 
     private Event onMouseDownEvent = null;
@@ -81,6 +90,7 @@ public class ListBox<T extends Object> extends LayoutComposite {
     public void onBrowserEvent(Event event) {
       Element targetRow = null;
       Element targetCell = null;
+      Set<Integer> selection = null;
 
       switch (DOM.eventGetType(event)) {
         // Select a row on click
@@ -107,6 +117,41 @@ public class ListBox<T extends Object> extends LayoutComposite {
           }
           DOM.eventPreventDefault(event);
           showContextMenu(event);
+          break;
+
+        case Event.ONKEYDOWN:
+          System.out.println("-----------------------");
+          switch (event.getKeyCode()) {
+            case KeyboardListener.KEY_UP:
+              selection = getSelectedRows();
+              for (Integer i : selection) {
+                selectRow(i.intValue() - 1, true);
+                break;
+              }
+              break;
+            case KeyboardListener.KEY_DOWN:
+              selection = getSelectedRows();
+              for (Integer i : selection) {
+                selectRow(i.intValue() + 1, true);
+                break;
+              }
+              break;
+            case KeyboardListener.KEY_PAGEUP:
+              for (Integer i : selection) {
+                selectRow(i.intValue() - 10, true);
+                break;
+              }
+              break;
+            case KeyboardListener.KEY_PAGEDOWN:
+              for (Integer i : selection) {
+                selectRow(i.intValue() + 10, true);
+                break;
+              }
+              break;
+            default:
+              super.onBrowserEvent(event);
+              break;
+          }
           break;
 
         default:
@@ -150,6 +195,12 @@ public class ListBox<T extends Object> extends LayoutComposite {
         }
       });
     }
+
+    @Override
+    protected void hoverCell(Element cellElem) {
+      super.hoverCell(cellElem);
+    }
+
   }
 
   private static final int INSERT_AT_END = -1;
@@ -194,6 +245,8 @@ public class ListBox<T extends Object> extends LayoutComposite {
    */
   private Map<Element, T> rowItems = new HashMap<Element, T>();
 
+  private FocusPanel focusPanel;
+
   /**
    * Creates an empty list box in single selection mode.
    */
@@ -226,6 +279,89 @@ public class ListBox<T extends Object> extends LayoutComposite {
     setMultipleSelect(false);
     columnWidget.setResizePolicy(ResizePolicy.FILL_WIDTH);
     layoutPanel.add(columnWidget);
+
+    focusPanel = new FocusPanel();
+    final Element focusable = focusPanel.getElement();
+    DOM.setStyleAttribute(focusable, "fontSize", "0");
+    DOM.setStyleAttribute(focusable, "position", "absolute");
+
+    // Hide focus outline in Mozilla/Webkit/Opera
+    DOM.setStyleAttribute(focusable, "outline", "0px");
+
+    // Hide focus outline in IE 6/7
+    DOM.setElementAttribute(focusable, "hideFocus", "true");
+
+    DOM.setIntStyleAttribute(focusable, "zIndex", -1);
+    layoutPanel.add(focusPanel);
+
+    sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS);
+    focusPanel.sinkEvents(Event.FOCUSEVENTS);
+    
+    focusPanel.addKeyboardListener(new KeyboardListener() {
+      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+        System.out.println("=================");
+        
+      }
+
+      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+        // TODO Auto-generated method stub
+        
+      }
+
+      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+        // TODO Auto-generated method stub
+        
+      }});
+  }
+
+  /**
+   * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
+   */
+  @Override
+  public void onBrowserEvent(Event event) {
+    Element targetRow = null;
+    Element targetCell = null;
+    Set<Integer> selection = null;
+
+    switch (DOM.eventGetType(event)) {
+      case Event.ONKEYDOWN:
+        Window.alert("-----------------------");
+        // switch (event.getKeyCode()) {
+        // case KeyboardListener.KEY_UP:
+        // selection = getSelectedRows();
+        // for (Integer i : selection) {
+        // selectRow(i.intValue() - 1, true);
+        // break;
+        // }
+        // break;
+        // case KeyboardListener.KEY_DOWN:
+        // selection = getSelectedRows();
+        // for (Integer i : selection) {
+        // selectRow(i.intValue() + 1, true);
+        // break;
+        // }
+        // break;
+        // case KeyboardListener.KEY_PAGEUP:
+        // for (Integer i : selection) {
+        // selectRow(i.intValue() - 10, true);
+        // break;
+        // }
+        // break;
+        // case KeyboardListener.KEY_PAGEDOWN:
+        // for (Integer i : selection) {
+        // selectRow(i.intValue() + 10, true);
+        // break;
+        // }
+        // break;
+        // default:
+        // super.onBrowserEvent(event);
+        // break;
+        // }
+        // break;
+
+      default:
+        super.onBrowserEvent(event);
+    }
   }
 
   /**
@@ -512,6 +648,52 @@ public class ListBox<T extends Object> extends LayoutComposite {
 
   public void setContextMenu(PopupMenu contextMenu) {
     dataTable.setContextMenu(contextMenu);
+  }
+
+  public int getTabIndex() {
+    return focusPanel.getTabIndex();
+  }
+
+  public void setAccessKey(char key) {
+    focusPanel.setAccessKey(key);
+  }
+
+  public void setFocus(boolean focused) {
+    focusPanel.setFocus(focused);
+  }
+
+  public void setTabIndex(int index) {
+    focusPanel.setTabIndex(index);
+  }
+
+  private FocusListenerCollection focusListeners;
+
+  public void addFocusListener(FocusListener listener) {
+    if (focusListeners == null) {
+      focusListeners = new FocusListenerCollection();
+    }
+    focusListeners.add(listener);
+  }
+
+  public void removeFocusListener(FocusListener listener) {
+    if (focusListeners != null) {
+      focusListeners.remove(listener);
+    }
+  }
+
+  private KeyboardListenerCollection keyboardListeners;
+
+  public void addKeyboardListener(KeyboardListener listener) {
+    if (keyboardListeners == null) {
+      keyboardListeners = new KeyboardListenerCollection();
+    }
+    keyboardListeners.add(listener);
+  }
+
+  public void removeKeyboardListener(KeyboardListener listener) {
+    if (keyboardListeners != null) {
+      keyboardListeners.remove(listener);
+    }
   }
 
 }
