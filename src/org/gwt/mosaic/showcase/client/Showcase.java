@@ -47,6 +47,7 @@ import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwVerticalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopupPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
@@ -346,6 +347,8 @@ public class Showcase implements EntryPoint {
     TreeItem catPopups = mainMenu.addItem("Popups");
     setupMainMenuOption(catPopups, new CwInfoPanel(constants),
         IMAGES.catPopups());
+    setupMainMenuOption(catPopups, new CwLayoutPopupPanel(constants),
+        IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwWindowPanel(constants),
         IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwMessageBox(constants),
@@ -375,7 +378,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
         IMAGES.catPanels());
-    
+
     TreeItem catGWTPanels = catPanels.addItem("GWT Panels");
     setupMainMenuOption(catGWTPanels, new CwTabPanel(constants),
         IMAGES.catPanels());
@@ -422,8 +425,7 @@ public class Showcase implements EntryPoint {
 
     // Tables
     TreeItem catTables = mainMenu.addItem("Lists & Tables");
-    setupMainMenuOption(catTables, new CwListBox(constants),
-        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
     setupMainMenuOption(catTables, new CwScrollTable(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
