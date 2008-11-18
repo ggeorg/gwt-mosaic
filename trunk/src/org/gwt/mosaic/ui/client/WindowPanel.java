@@ -250,6 +250,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
           if (newHeight != contentHeight) {
             windowPanel.moveBy(0, contentHeight - newHeight);
           }
+          System.out.println(windowPanel.getContentWidth() + "x" + newHeight);
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
           windowPanel.delayedLayout(DEFAULT_DELAY_MILLIS);
         }
@@ -1109,11 +1110,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       show();
       return;
     }
-//    setSize("auto", "auto");
-//    getLayoutPanel().setSize("0px", "0px");
+    // setSize("auto", "auto");
+    // getLayoutPanel().setSize("0px", "0px");
     final int[] size = getLayoutPanel().getPreferredSize();
     setContentSize(size[0], size[1]);
-    //delayedLayout(MIN_DELAY_MILLIS);
+    // delayedLayout(MIN_DELAY_MILLIS);
     layout();
   }
 
@@ -1407,27 +1408,28 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public void showModal() {
     modal = true;
     center();
-    
-//    boolean initiallyShowing = showing;
-//    boolean initiallyAnimated = isAnimationEnabled;
-//
-//    if (!initiallyShowing) {
-//      setVisible(false);
-//      setAnimationEnabled(false);
-//      show();
-//    }
-//
-//    int left = (Window.getClientWidth() - getOffsetWidth()) >> 1;
-//    int top = (Window.getClientHeight() - getOffsetHeight()) >> 1;
-//    setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop() + top);
-//
-//    if (!initiallyShowing) {
-//      hide();
-//      setVisible(true);
-//      setAnimationEnabled(initiallyAnimated);
-//      show();
-//    }
-    
+
+    // boolean initiallyShowing = showing;
+    // boolean initiallyAnimated = isAnimationEnabled;
+    //
+    // if (!initiallyShowing) {
+    // setVisible(false);
+    // setAnimationEnabled(false);
+    // show();
+    // }
+    //
+    // int left = (Window.getClientWidth() - getOffsetWidth()) >> 1;
+    // int top = (Window.getClientHeight() - getOffsetHeight()) >> 1;
+    // setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop() +
+    // top);
+    //
+    // if (!initiallyShowing) {
+    // hide();
+    // setVisible(true);
+    // setAnimationEnabled(initiallyAnimated);
+    // show();
+    // }
+
     toFront();
   }
 

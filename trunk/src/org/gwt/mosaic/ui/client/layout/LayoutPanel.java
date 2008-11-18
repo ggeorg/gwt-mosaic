@@ -19,8 +19,11 @@ import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.CollapsedListener;
+import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
+import org.gwt.mosaic.ui.client.Viewport;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -345,11 +348,20 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
           parent = parent.getParent();
         }
       }
+      if (parent instanceof DecoratorPanel) {
+        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
+          parent = parent.getParent();
+        }
+      }
     }
 
-    if (parent instanceof HasLayoutManager) {
+    if (parent instanceof HasLayoutManager || parent instanceof Viewport) {
       return;
     }
+
+    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+        + parent.getClass().getName()
+        + "') is not an instance of HasLayoutManager.", null);
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
