@@ -19,8 +19,6 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -129,11 +127,11 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   public void layout() {
     layoutPanel.layout();
 
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
-      }
-    });
+    // DeferredCommand.addCommand(new Command() {
+    // public void execute() {
+    System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
+    // }
+    // });
   }
 
   private int decorationWidthCache = 0;
@@ -146,33 +144,56 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   }
 
   protected void afterLoad() {
-    final int[] prefSize = layoutPanel.getPreferredSize();
+    int[] prefSize = layoutPanel.getPreferredSize();
 
     if (desiredWidth != null && desiredHeight != null) {
       layoutPanel.setSize(desiredWidth, desiredHeight);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       calculateDecorationSize(size);
-      final int w = size[0] - decorationWidthCache;
-      final int h = size[1] - decorationHeightCache;
+      final int w = size[0];// - decorationWidthCache;
+      final int h = size[1];// - decorationHeightCache;
       setPixelSize(w, h);
+      layout();
+
+      // run twice
+      prefSize = layoutPanel.getPreferredSize();
+      setPixelSize(w, h);
+
     } else if (desiredWidth != null) {
       layoutPanel.setWidth(desiredWidth);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       calculateDecorationSize(size);
-      final int w = size[0] - decorationWidthCache;
-      final int h = prefSize[1];
+      final int w = size[0];// - decorationWidthCache;
+      final int h = prefSize[1] + decorationHeightCache;
       setPixelSize(w, h);
+      layout();
+
+      // run twice
+      prefSize = layoutPanel.getPreferredSize();
+      setPixelSize(w, prefSize[1] + decorationHeightCache);
+
     } else if (desiredHeight != null) {
       layoutPanel.setHeight(desiredHeight);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       calculateDecorationSize(size);
       final int w = prefSize[0];
-      final int h = size[1] - decorationHeightCache;
+      final int h = size[1];// - decorationHeightCache;
       setPixelSize(w, h);
+      layout();
+
+      // run twice
+      prefSize = layoutPanel.getPreferredSize();
+      setPixelSize(prefSize[0], h);
+
     } else {
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       calculateDecorationSize(size);
-      setPixelSize(prefSize[0], prefSize[1]);
+      setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
+      layout();
+
+      // run twice
+      prefSize = layoutPanel.getPreferredSize();
+      setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
     }
 
     layout();
@@ -182,7 +203,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setHeight(String height) {
-    super.setHeight(height);
+    //super.setHeight(height);
     if (!isAttached()) {
       this.desiredHeight = height;
     } else {
@@ -196,7 +217,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setWidth(String width) {
-    super.setWidth(width);
+    //super.setWidth(width);
     if (!isAttached()) {
       this.desiredWidth = width;
     } else {
