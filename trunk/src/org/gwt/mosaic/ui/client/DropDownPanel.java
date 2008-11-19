@@ -85,25 +85,9 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
 
   @Override
   protected void afterLoad() {
-    getLayoutPanel().setWidth(relativeWidget.getOffsetWidth() + "px");
-    System.out.println(relativeWidget.getOffsetWidth());
-    final int[] box = DOM.getClientSize(getElement());
-    final int[] size = DOM.getBoxSize(getLayoutPanel().getElement());
-    System.out.println("\t"+size[0]);
-    final int w = size[0] - (box[0] - size[0]);
-    System.out.println("\t\t"+w);
-    final int h = size[1] - (box[1] - size[1]);
-    setContentSize(w, h);
+    super.afterLoad();
+    setWidth(relativeWidget.getOffsetWidth() + "px");
     layout();
-    // final int[] box1 = DOM.getClientSize(relativeWidget.getElement());
-    // final int[] box2 = DOM.getClientSize(getElement());
-    // final int[] m = DOM.getMarginSizes(getLayoutPanel().getElement());
-    // final int widthDelta = getOffsetWidth() -
-    // getLayoutPanel().getOffsetWidth();
-    // final int heightDelta = getLayoutPanel().getOffsetHeight() + m[0] + m[2]
-    // - BaseLayout.getFlowHeight(getLayoutPanel());
-    // // FIXME why (+ 1) ?
-    // setContentSize(box1[0] - widthDelta, box2[1] - heightDelta + 1);
   }
 
   /**
