@@ -62,6 +62,19 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   }
 
   /**
+   * Creates a LayoutPanel with the given element. This is protected so that it
+   * can be used by a subclass that wants to substitute another element. The
+   * element is presumed to be a &lt;div&gt;.
+   * 
+   * @param elem the element to be used for this panel.
+   */
+  protected LayoutPanel(Element elem) {
+    super(elem);
+    setStyleName(DEFAULT_STYLENAME);
+    setLayout(new FillLayout());
+  }
+
+  /**
    * Creates a new <code>LayoutPanel</code> with the specified layout manager.
    * 
    * @param layout the <code>LayoutManager</code> to use
