@@ -1,8 +1,6 @@
 /*
  * Copyright 2008 Google Inc. 
  * 
- * Copyright 2008 Georgios J. Georgopoulos
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -34,11 +32,12 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
-import com.google.gwt.widgetideas.table.client.ScrollTable;
 import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-FastTreeTable"})
 public class CwBasicTreeTable extends ContentWidget {
@@ -73,7 +72,7 @@ public class CwBasicTreeTable extends ContentWidget {
   protected FixedWidthFlexTable headerTable = null;
 
   /**
-   * The footer portion of the {@link ScrollTable}.
+   * The footer portion of the {@link ScrollTable2}.
    */
   @ShowcaseData
   protected FixedWidthFlexTable footerTable = null;
