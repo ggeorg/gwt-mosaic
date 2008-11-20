@@ -36,7 +36,6 @@ import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
  * <h3>Example</h3>
  * {@example com.google.gwt.examples.TreeExample}
  */
-
 public class FastTreeTableItem extends Widget implements HasHTML,
     HasFastTreeTableItems {
   private static final String STYLENAME_SELECTED = "selected";
