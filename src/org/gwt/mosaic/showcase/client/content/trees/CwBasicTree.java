@@ -1,6 +1,5 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +31,8 @@ import com.google.gwt.widgetideas.client.FastTreeItem;
 
 /**
  * Example file.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle({".gwt-FastTree"})
 public class CwBasicTree extends ContentWidget {
@@ -43,7 +44,6 @@ public class CwBasicTree extends ContentWidget {
    */
   public CwBasicTree(CwConstants constants) {
     super(constants);
-    //FastTree.addDefaultCSS();
   }
   
   @Override
