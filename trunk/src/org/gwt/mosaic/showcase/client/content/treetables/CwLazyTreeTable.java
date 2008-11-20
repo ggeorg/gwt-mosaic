@@ -221,7 +221,7 @@ public class CwLazyTreeTable extends ContentWidget {
   @ShowcaseSource
   private void setupScrollTreeTable() {
     // Setup the formatting
-    scrollTreeTable.setCellPaddind(3);
+    scrollTreeTable.setCellPadding(3);
     scrollTreeTable.setCellSpacing(0);
     scrollTreeTable.setResizePolicy(ScrollTreeTable.ResizePolicy.UNCONSTRAINED);
 
