@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2006-2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -60,58 +60,60 @@ import com.google.gwt.widgetideas.table.client.TableSelectionListener;
  * <li>.gwt-FastTree .selection-bar {the selection bar used to highlight the
  * selected tree item}</li>
  * </ul>
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     HasFastTreeTableItems {
 
-  /**
-   * Resources used.
-   */
-  public interface DefaultResources extends ImmutableResourceBundle {
-
-    /**
-     * The css file.
-     * 
-     * @gwt.resource FastTreeTable.css
-     */
-    TextResource css();
-
-    /**
-     * The rtl css file.
-     * 
-     * @gwt.resource FastTreeTableRTL.css
-     */
-    TextResource cssRTL();
-
-    /**
-     * The gif used to highlight selection.
-     * 
-     * @gwt.resource selectionBar.gif
-     */
-    DataResource selectionBar();
-
-    /**
-     * "+" gif.
-     * 
-     * @gwt.resource treeClosed.gif
-     */
-
-    DataResource treeClosed();
-
-    /**
-     * "-" gif.
-     * 
-     * @gwt.resource treeOpen.gif
-     */
-    DataResource treeOpen();
-
-    /**
-     * "*" gif.
-     * 
-     * @gwt.resource treeLoading.gif
-     */
-    DataResource treeLoading();
-  }
+  // /**
+  // * Resources used.
+  // */
+  // public interface DefaultResources extends ImmutableResourceBundle {
+  //
+  // /**
+  // * The css file.
+  // *
+  // * @gwt.resource FastTreeTable.css
+  // */
+  // TextResource css();
+  //
+  // /**
+  // * The rtl css file.
+  // *
+  // * @gwt.resource FastTreeTableRTL.css
+  // */
+  // TextResource cssRTL();
+  //
+  // /**
+  // * The gif used to highlight selection.
+  // *
+  // * @gwt.resource selectionBar.gif
+  // */
+  // DataResource selectionBar();
+  //
+  // /**
+  // * "+" gif.
+  // *
+  // * @gwt.resource treeClosed.gif
+  // */
+  //
+  // DataResource treeClosed();
+  //
+  // /**
+  // * "-" gif.
+  // *
+  // * @gwt.resource treeOpen.gif
+  // */
+  // DataResource treeOpen();
+  //
+  // /**
+  // * "*" gif.
+  // *
+  // * @gwt.resource treeLoading.gif
+  // */
+  // DataResource treeLoading();
+  // }
 
   class DefaultTreeTableLabelProvider implements TreeTableLabelProvider {
     public Object getItemLabel(FastTreeTableItem item, int col) {
@@ -146,15 +148,14 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
   /**
    * Add the default style sheet and images.
    */
-  public static void addDefaultCSS() {
-    DefaultResources instance = GWT.create(DefaultResources.class);
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      StyleInjector.injectStylesheet(instance.cssRTL().getText(), instance);
-    } else {
-      StyleInjector.injectStylesheet(instance.css().getText(), instance);
-    }
-  }
-
+  // public static void addDefaultCSS() {
+  // DefaultResources instance = GWT.create(DefaultResources.class);
+  // if (LocaleInfo.getCurrentLocale().isRTL()) {
+  // StyleInjector.injectStylesheet(instance.cssRTL().getText(), instance);
+  // } else {
+  // StyleInjector.injectStylesheet(instance.css().getText(), instance);
+  // }
+  // }
   private static boolean hasModifiers(Event event) {
     boolean alt = event.getAltKey();
     boolean ctrl = event.getCtrlKey();
@@ -258,7 +259,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
       public void onRowDeselected(SourceTableSelectionEvents sender, int row) {
         final FastTreeTableItem item = findItemByRow(row);
         if (item instanceof FastTreeTableItem) {
-          //System.out.println("DeSelect item: " + item);
+          // System.out.println("DeSelect item: " + item);
         }
       }
 
@@ -282,7 +283,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     setStyleName(STYLENAME_DEFAULT);
     moveSelectionBar(curSelection);
   }
-  
+
   /**
    * Finds an item in the tree structure by row.
    * 
@@ -291,7 +292,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
    */
   public FastTreeTableItem findItemByRow(final int row) {
     final ArrayList<Element> chain = new ArrayList<Element>();
-    final Element elem = getCellFormatter().getElement(row, getTreeColumn()).getFirstChild().cast(); 
+    final Element elem = getCellFormatter().getElement(row, getTreeColumn()).getFirstChild().cast();
     collectElementChain(chain, getElement(), elem);
     return findItemByChain(chain, 0, root);
   }
