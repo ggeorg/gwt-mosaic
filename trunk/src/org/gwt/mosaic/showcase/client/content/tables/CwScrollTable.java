@@ -22,13 +22,14 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.table.ScrollTable;
+import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
-import com.google.gwt.widgetideas.table.client.ScrollTable;
 import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
@@ -72,7 +73,7 @@ public class CwScrollTable extends ContentWidget {
    * The data portion of the <code>ScrollTable</code>
    */
   @ShowcaseData
-  private FixedWidthGrid dataTable = null;
+  private DataGrid dataTable = null;
 
   /**
    * The footer portion of the <code>ScrollTable</code>
@@ -161,7 +162,7 @@ public class CwScrollTable extends ContentWidget {
     // Create the inner tables
     createHeaderTable();
     createFooterTable();
-    dataTable = new FixedWidthGrid();
+    dataTable = new DataGrid();
     dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
 
     // Add the scroll table to the page
@@ -274,7 +275,7 @@ public class CwScrollTable extends ContentWidget {
     }
 
     // Redraw the scroll table
-    scrollTable.redraw();
+    //scrollTable.redraw();
 
     layoutPanel.add(scrollTable);
 
