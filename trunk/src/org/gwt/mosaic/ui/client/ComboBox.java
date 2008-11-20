@@ -17,18 +17,16 @@ package org.gwt.mosaic.ui.client;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ComboBox extends ComboBoxBase<ListBox> {
+public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
-  private final ListBox listBox;
+  private final ListBox<T> listBox;
 
   private Timer updateTimer = new Timer() {
     public void run() {
@@ -44,15 +42,15 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    * Default constructor.
    */
   public ComboBox() {
-    this(new ListBox());
+    this(new ListBox<T>());
   }
 
-  protected ComboBox(final ListBox listBox) {
+  protected ComboBox(final ListBox<T> listBox) {
     super();
 
     this.listBox = listBox;
     this.listBox.setMultipleSelect(false);
-    this.listBox.setVisibleItemCount(10);
+    //this.listBox.setVisibleItemCount(10);
     this.listBox.addStyleName("mosaic-ComboBoxList");
 
     super.addKeyboardListener(new KeyboardListener() {
@@ -79,7 +77,7 @@ public class ComboBox extends ComboBoxBase<ListBox> {
 
     listBox.addChangeListener(new ChangeListener() {
       public void onChange(Widget sender) {
-        setText(listBox.getItemText(listBox.getSelectedIndex()));
+        setText((String)listBox.getItem(listBox.getSelectedIndex()));
         hidePopup();
       }
     });
@@ -91,7 +89,7 @@ public class ComboBox extends ComboBoxBase<ListBox> {
   }
 
   @Override
-  protected ListBox onShowPopup() {
+  protected ListBox<T> onShowPopup() {
     return listBox;
   }
 
@@ -104,19 +102,8 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    * 
    * @param item the text of the item to be added
    */
-  public void addItem(String item) {
+  public void addItem(T item) {
     listBox.addItem(item);
-  }
-
-  /**
-   * Adds an item to the list box, specifying an initial value for the item.
-   * 
-   * @param item the text of the item to be added
-   * @param value the item's value, to be submitted if it is part of a
-   *          {@link FormPanel}; cannot be <code>null</code>
-   */
-  public void addItem(String item, String value) {
-    listBox.addItem(item, value);
   }
 
   /**
@@ -134,6 +121,10 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    */
   public int getItemCount() {
     return listBox.getItemCount();
+  }
+  
+  public T getItem(int index) {
+    return listBox.getItem(index);
   }
 
   /**
@@ -153,9 +144,9 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    * 
    * @return the visible item count
    */
-  public int getVisibleItemCount() {
-    return listBox.getVisibleItemCount();
-  }
+//  public int getVisibleItemCount() {
+//    return listBox.getVisibleItemCount();
+//  }
 
   /**
    * Inserts an item into the list box. Has the same effect as
@@ -167,22 +158,8 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    * @param item the text of the item to be inserted
    * @param index the index at which to insert it
    */
-  public void insertItem(String item, int index) {
+  public void insertItem(T item, int index) {
     listBox.insertItem(item, index);
-  }
-
-  /**
-   * Inserts an item into the list box, specifying an initial value for the
-   * item. If the index is less than zero, or greater than or equal to the
-   * length of the list, then the item will be appended to the end of the list.
-   * 
-   * @param item the text of the item to be inserted
-   * @param value the item's value, to be submitted if it is part of a
-   *          {@link FormPanel}.
-   * @param index the index at which to insert it
-   */
-  public void insertItem(String item, String value, int index) {
-    listBox.insertItem(item, value, index);
   }
 
   /**
@@ -229,8 +206,8 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    * @param text the item's new text
    * @throws IndexOutOfBoundsException if the index is out of range
    */
-  public void setItemText(int index, String text) {
-    listBox.setItemText(index, text);
+  public void setItem(int index, T item) {
+    listBox.setItem(index, item);
   }
   
   /**
@@ -257,11 +234,11 @@ public class ComboBox extends ComboBoxBase<ListBox> {
    * 
    * @param visibleItems the visible item count
    */
-  public void setVisibleItemCount(int visibleItems) {
-    if (visibleItems < 2) {
-      throw new IllegalArgumentException();
-    }
-    listBox.setVisibleItemCount(visibleItems);
-  }
+//  public void setVisibleItemCount(int visibleItems) {
+//    if (visibleItems < 2) {
+//      throw new IllegalArgumentException();
+//    }
+//    listBox.setVisibleItemCount(visibleItems);
+//  }
 
 }
