@@ -27,17 +27,16 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ChangeListenerCollection;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusListenerCollection;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.table.client.SourceTableSelectionEvents;
@@ -54,8 +53,9 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
  * 
  * @param <T>
  */
-public class ListBox<T extends Object> extends LayoutComposite implements
-    HasFocus {
+public class ListBox<T> extends LayoutComposite implements HasFocus {
+
+  static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
   /**
    * The render used to set cell contents.
@@ -78,7 +78,7 @@ public class ListBox<T extends Object> extends LayoutComposite implements
 
     public DataGrid() {
       super();
-      sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS);
+      // sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS);
     }
 
     private Event onMouseDownEvent = null;
@@ -90,7 +90,6 @@ public class ListBox<T extends Object> extends LayoutComposite implements
     public void onBrowserEvent(Event event) {
       Element targetRow = null;
       Element targetCell = null;
-      Set<Integer> selection = null;
 
       switch (DOM.eventGetType(event)) {
         // Select a row on click
@@ -117,41 +116,6 @@ public class ListBox<T extends Object> extends LayoutComposite implements
           }
           DOM.eventPreventDefault(event);
           showContextMenu(event);
-          break;
-
-        case Event.ONKEYDOWN:
-          System.out.println("-----------------------");
-          switch (event.getKeyCode()) {
-            case KeyboardListener.KEY_UP:
-              selection = getSelectedRows();
-              for (Integer i : selection) {
-                selectRow(i.intValue() - 1, true);
-                break;
-              }
-              break;
-            case KeyboardListener.KEY_DOWN:
-              selection = getSelectedRows();
-              for (Integer i : selection) {
-                selectRow(i.intValue() + 1, true);
-                break;
-              }
-              break;
-            case KeyboardListener.KEY_PAGEUP:
-              for (Integer i : selection) {
-                selectRow(i.intValue() - 10, true);
-                break;
-              }
-              break;
-            case KeyboardListener.KEY_PAGEDOWN:
-              for (Integer i : selection) {
-                selectRow(i.intValue() + 10, true);
-                break;
-              }
-              break;
-            default:
-              super.onBrowserEvent(event);
-              break;
-          }
           break;
 
         default:
@@ -245,8 +209,6 @@ public class ListBox<T extends Object> extends LayoutComposite implements
    */
   private Map<Element, T> rowItems = new HashMap<Element, T>();
 
-  private FocusPanel focusPanel;
-
   /**
    * Creates an empty list box in single selection mode.
    */
@@ -259,6 +221,8 @@ public class ListBox<T extends Object> extends LayoutComposite implements
    * @param strings
    */
   public ListBox(String[] columns) {
+    super(impl.createFocusable());
+
     if (columns != null && columns.length > 0) {
       headerTable = new FixedWidthFlexTable();
       for (int column = 0; column < columns.length; ++column) {
@@ -280,87 +244,116 @@ public class ListBox<T extends Object> extends LayoutComposite implements
     columnWidget.setResizePolicy(ResizePolicy.FILL_WIDTH);
     layoutPanel.add(columnWidget);
 
-    focusPanel = new FocusPanel();
-    final Element focusable = focusPanel.getElement();
-    DOM.setStyleAttribute(focusable, "fontSize", "0");
-    DOM.setStyleAttribute(focusable, "position", "absolute");
-
+    // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
+    // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
+    sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
+        | Event.ONFOCUS | Event.ONKEYDOWN);
+    
     // Hide focus outline in Mozilla/Webkit/Opera
-    DOM.setStyleAttribute(focusable, "outline", "0px");
+    DOM.setStyleAttribute(getElement(), "outline", "0px");
 
     // Hide focus outline in IE 6/7
-    DOM.setElementAttribute(focusable, "hideFocus", "true");
-
-    DOM.setIntStyleAttribute(focusable, "zIndex", -1);
-    layoutPanel.add(focusPanel);
-
-    sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS);
-    focusPanel.sinkEvents(Event.FOCUSEVENTS);
-    
-    focusPanel.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        System.out.println("=================");
-        
-      }
-
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // TODO Auto-generated method stub
-        
-      }
-
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        // TODO Auto-generated method stub
-        
-      }});
+    DOM.setElementAttribute(getElement(), "hideFocus", "true");
   }
 
   /**
+   * {@inheritDoc}
+   * 
    * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
    */
   @Override
   public void onBrowserEvent(Event event) {
-    Element targetRow = null;
-    Element targetCell = null;
-    Set<Integer> selection = null;
 
     switch (DOM.eventGetType(event)) {
+      case Event.ONCLICK:
+        setFocus(true);
+        super.onBrowserEvent(event);
+        break;
       case Event.ONKEYDOWN:
-        Window.alert("-----------------------");
-        // switch (event.getKeyCode()) {
-        // case KeyboardListener.KEY_UP:
-        // selection = getSelectedRows();
-        // for (Integer i : selection) {
-        // selectRow(i.intValue() - 1, true);
-        // break;
-        // }
-        // break;
-        // case KeyboardListener.KEY_DOWN:
-        // selection = getSelectedRows();
-        // for (Integer i : selection) {
-        // selectRow(i.intValue() + 1, true);
-        // break;
-        // }
-        // break;
-        // case KeyboardListener.KEY_PAGEUP:
-        // for (Integer i : selection) {
-        // selectRow(i.intValue() - 10, true);
-        // break;
-        // }
-        // break;
-        // case KeyboardListener.KEY_PAGEDOWN:
-        // for (Integer i : selection) {
-        // selectRow(i.intValue() + 10, true);
-        // break;
-        // }
-        // break;
-        // default:
-        // super.onBrowserEvent(event);
-        // break;
-        // }
-        // break;
+        int keyCode = DOM.eventGetKeyCode(event);
+        switch (keyCode) {
+          case KeyboardListener.KEY_UP:
+            moveUp();
+            eatEvent(event);
+            break;
+          case KeyboardListener.KEY_DOWN:
+            moveDown();
+            eatEvent(event);
+            break;
+          case KeyboardListener.KEY_PAGEUP:
+            break;
+          case KeyboardListener.KEY_PAGEDOWN:
+            break;
+          default:
+            super.onBrowserEvent(event);
+            break;
+        }
+        break;
 
       default:
         super.onBrowserEvent(event);
+    }
+  }
+
+  private void eatEvent(Event event) {
+    DOM.eventCancelBubble(event, true);
+    DOM.eventPreventDefault(event);
+  }
+
+  /**
+   * Selects the firs item in the list if no items are currently selected. This
+   * method assumes that the list has at least 1 item.
+   * 
+   * @return {@code true} if no item was previosly selected and the first item
+   *         in the list was selected, {@code false} otherwise
+   */
+  private boolean selectFirstItemIfNodeSelected() {
+    if (getSelectedIndex() == -1) {
+      setSelectedIndex(0);
+      return true;
+    }
+    return false;
+  }
+
+  private void moveUp() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectPrevItemItem();
+  }
+
+  private void moveDown() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectNextItem();
+  }
+
+  private void selectPrevItemItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index > 0) {
+      setSelectedIndex(--index);
+    } else {
+      // we're at the start, loop around to the end
+      setSelectedIndex(getItemCount() - 1);
+    }
+  }
+
+  private void selectNextItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index < getItemCount() - 1) {
+      setSelectedIndex(++index);
+    } else {
+      // we're at the end, loop around to the start
+      setSelectedIndex(0);
     }
   }
 
@@ -651,19 +644,23 @@ public class ListBox<T extends Object> extends LayoutComposite implements
   }
 
   public int getTabIndex() {
-    return focusPanel.getTabIndex();
+    return impl.getTabIndex(getElement());
   }
 
   public void setAccessKey(char key) {
-    focusPanel.setAccessKey(key);
+    impl.setAccessKey(getElement(), key);
   }
 
   public void setFocus(boolean focused) {
-    focusPanel.setFocus(focused);
+    if (focused) {
+      impl.focus(getElement());
+    } else {
+      impl.blur(getElement());
+    }
   }
 
   public void setTabIndex(int index) {
-    focusPanel.setTabIndex(index);
+    impl.setTabIndex(getElement(), index);
   }
 
   private FocusListenerCollection focusListeners;
