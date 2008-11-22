@@ -24,18 +24,30 @@ import com.google.gwt.user.client.ui.HasAnimation;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class PopupMenu extends AbstractDecoratedPopupPanel implements HasAnimation {
+public class PopupMenu extends AbstractDecoratedPopupPanel implements
+    HasAnimation {
 
   private final MenuBar menu;
 
   public PopupMenu() {
     super(true, false, "menuPopup");
-    menu = new MenuBar(true);
+    menu = new MenuBar(true) {
+      @Override
+      public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+        super.onPopupClosed(sender, autoClosed);
+
+        // If the menu popup was not auto-closed, close popup menu..
+        if (!autoClosed) {
+          PopupMenu.this.hide();
+        }
+      }
+    };
     menu.setAutoOpen(true);
     add(menu);
     setAnimationEnabled(true);
