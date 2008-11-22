@@ -15,10 +15,17 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
+import java.util.Set;
+
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.ColumnWidget;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 
@@ -51,6 +58,8 @@ import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
  */
 public class ScrollTable extends ColumnWidget {
 
+  static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
+
   /**
    * The default style name.
    */
@@ -75,7 +84,18 @@ public class ScrollTable extends ColumnWidget {
    * @param headerTable the header table
    */
   public ScrollTable(DataGrid dataTable, FixedWidthFlexTable headerTable) {
-    super(dataTable, headerTable);
+    super(impl.createFocusable(), dataTable, headerTable);
+
+    // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
+    // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
+    sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
+        | Event.ONFOCUS | Event.ONKEYDOWN);
+
+    // Hide focus outline in Mozilla/Webkit/Opera
+    DOM.setStyleAttribute(getElement(), "outline", "0px");
+
+    // Hide focus outline in IE 6/7
+    DOM.setElementAttribute(getElement(), "hideFocus", "true");
 
     setStylePrimaryName(DEFAULT_STYLENAME);
   }
@@ -83,6 +103,147 @@ public class ScrollTable extends ColumnWidget {
   @Override
   protected void hoverCell(Element cellElem) {
     ((DataGrid) getDataTable()).hoverCell(cellElem);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
+   */
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONCLICK:
+        impl.focus(getElement());
+        super.onBrowserEvent(event);
+        break;
+      case Event.ONKEYDOWN:
+        int keyCode = DOM.eventGetKeyCode(event);
+        switch (keyCode) {
+          case KeyboardListener.KEY_UP:
+            moveUp();
+            eatEvent(event);
+            break;
+          case KeyboardListener.KEY_DOWN:
+            moveDown();
+            eatEvent(event);
+            break;
+          case KeyboardListener.KEY_LEFT:
+            DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
+                getSelectedIndex()).getFirstChild());
+            break;
+          case KeyboardListener.KEY_RIGHT:
+            DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
+                getSelectedIndex()).getLastChild());
+            break;
+          default:
+            super.onBrowserEvent(event);
+            break;
+        }
+        break;
+      default:
+        super.onBrowserEvent(event);
+    }
+  }
+
+  /**
+   * Gets the currently-selected item. If multiple items are selected, this
+   * method will returns the first selected item ({@link #isItemeSelected(int)}
+   * can be used to query individual items).
+   * 
+   * @return the selected index, or {@code -1} if none is selected
+   */
+  public int getSelectedIndex() {
+    Set<Integer> selection = getDataTable().getSelectedRows();
+    for (Integer i : selection) {
+      return i.intValue();
+    }
+    return -1;
+  }
+
+  private void checkIndex(int index) {
+    if (index < 0 || index >= getDataTable().getRowCount()) {
+      throw new IndexOutOfBoundsException();
+    }
+  }
+
+  /**
+   * Sets the currently selected index.
+   * <p>
+   * After calling this method, only the specified item in the list will remain
+   * selected. For a {@code ListBox} with multiple selection enabled, see
+   * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
+   * <p>
+   * Note that setting the selected index programmatically does <em>not</em>
+   * cause the {@link ChangeListener#onChange(Widget)} event to be fired.
+   * 
+   * @param index the index of the item to be selected
+   */
+  public void setSelectedIndex(int index) {
+    checkIndex(index);
+    getDataTable().selectRow(index, true);
+  }
+
+  /**
+   * Selects the firs item in the list if no items are currently selected. This
+   * method assumes that the list has at least 1 item.
+   * 
+   * @return {@code true} if no item was previosly selected and the first item
+   *         in the list was selected, {@code false} otherwise
+   */
+  private boolean selectFirstItemIfNodeSelected() {
+    if (getSelectedIndex() == -1) {
+      setSelectedIndex(0);
+      return true;
+    }
+    return false;
+  }
+
+  private void moveUp() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectPrevItemItem();
+  }
+
+  private void moveDown() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectNextItem();
+  }
+
+  private void selectPrevItemItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index > 0) {
+      setSelectedIndex(--index);
+    }
+
+    DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
+        getSelectedIndex()).getFirstChild());
+  }
+
+  private void selectNextItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index < getDataTable().getRowCount() - 1) {
+      setSelectedIndex(++index);
+    }
+
+    DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
+        getSelectedIndex()).getFirstChild());
+  }
+
+  private void eatEvent(Event event) {
+    DOM.eventCancelBubble(event, true);
+    DOM.eventPreventDefault(event);
   }
 
 }
