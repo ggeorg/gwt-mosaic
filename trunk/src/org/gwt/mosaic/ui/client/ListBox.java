@@ -248,7 +248,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
     // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
     sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
         | Event.ONFOCUS | Event.ONKEYDOWN);
-    
+
     // Hide focus outline in Mozilla/Webkit/Opera
     DOM.setStyleAttribute(getElement(), "outline", "0px");
 
@@ -263,7 +263,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
    */
   @Override
   public void onBrowserEvent(Event event) {
-
     switch (DOM.eventGetType(event)) {
       case Event.ONCLICK:
         setFocus(true);
@@ -280,9 +279,13 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
             moveDown();
             eatEvent(event);
             break;
-          case KeyboardListener.KEY_PAGEUP:
+          case KeyboardListener.KEY_LEFT:
+            DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
+                getSelectedIndex()).getFirstChild());
             break;
-          case KeyboardListener.KEY_PAGEDOWN:
+          case KeyboardListener.KEY_RIGHT:
+            DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
+                getSelectedIndex()).getLastChild());
             break;
           default:
             super.onBrowserEvent(event);
@@ -341,6 +344,9 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
       // we're at the start, loop around to the end
       setSelectedIndex(getItemCount() - 1);
     }
+
+    DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
+        getSelectedIndex()).getFirstChild());
   }
 
   private void selectNextItem() {
@@ -355,6 +361,9 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
       // we're at the end, loop around to the start
       setSelectedIndex(0);
     }
+
+    DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
+        getSelectedIndex()).getFirstChild());
   }
 
   /**
