@@ -586,7 +586,16 @@ public abstract class ColumnWidget extends LayoutComposite {
 
   public ColumnWidget(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable) {
     super();
+    init(dataTable, headerTable);
+  }
 
+  public ColumnWidget(Element element, FixedWidthGrid dataTable,
+      FixedWidthFlexTable headerTable) {
+    super(element);
+    init(dataTable, headerTable);
+  }
+
+  private void init(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable) {
     final LayoutPanel layoutPanel = getWidget();
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setPadding(0);
