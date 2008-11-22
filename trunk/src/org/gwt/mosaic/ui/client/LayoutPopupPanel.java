@@ -170,6 +170,7 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
       setPixelSize(prefSize[0], h);
 
     } else {
+      layoutPanel.setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       calculateDecorationSize(size);
       setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);

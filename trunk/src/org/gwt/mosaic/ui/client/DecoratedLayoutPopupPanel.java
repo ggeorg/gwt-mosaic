@@ -186,6 +186,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
       setPixelSize(prefSize[0], h);
 
     } else {
+      layoutPanel.setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       calculateDecorationSize(size);
       setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
@@ -203,7 +204,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setHeight(String height) {
-    //super.setHeight(height);
+    // super.setHeight(height);
     if (!isAttached()) {
       this.desiredHeight = height;
     } else {
@@ -217,7 +218,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setWidth(String width) {
-    //super.setWidth(width);
+    // super.setWidth(width);
     if (!isAttached()) {
       this.desiredWidth = width;
     } else {
