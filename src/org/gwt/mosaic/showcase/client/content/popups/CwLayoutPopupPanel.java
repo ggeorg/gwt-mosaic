@@ -32,7 +32,6 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -58,12 +57,12 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
 
   @Override
   public String getDescription() {
-    return "LayoutPopupPanel description";
+    return "Layout PopupPanel description";
   }
 
   @Override
   public String getName() {
-    return "LayoutPopupPanel";
+    return "Layout PopupPanel";
   }
 
   /**
