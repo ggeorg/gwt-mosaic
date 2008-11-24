@@ -116,7 +116,10 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
   public int[] getPreferredSize() {
-    return layoutPanel.getPreferredSize();
+    int[] result = layoutPanel.getPreferredSize();
+    result[0] += decorationWidthCache;
+    result[1] += decorationHeightCache;
+    return result;
   }
 
   /**
@@ -129,7 +132,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
     // DeferredCommand.addCommand(new Command() {
     // public void execute() {
-    System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
+    // System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
     // }
     // });
   }
