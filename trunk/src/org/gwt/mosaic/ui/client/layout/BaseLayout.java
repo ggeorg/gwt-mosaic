@@ -44,7 +44,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     if (child instanceof FormPanel) {
       final Widget _child = ((FormPanel) child).getWidget();
       if (_child != null && (_child instanceof HasLayoutManager)) {
-          child = _child;
+        child = _child;
       }
     }
     if (child instanceof HasLayoutManager) {
@@ -53,7 +53,12 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
       forceFlowLayout(child.getElement());
+      // ggeorg: set to "0px", read and set it to "auto"
+      // I don't know why but it works for widget like 'ListBox'
+      child.setHeight("0px");
+      child.getOffsetHeight();
       child.setHeight("auto");
+      // ---------------------------------
       flowHeight = child.getOffsetHeight() + m[0] + m[2];
     }
     return flowHeight;
@@ -68,7 +73,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     if (child instanceof FormPanel) {
       final Widget _child = ((FormPanel) child).getWidget();
       if (_child != null && (_child instanceof HasLayoutManager)) {
-          child = _child;
+        child = _child;
       }
     }
     if (child instanceof HasLayoutManager) {
@@ -77,7 +82,12 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
       forceFlowLayout(child.getElement());
+      // ggeorg: set to "0px", read and set it to "auto"
+      // I don't know why but it works for widget like 'ListBox'
+      child.setWidth("0px");
+      child.getOffsetWidth();
       child.setWidth("auto");
+      // ---------------------------------
       flowWidth = child.getOffsetWidth() + m[1] + m[3];
     }
     return flowWidth;
@@ -144,7 +154,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     if (widget instanceof FormPanel) {
       final Widget child = ((FormPanel) widget).getWidget();
       if (child != null && (child instanceof HasLayoutManager)) {
-          setSize(child, width, height);
+        setSize(child, width, height);
       }
     }
   }
