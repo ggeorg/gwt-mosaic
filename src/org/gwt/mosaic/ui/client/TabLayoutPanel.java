@@ -219,6 +219,15 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   }
 
   /**
+   * Gets the tab that is currently selected.
+   * 
+   * @return the selected tab
+   */
+  public int getSelectedTab() {
+    return tabBar.getSelectedTab();
+  }
+
+  /**
    * Gets the specified tab's HTML.
    * 
    * @param index the index of the tab whose HTML is to be retrieved
@@ -372,7 +381,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
     return true;
   }
-
+  
   /*
    * (non-Javadoc)
    * 
