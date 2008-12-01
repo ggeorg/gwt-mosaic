@@ -145,8 +145,15 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     decorationWidthCache = (box[0] - size[0]);
     decorationHeightCache = (box[1] - size[1]);
   }
+  
+  private boolean initialized = false;
 
   protected void afterLoad() {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+    
     int[] prefSize = layoutPanel.getPreferredSize();
 
     if (desiredWidth != null && desiredHeight != null) {
