@@ -16,19 +16,75 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.Viewport;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * {@code FillLayout} lays out the first visible widget forcing it to completely
+ * fill the available space. The widget that {@code FillLayout} lays out can
+ * have an associated layout data object, called {@link FillLayoutData}.
+ * <p>
+ * {@code FillLayout} is the default layout manager for {@link LayoutPanel}. In
+ * the following example two {@code Buttons} are placed inside a
+ * {@link LayoutPanel}. Notice that only the first {@code Button} is rendered.
+ * The associated layout data object declares that the {@code Button} will be
+ * decorated (the {@code Button} will be placed inside a
+ * {@code com.google.gwt.user.client.ui.DecoratorPanel}):
+ * 
+ * <table>
+ * <tr>
+ * <td> <img border="1" src="FillLayout1.jpg"> </td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   LayoutPanel panel = new LayoutPanel();
+ *   panel.setPixelSize(320, 200);
+ *   panel.setPadding(20);
+ *   
+ *   panel.add(new Button("Button 1"), new FillLayoutData(true));
+ *   
+ *   // This button is not rendered!
+ *   panel.add(new Button("Button 2"), new FillLayoutData(true));
+ *   
+ *   RootPanel.get().add(panel);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
+ * <p>
+ * In the next example a {@code Button} placed inside a {@link Viewport} is
+ * sized to completely fill the browser's content area:
+ * 
+ * <table>
+ * <tr>
+ * <td> <img border="1" src="FillLayout2.jpg"> </td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   viewport.add(new Button("Button 1"));
+ *   
+ *   RootPanel.get().add(viewport);
+ * }
+ * </td>
+ * </tr></table>
+ * 
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class FillLayout extends BaseLayout {
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
    */
@@ -83,14 +139,14 @@ public class FillLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
-    
+
     layoutPanel.setPreferredSize(result[0], result[1]);
 
     return result;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.mosaic.ui.client.LayoutPanel)
    */
@@ -147,7 +203,7 @@ public class FillLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
-    
+
     layoutPanel.setPreferredSize(-1, -1);
   }
 
