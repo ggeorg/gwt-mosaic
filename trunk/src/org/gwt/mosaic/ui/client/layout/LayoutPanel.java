@@ -375,24 +375,29 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     GWT.log("Parent of '" + this.getClass().getName() + "' ('"
         + parent.getClass().getName()
         + "') is not an instance of HasLayoutManager.", null);
-
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        // Set the initial size
-        final int[] size = getPreferredSize();
+    
+    // DeferredCommand.addCommand(new Command() {
+    // public void execute() {
+    // Set the initial size
+    if (width != null && height != null) {
+      super.setWidth(width);
+      super.setHeight(height);
+    } else {
+      final int[] size = getPreferredSize();
+      if (width != null) {
+        LayoutPanel.super.setWidth(width);
+        BaseLayout.setSize(LayoutPanel.this, -1, size[1]);
+      } else if (height != null) {
+        BaseLayout.setSize(LayoutPanel.this, size[0], -1);
+        LayoutPanel.super.setHeight(height);
+      } else {
         BaseLayout.setSize(LayoutPanel.this, size[0], size[1]);
-        if (width != null && height != null) {
-          LayoutPanel.super.setWidth(width);
-          LayoutPanel.super.setHeight(height);
-        } else if (width != null) {
-          LayoutPanel.super.setWidth(width);
-          BaseLayout.setSize(LayoutPanel.this, -1, size[1]);
-        } else if (height != null) {
-          BaseLayout.setSize(LayoutPanel.this, size[0], -1);
-          LayoutPanel.super.setHeight(height);
-        }
       }
-    });
+    }
+    
+    layout();
+    // }
+    // });
 
     // Add to Resizable Collection
     ResizableWidgetCollection.get().add(new ResizableWidget() {
@@ -408,23 +413,28 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
         LayoutPanel.this.layout();
       }
     });
-
   }
 
   private String height;
 
   @Override
   public void setHeight(String height) {
-    super.setHeight(height);
-    this.height = height;
+    if (!isAttached()) {
+      this.height = height;
+    } else {
+      super.setHeight(height);
+    }
   }
 
   private String width;
 
   @Override
   public void setWidth(String width) {
-    super.setWidth(width);
-    this.width = width;
+    if (!isAttached()) {
+      this.width = width;
+    } else {
+      super.setWidth(width);
+    }
   }
 
   public void addCollapsedListener(Widget widget, CollapsedListener listener) {
