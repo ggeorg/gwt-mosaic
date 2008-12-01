@@ -24,12 +24,38 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * The {@code GridLayout} class is a layout manager that lays out a panel's
+ * widgets in a rectangular grid. The panel is divided into equal-sized
+ * rectangles, with each widget occupying one or more cells.
+ * <p>
+ * {@code GridLayout} has a number of configurable fields, and the control it
+ * lays out can have an associated layout data object, called
+ * {@link GridLayoutData}.
+ * <p>
+ * The following code lays out six buttons into three columns and two rows:
+ * 
+ * <pre>
+ * LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(3, 2));
+ * layoutPanel.add(new Button("1"));
+ * layoutPanel.add(new Button("2"));
+ * layoutPanel.add(new Button("3"));
+ * layoutPanel.add(new Button("4"));
+ * layoutPanel.add(new Button("5"));
+ * layoutPanel.add(new Button("6"));
+ * </pre>
+ * 
+ * <p>
+ * The {@code columns} and {@code rows} parameters are the most important
+ * {@code GridLayout} properties. Widgets are laid out in columns from left to
+ * right, and rows from top to bottom.
+ * 
+ * @see GridLayoutData
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class GridLayout extends BaseLayout {
 
-  private static final Widget SPAN = new SimplePanel();
+  protected static final Widget SPAN = new SimplePanel();
 
   /**
    * Initial grid columns.
@@ -44,17 +70,18 @@ public class GridLayout extends BaseLayout {
   /**
    * The widget matrix to render.
    */
-  private Widget[][] widgetMatrix;
+  protected Widget[][] widgetMatrix;
 
   /**
-   * Constructs an empty grid layout.
+   * Creates a grid layout with a default of one column per component, in a
+   * single row.
    */
   public GridLayout() {
     this(1, 1);
   }
 
   /**
-   * Constructor for grid of given size (number of cells).
+   * Constructor for grid layout with the specified number of rows and columns.
    * 
    * @param columns number of columns in the grid
    * @param rows number of rows in the grid
@@ -64,7 +91,7 @@ public class GridLayout extends BaseLayout {
     setRows(rows);
   }
 
-  private void buildWidgetMatrix(LayoutPanel layoutPanel) {
+  protected void buildWidgetMatrix(LayoutPanel layoutPanel) {
     final int size = layoutPanel.getWidgetCount();
 
     int cursorX = 0;
@@ -132,8 +159,18 @@ public class GridLayout extends BaseLayout {
     return cols;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Determines the preferred size of the panel argument using this grid layout.
+   * <p>
+   * The preferred width of a grid layout is the largest preferred width of all
+   * of the widgets in the panel times the number of columns, plus the
+   * horizontal padding times the number of columns minus one, plus the left and
+   * right margins.
+   * <p>
+   * The preferred height of a grid layout is the largest preferred height of
+   * all of the widgets in the panel times the number of rows, plus the vertical
+   * padding times the number of rows minus one, plus the top and bottom
+   * margins.
    * 
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
@@ -146,7 +183,7 @@ public class GridLayout extends BaseLayout {
       }
 
       buildWidgetMatrix(layoutPanel);
-      
+
       for (int r = 0; r < rows; r++) {
         int cellWidth = 0;
         int cellHeight = 0;
@@ -204,8 +241,16 @@ public class GridLayout extends BaseLayout {
     return rows;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Lays out the specified {@link LayoutPanel} using this layout.
+   * <p>
+   * The grid layout manager determines the size of individual widgets by
+   * dividing the free space in the panel into equal-sized portions according to
+   * the number of rows and columns in the layout. The container's free space
+   * equals the container's size minus any margins and any specified horizontal
+   * or vertical gap.
+   * 
+   * @param layoutPanel the panel in which to do the layout
    * 
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
