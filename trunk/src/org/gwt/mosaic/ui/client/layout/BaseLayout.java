@@ -130,8 +130,10 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
+   * <p>
+   * The default implementation returns {@code false}.
    * 
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#runTwice()
    */
