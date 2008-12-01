@@ -75,18 +75,21 @@ import com.google.gwt.user.client.ui.Widget;
  *   
  *   RootPanel.get().add(viewport);
  * }
+ * </pre>
+ * 
  * </td>
- * </tr></table>
+ * </tr>
+ * </table>
  * 
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class FillLayout extends BaseLayout {
 
-  /**
-   * {@inheritDoc}
+  /*
+   * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public int[] getPreferredSize(LayoutPanel layoutPanel) {
     int[] result = {0, 0};
@@ -145,10 +148,10 @@ public class FillLayout extends BaseLayout {
     return result;
   }
 
-  /**
-   * {@inheritDoc}
+  /*
+   * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.mosaic.ui.client.LayoutPanel)
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public void layoutPanel(LayoutPanel layoutPanel) {
     try {
