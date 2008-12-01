@@ -130,7 +130,14 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     decorationHeightCache = (box[1] - size[1]);
   }
 
+  private boolean initialized = false;
+
   protected void afterLoad() {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+
     int[] prefSize = layoutPanel.getPreferredSize();
 
     if (desiredWidth != null && desiredHeight != null) {
