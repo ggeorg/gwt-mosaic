@@ -18,6 +18,19 @@ package org.gwt.mosaic.ui.client.layout;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
 /**
+ * {@code GridLayoutData} is the layout data object associated with
+ * {@link GridLayout}. To set a {@code GridLayoutData} object into a widget,
+ * use the
+ * {@link LayoutPanel#add(com.google.gwt.user.client.ui.Widget, LayoutData)}
+ * method.
+ * <p>
+ * NOTE: Do not reuse {@code GridLayouData} objects. Every widget in a
+ * {@code LayoutPanel} that is managed by a {@link GridLayout} must have a
+ * unique {@code GridLayoutData} object. If the layout data for a widget in a
+ * {@link GridLayout} is {@code null} at layout time, a unique
+ * {@code GridLayoutData} object is created for it.
+ * 
+ * @see GridLayout
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -26,20 +39,38 @@ public class GridLayoutData extends LayoutData {
   public int rowspan;
   public int colspan;
 
+  /**
+   * 
+   */
   public GridLayoutData() {
     this(1, 1);
   }
-  
+
+  /**
+   * 
+   * @param decorate
+   */
   public GridLayoutData(boolean decorate) {
     this(1, 1, decorate);
   }
 
+  /**
+   * 
+   * @param colSpan
+   * @param rowSpan
+   */
   public GridLayoutData(int colSpan, int rowSpan) {
     super();
     setColspan(colSpan);
     setRowspan(rowSpan);
   }
-  
+
+  /**
+   * 
+   * @param colSpan
+   * @param rowSpan
+   * @param decorate
+   */
   public GridLayoutData(int colSpan, int rowSpan, boolean decorate) {
     super();
     setColspan(colSpan);
