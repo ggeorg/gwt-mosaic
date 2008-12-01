@@ -7,5 +7,6 @@ org.gwt.mosaic.ui.client
 org.gwt.mosaic.ui.client.datepicker
 org.gwt.mosaic.ui.client.infopanel
 org.gwt.mosaic.ui.client.layout
+org.gwt.mosaic.ui.client.table
 org.gwt.mosaic.ui.client.treetable
 org.gwt.mosaic.ui.client.util
