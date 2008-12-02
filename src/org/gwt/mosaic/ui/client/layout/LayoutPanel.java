@@ -375,29 +375,28 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     GWT.log("Parent of '" + this.getClass().getName() + "' ('"
         + parent.getClass().getName()
         + "') is not an instance of HasLayoutManager.", null);
-    
-    // DeferredCommand.addCommand(new Command() {
-    // public void execute() {
-    // Set the initial size
-    if (width != null && height != null) {
-      super.setWidth(width);
-      super.setHeight(height);
-    } else {
-      final int[] size = getPreferredSize();
-      if (width != null) {
-        LayoutPanel.super.setWidth(width);
-        BaseLayout.setSize(LayoutPanel.this, -1, size[1]);
-      } else if (height != null) {
-        BaseLayout.setSize(LayoutPanel.this, size[0], -1);
-        LayoutPanel.super.setHeight(height);
-      } else {
-        BaseLayout.setSize(LayoutPanel.this, size[0], size[1]);
+
+    // Set the initial size & layout
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        if (width != null && height != null) {
+          LayoutPanel.super.setWidth(width);
+          LayoutPanel.super.setHeight(height);
+        } else {
+          final int[] size = getPreferredSize();
+          if (width != null) {
+            LayoutPanel.super.setWidth(width);
+            BaseLayout.setSize(LayoutPanel.this, -1, size[1]);
+          } else if (height != null) {
+            BaseLayout.setSize(LayoutPanel.this, size[0], -1);
+            LayoutPanel.super.setHeight(height);
+          } else {
+            BaseLayout.setSize(LayoutPanel.this, size[0], size[1]);
+          }
+        }
+        layout();
       }
-    }
-    
-    layout();
-    // }
-    // });
+    });
 
     // Add to Resizable Collection
     ResizableWidgetCollection.get().add(new ResizableWidget() {

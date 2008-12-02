@@ -26,6 +26,148 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * A layout manager that allows multiple widgets of a {@link LayoutPanel} to be
+ * laid out either vertically or horizontally. The height and width of each
+ * widget in a {@code BoxLayout} can be specified by setting a
+ * {@link BoxLayoutData} object into the widget using
+ * {@link LayoutPanel#add(Widget, LayoutData)} and also by using CSS or a
+ * combination of both methods.
+ * <p>
+ * {@code BoxLayout} aligns all widgets in one row if the {@link Orientation}
+ * field is set to {@code HORIZONTAL}, and one column if it is set to
+ * {@code VERTICAL}.
+ * <p>
+ * NOTE: {@code BoxLayout} does not have the ability to wrap.
+ * <p>
+ * When a {@code BoxLayout} lays out widgets, it tries to size each widget at
+ * the widget's preferred size. In the following example a {@link LayoutPanel}
+ * is set to use a {@code BoxLayout}. The default orientation of a
+ * {@code BoxLayout} is {@code HORIZONTAL}. The {@link LayoutPanel} is added
+ * decorated to a {@link Viewport} so that it fills all browser's content area:
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BoxLayout1.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   LayoutPanel panel = new LayoutPanel(new BoxLayout());
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *   panel.add(new Button("Button 1"));
+ *   panel.add(new Button("Button 2"));
+ *   panel.add(new Button("Button 3"));
+ *   panel.add(new Button("Button 4"));
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
+ * <p>
+ * The next example sets the orientation of the {@link BoxLayout} to
+ * {@link Orientation#VERTICAL}:
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BoxLayout2.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *   panel.add(new Button("Button 1"));
+ *   panel.add(new Button("Button 2"));
+ *   panel.add(new Button("Button 3"));
+ *   panel.add(new Button("Button 4"));
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
+ * <p>
+ * {@code BoxLayoutData} can specify the size of the widgets. In the next two
+ * examples: <em>Button 1</em> will be stretch to fill the available space in
+ * both directions (horizontally and vertical); <em>Button 2</em> will be
+ * stretched only vertical, <em>Button 3</em> will be stretched only
+ * horizontally; <em>Button 4</em> and <em>Button 5</em> will be set to a
+ * specific size by giving explicitly the width and height in pixels or ratios
+ * (values > 0 and <= 1 are ratios of the {@link LayoutPanel}'s client area
+ * except paddings, 0 and values > 1 are pixels, and -1 means preferred size).
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BoxLayout3.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   LayoutPanel panel = new LayoutPanel(new BoxLayout());
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *   panel.add(new Button("Button 1"), new BoxLayoutData(FillStyle.BOTH));
+ *   panel.add(new Button("Button 2"), new BoxLayoutData(FillStyle.VERTICAL));
+ *   panel.add(new Button("Button 3"), new BoxLayoutData(FillStyle.HORIZONTAL));
+ *   panel.add(new Button("Button 4"), new BoxLayoutData(-1.0, 0.5));
+ *   panel.add(new Button("Button 5"), new BoxLayoutData(-1.0, 150.0));
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BoxLayout4.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *   panel.add(new Button("Button 1"), new BoxLayoutData(FillStyle.BOTH));
+ *   panel.add(new Button("Button 2"), new BoxLayoutData(FillStyle.VERTICAL));
+ *   panel.add(new Button("Button 3"), new BoxLayoutData(FillStyle.HORIZONTAL));
+ *   panel.add(new Button("Button 4"), new BoxLayoutData(0.5, -1.0));
+ *   panel.add(new Button("Button 5"), new BoxLayoutData(150.0, -1.0));
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -35,27 +177,47 @@ public class BoxLayout extends BaseLayout {
     HORIZONTAL, VERTICAL
   };
 
-  private Orientation orient;
+  private Orientation orientation;
 
   boolean leftToRight = true;
 
   private boolean runTwiceFlag;
 
+  /**
+   * Creates a new instance of {@code BoxLayout} with horizontal orientation.
+   */
   public BoxLayout() {
     this(Orientation.HORIZONTAL);
   }
 
-  public BoxLayout(Orientation orient) {
-    this.orient = orient;
+  /**
+   * Creates a new instance of {@code BoxLayout} with the given orientation.
+   * 
+   * @param orientation the orientation.
+   */
+  public BoxLayout(Orientation orientation) {
+    this.orientation = orientation;
   }
 
+  /**
+   * Gets the orientation of the child widgets. The default value is
+   * {@link Orientation#HORIZONTAL}.
+   * 
+   * @return the orientation of the child widgets.
+   * @deprecated Replaced by {@link #getOrientation()}.
+   */
   public Orientation getOrient() {
-    return orient;
+    return orientation;
   }
 
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
+  /**
+   * Gets the orientation of the child widgets. The default value is
+   * {@link Orientation#HORIZONTAL}.
+   * 
+   * @return the orientation of the child widgets.
+   */
+  public Orientation getOrientation() {
+    return orientation;
   }
 
   /*
@@ -84,7 +246,7 @@ public class BoxLayout extends BaseLayout {
       final int spacing = layoutPanel.getWidgetSpacing();
 
       // adjust for spacing
-      if (orient == Orientation.HORIZONTAL) {
+      if (orientation == Orientation.HORIZONTAL) {
         width += ((size - 1) * spacing);
       } else { // Orientation.VERTICAL
         height += ((size - 1) * spacing);
@@ -111,11 +273,11 @@ public class BoxLayout extends BaseLayout {
         }
         BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
 
-        if (orient == Orientation.HORIZONTAL) {
+        if (orientation == Orientation.HORIZONTAL) {
           if (layoutData.preferredWidth != -1) {
             if (layoutData.preferredWidth > 0
                 && layoutData.preferredWidth <= 1.0) {
-              // FIXME
+              // Ignore: width += 0;
             } else {
               width += (int) layoutData.preferredWidth;
             }
@@ -129,9 +291,9 @@ public class BoxLayout extends BaseLayout {
             }
           }
           if (layoutData.preferredHeight != -1) {
-            if (layoutData.preferredHeight > 0
+            if (layoutData.preferredHeight >= 0
                 && layoutData.preferredHeight <= 1.0) {
-              // FIXME
+              layoutData.calcHeight = 0;
             } else {
               layoutData.calcHeight = (int) layoutData.preferredHeight;
             }
@@ -149,7 +311,7 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.preferredHeight != -1) {
             if (layoutData.preferredHeight > 0
                 && layoutData.preferredHeight <= 1.0) {
-              // FIXME
+              // Ignore: height += 0;
             } else {
               height += (int) layoutData.preferredHeight;
             }
@@ -165,7 +327,7 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.preferredWidth != -1) {
             if (layoutData.preferredWidth > 0
                 && layoutData.preferredWidth <= 1.0) {
-              // FIXME
+              layoutData.calcWidth = 0;
             } else {
               layoutData.calcWidth = (int) layoutData.preferredWidth;
             }
@@ -182,7 +344,7 @@ public class BoxLayout extends BaseLayout {
         }
       }
 
-      if (orient == Orientation.HORIZONTAL) {
+      if (orientation == Orientation.HORIZONTAL) {
         result[0] = width;
         result[1] = height + maxHeight;
       } else { // Orientation.VERTICAL
@@ -194,13 +356,13 @@ public class BoxLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ".getPreferredSize() : "
           + e.getMessage());
     }
-    
+
     layoutPanel.setPreferredSize(result[0], result[1]);
-    
+
     return result;
   }
 
-  public int getVisibleWidgetCount(LayoutPanel layoutPanel) {
+  private int getVisibleWidgetCount(LayoutPanel layoutPanel) {
     int result = 0;
     for (int i = 0, n = layoutPanel.getWidgetCount(); i < n; i++) {
       Widget child = layoutPanel.getWidget(i);
@@ -215,6 +377,14 @@ public class BoxLayout extends BaseLayout {
     return result;
   }
 
+  /**
+   * If orientation is {@link Orientation#HORIZONTAL} this method returns
+   * {@code true} if the child widgets are positioned from left to right,
+   * {@code false} otherwise. Default is {@code true}.
+   * 
+   * @return {@code true} if the child widgets are positioned from left to
+   *         right, {@code false} otherwise.
+   */
   public boolean isLeftToRight() {
     return leftToRight;
   }
@@ -245,15 +415,15 @@ public class BoxLayout extends BaseLayout {
       int left = paddings[3];
       int top = paddings[0];
 
-      // adjust for spacing
-      if (orient == Orientation.HORIZONTAL) {
-        width -= ((size - 1) * spacing);
-      } else { // Orientation.VERTICAL
-        height -= ((size - 1) * spacing);
-      }
-
       int fillWidth = width;
       int fillHeight = height;
+
+      // adjust for spacing
+      if (orientation == Orientation.HORIZONTAL) {
+        fillWidth -= ((size - 1) * spacing);
+      } else { // Orientation.VERTICAL
+        fillHeight -= ((size - 1) * spacing);
+      }
 
       int fillingWidth = 0;
       int fillingHeight = 0;
@@ -283,7 +453,7 @@ public class BoxLayout extends BaseLayout {
         }
         BoxLayoutData layoutData = (BoxLayoutData) layoutDataObject;
 
-        if (orient == Orientation.HORIZONTAL) {
+        if (orientation == Orientation.HORIZONTAL) {
           if (layoutData.fillWidth) {
             fillingWidth++;
           } else if (layoutData.preferredWidth != -1) {
@@ -379,7 +549,7 @@ public class BoxLayout extends BaseLayout {
         int w = layoutData.calcWidth;
         int h = layoutData.calcHeight;
 
-        if (orient == Orientation.HORIZONTAL) {
+        if (orientation == Orientation.HORIZONTAL) {
           if (layoutData.fillWidth) {
             w = fillWidth / fillingWidth;
           }
@@ -414,7 +584,7 @@ public class BoxLayout extends BaseLayout {
             fh -= decPanelBorderHeight;
           }
 
-          if (orient == Orientation.VERTICAL || isLeftToRight()) {
+          if (orientation == Orientation.VERTICAL || isLeftToRight()) {
             setBounds(layoutPanel, child, left, top, fw, fh);
           } else { // !isLeftToRight()
             setBounds(layoutPanel, child, box[0] - decPanelBorderWidth
@@ -422,7 +592,7 @@ public class BoxLayout extends BaseLayout {
                 fw, fh);
           }
         } else {
-          if (orient == Orientation.VERTICAL || isLeftToRight()) {
+          if (orientation == Orientation.VERTICAL || isLeftToRight()) {
             setBounds(layoutPanel, child, left, top, fw, fh);
           } else { // !isLeftToRight()
             setBounds(layoutPanel, child, box[0]
@@ -431,7 +601,7 @@ public class BoxLayout extends BaseLayout {
           }
         }
 
-        if (orient == Orientation.HORIZONTAL) {
+        if (orientation == Orientation.HORIZONTAL) {
           left += (w + spacing);
         } else { // Orientation.VERTICAL
           top += (h + spacing);
@@ -440,16 +610,49 @@ public class BoxLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
     }
-    
+
     layoutPanel.setPreferredSize(-1, -1);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.BaseLayout#runTwice()
+   */
+  @Override
+  public boolean runTwice() {
+    return runTwiceFlag;
+  }
+
+  /**
+   * If orientation is {@link Orientation#HORIZONTAL} this method defines
+   * whether the child widgets are positioned from left to right, or from right
+   * to left.
+   * 
+   * @param leftToRight {@code true} if the child widgets are positioned from
+   *          left to right, {@code false} otherwise.
+   */
   public void setLeftToRight(boolean leftToRight) {
     this.leftToRight = leftToRight;
   }
 
+  /**
+   * Sets the orientation of the child widgets.
+   * 
+   * @param orient the orientation of the child widgets.
+   * @deprecated Replaced by {@link #setOrientation(Orientation)}.
+   */
   public void setOrient(Orientation orient) {
-    this.orient = orient;
+    this.orientation = orient;
+  }
+
+  /**
+   * Sets the orientation of the child widgets.
+   * 
+   * @param orient the orientation of the child widgets.
+   */
+  public void setOrientation(Orientation orient) {
+    this.orientation = orient;
   }
 
 }
