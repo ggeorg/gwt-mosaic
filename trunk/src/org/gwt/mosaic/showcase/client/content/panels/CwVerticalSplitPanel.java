@@ -23,7 +23,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.GridLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -85,10 +85,10 @@ public class CwVerticalSplitPanel extends ContentWidget {
       }
     };
     p1.setPadding(0);
-    p1.add(new Button("NORTH"), new BorderLayoutData(BorderLayoutRegion.NORTH));
-    p1.add(new Button("SOUTH"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
-    p1.add(new Button("WETS"), new BorderLayoutData(BorderLayoutRegion.WEST));
-    p1.add(new Button("EAST"), new BorderLayoutData(BorderLayoutRegion.EAST));
+    p1.add(new Button("NORTH"), new BorderLayoutData(Region.NORTH));
+    p1.add(new Button("SOUTH"), new BorderLayoutData(Region.SOUTH));
+    p1.add(new Button("WETS"), new BorderLayoutData(Region.WEST));
+    p1.add(new Button("EAST"), new BorderLayoutData(Region.EAST));
     p1.add(new Button("CENTER"));
     hSplit.setTopWidget(p1);
 

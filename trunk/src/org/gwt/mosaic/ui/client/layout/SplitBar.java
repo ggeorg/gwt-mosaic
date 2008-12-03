@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class SplitBar extends Widget implements SourcesMouseEvents {
+final class SplitBar extends Widget implements SourcesMouseEvents {
 
   private MouseListenerCollection mouseListeners;
 
@@ -74,11 +74,11 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
     public void dragStart() {
       super.dragStart();
 
-      WidgetLocation currentDraggableLocation = new WidgetLocation(context.draggable,
-          context.boundaryPanel);
+      WidgetLocation currentDraggableLocation = new WidgetLocation(
+          context.draggable, context.boundaryPanel);
       movablePanel = context.draggable;
-      context.boundaryPanel.add(movablePanel, currentDraggableLocation.getLeft(),
-          currentDraggableLocation.getTop());
+      context.boundaryPanel.add(movablePanel,
+          currentDraggableLocation.getLeft(), currentDraggableLocation.getTop());
       movablePanel.addStyleName(getStylePrimaryName() + "-Movable");
 
       // one time calculation of boundary panel location for efficiency during
@@ -154,17 +154,21 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
     public void dragEnd() {
       int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
       if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
-        int delta = context.draggable.getAbsoluteTop() - draggableOldAbsoluteTop;
+        int delta = context.draggable.getAbsoluteTop()
+            - draggableOldAbsoluteTop;
         layoutData.preferredSize = widget.getOffsetHeight() + delta;
       } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
-        int delta = draggableOldAbsoluteTop - context.draggable.getAbsoluteTop();
+        int delta = draggableOldAbsoluteTop
+            - context.draggable.getAbsoluteTop();
         layoutData.preferredSize = widget.getOffsetHeight() + delta;
       }
       if ((direction & SplitBar.DIRECTION_WEST) != 0) {
-        int delta = context.draggable.getAbsoluteLeft() - draggableOldAbsoluteLeft;
+        int delta = context.draggable.getAbsoluteLeft()
+            - draggableOldAbsoluteLeft;
         layoutData.preferredSize = widget.getOffsetWidth() + delta;
       } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
-        int delta = draggableOldAbsoluteLeft - context.draggable.getAbsoluteLeft();
+        int delta = draggableOldAbsoluteLeft
+            - context.draggable.getAbsoluteLeft();
         layoutData.preferredSize = widget.getOffsetWidth() + delta;
       }
 
@@ -189,7 +193,8 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
       return directionMap.get(draggable);
     }
 
-    public void makeDraggable(Widget widget, SplitBar.DirectionConstant direction) {
+    public void makeDraggable(Widget widget,
+        SplitBar.DirectionConstant direction) {
       super.makeDraggable(widget);
       directionMap.put(widget, direction);
     }
@@ -227,30 +232,33 @@ public class SplitBar extends Widget implements SourcesMouseEvents {
   /**
    * Specifies that resizing occur at the both edge.
    */
-  public static final DirectionConstant NORTH = new DirectionConstant(DIRECTION_NORTH,
-      "n");
+  public static final DirectionConstant NORTH = new DirectionConstant(
+      DIRECTION_NORTH, "n");
 
   /**
    * Specifies that resizing occur at the south edge.
    */
-  public static final DirectionConstant SOUTH = new DirectionConstant(DIRECTION_SOUTH,
-      "s");
+  public static final DirectionConstant SOUTH = new DirectionConstant(
+      DIRECTION_SOUTH, "s");
 
   /**
    * Specifies that resizing occur at the east edge.
    */
-  public static final DirectionConstant EAST = new DirectionConstant(DIRECTION_EAST, "e");
+  public static final DirectionConstant EAST = new DirectionConstant(
+      DIRECTION_EAST, "e");
 
   /**
    * Specifies that resizing occur at the west edge.
    */
-  public static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST, "w");
+  public static final DirectionConstant WEST = new DirectionConstant(
+      DIRECTION_WEST, "w");
 
   private final AbsolutePanel boundaryPanel;
 
   private final SplitBarDragController dragController;
 
-  public SplitBar(AbsolutePanel boundaryPanel, Widget widget, DirectionConstant direction) {
+  public SplitBar(AbsolutePanel boundaryPanel, Widget widget,
+      DirectionConstant direction) {
     setElement(DOM.createSpan());
     sinkEvents(Event.MOUSEEVENTS);
 

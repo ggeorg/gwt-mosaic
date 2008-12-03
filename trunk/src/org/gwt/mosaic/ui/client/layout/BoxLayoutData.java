@@ -21,6 +21,7 @@ package org.gwt.mosaic.ui.client.layout;
  * instance of this layout data object.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  * @see BoxLayout
  */
 public final class BoxLayoutData extends LayoutData {
@@ -69,7 +70,7 @@ public final class BoxLayoutData extends LayoutData {
    * should be undecorated. The width and height of the widget is specified by
    * the {@code width} and {@code height} parameters. Values > 0 and <= 1 are in
    * ratios of the available client area except paddings, 0 and values > 1 are
-   * in pixels, and -1 means preferred size.
+   * in pixels, and -1 means the calculated preferred size.
    * 
    * @param width the preferred width or -1 indicating that the widget's
    *          calculated preferred width should be used instead of this value.

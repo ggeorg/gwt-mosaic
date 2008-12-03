@@ -29,14 +29,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A border layout lays out a {@link LayoutPanel}, arranging and resizing its
- * widgets to fit in five regions: {@link BorderLayoutRegion#NORTH},
- * {@link BorderLayoutRegion#SOUTH}, {@link BorderLayoutRegion#EAST},
- * {@link BorderLayoutRegion#WEST}, and {@link BorderLayoutRegion#CENTER}.
- * Each region will render the first visible widget added to that region. The
- * region of the widget added to a {@link LayoutPanel} with a
- * {@code BorderLayout} can be specified by setting a {@link BorderLayoutData}
- * object into the widget using {@link LayoutPanel#add(Widget, LayoutData)},
- * for example:
+ * widgets to fit in five regions: {@link Region#NORTH}, {@link Region#SOUTH},
+ * {@link Region#EAST}, {@link Region#WEST}, and {@link Region#CENTER}. Each
+ * region will render the first visible widget added to that region. The region
+ * of the widget added to a {@link LayoutPanel} with a {@code BorderLayout} can
+ * be specified by setting a {@link BorderLayoutData} object into the widget
+ * using {@link LayoutPanel#add(Widget, LayoutData)}, for example:
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
@@ -45,8 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <p>
  * As a convenience, {@code BorderLayout} interprets the absence of a
- * {@link BorderLayoutRegion} specification the same as the
- * {@link BorderLayoutRegion#CENTER}:
+ * {@link Region} specification the same as the {@link Region#CENTER}:
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
@@ -63,11 +60,10 @@ import com.google.gwt.user.client.ui.Widget;
  * <p>
  * The components are laid out according to their preferred sizes or the width
  * and height specified by a {@link BorderLayoutData} object. The
- * {@link BorderLayoutRegion#NORTH} and {@link BorderLayoutRegion#SOUTH} child
- * widgets are stretched horizontally; the {@link BorderLayoutRegion#EAST} and
- * {@link BorderLayoutRegion#WEST} child widgets are stretched vertically; the
- * {@link BorderLayoutRegion#CENTER} child widget will be stretched both
- * horizontally and vertically to fill any space left over.
+ * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
+ * horizontally; the {@link Region#EAST} and {@link Region#WEST} child widgets
+ * are stretched vertically; the {@link Region#CENTER} child widget will be
+ * stretched both horizontally and vertically to fill any space left over.
  * 
  * <p>
  * Here is an example of five buttons laid out using the {@code BorderLayout}
@@ -86,10 +82,10 @@ import com.google.gwt.user.client.ui.Widget;
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.NORTH));
- *   panel.add(new Button("Button 2"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
- *   panel.add(new Button("Button 3"), new BorderLayoutData(BorderLayoutRegion.WEST));
- *   panel.add(new Button("Button 4"), new BorderLayoutData(BorderLayoutRegion.EAST));
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST));
  *   panel.add(new Button("Button 5"));
  *
  *   viewport.add(panel, true);
@@ -124,10 +120,10 @@ import com.google.gwt.user.client.ui.Widget;
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.NORTH, 50));
- *   panel.add(new Button("Button 2"), new BorderLayoutData(BorderLayoutRegion.SOUTH, 0.3));
- *   panel.add(new Button("Button 3"), new BorderLayoutData(BorderLayoutRegion.WEST, 200, 10, 300));
- *   panel.add(new Button("Button 4"), new BorderLayoutData(BorderLayoutRegion.EAST, -1));
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH, 50));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH, 0.3));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST, 200, 10, 300));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST, -1));
  *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
  *
  *   viewport.add(panel, true);
@@ -141,9 +137,8 @@ import com.google.gwt.user.client.ui.Widget;
  * </table>
  * 
  * <p>
- * In the next example the regions {@link BorderLayoutRegion#NORTH},
- * {@link BorderLayoutRegion#SOUTH}, {@link BorderLayoutRegion#EAST} and
- * {@link BorderLayoutRegion#WEST} are set to a collapsed state:
+ * In the next example the regions {@link Region#NORTH}, {@link Region#SOUTH},
+ * {@link Region#EAST} and {@link Region#WEST} are set to a collapsed state:
  * 
  * <table>
  * <tr>
@@ -170,10 +165,10 @@ import com.google.gwt.user.client.ui.Widget;
  *   Button button3 = new Button("Button 3", clickListener);
  *   Button button4 = new Button("Button 4", clickListener);
  *
- *   panel.add(button1, new BorderLayoutData(BorderLayoutRegion.NORTH));
- *   panel.add(button2, new BorderLayoutData(BorderLayoutRegion.SOUTH));
- *   panel.add(button3, new BorderLayoutData(BorderLayoutRegion.WEST));
- *   panel.add(button4, new BorderLayoutData(BorderLayoutRegion.EAST));
+ *   panel.add(button1, new BorderLayoutData(Region.NORTH));
+ *   panel.add(button2, new BorderLayoutData(Region.SOUTH));
+ *   panel.add(button3, new BorderLayoutData(Region.WEST));
+ *   panel.add(button4, new BorderLayoutData(Region.EAST));
  *  
  *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
  *   
@@ -198,7 +193,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class BorderLayout extends BaseLayout {
 
-  public enum BorderLayoutRegion {
+  public enum Region {
     NORTH, EAST, SOUTH, WEST, CENTER
   };
 
@@ -772,23 +767,23 @@ public class BorderLayout extends BaseLayout {
         continue;
       }
 
-      if (layoutData.region == BorderLayoutRegion.NORTH) {
+      if (layoutData.region == Region.NORTH) {
         if (north == null) {
           north = child;
         }
-      } else if (layoutData.region == BorderLayoutRegion.EAST) {
+      } else if (layoutData.region == Region.EAST) {
         if (east == null) {
           east = child;
         }
-      } else if (layoutData.region == BorderLayoutRegion.SOUTH) {
+      } else if (layoutData.region == Region.SOUTH) {
         if (south == null) {
           south = child;
         }
-      } else if (layoutData.region == BorderLayoutRegion.WEST) {
+      } else if (layoutData.region == Region.WEST) {
         if (west == null) {
           west = child;
         }
-      } else if (layoutData.region == BorderLayoutRegion.CENTER) {
+      } else if (layoutData.region == Region.CENTER) {
         if (center == null) {
           center = child;
         }

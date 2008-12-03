@@ -20,7 +20,7 @@ import java.util.Iterator;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
 import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
 import com.google.gwt.user.client.ui.DecoratedTabBar;
@@ -125,9 +125,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
 
     if (region == TabBarPosition.TOP) {
-      layoutPanel.add(tabBar, new BorderLayoutData(BorderLayoutRegion.NORTH));
+      layoutPanel.add(tabBar, new BorderLayoutData(Region.NORTH));
     } else {
-      layoutPanel.add(tabBar, new BorderLayoutData(BorderLayoutRegion.SOUTH));
+      layoutPanel.add(tabBar, new BorderLayoutData(Region.SOUTH));
     }
     layoutPanel.add(deck, new BorderLayoutData(decorateBody));
 
