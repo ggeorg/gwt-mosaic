@@ -15,20 +15,32 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import com.google.gwt.user.client.ui.DecoratorPanel;
-
 /**
+ * Layout data object for {@link FillLayout}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * @see FillLayout
  */
 public class FillLayoutData extends LayoutData {
 
+  /**
+   * Creates a new instance of {@code FillLayoutData}. The associated widget
+   * should be undecorated.
+   */
   public FillLayoutData() {
-    // Nothing to do here!
+    super(false);
   }
-  
-  public FillLayoutData(boolean decorate) {
-    this.decoratorPanel = decorate ? new DecoratorPanel() : null;
+
+  /**
+   * Creates a new instance of {@code FillLayoutData} by specifying that the
+   * associated widget should be decorated if parameter {@code decorate} is
+   * {@code true}, and undecorated if {@code false}.
+   * 
+   * @param decorate specifies whether the associated widget will be decorated
+   *          or not.
+   */
+  public FillLayoutData(final boolean decorate) {
+    super(decorate);
   }
 
 }

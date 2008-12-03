@@ -19,7 +19,6 @@ import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.CollapsedListenerCollection;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
 
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -27,6 +26,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class BorderLayoutData extends LayoutData {
+
+  double preferredSize = -1.0;
 
   BorderLayoutRegion region;
 
@@ -47,8 +48,8 @@ public class BorderLayoutData extends LayoutData {
   }
 
   public BorderLayoutData(BorderLayoutRegion region, boolean decorate) {
+    super(decorate);
     this.region = region;
-    this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
   public BorderLayoutData(BorderLayoutRegion region, double preferredSize) {
@@ -57,9 +58,9 @@ public class BorderLayoutData extends LayoutData {
 
   public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
       boolean decorate) {
+    super(decorate);
     this.region = region;
     this.preferredSize = preferredSize;
-    this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
   public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
@@ -69,12 +70,12 @@ public class BorderLayoutData extends LayoutData {
 
   public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
       int minSize, int maxSize, boolean decorate) {
+    super(decorate);
     this.region = region;
     this.preferredSize = preferredSize;
     this.minSize = Math.max(0, minSize);
     this.maxSize = Math.max(0, maxSize);
     this.resizable = minSize < maxSize;
-    this.decoratorPanel = decorate ? new DecoratorPanel() : null;
     // TODO
     // if (this.resizable) {
     // this.preferredSize = (this.preferredSize > this.minSize) ? Math.min(
@@ -136,4 +137,33 @@ public class BorderLayoutData extends LayoutData {
     }
   }
 
+  /**
+   * Returns the user specified preferred size of a child widget, either width
+   * or height in pixels or ratio depending on the {@link LayoutManager}.
+   * Default is -1 which means that the widget's calculated preferred size
+   * should be used instead. Values > 0 and <= 1 are ratios, 0 and values > 1
+   * are pixels.
+   * 
+   * @return the preferred size or -1 indicating that the widget's calculated
+   *         preferred size should be used instead of this value.
+   * 
+   * @see BaseLayout#getFlowWidth(com.google.gwt.user.client.ui.Widget)
+   * @see BaseLayout#getFlowHeight(com.google.gwt.user.client.ui.Widget)
+   */
+  public double getPreferredSize() {
+    return preferredSize;
+  }
+
+  /**
+   * Sets the child widget's preferred size, either width or height in pixels or
+   * ratio depending on the {@link LayoutManager}. Values > 0 and <= 1 are
+   * ratios, 0 and values > 1 are pixels, and -1 means that the widget's
+   * calculated preferred size should be used.
+   * 
+   * @param preferredSize the preferred size or -1 indicating that the widget's
+   *          calculated preferred size should be used instead of this value.
+   */
+  public void setPreferredSize(double preferredSize) {
+    this.preferredSize = preferredSize;
+  }
 }

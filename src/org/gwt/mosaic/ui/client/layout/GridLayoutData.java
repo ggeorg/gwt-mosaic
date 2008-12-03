@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import com.google.gwt.user.client.ui.DecoratorPanel;
-
 /**
  * {@code GridLayoutData} is the layout data object associated with
  * {@link GridLayout}. To set a {@code GridLayoutData} object into a widget,
@@ -60,7 +58,7 @@ public class GridLayoutData extends LayoutData {
    * @param rowSpan
    */
   public GridLayoutData(int colSpan, int rowSpan) {
-    super();
+    super(false);
     setColspan(colSpan);
     setRowspan(rowSpan);
   }
@@ -72,10 +70,9 @@ public class GridLayoutData extends LayoutData {
    * @param decorate
    */
   public GridLayoutData(int colSpan, int rowSpan, boolean decorate) {
-    super();
+    super(decorate);
     setColspan(colSpan);
     setRowspan(rowSpan);
-    this.decoratorPanel = decorate ? new DecoratorPanel() : null;
   }
 
   protected int getRowspan() {

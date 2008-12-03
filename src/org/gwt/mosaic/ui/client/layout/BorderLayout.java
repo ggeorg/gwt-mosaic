@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client.layout;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
+import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 
 import com.google.gwt.user.client.Window;
@@ -27,8 +28,173 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * A border layout lays out a {@link LayoutPanel}, arranging and resizing its
+ * widgets to fit in five regions: {@link BorderLayoutRegion#NORTH},
+ * {@link BorderLayoutRegion#SOUTH}, {@link BorderLayoutRegion#EAST},
+ * {@link BorderLayoutRegion#WEST}, and {@link BorderLayoutRegion#CENTER}.
+ * Each region will render the first visible widget added to that region. The
+ * region of the widget added to a {@link LayoutPanel} with a
+ * {@code BorderLayout} can be specified by setting a {@link BorderLayoutData}
+ * object into the widget using {@link LayoutPanel#add(Widget, LayoutData)},
+ * for example:
+ * 
+ * <pre>
+ * LayoutPanel panel = new LayoutPanel(new BorderLayout());
+ * panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
+ * </pre>
+ * 
+ * <p>
+ * As a convenience, {@code BorderLayout} interprets the absence of a
+ * {@link BorderLayoutRegion} specification the same as the
+ * {@link BorderLayoutRegion#CENTER}:
+ * 
+ * <pre>
+ * LayoutPanel panel = new LayoutPanel(new BorderLayout());
+ * panel.add(new Button("Button 1"), new BorderLayoutData(true));
+ * </pre>
+ * 
+ * or
+ * 
+ * <pre>
+ * LayoutPanel panel = new LayoutPanel(new BorderLayout());
+ * panel.add(new Button("Button 1"));
+ * </pre>
+ * 
+ * <p>
+ * The components are laid out according to their preferred sizes or the width
+ * and height specified by a {@link BorderLayoutData} object. The
+ * {@link BorderLayoutRegion#NORTH} and {@link BorderLayoutRegion#SOUTH} child
+ * widgets are stretched horizontally; the {@link BorderLayoutRegion#EAST} and
+ * {@link BorderLayoutRegion#WEST} child widgets are stretched vertically; the
+ * {@link BorderLayoutRegion#CENTER} child widget will be stretched both
+ * horizontally and vertically to fill any space left over.
+ * 
+ * <p>
+ * Here is an example of five buttons laid out using the {@code BorderLayout}
+ * layout manager. The {@link LayoutPanel} is added decorated to a
+ * {@link Viewport} so that it fills all browser's content area:
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BorderLayout1.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *
+ *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.NORTH));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(BorderLayoutRegion.WEST));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(BorderLayoutRegion.EAST));
+ *   panel.add(new Button("Button 5"));
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
+ * <p>
+ * In the next example the height of <em>Button 1</em> is set to 50 pixels,
+ * the height of <em>Button 2</em> is a ratio (30% of the height of
+ * {@link LayoutPanel LayoutPanel's} client area except paddings), the width of
+ * <em>Button 3</em> is set to 200 pixels but may be changed by the user, by
+ * dragging a split bar, to a value in the range [10, 300], and the width of
+ * <em>Button 4</em> is set to -1 which means the calculated preferred width
+ * for that child. <em>Button 5</em> is placed in a
+ * {@code com.google.gwt.user.client.ui.DecoratorPanel}.
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BorderLayout2.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *
+ *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.NORTH, 50));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(BorderLayoutRegion.SOUTH, 0.3));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(BorderLayoutRegion.WEST, 200, 10, 300));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(BorderLayoutRegion.EAST, -1));
+ *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
+ * <p>
+ * In the next example the regions {@link BorderLayoutRegion#NORTH},
+ * {@link BorderLayoutRegion#SOUTH}, {@link BorderLayoutRegion#EAST} and
+ * {@link BorderLayoutRegion#WEST} are set to a collapsed state:
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="1" src="BorderLayout3.jpg"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *
+ *   final LayoutPanel panel = new LayoutPanel(new BorderLayout());
+ *   panel.setPadding(10);
+ *   panel.setWidgetSpacing(5);
+ *
+ *   ClickListener clickListener = new ClickListener() {
+ *     public void onClick(Widget sender) {
+ *       panel.setCollapsed(sender, !panel.isCollapsed(sender));
+ *       panel.layout();
+ *     }
+ *   };
+ *
+ *   Button button1 = new Button("Button 1", clickListener);
+ *   Button button2 = new Button("Button 2", clickListener);
+ *   Button button3 = new Button("Button 3", clickListener);
+ *   Button button4 = new Button("Button 4", clickListener);
+ *
+ *   panel.add(button1, new BorderLayoutData(BorderLayoutRegion.NORTH));
+ *   panel.add(button2, new BorderLayoutData(BorderLayoutRegion.SOUTH));
+ *   panel.add(button3, new BorderLayoutData(BorderLayoutRegion.WEST));
+ *   panel.add(button4, new BorderLayoutData(BorderLayoutRegion.EAST));
+ *  
+ *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
+ *   
+ *   panel.setCollapsed(button1, true);
+ *   panel.setCollapsed(button2, true);
+ *   panel.setCollapsed(button3, true);
+ *   panel.setCollapsed(button4, true);
+ *
+ *   viewport.add(panel, true);
+ *
+ *   RootPanel.get().add(viewport);
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
+ * 
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * @see BorderLayoutData
  */
 public class BorderLayout extends BaseLayout {
 
@@ -94,7 +260,7 @@ public class BorderLayout extends BaseLayout {
           }
           height += northHeight;
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             height += (decPanel.getOffsetHeight() - north.getOffsetHeight());
           }
         }
@@ -117,7 +283,7 @@ public class BorderLayout extends BaseLayout {
           }
           height += southHeight;
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             height += (decPanel.getOffsetHeight() - south.getOffsetHeight());
           }
         }
@@ -140,7 +306,7 @@ public class BorderLayout extends BaseLayout {
           }
           width += (int) Math.round(westWidth);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             width += (decPanel.getOffsetWidth() - west.getOffsetWidth());
           }
         }
@@ -163,7 +329,7 @@ public class BorderLayout extends BaseLayout {
           }
           width += (int) Math.round(eastWidth);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             width += (decPanel.getOffsetWidth() - east.getOffsetWidth());
           }
         }
@@ -186,7 +352,7 @@ public class BorderLayout extends BaseLayout {
 
       BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+        final DecoratorPanel decPanel = layoutData.decoratorPanel;
         width += (decPanel.getOffsetWidth() - center.getOffsetWidth());
         height += (decPanel.getOffsetHeight() - center.getOffsetHeight());
       }
@@ -271,7 +437,7 @@ public class BorderLayout extends BaseLayout {
                 layoutPanel.remove(northCollapsedImageButton);
                 northCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
-                  layoutData.getDecoratorPanel().setVisible(true);
+                  layoutData.decoratorPanel.setVisible(true);
                 }
                 north.setVisible(true);
                 layoutPanel.layout();
@@ -280,7 +446,7 @@ public class BorderLayout extends BaseLayout {
             });
             layoutPanel.add(northCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
-              layoutData.getDecoratorPanel().setVisible(false);
+              layoutData.decoratorPanel.setVisible(false);
             }
             north.setVisible(false);
           }
@@ -299,7 +465,7 @@ public class BorderLayout extends BaseLayout {
 
           h = northHeight;
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             final int decPanelBorderWidth = decPanel.getOffsetWidth()
                 - north.getOffsetWidth();
             final int decPanelBorderHeight = decPanel.getOffsetHeight()
@@ -351,7 +517,7 @@ public class BorderLayout extends BaseLayout {
                 layoutPanel.remove(southCollapsedImageButton);
                 southCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
-                  layoutData.getDecoratorPanel().setVisible(true);
+                  layoutData.decoratorPanel.setVisible(true);
                 }
                 south.setVisible(true);
                 layoutPanel.layout();
@@ -360,7 +526,7 @@ public class BorderLayout extends BaseLayout {
             });
             layoutPanel.add(southCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
-              layoutData.getDecoratorPanel().setVisible(false);
+              layoutData.decoratorPanel.setVisible(false);
             }
             south.setVisible(false);
           }
@@ -379,7 +545,7 @@ public class BorderLayout extends BaseLayout {
 
           h = (int) Math.round(southHeight);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             final int _width = Math.max(0, right - left)
                 - (decPanel.getOffsetWidth() - south.getOffsetWidth());
             final int _top = Math.max(0, bottom - h)
@@ -430,7 +596,7 @@ public class BorderLayout extends BaseLayout {
                 layoutPanel.remove(westCollapsedImageButton);
                 westCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
-                  layoutData.getDecoratorPanel().setVisible(true);
+                  layoutData.decoratorPanel.setVisible(true);
                 }
                 west.setVisible(true);
                 layoutPanel.layout();
@@ -439,7 +605,7 @@ public class BorderLayout extends BaseLayout {
             });
             layoutPanel.add(westCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
-              layoutData.getDecoratorPanel().setVisible(false);
+              layoutData.decoratorPanel.setVisible(false);
             }
             west.setVisible(false);
           }
@@ -457,7 +623,7 @@ public class BorderLayout extends BaseLayout {
 
           w = (int) Math.round(westWidth);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             final int _height = Math.max(0, bottom - top)
                 - (decPanel.getOffsetHeight() - west.getOffsetHeight());
             setBounds(layoutPanel, west, left, top, w, _height);
@@ -506,7 +672,7 @@ public class BorderLayout extends BaseLayout {
                 layoutPanel.remove(eastCollapsedImageButton);
                 eastCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
-                  layoutData.getDecoratorPanel().setVisible(true);
+                  layoutData.decoratorPanel.setVisible(true);
                 }
                 east.setVisible(true);
                 layoutPanel.layout();
@@ -515,7 +681,7 @@ public class BorderLayout extends BaseLayout {
             });
             layoutPanel.add(eastCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
-              layoutData.getDecoratorPanel().setVisible(false);
+              layoutData.decoratorPanel.setVisible(false);
             }
             east.setVisible(false);
           }
@@ -533,7 +699,7 @@ public class BorderLayout extends BaseLayout {
 
           w = (int) Math.round(eastWidth);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             final int decPanelBorderWidth = decPanel.getOffsetWidth()
                 - east.getOffsetWidth();
             final int decPanelBorderHeight = decPanel.getOffsetHeight()
@@ -560,7 +726,7 @@ public class BorderLayout extends BaseLayout {
 
       BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+        final DecoratorPanel decPanel = layoutData.decoratorPanel;
         final int decPanelBorderWidth = decPanel.getOffsetWidth()
             - center.getOffsetWidth();
         final int decPanelBorderHeight = decPanel.getOffsetHeight()

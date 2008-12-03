@@ -170,6 +170,7 @@ import com.google.gwt.user.client.ui.Widget;
  * </table>
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * @see BoxLayoutData
  */
 public class BoxLayout extends BaseLayout {
 
@@ -233,15 +234,17 @@ public class BoxLayout extends BaseLayout {
         return result;
       }
 
-      final int size = getVisibleWidgetCount(layoutPanel);
-      if (size == 0) {
-        return result;
-      }
-
       final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
       int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]);
       int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]);
+      
+      final int size = getVisibleWidgetCount(layoutPanel);
+      if (size == 0) {
+        result[0] = width;
+        result[1] = height;
+        return result;
+      }
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -284,7 +287,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             width += getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
               width += decPanelBorderWidth;
@@ -300,7 +303,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
               layoutData.calcHeight += decPanelBorderHeight;
@@ -318,7 +321,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             height += getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
               height += decPanelBorderHeight;
@@ -334,7 +337,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
               layoutData.calcWidth += decPanelBorderWidth;
@@ -467,7 +470,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
               layoutData.calcWidth += decPanelBorderWidth;
@@ -487,7 +490,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
               layoutData.calcHeight += decPanelBorderHeight;
@@ -508,7 +511,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcHeight = getFlowHeight(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
               layoutData.calcHeight += decPanelBorderHeight;
@@ -528,7 +531,7 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcWidth = getFlowWidth(child);
             if (layoutData.hasDecoratorPanel()) {
-              final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+              final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
               layoutData.calcWidth += decPanelBorderWidth;
@@ -571,7 +574,7 @@ public class BoxLayout extends BaseLayout {
         // TODO to check again
 
         if (layoutData.hasDecoratorPanel()) {
-          final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+          final DecoratorPanel decPanel = layoutData.decoratorPanel;
           final int decPanelBorderWidth = decPanel.getOffsetWidth()
               - child.getOffsetWidth();
 
