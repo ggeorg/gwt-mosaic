@@ -25,7 +25,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
@@ -405,7 +405,7 @@ public abstract class MessageBox extends WindowPanel {
       this.image = image;
       imageWrapper = new WidgetWrapper(image);
       layoutPanel.add(imageWrapper, new BorderLayoutData(
-          BorderLayoutRegion.WEST));
+          Region.WEST));
     }
   }
 

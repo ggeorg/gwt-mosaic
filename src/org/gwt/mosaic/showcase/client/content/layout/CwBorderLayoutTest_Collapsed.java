@@ -30,7 +30,7 @@ import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
@@ -95,7 +95,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
       }
     });
 
-    layoutPanel.add(northPanel, new BorderLayoutData(BorderLayoutRegion.NORTH,
+    layoutPanel.add(northPanel, new BorderLayoutData(Region.NORTH,
         0.20, true));
     layoutPanel.setCollapsed(northPanel, true);
 
@@ -117,7 +117,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
       }
     });
 
-    layoutPanel.add(southPanel, new BorderLayoutData(BorderLayoutRegion.SOUTH,
+    layoutPanel.add(southPanel, new BorderLayoutData(Region.SOUTH,
         0.20, true));
     layoutPanel.setCollapsed(southPanel, true);
 
@@ -138,7 +138,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
       }
     });
 
-    layoutPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST,
+    layoutPanel.add(westPanel, new BorderLayoutData(Region.WEST,
         0.2, true));
     layoutPanel.setCollapsed(westPanel, true);
 
@@ -159,7 +159,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
       }
     });
 
-    layoutPanel.add(eastPanel, new BorderLayoutData(BorderLayoutRegion.EAST,
+    layoutPanel.add(eastPanel, new BorderLayoutData(Region.EAST,
         0.2, true));
     layoutPanel.setCollapsed(eastPanel, true);
 

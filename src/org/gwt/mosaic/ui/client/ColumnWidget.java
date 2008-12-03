@@ -28,7 +28,7 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
 
 import com.google.gwt.core.client.GWT;
@@ -633,9 +633,9 @@ public abstract class ColumnWidget extends LayoutComposite {
 
     // Adopt the header and the data tables into the panel
     if (headerTable != null) {
-      adoptTable(headerTable, headerWrapper, BorderLayoutRegion.NORTH);
+      adoptTable(headerTable, headerWrapper, Region.NORTH);
     }
-    adoptTable(dataTable, dataWrapper, BorderLayoutRegion.CENTER);
+    adoptTable(dataTable, dataWrapper, Region.CENTER);
 
     final ScrollTableImages images = (ScrollTableImages) GWT.create(ScrollTableImages.class);
 
@@ -715,7 +715,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    * @param region the border layout region to insert the wrapper
    */
   private void adoptTable(Widget table, AbsolutePanel wrapper,
-      BorderLayoutRegion region) {
+      Region region) {
     wrapper.add(table);
     getWidget().add(wrapper, new BorderLayoutData(region));
   }
@@ -1323,7 +1323,7 @@ public abstract class ColumnWidget extends LayoutComposite {
       }
 
       // Adopt the footer table into the panel
-      adoptTable(footerTable, footerWrapper, BorderLayoutRegion.SOUTH);
+      adoptTable(footerTable, footerWrapper, Region.SOUTH);
     }
   }
 

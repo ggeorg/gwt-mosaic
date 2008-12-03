@@ -26,7 +26,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
@@ -134,7 +134,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
 
     HTML caption = new HTML(
         "<b>A very boring demo showing the speed difference of using bulk loading tables.</b>");
-    layoutPanel.add(caption, new BorderLayoutData(BorderLayoutRegion.NORTH));
+    layoutPanel.add(caption, new BorderLayoutData(Region.NORTH));
 
     LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
 
@@ -229,7 +229,7 @@ public class CwTableLoadingBenchmark extends ContentWidget {
         });
     panel.add(pendingAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    layoutPanel.add(panel, new BorderLayoutData(BorderLayoutRegion.WEST, 250,
+    layoutPanel.add(panel, new BorderLayoutData(Region.WEST, 250,
         true));
     layoutPanel.add(center, new BorderLayoutData(true));
 

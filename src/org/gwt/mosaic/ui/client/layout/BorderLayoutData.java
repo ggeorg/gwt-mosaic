@@ -17,59 +17,223 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.CollapsedListenerCollection;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Layout data object for {@link BorderLayout}. Each widget controlled by a
+ * {@link BorderLayout} can have its initial size and region specified by an
+ * instance of this layout data object.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @see BorderLayout
  */
 public class BorderLayoutData extends LayoutData {
 
   double preferredSize = -1.0;
 
-  BorderLayoutRegion region;
+  Region region;
 
   boolean resizable, collapse;
 
   int minSize = 0, maxSize = -1;
 
+  /**
+   * Creates a new instance of {@code BorderLayoutData}. The associated widget
+   * should be undecorated. The region of the widget added to a
+   * {@link LayoutPanel} is specified to {@link Region#CENTER}. The widget will
+   * be stretched both horizontally and vertically to fill any space left over.
+   */
   public BorderLayoutData() {
-    this(BorderLayoutRegion.CENTER, false);
+    this(Region.CENTER, false);
   }
 
+  /**
+   * Creates a new instance of {@code BorderLayoutData} by specifying that the
+   * associated widget should be decorated if parameter {@code decorate} is
+   * {@code true}, and undecorated if {@code false}. The region of the widget
+   * added to a {@link LayoutPanel} is specified to {@link Region#CENTER}. The
+   * widget will be stretched both horizontally and vertically to fill any space
+   * left over.
+   * 
+   * @param decorate decorate specifies whether the associated widget will be
+   *          decorated or not.
+   */
   public BorderLayoutData(boolean decorate) {
-    this(BorderLayoutRegion.CENTER, decorate);
+    this(Region.CENTER, decorate);
   }
 
-  public BorderLayoutData(BorderLayoutRegion region) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData}. The associated widget
+   * should be undecorated. The region of the widget added to a
+   * {@link LayoutPanel} is specified by the {@code region} parameter. The
+   * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
+   * horizontally, while the height of the widgets is set to the calculated
+   * preferred height; the {@link Region#EAST} and {@link Region#WEST} child
+   * widgets are stretched vertically, while the width of the widgets is set to
+   * the calculated preferred width; the {@link Region#CENTER} child widget will
+   * be stretched both horizontally and vertically to fill any space left over.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   */
+  public BorderLayoutData(Region region) {
     this(region, false);
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, boolean decorate) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData} by specifying that the
+   * associated widget should be decorated if parameter {@code decorate} is
+   * {@code true}, and undecorated if {@code false}. The region of the widget
+   * added to a {@link LayoutPanel} is specified by the {@code region}
+   * parameter. The {@link Region#NORTH} and {@link Region#SOUTH} child widgets
+   * are stretched horizontally, while the height of the widgets is set to the
+   * calculated preferred height; the {@link Region#EAST} and
+   * {@link Region#WEST} child widgets are stretched vertically, while the width
+   * of the widgets is set to the calculated preferred width; the
+   * {@link Region#CENTER} child widget will be stretched both horizontally and
+   * vertically to fill any space left over.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param decorate decorate specifies whether the associated widget will be
+   *          decorated or not.
+   */
+  public BorderLayoutData(Region region, boolean decorate) {
     super(decorate);
     this.region = region;
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, double preferredSize) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData}. The associated widget
+   * should be undecorated. The region of the widget added to a
+   * {@link LayoutPanel} is specified by the {@code region} parameter. The
+   * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
+   * horizontally, while the height of the widgets is specified by the
+   * {@code preferredSize} parameter; the {@link Region#EAST} and
+   * {@link Region#WEST} child widgets are stretched vertically, while the width
+   * of the widgets is specified by the {@code preferredSize} parameter; the
+   * {@link Region#CENTER} child widget will be stretched both horizontally and
+   * vertically to fill any space left over.
+   * <p>
+   * For {@code preferredSize} parameter values > 0 and <= 1 are in ratios of
+   * the available client area except paddings, 0 and values > 1 are in pixels,
+   * and -1 means the calculated preferred size.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param preferredSize the preferred size or -1 indicating that the widget's
+   *          calculated preferred size should be used instead of this value.
+   */
+  public BorderLayoutData(Region region, double preferredSize) {
     this(region, preferredSize, false);
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
-      boolean decorate) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData} by specifying that the
+   * associated widget should be decorated if parameter {@code decorate} is
+   * {@code true}, and undecorated if {@code false}. The associated widget
+   * should be undecorated. The region of the widget added to a
+   * {@link LayoutPanel} is specified by the {@code region} parameter. The
+   * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
+   * horizontally, while the height of the widgets is specified by the
+   * {@code preferredSize} parameter; the {@link Region#EAST} and
+   * {@link Region#WEST} child widgets are stretched vertically, while the width
+   * of the widgets is specified by the {@code preferredSize} parameter; the
+   * {@link Region#CENTER} child widget will be stretched both horizontally and
+   * vertically to fill any space left over.
+   * <p>
+   * For {@code preferredSize} parameter values > 0 and <= 1 are in ratios of
+   * the available client area except paddings, 0 and values > 1 are in pixels,
+   * and -1 means the calculated preferred size.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param preferredSize the preferred size or -1 indicating that the widget's
+   *          calculated preferred size should be used instead of this value.
+   * @param decorate decorate specifies whether the associated widget will be
+   *          decorated or not.
+   */
+  public BorderLayoutData(Region region, double preferredSize, boolean decorate) {
     super(decorate);
     this.region = region;
     this.preferredSize = preferredSize;
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
-      int minSize, int maxSize) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData}. The associated widget
+   * should be undecorated. The region of the widget added to a
+   * {@link LayoutPanel} is specified by the {@code region} parameter. The
+   * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
+   * horizontally, while the initial height of the widgets is specified by the
+   * {@code preferredSize} parameter; the {@link Region#EAST} and
+   * {@link Region#WEST} child widgets are stretched vertically, while the
+   * initial width of the widgets is specified by the {@code preferredSize}
+   * parameter; the {@link Region#CENTER} child widget will be stretched both
+   * horizontally and vertically to fill any space left over.
+   * <p>
+   * The {@code minSize} and {@code maxSize} parameters specify that the height,
+   * for widgets placed on the {@link Region#NORTH} and {@link Region#SOUTH}
+   * regions, or the width, for widgets placed on the {@link Region#EAST} and
+   * {@link Region#WEST} regions, can be changed by the user by dragging a split
+   * bar, to the value in the range [minSize, maxSize].
+   * <p>
+   * For all size parameter values > 0 and <= 1 are in ratios of the available
+   * client area except paddings, 0 and values > 1 are in pixels, and -1 means
+   * the calculated preferred size.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param preferredSize the preferred size or -1 indicating that the widget's
+   *          calculated preferred size should be used instead of this value.
+   * @param minSize the minimum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   * @param maxSize the maximum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   */
+  public BorderLayoutData(Region region, double preferredSize, int minSize,
+      int maxSize) {
     this(region, preferredSize, minSize, maxSize, false);
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, double preferredSize,
-      int minSize, int maxSize, boolean decorate) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData} by specifying that the
+   * associated widget should be decorated if parameter {@code decorate} is
+   * {@code true}, and undecorated if {@code false}. The region of the widget
+   * added to a {@link LayoutPanel} is specified by the {@code region}
+   * parameter. The {@link Region#NORTH} and {@link Region#SOUTH} child widgets
+   * are stretched horizontally, while the initial height of the widgets is
+   * specified by the {@code preferredSize} parameter; the {@link Region#EAST}
+   * and {@link Region#WEST} child widgets are stretched vertically, while the
+   * initial width of the widgets is specified by the {@code preferredSize}
+   * parameter; the {@link Region#CENTER} child widget will be stretched both
+   * horizontally and vertically to fill any space left over.
+   * <p>
+   * The {@code minSize} and {@code maxSize} parameters specify that the height,
+   * for widgets placed on the {@link Region#NORTH} and {@link Region#SOUTH}
+   * regions, or the width, for widgets placed on the {@link Region#EAST} and
+   * {@link Region#WEST} regions, can be changed by the user by dragging a split
+   * bar, to the value in the range [minSize, maxSize].
+   * <p>
+   * For all size parameter values > 0 and <= 1 are in ratios of the available
+   * client area except paddings, 0 and values > 1 are in pixels, and -1 means
+   * the calculated preferred size.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param preferredSize the preferred size or -1 indicating that the widget's
+   *          calculated preferred size should be used instead of this value.
+   * @param minSize the minimum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   * @param maxSize the maximum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   * @param decorate decorate specifies whether the associated widget will be
+   *          decorated or not.
+   */
+  public BorderLayoutData(Region region, double preferredSize, int minSize,
+      int maxSize, boolean decorate) {
     super(decorate);
     this.region = region;
     this.preferredSize = preferredSize;
@@ -83,24 +247,111 @@ public class BorderLayoutData extends LayoutData {
     // }
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize) {
+  /**
+   * Creates a new instance of {@code BorderLayoutData}. The associated widget
+   * should be undecorated. The region of the widget added to a
+   * {@link LayoutPanel} is specified by the {@code region} parameter. The
+   * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
+   * horizontally, while the initial height of the widgets is set to the
+   * calculated preferred height; the {@link Region#EAST} and
+   * {@link Region#WEST} child widgets are stretched vertically, while the
+   * initial width of the widgets is set to the calculated preferred width; the
+   * {@link Region#CENTER} child widget will be stretched both horizontally and
+   * vertically to fill any space left over.
+   * <p>
+   * The {@code minSize} and {@code maxSize} parameters specify that the height,
+   * for widgets placed on the {@link Region#NORTH} and {@link Region#SOUTH}
+   * regions, or the width, for widgets placed on the {@link Region#EAST} and
+   * {@link Region#WEST} regions, can be changed by the user by dragging a split
+   * bar, to the value in the range [minSize, maxSize].
+   * <p>
+   * For all size parameter values > 0 and <= 1 are in ratios of the available
+   * client area except paddings, 0 and values > 1 are in pixels, and -1 means
+   * the calculated preferred size.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param minSize the minimum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   * @param maxSize the maximum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   */
+  public BorderLayoutData(Region region, int minSize, int maxSize) {
     this(region, -1.0, minSize, maxSize, false);
   }
 
-  public BorderLayoutData(BorderLayoutRegion region, int minSize, int maxSize,
+  /**
+   * Creates a new instance of {@code BorderLayoutData} by specifying that the
+   * associated widget should be decorated if parameter {@code decorate} is
+   * {@code true}, and undecorated if {@code false}. The region of the widget
+   * added to a {@link LayoutPanel} is specified by the {@code region}
+   * parameter. The {@link Region#NORTH} and {@link Region#SOUTH} child widgets
+   * are stretched horizontally, while the initial height of the widgets is set
+   * to the calculated preferred height; the {@link Region#EAST} and
+   * {@link Region#WEST} child widgets are stretched vertically, while the
+   * initial width of the widgets is set to the calculated preferred width; the
+   * {@link Region#CENTER} child widget will be stretched both horizontally and
+   * vertically to fill any space left over.
+   * <p>
+   * The {@code minSize} and {@code maxSize} parameters specify that the height,
+   * for widgets placed on the {@link Region#NORTH} and {@link Region#SOUTH}
+   * regions, or the width, for widgets placed on the {@link Region#EAST} and
+   * {@link Region#WEST} regions, can be changed by the user by dragging a split
+   * bar, to the value in the range [minSize, maxSize].
+   * <p>
+   * For all size parameter values > 0 and <= 1 are in ratios of the available
+   * client area except paddings, 0 and values > 1 are in pixels, and -1 means
+   * the calculated preferred size.
+   * 
+   * @param region the region of the widget added to a {@link LayoutPanel} with
+   *          a {@code BorderLayout}.
+   * @param minSize the minimum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   * @param maxSize the maximum widget size, either width or height, that the
+   *          widget can be resized to by the user, by dragging a split bar.
+   * @param decorate decorate specifies whether the associated widget will be
+   *          decorated or not.
+   */
+  public BorderLayoutData(Region region, int minSize, int maxSize,
       boolean decorate) {
     this(region, -1.0, minSize, maxSize, decorate);
   }
 
+  /**
+   * Gets the maximum widget size, either height for widgets placed on
+   * {@link Region#NORTH} and {@link Region#SOUTH} or width for widgets placed
+   * on {@link Region#WEST} and {@link Region#EAST}, that the widget can be
+   * resized by dragging a split bar. Values > 0 and <= 1 are in ratios of the
+   * available client area except paddings, 0 and values > 1 are in pixels, and
+   * -1 means the calculated preferred size.
+   * 
+   * @return the maximum widget size, either width or height, that the widget
+   *         can be resized by dragging a split bar.
+   */
   public int getMaxSize() {
     return maxSize;
   }
 
+  /**
+   * Gets the minimum widget size, either height for widgets placed on
+   * {@link Region#NORTH} and {@link Region#SOUTH} or width for widgets placed
+   * on {@link Region#WEST} and {@link Region#EAST}, that the widget can be
+   * resized by dragging a split bar. Values > 0 and <= 1 are in ratios of the
+   * available client area except paddings, 0 and values > 1 are in pixels, and
+   * -1 means the calculated preferred size.
+   * 
+   * @return the maximum widget size, either width or height, that the widget
+   *         can be resized by dragging a split bar.
+   */
   public int getMinSize() {
     return minSize;
   }
 
-  public BorderLayoutRegion getRegion() {
+  /**
+   * 
+   * @return
+   */
+  public Region getRegion() {
     return region;
   }
 

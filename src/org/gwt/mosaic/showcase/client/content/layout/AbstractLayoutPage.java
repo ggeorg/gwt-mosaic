@@ -22,7 +22,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
@@ -83,11 +83,11 @@ public abstract class AbstractLayoutPage extends ContentWidget {
     final Button b4 = new Button("Button 4");
     final Button b5 = new Button("Button 5");
 
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
-    layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+    layoutPanel.add(b1, new BorderLayoutData(Region.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(Region.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(Region.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(Region.EAST, 10, 200));
+    layoutPanel.add(b5, new BorderLayoutData(Region.CENTER, true));
   }
 
   /**
@@ -104,11 +104,11 @@ public abstract class AbstractLayoutPage extends ContentWidget {
 
     final LayoutPanel layoutPanel1 = new LayoutPanel(new BorderLayout());
 
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
-    layoutPanel.add(layoutPanel1, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+    layoutPanel.add(b1, new BorderLayoutData(Region.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(Region.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(Region.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(Region.EAST, 10, 200));
+    layoutPanel.add(layoutPanel1, new BorderLayoutData(Region.CENTER, true));
 
     final Button b11 = new Button("Button 11");
     final Button b12 = new Button("Button 12");
@@ -116,11 +116,11 @@ public abstract class AbstractLayoutPage extends ContentWidget {
     final Button b14 = new Button("Button 14");
     final Button b15 = new Button("Button 15");
 
-    layoutPanel1.add(b11, new BorderLayoutData(BorderLayoutRegion.NORTH));
-    layoutPanel1.add(b12, new BorderLayoutData(BorderLayoutRegion.SOUTH));
-    layoutPanel1.add(b13, new BorderLayoutData(BorderLayoutRegion.WEST));
-    layoutPanel1.add(b14, new BorderLayoutData(BorderLayoutRegion.EAST));
-    layoutPanel1.add(b15, new BorderLayoutData(BorderLayoutRegion.CENTER));
+    layoutPanel1.add(b11, new BorderLayoutData(Region.NORTH));
+    layoutPanel1.add(b12, new BorderLayoutData(Region.SOUTH));
+    layoutPanel1.add(b13, new BorderLayoutData(Region.WEST));
+    layoutPanel1.add(b14, new BorderLayoutData(Region.EAST));
+    layoutPanel1.add(b15, new BorderLayoutData(Region.CENTER));
   }
 
   /**
@@ -137,11 +137,11 @@ public abstract class AbstractLayoutPage extends ContentWidget {
 
     final LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
 
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
-    layoutPanel.add(layoutPanel1, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+    layoutPanel.add(b1, new BorderLayoutData(Region.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(Region.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(Region.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(Region.EAST, 10, 200));
+    layoutPanel.add(layoutPanel1, new BorderLayoutData(Region.CENTER, true));
 
     final Button b11 = new Button("Button 11");
     final Button b12 = new Button("Button 12");

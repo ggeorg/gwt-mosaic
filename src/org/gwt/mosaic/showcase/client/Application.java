@@ -27,7 +27,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
@@ -156,7 +156,7 @@ public class Application extends Viewport implements HasLayoutManager {
       }
     });
 
-    bottomPanel.add(westPanel, new BorderLayoutData(BorderLayoutRegion.WEST,
+    bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST,
         200, 100, 350, true));
     //bottomPanel.setCollapsed(westPanel, true);
 

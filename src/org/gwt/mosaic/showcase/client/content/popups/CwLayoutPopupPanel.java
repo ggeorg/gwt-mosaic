@@ -28,7 +28,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -211,11 +211,11 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     panel.setPadding(0);
 
     panel.add(new Button("North"), new BorderLayoutData(
-        BorderLayoutRegion.NORTH));
+        Region.NORTH));
     panel.add(new Button("South"), new BorderLayoutData(
-        BorderLayoutRegion.SOUTH));
-    panel.add(new Button("West"), new BorderLayoutData(BorderLayoutRegion.WEST));
-    panel.add(new Button("East"), new BorderLayoutData(BorderLayoutRegion.EAST));
+        Region.SOUTH));
+    panel.add(new Button("West"), new BorderLayoutData(Region.WEST));
+    panel.add(new Button("East"), new BorderLayoutData(Region.EAST));
     panel.add(new Button("Center"));
 
     return panel;
@@ -247,10 +247,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     };
 
-    panel.add(new Button("North"), new BorderLayoutData(BorderLayoutRegion.NORTH));
-    panel.add(new Button("South"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
-    panel.add(new Button("West"), new BorderLayoutData(BorderLayoutRegion.WEST));
-    panel.add(new Button("East"), new BorderLayoutData(BorderLayoutRegion.EAST));
+    panel.add(new Button("North"), new BorderLayoutData(Region.NORTH));
+    panel.add(new Button("South"), new BorderLayoutData(Region.SOUTH));
+    panel.add(new Button("West"), new BorderLayoutData(Region.WEST));
+    panel.add(new Button("East"), new BorderLayoutData(Region.EAST));
     panel.add(new Button("Click Me!", cl1));
     
     return panel;

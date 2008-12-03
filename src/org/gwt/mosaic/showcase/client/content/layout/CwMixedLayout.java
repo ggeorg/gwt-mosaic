@@ -23,7 +23,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
@@ -72,12 +72,12 @@ public class CwMixedLayout extends ContentWidget {
     final LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
 
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
+    layoutPanel.add(b1, new BorderLayoutData(Region.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(Region.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(Region.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(Region.EAST, 10, 200));
     layoutPanel.add(layoutPanel1, new BorderLayoutData(
-        BorderLayoutRegion.CENTER, true));
+        Region.CENTER, true));
 
     final Button b11 = new Button("Button 11");
     final Button b12 = new Button("Button 12");

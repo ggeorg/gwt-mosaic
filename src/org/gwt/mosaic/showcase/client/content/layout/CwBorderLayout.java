@@ -21,7 +21,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.BorderLayoutRegion;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
@@ -68,11 +68,11 @@ public class CwBorderLayout extends ContentWidget {
     final Button b4 = new Button("Button 4");
     final Button b5 = new Button("Button 5");
     
-    layoutPanel.add(b1, new BorderLayoutData(BorderLayoutRegion.NORTH, 10, 200));
-    layoutPanel.add(b2, new BorderLayoutData(BorderLayoutRegion.SOUTH, 10, 200));
-    layoutPanel.add(b3, new BorderLayoutData(BorderLayoutRegion.WEST, 10, 200));
-    layoutPanel.add(b4, new BorderLayoutData(BorderLayoutRegion.EAST, 10, 200));
-    layoutPanel.add(b5, new BorderLayoutData(BorderLayoutRegion.CENTER, true));
+    layoutPanel.add(b1, new BorderLayoutData(Region.NORTH, 10, 200));
+    layoutPanel.add(b2, new BorderLayoutData(Region.SOUTH, 10, 200));
+    layoutPanel.add(b3, new BorderLayoutData(Region.WEST, 10, 200));
+    layoutPanel.add(b4, new BorderLayoutData(Region.EAST, 10, 200));
+    layoutPanel.add(b5, new BorderLayoutData(Region.CENTER, true));
     
     return layoutPanel;
   }
