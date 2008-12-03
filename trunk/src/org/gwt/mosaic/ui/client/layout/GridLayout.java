@@ -290,7 +290,7 @@ public class GridLayout extends BaseLayout {
           }
           final GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             final int offsetWidth = decPanel.getOffsetWidth()
                 - widget.getOffsetWidth();
             final int offsetHeight = decPanel.getOffsetHeight()

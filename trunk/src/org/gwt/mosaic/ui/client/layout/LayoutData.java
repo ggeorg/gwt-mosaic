@@ -18,29 +18,40 @@ package org.gwt.mosaic.ui.client.layout;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
 /**
+ * Base class for all layout data objects.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public abstract class LayoutData {
+public class LayoutData {
 
-  double preferredSize = -1.0;
+  final transient DecoratorPanel decoratorPanel;
 
-  DecoratorPanel decoratorPanel;
-
-  DecoratorPanel getDecoratorPanel() {
-    return decoratorPanel;
+  /**
+   * Creates a new instance of {@code LayoutData} by specifying that the
+   * associated widget should be decorated.
+   * 
+   * @param decorate specifies whether the associated widget will be decorated
+   *          or not.
+   */
+  protected LayoutData(final boolean decorate) {
+    if (decorate) {
+      decoratorPanel = new DecoratorPanel();
+    } else {
+      decoratorPanel = null;
+    }
   }
 
-  public double getPreferredSize() {
-    return preferredSize;
-  }
-
-  public boolean hasDecoratorPanel() {
+  /**
+   * If the child widget is decorated (if the child widget is placed in a
+   * {@code com.google.gwt.user.client.ui.DecoratorPanel}), this method returns
+   * {@code true}, if not this method will return {@code false}.
+   * 
+   * @return {@code true} if the child widget is placed in a
+   *         {@code com.google.gwt.user.client.ui.DecoratorPanel},
+   *         {@code false} otherwise.
+   */
+  public final boolean hasDecoratorPanel() {
     return decoratorPanel != null;
-  }
-
-  protected void setPreferredSize(double preferredSize) {
-    this.preferredSize = preferredSize;
   }
 
 }

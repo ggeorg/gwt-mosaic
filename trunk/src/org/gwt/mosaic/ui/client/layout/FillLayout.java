@@ -83,6 +83,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * @see FillLayoutData
  */
 public class FillLayout extends BaseLayout {
 
@@ -123,7 +124,7 @@ public class FillLayout extends BaseLayout {
         result[1] = getFlowHeight(child);
 
         if (layoutData.hasDecoratorPanel()) {
-          final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+          final DecoratorPanel decPanel = layoutData.decoratorPanel;
           result[0] += decPanel.getOffsetWidth() - child.getOffsetWidth();
           result[1] += decPanel.getOffsetHeight() - child.getOffsetHeight();
         }
@@ -188,7 +189,7 @@ public class FillLayout extends BaseLayout {
         FillLayoutData layoutData = (FillLayoutData) layoutDataObject;
 
         if (layoutData.hasDecoratorPanel()) {
-          final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+          final DecoratorPanel decPanel = layoutData.decoratorPanel;
           final int offsetWidth = decPanel.getOffsetWidth()
               - child.getOffsetWidth();
           final int offsetHeight = decPanel.getOffsetHeight()

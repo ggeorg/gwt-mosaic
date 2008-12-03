@@ -246,7 +246,7 @@ public class FormLayout extends GridLayout {
           }
           // ----
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+            final DecoratorPanel decPanel = layoutData.decoratorPanel;
             final int offsetWidth = decPanel.getOffsetWidth()
                 - widget.getOffsetWidth();
             final int offsetHeight = decPanel.getOffsetHeight()

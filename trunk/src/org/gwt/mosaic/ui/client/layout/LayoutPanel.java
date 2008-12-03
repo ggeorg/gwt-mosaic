@@ -98,7 +98,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
     BaseLayout.setLayoutData(widget, layoutData);
     if (layoutData.hasDecoratorPanel()) {
-      final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+      final DecoratorPanel decPanel = layoutData.decoratorPanel;
       decPanel.setWidget(widget);
       decPanel.setVisible(widget.isVisible());
       super.add(decPanel);
@@ -110,7 +110,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   private Widget getDecoratorWidget(Widget widget) {
     LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
     if (layoutData != null && layoutData.hasDecoratorPanel()) {
-      return layoutData.getDecoratorPanel();
+      return layoutData.decoratorPanel;
     }
     return widget;
   }
@@ -161,7 +161,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       widget = ((DecoratorPanel) widget).getWidget();
       LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        return layoutData.getDecoratorPanel().getWidget();
+        return layoutData.decoratorPanel.getWidget();
       }
     }
     return widget;
@@ -216,7 +216,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
     BaseLayout.setLayoutData(w, layoutData);
     if (layoutData.hasDecoratorPanel()) {
-      final DecoratorPanel decPanel = layoutData.getDecoratorPanel();
+      final DecoratorPanel decPanel = layoutData.decoratorPanel;
       decPanel.setWidget(w);
       super.insert(decPanel, getElement(), beforeIndex, true);
     } else {
