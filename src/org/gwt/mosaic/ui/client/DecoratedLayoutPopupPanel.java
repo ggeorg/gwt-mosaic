@@ -19,6 +19,8 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -99,6 +101,12 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   @Override
   protected void onLoad() {
     afterLoad();
+    
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        layout();
+      }
+    });
   }
 
   protected LayoutPanel getLayoutPanel() {
@@ -145,7 +153,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     decorationWidthCache = (box[0] - size[0]);
     decorationHeightCache = (box[1] - size[1]);
   }
-  
+
   private boolean initialized = false;
 
   protected void afterLoad() {
@@ -153,7 +161,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
       return;
     }
     initialized = true;
-    
+
     int[] prefSize = layoutPanel.getPreferredSize();
 
     if (desiredWidth != null && desiredHeight != null) {
@@ -207,7 +215,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
       setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
     }
 
-    layout();
+    // layout();
   }
 
   private String desiredHeight = null;
