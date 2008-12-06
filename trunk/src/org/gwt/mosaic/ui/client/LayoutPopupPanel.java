@@ -19,6 +19,8 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -83,6 +85,12 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   @Override
   protected void onLoad() {
     afterLoad();
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        layout();
+      }
+    });
   }
 
   protected LayoutPanel getLayoutPanel() {
