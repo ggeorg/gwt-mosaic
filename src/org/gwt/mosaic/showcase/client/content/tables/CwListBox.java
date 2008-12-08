@@ -28,7 +28,6 @@ import org.gwt.mosaic.ui.client.ToolBar;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
-import org.gwt.mosaic.ui.client.ListBox.DataGrid;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -219,16 +218,17 @@ public class CwListBox extends ContentWidget {
         "Name", "Gender", "Married"});
     listBox.setContextMenu(createContextMenu());
     listBox.setCellRenderer(new CellRenderer<Person>() {
-      public void renderCell(DataGrid grid, int row, int column, Person item) {
+      public void renderCell(ListBox<Person> listBox, int row, int column,
+          Person item) {
         switch (column) {
           case 0:
-            grid.setText(row, column, item.getName());
+            listBox.setText(row, column, item.getName());
             break;
           case 1:
-            grid.setText(row, column, item.getGender());
+            listBox.setText(row, column, item.getGender());
             break;
           case 2:
-            grid.setText(row, column, String.valueOf(item.isMarried()));
+            listBox.setText(row, column, String.valueOf(item.isMarried()));
             break;
           default:
             throw new RuntimeException("Should not happen");

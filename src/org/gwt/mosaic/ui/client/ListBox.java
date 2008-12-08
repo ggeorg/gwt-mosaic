@@ -22,6 +22,9 @@ import java.util.Set;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.ColumnWidget.ResizePolicy;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.list.ListDataEvent;
+import org.gwt.mosaic.ui.client.list.ListDataListener;
+import org.gwt.mosaic.ui.client.list.ListModel;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -53,7 +56,8 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
  * 
  * @param <T>
  */
-public class ListBox<T> extends LayoutComposite implements HasFocus {
+public class ListBox<T> extends LayoutComposite implements HasFocus,
+    ListDataListener {
 
   static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
@@ -66,15 +70,15 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
     /**
      * Render the contents of a cell.
      * 
-     * @param grid the grid to render the contents in
+     * @param listBox the {@code ListBox} that is asking the renderer to draw
      * @param row the row index
      * @param column the column index
      * @param item the item to render
      */
-    void renderCell(DataGrid grid, int row, int column, T item);
+    void renderCell(ListBox<T> listBox, int row, int column, T item);
   }
 
-  public static class DataGrid extends FixedWidthGrid {
+  private static class DataGrid extends FixedWidthGrid {
 
     public DataGrid() {
       super();
@@ -177,11 +181,11 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
    * The cell renderer used on the data table.
    */
   private CellRenderer<T> cellRenderer = new CellRenderer<T>() {
-    public void renderCell(DataGrid grid, int row, int column, T item) {
+    public void renderCell(ListBox<T> listBox, int row, int column, T item) {
       if (item instanceof Widget) {
-        grid.setWidget(row, column, (Widget) item);
+        listBox.setWidget(row, column, (Widget) item);
       } else {
-        grid.setText(row, column, item.toString());
+        listBox.setText(row, column, item.toString());
       }
     }
   };
@@ -434,6 +438,10 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
     }
     return -1;
   }
+  
+  public Set<Integer> getSelectedItems() {
+    return dataTable.getSelectedRows();
+  }
 
   /**
    * Inserts an item into the list box.
@@ -454,7 +462,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
     }
     // Set the data in the new row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
-      cellRenderer.renderCell(dataTable, index, cellIndex, item);
+      cellRenderer.renderCell(this, index, cellIndex, item);
     }
     // Map item with <tr>
     final Element tr = dataTable.getRowFormatter().getElement(index);
@@ -476,7 +484,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
 
     // Set the data in the row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
-      cellRenderer.renderCell(dataTable, index, cellIndex, item);
+      cellRenderer.renderCell(this, index, cellIndex, item);
     }
 
     // Map the new item with <tr>
@@ -700,6 +708,86 @@ public class ListBox<T> extends LayoutComposite implements HasFocus {
     if (keyboardListeners != null) {
       keyboardListeners.remove(listener);
     }
+  }
+
+  private ListModel<T> dataModel;
+
+  /**
+   * Sets the model that represents the contents of the {@code ListBox}, and
+   * then clears the list's selection.
+   * 
+   * @param dataModel the {@link ListModel} that provides the list of items for
+   *          display
+   * @see #getModel
+   */
+  public void setModel(ListModel<T> dataModel) {
+    if (this.dataModel != null) {
+      this.dataModel.removeListDataListener(this);
+    }
+    dataTable.deselectRows();
+    // dataTable.clear();
+    this.dataModel = dataModel;
+    if (this.dataModel != null) {
+      this.dataModel.addListDataListener(this);
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.list.ListDataListener#contentsChanged(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   */
+  public void contentsChanged(ListDataEvent event) {
+    if (dataModel == event.getSource()) {
+      System.out.println("contentsChanged:" + event);
+      for (int i = event.getIndex0(), n = event.getIndex1(); i < n; ++i) {
+        if (i < getItemCount()) {
+          insertItem(dataModel.getElementAt(i), i);
+        } else {
+          addItem(dataModel.getElementAt(i));
+        }
+      }
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.list.ListDataListener#intervalAdded(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   */
+  public void intervalAdded(ListDataEvent event) {
+    if (dataModel == event.getSource()) {
+      System.out.println("intervalAdded:" + event);
+      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
+        if (i < getItemCount()) {
+          setItem(i, dataModel.getElementAt(i));
+        } else {
+          addItem(dataModel.getElementAt(i));
+        }
+      }
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.list.ListDataListener#intervalRemoved(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   */
+  public void intervalRemoved(ListDataEvent event) {
+    // TODO Auto-generated method stub
+    System.out.println("interval removed");
+  }
+
+  public void setText(int row, int column, String text) {
+    dataTable.setText(row, column, text);
+  }
+
+  public void setHTML(int row, int column, String html) {
+    dataTable.setHTML(row, column, html);
+  }
+
+  public void setWidget(int row, int column, Widget widget) {
+    dataTable.setWidget(row, column, widget);
   }
 
 }

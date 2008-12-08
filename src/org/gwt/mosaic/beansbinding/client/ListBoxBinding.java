@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gwt.beansbinding.core.client.AutoBinding;
+import org.gwt.beansbinding.core.client.ObjectProperty;
 import org.gwt.beansbinding.core.client.Property;
 import org.gwt.beansbinding.core.client.PropertyStateEvent;
 import org.gwt.beansbinding.core.client.PropertyStateListener;
@@ -19,187 +20,6 @@ import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
 import org.gwt.mosaic.ui.client.list.ListModel;
 
-/**
- * Binds a {@code List} of objects to act as the rows of a {@code JTable}. Each
- * object in the source {@code List} represents one row in the {@code JTable}.
- * Mappings from properties of the source objects to columns are created by
- * adding
- * {@link org.jdesktop.swingbinding.JTableBinding.ColumnBinding ColumnBindings}
- * to a {@code JTableBinding}. Instances of {@code JTableBinding} are obtained
- * by calling one of the {@code createJTableBinding} methods in the
- * {@code SwingBindings} class.
- * <p>
- * Here is an example of creating a binding from a {@code List} of
- * {@code Person} objects to a {@code JTable}:
- * <p>
- * 
- * <pre><code>
- *    // create the person List
- *    List<Person> people = createPersonList();
- *
- *    // create the binding from List to JTable
- *    JTableBinding tb = SwingBindings.createJTableBinding(READ, people, jTable);
- *
- *    // define the properties to be used for the columns
- *    BeanProperty firstNameP = BeanProperty.create("firstName");
- *    BeanProperty lastNameP = BeanProperty.create("lastName");
- *    BeanProperty ageP = BeanProperty.create("age");
- *
- *    // configure how the properties map to columns
- *    tb.addColumnBinding(firstNameP).setColumnName("First Name");
- *    tb.addColumnBinding(lastNameP).setColumnName("Last Name");
- *    tb.addColumnBinding(ageP).setColumnName("Age").setColumnClass(Integer.class);
- *
- *    // realize the binding
- *    tb.bind();
- * </code></pre>
- * 
- * <p>
- * The {@code JTable} target of a {@code JTableBinding} acts as a live view of
- * the objects in the source {@code List}, regardless of the update strategy
- * (the meaning of the update strategy is <a href="#CLARIFICATION">clarified
- * later</a> in this document). {@code JTableBinding} listens to the properties
- * specified for the {@code ColumnBindings}, for all objects in the
- * {@code List}, and updates the values displayed in the {@code JTable} in
- * response to change. All successful edits made to {@code JTable} cell values
- * are immediately committed back to corresponding objects in the source
- * {@code List}. If the {@code List} is an instance of {@code ObservableList},
- * then changes to the {@code List} contents (such as adding, removing or
- * replacing an object) are also reflected in the {@code JTable}. <b>Important:</b>
- * Changing the contents of a non-observable {@code List} while it is
- * participating in a {@code JTableBinding} is unsupported, resulting in
- * undefined behavior and possible exceptions.
- * <p>
- * <a name="EDITABILITY">A cell</a> in the {@code JTable} is editable for any
- * given row and column when all of the following are true: the property
- * specified for that column by its {@code ColumnBinding} is writeable for the
- * object representing that row, the {@code "editable"} property of the
- * {@code JTableBinding} is {@code true} (the default), and the
- * {@code "editable"} property of the {@code ColumnBinding} is {@code true} (the
- * default).
- * <p>
- * <a name="CLARIFICATION">{@code JTableBinding} requires</a> extra
- * clarification on the operation of the {@code refresh} and {@code save}
- * methods and the meaning of the update strategy. The target property of a
- * {@code JTableBinding} is not the target {@code JTable} property provided in
- * the constructor, but rather a private synthetic property representing the
- * {@code List} of objects to show in the target {@code JTable}. This synthetic
- * property is readable/writeable only when the {@code JTableBinding} is bound
- * and the target {@code JTable} property is readable with a {@code non-null}
- * value.
- * <p>
- * It is this private synthetic property on which the {@code refresh} and
- * {@code save} methods operate; meaning that these methods simply cause syncing
- * between the value of the source {@code List} property and the value of the
- * synthetic target property (representing the {@code List} to be shown in the
- * target {@code JTable}). These methods do not, therefore, have anything to do
- * with refreshing or saving <i>values</i> in the {@code JTable}. Likewise,
- * the update strategy, which simply controls when {@code refresh} and
- * {@code save} are automatically called, also has nothing to do with refreshing
- * or saving <i>values</i> in the {@code JTable}.
- * <p>
- * <b>Note:</b> At the current time, the {@code READ_WRITE} update strategy is
- * not useful for {@code JTableBinding}. To prevent unwanted confusion,
- * {@code READ_WRITE} is translated to {@code READ} by {@code JTableBinding's}
- * constructor.
- * <p>
- * {@code JTableBinding} works by installing a custom model on the target
- * {@code JTable}, as appropriate, to represent the source {@code List}. The
- * model is installed on a target {@code JTable} with the first succesful call
- * to {@code refresh} with that {@code JTable} as the target. Subsequent calls
- * to {@code refresh} update the elements in this already-installed model. The
- * model is uninstalled from a target {@code JTable} when either the
- * {@code JTableBinding} is unbound or when the target {@code JTable} property
- * changes to no longer represent that {@code JTable}. Note: When the model is
- * uninstalled from a {@code JTable}, it is replaced with a
- * {@code DefaultTableModel}, in order to leave the {@code JTable} functional.
- * <p>
- * Some of the above is easier to understand with an example. Let's consider a
- * {@code JTableBinding} ({@code binding}), with update strategy {@code READ},
- * between a property representing a {@code List} ({@code listP}) and a
- * property representing a {@code JTable} ({@code jTableP}). {@code listP} and
- * {@code jTableP} both start off readable, referring to a {@code non-null}
- * {@code List} and {@code non-null} {@code JTable} respectively. Let's look at
- * what happens for each of a sequence of events:
- * <p>
- * <table border=1>
- * <tr>
- * <th>Sequence</th>
- * <th>Event</th>
- * <th>Result</th>
- * </tr>
- * <tr valign="baseline">
- * <td align="center">1</td>
- * <td>explicit call to {@code binding.bind()}</td>
- * <td> - synthetic target property becomes readable/writeable <br> -
- * {@code refresh()} is called <br> - model is installed on target
- * {@code JTable}, representing list of objects </td>
- * </tr>
- * <tr valign="baseline">
- * <td align="center">2</td>
- * <td>{@code listP} changes to a new {@code List}</td>
- * <td> - {@code refresh()} is called <br> - model is updated with new list of
- * objects </td>
- * </tr>
- * <tr valign="baseline">
- * <td align="center"><a name="STEP3" href="#NOTICE">3</a></td>
- * <td>{@code jTableP} changes to a new {@code JTable}</td>
- * <td> - model is uninstalled from old {@code JTable} </td>
- * </tr>
- * <tr valign="baseline">
- * <td align="center">4</td>
- * <td>explicit call to {@code binding.refresh()}</td>
- * <td> - model is installed on target {@code JTable}, representing list of
- * objects </td>
- * </tr>
- * <tr valign="baseline">
- * <td align="center">5</td>
- * <td>{@code listP} changes to a new {@code List}</td>
- * <td> - {@code refresh()} is called <br> - model is updated with new list of
- * objects </td>
- * </tr>
- * <tr valign="baseline">
- * <td align="center">6</td>
- * <td>explicit call to {@code binding.unbind()}</td>
- * <td> - model is uninstalled from target {@code JTable} </td>
- * </tr>
- * </table>
- * <p>
- * <a name="NOTICE">Notice</a> that in <a href="#STEP3">step 3</a>, when the
- * value of the {@code JTable} property changed, the new {@code JTable} did not
- * automatically get the model with the elements applied to it. A change to the
- * target value should not cause an {@code AutoBinding} to sync the target from
- * the source. Step 4 forces a sync by explicitly calling {@code refresh}.
- * Alternatively, it could be caused by any other action that results in a
- * {@code refresh} (for example, the source property changing value, or an
- * explicit call to {@code unbind} followed by {@code bind}).
- * <p>
- * {@code ColumnBindings} are managed by the {@code JTableBinding}. They are
- * not to be explicitly bound, unbound, added to a {@code BindingGroup}, or
- * accessed in a way that is not allowed for a managed binding.
- * {@code BindingListeners} added to a {@code ColumnBinding} are notified at the
- * time an edited {@code JTable} value is to be committed back to the source
- * {@code List}. They receive notification of either {@code synced} or
- * {@code syncFailed}. {@code BindingListeners} added to the
- * {@code JTableBinding} itself are also notified of {@code sync} and
- * {@code syncFailed} for the {@code JTableBinding's ColumnBindings}.
- * <p>
- * In addition to binding the elements of a {@code JTable}, it is possible to
- * bind to the selection of a {@code JTable}. When binding to the selection of
- * a {@code JTable} backed by a {@code JTableBinding}, the selection is always
- * in terms of elements from the source {@code List}. See the list of <a
- * href="package-summary.html#SWING_PROPS"> interesting swing properties</a> in
- * the package summary for more details.
- * 
- * @param <E> the type of elements in the source {@code List}
- * @param <SS> the type of source object (on which the source property resolves
- *          to {@code List})
- * @param <TS> the type of target object (on which the target property resolves
- *          to {@link ListBox})
- * 
- * @author Shannon Hickey
- * @author georgopoulos.georgios(at)gmail.com
- */
 public final class ListBoxBinding<E, SS, TS> extends
     AutoBinding<SS, List<E>, TS, List> {
 
@@ -208,8 +28,7 @@ public final class ListBoxBinding<E, SS, TS> extends
   private Handler handler = new Handler();
   private ListBox<E> listBox;
   private BindingListModel model;
-  private boolean editable = true;
-  private List<ColumnBinding> columnBindings = new ArrayList<ColumnBinding>();
+  private DetailBinding detailBinding;
 
   /**
    * Constructs an instance of {@code ListBoxBinding}.
@@ -239,6 +58,7 @@ public final class ListBoxBinding<E, SS, TS> extends
 
     listBoxP = targetListBoxProperty;
     elementsP = (ElementsProperty<TS>) getTargetProperty();
+    setDetailBinding(null);
   }
 
   /*
@@ -282,6 +102,7 @@ public final class ListBoxBinding<E, SS, TS> extends
       return;
     }
 
+    // resetListSelection();
     listBox.setModel(null);
     listBox = null;
     model.setElements(null, true);
@@ -289,204 +110,65 @@ public final class ListBoxBinding<E, SS, TS> extends
   }
 
   /**
-   * Creates a {@code ColumnBinding} and adds it to the end of the list of
-   * {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
+   * Creates a {@code DetailBinding} and sets it as the {@code DetailBinding}
+   * for this {@code ListBoxBinding}. A {@code DetailBinding} specifies the
+   * property of the objects in the source {@code List} to be used as the
+   * elements of the {@code ListBox}. If the {@code detailProperty} parameter
+   * is {@code null}, the {@code DetailBinding} specifies that the objects
+   * themselves be used.
    * 
-   * @param columnProperty the property with which to derive cell values from
-   *          the elements of the source {@code List}
-   * @return the {@code ColumnBinding}
-   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
-   * @see ListBoxBinding#ColumnBinding
+   * @param detailProperty the property with which to derive each list value
+   *          from its corresponding object in the source {@code List}
+   * @return the {@code DetailBinding}
    */
-  public ColumnBinding addColumnBinding(Property<E, ?> columnProperty) {
-    return addColumnBinding(columnProperty, null);
+  public DetailBinding setDetailBinding(Property<E, ?> detailProperty) {
+    return setDetailBinding(detailProperty, null);
   }
 
   /**
-   * Creates a named {@code ColumnBinding} and adds it to the end of the list of
-   * {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
+   * Creates a named {@code DetailBinding} and sets it as the
+   * {@code DetailBinding} for this {@code ListBoxBinding}. A
+   * {@code DetailBinding} specifies the property of the objects in the source
+   * {@code List} to be used as the elements of the {@code ListBox}. If the
+   * {@code detailProperty} parameter is {@code null}, the
+   * {@code DetailBinding} specifies that the objects themselves be used.
    * 
-   * @param columnProperty the property with which to derive cell values from
-   *          the elements of the source {@code List}
-   * @param name a name for the column binding
-   * @return the {@code ColumnBinding}
-   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
-   * @see ListBoxBinding#ColumnBinding
+   * @param detailProperty the property with which to derive each list value
+   *          from its corresponding object in the source {@code List}
+   * @return the {@code DetailBinding}
    */
-  public ColumnBinding addColumnBinding(Property<E, ?> columnProperty,
+  public DetailBinding setDetailBinding(Property<E, ?> detailProperty,
       String name) {
     throwIfBound();
 
-    if (columnProperty == null) {
-      throw new IllegalArgumentException("can't have null column property");
-    }
-
     if (name == null && ListBoxBinding.this.getName() != null) {
-      name = ListBoxBinding.this.getName() + ".COLUMN_BINDING";
+      name = ListBoxBinding.this.getName() + ".DETAIL_BINDING";
     }
 
-    ColumnBinding binding = new ColumnBinding(columnBindings.size(),
-        columnProperty, name);
-    columnBindings.add(binding);
-    return binding;
+    detailBinding = detailProperty == null ? new DetailBinding(
+        ObjectProperty.<E> create(), name) : new DetailBinding(detailProperty,
+        name);
+    return detailBinding;
   }
 
   /**
-   * Creates a {@code ColumnBinding} and inserts it at the given index into the
-   * list of {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
+   * Returns the {@code DetailBinding} for this {@code ListBoxBinding}. A
+   * {@code DetailBinding} specifies the property of the source {@code List}
+   * elements to be used as the elements of the {@code ListBox}.
    * 
-   * @param index the index at which to insert the {@code ColumnBinding}
-   * @param columnProperty the property with which to derive cell values from
-   *          the elements of the source {@code List}
-   * @return the {@code ColumnBinding}
-   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
-   * @see ListBoxBinding#ColumnBinding
+   * @return the {@code DetailBinding}
+   * @see #setDetailBinding(Property, String)
    */
-  public ColumnBinding addColumnBinding(int index, Property<E, ?> columnProperty) {
-    return addColumnBinding(index, columnProperty, null);
+  public DetailBinding getDetailBinding() {
+    return detailBinding;
   }
 
-  /**
-   * Creates a {@code ColumnBinding} and inserts it at the given index into the
-   * list of {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
-   * 
-   * @param index the index at which to insert the {@code ColumnBinding}
-   * @param columnProperty the property with which to derive cell values from
-   *          the elements of the source {@code List}
-   * @param name a name for the {@code ColumnBinding}
-   * @return the {@code ColumnBinding}
-   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
-   * @see ListBoxBinding#ColumnBinding
-   */
-  public ColumnBinding addColumnBinding(int index,
-      Property<E, ?> columnProperty, String name) {
-    throwIfBound();
-
-    if (columnProperty == null) {
-      throw new IllegalArgumentException("can't have null column property");
-    }
-
-    if (name == null && ListBoxBinding.this.getName() != null) {
-      name = ListBoxBinding.this.getName() + ".COLUMN_BINDING";
-    }
-
-    ColumnBinding binding = new ColumnBinding(index, columnProperty, name);
-    columnBindings.add(index, binding);
-    adjustIndices(index + 1, true);
-    return binding;
-  }
-
-  /**
-   * Removes the given {@code ColumnBinding} from the list maintained by this
-   * {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
-   * 
-   * @param binding the {@code ColumnBinding} to remove
-   * @see #addColumnBinding(Property, String)
-   */
-  public boolean removeColumnBinding(ColumnBinding binding) {
-    throwIfBound();
-    boolean retVal = columnBindings.remove(binding);
-
-    if (retVal) {
-      adjustIndices(binding.getColumn(), false);
-    }
-
-    return retVal;
-  }
-
-  /**
-   * Removes the {@code ColumnBinding} with the given index from the list
-   * maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
-   * 
-   * @param index the index of the {@code ColumnBinding} to remove
-   * @see #addColumnBinding(Property, String)
-   */
-  public ColumnBinding removeColumnBinding(int index) {
-    throwIfBound();
-    ColumnBinding retVal = columnBindings.remove(index);
-
-    if (retVal != null) {
-      adjustIndices(index, false);
-    }
-
-    return retVal;
-  }
-
-  /**
-   * Returns the {@code ColumnBinding} with the given index in the list
-   * maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
-   * 
-   * @param index the index of the {@code ColumnBinding} to return
-   * @return the {@code ColumnBinding} at the given index
-   * @see #addColumnBinding(Property, String)
-   */
-  public ColumnBinding getColumnBinding(int index) {
-    return columnBindings.get(index);
-  }
-
-  /**
-   * Returns an unmodifiable copy of the list of {@code ColumnBindings}
-   * maintained by this {@code ListBoxBinding}.
-   * <p>
-   * The list of {@code ColumnBindings} dictates the columns to be displayed in
-   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
-   * determining its table model index. XXX fix that!
-   * 
-   * @return the list of {@code ColumnBindings}
-   * @see #addColumnBinding(Property, String)
-   */
-  public List<ColumnBinding> getColumnBindings() {
-    return columnBindings; // XXX Collections.unmodifiableList(columnBindings);
-  }
-
-  private void adjustIndices(int start, boolean up) {
-    int size = columnBindings.size();
-    for (int i = start; i < size; i++) {
-      ColumnBinding cb = columnBindings.get(i);
-      cb.adjustColumn(cb.getColumn() + (up ? 1 : -1));
-    }
-  }
-
-  private final class ColumnProperty extends Property {
-    private ColumnBinding binding;
-
-    public Class<? extends Object> getWriteType(Object source) {
-      return binding.columnClass == null ? Object.class : binding.columnClass;
+  private final Property DETAIL_PROPERTY = new Property() {
+    public Class<Object> getWriteType(Object source) {
+      return Object.class;
     }
 
     public Object getValue(Object source) {
-      if (binding.isBound()) {
-        return binding.editingObject;
-      }
-
       throw new UnsupportedOperationException();
     }
 
@@ -495,7 +177,7 @@ public final class ListBoxBinding<E, SS, TS> extends
     }
 
     public boolean isReadable(Object source) {
-      return binding.isBound();
+      throw new UnsupportedOperationException();
     }
 
     public boolean isWriteable(Object source) {
@@ -504,155 +186,43 @@ public final class ListBoxBinding<E, SS, TS> extends
 
     public void addPropertyStateListener(Object source,
         PropertyStateListener listener) {
+      throw new UnsupportedOperationException();
     }
 
     public void removePropertyStateListener(Object source,
         PropertyStateListener listener) {
+      throw new UnsupportedOperationException();
     }
 
     public PropertyStateListener[] getPropertyStateListeners(Object source) {
-      return new PropertyStateListener[0];
+      throw new UnsupportedOperationException();
     }
-  }
+  };
 
   /**
-   * {@code ColumnBinding} represents a binding between a property of the
-   * elements in the {@code ListBoxBinding's} source {@code List}, and a column
-   * in the {@code ListBox}. Each {@code ColumnBinding} added to a
-   * {@code ListBoxBinding} represents a column to be displayed by the
-   * {@code ListBox}. A value for any given row in a column is acquired by
-   * fetching the value of the associated {@code ColumnBinding's} source
-   * property for the element in the source {@code List} representing that row.
+   * {@code DetailBinding} represents a binding between a property of the
+   * elements in the {@code ListBoxBinding's} source {@code List}, and the
+   * values shown in the {@code ListBox}. Values in the {@code ListBox} are
+   * aquired by fetching the value of the {@code DetailBinding's} source
+   * property for the associated object in the source {@code List}.
    * <p>
-   * A {@code Converter} may be specified on a {@code ColumnBinding}, as may be
-   * a {@code Validator}. Validation occurs at the time a cell value is to be
-   * committed back to the source {@code List}.
+   * A {@code Converter} may be specified on a {@code DetailBinding}.
+   * Specifying a {@code Validator} is also possible, but doesn't make sense
+   * since {@code ListBox} values aren't editable.
    * <p>
-   * {@code BindingListeners} registered on a {@code ColumnBinding} are notified
-   * of successful {@code sync} or {@code syncFailure}. These notifications are
-   * also sent to the {@code ListBoxBinding's} {@code BindingListeners}.
-   * <p>
-   * {@code ColumnBindings} are managed by their {@code ListBoxBinding}. They
+   * {@code DetailBindings} are managed by their {@code ListBoxBinding}. They
    * are not to be explicitly bound, unbound, added to a {@code BindingGroup},
    * or accessed in a way that is not allowed for a managed binding.
    * 
-   * @see ListBoxBinding#addColumnBinding(Property, String)
+   * @see org.jdesktop.swingbinding.ListBoxBinding#setDetailBinding(Property,
+   *      String)
    */
-  public final class ColumnBinding extends AbstractColumnBinding {
-    private Class<?> columnClass;
-    private boolean editable = true;
-    private boolean editableSet;
-    private String columnName;
-    private Object editingObject;
+  public final class DetailBinding extends AbstractColumnBinding {
 
-    private ColumnBinding(int column, Property<E, ?> columnProperty, String name) {
-      super(column, columnProperty, new ColumnProperty(), name);
-      ((ColumnProperty) getTargetProperty()).binding = this;
+    private DetailBinding(Property<E, ?> detailProperty, String name) {
+      super(0, detailProperty, DETAIL_PROPERTY, name);
     }
 
-    private void setEditingObject(Object editingObject) {
-      this.editingObject = editingObject;
-    }
-
-    private void adjustColumn(int newCol) {
-      setColumn(newCol);
-    }
-
-    /**
-     * Sets a name for the column represented by this {@code ColumnBinding}.
-     * This is used to initialize the {@code ListBox's} column header name. If
-     * {@code null} is specified, the {@code toString()} value of the
-     * {@code ColumnBinding's} source property is used.
-     * 
-     * @param name the name
-     * @return the {@code ColumnBinding} itself, to allow for method chaining
-     */
-    public ColumnBinding setColumnName(String name) {
-      ListBoxBinding.this.throwIfBound();
-      this.columnName = name;
-      return this;
-    }
-
-    /**
-     * Sets the column class to be used by {@code ListBox} to determine the
-     * renderer and editor for the column represented by this
-     * {@code ColumnBinding}.
-     * 
-     * @param columnClass the column class
-     * @return the {@code ColumnBinding} itself, to allow for method chaining
-     */
-    public ColumnBinding setColumnClass(Class<?> columnClass) {
-      ListBoxBinding.this.throwIfBound();
-      this.columnClass = columnClass;
-      return this;
-    }
-
-    /**
-     * Returns the column class to be used by {@code ListBox} to determine the
-     * renderer and editor for the column represented by this
-     * {@code ColumnBinding}.
-     * 
-     * @see #setColumnClass
-     */
-    public Class<?> getColumnClass() {
-      return columnClass == null ? Object.class : columnClass;
-    }
-
-    /**
-     * Returns the name for the column represented by this {@code ColumnBinding}.
-     * This is used to initialize the table's column header name. If no name has
-     * been specified, or if it has been set to {@code null}, the
-     * {@code toString()} value of the {@code ColumnBinding's} source property
-     * is returned.
-     * 
-     * @return the name for the column
-     * @see #setColumnName
-     */
-    public String getColumnName() {
-      return columnName == null ? getSourceProperty().toString() : columnName;
-    }
-
-    /**
-     * Sets whether or not the cells of the column should be editable. The
-     * default for this property is {@code true}. See this <a
-     * href="ListBoxBinding.html#EDITABILITY">paragraph</a> in the class level
-     * documentation on editability.
-     * 
-     * @param editable whether or not the cells of the column should be editable
-     * @return the {@code ColumnBinding} itself, to allow for method chaining
-     */
-    public ColumnBinding setEditable(boolean editable) {
-      this.editable = editable;
-      return this;
-    }
-
-    /**
-     * Returns whether or not the cells of the column should be editable. The
-     * default for this property is {@code true}. See this <a
-     * href="ListBoxBinding.html#EDITABILITY">paragraph</a> in the class level
-     * documentation on editability.
-     * 
-     * @return whether or not the cells of the column should be editable
-     */
-    public boolean isEditable() {
-      return editable;
-    }
-
-    private void bindUnmanaged0() {
-      bindUnmanaged();
-    }
-
-    private void unbindUnmanaged0() {
-      unbindUnmanaged();
-    }
-
-    private SyncFailure saveUnmanaged0() {
-      return saveUnmanaged();
-    }
-
-    private void setSourceObjectUnmanaged0(Object source) {
-      setSourceObjectUnmanaged(source);
-    }
   }
 
   private class Handler implements PropertyStateListener {
@@ -679,13 +249,25 @@ public final class ListBoxBinding<E, SS, TS> extends
 
         if (listBox == null) {
           listBox = listBoxP.getValue(getTargetObject());
+          // resetListSelection();
           model = new BindingListModel();
           listBox.setModel(model);
+        } else {
+          // resetListSelection();
         }
 
         model.setElements((List) pse.getNewValue(), true);
       }
     }
+  }
+
+  private void resetListSelection() {
+    // ListSelectionModel selectionModel = list.getSelectionModel();
+    // selectionModel.setValueIsAdjusting(true);
+    // selectionModel.clearSelection();
+    // selectionModel.setAnchorSelectionIndex(-1);
+    // selectionModel.setLeadSelectionIndex(-1);
+    // selectionModel.setValueIsAdjusting(false);
   }
 
   private final class BindingListModel extends ListBindingManager implements
@@ -704,9 +286,7 @@ public final class ListBoxBinding<E, SS, TS> extends
      */
     @Override
     protected AbstractColumnBinding[] getColBindings() {
-      AbstractColumnBinding[] bindings = new AbstractColumnBinding[getColumnBindings().size()];
-      bindings = getColumnBindings().toArray(bindings);
-      return bindings;
+      return new AbstractColumnBinding[] {getDetailBinding()};
     }
 
     /*
