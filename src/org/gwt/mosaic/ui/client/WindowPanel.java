@@ -250,7 +250,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
           if (newHeight != contentHeight) {
             windowPanel.moveBy(0, contentHeight - newHeight);
           }
-          System.out.println(windowPanel.getContentWidth() + "x" + newHeight);
           windowPanel.setContentSize(windowPanel.getContentWidth(), newHeight);
           windowPanel.delayedLayout(DEFAULT_DELAY_MILLIS);
         }
