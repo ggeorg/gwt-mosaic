@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/gwt-incubator.jar"/>
 	<classpathentry kind="var" path="GWT15_HOME/gwt-user.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-dnd-2.5.6.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.1.jar"/>
+	<classpathentry kind="lib" path="lib/GWTx-1.5.20081208.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
