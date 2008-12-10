@@ -82,7 +82,7 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     List<Object> elements = new ArrayList<Object>();
 
-    Set<Integer> selection = listBox.getSelectedItems();
+    Set<Integer> selection = listBox.getSelectedIndices();
 
     if (selection == null || selection.size() > 0) {
       return elements;
