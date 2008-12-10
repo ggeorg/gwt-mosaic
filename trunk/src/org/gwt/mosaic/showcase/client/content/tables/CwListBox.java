@@ -35,6 +35,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.list.DefaultListModel;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -122,11 +123,13 @@ public class CwListBox extends ContentWidget {
 
     final ListBox<String> listBox = new ListBox<String>();
     listBox.setContextMenu(createContextMenu());
-    listBox.addItem("foo");
-    listBox.addItem("bar");
-    listBox.addItem("baz");
-    listBox.addItem("toto");
-    listBox.addItem("tintin");
+
+    final DefaultListModel<String> model = (DefaultListModel<String>) listBox.getModel();
+    model.add("foo");
+    model.add("bar");
+    model.add("baz");
+    model.add("toto");
+    model.add("tintin");
 
     listBox.addChangeListener(new ChangeListener() {
       public void onChange(Widget sender) {
@@ -151,9 +154,9 @@ public class CwListBox extends ContentWidget {
                 if (input != null) {
                   final int index = listBox.getSelectedIndex();
                   if (index == -1) {
-                    listBox.addItem(input);
+                    model.add(input);
                   } else {
-                    listBox.insertItem(input, index);
+                    model.add(index, input);
                   }
                 }
               }
@@ -172,7 +175,7 @@ public class CwListBox extends ContentWidget {
                 + "' from the list?", new ConfirmationCallback() {
               public void onResult(boolean result) {
                 if (result) {
-                  listBox.removeItem(listBox.getSelectedIndex());
+                  model.remove(listBox.getSelectedIndex());
                 }
               }
             });
@@ -190,7 +193,7 @@ public class CwListBox extends ContentWidget {
           public void onResult(String input) {
             if (input != null) {
               final int index = listBox.getSelectedIndex();
-              listBox.setItem(index, input);
+              model.set(index, input);
             }
           }
         });
@@ -236,10 +239,11 @@ public class CwListBox extends ContentWidget {
       }
     });
 
-    listBox.addItem(new Person("Rainer Zufall", "male", true));
-    listBox.addItem(new Person("Marie Darms", "female", false));
-    listBox.addItem(new Person("Holger Adams", "male", true));
-    listBox.addItem(new Person("Juliane Adams", "female", true));
+    final DefaultListModel<Person> model = (DefaultListModel<Person>) listBox.getModel();
+    model.add(new Person("Rainer Zufall", "male", true));
+    model.add(new Person("Marie Darms", "female", false));
+    model.add(new Person("Holger Adams", "male", true));
+    model.add(new Person("Juliane Adams", "female", true));
 
     listBox.addChangeListener(new ChangeListener() {
       public void onChange(Widget sender) {
@@ -258,22 +262,22 @@ public class CwListBox extends ContentWidget {
     final ToolBar toolBar = new ToolBar();
     toolBar.add(new ToolButton("Insert", new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.prompt("ListBox Insert", "Please enter a new value to add",
+        MessageBox.prompt("ListBox Insert",
+            "Please enter a new value to add, should be a 'Married Male'",
             null, new PromptCallback<String>() {
               public void onResult(String input) {
                 if (input != null) {
                   final int index = listBox.getSelectedIndex();
                   if (index == -1) {
-                    // listBox.addItem(input);
+                    model.add(new Person(input, "male", true));
                   } else {
-                    // listBox.insertItem(input, index);
+                    model.add(index, new Person(input, "male", true));
                   }
                 }
               }
             });
       }
     }));
-    ((ToolButton) toolBar.getWidget(0)).setEnabled(false);
     toolBar.add(new ToolButton("Remove", new ClickListener() {
       public void onClick(Widget sender) {
         if (listBox.getSelectedIndex() == -1) {
@@ -286,7 +290,7 @@ public class CwListBox extends ContentWidget {
                 + "' from the list?", new ConfirmationCallback() {
               public void onResult(boolean result) {
                 if (result) {
-                  listBox.removeItem(listBox.getSelectedIndex());
+                  model.remove(listBox.getSelectedIndex());
                 }
               }
             });
@@ -306,7 +310,7 @@ public class CwListBox extends ContentWidget {
                 if (input != null) {
                   final int index = listBox.getSelectedIndex();
                   item.setName(input);
-                  listBox.setItem(index, item);
+                  model.set(index, item);
                 }
               }
             });
