@@ -103,15 +103,15 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * @param item the text of the item to be added
    */
   public void addItem(T item) {
-    listBox.addItem(item);
+    //listBox.addItem(item);
   }
 
   /**
    * Removes all items from the list box.
    */
   public void clear() {
-    listBox.clear();
-    setText("");
+//    listBox.clear();
+//    setText("");
   }
 
   /**
@@ -159,7 +159,7 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * @param index the index at which to insert it
    */
   public void insertItem(T item, int index) {
-    listBox.insertItem(item, index);
+    listBox.renderItemOnInsert(item, index);
   }
 
   /**
@@ -180,7 +180,7 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * @throws IndexOutOfBoundsException if the index is out of range
    */
   public void removeItem(int index) {
-    listBox.removeItem(index);
+    //listBox.removeItem(index);
   }
 
   /**
@@ -207,7 +207,7 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * @throws IndexOutOfBoundsException if the index is out of range
    */
   public void setItem(int index, T item) {
-    listBox.setItem(index, item);
+    listBox.renderItemOnUpdate(index, item);
   }
   
   /**
