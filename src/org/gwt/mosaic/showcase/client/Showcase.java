@@ -39,6 +39,7 @@ import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
 import org.gwt.mosaic.showcase.client.content.other.CwActions;
+import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwHorizontalSplitPanel;
@@ -444,6 +445,7 @@ public class Showcase implements EntryPoint {
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
+    setupMainMenuOption(catOther, new CwListBoxBinding(constants), IMAGES.catOther());
     setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
 
   }
