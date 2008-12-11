@@ -131,6 +131,9 @@
 			<fileset dir="${build}/classes">
 				<include name="**/*.class" />
 			</fileset>
+			<fileset dir="${source.path}">
+				<include name="**/*.xml" />
+			</fileset>
 		</copy>
 	</target>
 
