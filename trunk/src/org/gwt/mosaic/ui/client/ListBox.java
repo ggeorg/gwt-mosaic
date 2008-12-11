@@ -50,7 +50,7 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
 /**
  * This widget is used to create a list of items where one or more of the items
  * may be selected. A {@code ListBox} may contain multiple columns. A separate
- * mode, {@link ListModel}, maintains the contents of the list.
+ * model, {@link ListModel}, maintains the contents of the list.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
@@ -334,8 +334,9 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   public void contentsChanged(ListDataEvent event) {
     if (dataModel == event.getSource()) {
       for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
-        // if (i < getItemCount()) {
-        renderItemOnUpdate(i, dataModel.getElementAt(i));
+        if (i < getItemCount()) {
+          renderItemOnUpdate(i, dataModel.getElementAt(i));
+        }
         // } else {
         // renderItemOnInsert(dataModel.getElementAt(i), INSERT_AT_END);
         // }
@@ -646,7 +647,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * Removes all items from the list box.
    */
   public void renderOnClear() {
-    dataTable.clearAll();
+    dataTable.resizeRows(0);
     rowItems.clear();
   }
 
