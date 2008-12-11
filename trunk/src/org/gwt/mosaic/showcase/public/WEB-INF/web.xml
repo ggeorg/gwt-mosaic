@@ -13,13 +13,25 @@
 	<servlet>
 		<servlet-name>datasource</servlet-name>
 		<servlet-class>
-			org.gwt.mosaic.ui.server.DataSourceServiceImpl
+			org.gwt.mosaic.showcase.server.DataSourceServiceImpl
 		</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>datasource</servlet-name>
 		<url-pattern>/datasource</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>customerService</servlet-name>
+		<servlet-class>
+			org.gwt.mosaic.showcase.server.CustomerServiceImpl
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>customerService</servlet-name>
+		<url-pattern>/customerService</url-pattern>
 	</servlet-mapping>
 
 </web-app>

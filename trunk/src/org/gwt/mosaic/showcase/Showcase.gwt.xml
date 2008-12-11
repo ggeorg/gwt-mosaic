@@ -20,6 +20,7 @@
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
 	<inherits name='org.gwt.mosaic.forms.Forms' />
+	<inherits name='org.gwt.mosaic.beansbinding.BeansBinding' />
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
@@ -52,6 +53,8 @@
 	<!-- Define the RPC service -->
 	<servlet path="/datasource"
 		class="org.gwt.mosaic.showcase.server.DataSourceServiceImpl" />
+	<servlet path="/customerService"
+		class="org.gwt.mosaic.showcase.server.CustomerServiceImpl" />
 
 	<!-- Internationalization support. -->
 	<extend-property name="locale" values="en" />
