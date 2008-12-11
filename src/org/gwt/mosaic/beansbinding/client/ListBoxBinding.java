@@ -1,8 +1,18 @@
 /*
- * Copyright (C) 2007 Sun Microsystems, Inc. All rights reserved. Use is subject
- * to license terms.
+ * Copyright 2006-2008 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
-
 package org.gwt.mosaic.beansbinding.client;
 
 import java.util.ArrayList;
@@ -16,10 +26,24 @@ import org.gwt.beansbinding.core.client.PropertyStateListener;
 import org.gwt.beansbinding.ui.client.impl.AbstractColumnBinding;
 import org.gwt.beansbinding.ui.client.impl.ListBindingManager;
 import org.gwt.mosaic.ui.client.ListBox;
+import org.gwt.mosaic.ui.client.list.DefaultListModel;
 import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
 import org.gwt.mosaic.ui.client.list.ListModel;
 
+/**
+ * Binds a {@code List} of objects to act as the elements of a {@link ListBox}.
+ * 
+ * TODO more
+ * 
+ * @param <E> the type of elements in the source {@code List}
+ * @param <SS> the type of source object (on which the source property resolves
+ *          to {@code List})
+ * @param <TS> the type of target object (on which the target property resolves
+ *          to {@code JList})
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public final class ListBoxBinding<E, SS, TS> extends
     AutoBinding<SS, List<E>, TS, List> {
 
@@ -28,7 +52,7 @@ public final class ListBoxBinding<E, SS, TS> extends
   private Handler handler = new Handler();
   private ListBox<E> listBox;
   private BindingListModel model;
-  private DetailBinding detailBinding;
+  private List<ColumnBinding> columnBindings = new ArrayList<ColumnBinding>();
 
   /**
    * Constructs an instance of {@code ListBoxBinding}.
@@ -58,7 +82,7 @@ public final class ListBoxBinding<E, SS, TS> extends
 
     listBoxP = targetListBoxProperty;
     elementsP = (ElementsProperty<TS>) getTargetProperty();
-    setDetailBinding(null);
+    addColumnBinding(null);
   }
 
   /*
@@ -102,65 +126,74 @@ public final class ListBoxBinding<E, SS, TS> extends
       return;
     }
 
-    // resetListSelection();
-    listBox.setModel(null);
+    listBox.setModel(new DefaultListModel<E>());
     listBox = null;
     model.setElements(null, true);
     model = null;
   }
 
   /**
-   * Creates a {@code DetailBinding} and sets it as the {@code DetailBinding}
-   * for this {@code ListBoxBinding}. A {@code DetailBinding} specifies the
-   * property of the objects in the source {@code List} to be used as the
-   * elements of the {@code ListBox}. If the {@code detailProperty} parameter
-   * is {@code null}, the {@code DetailBinding} specifies that the objects
-   * themselves be used.
+   * Creates a {@code ColumnBinding} and adds it to the list of
+   * {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
    * 
-   * @param detailProperty the property with which to derive each list value
+   * @param columnProperty the property with which to derive each list value
    *          from its corresponding object in the source {@code List}
-   * @return the {@code DetailBinding}
+   * @return the {@code ColumnBinding}
    */
-  public DetailBinding setDetailBinding(Property<E, ?> detailProperty) {
-    return setDetailBinding(detailProperty, null);
+  public ColumnBinding addColumnBinding(Property<E, ?> columnProperty) {
+    return addDetailBinding(columnProperty, null);
   }
 
   /**
-   * Creates a named {@code DetailBinding} and sets it as the
-   * {@code DetailBinding} for this {@code ListBoxBinding}. A
-   * {@code DetailBinding} specifies the property of the objects in the source
-   * {@code List} to be used as the elements of the {@code ListBox}. If the
-   * {@code detailProperty} parameter is {@code null}, the
-   * {@code DetailBinding} specifies that the objects themselves be used.
+   * Creates a {@code ColumnBinding} and adds it to the list of
+   * {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
    * 
-   * @param detailProperty the property with which to derive each list value
+   * @param columnProperty the property with which to derive each list value
    *          from its corresponding object in the source {@code List}
-   * @return the {@code DetailBinding}
+   * @param name
+   * @return the {@code ColumnBinding}
    */
-  public DetailBinding setDetailBinding(Property<E, ?> detailProperty,
+  public ColumnBinding addDetailBinding(Property<E, ?> detailProperty,
       String name) {
     throwIfBound();
 
     if (name == null && ListBoxBinding.this.getName() != null) {
-      name = ListBoxBinding.this.getName() + ".DETAIL_BINDING";
+      name = ListBoxBinding.this.getName() + ".COLUMN_BINDING";
     }
 
-    detailBinding = detailProperty == null ? new DetailBinding(
-        ObjectProperty.<E> create(), name) : new DetailBinding(detailProperty,
+    ColumnBinding columnBinding = detailProperty == null ? new ColumnBinding(
+        ObjectProperty.<E> create(), name) : new ColumnBinding(detailProperty,
         name);
-    return detailBinding;
+
+    columnBindings.add(columnBinding);
+
+    return columnBinding;
   }
 
   /**
-   * Returns the {@code DetailBinding} for this {@code ListBoxBinding}. A
-   * {@code DetailBinding} specifies the property of the source {@code List}
-   * elements to be used as the elements of the {@code ListBox}.
+   * Removes the given {@code ColumnBinding} from the list maintained by this
+   * {@code ListBoxBinding}.
    * 
-   * @return the {@code DetailBinding}
-   * @see #setDetailBinding(Property, String)
+   * @param binding the {@code ColumnBinding} to remove
+   * @return {@code true} if this list contained the specified element
+   * @see #addColumnBinding(Property)
+   * @see #addDetailBinding(Property, String)
    */
-  public DetailBinding getDetailBinding() {
-    return detailBinding;
+  public boolean removeColumnBinding(ColumnBinding binding) {
+    throwIfBound();
+    return columnBindings.remove(binding);
+  }
+
+  /**
+   * Returns an array of the {@code ColumnBindings} maintained by this
+   * {@code ListBoxBinding}.
+   * 
+   * @return the list of {@code ColumnBindings}
+   * @see #addColumnBinding(Property)
+   * @see #addDetailBinding(Property, String)
+   */
+  public ColumnBinding[] getColumnBindings() {
+    return (ColumnBinding[]) columnBindings.toArray(new AbstractColumnBinding[columnBindings.size()]);
   }
 
   private final Property DETAIL_PROPERTY = new Property() {
@@ -200,26 +233,23 @@ public final class ListBoxBinding<E, SS, TS> extends
   };
 
   /**
-   * {@code DetailBinding} represents a binding between a property of the
+   * {@code ColumnBinding} represents a binding between a property of the
    * elements in the {@code ListBoxBinding's} source {@code List}, and the
-   * values shown in the {@code ListBox}. Values in the {@code ListBox} are
-   * aquired by fetching the value of the {@code DetailBinding's} source
-   * property for the associated object in the source {@code List}.
+   * values shown in the {@code ListBox}.
    * <p>
-   * A {@code Converter} may be specified on a {@code DetailBinding}.
+   * A {@code Converter} may be specified on a {@code ColumnBinding}.
    * Specifying a {@code Validator} is also possible, but doesn't make sense
    * since {@code ListBox} values aren't editable.
    * <p>
-   * {@code DetailBindings} are managed by their {@code ListBoxBinding}. They
+   * {@code ColumnBindings} are managed by their {@code ListBoxBinding}. They
    * are not to be explicitly bound, unbound, added to a {@code BindingGroup},
    * or accessed in a way that is not allowed for a managed binding.
    * 
-   * @see org.jdesktop.swingbinding.ListBoxBinding#setDetailBinding(Property,
-   *      String)
+   * @see ListBoxBinding#addColumnBinding(Property)
    */
-  public final class DetailBinding extends AbstractColumnBinding {
+  public final class ColumnBinding extends AbstractColumnBinding {
 
-    private DetailBinding(Property<E, ?> detailProperty, String name) {
+    private ColumnBinding(Property<E, ?> detailProperty, String name) {
       super(0, detailProperty, DETAIL_PROPERTY, name);
     }
 
@@ -249,25 +279,13 @@ public final class ListBoxBinding<E, SS, TS> extends
 
         if (listBox == null) {
           listBox = listBoxP.getValue(getTargetObject());
-          // resetListSelection();
           model = new BindingListModel();
           listBox.setModel(model);
-        } else {
-          // resetListSelection();
         }
 
         model.setElements((List) pse.getNewValue(), true);
       }
     }
-  }
-
-  private void resetListSelection() {
-    // ListSelectionModel selectionModel = list.getSelectionModel();
-    // selectionModel.setValueIsAdjusting(true);
-    // selectionModel.clearSelection();
-    // selectionModel.setAnchorSelectionIndex(-1);
-    // selectionModel.setLeadSelectionIndex(-1);
-    // selectionModel.setValueIsAdjusting(false);
   }
 
   private final class BindingListModel extends ListBindingManager implements
@@ -286,7 +304,9 @@ public final class ListBoxBinding<E, SS, TS> extends
      */
     @Override
     protected AbstractColumnBinding[] getColBindings() {
-      return new AbstractColumnBinding[] {getDetailBinding()};
+      AbstractColumnBinding[] bindings = new AbstractColumnBinding[columnBindings.size()];
+      bindings = columnBindings.toArray(bindings);
+      return bindings;
     }
 
     /*
@@ -369,7 +389,9 @@ public final class ListBoxBinding<E, SS, TS> extends
      * @see org.gwt.mosaic.ui.client.list.ListModel#getElementAt(int)
      */
     public Object getElementAt(int index) {
-      return valueAt(index, 0);
+      System.out.println(valueAt(index, 0));
+      System.out.println(getElement(index));
+      return getElement(index);
     }
 
     /*
