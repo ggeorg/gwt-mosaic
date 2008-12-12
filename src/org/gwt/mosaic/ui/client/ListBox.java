@@ -776,7 +776,15 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     }
 
     this.dataModel = dataModel;
+
+    // TODO bulk update
+    for (int i = 0, n = dataModel.getSize(); i < n; ++i) {
+      renderItemOnInsert(dataModel.getElementAt(i), INSERT_AT_END);
+    }
+
     this.dataModel.addListDataListener(this);
+    
+    layout();
   }
 
   /**

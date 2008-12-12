@@ -23,7 +23,6 @@ import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 import org.gwt.mosaic.ui.client.Viewport;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -70,6 +69,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    */
   protected LayoutPanel(Element elem) {
     super(elem);
+    
+    // Setting the panel's position style to 'relative' causes it to be treated
+    // as a new positioning context for its children.
+    DOM.setStyleAttribute(getElement(), "position", "relative");
+    DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+    
     setStyleName(DEFAULT_STYLENAME);
     setLayout(new FillLayout());
   }
@@ -372,9 +377,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       return;
     }
 
-    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
-        + parent.getClass().getName()
-        + "') is not an instance of HasLayoutManager.", null);
+//    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+//        + parent.getClass().getName()
+//        + "') is not an instance of HasLayoutManager.", null);
 
     // Set the initial size & layout
     DeferredCommand.addCommand(new Command() {
