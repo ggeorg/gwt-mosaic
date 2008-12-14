@@ -24,7 +24,6 @@ import org.gwt.beansbinding.core.client.BindingGroup;
 import org.gwt.beansbinding.core.client.Bindings;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
-import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 import org.gwt.beansbinding.observablecollections.client.ObservableCollections;
 import org.gwt.beansbinding.observablecollections.client.ObservableList;
 import org.gwt.beansbinding.ui.client.adapters.TextBoxAdapterProvider;
@@ -42,7 +41,6 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.TextBox;
@@ -54,14 +52,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class CwListBoxBinding extends ContentWidget {
-  
-  static {
-    try {
-      GWT.create(HasPropertyChangeSupport.class);
-    } catch (Throwable t) {
-      // GWT.log(t.getMessage(), t);
-    }
-  }
 
   /**
    * 
