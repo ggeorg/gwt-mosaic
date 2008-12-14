@@ -16,10 +16,10 @@
 package org.gwt.mosaic.ui.client.table;
 
 /**
- *  
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public interface TableModel {
+public interface TableModel<T> {
 
   /**
    * Returns the number of rows in the model.
@@ -35,15 +35,17 @@ public interface TableModel {
    * @return the number of columns in the model
    * @see #getRowCount
    */
-  public int getColumnCount();
-
+  // public int getColumnCount();
   /**
-   * Returns the name of the column at {@code columnIndex}.
+   * Sets the value in the cell at {@code columnIndex} and {@code rowIndex} to
+   * {@code value}.
    * 
-   * @param columnIndex the index of the column
-   * @return the name of the column
+   * @param value the new value
+   * @param rowIndex the row whose value is to be changed
+   * @param columnIndex the column whose value is to be changed
+   * @see #getValueAt(int, int)
    */
-  public String getColumnName(int columnIndex);
+  public void setValueAt(Object value, int rowIndex, int columnIndex);
 
   /**
    * Returns the value for the cell at {@code columnIndex} and {@code rowIndex}.
