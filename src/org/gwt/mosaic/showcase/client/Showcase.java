@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.gwt.beansbinding.core.client.util.InvokeBeanPropertyDescriptorGenerator;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
 import org.gwt.mosaic.showcase.client.content.forms.CwComplexForm;
@@ -100,6 +101,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
+
+  static {
+    try {
+      GWT.create(InvokeBeanPropertyDescriptorGenerator.class);
+    } catch (Throwable t) {
+      // GWT.log(t.getMessage(), t);
+    }
+  }
 
   /**
    * The type passed into the
@@ -445,7 +454,8 @@ public class Showcase implements EntryPoint {
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
-    setupMainMenuOption(catOther, new CwListBoxBinding(constants), IMAGES.catOther());
+    setupMainMenuOption(catOther, new CwListBoxBinding(constants),
+        IMAGES.catOther());
     setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
 
   }
