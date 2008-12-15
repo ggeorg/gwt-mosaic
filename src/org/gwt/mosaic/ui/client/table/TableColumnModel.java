@@ -17,18 +17,18 @@ package org.gwt.mosaic.ui.client.table;
 
 /**
  * 
- * @param <R> the type of the row value associated with the editor
+ * @param <T> the type of the row value
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public interface TableColumnModel<R> {
-  
-  public void addColumn(TableColumn<R> aColumn);
-  
-  public void removeColumn(TableColumn<R> column);
-  
+public interface TableColumnModel<T> {
+
+  public void addColumn(TableColumn<?> aColumn);
+
+  public void removeColumn(TableColumn<?> column);
+
   public int getColumnCount();
-  
-  public TableColumn<R> getColumn(int columnIndex);
+
+  public TableColumn<?> getColumn(int columnIndex);
 
 }

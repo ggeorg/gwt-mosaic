@@ -17,11 +17,11 @@ package org.gwt.mosaic.ui.client.table;
 
 /**
  * 
- * @param <R> the type of the row value associated with the editor
+ * @param <T> the data type of the column associated with the editor
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class TableColumn<R> {
+public class TableColumn<T> {
   
   /** The label of the column. */
   protected String label;
@@ -30,9 +30,13 @@ public class TableColumn<R> {
   protected int width;
   
   /** The editor used to edit the data cells of the column. */
-  protected TableCellEditor<R> cellEditor;
+  protected TableCellEditor<T> cellEditor;
   
-  public TableColumn(String label, int width, TableCellEditor<R> cellEditor) {
+  public TableColumn(String label) {
+    this(label, 100, null);
+  }
+  
+  public TableColumn(String label, int width, TableCellEditor<T> cellEditor) {
     this.label = label;
     this.width = width;
     this.cellEditor = cellEditor;
@@ -46,7 +50,7 @@ public class TableColumn<R> {
     return width;
   }
 
-  public TableCellEditor<R> getCellEditor() {
+  public TableCellEditor<T> getCellEditor() {
     return cellEditor;
   }
   

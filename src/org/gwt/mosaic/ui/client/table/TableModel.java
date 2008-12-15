@@ -17,6 +17,8 @@ package org.gwt.mosaic.ui.client.table;
 
 /**
  * 
+ * @param <T> the data type of the row values
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public interface TableModel<T> {
