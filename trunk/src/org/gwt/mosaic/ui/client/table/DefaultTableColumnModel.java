@@ -19,32 +19,41 @@ import java.util.Vector;
 
 /**
  * 
- * @param <R> the type of the row value associated with the editor
+ * @param <T> the type of the row value
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class DefaultTableColumnModel<R> implements TableColumnModel<R> {
+public class DefaultTableColumnModel<T> implements TableColumnModel<T> {
 
   /** Array of TableColumn objects. */
-  protected final Vector<TableColumn<R>> tableColumns;
+  protected final Vector<TableColumn<?>> tableColumns = new Vector<TableColumn<?>>();
 
   /**
    * Creates a default table column model.
    */
   public DefaultTableColumnModel() {
     super();
-
-    tableColumns = new Vector<TableColumn<R>>();
   }
 
-  public void addColumn(TableColumn<R> column) {
+  /**
+   * 
+   * @param columnNames
+   */
+  public DefaultTableColumnModel(String[] columnNames) {
+    super();
+    for (int i = 0; i < columnNames.length; ++i) {
+      tableColumns.add(new TableColumn<String>(columnNames[i], 100, null));
+    }
+  }
+
+  public void addColumn(TableColumn<?> column) {
     if (column == null) {
       throw new IllegalArgumentException("Object is null");
     }
     tableColumns.add(column);
   }
 
-  public void removeColumn(TableColumn<R> column) {
+  public void removeColumn(TableColumn<?> column) {
     tableColumns.remove(column);
   }
 
@@ -52,8 +61,8 @@ public class DefaultTableColumnModel<R> implements TableColumnModel<R> {
     return tableColumns.size();
   }
 
-  public TableColumn<R> getColumn(int columnIndex) {
-    return (TableColumn<R>) tableColumns.elementAt(columnIndex);
+  public TableColumn<?> getColumn(int columnIndex) {
+    return tableColumns.elementAt(columnIndex);
   }
 
 }

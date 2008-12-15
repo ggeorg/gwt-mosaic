@@ -183,6 +183,7 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
 
   @Override
   public Object getCell(int rowNum, int colNum) {
+    System.out.println(rowNum+"x"+colNum+"?????"+COLUMN_COUNT);
     return data.getCell(rowNum, colNum);
   }
 

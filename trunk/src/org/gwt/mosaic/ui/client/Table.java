@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client;
 import java.io.Serializable;
 
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.table.AbstractTableModel;
 import org.gwt.mosaic.ui.client.table.PagingScrollTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable;
 import org.gwt.mosaic.ui.client.table.TableColumnModel;
@@ -36,10 +37,12 @@ import com.google.gwt.widgetideas.table.client.TableBulkRenderer;
 import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
 
 /**
+ * A {@link PaddingScrollTable} that acts as a view of the underlying
+ * {@link TableModel}.
+ * 
+ * @param <T> the data type of the row values
  * 
  * @author georgopoulos.georgios(at)gmail.com
- * 
- * @param <T>
  */
 public class Table<T> extends LayoutComposite implements HasFocus {
 
@@ -65,7 +68,13 @@ public class Table<T> extends LayoutComposite implements HasFocus {
   private TableModel<T> tableModel;
   private TableColumnModel<T> columnModel;
 
-  public Table(TableModel<T> tableModel, TableColumnModel<T> columnModel) {
+  /**
+   * 
+   * @param tableModel
+   * @param columnModel
+   */
+  public Table(final TableModel<T> tableModel,
+      final TableColumnModel<T> columnModel) {
     super();
 
     this.tableModel = tableModel;
@@ -84,7 +93,15 @@ public class Table<T> extends LayoutComposite implements HasFocus {
 
           @Override
           public Object getCell(int rowNum, int colNum) {
-            return Table.this.tableModel.getValueAt(rowNum, colNum);
+            // XXX Get the value for a given cell. Return null if no more values
+            // are available!
+            if (rowNum >= tableModel.getRowCount()
+                || colNum >= columnModel.getColumnCount()) {
+              return null;
+            }
+            Object value = tableModel.getValueAt(rowNum, colNum);
+            System.out.println(value);
+            return value == null ? "" : value.toString();
           }
 
           @Override
@@ -102,9 +119,9 @@ public class Table<T> extends LayoutComposite implements HasFocus {
             return true;
           }
         });
+    cachedTableModel.setRowCount(tableModel.getRowCount());
     cachedTableModel.setPreCachedRowCount(50);
     cachedTableModel.setPostCachedRowCount(50);
-    cachedTableModel.setRowCount(1000);
 
     final LayoutPanel layoutPanel = getWidget();
     table = new PagingScrollTable<T>(cachedTableModel, new DataGrid(),
@@ -129,7 +146,7 @@ public class Table<T> extends LayoutComposite implements HasFocus {
     // cellRenderer.renderCell(row, column, (T) data));
     // }
     // });
-    table.setPageSize(100);
+    // table.setPageSize(0);
 
     // Setup the bulk renderer
     FixedWidthGridBulkRenderer bulkRenderer = new FixedWidthGridBulkRenderer(
@@ -153,6 +170,29 @@ public class Table<T> extends LayoutComposite implements HasFocus {
     table.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
 
     setMultipleSelect(false);
+  }
+
+  /**
+   * @param data
+   * @param columnModel
+   */
+  public Table(final Object[][] data, final TableColumnModel<T> columnModel) {
+    this(new AbstractTableModel<T>() {
+      private static final long serialVersionUID = 5132764391482749460L;
+
+      public int getRowCount() {
+        return data.length;
+      }
+
+      public Object getValueAt(int rowIndex, int columnIndex) {
+        return data[rowIndex][columnIndex];
+      }
+
+      public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        data[rowIndex][columnIndex] = value;
+        fireTableCellUpdated(rowIndex, columnIndex);
+      }
+    }, columnModel);
   }
 
   /**
@@ -228,4 +268,21 @@ public class Table<T> extends LayoutComposite implements HasFocus {
     // TODO table.setTabIndex(getElement(), index);
   }
 
+  /**
+   * A penel that wraps a {@link Table} and icludes options to manipulate the
+   * page.
+   * 
+   * <h3>CSS Style Rules</h3>
+   * <ul class="css">
+   * <li> .gwt-PagingOptions { applied to the entire widget } </li>
+   * <li> .gwt-PagingOptions .errorMessage { applied to the error message }
+   * </li>
+   * </ul>
+   */
+  public static class PagingOptions extends
+      org.gwt.mosaic.ui.client.table.PagingOptions {
+    public PagingOptions(Table<?> table) {
+      super(table.table);
+    }
+  }
 }
