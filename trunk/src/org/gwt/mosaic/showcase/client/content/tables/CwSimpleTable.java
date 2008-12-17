@@ -104,8 +104,7 @@ public class CwSimpleTable extends ContentWidget {
 
     // vBox.add(toolBar, new BoxLayoutData(FillStyle.HORIZONTAL));
     vBox.add(table, new BoxLayoutData(FillStyle.BOTH));
-    vBox.add(new WidgetWrapper(pagingOptions), new BoxLayoutData(
-        FillStyle.HORIZONTAL, true));
+    vBox.add(pagingOptions);
 
     return vBox;
   }

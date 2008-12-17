@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.FocusListenerCollection;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
+import com.google.gwt.widgetideas.table.client.AbstractCellEditor;
 import com.google.gwt.widgetideas.table.client.CachedTableModel;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGridBulkRenderer;
@@ -131,6 +132,8 @@ public class Table<T> extends LayoutComposite implements HasFocus {
     for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
       headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
       table.setColumnWidth(i, columnModel.getColumn(i).getWidth());
+      table.setCellEditor(i,
+          (AbstractCellEditor<T>) columnModel.getColumn(i).getCellEditor());
     }
 
     // table.setCellRenderer(new

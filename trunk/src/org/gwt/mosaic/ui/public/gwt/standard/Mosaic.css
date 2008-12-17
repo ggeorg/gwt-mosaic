@@ -1239,6 +1239,12 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	z-index: 2147483647; /* Integer.MAX_VALUE */
 }
 
+/*** gwt-InlineCellEditor **/
+
+.gwt-InlineCellEditor {
+	z-index: 2147483647; /* Integer.MAX_VALUE */
+}
+
 /*** mosaic-FormSeparator **/
 
 .mosaic-FormSeparator td {
