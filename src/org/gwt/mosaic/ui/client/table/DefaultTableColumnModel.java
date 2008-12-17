@@ -42,7 +42,7 @@ public class DefaultTableColumnModel<T> implements TableColumnModel<T> {
   public DefaultTableColumnModel(String[] columnNames) {
     super();
     for (int i = 0; i < columnNames.length; ++i) {
-      tableColumns.add(new TableColumn<String>(columnNames[i], 100, null));
+      tableColumns.add(new TableColumn<String>(columnNames[i], 100, new TextCellEditor()));
     }
   }
 
