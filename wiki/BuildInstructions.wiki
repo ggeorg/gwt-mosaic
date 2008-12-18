@@ -2,7 +2,7 @@
 
 === Requirements ===
 
- * GWT 1.5.2 is required.
+ * GWT 1.5.3 is required.
  * The build requires a *GWT_HOME* enviornment variable
  * Eclipse requires a *GWT15_HOME* classpath variable
 
