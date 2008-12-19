@@ -15,24 +15,19 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
+import com.google.gwt.user.client.EventListener;
+
 /**
- * 
- * @param <T> the type of the row value
+ * A {@code TableColumnModelListener} can register with a
+ * {@link TableColumnModel} to receive notification of changes to the model.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public interface TableColumnModel<T> {
-
-  public void addColumn(TableColumn<?> aColumn);
-
-  public void removeColumn(TableColumn<?> column);
-
-  public int getColumnCount();
-
-  public TableColumn<?> getColumn(int columnIndex);
-  
-  void addColumnModelListener(TableColumnModelListener listener);
-  
-  void removeColumnModelListener(TableColumnModelListener listener);
-
+public interface TableColumnModelListener extends EventListener {
+  /**
+   * Called by the {@link TableColumnModel} to indicate that a 
+   * @param e
+   */
+  void columnAdded(TableColumnModelEvent e);
+  void columnRemoved(TableColumnModelEvent e);
 }
