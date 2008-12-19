@@ -65,4 +65,14 @@ public class DefaultTableColumnModel<T> implements TableColumnModel<T> {
     return tableColumns.elementAt(columnIndex);
   }
 
+  public void addColumnModelListener(TableColumnModelListener listener) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public void removeColumnModelListener(TableColumnModelListener listener) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

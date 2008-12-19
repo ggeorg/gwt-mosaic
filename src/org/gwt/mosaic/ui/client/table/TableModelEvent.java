@@ -27,7 +27,7 @@ import java.util.EventObject;
 public class TableModelEvent extends EventObject {
 
   /** The event type. */
-  enum Type {
+  public enum Type {
     /** Identifies the addition of new rows or columns. */
     INSERT,
     /** Identifies a change to existing data. */

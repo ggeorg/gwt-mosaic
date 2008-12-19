@@ -19,10 +19,13 @@ import java.io.Serializable;
 
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.table.AbstractTableModel;
+import org.gwt.mosaic.ui.client.table.DefaultTableModel;
 import org.gwt.mosaic.ui.client.table.PagingScrollTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable;
 import org.gwt.mosaic.ui.client.table.TableColumnModel;
 import org.gwt.mosaic.ui.client.table.TableModel;
+import org.gwt.mosaic.ui.client.table.TableModelEvent;
+import org.gwt.mosaic.ui.client.table.TableModelListener;
 import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
 
 import com.google.gwt.user.client.ui.FocusListener;
@@ -45,7 +48,8 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class Table<T> extends LayoutComposite implements HasFocus {
+public class Table<T> extends LayoutComposite implements HasFocus,
+    TableModelListener {
 
   /**
    * The renderer used to set cell contents.
@@ -60,13 +64,13 @@ public class Table<T> extends LayoutComposite implements HasFocus {
     }
   };
 
-  private final PagingScrollTable<T> table;
+  private PagingScrollTable<T> table;
 
   private FocusListenerCollection focusListeners;
 
   private KeyboardListenerCollection keyboardListeners;
 
-  private TableModel<T> tableModel;
+  private TableModel<T> dataModel;
   private TableColumnModel<T> columnModel;
 
   /**
@@ -78,56 +82,12 @@ public class Table<T> extends LayoutComposite implements HasFocus {
       final TableColumnModel<T> columnModel) {
     super();
 
-    this.tableModel = tableModel;
+    // this.dataModel = tableModel;
     this.columnModel = columnModel;
 
-    FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
+    setModel(tableModel);
 
-    // Setup the controller
-    CachedTableModel<T> cachedTableModel = new CachedTableModel<T>(
-        new com.google.gwt.widgetideas.table.client.ClientTableModel<T>() {
-
-          @Override
-          public void requestRows(Request request, Callback<T> callback) {
-            super.requestRows(request, callback);
-          }
-
-          @Override
-          public Object getCell(int rowNum, int colNum) {
-            // XXX Get the value for a given cell. Return null if no more values
-            // are available!
-            if (rowNum >= tableModel.getRowCount()
-                || colNum >= columnModel.getColumnCount()) {
-              return null;
-            }
-            Object value = tableModel.getValueAt(rowNum, colNum);
-            System.out.println(value);
-            return value == null ? "" : value.toString();
-          }
-
-          @Override
-          protected boolean onRowInserted(int beforeRow) {
-            return true;
-          }
-
-          @Override
-          protected boolean onRowRemoved(int row) {
-            return true;
-          }
-
-          @Override
-          protected boolean onSetData(int row, int cell, Object data) {
-            return true;
-          }
-        });
-    cachedTableModel.setRowCount(tableModel.getRowCount());
-    cachedTableModel.setPreCachedRowCount(50);
-    cachedTableModel.setPostCachedRowCount(50);
-
-    final LayoutPanel layoutPanel = getWidget();
-    table = new PagingScrollTable<T>(cachedTableModel, new DataGrid(),
-        headerTable);
-    layoutPanel.add(table);
+    FixedWidthFlexTable headerTable = table.getHeaderTable();
 
     for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
       headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
@@ -286,6 +246,95 @@ public class Table<T> extends LayoutComposite implements HasFocus {
       org.gwt.mosaic.ui.client.table.PagingOptions {
     public PagingOptions(Table<?> table) {
       super(table.table);
+    }
+  }
+
+  /**
+   * Set the data model.
+   * 
+   * @param model the new data model
+   * @exception IllegalArgumentException if {@code model} is {@code null}
+   * @see #getModel
+   */
+  public void setModel(TableModel<T> model) {
+    if (model == null) {
+      throw new IllegalArgumentException();
+    }
+    TableModel<T> oldValue = dataModel;
+    if (oldValue != null) {
+      oldValue.removeTableModelListener(this);
+    }
+    dataModel = model;
+    dataModel.addTableModelListener(this);
+    if (oldValue != dataModel) {
+      // Setup the controller
+      CachedTableModel<T> cachedTableModel = new CachedTableModel<T>(
+          new com.google.gwt.widgetideas.table.client.ClientTableModel<T>() {
+
+            @Override
+            public void requestRows(Request request, Callback<T> callback) {
+              super.requestRows(request, callback);
+            }
+
+            @Override
+            public Object getCell(int rowNum, int colNum) {
+              // XXX Get the value for a given cell. Return null if no more
+              // values are available!
+              if (rowNum >= dataModel.getRowCount()
+                  || colNum >= columnModel.getColumnCount()) {
+                return null;
+              }
+              Object value = dataModel.getValueAt(rowNum, colNum);
+              return value == null ? "" : value.toString();
+            }
+
+            @Override
+            protected boolean onRowInserted(int beforeRow) {
+              return true;
+            }
+
+            @Override
+            protected boolean onRowRemoved(int row) {
+              return true;
+            }
+
+            @Override
+            protected boolean onSetData(int row, int cell, Object data) {
+              return true;
+            }
+          });
+      cachedTableModel.setRowCount(dataModel.getRowCount());
+      cachedTableModel.setPreCachedRowCount(50);
+      cachedTableModel.setPostCachedRowCount(50);
+
+      final LayoutPanel layoutPanel = getWidget();
+      table = new PagingScrollTable<T>(cachedTableModel, new DataGrid(),
+          new FixedWidthFlexTable());
+      layoutPanel.clear();
+      layoutPanel.add(table);
+    }
+  }
+
+  /**
+   * Receives notification when the table model changes.
+   * 
+   * @see org.gwt.mosaic.ui.client.table.TableModelListener#tableChanged(org.gwt.mosaic.ui.client.table.TableModelEvent)
+   */
+  public void tableChanged(TableModelEvent event) {
+    if (event == null || event.getFirstRow() == TableModelEvent.ALL_ROWS) {
+      table.getDataTable().deselectRows();
+
+      // TODO
+
+      return;
+    }
+
+    if (event.getType() == TableModelEvent.Type.INSERT) {
+
+    } else if (event.getType() == TableModelEvent.Type.DELETE) {
+
+    } else {
+
     }
   }
 }
