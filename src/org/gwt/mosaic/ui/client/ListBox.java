@@ -99,6 +99,11 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     public PopupMenu getContextMenu() {
       return contextMenu;
     }
+    
+    @Override
+    protected int getInputColumnWidth() {
+      return super.getInputColumnWidth();
+    }
 
     @Override
     protected void hoverCell(Element cellElem) {
@@ -230,6 +235,11 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
 
     final LayoutPanel layoutPanel = getWidget();
     columnWidget = new ColumnWidget(dataTable, headerTable) {
+      @Override
+      protected int getInputColumnWidth() {
+        return dataTable.getInputColumnWidth();
+      }
+
       @Override
       protected void hoverCell(Element cellElem) {
         dataTable.hoverCell(cellElem);
@@ -610,18 +620,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   }
 
   /**
-   * Removes the item at the specified index.
-   * 
-   * @param index the index of the item to be removed
-   * @throws IndexOutOfBoundsException if the index is out of range
-   */
-  public void renderOnRemove(int index) {
-    checkIndex(index);
-    rowItems.remove(getItem(index));
-    dataTable.removeRow(index);
-  }
-
-  /**
    * Renders an updated item.
    * 
    * @param index the index of the item to be set
@@ -649,6 +647,18 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   public void renderOnClear() {
     dataTable.resizeRows(0);
     rowItems.clear();
+  }
+
+  /**
+   * Removes the item at the specified index.
+   * 
+   * @param index the index of the item to be removed
+   * @throws IndexOutOfBoundsException if the index is out of range
+   */
+  public void renderOnRemove(int index) {
+    checkIndex(index);
+    rowItems.remove(getItem(index));
+    dataTable.removeRow(index);
   }
 
   /**
@@ -771,7 +781,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     }
     if (this.dataModel != null) {
       this.dataModel.removeListDataListener(this);
-      dataTable.deselectRows();
+      dataTable.deselectAllRows();
       renderOnClear();
     }
 

@@ -55,6 +55,11 @@ public class ScrollTreeTable extends ColumnWidget {
 
     setStylePrimaryName(DEFAULT_STYLENAME);
   }
+  
+  @Override
+  protected int getInputColumnWidth() {
+    return ((FastTreeTable) getDataTable()).getInputColumnWidth();
+  }
 
   @Override
   protected void hoverCell(Element cellElem) {

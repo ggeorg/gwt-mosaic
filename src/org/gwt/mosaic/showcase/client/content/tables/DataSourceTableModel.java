@@ -22,6 +22,8 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.widgetideas.table.client.ClientTableModel;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.SerializableResponse;
 
 /**
  * An iterator that serves as the data source for TableOracle requests.
@@ -36,12 +38,6 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
   /**
    * The source of the data.
    */
-//  private StudentGenerator data = new StudentGenerator() {
-//    @Override
-//    public int getRandomInt(int max) {
-//      return Random.nextInt(max);
-//    }
-//  };
   private DataSourceData data = new DataSourceData() {
     @Override
     public int getRandomInt(int max) {
@@ -69,6 +65,14 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
    * A boolean indicating that we should return 0 rows in the response.
    */
   private boolean zeroMode = false;
+
+  /**
+   * @see ClientTableModel#getCell(int, int)
+   */
+  @Override
+  public Object getCell(int rowNum, int colNum) {
+    return data.getCell(rowNum, colNum);
+  }
 
   /**
    * Check if zero mode is enabled.
@@ -108,8 +112,9 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
       callback.onFailure(new Exception("An error has occured."));
     } else if (zeroMode) {
       // Return an empty result
-      //List<Serializable> students = data.generateStudents(0);
-      //callback.onRowsReady(request, new SerializableResponse<Serializable>(students));
+      // List<Serializable> students = data.generateStudents(0);
+      // callback.onRowsReady(request, new
+      // SerializableResponse<Serializable>(students));
     } else if (rpcMode) {
       // Create the service if needed
       if (dataService == null) {
@@ -131,13 +136,7 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
             }
           });
     } else {
-   // Generate data locally
-//      int numRows = request.getNumRows();
-//      List<Serializable> students = data.generateStudents(numRows);
-//      SerializableResponse<Serializable> response = new SerializableResponse<Serializable>(
-//          students);
-//      callback.onRowsReady(request, response);
-   // Request rows from the local client
+      // Generate data locally
       super.requestRows(request, callback);
     }
   }
@@ -159,7 +158,7 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
   public void setRPCModeEnabled(boolean enabled) {
     this.rpcMode = enabled;
   }
-  
+
   /**
    * Enable or disable zero mode.
    * 
@@ -178,17 +177,10 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
   protected boolean onRowRemoved(int row) {
     return true;
   }
-  
-  //-------------------------
-
-  @Override
-  public Object getCell(int rowNum, int colNum) {
-    System.out.println(rowNum+"x"+colNum+"?????"+COLUMN_COUNT);
-    return data.getCell(rowNum, colNum);
-  }
 
   @Override
   protected boolean onSetData(int row, int cell, Object data) {
-    return true;
+    System.out.println("=======================");
+    return false;
   }
 }

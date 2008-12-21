@@ -42,8 +42,8 @@ import com.google.gwt.widgetideas.table.client.SortableGrid.ColumnSorter;
 import com.google.gwt.widgetideas.table.client.SortableGrid.ColumnSorterCallback;
 import com.google.gwt.widgetideas.table.client.TableModel.Callback;
 import com.google.gwt.widgetideas.table.client.TableModel.ColumnSortList;
-import com.google.gwt.widgetideas.table.client.TableModel.Request;
 import com.google.gwt.widgetideas.table.client.TableModel.Response;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
 
 /**
  * A {@link ScrollTable} that acts as a view for an underlying
@@ -401,7 +401,7 @@ public class PagingScrollTable<R> extends ScrollTable implements
     if (currentPage != oldPage || forced) {
       // Deselect rows when switching pages
       DataGrid dataTable = (DataGrid) getDataTable();
-      dataTable.deselectRows();
+      dataTable.deselectAllRows();
 
       // Fire listeners
       if (rowPagingListeners != null) {

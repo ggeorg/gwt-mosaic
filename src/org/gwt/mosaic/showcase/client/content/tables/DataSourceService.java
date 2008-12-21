@@ -18,8 +18,8 @@ package org.gwt.mosaic.showcase.client.content.tables;
 import java.io.Serializable;
 
 import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.widgetideas.table.client.TableModel.Request;
-import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.SerializableResponse;
 
 /**
  * A <code>RemoteService</code> to retrieve row data for the
