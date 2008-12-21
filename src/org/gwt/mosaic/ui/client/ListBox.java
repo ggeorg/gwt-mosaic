@@ -99,7 +99,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     public PopupMenu getContextMenu() {
       return contextMenu;
     }
-    
+
     @Override
     protected int getInputColumnWidth() {
       return super.getInputColumnWidth();
@@ -793,7 +793,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     }
 
     this.dataModel.addListDataListener(this);
-    
+
     layout();
   }
 

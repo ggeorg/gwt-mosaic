@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -152,6 +153,11 @@ public class PagingScrollTable<R> extends ScrollTable implements
   private int currentPage = -1;
 
   /**
+   * The wrapper around the empty table widget.
+   */
+  private SimplePanel emptyTableWidgetWrapper = new SimplePanel();
+
+  /**
    * The old page count, used to detect when the number of pages changes.
    */
   private int oldPageCount;
@@ -228,9 +234,10 @@ public class PagingScrollTable<R> extends ScrollTable implements
    */
   public PagingScrollTable(TableModel<R> tableModel, DataGrid dataTable,
       FixedWidthFlexTable headerTable, ScrollTableImages images) {
-    //super(dataTable, headerTable, images);
-    super(dataTable, headerTable);
+    super(dataTable, headerTable, images);
     this.tableModel = tableModel;
+    // TODO insert(emptyTableWidgetWrapper, getElement(), 2, true);
+    // TODO setEmptyTableWidgetVisible(false);
     oldPageCount = getNumPages();
 
     // Listen to table model events
@@ -290,6 +297,20 @@ public class PagingScrollTable<R> extends ScrollTable implements
   }
 
   /**
+   * Invoke the cell editor on a cell, if one is set. If a cell editor is not
+   * specified, this method has no effect.
+   */
+  protected void editCell(int row, int column) {
+    AbstractCellEditor<R> cellEditor = getCellEditor(column);
+    if (cellEditor == null) {
+      return;
+    }
+    CellEditInfo<R> editInfo = new CellEditInfo<R>(getDataTable(), row, column,
+        getRowValue(row));
+    cellEditor.editCell(editInfo, getCellEditorCallback());
+  }
+
+  /**
    * Get the column editor for a column.
    * 
    * @param column the column index
@@ -300,6 +321,23 @@ public class PagingScrollTable<R> extends ScrollTable implements
       return null;
     }
     return cellEditors.get(new Integer(column));
+  }
+
+  /**
+   * @return the cell editor callback.
+   */
+  protected AbstractCellEditor.Callback<R> getCellEditorCallback() {
+    if (cellEditorCallback == null) {
+      cellEditorCallback = new AbstractCellEditor.Callback<R>() {
+        public void onCancel(CellEditInfo<R> cellEditInfo) {
+        }
+
+        public void onComplete(CellEditInfo<R> cellEditInfo, Object value) {
+          renderCell(cellEditInfo.getRow(), cellEditInfo.getCell(), value);
+        }
+      };
+    }
+    return cellEditorCallback;
   }
 
   /**
@@ -314,6 +352,38 @@ public class PagingScrollTable<R> extends ScrollTable implements
    */
   public int getCurrentPage() {
     return currentPage;
+  }
+
+  /**
+   * @return the widget displayed when the data table is empty
+   */
+  public Widget getEmptyTableWidget() {
+    return emptyTableWidgetWrapper.getWidget();
+  }
+
+  /**
+   * Get the first visible row index.
+   * 
+   * @return the first row index
+   */
+  protected int getFirstRow() {
+    return currentPage * pageSize;
+  }
+
+  /**
+   * Get the last visible row index.
+   * 
+   * @return the last row index
+   */
+  protected int getLastRow() {
+    if (tableModel.getRowCount() < 0) {
+      // Unknown row count, so just return based on current page
+      return (currentPage + 1) * pageSize - 1;
+    } else if (pageSize == 0) {
+      // Only one page, so return row count
+      return tableModel.getRowCount() - 1;
+    }
+    return Math.min(tableModel.getRowCount(), (currentPage + 1) * pageSize) - 1;
   }
 
   /**
@@ -445,6 +515,43 @@ public class PagingScrollTable<R> extends ScrollTable implements
   }
 
   /**
+   * Insert a row into the table relative to the total number of rows.
+   * 
+   * @param beforeRow the row index
+   */
+  protected void insertAbsoluteRow(int beforeRow) {
+    // Physically insert the row
+    int lastRow = getLastRow() + 1;
+    if (beforeRow <= lastRow) {
+      int firstRow = getFirstRow();
+      if (beforeRow >= firstRow) {
+        // Insert row in the middle of the page
+        getDataTable().insertRow(beforeRow - firstRow);
+      } else {
+        // Insert zero row because row is before this page
+        getDataTable().insertRow(0);
+      }
+      if (getDataTable().getRowCount() > pageSize) {
+        getDataTable().removeRow(pageSize);
+      }
+    }
+  }
+
+  /**
+   * This method is called immediately after a widget becomes attached to the
+   * browser's document.
+   */
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    // If we have not loaded any pages, load one now
+    if (currentPage < 0) {
+      gotoPage(0, true);
+    }
+  }
+
+  /**
    * Reload the current page.
    */
   public void reloadPage() {
@@ -456,6 +563,27 @@ public class PagingScrollTable<R> extends ScrollTable implements
   }
 
   /**
+   * Remove a row from the table relative to the total number of rows.
+   * 
+   * @param row the row index
+   */
+  protected void removeAbsoluteRow(int row) {
+    // Physically remove the row
+    int lastRow = getLastRow();
+    if (row <= lastRow) {
+      int firstRow = getFirstRow();
+      if (row >= firstRow) {
+        // Remove a row in the middle of the page
+        getDataTable().removeRow(row - firstRow);
+      } else {
+        // Remove first row because row is before this page
+        getDataTable().removeRow(0);
+      }
+      getDataTable().insertRow(pageSize - 1);
+    }
+  }
+
+  /**
    * Remove a {@link RowPagingListener}.
    * 
    * @param listener the listener to remove
@@ -463,6 +591,44 @@ public class PagingScrollTable<R> extends ScrollTable implements
   public void removeRowPagingListener(RowPagingListener listener) {
     if (rowPagingListeners != null) {
       rowPagingListeners.remove(listener);
+    }
+  }
+
+  /**
+   * Render the contents of the cell.
+   * 
+   * @param row the row index
+   * @param column the column index
+   * @param data the data to render
+   */
+  protected void renderCell(int row, int column, Object data) {
+    if (cellRenderer == null) {
+      if (data instanceof Widget) {
+        getDataTable().setWidget(row, column, (Widget) data);
+      } else {
+        getDataTable().setHTML(row, column, data + "");
+      }
+    } else {
+      cellRenderer.renderCell((DataGrid) getDataTable(), row, column, data);
+    }
+  }
+
+  /**
+   * Set the data in a cell. The data object will be rendered using the
+   * {@link CellRenderer}, if one is specified.
+   * 
+   * The row index in this method is relative to the total number of rows across
+   * all pages. It is not the same as the row index passed into setHTML, which
+   * is relative to the current page.
+   * 
+   * @param row the row index
+   * @param column the column index
+   * @param data the data to set
+   */
+  protected void setAbsoluteData(int row, int column, Object data) {
+    int firstRow = getFirstRow();
+    if ((row >= firstRow) && (row <= getLastRow())) {
+      renderCell(row - firstRow, column, data);
     }
   }
 
@@ -499,6 +665,85 @@ public class PagingScrollTable<R> extends ScrollTable implements
    */
   public void setCellRenderer(CellRenderer cellRenderer) {
     this.cellRenderer = cellRenderer;
+  }
+
+  /**
+   * Set a block of data. This method is used when responding to data requests.
+   * 
+   * This method takes an iterator of iterators, where each iterator represents
+   * one row of data starting with the first row.
+   * 
+   * @param firstRow the row index
+   * @param rows the 2D Iterator of data
+   * @param rowValues the values associated with each row
+   */
+  protected void setData(int firstRow, Iterator<Iterator<Object>> rows,
+      List<R> rowValues) {
+    getDataTable().deselectAllRows();
+    this.rowValues = rowValues;
+    if (rows != null && rows.hasNext()) {
+      // TODO setEmptyTableWidgetVisible(false);
+
+      // Get an iterator over the visible rows
+      int firstVisibleRow = getFirstRow();
+      int lastVisibleRow = getLastRow();
+      Iterator<Iterator<Object>> visibleIter = new VisibleRowsIterator(rows,
+          firstRow, firstVisibleRow, lastVisibleRow);
+
+      // Use the table renderer
+      if (bulkRenderer != null) {
+        bulkRenderer.renderRows(visibleIter, tableRendererCallback);
+        return;
+      }
+
+      // Render the cells the default way
+      int rowCount = 0;
+      int colCount = 0;
+      while (visibleIter.hasNext()) {
+        Iterator<Object> columnIt = visibleIter.next();
+        int curColumn = 0;
+        while (columnIt.hasNext()) {
+          renderCell(rowCount, curColumn, columnIt.next());
+          curColumn++;
+        }
+
+        // Increment the number of rows and cells
+        rowCount++;
+        colCount = Math.max(colCount, curColumn);
+      }
+
+      // Get rid of unneeded rows
+      getDataTable().resize(rowCount, colCount);
+    } else {
+      // TODO setEmptyTableWidgetVisible(true);
+    }
+
+    // Fire page loaded event
+    tableRendererCallback.onRendered();
+  }
+
+  /**
+   * Set the {@link Widget} that will be displayed in place of the data table
+   * when the data table has no data to display.
+   * 
+   * @param emptyTableWidget the widget to display when the data table is empty
+   */
+  public void setEmptyTableWidget(Widget emptyTableWidget) {
+    emptyTableWidgetWrapper.setWidget(emptyTableWidget);
+  }
+
+  /**
+   * Set whether or not the empty table widget is visible.
+   * 
+   * @param visible true to show the empty table widget
+   */
+  protected void setEmptyTableWidgetVisible(boolean visible) {
+    emptyTableWidgetWrapper.setVisible(visible);
+    if (visible) {
+      getDataWrapper().getElement().getStyle().setProperty("display", "none");
+    } else {
+      getDataWrapper().getElement().getStyle().setProperty("display", "");
+    }
   }
 
   /**
@@ -542,203 +787,5 @@ public class PagingScrollTable<R> extends ScrollTable implements
 
     // Set the row value
     rowValues.set(row, value);
-  }
-
-  /**
-   * Invoke the cell editor on a cell, if one is set. If a cell editor is not
-   * specified, this method has no effect.
-   */
-  protected void editCell(int row, int column) {
-    AbstractCellEditor<R> cellEditor = getCellEditor(column);
-    if (cellEditor == null) {
-      return;
-    }
-    CellEditInfo<R> editInfo = new CellEditInfo<R>(getDataTable(), row, column,
-        getRowValue(row));
-    cellEditor.editCell(editInfo, getCellEditorCallback());
-  }
-
-  /**
-   * @return the cell editor callback.
-   */
-  protected AbstractCellEditor.Callback<R> getCellEditorCallback() {
-    if (cellEditorCallback == null) {
-      cellEditorCallback = new AbstractCellEditor.Callback<R>() {
-        public void onCancel(CellEditInfo<R> cellEditInfo) {
-        }
-
-        public void onComplete(CellEditInfo<R> cellEditInfo, Object value) {
-          renderCell(cellEditInfo.getRow(), cellEditInfo.getCell(), value);
-        }
-      };
-    }
-    return cellEditorCallback;
-  }
-
-  /**
-   * Get the first visible row index.
-   * 
-   * @return the first row index
-   */
-  protected int getFirstRow() {
-    return currentPage * pageSize;
-  }
-
-  /**
-   * Get the last visible row index.
-   * 
-   * @return the last row index
-   */
-  protected int getLastRow() {
-    if (tableModel.getRowCount() < 0) {
-      return (currentPage + 1) * pageSize - 1;
-    }
-    return Math.min(tableModel.getRowCount(), (currentPage + 1) * pageSize) - 1;
-  }
-
-  /**
-   * Insert a row into the table relative to the total number of rows.
-   * 
-   * @param beforeRow the row index
-   */
-  protected void insertAbsoluteRow(int beforeRow) {
-    // Physically insert the row
-    int lastRow = getLastRow() + 1;
-    if (beforeRow <= lastRow) {
-      int firstRow = getFirstRow();
-      if (beforeRow >= firstRow) {
-        // Insert row in the middle of the page
-        getDataTable().insertRow(beforeRow - firstRow);
-      } else {
-        // Insert zero row because row is before this page
-        getDataTable().insertRow(0);
-      }
-      if (getDataTable().getRowCount() > pageSize) {
-        getDataTable().removeRow(pageSize);
-      }
-    }
-  }
-
-  /**
-   * This method is called immediately after a widget becomes attached to the
-   * browser's document.
-   */
-  @Override
-  protected void onLoad() {
-    super.onLoad();
-
-    // If we have not loaded any pages, load one now
-    if (currentPage < 0) {
-      gotoPage(0, true);
-    }
-  }
-
-  /**
-   * Remove a row from the table relative to the total number of rows.
-   * 
-   * @param row the row index
-   */
-  protected void removeAbsoluteRow(int row) {
-    // Physically remove the row
-    int lastRow = getLastRow();
-    if (row <= lastRow) {
-      int firstRow = getFirstRow();
-      if (row >= firstRow) {
-        // Remove a row in the middle of the page
-        getDataTable().removeRow(row - firstRow);
-      } else {
-        // Remove first row because row is before this page
-        getDataTable().removeRow(0);
-      }
-      getDataTable().insertRow(pageSize - 1);
-    }
-  }
-
-  /**
-   * Render the contents of the cell.
-   * 
-   * @param row the row index
-   * @param column the column index
-   * @param data the data to render
-   */
-  protected void renderCell(int row, int column, Object data) {
-    if (cellRenderer == null) {
-      if (data instanceof Widget) {
-        getDataTable().setWidget(row, column, (Widget) data);
-      } else {
-        getDataTable().setHTML(row, column, data + "");
-      }
-    } else {
-      cellRenderer.renderCell((DataGrid) getDataTable(), row, column, data);
-    }
-  }
-
-  /**
-   * Set the data in a cell. The data object will be rendered using the
-   * {@link CellRenderer}, if one is specified.
-   * 
-   * The row index in this method is relative to the total number of rows across
-   * all pages. It is not the same as the row index passed into setHTML, which
-   * is relative to the current page.
-   * 
-   * @param row the row index
-   * @param column the column index
-   * @param data the data to set
-   */
-  protected void setAbsoluteData(int row, int column, Object data) {
-    int firstRow = getFirstRow();
-    if ((row >= firstRow) && (row <= getLastRow())) {
-      renderCell(row - firstRow, column, data);
-    }
-  }
-
-  /**
-   * Set a block of data. This method is used when responding to data requests.
-   * 
-   * This method takes an iterator of iterators, where each iterator represents
-   * one row of data starting with the first row.
-   * 
-   * @param firstRow the row index
-   * @param rows the 2D Iterator of data
-   * @param rowValues the values associated with each row
-   */
-  protected void setData(int firstRow, Iterator<Iterator<Object>> rows,
-      List<R> rowValues) {
-    this.rowValues = rowValues;
-    if (rows != null) {
-      // Get an iterator over the visible rows
-      int firstVisibleRow = getFirstRow();
-      int lastVisibleRow = getLastRow();
-      Iterator<Iterator<Object>> visibleIter = new VisibleRowsIterator(rows,
-          firstRow, firstVisibleRow, lastVisibleRow);
-
-      // Use the table renderer
-      if (bulkRenderer != null) {
-        bulkRenderer.renderRows(visibleIter, tableRendererCallback);
-        return;
-      }
-
-      // Render the cells the default way
-      int rowCount = 0;
-      int colCount = 0;
-      while (visibleIter.hasNext()) {
-        Iterator<Object> columnIt = visibleIter.next();
-        int curColumn = 0;
-        while (columnIt.hasNext()) {
-          renderCell(rowCount, curColumn, columnIt.next());
-          curColumn++;
-        }
-
-        // Increment the number of rows and cells
-        rowCount++;
-        colCount = Math.max(colCount, curColumn);
-      }
-
-      // Get rid of unneeded rows
-      getDataTable().resize(rowCount, colCount);
-
-      // Fire page loaded event
-      tableRendererCallback.onRendered();
-    }
   }
 }

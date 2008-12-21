@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.ScrollTable.ScrollTableImages;
 
 /**
  * <p>
@@ -68,7 +69,7 @@ public class ScrollTable extends ColumnWidget {
     protected int getInputColumnWidth() {
       return super.getInputColumnWidth();
     }
-    
+
     @Override
     protected void hoverCell(Element cellElem) {
       super.hoverCell(cellElem);
@@ -89,10 +90,20 @@ public class ScrollTable extends ColumnWidget {
    * @param headerTable the header table
    */
   public ScrollTable(DataGrid dataTable, FixedWidthFlexTable headerTable) {
-    super(impl.createFocusable(), dataTable, headerTable);
+    super(dataTable, headerTable);
+  }
 
-    // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
-    // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
+  /**
+   * Constructor.
+   * 
+   * @param dataTable the data table
+   * @param headerTable the header table
+   * @param images the images to use in the table
+   */
+  public ScrollTable(DataGrid dataTable, FixedWidthFlexTable headerTable,
+      ScrollTableImages images) {
+    super(impl.createFocusable(), dataTable, headerTable, images);
+
     sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
         | Event.ONFOCUS | Event.ONKEYDOWN);
 
