@@ -267,10 +267,6 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
         // Nothing to do here.
       }
 
-      public void onRowUnhover(SourceTableSelectionEvents sender, int row) {
-        // Nothing to do here.
-      }
-
       public void onRowsSelected(SourceTableSelectionEvents sender,
           int firstRow, int numRows) {
         final FastTreeTableItem item = findItemByRow(firstRow);
@@ -278,23 +274,14 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
           setSelectedItem(item);
         }
       }
+
+      public void onRowUnhover(SourceTableSelectionEvents sender, int row) {
+        // Nothing to do here.
+      }
     });
 
     setStyleName(STYLENAME_DEFAULT);
     moveSelectionBar(curSelection);
-  }
-
-  /**
-   * Finds an item in the tree structure by row.
-   * 
-   * @param row the item row
-   * @return the item, or <code>null</code>
-   */
-  public FastTreeTableItem findItemByRow(final int row) {
-    final ArrayList<Element> chain = new ArrayList<Element>();
-    final Element elem = getCellFormatter().getElement(row, getTreeColumn()).getFirstChild().cast();
-    collectElementChain(chain, getElement(), elem);
-    return findItemByChain(chain, 0, root);
   }
 
   /**
@@ -358,6 +345,10 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
       mouseListeners = new MouseListenerCollection();
     }
     mouseListeners.add(listener);
+  }
+
+  public void addTreeTableLabelProvider(TreeTableLabelProvider labelProvider) {
+    this.labelProvider = labelProvider;
   }
 
   void adopt(Widget widget, FastTreeTableItem treeItem) {
@@ -505,6 +496,19 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     return null;
   }
 
+  /**
+   * Finds an item in the tree structure by row.
+   * 
+   * @param row the item row
+   * @return the item, or <code>null</code>
+   */
+  public FastTreeTableItem findItemByRow(final int row) {
+    final ArrayList<Element> chain = new ArrayList<Element>();
+    final Element elem = getCellFormatter().getElement(row, getTreeColumn()).getFirstChild().cast();
+    collectElementChain(chain, getElement(), elem);
+    return findItemByChain(chain, 0, root);
+  }
+
   public FastTreeTableItem getChild(int index) {
     return root.getChild(index);
   }
@@ -522,6 +526,11 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
    */
   Map<Widget, FastTreeTableItem> getChildWidgets() {
     return childWidgets;
+  }
+
+  @Override
+  protected int getInputColumnWidth() {
+    return super.getInputColumnWidth();
   }
 
   /**
@@ -570,11 +579,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     }
     return labelProvider;
   }
-
-  public void addTreeTableLabelProvider(TreeTableLabelProvider labelProvider) {
-    this.labelProvider = labelProvider;
-  }
-
+  
   @Override
   protected void hoverCell(Element cellElem) {
     super.hoverCell(cellElem);

@@ -19,7 +19,6 @@ import java.io.Serializable;
 
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.table.AbstractTableModel;
-import org.gwt.mosaic.ui.client.table.DefaultTableModel;
 import org.gwt.mosaic.ui.client.table.PagingScrollTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable;
 import org.gwt.mosaic.ui.client.table.TableColumnModel;
@@ -39,6 +38,7 @@ import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGridBulkRenderer;
 import com.google.gwt.widgetideas.table.client.TableBulkRenderer;
 import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
 
 /**
  * A {@link PaddingScrollTable} that acts as a view of the underlying
@@ -300,6 +300,7 @@ public class Table<T> extends LayoutComposite implements HasFocus,
 
             @Override
             protected boolean onSetData(int row, int cell, Object data) {
+              System.out.println(row+"x"+cell+"="+data);
               return true;
             }
           });
@@ -322,7 +323,7 @@ public class Table<T> extends LayoutComposite implements HasFocus,
    */
   public void tableChanged(TableModelEvent event) {
     if (event == null || event.getFirstRow() == TableModelEvent.ALL_ROWS) {
-      table.getDataTable().deselectRows();
+      table.getDataTable().deselectAllRows();
 
       // TODO
 

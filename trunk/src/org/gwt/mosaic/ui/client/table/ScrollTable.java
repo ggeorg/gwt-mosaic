@@ -58,13 +58,6 @@ import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
  */
 public class ScrollTable extends ColumnWidget {
 
-  static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
-
-  /**
-   * The default style name.
-   */
-  public static final String DEFAULT_STYLE_NAME = "gwt-ScrollTable";
-
   public static class DataGrid extends FixedWidthGrid {
     public DataGrid() {
       super();
@@ -72,10 +65,22 @@ public class ScrollTable extends ColumnWidget {
     }
 
     @Override
+    protected int getInputColumnWidth() {
+      return super.getInputColumnWidth();
+    }
+    
+    @Override
     protected void hoverCell(Element cellElem) {
       super.hoverCell(cellElem);
     }
   }
+
+  static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
+
+  /**
+   * The default style name.
+   */
+  public static final String DEFAULT_STYLE_NAME = "gwt-ScrollTable";
 
   /**
    * Constructor.
@@ -100,9 +105,54 @@ public class ScrollTable extends ColumnWidget {
     setStylePrimaryName(DEFAULT_STYLENAME);
   }
 
+  private void checkIndex(int index) {
+    if (index < 0 || index >= getDataTable().getRowCount()) {
+      throw new IndexOutOfBoundsException();
+    }
+  }
+
+  private void eatEvent(Event event) {
+    DOM.eventCancelBubble(event, true);
+    DOM.eventPreventDefault(event);
+  }
+
+  @Override
+  protected int getInputColumnWidth() {
+    return ((DataGrid) getDataTable()).getInputColumnWidth();
+  }
+
+  /**
+   * Gets the currently-selected item. If multiple items are selected, this
+   * method will returns the first selected item ({@link #isItemeSelected(int)}
+   * can be used to query individual items).
+   * 
+   * @return the selected index, or {@code -1} if none is selected
+   */
+  public int getSelectedIndex() {
+    Set<Integer> selection = getDataTable().getSelectedRows();
+    for (Integer i : selection) {
+      return i.intValue();
+    }
+    return -1;
+  }
+
   @Override
   protected void hoverCell(Element cellElem) {
     ((DataGrid) getDataTable()).hoverCell(cellElem);
+  }
+
+  private void moveDown() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectNextItem();
+  }
+
+  private void moveUp() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectPrevItemItem();
   }
 
   /**
@@ -147,24 +197,46 @@ public class ScrollTable extends ColumnWidget {
   }
 
   /**
-   * Gets the currently-selected item. If multiple items are selected, this
-   * method will returns the first selected item ({@link #isItemeSelected(int)}
-   * can be used to query individual items).
+   * Selects the firs item in the list if no items are currently selected. This
+   * method assumes that the list has at least 1 item.
    * 
-   * @return the selected index, or {@code -1} if none is selected
+   * @return {@code true} if no item was previosly selected and the first item
+   *         in the list was selected, {@code false} otherwise
    */
-  public int getSelectedIndex() {
-    Set<Integer> selection = getDataTable().getSelectedRows();
-    for (Integer i : selection) {
-      return i.intValue();
+  private boolean selectFirstItemIfNodeSelected() {
+    if (getSelectedIndex() == -1) {
+      setSelectedIndex(0);
+      return true;
     }
-    return -1;
+    return false;
   }
 
-  private void checkIndex(int index) {
-    if (index < 0 || index >= getDataTable().getRowCount()) {
-      throw new IndexOutOfBoundsException();
+  private void selectNextItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
     }
+
+    if (index < getDataTable().getRowCount() - 1) {
+      setSelectedIndex(++index);
+    }
+
+    DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
+        getSelectedIndex()).getFirstChild());
+  }
+
+  private void selectPrevItemItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index > 0) {
+      setSelectedIndex(--index);
+    }
+
+    DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
+        getSelectedIndex()).getFirstChild());
   }
 
   /**
@@ -182,68 +254,6 @@ public class ScrollTable extends ColumnWidget {
   public void setSelectedIndex(int index) {
     checkIndex(index);
     getDataTable().selectRow(index, true);
-  }
-
-  /**
-   * Selects the firs item in the list if no items are currently selected. This
-   * method assumes that the list has at least 1 item.
-   * 
-   * @return {@code true} if no item was previosly selected and the first item
-   *         in the list was selected, {@code false} otherwise
-   */
-  private boolean selectFirstItemIfNodeSelected() {
-    if (getSelectedIndex() == -1) {
-      setSelectedIndex(0);
-      return true;
-    }
-    return false;
-  }
-
-  private void moveUp() {
-    if (selectFirstItemIfNodeSelected()) {
-      return;
-    }
-    selectPrevItemItem();
-  }
-
-  private void moveDown() {
-    if (selectFirstItemIfNodeSelected()) {
-      return;
-    }
-    selectNextItem();
-  }
-
-  private void selectPrevItemItem() {
-    int index = getSelectedIndex();
-    if (index == -1) {
-      return;
-    }
-
-    if (index > 0) {
-      setSelectedIndex(--index);
-    }
-
-    DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
-        getSelectedIndex()).getFirstChild());
-  }
-
-  private void selectNextItem() {
-    int index = getSelectedIndex();
-    if (index == -1) {
-      return;
-    }
-
-    if (index < getDataTable().getRowCount() - 1) {
-      setSelectedIndex(++index);
-    }
-
-    DOM.scrollIntoView((Element) getDataTable().getRowFormatter().getElement(
-        getSelectedIndex()).getFirstChild());
-  }
-
-  private void eatEvent(Event event) {
-    DOM.eventCancelBubble(event, true);
-    DOM.eventPreventDefault(event);
   }
 
 }

@@ -26,8 +26,8 @@ import org.gwt.mosaic.showcase.client.content.tables.DataSourceService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.widgetideas.table.client.TableModel.ColumnSortList;
-import com.google.gwt.widgetideas.table.client.TableModel.Request;
-import com.google.gwt.widgetideas.table.client.TableModel.SerializableResponse;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
+import com.google.gwt.widgetideas.table.client.TableModelHelper.SerializableResponse;
 
 /**
  * Implementation of {@link DataSourceService}.
@@ -39,12 +39,6 @@ public class DataSourceServiceImpl extends RemoteServiceServlet implements
   /**
    * The source of the data.
    */
-  // private StudentGenerator data = new StudentGenerator() {
-  // @Override
-  // protected int getRandomInt(int max) {
-  // return random.nextInt(max);
-  // }
-  // };
   private DataSourceData data = new DataSourceData() {
     @Override
     public int getRandomInt(int max) {

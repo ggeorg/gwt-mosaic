@@ -39,6 +39,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollListener;
+import com.google.gwt.user.client.ui.ScrollListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
@@ -49,6 +51,25 @@ import com.google.gwt.widgetideas.table.client.TableModel.ColumnSortList;
 import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
 
 /**
+ * A {@code ColumnWidget} consists of a fixed header and footer (both optional)
+ * that remain visible and a scrolltable body that contains the data.
+ * <p>
+ * In order for the columns in the header table and the data table to line up,
+ * the two table must have the same margin, padding, and border widths. You can
+ * use CSS style sheets to manipulate the colors and styles of the cell's, but
+ * you must keep the actual sizes consistent (especially with respect to the
+ * left and right side of the cells).
+ * 
+ * <h3>CSS Style Rules</h3>
+ * <ul class="css">
+ * <li>.gwt-ScrollTable { applied to the entire widget }</li>
+ * <li>.gwt-ScrollTable .headerTable { applied to the header table }</li>
+ * <li>.gwt-ScrollTable .dataTable { applied to the data table }</li>
+ * <li>.gwt-ScrollTable .footerTable { applied to the footer table }</li>
+ * <li>.gwt-ScrollTable .headerWrapper { wrapper around the header table }</li>
+ * <li>.gwt-ScrollTable .dataWrapper { wrapper around the data table }</li>
+ * <li>.gwt-ScrollTable .footerWrapper { wrapper around the footer table }</li>
+ * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -171,16 +192,8 @@ public abstract class ColumnWidget extends LayoutComposite {
     private int getCellIndex(Element cell) {
       int row = OverrideDOM.getRowIndex(DOM.getParent(cell)) - 1;
       int column = OverrideDOM.getCellIndex(cell);
-      return table.headerTable.getColumnIndex(row, column);
-    }
-
-    /**
-     * Returns the current cell.
-     * 
-     * @return the current cell
-     */
-    public Element getCurrentCell() {
-      return curCell;
+      return table.headerTable.getColumnIndex(row, column)
+          - table.getHeaderOffset();
     }
 
     /**
@@ -190,6 +203,15 @@ public abstract class ColumnWidget extends LayoutComposite {
      */
     protected ColumnWidget getColumnWidget() {
       return table;
+    }
+
+    /**
+     * Returns the current cell.
+     * 
+     * @return the current cell
+     */
+    public Element getCurrentCell() {
+      return curCell;
     }
 
     /**
@@ -239,6 +261,15 @@ public abstract class ColumnWidget extends LayoutComposite {
     }
 
     /**
+     * Set the column widget table that this worker affects.
+     * 
+     * @param table the column widget table
+     */
+    public void setColumnWidget(ColumnWidget table) {
+      this.table = table;
+    }
+
+    /**
      * Set the current cell that will be resized based on the mouse event.
      * 
      * @param event the event that triggered the new cell
@@ -277,7 +308,7 @@ public abstract class ColumnWidget extends LayoutComposite {
         curCell = cell;
         if (curCell != null) {
           curCellIndex = getCellIndex(curCell);
-          if (table.isColumnWidthGuaranteed(curCellIndex)) {
+          if (curCellIndex < 0 || table.isColumnWidthGuaranteed(curCellIndex)) {
             curCell = null;
             return false;
           }
@@ -288,15 +319,6 @@ public abstract class ColumnWidget extends LayoutComposite {
 
       // The cell did not change
       return false;
-    }
-
-    /**
-     * Set the column widget table that this worker affects.
-     * 
-     * @param table the column widget table
-     */
-    public void setColumnWidget(ColumnWidget table) {
-      this.table = table;
     }
 
     /**
@@ -476,46 +498,9 @@ public abstract class ColumnWidget extends LayoutComposite {
   private ColumnResizePolicy columnResizePolicy = ColumnResizePolicy.MULTI_CELL;
 
   /**
-   * The minimum allowed width of the data table.
-   */
-  private int minWidth = -1;
-
-  /**
-   * A boolean indicating whether or not the grid should try to maintain its
-   * width as much as possible.
-   */
-  private ResizePolicy resizePolicy = ResizePolicy.FLOW;
-
-  /**
    * Columns which have guaranteed sizes.
    */
   private Set<Integer> guaranteedColumns = new HashSet<Integer>();
-
-  /**
-   * The worker that helps with mouse resize events.
-   */
-  private MouseResizeWorker resizeWorker = GWT.create(MouseResizeWorker.class);
-
-  /**
-   * The scrolling policy.
-   */
-  private ScrollPolicy scrollPolicy = ScrollPolicy.BOTH;
-
-  /**
-   * The header table.
-   */
-  private FixedWidthFlexTable headerTable = null;
-
-  /**
-   * The non-scrollable wrapper div around the header table.
-   */
-  private AbsolutePanel headerWrapper = null;
-
-  /**
-   * A spacer used to stretch the headerTable area so we can scroll past the
-   * edge of the header table.
-   */
-  private Element headerSpacer = null;
 
   /**
    * The data table.
@@ -528,22 +513,6 @@ public abstract class ColumnWidget extends LayoutComposite {
   private AbsolutePanel dataWrapper;
 
   /**
-   * The footer table.
-   */
-  private FixedWidthFlexTable footerTable = null;
-
-  /**
-   * The non-scrollable wrapper div around the footer table.
-   */
-  private AbsolutePanel footerWrapper = null;
-
-  /**
-   * A spacer used to stretch the footerTable area so we can scroll past the
-   * edge of the footer table.
-   */
-  private Element footerSpacer = null;
-
-  /**
    * If true, ignore all requests to scroll the tables. This boolean is used to
    * improve performance of certain operations that would otherwise force
    * repeated calls to scrollTables.
@@ -554,6 +523,74 @@ public abstract class ColumnWidget extends LayoutComposite {
    * An image used to show a fill width button.
    */
   private Image fillWidthImage;
+
+  /**
+   * A spacer used to stretch the footerTable area so we can scroll past the
+   * edge of the footer table.
+   */
+  private Element footerSpacer = null;
+
+  /**
+   * The footer table.
+   */
+  private FixedWidthFlexTable footerTable = null;
+
+  /**
+   * The non-scrollable wrapper div around the footer table.
+   */
+  private AbsolutePanel footerWrapper = null;
+
+  /**
+   * A spacer used to stretch the headerTable area so we can scroll past the
+   * edge of the header table.
+   */
+  private Element headerSpacer = null;
+
+  /**
+   * The header table.
+   */
+  private FixedWidthFlexTable headerTable = null;
+
+  /**
+   * The non-scrollable wrapper div around the header table.
+   */
+  private AbsolutePanel headerWrapper = null;
+
+  /**
+   * The images applied to the table.
+   */
+  private ScrollTableImages images;
+
+  /**
+   * The last known height of this widget that the user set.
+   */
+  private String lastHeight = null;
+
+  /**
+   * The minimum allowed width of the data table.
+   */
+  private int minWidth = -1;
+
+  /**
+   * A boolean indicating whether or not the grid should try to maintain its
+   * width as much as possible.
+   */
+  private ResizePolicy resizePolicy = ResizePolicy.FLOW;
+
+  /**
+   * The worker that helps with mouse resize events.
+   */
+  private MouseResizeWorker resizeWorker = GWT.create(MouseResizeWorker.class);
+
+  /**
+   * The scroll listeners attached to this widget.
+   */
+  private ScrollListenerCollection scrollListeners = null;
+
+  /**
+   * The scrolling policy.
+   */
+  private ScrollPolicy scrollPolicy = ScrollPolicy.BOTH;
 
   /**
    * The Image use to indicate the currently sorted column.
@@ -584,127 +621,62 @@ public abstract class ColumnWidget extends LayoutComposite {
    */
   private Map<Integer, Boolean> unsortableColumns = new HashMap<Integer, Boolean>();
 
-  public ColumnWidget(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable) {
-    super();
-    init(dataTable, headerTable);
-  }
-
+  /**
+   * Constructor.
+   * 
+   * @param element the element to be used for this widget
+   * @param dataTable the data table
+   * @param headerTable the header table
+   */
   public ColumnWidget(Element element, FixedWidthGrid dataTable,
       FixedWidthFlexTable headerTable) {
-    super(element);
-    init(dataTable, headerTable);
+    this(element, dataTable, headerTable,
+        (ScrollTableImages) GWT.create(ScrollTableImages.class));
   }
 
-  private void init(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable) {
-    final LayoutPanel layoutPanel = getWidget();
-    layoutPanel.setLayout(new BorderLayout());
-    layoutPanel.setPadding(0);
-    layoutPanel.setWidgetSpacing(0);
+  /**
+   * Constructor.
+   * 
+   * @param element the element to be used for this widget
+   * @param dataTable the data table
+   * @param headerTable the header table
+   * @param images the images to use in the table
+   */
+  public ColumnWidget(Element element, FixedWidthGrid dataTable,
+      FixedWidthFlexTable headerTable, ScrollTableImages images) {
+    super(element);
+    init(dataTable, headerTable, images);
+  }
 
-    this.dataTable = dataTable;
-    this.headerTable = headerTable;
-    resizeWorker.setColumnWidget(this);
+  /**
+   * Constructor.
+   * 
+   * @param dataTable the data table
+   * @param headerTable the header table
+   */
+  public ColumnWidget(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable) {
+    this(dataTable, headerTable,
+        (ScrollTableImages) GWT.create(ScrollTableImages.class));
+  }
 
-    // Prepare the header and data tables
-    prepareTable(dataTable, "dataTable");
-    if (headerTable != null) {
-      prepareTable(headerTable, "headerTable");
+  /**
+   * Constructor.
+   * 
+   * @param dataTable the data table
+   * @param headerTable the header table
+   * @param images the images to use in the table
+   */
+  public ColumnWidget(FixedWidthGrid dataTable,
+      FixedWidthFlexTable headerTable, ScrollTableImages images) {
+    super();
+    init(dataTable, headerTable, images);
+  }
+
+  public void addScrollListener(ScrollListener listener) {
+    if (scrollListeners == null) {
+      scrollListeners = new ScrollListenerCollection();
     }
-
-    setStylePrimaryName(DEFAULT_STYLENAME);
-
-    // Create the table wrapper and spacer
-    if (headerTable != null) {
-      headerWrapper = createWrapper("headerWrapper");
-      headerSpacer = createSpacer(headerWrapper.getElement());
-    }
-    dataWrapper = createWrapper("dataWrapper");
-
-    // Create image to fill width
-    fillWidthImage = new Image() {
-      @Override
-      public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-        if (DOM.eventGetType(event) == Event.ONCLICK) {
-          fillWidth();
-        }
-      }
-    };
-
-    // Adopt the header and the data tables into the panel
-    if (headerTable != null) {
-      adoptTable(headerTable, headerWrapper, Region.NORTH);
-    }
-    adoptTable(dataTable, dataWrapper, Region.CENTER);
-
-    final ScrollTableImages images = (ScrollTableImages) GWT.create(ScrollTableImages.class);
-
-    fillWidthImage.setTitle("Shrink/Expand to fill visible area");
-    images.scrollTableFillWidth().applyTo(fillWidthImage);
-    Element fillWidthImageElem = fillWidthImage.getElement();
-    DOM.setStyleAttribute(fillWidthImageElem, "cursor", "pointer");
-    DOM.setStyleAttribute(fillWidthImageElem, "position", "absolute");
-    DOM.setStyleAttribute(fillWidthImageElem, "top", "0px");
-    DOM.setStyleAttribute(fillWidthImageElem, "right", "0px");
-    DOM.setStyleAttribute(fillWidthImageElem, "zIndex", "1");
-    // Add after the dataTable, so that to be ignored by the layout manager!!!
-    layoutPanel.add(fillWidthImage);
-
-    // Create the sort indicator Image
-    sortedColumnWrapper = DOM.createSpan();
-    DOM.setInnerHTML(sortedColumnWrapper, "&nbsp;");
-    DOM.appendChild(sortedColumnWrapper, sortedColumnIndicator.getElement());
-
-    // Add some event handling
-    sinkEvents(Event.ONMOUSEOUT);
-    // DOM.setEventListener(dataWrapper.getElement(), this);
-    dataWrapper.sinkEvents(Event.ONSCROLL);
-    // DOM.setEventListener(headerWrapper.getElement(), this);
-    if (headerTable != null) {
-      headerWrapper.sinkEvents(Event.ONMOUSEMOVE | Event.ONMOUSEDOWN
-          | Event.ONMOUSEUP | Event.ONCLICK);
-    }
-
-    // Listen for sorting events in the data table
-    dataTable.addSortableColumnsListener(new SortableColumnsListener() {
-      public void onColumnSorted(ColumnSortList sortList) {
-        // Get the primary column and sort order
-        int column = -1;
-        boolean ascending = true;
-        if (sortList != null) {
-          column = sortList.getPrimaryColumn();
-          ascending = sortList.isPrimaryAscending();
-        }
-
-        // Remove the sorted column indicator
-        if (isColumnSortable(column)) {
-          Element parent = DOM.getParent(sortedColumnWrapper);
-          if (parent != null) {
-            DOM.removeChild(parent, sortedColumnWrapper);
-          }
-
-          // Re-add the sorted column indicator
-          if (column < 0) {
-            sortedColumnTrigger = null;
-          } else if (sortedColumnTrigger != null) {
-            DOM.appendChild(sortedColumnTrigger, sortedColumnWrapper);
-            if (ascending) {
-              images.scrollTableAscending().applyTo(sortedColumnIndicator);
-            } else {
-              images.scrollTableDescending().applyTo(sortedColumnIndicator);
-            }
-            sortedColumnTrigger = null;
-          }
-        }
-      }
-    });
-
-    // Set the default supported operations
-    try {
-      setSortingEnabled(sortingEnabled);
-    } catch (UnsupportedOperationException e) {
-      // Ignore, this may not be implemented
-    }
+    scrollListeners.add(listener);
   }
 
   /**
@@ -714,10 +686,36 @@ public abstract class ColumnWidget extends LayoutComposite {
    * @param wrapper the wrapper panel
    * @param region the border layout region to insert the wrapper
    */
-  private void adoptTable(Widget table, AbsolutePanel wrapper,
-      Region region) {
+  private void adoptTable(Widget table, AbsolutePanel wrapper, Region region) {
     wrapper.add(table);
     getWidget().add(wrapper, new BorderLayoutData(region));
+  }
+
+  /**
+   * Apply the sorted column indicator to a specific table cell in the header
+   * table.
+   * 
+   * @param tdElem the cell in the header table, or null to remove it
+   * @param ascending true to apply the ascending indicator, false for
+   *          descending
+   */
+  protected void applySortedColumnIndicator(Element tdElem, boolean ascending) {
+    // Remove the sort indicator
+    if (tdElem == null) {
+      Element parent = DOM.getParent(sortedColumnWrapper);
+      if (parent != null) {
+        parent.removeChild(sortedColumnWrapper);
+      }
+      return;
+    }
+
+    tdElem.appendChild(sortedColumnWrapper);
+    if (ascending) {
+      images.scrollTableAscending().applyTo(sortedColumnIndicator);
+    } else {
+      images.scrollTableDescending().applyTo(sortedColumnIndicator);
+    }
+    sortedColumnTrigger = null;
   }
 
   /**
@@ -763,7 +761,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    * needing a horizontal scroll bar. The distribution will be proportional to
    * the current width of each column.
    * 
-   * The {@link ScrollTreeTable} must be visible on the page for this method to
+   * The {@link ColumnWidget} must be visible on the page for this method to
    * work.
    */
   public void fillWidth() {
@@ -878,12 +876,35 @@ public abstract class ColumnWidget extends LayoutComposite {
   }
 
   /**
+   * 
+   * @return the wrapper around the data table
+   */
+  protected AbsolutePanel getDataWrapper() {
+    return dataWrapper;
+  }
+
+  /**
    * Get the footer table.
    * 
    * @return the footer table
    */
   public FixedWidthFlexTable getFooterTable() {
     return footerTable;
+  }
+
+  /**
+   * Get the offset between the data and header and footer tables. An offset of
+   * one means that the header and footer table indexes are one greater that the
+   * data table indexes, probably because the data table contains a checkbox
+   * column.
+   * 
+   * @return the offset
+   */
+  private int getHeaderOffset() {
+    if (dataTable.getSelectionPolicy().hasInputColumn()) {
+      return 1;
+    }
+    return 0;
   }
 
   /**
@@ -894,6 +915,14 @@ public abstract class ColumnWidget extends LayoutComposite {
   public FixedWidthFlexTable getHeaderTable() {
     return headerTable;
   }
+
+  /**
+   * Get the width of the input column used in the current
+   * {@code SelectionGrid.SelectionPolicy}.
+   * 
+   * @return the width of the input element
+   */
+  protected abstract int getInputColumnWidth();
 
   /**
    * Get the minimum width of the data table.
@@ -916,6 +945,128 @@ public abstract class ColumnWidget extends LayoutComposite {
    */
   public ScrollPolicy getScrollPolicy() {
     return scrollPolicy;
+  }
+
+  /**
+   * Set the current hovering cell for the data table.
+   * 
+   * @param cellElem the cell element
+   */
+  protected abstract void hoverCell(Element cellElem);
+
+  /**
+   * 
+   * @param dataTable the data table
+   * @param headerTable the header table
+   * @param images the images to use in the table
+   */
+  private void init(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable,
+      ScrollTableImages images) {
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BorderLayout());
+    layoutPanel.setPadding(0);
+    layoutPanel.setWidgetSpacing(0);
+
+    this.dataTable = dataTable;
+    this.headerTable = headerTable;
+    this.images = images;
+    resizeWorker.setColumnWidget(this);
+
+    // Prepare the header and data tables
+    prepareTable(dataTable, "dataTable");
+    if (headerTable != null) {
+      prepareTable(headerTable, "headerTable");
+    }
+    if (dataTable.getSelectionPolicy().hasInputColumn()) {
+      headerTable.setColumnWidth(0, getInputColumnWidth());
+    }
+
+    setStylePrimaryName(DEFAULT_STYLENAME);
+
+    // Create the table wrapper and spacer
+    if (headerTable != null) {
+      headerWrapper = createWrapper("headerWrapper");
+      headerSpacer = createSpacer(headerWrapper.getElement());
+    }
+    dataWrapper = createWrapper("dataWrapper");
+
+    // Create image to fill width
+    fillWidthImage = new Image() {
+      @Override
+      public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (DOM.eventGetType(event) == Event.ONCLICK) {
+          fillWidth();
+        }
+      }
+    };
+
+    // Adopt the header and the data tables into the panel
+    if (headerTable != null) {
+      adoptTable(headerTable, headerWrapper, Region.NORTH);
+    }
+    adoptTable(dataTable, dataWrapper, Region.CENTER);
+
+    fillWidthImage.setTitle("Shrink/Expand to fill visible area");
+    images.scrollTableFillWidth().applyTo(fillWidthImage);
+    Element fillWidthImageElem = fillWidthImage.getElement();
+    DOM.setStyleAttribute(fillWidthImageElem, "cursor", "pointer");
+    DOM.setStyleAttribute(fillWidthImageElem, "position", "absolute");
+    DOM.setStyleAttribute(fillWidthImageElem, "top", "0px");
+    DOM.setStyleAttribute(fillWidthImageElem, "right", "0px");
+    DOM.setStyleAttribute(fillWidthImageElem, "zIndex", "1");
+    // Add after the dataTable, so that to be ignored by the layout manager!!!
+    layoutPanel.add(fillWidthImage);
+
+    // Create the sort indicator Image
+    sortedColumnWrapper = DOM.createSpan();
+    DOM.setInnerHTML(sortedColumnWrapper, "&nbsp;");
+    DOM.appendChild(sortedColumnWrapper, sortedColumnIndicator.getElement());
+
+    // Add some event handling
+    sinkEvents(Event.ONMOUSEOUT);
+    // DOM.setEventListener(dataWrapper.getElement(), this);
+    dataWrapper.sinkEvents(Event.ONSCROLL);
+    // DOM.setEventListener(headerWrapper.getElement(), this);
+    if (headerTable != null) {
+      headerWrapper.sinkEvents(Event.ONMOUSEMOVE | Event.ONMOUSEDOWN
+          | Event.ONMOUSEUP | Event.ONCLICK);
+    }
+
+    // Listen for sorting events in the data table
+    dataTable.addSortableColumnsListener(new SortableColumnsListener() {
+      public void onColumnSorted(ColumnSortList sortList) {
+        // Get the primary column and sort order
+        int column = -1;
+        boolean ascending = true;
+        if (sortList != null) {
+          column = sortList.getPrimaryColumn();
+          ascending = sortList.isPrimaryAscending();
+        }
+
+        // Remove the sorted column indicator
+        if (isColumnSortable(column)) {
+          Element parent = DOM.getParent(sortedColumnWrapper);
+          if (parent != null) {
+            DOM.removeChild(parent, sortedColumnWrapper);
+          }
+
+          // Re-add the sorted column indicator
+          if (column < 0) {
+            sortedColumnTrigger = null;
+          } else if (sortedColumnTrigger != null) {
+            applySortedColumnIndicator(sortedColumnTrigger, ascending);
+          }
+        }
+      }
+    });
+
+    // Set the default supported operations
+    try {
+      setSortingEnabled(sortingEnabled);
+    } catch (UnsupportedOperationException e) {
+      // Ignore, this may not be implemented
+    }
   }
 
   /**
@@ -974,6 +1125,16 @@ public abstract class ColumnWidget extends LayoutComposite {
     }
   }
 
+  /**
+   * Redistribute space as needed.
+   */
+  @Override
+  protected void onAttach() {
+    super.onAttach();
+    repositionHeaderSpacer();
+    maybeFillWidth();
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -987,6 +1148,12 @@ public abstract class ColumnWidget extends LayoutComposite {
       case Event.ONSCROLL:
         // Reposition the tables on scroll
         scrollTables(false);
+        if (dataWrapper.getElement().isOrHasChild(target)
+            && scrollListeners != null) {
+          scrollListeners.fireScroll(this,
+              dataWrapper.getElement().getScrollLeft(),
+              dataWrapper.getElement().getScrollTop());
+        }
         break;
 
       case Event.ONMOUSEDOWN:
@@ -1020,8 +1187,9 @@ public abstract class ColumnWidget extends LayoutComposite {
           if (cellElem != null) {
             int row = OverrideDOM.getRowIndex(DOM.getParent(cellElem)) - 1;
             int cell = OverrideDOM.getCellIndex(cellElem);
-            int column = headerTable.getColumnIndex(row, cell);
-            if (isColumnSortable(column)) {
+            int column = headerTable.getColumnIndex(row, cell)
+                - getHeaderOffset();
+            if (column >= 0 && isColumnSortable(column)) {
               if (dataTable.getColumnCount() > column) {
                 sortedColumnTrigger = cellElem;
                 dataTable.sortColumn(column);
@@ -1067,13 +1235,6 @@ public abstract class ColumnWidget extends LayoutComposite {
   }
 
   /**
-   * Set the current hovering cell for the data table.
-   * 
-   * @param cellElem the cell element
-   */
-  protected abstract void hoverCell(Element cellElem);
-
-  /**
    * Prepare a table to be added to the {@link ScrollTreeTable}.
    * 
    * @param table the table to prepare
@@ -1096,7 +1257,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    */
   private int redistributeWidth(int width, int startColumn) {
     // Make sure we have a column to distribute to
-    int numColumns = Math.max(headerTable.getColumnCount(),
+    int numColumns = Math.max(headerTable.getColumnCount() - getHeaderOffset(),
         dataTable.getColumnCount());
     if (startColumn >= numColumns) {
       return 0;
@@ -1147,6 +1308,12 @@ public abstract class ColumnWidget extends LayoutComposite {
 
     // Return the actual width
     return actualWidth;
+  }
+
+  public void removeScrollListener(ScrollListener listener) {
+    if (scrollListeners != null) {
+      scrollListeners.remove(listener);
+    }
   }
 
   /**
@@ -1313,6 +1480,9 @@ public abstract class ColumnWidget extends LayoutComposite {
       footerTable.setCellSpacing(getCellSpacing());
       footerTable.setCellSpacing(getCellPadding());
       prepareTable(footerTable, "footerTable");
+      if (dataTable.getSelectionPolicy().hasInputColumn()) {
+        footerTable.setColumnWidth(0, getInputColumnWidth());
+      }
 
       // Create the footer table wrapper and spacer
       if (footerWrapper == null) {
@@ -1407,28 +1577,7 @@ public abstract class ColumnWidget extends LayoutComposite {
     this.sortingEnabled = sortingEnabled;
 
     // Remove the sorted indicator image
-    Element parent = DOM.getParent(sortedColumnWrapper);
-    if (parent != null) {
-      DOM.removeChild(parent, sortedColumnWrapper);
-    }
-  }
-
-  /**
-   * 
-   * @return the wrapper around the data table
-   */
-  protected AbsolutePanel getDataWrapper() {
-    return dataWrapper;
-  }
-
-  /**
-   * Redistribute space as needed.
-   */
-  @Override
-  protected void onAttach() {
-    super.onAttach();
-    repositionHeaderSpacer();
-    maybeFillWidth();
+    applySortedColumnIndicator(null, true);
   }
 
   /**
