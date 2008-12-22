@@ -333,7 +333,7 @@ public class PagingScrollTable<R> extends ScrollTable implements
         }
 
         public void onComplete(CellEditInfo<R> cellEditInfo, Object value) {
-          renderCell(cellEditInfo.getRow(), cellEditInfo.getCell(), value);
+          tableModel.setData(cellEditInfo.getRow(), cellEditInfo.getCell(), value);
         }
       };
     }
