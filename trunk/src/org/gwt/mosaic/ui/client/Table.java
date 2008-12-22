@@ -300,7 +300,7 @@ public class Table<T> extends LayoutComposite implements HasFocus,
 
             @Override
             protected boolean onSetData(int row, int cell, Object data) {
-              System.out.println(row+"x"+cell+"="+data);
+              dataModel.setValueAt(data, row, cell);
               return true;
             }
           });
