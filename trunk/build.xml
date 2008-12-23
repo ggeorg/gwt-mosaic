@@ -93,9 +93,11 @@
 		<jar destfile="${ant.project.name}-${project.version}.jar">
 			<fileset dir="${build}/classes">
 				<include name="**/*.class" />
+				<exclude name="**/showcase/**" />
 			</fileset>
 			<fileset dir="${source.path}">
 				<include name="**" />
+				<exclude name="**/showcase/**" />
 			</fileset>
 		</jar>
 	</target>
