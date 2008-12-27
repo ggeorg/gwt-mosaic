@@ -101,7 +101,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   @Override
   protected void onLoad() {
     afterLoad();
-    
+
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         layout();
@@ -215,7 +215,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
       setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
     }
 
-    // layout();
+    layout();
   }
 
   private String desiredHeight = null;
