@@ -1,3 +1,13 @@
+Change log for v0.1.6
+================================
+
+ - GWT Incubator upgrade (SVN version)
+ - InlineCellEditor & TableModel updates bug fix in PaggingScrollTable
+ - Showcase modules is excluded from the gwt-mosaic JAR file
+ - TableColumnModel added
+ - IE WindowPanel.onLoad() bug fix
+ - DoubleClickListener & ContextMenu support for ScrollTable & PagingScrollTable
+
 Change log for v0.1.5
 ================================
 
