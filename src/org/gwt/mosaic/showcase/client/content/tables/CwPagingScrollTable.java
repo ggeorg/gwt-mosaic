@@ -21,7 +21,11 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.DoubleClickListener;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -34,6 +38,7 @@ import org.gwt.mosaic.ui.client.table.PagingScrollTable.CellRenderer;
 import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
@@ -77,8 +82,8 @@ public class CwPagingScrollTable extends ContentWidget {
   private static class CustomBulkRenderer extends
       TableBulkRenderer.CellRenderer {
     @Override
-    public void renderCell(final int row, final int column, final Object cellData,
-        final StringBuffer accum) {
+    public void renderCell(final int row, final int column,
+        final Object cellData, final StringBuffer accum) {
       if (cellData == null) {
         return;
       }
@@ -93,7 +98,7 @@ public class CwPagingScrollTable extends ContentWidget {
       }
     }
   }
-  
+
   /**
    * A custom cell renderer.
    */
@@ -237,8 +242,17 @@ public class CwPagingScrollTable extends ContentWidget {
     cachedTableModel.setRowCount(1000);
 
     // Create the scroll table
-    scrollTable = new PagingScrollTable<Serializable>(cachedTableModel, dataTable,
-        headerTable);
+    scrollTable = new PagingScrollTable<Serializable>(cachedTableModel,
+        dataTable, headerTable);
+    scrollTable.setContextMenu(createContextMenu());
+
+    scrollTable.addDoubleClickListener(new DoubleClickListener() {
+      public void onDoubleClick(Widget sender) {
+        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
+            scrollTable.getDataTable().getSelectedRows().toString());
+      }
+    });
+
     PagingScrollTable<Serializable> pagingScrollTable = getPagingScrollTable();
     pagingScrollTable.setCellRenderer(new CustomCellRenderer());
     pagingScrollTable.setPageSize(20);
@@ -252,6 +266,31 @@ public class CwPagingScrollTable extends ContentWidget {
 
     // Setup the scroll table
     setupScrollTable();
+  }
+
+  /**
+   * 
+   * @return
+   */
+  @ShowcaseSource
+  private PopupMenu createContextMenu() {
+    Command cmd = new Command() {
+      public void execute() {
+        InfoPanel.show("Menu Button", "You selected a menu item!");
+      }
+    };
+
+    PopupMenu contextMenu = new PopupMenu();
+
+    contextMenu.addItem("MenuItem 1", cmd);
+    contextMenu.addItem("MenuItem 2", cmd);
+
+    contextMenu.addSeparator();
+
+    contextMenu.addItem("MenuItem 3", cmd);
+    contextMenu.addItem("MenuItem 4", cmd);
+
+    return contextMenu;
   }
 
   /**

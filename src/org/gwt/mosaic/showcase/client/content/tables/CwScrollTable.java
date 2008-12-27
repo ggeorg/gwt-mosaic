@@ -21,11 +21,16 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
+import org.gwt.mosaic.ui.client.DoubleClickListener;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.PopupMenu;
+import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.table.ScrollTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
@@ -168,8 +173,41 @@ public class CwScrollTable extends ContentWidget {
     // Add the scroll table to the page
     scrollTable = new ScrollTable(dataTable, headerTable);
     scrollTable.setFooterTable(footerTable);
+    scrollTable.setContextMenu(createContextMenu());
+    
+    scrollTable.addDoubleClickListener(new DoubleClickListener() {
+      public void onDoubleClick(Widget sender) {
+        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
+            scrollTable.getDataTable().getSelectedRows().toString());
+      }
+    });
 
     setupScrollTable();
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  @ShowcaseSource
+  private PopupMenu createContextMenu() {
+    Command cmd = new Command() {
+      public void execute() {
+        InfoPanel.show("Menu Button", "You selected a menu item!");
+      }
+    };
+
+    PopupMenu contextMenu = new PopupMenu();
+
+    contextMenu.addItem("MenuItem 1", cmd);
+    contextMenu.addItem("MenuItem 2", cmd);
+
+    contextMenu.addSeparator();
+
+    contextMenu.addItem("MenuItem 3", cmd);
+    contextMenu.addItem("MenuItem 4", cmd);
+
+    return contextMenu;
   }
 
   /**
