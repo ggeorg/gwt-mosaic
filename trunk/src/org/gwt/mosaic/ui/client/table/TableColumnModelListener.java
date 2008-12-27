@@ -25,9 +25,16 @@ import com.google.gwt.user.client.EventListener;
  */
 public interface TableColumnModelListener extends EventListener {
   /**
-   * Called by the {@link TableColumnModel} to indicate that a 
-   * @param e
+   * Notifies that a column has been added to the model.
+   * 
+   * @param event contains details about the column addition
    */
-  void columnAdded(TableColumnModelEvent e);
-  void columnRemoved(TableColumnModelEvent e);
+  void columnAdded(TableColumnModelEvent event);
+
+  /**
+   * Notifies that a column has been removed from the model.
+   * 
+   * @param event contains details about the column removal
+   */
+  void columnRemoved(TableColumnModelEvent event);
 }

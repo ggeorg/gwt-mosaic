@@ -15,6 +15,8 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -42,7 +44,8 @@ public class DefaultTableColumnModel<T> implements TableColumnModel<T> {
   public DefaultTableColumnModel(String[] columnNames) {
     super();
     for (int i = 0; i < columnNames.length; ++i) {
-      tableColumns.add(new TableColumn<String>(columnNames[i], 100, new TextCellEditor()));
+      tableColumns.add(new TableColumn<String>(columnNames[i], 100,
+          new TextCellEditor()));
     }
   }
 
@@ -51,10 +54,15 @@ public class DefaultTableColumnModel<T> implements TableColumnModel<T> {
       throw new IllegalArgumentException("Object is null");
     }
     tableColumns.add(column);
+    fireColumnAdded(new TableColumnModelEvent(this,
+        tableColumns.size() - 2 >= 0 ? tableColumns.size() - 2
+            : tableColumns.size() - 1, tableColumns.size() - 1));
   }
 
   public void removeColumn(TableColumn<?> column) {
+    int index = tableColumns.indexOf(column);
     tableColumns.remove(column);
+    fireColumnRemoved(new TableColumnModelEvent(this, index, index));
   }
 
   public int getColumnCount() {
@@ -65,14 +73,33 @@ public class DefaultTableColumnModel<T> implements TableColumnModel<T> {
     return tableColumns.elementAt(columnIndex);
   }
 
+  protected void fireColumnAdded(final TableColumnModelEvent e) {
+    TableColumnModelListener[] listeners = getColumnModelListeners();
+    for (int i = 0; i < listeners.length; i++) {
+      listeners[i].columnAdded(e);
+    }
+  }
+
+  protected void fireColumnRemoved(final TableColumnModelEvent e) {
+    TableColumnModelListener[] listeners = getColumnModelListeners();
+    for (int i = 0; i < listeners.length; i++) {
+      listeners[i].columnRemoved(e);
+    }
+  }
+
+  public TableColumnModelListener[] getColumnModelListeners() {
+    TableColumnModelListener[] a = new TableColumnModelListener[listenerList.size()];
+    return listenerList.toArray(a);
+  }
+
+  private List<TableColumnModelListener> listenerList = new ArrayList<TableColumnModelListener>();
+
   public void addColumnModelListener(TableColumnModelListener listener) {
-    // TODO Auto-generated method stub
-    
+    listenerList.add(listener);
   }
 
   public void removeColumnModelListener(TableColumnModelListener listener) {
-    // TODO Auto-generated method stub
-    
+    listenerList.remove(listener);
   }
 
 }

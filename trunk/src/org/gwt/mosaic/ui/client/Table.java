@@ -22,6 +22,8 @@ import org.gwt.mosaic.ui.client.table.AbstractTableModel;
 import org.gwt.mosaic.ui.client.table.PagingScrollTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable;
 import org.gwt.mosaic.ui.client.table.TableColumnModel;
+import org.gwt.mosaic.ui.client.table.TableColumnModelEvent;
+import org.gwt.mosaic.ui.client.table.TableColumnModelListener;
 import org.gwt.mosaic.ui.client.table.TableModel;
 import org.gwt.mosaic.ui.client.table.TableModelEvent;
 import org.gwt.mosaic.ui.client.table.TableModelListener;
@@ -49,7 +51,7 @@ import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Table<T> extends LayoutComposite implements HasFocus,
-    TableModelListener {
+    TableModelListener, TableColumnModelListener {
 
   /**
    * The renderer used to set cell contents.
@@ -84,6 +86,7 @@ public class Table<T> extends LayoutComposite implements HasFocus,
 
     // this.dataModel = tableModel;
     this.columnModel = columnModel;
+    this.columnModel.addColumnModelListener(this);
 
     setModel(tableModel);
 
@@ -337,5 +340,41 @@ public class Table<T> extends LayoutComposite implements HasFocus,
     } else {
 
     }
+  }
+
+  /**
+   * Invoked when a column is added to the {@code TableColumnModel}.
+   * 
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.table.TableColumnModelListener#columnAdded(org.gwt.mosaic.ui.client.table.TableColumnModelEvent)
+   */
+  public void columnAdded(TableColumnModelEvent event) {
+    final FixedWidthFlexTable headerTable = table.getHeaderTable();
+    for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
+      headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
+      table.setColumnWidth(i, columnModel.getColumn(i).getWidth());
+      table.setCellEditor(i,
+          (AbstractCellEditor<T>) columnModel.getColumn(i).getCellEditor());
+    }
+    //table.
+  }
+
+  /**
+   * Invoked when a column is removed from the {@code TableColumnModel}.
+   * 
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.table.TableColumnModelListener#columnRemoved(org.gwt.mosaic.ui.client.table.TableColumnModelEvent)
+   */
+  public void columnRemoved(TableColumnModelEvent event) {
+    final FixedWidthFlexTable headerTable = table.getHeaderTable();
+    for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
+      headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
+      table.setColumnWidth(i, columnModel.getColumn(i).getWidth());
+      table.setCellEditor(i,
+          (AbstractCellEditor<T>) columnModel.getColumn(i).getCellEditor());
+    }
+    table.reloadPage();
   }
 }
