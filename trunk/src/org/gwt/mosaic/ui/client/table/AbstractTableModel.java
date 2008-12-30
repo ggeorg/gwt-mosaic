@@ -13,8 +13,10 @@ import java.util.List;
  */
 public abstract class AbstractTableModel<T> implements TableModel<T>,
     Serializable {
+  private static final long serialVersionUID = 4235627486811656219L;
+
   /** List of {@link TableModelListener TableModelListeners}. */
-  protected List<TableModelListener> listenerList = new ArrayList<TableModelListener>();
+  protected transient List<TableModelListener> listenerList = new ArrayList<TableModelListener>();
 
   /**
    * Adds a listener to the list that's notified each time a change to the data
@@ -66,8 +68,8 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
   /**
    * Notifies all listeners that the table's structure has changed. The number
    * of columns in the table, and the names and types of the new columns may be
-   * different from the previous state. If the <code>JTable</code> receives
-   * this event and its <code>autoCreateColumnsFromModel</code> flag is set it
+   * different from the previous state. If the <code>JTable</code> receives this
+   * event and its <code>autoCreateColumnsFromModel</code> flag is set it
    * discards any table columns that it had and reallocates default columns in
    * the order they appear in the model. This is the same as calling
    * <code>setModel(TableModel)</code> on the <code>JTable</code>.

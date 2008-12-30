@@ -27,8 +27,10 @@ import java.util.List;
  */
 public abstract class AbstractListModel<T> implements ListModel<T>,
     Serializable {
+  private static final long serialVersionUID = 4151800085271288709L;
+
   /** List of {@link ListDataListener ListDataListeners}. */
-  protected List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
+  protected transient List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
 
   /**
    * Add a listener object to this model that's notified each time a change to
@@ -41,8 +43,8 @@ public abstract class AbstractListModel<T> implements ListModel<T>,
   }
 
   /**
-   * {@code AbstractListModel} subclasses must call this method <b>after</b>
-   * one or more elements of the list change.
+   * {@code AbstractListModel} subclasses must call this method <b>after</b> one
+   * or more elements of the list change.
    * 
    * @param source the {@link ListModel} that changed, typically {@code this}
    * @param index0 one end of the new interval
@@ -85,8 +87,8 @@ public abstract class AbstractListModel<T> implements ListModel<T>,
   }
 
   /**
-   * Returns an array of all the list data listeners registered on this
-   * {@code AbstractListModel}.
+   * Returns an array of all the list data listeners registered on this {@code
+   * AbstractListModel}.
    * 
    * @return all of this model's {@link ListDataListener ListDataListeners}, or
    *         an empty array if no list data listeners are currently registered
