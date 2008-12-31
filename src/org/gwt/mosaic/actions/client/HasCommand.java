@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -15,22 +13,12 @@
  */
 package org.gwt.mosaic.actions.client;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.user.client.Command;
 
-public class ActionRegistry {
-
-  private static final Map<String, Action> actionMap = new HashMap<String, Action>();
-
-  public static Action get(String id) {
-    return actionMap.get(id);
-  }
-
-  public static void register(Action action) {
-    actionMap.put(action.getId(), action);
-  }
-
-  public static void unregister(Action action) {
-    actionMap.remove(action.getId());
-  }
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public interface HasCommand {
+  public Command getCommand();
 }
