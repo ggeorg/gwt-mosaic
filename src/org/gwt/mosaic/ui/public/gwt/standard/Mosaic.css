@@ -1233,6 +1233,14 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 }
 */
 
+/*** gwt-MenuItem ***/
+
+.gwt-MenuBar .gwt-MenuItem-disabled {
+  cursor: default;
+  background: none;
+  color: #888;
+}
+
 /*** gwt-MenuBarPopup ***/
 
 .gwt-MenuBarPopup {

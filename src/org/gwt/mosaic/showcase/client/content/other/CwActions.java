@@ -15,9 +15,9 @@
  */
 package org.gwt.mosaic.showcase.client.content.other;
 
-import org.gwt.mosaic.actions.client.Action;
-import org.gwt.mosaic.actions.client.ActionListener;
-import org.gwt.mosaic.actions.client.ActionRegistry;
+import org.gwt.mosaic.actions.client.old.Action;
+import org.gwt.mosaic.actions.client.old.ActionListener;
+import org.gwt.mosaic.actions.client.old.ActionRegistry;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;

@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.UIObject;
 /**
  * Implementations of this interface are used by {@link Action} as widget
  * factories.
+ * 
+ * @deprecated
  */
 public interface ActionWidgetFactory {
 

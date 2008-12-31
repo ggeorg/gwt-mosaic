@@ -15,4 +15,5 @@
 <!--                                                                        -->
 
 <module>
+	<inherits name='org.gwt.mosaic.beansbinding.BeansBinding' />
 </module>
