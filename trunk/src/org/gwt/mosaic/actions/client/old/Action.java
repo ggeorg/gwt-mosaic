@@ -30,6 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
  * the end user. Actions are typically associated with buttons, menu items, and
  * items in tool bars. When the end user triggers the command via its control,
  * the action's <code>execute</code> method is invoked to do the real work.
+ * 
+ * @deprecated
  */
 public class Action implements Command, HasText, ClickListener {
 

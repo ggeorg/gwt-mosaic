@@ -18,6 +18,10 @@ package org.gwt.mosaic.actions.client.old;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @deprecated
+ */
 public class ActionRegistry {
 
   private static final Map<String, Action> actionMap = new HashMap<String, Action>();

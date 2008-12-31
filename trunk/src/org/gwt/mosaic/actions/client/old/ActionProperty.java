@@ -15,6 +15,10 @@
  */
 package org.gwt.mosaic.actions.client.old;
 
+/**
+ * 
+ * @deprecated
+ */
 public interface ActionProperty {
   int TEXT = 0;
   int TITLE = 1;

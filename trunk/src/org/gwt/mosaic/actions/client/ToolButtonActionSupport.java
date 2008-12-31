@@ -17,30 +17,44 @@
 package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
+import org.gwt.mosaic.ui.client.ToolButton;
 
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ButtonActionSupport extends ActionSupport<Button> implements
-    ClickListener {
+public class ToolButtonActionSupport extends ActionSupport<ToolButton>
+    implements ClickListener {
 
-  public final class ButtonBean extends TargetBean {
-    public ButtonBean(Button target) {
+  public final class ToolButtonBean extends TargetBean {
+    public ToolButtonBean(ToolButton target) {
       super(target);
+    }
+
+    @Override
+    public Boolean isEnabled() {
+      return target.isEnabled();
+    }
+
+    @Override
+    public void setEnabled(Boolean enabled) {
+      enabled = toBoolean(enabled, Boolean.TRUE);
+      Boolean oldValue = target.isEnabled();
+      target.setEnabled(enabled);
+      changeSupport.firePropertyChange("enabled", oldValue, enabled);
     }
   }
 
   private TargetBean targetBean;
-  
-  public ButtonActionSupport(Action source) {
-    this(source, new Button());
+
+  public ToolButtonActionSupport(Action source) {
+    this(source, new ToolButton());
   }
 
-  public ButtonActionSupport(Action source, Button target) {
+  public ToolButtonActionSupport(Action source, ToolButton target) {
     super(source, target);
 
     // Action.MNEMONIC_KEY;
@@ -73,7 +87,7 @@ public class ButtonActionSupport extends ActionSupport<Button> implements
   @Override
   protected TargetBean getTargetBean() {
     if (targetBean == null) {
-      targetBean = new TargetBean(getTarget());
+      targetBean = new ToolButtonBean(getTarget());
     }
     return targetBean;
   }
@@ -83,12 +97,13 @@ public class ButtonActionSupport extends ActionSupport<Button> implements
     getTarget().addClickListener(this);
   }
 
+  @Override
+  protected void onUnBind() {
+    getTarget().removeClickListener(this);
+  }
+
   public void onClick(Widget sender) {
     getSource().actionPerformed(new ActionEvent(getSource(), sender));
   }
 
-  @Override
-  public void onUnBind() {
-    getTarget().removeClickListener(this);
-  }
 }

@@ -9,6 +9,10 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.UIObject;
 
+/**
+ * 
+ * @deprecated
+ */
 public class DefaultActionWidgetFactory implements ActionWidgetFactory {
 
   @SuppressWarnings("unchecked")

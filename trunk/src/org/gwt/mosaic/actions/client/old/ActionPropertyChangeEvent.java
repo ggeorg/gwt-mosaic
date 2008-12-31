@@ -17,6 +17,10 @@ package org.gwt.mosaic.actions.client.old;
 
 import java.util.EventObject;
 
+/**
+ * 
+ * @deprecated
+ */
 public class ActionPropertyChangeEvent extends EventObject {
   private static final long serialVersionUID = 8263415801874185516L;
 

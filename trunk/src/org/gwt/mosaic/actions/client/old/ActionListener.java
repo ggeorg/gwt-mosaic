@@ -15,6 +15,10 @@
  */
 package org.gwt.mosaic.actions.client.old;
 
+/**
+ * 
+ * @deprecated
+ */
 public interface ActionListener {
   void handleAction(Action action);
 }
