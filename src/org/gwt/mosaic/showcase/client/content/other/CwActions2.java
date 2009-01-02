@@ -149,61 +149,61 @@ public class CwActions2 extends ContentWidget {
     final ButtonActionSupport btnActionSupport1 = new ButtonActionSupport(
         action);
     btnActionSupport1.bind();
-    btnActionSupport1.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        panel.layout();
-      }
-    });
+//    btnActionSupport1.addPropertyChangeListener(new PropertyChangeListener() {
+//      public void propertyChange(PropertyChangeEvent evt) {
+//        panel.layout();
+//      }
+//    });
 
     final ButtonActionSupport btnActionSupport2 = new ButtonActionSupport(
         action);
     btnActionSupport2.bind();
     btnActionSupport2.setLabelType(ButtonLabelType.TEXT_ON_BOTTOM);
-    btnActionSupport2.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        panel.layout();
-      }
-    });
+//    btnActionSupport2.addPropertyChangeListener(new PropertyChangeListener() {
+//      public void propertyChange(PropertyChangeEvent evt) {
+//        panel.layout();
+//      }
+//    });
 
     final ButtonActionSupport btnActionSupport3 = new ButtonActionSupport(
         action);
     btnActionSupport3.bind();
     btnActionSupport3.setLabelType(ButtonLabelType.TEXT_ON_LEFT);
-    btnActionSupport3.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        panel.layout();
-      }
-    });
+//    btnActionSupport3.addPropertyChangeListener(new PropertyChangeListener() {
+//      public void propertyChange(PropertyChangeEvent evt) {
+//        panel.layout();
+//      }
+//    });
 
     final ButtonActionSupport btnActionSupport4 = new ButtonActionSupport(
         action);
     btnActionSupport4.bind();
     btnActionSupport4.setLabelType(ButtonLabelType.TEXT_ON_TOP);
-    btnActionSupport4.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        panel.layout();
-      }
-    });
+//    btnActionSupport4.addPropertyChangeListener(new PropertyChangeListener() {
+//      public void propertyChange(PropertyChangeEvent evt) {
+//        panel.layout();
+//      }
+//    });
 
     final ButtonActionSupport btnActionSupport5 = new ButtonActionSupport(
         action);
     btnActionSupport5.bind();
     btnActionSupport5.setLabelType(ButtonLabelType.TEXT_ONLY);
-    btnActionSupport5.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        panel.layout();
-      }
-    });
+//    btnActionSupport5.addPropertyChangeListener(new PropertyChangeListener() {
+//      public void propertyChange(PropertyChangeEvent evt) {
+//        panel.layout();
+//      }
+//    });
 
     final ButtonActionSupport btnActionSupport6 = new ButtonActionSupport(
         action);
     btnActionSupport6.bind();
     btnActionSupport6.setLabelType(ButtonLabelType.NO_TEXT);
-    btnActionSupport6.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
-        panel.layout();
-      }
-    });
+//    btnActionSupport6.addPropertyChangeListener(new PropertyChangeListener() {
+//      public void propertyChange(PropertyChangeEvent evt) {
+//        panel.layout();
+//      }
+//    });
 
     hBox.add(btnActionSupport1.getTarget());
     hBox.add(btnActionSupport2.getTarget());
@@ -215,6 +215,11 @@ public class CwActions2 extends ContentWidget {
     panel.add(hBox);
   }
 
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
   private void addCustomButton(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
     hBox.setPadding(0);
@@ -261,6 +266,11 @@ public class CwActions2 extends ContentWidget {
     panel.add(hBox);
   }
 
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
   private void addToolButton1(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
     hBox.setPadding(0);
@@ -304,6 +314,11 @@ public class CwActions2 extends ContentWidget {
     panel.add(hBox);
   }
 
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
   private void addToolButton2(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
     hBox.setPadding(0);
@@ -353,6 +368,11 @@ public class CwActions2 extends ContentWidget {
     panel.add(hBox);
   }
 
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
   private void addToolButton3(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
     hBox.setPadding(0);
@@ -425,6 +445,11 @@ public class CwActions2 extends ContentWidget {
     panel.add(hBox);
   }
 
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
   private void addToolButton4(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
     hBox.setPadding(0);
@@ -497,6 +522,11 @@ public class CwActions2 extends ContentWidget {
     panel.add(hBox);
   }
 
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
   private void addMenuBar(final LayoutPanel panel) {
     // Create a menu bar
     MenuBar menu = new MenuBar();

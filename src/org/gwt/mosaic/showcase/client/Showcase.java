@@ -455,7 +455,7 @@ public class Showcase implements EntryPoint {
     TreeItem catOther = mainMenu.addItem("Other Features");
     setupMainMenuOption(catOther, new CwListBoxBinding(constants),
         IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
+    //setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
     setupMainMenuOption(catOther, new CwActions2(constants), IMAGES.catOther());
 
   }
