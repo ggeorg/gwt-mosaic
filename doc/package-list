@@ -1,4 +1,5 @@
 org.gwt.mosaic.actions.client
+org.gwt.mosaic.actions.client.old
 org.gwt.mosaic.core.client
 org.gwt.mosaic.core.client.impl
 org.gwt.mosaic.core.client.util
