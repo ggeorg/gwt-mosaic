@@ -98,8 +98,10 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
 
   private Command menuCmd = new Command() {
     public void execute() {
-      getTargetBean().setSelected(!getTargetBean().getSelected());
-      getSource().actionPerformed(new ActionEvent(getSource(), getTarget()));
+      if (getTargetBean().getEnabled()) {
+        getTargetBean().setSelected(!getTargetBean().getSelected());
+        getSource().actionPerformed(new ActionEvent(getSource(), getTarget()));
+      }
     }
   };
 

@@ -23,12 +23,18 @@ import com.google.gwt.user.client.ui.ImageBundle;
  */
 public interface ActionImages extends ImageBundle {
 
+  @Resource(value = "award_star_bronze_1.png")
+  AbstractImagePrototype award_star_bronze_1();
+
+  @Resource(value = "bell.png")
+  AbstractImagePrototype bell();
+
   @Resource(value = "bomb.png")
-  AbstractImagePrototype action();
-  
+  AbstractImagePrototype bomb();
+
   @Resource(value = "menuitem_checkbox.png")
   AbstractImagePrototype menuitem_checkbox();
-  
+
   @Resource(value = "noimage.png")
   AbstractImagePrototype noimage();
 
