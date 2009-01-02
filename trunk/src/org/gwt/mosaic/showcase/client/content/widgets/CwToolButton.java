@@ -89,7 +89,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Push buttons
     //
 
-    layoutPanel.add(new HTML("Push buttons widgets"));
+    layoutPanel.add(new HTML("Push button widgets"));
 
     final LayoutPanel hBox1 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -100,7 +100,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Push buttons with image
     //
 
-    layoutPanel.add(new HTML("Push buttons widgets with image"));
+    layoutPanel.add(new HTML("Push button widgets with image"));
 
     final LayoutPanel hBox2 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -111,7 +111,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Menu & Split buttons
     //
 
-    layoutPanel.add(new HTML("Menu & Split buttons widgets"));
+    layoutPanel.add(new HTML("Menu & Split button widgets"));
 
     final LayoutPanel hBox3 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -122,7 +122,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Checkbox & Radio buttons
     //
 
-    layoutPanel.add(new HTML("Checkbox & Radio buttons widgets"));
+    layoutPanel.add(new HTML("Checkbox & Radio button widgets"));
 
     final LayoutPanel hBox4 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));

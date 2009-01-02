@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -138,8 +136,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
           }
           if (style == ToolButtonStyle.MENU) {
             if (menu != null) {
-              // TODO fix that code
-              // Region r = DOM.getRegion(ToolButton.this.getElement());
               final int box[] = DOM.getBoxSize(getElement());
               final int left = DOM.getAbsoluteLeft(getElement());
               final int top = DOM.getAbsoluteTop(getElement()) + box[1];

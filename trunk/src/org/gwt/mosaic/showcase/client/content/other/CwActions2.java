@@ -15,9 +15,11 @@ package org.gwt.mosaic.showcase.client.content.other;
 
 import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ButtonActionSupport;
+import org.gwt.mosaic.actions.client.CheckBoxActionSupport;
 import org.gwt.mosaic.actions.client.CommandAction;
 import org.gwt.mosaic.actions.client.MenuItemActionSupport;
 import org.gwt.mosaic.actions.client.PushButtonActionSupport;
+import org.gwt.mosaic.actions.client.RadioButtonActionSupport;
 import org.gwt.mosaic.actions.client.ToggleButtonActionSupport;
 import org.gwt.mosaic.actions.client.ToggleMenuItemActionSupport;
 import org.gwt.mosaic.actions.client.ToolButtonActionSupport;
@@ -42,10 +44,11 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -96,13 +99,13 @@ public class CwActions2 extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     layoutPanel.setPadding(0);
-    layoutPanel.setWidgetSpacing(0);
 
     final LayoutPanel vBox = new ScrollLayoutPanel();
+    vBox.setWidgetSpacing(0);
 
-    action = new CommandAction("Hello Action!", new Command() {
+    action = new CommandAction("Hello!", new Command() {
       public void execute() {
-        Window.alert("Hello");
+        Window.alert((String) action.getValue(Action.NAME));
       }
     });
     action.setEnabled(false);
@@ -110,22 +113,21 @@ public class CwActions2 extends ContentWidget {
     action.putValue(Action.SMALL_ICON, CommandAction.ACTION_IMAGES.bell());
 
     addMenuBar(layoutPanel);
-    vBox.add(new HTML("<u><b>GWT Button</b></u>"), new BoxLayoutData(
-        FillStyle.HORIZONTAL));
+    vBox.add(new Label("GWT Button"), new BoxLayoutData(FillStyle.HORIZONTAL));
     addButton(vBox);
-    vBox.add(new HTML("<u><b>GWT ToolButton (PUSH)</b></u>"),
-        new BoxLayoutData(FillStyle.HORIZONTAL));
+    vBox.add(new Label("GWT ToolButton (PUSH)"), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     addToolButton1(vBox);
-    vBox.add(new HTML("<u><b>GWT ToolButton (CHECKBOX)</b></u>"),
-        new BoxLayoutData(FillStyle.HORIZONTAL));
+    vBox.add(new Label("GWT ToolButton (CHECKBOX)"), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     addToolButton2(vBox);
-    vBox.add(new HTML("<u><b>GWT ToolButton (SPLIT)</b></u>"),
-        new BoxLayoutData(FillStyle.HORIZONTAL));
+    vBox.add(new Label("GWT ToolButton (SPLIT)"), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     addToolButton3(vBox);
-    vBox.add(new HTML("<u><b>GWT ToolButton (MENU)</b></u>"),
-        new BoxLayoutData(FillStyle.HORIZONTAL));
+    vBox.add(new Label("GWT ToolButton (MENU)"), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     addToolButton4(vBox);
-    vBox.add(new HTML("<u><b>GWT CustomButton</b></u>"), new BoxLayoutData(
+    vBox.add(new Label("GWT CustomButton"), new BoxLayoutData(
         FillStyle.HORIZONTAL));
     addCustomButton(vBox);
 
@@ -141,7 +143,6 @@ public class CwActions2 extends ContentWidget {
   @ShowcaseSource
   private void addButton(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
-    hBox.setPadding(0);
 
     final ButtonActionSupport btnActionSupport1 = new ButtonActionSupport(
         action);
@@ -179,34 +180,7 @@ public class CwActions2 extends ContentWidget {
     hBox.add(btnActionSupport5.getTarget());
     hBox.add(btnActionSupport6.getTarget());
 
-    panel.add(hBox);
-  }
-
-  /**
-   * 
-   * @param panel
-   */
-  @ShowcaseSource
-  private void addCustomButton(final LayoutPanel panel) {
-    final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
-    hBox.setPadding(0);
-
-    final PushButtonActionSupport pushBtnActionSupport = new PushButtonActionSupport(
-        action, new PushButton(
-            MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
-            MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
-    pushBtnActionSupport.bind();
-
-    final ToggleButtonActionSupport toggleBtnActionSupport = new ToggleButtonActionSupport(
-        action, new ToggleButton(
-            MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
-            MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
-    toggleBtnActionSupport.bind();
-
-    hBox.add(new WidgetWrapper(pushBtnActionSupport.getTarget()));
-    hBox.add(new WidgetWrapper(toggleBtnActionSupport.getTarget()));
-
-    panel.add(hBox);
+    panel.add(hBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
   }
 
   /**
@@ -216,7 +190,6 @@ public class CwActions2 extends ContentWidget {
   @ShowcaseSource
   private void addToolButton1(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
-    hBox.setPadding(0);
 
     final ToolButtonActionSupport toolBtnActionSupport1 = new ToolButtonActionSupport(
         action);
@@ -254,7 +227,7 @@ public class CwActions2 extends ContentWidget {
     hBox.add(toolBtnActionSupport5.getTarget());
     hBox.add(toolBtnActionSupport6.getTarget());
 
-    panel.add(hBox);
+    panel.add(hBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
   }
 
   /**
@@ -264,7 +237,6 @@ public class CwActions2 extends ContentWidget {
   @ShowcaseSource
   private void addToolButton2(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
-    hBox.setPadding(0);
 
     final ToolButtonActionSupport toolBtnActionSupport1 = new ToolButtonActionSupport(
         action);
@@ -308,7 +280,7 @@ public class CwActions2 extends ContentWidget {
     hBox.add(toolBtnActionSupport5.getTarget());
     hBox.add(toolBtnActionSupport6.getTarget());
 
-    panel.add(hBox);
+    panel.add(hBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
   }
 
   /**
@@ -318,7 +290,6 @@ public class CwActions2 extends ContentWidget {
   @ShowcaseSource
   private void addToolButton3(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
-    hBox.setPadding(0);
 
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
@@ -385,7 +356,7 @@ public class CwActions2 extends ContentWidget {
     hBox.add(btn5);
     hBox.add(btn6);
 
-    panel.add(hBox);
+    panel.add(hBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
   }
 
   /**
@@ -395,7 +366,6 @@ public class CwActions2 extends ContentWidget {
   @ShowcaseSource
   private void addToolButton4(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
-    hBox.setPadding(0);
 
     // Make a command that we will execute from all menu items.
     Command cmd1 = new Command() {
@@ -462,7 +432,43 @@ public class CwActions2 extends ContentWidget {
     hBox.add(btn5);
     hBox.add(btn6);
 
-    panel.add(hBox);
+    panel.add(hBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+  }
+  
+  /**
+   * 
+   * @param panel
+   */
+  @ShowcaseSource
+  private void addCustomButton(final LayoutPanel panel) {
+    final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
+
+    final PushButtonActionSupport pushBtnActionSupport = new PushButtonActionSupport(
+        action, new PushButton(
+            MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
+            MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
+    pushBtnActionSupport.bind();
+
+    final ToggleButtonActionSupport toggleBtnActionSupport = new ToggleButtonActionSupport(
+        action, new ToggleButton(
+            MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
+            MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
+    toggleBtnActionSupport.bind();
+    
+    final CheckBoxActionSupport checkBoxActionSupport = new CheckBoxActionSupport(
+        action);
+    checkBoxActionSupport.bind();
+
+    final RadioButtonActionSupport radioButtonActionSupport = new RadioButtonActionSupport(
+        action, new RadioButton("RadioButtonName"));
+    radioButtonActionSupport.bind();
+
+    hBox.add(new WidgetWrapper(pushBtnActionSupport.getTarget()));
+    hBox.add(new WidgetWrapper(toggleBtnActionSupport.getTarget()));
+    hBox.add(new WidgetWrapper(checkBoxActionSupport.getTarget()));
+    hBox.add(new WidgetWrapper(radioButtonActionSupport.getTarget()));
+
+    panel.add(hBox, new BoxLayoutData(FillStyle.HORIZONTAL, true));
   }
 
   /**
