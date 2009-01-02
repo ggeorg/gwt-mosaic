@@ -53,8 +53,8 @@ public class ToolButtonActionSupport extends ActionSupport<ToolButton>
     }
 
     public void firePropertyChange(final String property, Object oldValue,
-        Object selected) {
-      changeSupport.firePropertyChange(property, oldValue, selected);
+        Object newValue) {
+      changeSupport.firePropertyChange(property, oldValue, newValue);
     }
 
     public Boolean getSelected() {

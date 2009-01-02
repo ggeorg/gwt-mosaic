@@ -44,8 +44,8 @@ public class ToggleButtonActionSupport extends ButtonBaseActionSupport {
     }
 
     public void firePropertyChange(final String property, Object oldValue,
-        Object selected) {
-      changeSupport.firePropertyChange(property, oldValue, selected);
+        Object newValue) {
+      changeSupport.firePropertyChange(property, oldValue, newValue);
     }
   }
 

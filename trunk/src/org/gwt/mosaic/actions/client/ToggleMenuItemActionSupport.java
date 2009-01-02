@@ -32,12 +32,10 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
   public final class MenuItemBean extends TargetBean {
     private boolean enabled = true;
     private boolean selected = false;
-    private Command command = null;
     private String text;
 
-    public MenuItemBean(MenuItem target, Command command) {
+    public MenuItemBean(MenuItem target) {
       super(target);
-      this.command = command;
       this.text = target.getText();
     }
 
@@ -54,6 +52,10 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
       return enabled;
     }
 
+    public Boolean getSelected() {
+      return selected;
+    }
+
     @Override
     public String getText() {
       return this.text;
@@ -68,22 +70,10 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
         getTarget().setCommand(null);
         getTarget().addStyleDependentName("disabled");
       } else {
-        getTarget().setCommand(command);
+        getTarget().setCommand(menuCmd);
         getTarget().removeStyleDependentName("disabled");
       }
       changeSupport.firePropertyChange("enabled", oldValue, enabled);
-    }
-
-    @Override
-    public void setText(String text) {
-      String oldValue = this.text;
-      this.text = text;
-      changeSupport.firePropertyChange("text", oldValue, text);
-      target.setHTML(createLabel());
-    }
-
-    public Boolean getSelected() {
-      return selected;
     }
 
     public void setSelected(Boolean selected) {
@@ -94,9 +84,24 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
       target.setHTML(createLabel());
     }
 
+    @Override
+    public void setText(String text) {
+      String oldValue = this.text;
+      this.text = text;
+      changeSupport.firePropertyChange("text", oldValue, text);
+      target.setHTML(createLabel());
+    }
+
   }
 
   private MenuItemBean targetBean;
+
+  private Command menuCmd = new Command() {
+    public void execute() {
+      getTargetBean().setSelected(!getTargetBean().getSelected());
+      getSource().actionPerformed(new ActionEvent(getSource(), getTarget()));
+    }
+  };
 
   public ToggleMenuItemActionSupport(Action source) {
     this(source, new MenuItem("", (Command) null));
@@ -137,18 +142,14 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
   @Override
   protected MenuItemBean getTargetBean() {
     if (targetBean == null) {
-      Command command = getSource() instanceof HasCommand
-          ? ((HasCommand) getSource()).getCommand() : getTarget().getCommand();
-      targetBean = new MenuItemBean(getTarget(), command);
+      targetBean = new MenuItemBean(getTarget());
     }
     return targetBean;
   }
 
   @Override
   protected void onBind() {
-    if (getSource() instanceof HasCommand && getTargetBean().getEnabled()) {
-      getTarget().setCommand(((HasCommand) getSource()).getCommand());
-    }
+    getTarget().setCommand(menuCmd);
   }
 
   @Override
