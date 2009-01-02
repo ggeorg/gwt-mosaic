@@ -25,6 +25,7 @@ import java.util.Set;
 import org.gwt.beansbinding.observablecollections.client.ObservableMap;
 import org.gwt.beansbinding.observablecollections.client.ObservableMapListener;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 
 /**
@@ -61,7 +62,7 @@ public class CommandAction extends AbstractMap<String, Object> implements
       last = null;
       CommandAction.this.remove(toRemove);
     }
-  }
+  } 
 
   private class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
     public void clear() {
@@ -97,6 +98,8 @@ public class CommandAction extends AbstractMap<String, Object> implements
       return CommandAction.this.size();
     }
   }
+
+  public static final ActionImages ACTION_IMAGES = GWT.create(ActionImages.class);
 
   /**
    * {@code true} is this {@code Action} is enabled; {@code false} otherwise

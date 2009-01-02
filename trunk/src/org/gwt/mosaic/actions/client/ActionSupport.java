@@ -27,6 +27,7 @@ import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 import org.gwt.mosaic.core.client.DOM;
 
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
@@ -35,7 +36,7 @@ import com.google.gwt.user.client.ui.UIObject;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- *
+ * 
  * @param <T>
  */
 public abstract class ActionSupport<T> {
@@ -45,6 +46,8 @@ public abstract class ActionSupport<T> {
 
     protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(
         this);
+    
+    private AbstractImagePrototype image;
 
     public TargetBean(T target) {
       this.target = target;
@@ -59,12 +62,24 @@ public abstract class ActionSupport<T> {
       return null;
     }
 
+    public Boolean getEnabled() {
+      if (target instanceof FocusWidget) {
+        return ((FocusWidget) target).isEnabled();
+      } else {
+        throw new UnsupportedOperationException();
+      }
+    }
+
     public String getHTML() {
       if (target instanceof HasHTML) {
         return ((HasHTML) target).getHTML();
       } else {
         throw new UnsupportedOperationException();
       }
+    }
+
+    public AbstractImagePrototype getImage() {
+      return image;
     }
 
     public String getText() {
@@ -83,15 +98,7 @@ public abstract class ActionSupport<T> {
       }
     }
 
-    public Boolean isEnabled() {
-      if (target instanceof FocusWidget) {
-        return ((FocusWidget) target).isEnabled();
-      } else {
-        throw new UnsupportedOperationException();
-      }
-    }
-
-    public Boolean isVisible() {
+    public Boolean getVisible() {
       if (target instanceof UIObject) {
         return ((UIObject) target).isVisible();
       } else {
@@ -137,6 +144,12 @@ public abstract class ActionSupport<T> {
       } else {
         throw new UnsupportedOperationException();
       }
+    }
+
+    public void setImage(AbstractImagePrototype image) {
+      AbstractImagePrototype oldValue = this.image;
+      this.image = image;
+      changeSupport.firePropertyChange("image", oldValue, image);
     }
 
     public void setText(String text) {
@@ -194,7 +207,13 @@ public abstract class ActionSupport<T> {
   @SuppressWarnings("unchecked")
   protected Binding addBinding(String name, Property actionProperty,
       Property targetProperty) {
-    Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ, source,
+    return addBinding(name, UpdateStrategy.READ, actionProperty, targetProperty);
+  }
+
+  @SuppressWarnings("unchecked")
+  protected Binding addBinding(String name, UpdateStrategy updateStrategy,
+      Property actionProperty, Property targetProperty) {
+    Binding binding = Bindings.createAutoBinding(updateStrategy, source,
         actionProperty, getTargetBean(), targetProperty, name);
     addBinding(binding);
     return binding;
@@ -227,7 +246,7 @@ public abstract class ActionSupport<T> {
     return target;
   }
 
-  protected abstract HasPropertyChangeSupport getTargetBean();
+  protected abstract TargetBean getTargetBean();
 
   protected abstract void onBind();
 

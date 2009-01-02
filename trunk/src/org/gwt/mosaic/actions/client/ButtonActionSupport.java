@@ -17,25 +17,57 @@
 package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
+import org.gwt.mosaic.ui.client.util.ButtonHelper;
+import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ButtonActionSupport extends ActionSupport<Button> implements
-    ClickListener {
+public class ButtonActionSupport extends ButtonBaseActionSupport {
 
-  public final class ButtonBean extends TargetBean {
+  public final class ButtonBean extends ButtonBaseBean {
+    private String text;
+
     public ButtonBean(Button target) {
       super(target);
     }
+
+    private String createLabel() {
+      AbstractImagePrototype image = this.getImage();
+      if (image == null) {
+        return text;
+      } else {
+        return ButtonHelper.createButtonLabel(image, text, labelType);
+      }
+    }
+
+    @Override
+    public String getText() {
+      return this.text;
+    }
+
+    @Override
+    public void setImage(AbstractImagePrototype image) {
+      super.setImage(image);
+      target.setHTML(createLabel());
+    }
+
+    @Override
+    public void setText(String text) {
+      String oldValue = this.text;
+      this.text = text;
+      changeSupport.firePropertyChange("text", oldValue, text);
+      target.setHTML(createLabel());
+    }
   }
 
-  private TargetBean targetBean;
-  
+  private ButtonLabelType labelType = ButtonLabelType.TEXT_ON_RIGHT;
+
+  private ButtonBean targetBean;
+
   public ButtonActionSupport(Action source) {
     this(source, new Button());
   }
@@ -43,52 +75,30 @@ public class ButtonActionSupport extends ActionSupport<Button> implements
   public ButtonActionSupport(Action source, Button target) {
     super(source, target);
 
-    // Action.MNEMONIC_KEY;
-    // addBinding(Action.MNEMONIC_KEY,
-    // BeanProperty.<Action, Character> create(Action.MNEMONIC_KEY),
-    // BeanProperty.<TargetBean, Character> create("accessKey"));
-
     // Action.NAME
     addBinding(Action.NAME, BeanProperty.<Action, String> create(Action.NAME),
-        BeanProperty.<TargetBean, String> create("text"));
-
-    // Action.SHORT_DESCRIPTION
-    addBinding(Action.SHORT_DESCRIPTION,
-        BeanProperty.<Action, String> create(Action.SHORT_DESCRIPTION),
-        BeanProperty.<TargetBean, String> create("title"));
+        BeanProperty.<ButtonBaseBean, String> create("text"));
 
     // Action.SMALL_ICON
+    addBinding(Action.SMALL_ICON,
+        BeanProperty.<Action, String> create(Action.SMALL_ICON),
+        BeanProperty.<ButtonBean, String> create("image"));
+  }
 
-    // Action.ACTION_COMMAND_KEY
-
-    // "enabled"
-    addBinding("enabled", BeanProperty.<Action, String> create("enabled"),
-        BeanProperty.<TargetBean, String> create("enabled"));
-
-    // "visible"
-    addBinding("visible", BeanProperty.<Action, String> create("visible"),
-        BeanProperty.<TargetBean, String> create("visible"));
+  public ButtonLabelType getLabelType() {
+    return labelType;
   }
 
   @Override
-  protected TargetBean getTargetBean() {
+  protected ButtonBean getTargetBean() {
     if (targetBean == null) {
-      targetBean = new TargetBean(getTarget());
+      targetBean = new ButtonBean((Button) getTarget());
     }
     return targetBean;
   }
 
-  @Override
-  protected void onBind() {
-    getTarget().addClickListener(this);
-  }
-
-  public void onClick(Widget sender) {
-    getSource().actionPerformed(new ActionEvent(getSource(), sender));
-  }
-
-  @Override
-  public void onUnBind() {
-    getTarget().removeClickListener(this);
+  public void setLabelType(ButtonLabelType labelType) {
+    this.labelType = labelType;
+    getTargetBean().setText(getTargetBean().getText());
   }
 }

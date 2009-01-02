@@ -140,14 +140,6 @@
 	margin: 10px;
 }
 
-/*** Basic Button with Images ***/
-
-.gwt-Button[disabled] table {
-	opacity: .5;
-	zoom: 1;
-	filter: alpha(opacity=40);
-}
-
 /*** FastTree ***/
 
 .gwt-FastTree .selection-bar {

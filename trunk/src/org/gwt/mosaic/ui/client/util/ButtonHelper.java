@@ -11,21 +11,27 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public final class ButtonHelper {
 
   public static enum ButtonLabelType {
-    TEXT_ON_TOP, TEXT_ON_RIGHT, TEXT_ON_BOTTOM, TEXT_ON_LEFT
+    TEXT_ON_TOP, TEXT_ON_RIGHT, TEXT_ON_BOTTOM, TEXT_ON_LEFT, TEXT_ONLY, NO_TEXT
   }
   
   public static String createButtonLabel(AbstractImagePrototype image, String text,
       ButtonLabelType type) {
     final HTML html = new HTML(text);
     final Image img = image.createImage();
-    if (type == ButtonLabelType.TEXT_ON_LEFT
+    if (type == ButtonLabelType.TEXT_ONLY) {
+      return text;
+    } else if (type == ButtonLabelType.NO_TEXT) {
+      return image.getHTML();
+    } else if (type == ButtonLabelType.TEXT_ON_LEFT
         || type == ButtonLabelType.TEXT_ON_RIGHT) {
       HorizontalPanel hpanel = new HorizontalPanel();
       if (type == ButtonLabelType.TEXT_ON_LEFT) {
         hpanel.add(html);
+        hpanel.add(new HTML("&nbsp;"));
         hpanel.add(img);
       } else {
         hpanel.add(img);
+        hpanel.add(new HTML("&nbsp;"));
         hpanel.add(html);
       }
       hpanel.setCellVerticalAlignment(html, HasVerticalAlignment.ALIGN_MIDDLE);

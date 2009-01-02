@@ -121,7 +121,9 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     /*
      * (non-Javadoc)
      * 
-     * @see com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user.client.Event)
+     * @see
+     * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user
+     * .client.Event)
      */
     @Override
     public void onBrowserEvent(Event event) {
@@ -243,8 +245,8 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     /**
      * Sets whether this widget is enabled.
      * 
-     * @param enabled <code>true</code> to enable the widget,
-     *          <code>false</code> to disable it
+     * @param enabled <code>true</code> to enable the widget, <code>false</code>
+     *          to disable it
      */
     public void setEnabled(boolean enabled) {
       super.setEnabled(enabled);
@@ -477,7 +479,10 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    * @param checked <code>true</code> to check the check box
    */
   public void setChecked(boolean checked) {
-    button.setChecked(checked);
+    if (button.getStyle() == ToolButtonStyle.CHECKBOX
+        || button.getStyle() == ToolButtonStyle.RADIO) {
+      button.setChecked(checked);
+    }
   }
 
 }
