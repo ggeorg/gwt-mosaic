@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -14,9 +12,6 @@
  * the License.
  */
 package org.gwt.mosaic.showcase.client.content.other;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ButtonActionSupport;
@@ -44,7 +39,9 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -100,9 +97,9 @@ public class CwActions2 extends ContentWidget {
         Orientation.VERTICAL));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
-    
+
     final LayoutPanel vBox = new ScrollLayoutPanel();
-    
+
     action = new CommandAction("Hello Action!", new Command() {
       public void execute() {
         Window.alert("Hello");
@@ -110,7 +107,7 @@ public class CwActions2 extends ContentWidget {
     });
     action.setEnabled(false);
     action.putValue(Action.SHORT_DESCRIPTION, "A short description");
-    action.putValue(Action.SMALL_ICON, CommandAction.ACTION_IMAGES.action());
+    action.putValue(Action.SMALL_ICON, CommandAction.ACTION_IMAGES.bell());
 
     addMenuBar(layoutPanel);
     vBox.add(new HTML("<u><b>GWT Button</b></u>"), new BoxLayoutData(
@@ -131,12 +128,12 @@ public class CwActions2 extends ContentWidget {
     vBox.add(new HTML("<u><b>GWT CustomButton</b></u>"), new BoxLayoutData(
         FillStyle.HORIZONTAL));
     addCustomButton(vBox);
-    
+
     layoutPanel.add(vBox, new BoxLayoutData(FillStyle.BOTH));
 
     return layoutPanel;
   }
-  
+
   /**
    * 
    * @param panel
@@ -149,61 +146,31 @@ public class CwActions2 extends ContentWidget {
     final ButtonActionSupport btnActionSupport1 = new ButtonActionSupport(
         action);
     btnActionSupport1.bind();
-//    btnActionSupport1.addPropertyChangeListener(new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent evt) {
-//        panel.layout();
-//      }
-//    });
 
     final ButtonActionSupport btnActionSupport2 = new ButtonActionSupport(
         action);
-    btnActionSupport2.bind();
     btnActionSupport2.setLabelType(ButtonLabelType.TEXT_ON_BOTTOM);
-//    btnActionSupport2.addPropertyChangeListener(new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent evt) {
-//        panel.layout();
-//      }
-//    });
+    btnActionSupport2.bind();
 
     final ButtonActionSupport btnActionSupport3 = new ButtonActionSupport(
         action);
-    btnActionSupport3.bind();
     btnActionSupport3.setLabelType(ButtonLabelType.TEXT_ON_LEFT);
-//    btnActionSupport3.addPropertyChangeListener(new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent evt) {
-//        panel.layout();
-//      }
-//    });
+    btnActionSupport3.bind();
 
     final ButtonActionSupport btnActionSupport4 = new ButtonActionSupport(
         action);
-    btnActionSupport4.bind();
     btnActionSupport4.setLabelType(ButtonLabelType.TEXT_ON_TOP);
-//    btnActionSupport4.addPropertyChangeListener(new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent evt) {
-//        panel.layout();
-//      }
-//    });
+    btnActionSupport4.bind();
 
     final ButtonActionSupport btnActionSupport5 = new ButtonActionSupport(
         action);
-    btnActionSupport5.bind();
     btnActionSupport5.setLabelType(ButtonLabelType.TEXT_ONLY);
-//    btnActionSupport5.addPropertyChangeListener(new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent evt) {
-//        panel.layout();
-//      }
-//    });
+    btnActionSupport5.bind();
 
     final ButtonActionSupport btnActionSupport6 = new ButtonActionSupport(
         action);
-    btnActionSupport6.bind();
     btnActionSupport6.setLabelType(ButtonLabelType.NO_TEXT);
-//    btnActionSupport6.addPropertyChangeListener(new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent evt) {
-//        panel.layout();
-//      }
-//    });
+    btnActionSupport6.bind();
 
     hBox.add(btnActionSupport1.getTarget());
     hBox.add(btnActionSupport2.getTarget());
@@ -224,44 +191,20 @@ public class CwActions2 extends ContentWidget {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
     hBox.setPadding(0);
 
-    // final PushButtonActionSupport pushBtnActionSupport1 = new
-    // PushButtonActionSupport(
-    // action);
-    // pushBtnActionSupport1.bind();
-    // pushBtnActionSupport1.addPropertyChangeListener(new
-    // PropertyChangeListener() {
-    // public void propertyChange(PropertyChangeEvent evt) {
-    // panel.layout();
-    // }
-    // });
-
-    final PushButtonActionSupport pushBtnActionSupport2 = new PushButtonActionSupport(
+    final PushButtonActionSupport pushBtnActionSupport = new PushButtonActionSupport(
         action, new PushButton(
             MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
             MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
-    pushBtnActionSupport2.bind();
+    pushBtnActionSupport.bind();
 
-    // final ToggleButtonActionSupport toggleBtnActionSupport1 = new
-    // ToggleButtonActionSupport(
-    // action);
-    // toggleBtnActionSupport1.bind();
-    // toggleBtnActionSupport1.addPropertyChangeListener(new
-    // PropertyChangeListener() {
-    // public void propertyChange(PropertyChangeEvent evt) {
-    // panel.layout();
-    // }
-    // });
-
-    final ToggleButtonActionSupport toggleBtnActionSupport2 = new ToggleButtonActionSupport(
+    final ToggleButtonActionSupport toggleBtnActionSupport = new ToggleButtonActionSupport(
         action, new ToggleButton(
             MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
             MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
-    toggleBtnActionSupport2.bind();
+    toggleBtnActionSupport.bind();
 
-    // hBox.add(new WidgetWrapper(pushBtnActionSupport1.getTarget()));
-    hBox.add(new WidgetWrapper(pushBtnActionSupport2.getTarget()));
-    // hBox.add(new WidgetWrapper(toggleBtnActionSupport1.getTarget()));
-    hBox.add(new WidgetWrapper(toggleBtnActionSupport2.getTarget()));
+    hBox.add(new WidgetWrapper(pushBtnActionSupport.getTarget()));
+    hBox.add(new WidgetWrapper(toggleBtnActionSupport.getTarget()));
 
     panel.add(hBox);
   }
@@ -552,6 +495,30 @@ public class CwActions2 extends ContentWidget {
     MenuBar actionCtrlMenu = new MenuBar(true);
     menu.addItem(new MenuItem("Actions Control", actionCtrlMenu));
 
+    actionCtrlMenu.addItem(new MenuItem("Change Text", new Command() {
+      public void execute() {
+        String newName = Window.prompt("New Text:",
+            (String) action.getValue(Action.NAME));
+        action.putValue(Action.NAME, newName);
+
+        DeferredCommand.addCommand(new Command() {
+          public void execute() {
+            panel.layout();
+          }
+        });
+      }
+    }));
+
+    actionCtrlMenu.addItem(new MenuItem("Change Tooltip", new Command() {
+      public void execute() {
+        String newName = Window.prompt("New Text:",
+            (String) action.getValue(Action.SHORT_DESCRIPTION));
+        action.putValue(Action.SHORT_DESCRIPTION, newName);
+      }
+    }));
+
+    actionCtrlMenu.addSeparator();
+
     actionCtrlMenu.addItem(new MenuItem("Toggle Enabled", new Command() {
       public void execute() {
         action.setEnabled(!action.isEnabled());
@@ -565,6 +532,18 @@ public class CwActions2 extends ContentWidget {
           selected = Boolean.FALSE;
         }
         action.putValue("selected", !selected);
+      }
+    }));
+
+    actionCtrlMenu.addItem(new MenuItem("Toggle Icon", new Command() {
+      public void execute() {
+        AbstractImagePrototype icon = (AbstractImagePrototype) action.getValue(Action.SMALL_ICON);
+        if (CommandAction.ACTION_IMAGES.bell().equals(icon)) {
+          icon = CommandAction.ACTION_IMAGES.award_star_bronze_1();
+        } else {
+          icon = CommandAction.ACTION_IMAGES.bell();
+        }
+        action.putValue(Action.SMALL_ICON, icon);
       }
     }));
 
