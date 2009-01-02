@@ -78,9 +78,9 @@ public class ToggleButtonActionSupport extends ButtonBaseActionSupport {
 
   @Override
   public void onClick(Widget sender) {
-    super.onClick(sender);
     Boolean newValue = ((ToggleButton) sender).isDown();
     getTargetBean().firePropertyChange("selected", !newValue, newValue);
+    super.onClick(sender);
   }
 
 }
