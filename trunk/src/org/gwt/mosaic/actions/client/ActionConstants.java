@@ -24,11 +24,11 @@ public interface ActionConstants extends Constants {
 
   String copyName();
 
-  Object copyShortDescription();
+  String copyShortDescription();
 
   String cutName();
 
-  Object cutShortDescription();
+  String cutShortDescription();
 
   String exitName();
 
@@ -40,7 +40,7 @@ public interface ActionConstants extends Constants {
 
   String pasteName();
 
-  Object pasteShortDescription();
+  String pasteShortDescription();
 
   String selectAllName();
 
