@@ -13,7 +13,6 @@
  */
 package org.gwt.mosaic.ui.client.list;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +22,7 @@ import java.util.List;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public abstract class AbstractListModel<T> implements ListModel<T>,
-    Serializable {
+public abstract class AbstractListModel<T> implements ListModel<T> {
   private static final long serialVersionUID = 4151800085271288709L;
 
   /** List of {@link ListDataListener ListDataListeners}. */
