@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -100,7 +98,7 @@ public abstract class AbstractListModel<T> implements ListModel<T>,
   /**
    * Removes a listener object from the list.
    * 
-   * @param the listener to remove
+   * @param listener the listener to remove
    */
   public void removeListDataListener(ListDataListener listener) {
     listenerList.remove(listener);

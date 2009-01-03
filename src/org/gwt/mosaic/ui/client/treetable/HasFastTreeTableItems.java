@@ -1,6 +1,4 @@
 /*
- * Copyright 2007 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -19,7 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
- * A widget that implements this interface contains {@link FastTreeItem}
+ * A widget that implements this interface contains {@link FastTreeTableItem}
  * children and can add and remove them.
  */
 public interface HasFastTreeTableItems {
@@ -29,7 +27,6 @@ public interface HasFastTreeTableItems {
    * 
    * @param item the item to be added
    */
-
   void addItem(FastTreeTableItem item);
 
   /**

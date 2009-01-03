@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -34,7 +32,6 @@ import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
  * {@link com.google.gwt.widgetideas.client.FastTree}.
  * <p>
  * <h3>Example</h3>
- * {@example com.google.gwt.examples.TreeExample}
  */
 public class FastTreeTableItem extends Widget implements HasHTML,
     HasFastTreeTableItems {
@@ -419,12 +416,12 @@ public class FastTreeTableItem extends Widget implements HasHTML,
     // childTable.setWidget(r, treeTable.getTreeColumn(), item);
     final Element tr = getElement().getParentElement().getParentElement().cast();
     r += OverrideDOM.getRowIndex(tr);
-    
+
     int d = item.getDepth();
     if (d != 0) {
       DOM.setStyleAttribute(item.getElement(), "marginLeft", (d * 10) + "px");
     }
-    
+
     treeTable.insertItem(item, r);
   }
 
@@ -581,8 +578,8 @@ public class FastTreeTableItem extends Widget implements HasHTML,
   /**
    * Selects or deselects this item.
    * 
-   * @param selected <code>true</code> to select the item, <code>false</code>
-   *          to deselect it
+   * @param selected <code>true</code> to select the item, <code>false</code> to
+   *          deselect it
    */
   void setSelection(boolean selected, boolean fireEvents) {
     setStyleName(getControlElement(), STYLENAME_SELECTED, selected);
@@ -604,8 +601,7 @@ public class FastTreeTableItem extends Widget implements HasHTML,
    * Sets whether this item's children are displayed.
    * 
    * @param open whether the item is open
-   * @param fireEvents <code>true</code> to allow open/close events to be
-   *          fired
+   * @param fireEvents <code>true</code> to allow open/close events to be fired
    */
   public void setState(boolean open, boolean fireEvents) {
     if (open == isOpen()) {

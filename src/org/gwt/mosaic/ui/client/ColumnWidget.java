@@ -917,8 +917,8 @@ public abstract class ColumnWidget extends LayoutComposite {
   }
 
   /**
-   * Get the width of the input column used in the current
-   * {@code SelectionGrid.SelectionPolicy}.
+   * Get the width of the input column used in the current {@code
+   * SelectionGrid.SelectionPolicy}.
    * 
    * @return the width of the input element
    */
@@ -1138,7 +1138,9 @@ public abstract class ColumnWidget extends LayoutComposite {
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt.user.client.Event)
+   * @see
+   * com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt.user
+   * .client.Event)
    */
   @Override
   public void onBrowserEvent(Event event) {
@@ -1515,8 +1517,8 @@ public abstract class ColumnWidget extends LayoutComposite {
    * Widget is smaller than the width of the data table, a horizontal scroll bar
    * will appear.
    * 
-   * The minWidth property only applies to the policy
-   * {@link ResizePolicy#FILL_WIDTH}.
+   * The minWidth property only applies to the policy {@code
+   * ResizePolicy#FILL_WIDTH}.
    * 
    * @param minWidth the minimum width, or -1 to disable
    */

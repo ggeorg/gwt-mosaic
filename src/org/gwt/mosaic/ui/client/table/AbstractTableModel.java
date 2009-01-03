@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwt.mosaic.ui.client.table;
 
 import java.io.Serializable;
@@ -58,8 +74,7 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * order of the columns) is assumed to be the same.
    * 
    * @see TableModelEvent
-   * @see EventListenerList
-   * @see javax.swing.JTable#tableChanged(TableModelEvent)
+   * @see org.gwt.mosaic.ui.client.Table#tableChanged(TableModelEvent)
    */
   public void fireTableDataChanged() {
     fireTableChanged(new TableModelEvent(this));
@@ -75,7 +90,6 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * <code>setModel(TableModel)</code> on the <code>JTable</code>.
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableStructureChanged() {
     fireTableChanged(new TableModelEvent(this, 0 /* TableModelEvent.HEADER_ROW, */));
@@ -89,7 +103,6 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * @param lastRow the last row
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    * 
    */
   public void fireTableRowsInserted(int firstRow, int lastRow) {
@@ -105,7 +118,6 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * @param lastRow the last row
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableRowsUpdated(int firstRow, int lastRow) {
     fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
@@ -120,7 +132,6 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * @param lastRow the last row
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableRowsDeleted(int firstRow, int lastRow) {
     fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
@@ -134,7 +145,6 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * @param row row of cell which has been updated
    * @param column column of cell which has been updated
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableCellUpdated(int row, int column) {
     fireTableChanged(new TableModelEvent(this, row, row, column));
@@ -145,11 +155,10 @@ public abstract class AbstractTableModel<T> implements TableModel<T>,
    * <code>TableModelListeners</code> that registered themselves as listeners
    * for this table model.
    * 
-   * @param e the event to be forwarded
+   * @param event the event to be forwarded
    * 
    * @see #addTableModelListener
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableChanged(TableModelEvent event) {
     for (TableModelListener listener : listenerList) {

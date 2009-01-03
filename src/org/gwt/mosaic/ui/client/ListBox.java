@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -216,10 +214,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     this(null);
   }
 
-  /**
-   * 
-   * @param strings
-   */
   public ListBox(String[] columns) {
     super(impl.createFocusable());
 
@@ -623,7 +617,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * Renders an updated item.
    * 
    * @param index the index of the item to be set
-   * @param text the item's new value
+   * @param item the item's new value
    * @throws IndexOutOfBoundsException if the index is out of range
    */
   protected void renderItemOnUpdate(int index, T item) {

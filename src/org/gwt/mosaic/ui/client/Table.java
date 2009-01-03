@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -43,7 +41,7 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
 
 /**
- * A {@link PaddingScrollTable} that acts as a view of the underlying
+ * A {@link PagingScrollTable} that acts as a view of the underlying
  * {@link TableModel}.
  * 
  * @param <T> the data type of the row values
@@ -178,8 +176,8 @@ public class Table<T> extends LayoutComposite implements HasFocus,
    * 
    * @return the number of rows per page
    */
-  public void getPageSize() {
-    table.getPageSize();
+  public int getPageSize() {
+    return table.getPageSize();
   }
 
   public void addFocusListener(FocusListener listener) {
@@ -257,7 +255,6 @@ public class Table<T> extends LayoutComposite implements HasFocus,
    * 
    * @param model the new data model
    * @exception IllegalArgumentException if {@code model} is {@code null}
-   * @see #getModel
    */
   public void setModel(TableModel<T> model) {
     if (model == null) {

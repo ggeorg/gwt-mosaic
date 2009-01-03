@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -65,8 +63,8 @@ public class TableModelEvent extends EventObject {
   /**
    * This {@code row} of data has been updated.
    * <p>
-   * Note: To denote the arrival of a completely new table structure use
-   * {@code ALL_ROWS} as the {@code row} value.
+   * Note: To denote the arrival of a completely new table structure use {@code
+   * ALL_ROWS} as the {@code row} value.
    * 
    * @param source
    * @param row
@@ -87,8 +85,8 @@ public class TableModelEvent extends EventObject {
   }
 
   /**
-   * The cells in column {@code column} in the range [{@code firstRow},
-   * {@code lastRow}] have been updated.
+   * The cells in column {@code column} in the range [{@code firstRow}, {@code
+   * lastRow}] have been updated.
    * 
    * @param source
    * @param firstRow
@@ -122,7 +120,7 @@ public class TableModelEvent extends EventObject {
    * Returns the first row that changed. {@code ALL_ROWS} means table structure
    * change.
    * 
-   * @return
+   * @return the first row that changed
    */
   public int getFirstRow() {
     return firstRow;
@@ -131,7 +129,7 @@ public class TableModelEvent extends EventObject {
   /**
    * Returns the last row that changed.
    * 
-   * @return
+   * @return the last row that changed
    */
   public int getLastRow() {
     return lastRow;
@@ -141,7 +139,7 @@ public class TableModelEvent extends EventObject {
    * Returns the column data column. {@code ALL_COLUMNS} means every column in
    * the specified rows changed.
    * 
-   * @return
+   * @return the data column
    */
   public int getColumn() {
     return column;
@@ -150,7 +148,7 @@ public class TableModelEvent extends EventObject {
   /**
    * Returns the {@link Type} of the event.
    * 
-   * @return
+   * @return the event type
    */
   public Type getType() {
     return type;

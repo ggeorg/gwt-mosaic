@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -24,12 +22,6 @@ import java.util.NoSuchElementException;
 
 import org.gwt.mosaic.core.client.DOM;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.libideas.client.StyleInjector;
-import com.google.gwt.libideas.resources.client.DataResource;
-import com.google.gwt.libideas.resources.client.ImmutableResourceBundle;
-import com.google.gwt.libideas.resources.client.TextResource;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FocusListener;
@@ -58,8 +50,7 @@ import com.google.gwt.widgetideas.table.client.TableSelectionListener;
  * <li>.gwt-FastTree { the tree itself }</li>
  * <li>.gwt-FastTree .gwt-FastTreeItem { a tree item }</li>
  * <li>.gwt-FastTree .selection-bar {the selection bar used to highlight the
- * selected tree item}</li>
- * </ul>
+ * selected tree item}</li> </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -579,7 +570,7 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
     }
     return labelProvider;
   }
-  
+
   @Override
   protected void hoverCell(Element cellElem) {
     super.hoverCell(cellElem);
@@ -928,8 +919,8 @@ public class FastTreeTable extends FixedWidthGrid implements HasFocus,
    * is subject to asynchronous approval from other components of the
    * application.
    * 
-   * @returns true if element should be processed normally, false otherwise.
-   *          Default returns true.
+   * @return true if element should be processed normally, false otherwise.
+   *         Default returns true.
    */
   protected boolean processElementClicked(FastTreeTableItem item) {
     return true;

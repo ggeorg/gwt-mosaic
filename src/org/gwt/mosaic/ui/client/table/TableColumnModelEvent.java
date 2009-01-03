@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -19,7 +17,7 @@ import java.util.EventObject;
 
 /**
  * {@code TableColumnModelEvent} instances are used to notify
- * {@link TableColumnListener TableColumnListeners} that a
+ * {@link TableColumnModelListener TableColumnModelListeners} that a
  * {@link TableColumnModel} has changed.
  * 
  * @author georgopoulos.georgios(at)gmail.com

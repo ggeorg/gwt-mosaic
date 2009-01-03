@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -203,7 +201,7 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * Sets the text associated with the item at a given index.
    * 
    * @param index the index of the item to be set
-   * @param text the item's new text
+   * @param item the item's new text
    * @throws IndexOutOfBoundsException if the index is out of range
    */
   public void setItem(int index, T item) {

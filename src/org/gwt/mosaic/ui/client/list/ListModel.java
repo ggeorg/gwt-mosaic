@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -16,7 +14,8 @@
 package org.gwt.mosaic.ui.client.list;
 
 /**
- * The data model that is typically used in {@link ListBox}.
+ * The data model that is typically used in
+ * {@link org.gwt.mosaic.ui.client.ListBox}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */

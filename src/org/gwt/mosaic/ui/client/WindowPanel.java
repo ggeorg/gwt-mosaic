@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -693,13 +691,13 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   /**
    * Centers the {@code WindowPanel} in the browser window and shows it (
-   * centers the popup in the browser window by adding it to the
-   * {@code RootPanel}). The {@link #layout()} is called after the
-   * {@code WindowPanel} is attached (in {@link #onLoad()}). If the
-   * {@code WindowPanel} was already showing, then the {@code WindowPanel} is
-   * centered. If the {@code WindowPanel} is set to not visible by calling
-   * {@link #setVisible(boolean)} before {@link #show()} the {@code WindowPanel}
-   * will be attached and visible (not like {@link #show()}).
+   * centers the popup in the browser window by adding it to the {@code
+   * RootPanel}). The {@link #layout()} is called after the {@code WindowPanel}
+   * is attached (in {@link #onLoad()}). If the {@code WindowPanel} was already
+   * showing, then the {@code WindowPanel} is centered. If the {@code
+   * WindowPanel} is set to not visible by calling {@link #setVisible(boolean)}
+   * before {@link #show()} the {@code WindowPanel} will be attached and visible
+   * (not like {@link #show()}).
    * 
    * @see #show()
    */
@@ -864,7 +862,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * Hides the {@code WindowPanel} (hides the popup by removing it from the
    * {@code RootPanel}). This has no effect if it is not currently visible.
    * 
-   * @param autoClosed the value that will be passed to
+   * @param autoHide the value that will be passed to
    *          {@link PopupListener#onPopupClosed(PopupPanel, boolean)} when the
    *          popup is closed
    * 
@@ -1358,12 +1356,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   /**
    * Makes the {@code WindowPanel} visible (shows the popup by adding it to the
-   * {@code RootPanel}). The {@link #layout()} is called after the
-   * {@code WindowPanel} is attached (in {@link #onLoad()}). If the
-   * {@code WindowPanel} is already attached, this will bring the
-   * {@code WindowPanel} to the front. If the {@code WindowPanel} is set to not
-   * visible by calling {@link #setVisible(boolean)} before {@link #show()} the
-   * {@code WindowPanel} will be attached but not visible.
+   * {@code RootPanel}). The {@link #layout()} is called after the {@code
+   * WindowPanel} is attached (in {@link #onLoad()}). If the {@code WindowPanel}
+   * is already attached, this will bring the {@code WindowPanel} to the front.
+   * If the {@code WindowPanel} is set to not visible by calling
+   * {@link #setVisible(boolean)} before {@link #show()} the {@code WindowPanel}
+   * will be attached but not visible.
    * 
    * @see #center()
    * @see #pack()
@@ -1391,9 +1389,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   /**
    * Centers the {@code WindowPanel} in the browser window and shows it modal
-   * (centers the popup in the browser window by adding it to the
-   * {@code RootPanel} and displays a
-   * {@code com.google.gwt.widgetideas.client.GlassPanel} under it). The
+   * (centers the popup in the browser window by adding it to the {@code
+   * RootPanel} and displays a {@code
+   * com.google.gwt.widgetideas.client.GlassPanel} under it). The
    * {@link #layout()} is called after the {@code WindowPanel} is attached (in
    * {@link #onLoad()}). If the {@code WindowPanel} is already attached, then
    * the {@code WindowPanel} is centered. If the {@code WindowPanel} is set to
