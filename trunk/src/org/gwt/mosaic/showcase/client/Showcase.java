@@ -40,8 +40,8 @@ import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
 import org.gwt.mosaic.showcase.client.content.other.CwActions;
-import org.gwt.mosaic.showcase.client.content.other.CwActions2;
 import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
+import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwHorizontalSplitPanel;
@@ -103,7 +103,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
-  
+
   static {
     GWTBeansBinding.init();
   }
@@ -434,7 +434,8 @@ public class Showcase implements EntryPoint {
     // Tables
     TreeItem catTables = mainMenu.addItem("Lists & Tables");
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwSimpleTable(constants), IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwSimpleTable(constants),
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwScrollTable(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
@@ -455,8 +456,11 @@ public class Showcase implements EntryPoint {
     TreeItem catOther = mainMenu.addItem("Other Features");
     setupMainMenuOption(catOther, new CwListBoxBinding(constants),
         IMAGES.catOther());
-    //setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwActions2(constants), IMAGES.catOther());
+    // setupMainMenuOption(catOther, new CwActions(constants),
+    // IMAGES.catOther());
+    setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
+    setupMainMenuOption(catOther, new CwRadioButtonActions(constants),
+        IMAGES.catOther());
 
   }
 
