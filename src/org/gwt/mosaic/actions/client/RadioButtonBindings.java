@@ -18,7 +18,7 @@ package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
-import org.gwt.mosaic.actions.client.ToggleButtonActionSupport.ToggleButtonBean;
+import org.gwt.mosaic.actions.client.ToggleButtonBindings.ToggleButtonBean;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class RadioButtonActionSupport extends ButtonBaseActionSupport {
+public class RadioButtonBindings extends ButtonBaseActionSupport {
 
   public final class RadioButtonBean extends ButtonBaseBean {
     public RadioButtonBean(CheckBox target) {
@@ -53,7 +53,7 @@ public class RadioButtonActionSupport extends ButtonBaseActionSupport {
 
   private RadioButtonBean targetBean;
 
-  public RadioButtonActionSupport(Action source, RadioButton target) {
+  public RadioButtonBindings(Action source, RadioButton target) {
     super(source, target);
 
     // Action.NAME
@@ -77,6 +77,11 @@ public class RadioButtonActionSupport extends ButtonBaseActionSupport {
   @Override
   public void onClick(Widget sender) {
     Boolean newValue = ((RadioButton) sender).isChecked();
+    // XXX workaround to update BeanProperty {
+    ((RadioButton) sender).setChecked(!newValue);
+    getTargetBean().firePropertyChange("selected", newValue, !newValue);
+    ((RadioButton) sender).setChecked(newValue);
+    // XXX } end of workaround
     getTargetBean().firePropertyChange("selected", !newValue, newValue);
     super.onClick(sender);
   }

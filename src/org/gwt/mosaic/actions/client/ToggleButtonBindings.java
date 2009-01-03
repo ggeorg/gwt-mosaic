@@ -18,29 +18,28 @@ package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
-import org.gwt.mosaic.actions.client.ToggleButtonActionSupport.ToggleButtonBean;
 
-import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class CheckBoxActionSupport extends ButtonBaseActionSupport {
+public class ToggleButtonBindings extends ButtonBaseActionSupport {
 
-  public final class CheckBoxBean extends ButtonBaseBean {
-    public CheckBoxBean(CheckBox target) {
+  public final class ToggleButtonBean extends ButtonBaseBean {
+    public ToggleButtonBean(ToggleButton target) {
       super(target);
     }
 
     public Boolean getSelected() {
-      return ((CheckBox) target).isChecked();
+      return ((ToggleButton) target).isDown();
     }
 
     public void setSelected(Boolean selected) {
       selected = toBoolean(selected, Boolean.FALSE);
-      Boolean oldValue = ((CheckBox) target).isChecked();
-      ((CheckBox) target).setChecked(selected);
+      Boolean oldValue = ((ToggleButton) target).isDown();
+      ((ToggleButton) target).setDown(selected);
       changeSupport.firePropertyChange("selected", oldValue, selected);
     }
 
@@ -50,18 +49,18 @@ public class CheckBoxActionSupport extends ButtonBaseActionSupport {
     }
   }
 
-  private CheckBoxBean targetBean;
+  private ToggleButtonBean targetBean;
 
-  public CheckBoxActionSupport(Action source) {
-    this(source, new CheckBox());
-  }
-
-  public CheckBoxActionSupport(Action source, CheckBox target) {
-    super(source, target);
+  public ToggleButtonBindings(Action source) {
+    this(source, new ToggleButton());
 
     // Action.NAME
     addBinding(Action.NAME, BeanProperty.<Action, String> create(Action.NAME),
-        BeanProperty.<ButtonBaseBean, String> create("text"));
+        BeanProperty.<ToggleButtonBean, String> create("text"));
+  }
+
+  public ToggleButtonBindings(Action source, ToggleButton target) {
+    super(source, target);
 
     // "selected"
     addBinding("selected", UpdateStrategy.READ_WRITE,
@@ -70,16 +69,16 @@ public class CheckBoxActionSupport extends ButtonBaseActionSupport {
   }
 
   @Override
-  protected CheckBoxBean getTargetBean() {
+  protected ToggleButtonBean getTargetBean() {
     if (targetBean == null) {
-      targetBean = new CheckBoxBean((CheckBox) getTarget());
+      targetBean = new ToggleButtonBean((ToggleButton) getTarget());
     }
     return targetBean;
   }
 
   @Override
   public void onClick(Widget sender) {
-    Boolean newValue = ((CheckBox) sender).isChecked();
+    Boolean newValue = ((ToggleButton) sender).isDown();
     getTargetBean().firePropertyChange("selected", !newValue, newValue);
     super.onClick(sender);
   }

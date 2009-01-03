@@ -11,14 +11,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic.actions.client;
+package org.gwt.mosaic.actions.client.edit;
+
+import org.gwt.mosaic.actions.client.CommandAction;
 
 import com.google.gwt.user.client.Command;
 
 /**
+ * {@code SelectAllAction} provides the action for the {@code SelectAllCommand}.
+ * <p>
+ * The action has a default name.
  * 
+ * @author Anthony Sintes ObjectWave Corporation
  * @author georgopoulos.georgios(at)gmail.com
  */
-public interface HasCommand {
-  public Command getCommand();
+public final class SelectAllAction extends CommandAction {
+
+  /**
+   * This type defines the select all command.
+   */
+  public interface SelectAllCommand extends Command {
+  }
+
+  /**
+   * @param command the select all command that the action should act upon.
+   */
+  public SelectAllAction(SelectAllCommand command) {
+    super(ACTION_CONSTANTS.selectAllName(), command);
+  }
+
 }

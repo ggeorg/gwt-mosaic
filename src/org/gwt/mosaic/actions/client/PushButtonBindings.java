@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.PushButton;
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class PushButtonActionSupport extends ButtonBaseActionSupport {
+public class PushButtonBindings extends ButtonBaseActionSupport {
 
   public final class PushButtonBean extends ButtonBaseBean {
     public PushButtonBean(PushButton target) {
@@ -33,7 +33,7 @@ public class PushButtonActionSupport extends ButtonBaseActionSupport {
 
   private PushButtonBean targetBean;
 
-  public PushButtonActionSupport(Action source) {
+  public PushButtonBindings(Action source) {
     this(source, new PushButton());
 
     // Action.NAME
@@ -41,7 +41,7 @@ public class PushButtonActionSupport extends ButtonBaseActionSupport {
         BeanProperty.<PushButtonBean, String> create("text"));
   }
 
-  public PushButtonActionSupport(Action source, PushButton target) {
+  public PushButtonBindings(Action source, PushButton target) {
     super(source, target);
   }
 

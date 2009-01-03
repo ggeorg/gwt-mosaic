@@ -14,6 +14,8 @@
 package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
+import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
+import org.gwt.mosaic.actions.client.ToggleButtonBindings.ToggleButtonBean;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
@@ -25,10 +27,11 @@ import com.google.gwt.user.client.ui.MenuItem;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class MenuItemActionSupport extends ActionSupport<MenuItem> {
+public class CheckBoxMenuItemBindings extends ActionBindings<MenuItem> {
 
   public final class MenuItemBean extends TargetBean {
     private boolean enabled = true;
+    private boolean selected = false;
     private String text;
 
     public MenuItemBean(MenuItem target) {
@@ -37,10 +40,9 @@ public class MenuItemActionSupport extends ActionSupport<MenuItem> {
     }
 
     private String createLabel() {
-      AbstractImagePrototype image = this.getImage();
-      if (image == null) {
-        image = CommandAction.ACTION_IMAGES.noimage();
-      }
+      AbstractImagePrototype image = getSelected()
+          ? CommandAction.ACTION_IMAGES.menuitem_checkbox()
+          : CommandAction.ACTION_IMAGES.noimage();
       return ButtonHelper.createButtonLabel(image, text,
           ButtonLabelType.TEXT_ON_RIGHT);
     }
@@ -48,6 +50,10 @@ public class MenuItemActionSupport extends ActionSupport<MenuItem> {
     @Override
     public Boolean getEnabled() {
       return enabled;
+    }
+
+    public Boolean getSelected() {
+      return selected;
     }
 
     @Override
@@ -70,9 +76,11 @@ public class MenuItemActionSupport extends ActionSupport<MenuItem> {
       changeSupport.firePropertyChange("enabled", oldValue, enabled);
     }
 
-    @Override
-    public void setImage(AbstractImagePrototype image) {
-      super.setImage(image);
+    public void setSelected(Boolean selected) {
+      selected = toBoolean(selected, Boolean.FALSE);
+      Boolean oldValue = this.selected;
+      this.selected = selected;
+      changeSupport.firePropertyChange("selected", oldValue, selected);
       target.setHTML(createLabel());
     }
 
@@ -91,16 +99,17 @@ public class MenuItemActionSupport extends ActionSupport<MenuItem> {
   private Command menuCmd = new Command() {
     public void execute() {
       if (getTargetBean().getEnabled()) {
+        getTargetBean().setSelected(!getTargetBean().getSelected());
         getSource().actionPerformed(new ActionEvent(getSource(), getTarget()));
       }
     }
   };
 
-  public MenuItemActionSupport(Action source) {
+  public CheckBoxMenuItemBindings(Action source) {
     this(source, new MenuItem("", (Command) null));
   }
 
-  public MenuItemActionSupport(Action source, MenuItem target) {
+  public CheckBoxMenuItemBindings(Action source, MenuItem target) {
     super(source, target);
 
     // Action.MNEMONIC_KEY;
@@ -115,15 +124,17 @@ public class MenuItemActionSupport extends ActionSupport<MenuItem> {
         BeanProperty.<MenuItemBean, String> create("title"));
 
     // Action.SMALL_ICON
-    addBinding(Action.SMALL_ICON,
-        BeanProperty.<Action, String> create(Action.SMALL_ICON),
-        BeanProperty.<MenuItemBean, String> create("image"));
 
     // Action.ACTION_COMMAND_KEY
 
     // "enabled"
     addBinding("enabled", BeanProperty.<Action, String> create("enabled"),
         BeanProperty.<MenuItemBean, String> create("enabled"));
+
+    // "selected"
+    addBinding("selected", UpdateStrategy.READ_WRITE,
+        BeanProperty.<Action, String> create("selected"),
+        BeanProperty.<ToggleButtonBean, String> create("selected"));
 
     // "visible"
     addBinding("visible", BeanProperty.<Action, String> create("visible"),

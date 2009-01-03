@@ -27,15 +27,26 @@ import org.gwt.beansbinding.observablecollections.client.ObservableMapListener;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /**
- * A base class for implementing the {@link Action} interface.
+ * The base class for the action library. All actions will inherit from this
+ * class. The {@code CommandAction} defines a generic implementation of
+ * {@link CommandAction#actionPerformed(ActionEvent)}. Here the
+ * {@link CommandAction#actionPerformed(ActionEvent)} simply calls the {@code
+ * Command#execute()} method on its command object.
+ * <p>
+ * A developer can use this type directly by passing in the command, string, and
+ * action. However convenience implementations are available that already
+ * provide the string and icon. The developer simply needs to provide the proper
+ * command.
  * 
+ * @author Anthony Sintes ObjectWave Corporation
  * @author georgopoulos.georgios(at)gmail.com
  * @see Action
  */
 public class CommandAction extends AbstractMap<String, Object> implements
-    Action, HasCommand, ObservableMap<String, Object> {
+    Action, ObservableMap<String, Object> {
 
   private class EntryIterator implements Iterator<Map.Entry<String, Object>> {
     private Iterator<Map.Entry<String, Object>> realIterator;
@@ -62,7 +73,7 @@ public class CommandAction extends AbstractMap<String, Object> implements
       last = null;
       CommandAction.this.remove(toRemove);
     }
-  } 
+  }
 
   private class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
     public void clear() {
@@ -100,10 +111,12 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   public static final ActionImages ACTION_IMAGES = GWT.create(ActionImages.class);
+  
+  public static final ActionConstants ACTION_CONSTANTS = GWT.create(ActionConstants.class);
 
   /**
    * {@code true} is this {@code Action} is enabled; {@code false} otherwise
-   * (default is {@code true}.
+   * (default is {@code true}).
    */
   protected boolean enabled;
 
@@ -115,10 +128,12 @@ public class CommandAction extends AbstractMap<String, Object> implements
 
   private Command command;
 
-  public CommandAction(Command command) {
-    this(null, command);
-  }
-
+  /**
+   * This constructor creates an action without an icon.
+   * 
+   * @param name the action's name
+   * @param command the command for this action to act upon
+   */
   public CommandAction(final String name, Command command) {
     super();
     putValue(Action.NAME, name);
@@ -127,11 +142,29 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   /**
-   * The actionPerformed implementation, simply calls command.execute().
+   * This constructor creates an action with an icon.
+   * 
+   * @param name the action's name
+   * @param icon the action's icon
+   * @param command the command for this action to act upon
    */
-  public final void actionPerformed(ActionEvent e) {
+  public CommandAction(final String name, AbstractImagePrototype icon,
+      Command command) {
+    super();
+    putValue(Action.NAME, name);
+    putValue(Action.SMALL_ICON, icon);
+    setEnabled(true);
+    setCommand(command);
+  }
+
+  /**
+   * The actionPerformed implementation, simply calls {@code Command#eexecute()}.
+   * 
+   * @param event the action event
+   */
+  public final void actionPerformed(ActionEvent event) {
     if (enabled) {
-      getCommand().execute(); // kick off the command
+      getCommand().execute();
     }
   }
 
@@ -165,6 +198,11 @@ public class CommandAction extends AbstractMap<String, Object> implements
     return properties.get(key);
   }
 
+  /**
+   * This method retrieves the encapsulated command.
+   * 
+   * @return the command
+   */
   public final Command getCommand() {
     return command;
   }
@@ -238,6 +276,11 @@ public class CommandAction extends AbstractMap<String, Object> implements
     listeners.remove(listener);
   }
 
+  /**
+   * This method sets the action's command object.
+   * 
+   * @param newValue the command for this action to act upon
+   */
   protected final void setCommand(Command newValue) {
     this.command = newValue;
   }

@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public abstract class ButtonBaseActionSupport extends ActionSupport<ButtonBase>
+public abstract class ButtonBaseActionSupport extends ActionBindings<ButtonBase>
     implements ClickListener {
 
   public class ButtonBaseBean extends TargetBean {
