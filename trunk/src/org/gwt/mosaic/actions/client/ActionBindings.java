@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.UIObject;
  * 
  * @param <T>
  */
-public abstract class ActionSupport<T> {
+public abstract class ActionBindings<T> {
 
   public class TargetBean implements HasPropertyChangeSupport {
     protected T target;
@@ -194,7 +194,7 @@ public abstract class ActionSupport<T> {
   private final T target;
   private final BindingGroup bindingGroup = new BindingGroup();
 
-  public ActionSupport(Action source, T target) {
+  public ActionBindings(Action source, T target) {
     this.source = source;
     this.target = target;
   }

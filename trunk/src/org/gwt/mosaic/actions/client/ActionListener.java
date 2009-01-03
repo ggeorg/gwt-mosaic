@@ -17,10 +17,16 @@
 package org.gwt.mosaic.actions.client;
 
 /**
+ * This interface is for classes that listen for {@link Action} events.
  * 
- * @author Michael Danilov
  * @author georgopoulos.georgios(at)gmail.com
+ * @see ActionEvent
  */
 public interface ActionListener {
-  public void actionPerformed(ActionEvent e);
+  /**
+   * This method is invoked when an action occurs.
+   * 
+   * @param event the {@link ActionEvent} that occurred.
+   */
+  public void actionPerformed(ActionEvent event);
 }

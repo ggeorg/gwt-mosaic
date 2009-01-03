@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ButtonActionSupport extends ButtonBaseActionSupport {
+public class ButtonBindings extends ButtonBaseActionSupport {
 
   public final class ButtonBean extends ButtonBaseBean {
     private String text;
@@ -68,11 +68,11 @@ public class ButtonActionSupport extends ButtonBaseActionSupport {
 
   private ButtonBean targetBean;
 
-  public ButtonActionSupport(Action source) {
+  public ButtonBindings(Action source) {
     this(source, new Button());
   }
 
-  public ButtonActionSupport(Action source, Button target) {
+  public ButtonBindings(Action source, Button target) {
     super(source, target);
 
     // Action.NAME

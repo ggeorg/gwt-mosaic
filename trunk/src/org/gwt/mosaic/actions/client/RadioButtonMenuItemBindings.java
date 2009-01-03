@@ -13,9 +13,14 @@
  */
 package org.gwt.mosaic.actions.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
-import org.gwt.mosaic.actions.client.ToggleButtonActionSupport.ToggleButtonBean;
+import org.gwt.mosaic.actions.client.ToggleButtonBindings.ToggleButtonBean;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
@@ -27,7 +32,7 @@ import com.google.gwt.user.client.ui.MenuItem;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
+public class RadioButtonMenuItemBindings extends ActionBindings<MenuItem> {
 
   public final class MenuItemBean extends TargetBean {
     private boolean enabled = true;
@@ -41,7 +46,7 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
 
     private String createLabel() {
       AbstractImagePrototype image = getSelected()
-          ? CommandAction.ACTION_IMAGES.menuitem_checkbox()
+          ? CommandAction.ACTION_IMAGES.menuitem_radiobutton()
           : CommandAction.ACTION_IMAGES.noimage();
       return ButtonHelper.createButtonLabel(image, text,
           ButtonLabelType.TEXT_ON_RIGHT);
@@ -78,6 +83,16 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
 
     public void setSelected(Boolean selected) {
       selected = toBoolean(selected, Boolean.FALSE);
+      if (selected) {
+        List<RadioButtonMenuItemBindings> l = map.get(name);
+        for (int i = 0, n = l.size(); i < n; i++) {
+          MenuItemBean miBean = l.get(i).getTargetBean();
+          Boolean oldValue = miBean.selected;
+          miBean.selected = false;
+          changeSupport.firePropertyChange("selected", oldValue, Boolean.FALSE);
+          miBean.target.setHTML(miBean.createLabel());
+        }
+      }
       Boolean oldValue = this.selected;
       this.selected = selected;
       changeSupport.firePropertyChange("selected", oldValue, selected);
@@ -94,6 +109,8 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
 
   }
 
+  private String name;
+
   private MenuItemBean targetBean;
 
   private Command menuCmd = new Command() {
@@ -105,12 +122,18 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
     }
   };
 
-  public ToggleMenuItemActionSupport(Action source) {
-    this(source, new MenuItem("", (Command) null));
+  public RadioButtonMenuItemBindings(String name, Action source) {
+    this(name, source, new MenuItem("", (Command) null));
   }
 
-  public ToggleMenuItemActionSupport(Action source, MenuItem target) {
+  private static final Map<String, List<RadioButtonMenuItemBindings>> map = new HashMap<String, List<RadioButtonMenuItemBindings>>();
+
+  public RadioButtonMenuItemBindings(String name, Action source,
+      MenuItem target) {
     super(source, target);
+    assert (name != null);
+
+    this.name = name;
 
     // Action.MNEMONIC_KEY;
 
@@ -141,6 +164,10 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
         BeanProperty.<MenuItemBean, String> create("visible"));
   }
 
+  public String getName() {
+    return name;
+  }
+
   @Override
   protected MenuItemBean getTargetBean() {
     if (targetBean == null) {
@@ -151,11 +178,21 @@ public class ToggleMenuItemActionSupport extends ActionSupport<MenuItem> {
 
   @Override
   protected void onBind() {
+    List<RadioButtonMenuItemBindings> l = map.get(name);
+    if (l == null) {
+      l = new ArrayList<RadioButtonMenuItemBindings>();
+      map.put(name, l);
+    }
+    l.add(this);
+
     getTarget().setCommand(menuCmd);
   }
 
   @Override
   protected void onUnBind() {
+    List<RadioButtonMenuItemBindings> l = map.get(name);
+    l.remove(this);
+
     getTarget().setCommand(null);
   }
 

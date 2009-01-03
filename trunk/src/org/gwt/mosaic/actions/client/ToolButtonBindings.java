@@ -18,8 +18,8 @@ package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
-import org.gwt.mosaic.actions.client.ButtonActionSupport.ButtonBean;
-import org.gwt.mosaic.actions.client.ToggleButtonActionSupport.ToggleButtonBean;
+import org.gwt.mosaic.actions.client.ButtonBindings.ButtonBean;
+import org.gwt.mosaic.actions.client.ToggleButtonBindings.ToggleButtonBean;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
@@ -27,13 +27,14 @@ import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ToolButtonActionSupport extends ActionSupport<ToolButton>
+public class ToolButtonBindings extends ActionBindings<ToolButton>
     implements ClickListener {
 
   public final class ToolButtonBean extends TargetBean {
@@ -105,11 +106,11 @@ public class ToolButtonActionSupport extends ActionSupport<ToolButton>
 
   private ToolButtonBean targetBean;
 
-  public ToolButtonActionSupport(Action source) {
+  public ToolButtonBindings(Action source) {
     this(source, new ToolButton());
   }
 
-  public ToolButtonActionSupport(Action source, ToolButton target) {
+  public ToolButtonBindings(Action source, ToolButton target) {
     super(source, target);
 
     // Action.MNEMONIC_KEY;
@@ -165,9 +166,16 @@ public class ToolButtonActionSupport extends ActionSupport<ToolButton>
   }
 
   public void onClick(Widget sender) {
-    if (getTarget().getStyle() == ToolButtonStyle.CHECKBOX
-        || (getTarget().getStyle() == ToolButtonStyle.RADIO)) {
+    if (getTarget().getStyle() == ToolButtonStyle.CHECKBOX) {
       Boolean newValue = getTarget().isChecked();
+      getTargetBean().firePropertyChange("selected", !newValue, newValue);
+    } else if (getTarget().getStyle() == ToolButtonStyle.RADIO) {
+      Boolean newValue = getTarget().isChecked();
+      // XXX workaround to update BeanProperty {
+      getTarget().setChecked(!newValue);
+      getTargetBean().firePropertyChange("selected", newValue, !newValue);
+      getTarget().setChecked(newValue);
+      // XXX } end of workaround
       getTargetBean().firePropertyChange("selected", !newValue, newValue);
     }
     getSource().actionPerformed(new ActionEvent(getSource(), sender));

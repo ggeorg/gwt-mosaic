@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -31,6 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
  * items in tool bars. When the end user triggers the command via its control,
  * the action's <code>execute</code> method is invoked to do the real work.
  * 
+ * @author georgopoulos.georgios(at)gmail.com
  * @deprecated
  */
 public class Action implements Command, HasText, ClickListener {
