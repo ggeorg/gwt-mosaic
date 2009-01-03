@@ -13,8 +13,7 @@
  */
 package org.gwt.mosaic.actions.client.edit;
 
-import javax.swing.Action;
-
+import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.CommandAction;
 
 import com.google.gwt.user.client.Command;
