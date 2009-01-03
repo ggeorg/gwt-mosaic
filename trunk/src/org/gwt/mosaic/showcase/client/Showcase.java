@@ -40,6 +40,7 @@ import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
 import org.gwt.mosaic.showcase.client.content.other.CwActions;
+import org.gwt.mosaic.showcase.client.content.other.CwDefaultActions;
 import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
@@ -460,6 +461,8 @@ public class Showcase implements EntryPoint {
     // IMAGES.catOther());
     setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
     setupMainMenuOption(catOther, new CwRadioButtonActions(constants),
+        IMAGES.catOther());
+    setupMainMenuOption(catOther, new CwDefaultActions(constants),
         IMAGES.catOther());
 
   }

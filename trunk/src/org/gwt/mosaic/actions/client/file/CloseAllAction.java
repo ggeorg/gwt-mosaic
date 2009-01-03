@@ -20,7 +20,7 @@ import com.google.gwt.user.client.Command;
 /**
  * {@code CloseAllAction} provides the action for the {@code CloseAllCommand} command.
  * <p>
- * The action has a default name and icon.
+ * The action has a default name.
  * 
  * @author Anthony Sintes ObjectWave Corporation
  * @author georgopoulos.georgios(at)gmail.com
@@ -37,7 +37,7 @@ public final class CloseAllAction extends CommandAction {
    * @param command the close all command that the action should act upon.
    */
   public CloseAllAction(CloseAllCommand command) {
-    super(ACTION_CONSTANTS.closeAllName(), ACTION_IMAGES.close_all_action(), command);
+    super(ACTION_CONSTANTS.closeAllName(), command);
   }
 
 }

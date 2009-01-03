@@ -16,7 +16,6 @@ package org.gwt.mosaic.actions.client.edit;
 import org.gwt.mosaic.actions.client.CommandAction;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /**
  * {@code DeselectAllAction} provides the action for the {@code
@@ -38,8 +37,7 @@ public final class DeselectAllAction extends CommandAction {
   /**
    * @param command the deselect all command that the action should act upon.
    */
-  public DeselectAllAction(String name, AbstractImagePrototype icon,
-      DeselectAllCommand command) {
+  public DeselectAllAction(DeselectAllCommand command) {
     super(ACTION_CONSTANTS.deselectAllName(), command);
   }
 

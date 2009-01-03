@@ -56,9 +56,6 @@ public interface ActionImages extends ImageBundle {
   @Resource(value = "close_action.png")
   AbstractImagePrototype close_action();
 
-  @Resource(value = "close_all_action.png")
-  AbstractImagePrototype close_all_action();
-
   @Resource(value = "open_action.png")
   AbstractImagePrototype open_action();
 }
