@@ -10,8 +10,8 @@
 	<classpathentry kind="lib" path="lib/derby.jar"/>
 	<classpathentry kind="lib" path="lib/toplink-essentials.jar"/>
 	<classpathentry kind="lib" path="lib/toplink-essentials-agent.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/gwtx-1.5-20081912.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-incubator_1-5_Dec_28.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
