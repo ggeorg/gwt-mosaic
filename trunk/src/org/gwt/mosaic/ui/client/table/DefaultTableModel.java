@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwt.mosaic.ui.client.table;
 
 import java.io.Serializable;
@@ -7,8 +23,8 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * The default implementation of {@link TableModel} based on a
- * {@code java.util.Vector}.
+ * The default implementation of {@link TableModel} based on a {@code
+ * java.util.Vector}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -31,8 +47,8 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * the order they are returned by the collection's iterator.
    * 
    * @param c the collection whose elements are to be placed into this model
-   * @throws {@code NullPointerException} if the specified collection is
-   *           {@code null}
+   * @throws {@code NullPointerException} if the specified collection is {@code
+   *         null}
    */
   public DefaultTableModel(Collection<? extends Vector<Object>> c) {
     super(c);
@@ -78,8 +94,7 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * order of the columns) is assumed to be the same.
    * 
    * @see TableModelEvent
-   * @see EventListenerList
-   * @see javax.swing.JTable#tableChanged(TableModelEvent)
+   * @see org.gwt.mosaic.ui.client.Table#tableChanged(TableModelEvent)
    */
   public void fireTableDataChanged() {
     fireTableChanged(new TableModelEvent(this));
@@ -88,14 +103,13 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
   /**
    * Notifies all listeners that the table's structure has changed. The number
    * of columns in the table, and the names and types of the new columns may be
-   * different from the previous state. If the <code>JTable</code> receives
-   * this event and its <code>autoCreateColumnsFromModel</code> flag is set it
+   * different from the previous state. If the <code>JTable</code> receives this
+   * event and its <code>autoCreateColumnsFromModel</code> flag is set it
    * discards any table columns that it had and reallocates default columns in
    * the order they appear in the model. This is the same as calling
    * <code>setModel(TableModel)</code> on the <code>JTable</code>.
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableStructureChanged() {
     fireTableChanged(new TableModelEvent(this, 0 /* TableModelEvent.HEADER_ROW, */));
@@ -109,7 +123,6 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * @param lastRow the last row
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    * 
    */
   public void fireTableRowsInserted(int firstRow, int lastRow) {
@@ -125,7 +138,6 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * @param lastRow the last row
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableRowsUpdated(int firstRow, int lastRow) {
     fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
@@ -140,7 +152,6 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * @param lastRow the last row
    * 
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableRowsDeleted(int firstRow, int lastRow) {
     fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
@@ -154,7 +165,6 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * @param row row of cell which has been updated
    * @param column column of cell which has been updated
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableCellUpdated(int row, int column) {
     fireTableChanged(new TableModelEvent(this, row, row, column));
@@ -165,11 +175,10 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * <code>TableModelListeners</code> that registered themselves as listeners
    * for this table model.
    * 
-   * @param e the event to be forwarded
+   * @param event the event to be forwarded
    * 
    * @see #addTableModelListener
    * @see TableModelEvent
-   * @see EventListenerList
    */
   public void fireTableChanged(TableModelEvent event) {
     for (TableModelListener listener : listenerList) {
@@ -182,7 +191,8 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * 
    * @param index index at which the specified element is to be inserted
    * @param element element to be inserted
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
+   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
+   *           {@code index < 0 || index > size()})
    */
   @Override
   public void add(int index, Vector<Object> element) {
@@ -228,7 +238,8 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    *          collection
    * @param c elements to be inserted
    * @return {@code true} if this model changed as a result of the call
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
+   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
+   *           {@code index < 0 || index > size()})
    * @throws NullPointerException if the specified collection is null
    */
   public boolean addAll(int index, Collection<? extends Vector<Object>> c) {
@@ -246,8 +257,8 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * @deprecated Replaced by {@link #add(Object)}
    */
   @Override
-  public void addElement(Vector<Object> o) {
-    add(o);
+  public void addElement(Vector<Object> obj) {
+    add(obj);
   }
 
   /**
@@ -286,7 +297,7 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
    * 
    * @param index
    * @param element
-   * @return
+   * @return the replaced element
    */
   @Override
   public Vector<Object> set(int index, Vector<Object> element) {
@@ -305,8 +316,11 @@ public class DefaultTableModel extends Vector<Vector<Object>> implements
     return element.elementAt(columnIndex);
   }
 
-  /* (non-Javadoc)
-   * @see org.gwt.mosaic.ui.client.table.TableModel#setValueAt(java.lang.Object, int, int)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.table.TableModel#setValueAt(java.lang.Object,
+   * int, int)
    */
   public void setValueAt(Object value, int rowIndex, int columnIndex) {
     Vector<Object> element = super.elementAt(rowIndex);

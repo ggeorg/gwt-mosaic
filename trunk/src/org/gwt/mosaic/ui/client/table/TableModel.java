@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -27,17 +25,9 @@ public interface TableModel<T> {
    * Returns the number of rows in the model.
    * 
    * @return the number or rows in the model
-   * @see #getColumnCount
    */
   public int getRowCount();
 
-  /**
-   * Returns the number of columns in the model.
-   * 
-   * @return the number of columns in the model
-   * @see #getRowCount
-   */
-  // public int getColumnCount();
   /**
    * Sets the value in the cell at {@code columnIndex} and {@code rowIndex} to
    * {@code value}.

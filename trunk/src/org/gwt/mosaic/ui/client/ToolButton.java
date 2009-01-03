@@ -15,6 +15,7 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
 
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -148,22 +149,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
             setChecked(!isChecked());
           }
           if (style == ToolButtonStyle.RADIO) {
-            final Widget parent = ToolButton.this.getParent();
-            if (parent instanceof IndexedPanel) {
-              final IndexedPanel panel = (IndexedPanel) parent;
-              for (int i = 0, n = panel.getWidgetCount(); i < n; i++) {
-                final Widget widget = panel.getWidget(i);
-                if (widget instanceof ToolButton) {
-                  final ToolButton button = (ToolButton) widget;
-                  final String name = button.getName();
-                  if (button.getStyle() == ToolButtonStyle.RADIO
-                      && button.isChecked() && name != null
-                      && name.equals(getName())) {
-                    button.setChecked(false);
-                  }
-                }
-              }
-            }
             setChecked(true);
           }
           super.onBrowserEvent(event);
@@ -229,6 +214,27 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
      * @param checked <code>true</code> to check the check box
      */
     public void setChecked(boolean checked) {
+      if (style == ToolButtonStyle.RADIO) {
+        final Widget parent = ToolButton.this.getParent();
+        if (parent instanceof IndexedPanel) {
+          final IndexedPanel panel = (IndexedPanel) parent;
+          for (int i = 0, n = panel.getWidgetCount(); i < n; i++) {
+            final Widget widget = panel.getWidget(i);
+            if (widget instanceof ToolButton) {
+              final ToolButton toolButton = (ToolButton) widget;
+              final String name = toolButton.getName();
+              if (toolButton.getStyle() == ToolButtonStyle.RADIO
+                  && toolButton.isChecked() && name != null
+                  && name.equals(getName())) {
+                Element btnE = toolButton.button.getElement();
+                DOM.setElementPropertyBoolean(btnE, "checked", false);
+                DOM.setElementPropertyBoolean(btnE, "defaultChecked", false);
+                toolButton.button.removeStyleName("mosaic-Checkbox-Button-checked");
+              }
+            }
+          }
+        }
+      }
       DOM.setElementPropertyBoolean(getElement(), "checked", checked);
       DOM.setElementPropertyBoolean(getElement(), "defaultChecked", checked);
       if (checked) {

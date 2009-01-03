@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -230,7 +228,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   /**
    * Gets the specified tab's HTML.
    * 
-   * @param index the index of the tab whose HTML is to be retrieved
+   * @param tabIndex the index of the tab whose HTML is to be retrieved
    * @return the tab's HTML
    */
   public String getTabHTML(int tabIndex) {

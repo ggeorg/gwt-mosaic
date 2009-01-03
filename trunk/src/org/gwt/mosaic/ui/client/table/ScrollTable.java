@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -239,9 +237,7 @@ public class ScrollTable extends ColumnWidget {
   }
 
   /**
-   * Gets the currently-selected item. If multiple items are selected, this
-   * method will returns the first selected item ({@link #isItemeSelected(int)}
-   * can be used to query individual items).
+   * Gets the currently-selected item.
    * 
    * @return the selected index, or {@code -1} if none is selected
    */
@@ -369,12 +365,11 @@ public class ScrollTable extends ColumnWidget {
   /**
    * Sets the currently selected index.
    * <p>
-   * After calling this method, only the specified item in the list will remain
-   * selected. For a {@code ListBox} with multiple selection enabled, see
-   * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
+   * After calling this method, only the specified item in the table will remain
+   * selected.
    * <p>
    * Note that setting the selected index programmatically does <em>not</em>
-   * cause the {@link ChangeListener#onChange(Widget)} event to be fired.
+   * cause the {@code ChangeListener#onChange(Widget)} event to be fired.
    * 
    * @param index the index of the item to be selected
    */

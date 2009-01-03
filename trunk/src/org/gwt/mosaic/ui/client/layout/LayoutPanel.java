@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -120,19 +118,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return widget;
   }
 
-  /**
-   * Adds a widget to the panel at the specified position. Setting a position of
-   * <code>(-1, -1)</code> will cause the child widget to be positioned
-   * statically.
-   * 
-   * @param w the widget to be added
-   * @param left the widget's left position
-   * @param top the widget's top position
-   */
-  // public void add(Widget w, int left, int top) {
-  // // XXX ignore left & top
-  // add(w);
-  // }
   public LayoutManager getLayout() {
     return layout;
   }

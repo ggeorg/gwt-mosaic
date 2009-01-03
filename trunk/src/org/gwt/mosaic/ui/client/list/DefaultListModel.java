@@ -1,6 +1,4 @@
 /*
- * Copyright 2006-2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -120,8 +118,8 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * @deprecated Replaced by {@link #add(Object)}
    */
   @Override
-  public void addElement(E o) {
-    add(o);
+  public void addElement(E obj) {
+    add(obj);
   }
 
   /**
@@ -231,7 +229,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   /**
    * Removes a listener object from the list.
    * 
-   * @param the listener to remove
+   * @param listener the listener to remove
    * @see org.gwt.mosaic.ui.client.list.ListModel#removeListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
    */
   public void removeListDataListener(ListDataListener listener) {
@@ -244,7 +242,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * 
    * @param index
    * @param element
-   * @return
+   * @return the replaced element
    */
   @Override
   public E set(int index, E element) {

@@ -1,6 +1,4 @@
 /*
- * Copyright 2008 Google Inc.
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -34,16 +32,17 @@ import com.google.gwt.user.client.ui.Widget;
  * combination of both methods.
  * <p>
  * {@code BoxLayout} aligns all widgets in one row if the {@link Orientation}
- * field is set to {@code HORIZONTAL}, and one column if it is set to
- * {@code VERTICAL}.
+ * field is set to {@code HORIZONTAL}, and one column if it is set to {@code
+ * VERTICAL}.
  * <p>
  * NOTE: {@code BoxLayout} does not have the ability to wrap.
  * <p>
  * When a {@code BoxLayout} lays out widgets, it tries to size each widget at
  * the widget's preferred size. In the following example a {@link LayoutPanel}
- * is set to use a {@code BoxLayout}. The default orientation of a
- * {@code BoxLayout} is {@code HORIZONTAL}. The {@link LayoutPanel} is added
- * decorated to a {@link Viewport} so that it fills all browser's content area:
+ * is set to use a {@code BoxLayout}. The default orientation of a {@code
+ * BoxLayout} is {@code HORIZONTAL}. The {@link LayoutPanel} is added decorated
+ * to a {@link org.gwt.mosaic.ui.client.Viewport} so that it fills all browser's
+ * content area:
  * 
  * <table>
  * <tr>
@@ -224,7 +223,9 @@ public class BoxLayout extends BaseLayout {
   /*
    * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
+   * @see
+   * org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui
+   * .client.layout.LayoutPanel)
    */
   public int[] getPreferredSize(LayoutPanel layoutPanel) {
     int[] result = {0, 0};
@@ -238,7 +239,7 @@ public class BoxLayout extends BaseLayout {
       final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
       int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]);
       int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]);
-      
+
       final int size = getVisibleWidgetCount(layoutPanel);
       if (size == 0) {
         result[0] = width;
@@ -395,7 +396,9 @@ public class BoxLayout extends BaseLayout {
   /*
    * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.mosaic.ui.client.LayoutPanel)
+   * @see
+   * org.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.mosaic.ui.client
+   * .LayoutPanel)
    */
   public void layoutPanel(LayoutPanel layoutPanel) {
     try {
