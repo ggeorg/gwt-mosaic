@@ -16,7 +16,6 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +26,7 @@ import java.util.List;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public abstract class AbstractTableModel<T> implements TableModel<T>,
-    Serializable {
+public abstract class AbstractTableModel<T> implements TableModel<T> {
   private static final long serialVersionUID = 4235627486811656219L;
 
   /** List of {@link TableModelListener TableModelListeners}. */
