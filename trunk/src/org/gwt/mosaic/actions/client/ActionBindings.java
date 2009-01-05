@@ -46,7 +46,7 @@ public abstract class ActionBindings<T> {
 
     protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(
         this);
-    
+
     private AbstractImagePrototype image;
 
     public TargetBean(T target) {
@@ -259,5 +259,6 @@ public abstract class ActionBindings<T> {
 
   public final void unbind() {
     bindingGroup.unbind();
+    onUnBind();
   }
 }
