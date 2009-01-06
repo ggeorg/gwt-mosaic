@@ -44,8 +44,27 @@ public class PopupMenu extends AbstractDecoratedPopupPanel implements
 
         // If the menu popup was not auto-closed, close popup menu..
         if (!autoClosed) {
-          PopupMenu.this.hide();
+          if (canClose) {
+            PopupMenu.this.hide();
+          }
         }
+      }
+
+      private boolean canClose = true;
+
+      public void onBrowserEvent(Event event) {
+        switch (DOM.eventGetType(event)) {
+          case Event.ONMOUSEOVER: {
+            canClose = false;
+            break;
+          }
+
+          case Event.ONMOUSEOUT: {
+            canClose = true;
+            break;
+          }
+        }
+        super.onBrowserEvent(event);
       }
     };
     menu.setAutoOpen(true);
