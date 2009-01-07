@@ -20,6 +20,7 @@ import org.gwt.mosaic.core.client.DOM;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -55,7 +56,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class GridLayout extends BaseLayout {
+public class GridLayout extends BaseLayout implements HasAlignment {
 
   protected static final Widget SPAN = new SimplePanel();
 
@@ -89,8 +90,25 @@ public class GridLayout extends BaseLayout {
    * @param rows number of rows in the grid
    */
   public GridLayout(int columns, int rows) {
+    this(columns, rows, null, null);
+  }
+
+  /**
+   * Constructor for grid layout with the specified number of rows and columns
+   * TODO
+   * 
+   * @param columns number of columns in the grid
+   * @param rows number of rows in the grid
+   * @param horizontalAlignment TODO
+   * @param verticalAlignment TODO
+   */
+  public GridLayout(int columns, int rows,
+      HorizontalAlignmentConstant horizontalAlignment,
+      VerticalAlignmentConstant verticalAlignment) {
     setColumns(columns);
     setRows(rows);
+    setHorizontalAlignment(horizontalAlignment);
+    setVerticalAlignment(verticalAlignment);
   }
 
   protected void buildWidgetMatrix(LayoutPanel layoutPanel) {
@@ -312,17 +330,22 @@ public class GridLayout extends BaseLayout {
             cellHeight = rowHeight * layoutData.rowspan + spacing
                 * (layoutData.rowspan - 1);
           }
-          
+
+          HorizontalAlignmentConstant hAlignment = layoutData.getHorizontalAlignment();
+          if (hAlignment == null) {
+            hAlignment = getHorizontalAlignment();
+          }
+
           int posLeft;
           int widgetWidth;
 
-          if (layoutData.getHorizontalAlignment() == null) {
+          if (hAlignment == null) {
             posLeft = left + (spacing + colWidth) * c;
             widgetWidth = cellWidth;
-          } else if (HasHorizontalAlignment.ALIGN_LEFT == layoutData.getHorizontalAlignment()) {
+          } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
             posLeft = left + (spacing + colWidth) * c;
             widgetWidth = -1;
-          } else if (HasHorizontalAlignment.ALIGN_CENTER == layoutData.getHorizontalAlignment()) {
+          } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
             posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
                 - getFlowWidth(widget) / 2;
             widgetWidth = -1;
@@ -332,16 +355,21 @@ public class GridLayout extends BaseLayout {
             widgetWidth = -1;
           }
 
+          VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
+          if (vAlignment == null) {
+            vAlignment = getVerticalAlignment();
+          }
+
           int posTop;
           int widgetHeight;
 
-          if (layoutData.getVerticalAlignment() == null) {
+          if (vAlignment == null) {
             posTop = top + (spacing + rowHeight) * r;
             widgetHeight = cellHeight;
-          } else if (HasVerticalAlignment.ALIGN_TOP == layoutData.getVerticalAlignment()) {
+          } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
             posTop = top + (spacing + rowHeight) * r;
             widgetHeight = -1;
-          } else if (HasVerticalAlignment.ALIGN_MIDDLE == layoutData.getVerticalAlignment()) {
+          } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
             posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
                 - getFlowHeight(widget) / 2;
             widgetHeight = -1;
@@ -381,6 +409,54 @@ public class GridLayout extends BaseLayout {
    */
   public void setRows(int rows) {
     this.rows = Math.max(1, rows);
+  }
+
+  private HorizontalAlignmentConstant horizontalAlignment;
+  private VerticalAlignmentConstant verticalAlignment;
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.HasHorizontalAlignment#getHorizontalAlignment
+   * ()
+   */
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return horizontalAlignment;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.HasHorizontalAlignment#setHorizontalAlignment
+   * (com.google.gwt.user.client.ui.HasHorizontalAlignment.
+   * HorizontalAlignmentConstant)
+   */
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    this.horizontalAlignment = align;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.HasVerticalAlignment#getVerticalAlignment()
+   */
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.HasVerticalAlignment#setVerticalAlignment
+   * (com.
+   * google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+   */
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    this.verticalAlignment = align;
   }
 
 }

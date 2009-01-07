@@ -22,7 +22,7 @@ import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Align;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.Button;
@@ -63,7 +63,7 @@ public class CwBoxLayoutTest_Vertical extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new ScrollLayoutPanel();
-    ((BoxLayout)layoutPanel.getLayout()).setAlign(Align.CENTER);
+    ((BoxLayout)layoutPanel.getLayout()).setAlignment(Alignment.CENTER);
 
     final Button b1 = new Button("Width: float<br>Height: float");
     final Button b2 = new Button("Width: 25%<br>Height: float");
