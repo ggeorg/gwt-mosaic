@@ -22,7 +22,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Align;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -61,24 +61,24 @@ public class CwBoxLayoutTest_Histogram extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
-        Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
+    ((BoxLayout) layoutPanel.getLayout()).setAlign(Align.END);
+
     layoutPanel.setWidgetSpacing(1);
-    DOM.setStyleAttribute(layoutPanel.getElement(), "border",
-        "1px dotted #000");
+    DOM.setStyleAttribute(layoutPanel.getElement(), "border", "1px dotted #000");
 
     final int nBins = 33;
-    final double binHeight = 1.0 / (double) nBins;
+    final double binWidth = 1.0 / (double) nBins;
     final double mean = (nBins - 1) / 2;
 
     for (int i = 0; i < nBins; i++) {
-      final double value = Math.exp(-Math.pow((i - mean), 2) / mean);
+      final double value = Math.exp(-Math.pow((i - mean), 2) / (mean * 4));
       final Widget w = new SimplePanel();
       w.setTitle(Math.round(value * 100) + "%");
       DOM.setStyleAttribute(w.getElement(), "border", "1px solid #000");
       DOM.setStyleAttribute(w.getElement(), "background", "#f4f");
       DOM.setStyleAttribute(w.getElement(), "color", "#fff");
-      layoutPanel.add(w, new BoxLayoutData(value, binHeight));
+      layoutPanel.add(w, new BoxLayoutData(binWidth, value));
     }
 
     return layoutPanel;

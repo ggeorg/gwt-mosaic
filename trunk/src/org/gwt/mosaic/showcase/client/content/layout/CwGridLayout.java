@@ -68,8 +68,10 @@ public class CwGridLayout extends ContentWidget {
     final Button b21 = new Button("Button 2-1");
     
     final Button b31 = new Button("Button 3-1");
-
-    layoutPanel.add(b11, new GridLayoutData(1, 3, true));
+    GridLayoutData gl = new GridLayoutData(1, 3, true);
+    gl.setHorizontalAlignment(GridLayoutData.ALIGN_CENTER);
+    gl.setVerticalAlignment(GridLayoutData.ALIGN_MIDDLE);
+    layoutPanel.add(b11, gl);
     layoutPanel.add(b12);
     layoutPanel.add(b13, new GridLayoutData(1, 2));
     layoutPanel.add(b21);
