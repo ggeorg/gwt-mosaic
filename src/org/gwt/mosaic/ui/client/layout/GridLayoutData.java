@@ -15,6 +15,8 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import com.google.gwt.user.client.ui.HasAlignment;
+
 /**
  * {@code GridLayoutData} is the layout data object associated with
  * {@link GridLayout}. To set a {@code GridLayoutData} object into a widget,
@@ -32,7 +34,7 @@ package org.gwt.mosaic.ui.client.layout;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class GridLayoutData extends LayoutData {
+public class GridLayoutData extends LayoutData implements HasAlignment {
 
   public int rowspan;
   public int colspan;
@@ -89,6 +91,26 @@ public class GridLayoutData extends LayoutData {
 
   protected void setColspan(int colspan) {
     this.colspan = Math.max(1, colspan);
+  }
+  
+  private HorizontalAlignmentConstant horizontalAlignment;
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return horizontalAlignment;
+  }
+
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    this.horizontalAlignment = align;
+  }
+
+  private VerticalAlignmentConstant verticalAlignment;
+  
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
+  }
+
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    this.verticalAlignment = align;
   }
 
 }

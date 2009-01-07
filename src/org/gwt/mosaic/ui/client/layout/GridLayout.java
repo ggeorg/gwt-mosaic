@@ -20,6 +20,8 @@ import org.gwt.mosaic.core.client.DOM;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -288,6 +290,10 @@ public class GridLayout extends BaseLayout {
           if (widget instanceof DecoratorPanel) {
             widget = ((DecoratorPanel) widget).getWidget();
           }
+
+          int cellWidth;
+          int cellHeight;
+
           final GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
           if (layoutData.hasDecoratorPanel()) {
             final DecoratorPanel decPanel = layoutData.decoratorPanel;
@@ -295,17 +301,59 @@ public class GridLayout extends BaseLayout {
                 - widget.getOffsetWidth();
             final int offsetHeight = decPanel.getOffsetHeight()
                 - widget.getOffsetHeight();
-            setBounds(layoutPanel, widget, left + (spacing + colWidth) * c, top
-                + (spacing + rowHeight) * r, colWidth * layoutData.colspan
-                - offsetWidth + spacing * (layoutData.colspan - 1), rowHeight
-                * layoutData.rowspan + -offsetHeight + spacing
-                * (layoutData.rowspan - 1));
+
+            cellWidth = colWidth * layoutData.colspan - offsetWidth + spacing
+                * (layoutData.colspan - 1);
+            cellHeight = rowHeight * layoutData.rowspan + -offsetHeight
+                + spacing * (layoutData.rowspan - 1);
           } else {
-            setBounds(layoutPanel, widget, left + (spacing + colWidth) * c, top
-                + (spacing + rowHeight) * r, colWidth * layoutData.colspan
-                + spacing * (layoutData.colspan - 1), rowHeight
-                * layoutData.rowspan + spacing * (layoutData.rowspan - 1));
+            cellWidth = colWidth * layoutData.colspan + spacing
+                * (layoutData.colspan - 1);
+            cellHeight = rowHeight * layoutData.rowspan + spacing
+                * (layoutData.rowspan - 1);
           }
+          
+          int posLeft;
+          int widgetWidth;
+
+          if (layoutData.getHorizontalAlignment() == null) {
+            posLeft = left + (spacing + colWidth) * c;
+            widgetWidth = cellWidth;
+          } else if (HasHorizontalAlignment.ALIGN_LEFT == layoutData.getHorizontalAlignment()) {
+            posLeft = left + (spacing + colWidth) * c;
+            widgetWidth = -1;
+          } else if (HasHorizontalAlignment.ALIGN_CENTER == layoutData.getHorizontalAlignment()) {
+            posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
+                - getFlowWidth(widget) / 2;
+            widgetWidth = -1;
+          } else {
+            posLeft = left + (spacing + colWidth) * c + cellWidth
+                - getFlowWidth(widget);
+            widgetWidth = -1;
+          }
+
+          int posTop;
+          int widgetHeight;
+
+          if (layoutData.getVerticalAlignment() == null) {
+            posTop = top + (spacing + rowHeight) * r;
+            widgetHeight = cellHeight;
+          } else if (HasVerticalAlignment.ALIGN_TOP == layoutData.getVerticalAlignment()) {
+            posTop = top + (spacing + rowHeight) * r;
+            widgetHeight = -1;
+          } else if (HasVerticalAlignment.ALIGN_MIDDLE == layoutData.getVerticalAlignment()) {
+            posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
+                - getFlowHeight(widget) / 2;
+            widgetHeight = -1;
+          } else {
+            posTop = top + (spacing + rowHeight) * r + cellHeight
+                - getFlowHeight(widget);
+            widgetHeight = -1;
+          }
+
+          setBounds(layoutPanel, widget, posLeft, posTop, widgetWidth,
+              widgetHeight);
+
         }
       }
 
