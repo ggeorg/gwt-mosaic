@@ -173,7 +173,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class BoxLayout extends BaseLayout {
 
-  public enum Align {
+  public enum Alignment {
     START, CENTER, END
   }
 
@@ -181,7 +181,7 @@ public class BoxLayout extends BaseLayout {
     HORIZONTAL, VERTICAL
   }
 
-  private Align align;
+  private Alignment alignment;
 
   private Orientation orientation;
 
@@ -196,18 +196,26 @@ public class BoxLayout extends BaseLayout {
     this(Orientation.HORIZONTAL);
   }
 
+  public BoxLayout(Alignment alignment) {
+    this(Orientation.HORIZONTAL, alignment);
+  }
+
   /**
    * Creates a new instance of {@code BoxLayout} with the given orientation.
    * 
    * @param orientation the orientation.
    */
   public BoxLayout(Orientation orientation) {
-    this.orientation = orientation;
-    this.align = Align.START;
+    this(orientation, Alignment.START);
   }
 
-  public Align getAlign() {
-    return align;
+  public BoxLayout(Orientation orientation, Alignment alignment) {
+    this.orientation = orientation;
+    this.alignment = alignment;
+  }
+
+  public Alignment getAlignment() {
+    return alignment;
   }
 
   /**
@@ -596,9 +604,9 @@ public class BoxLayout extends BaseLayout {
           }
 
           if (orientation == Orientation.VERTICAL) {
-            if (align == Align.START) {
+            if (alignment == Alignment.START) {
               setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (align == Align.CENTER) {
+            } else if (alignment == Alignment.CENTER) {
               setBounds(layoutPanel, child, ((width - decPanelBorderWidth) / 2)
                   - (fw / 2) + left, top, fw, fh);
             } else {
@@ -606,9 +614,9 @@ public class BoxLayout extends BaseLayout {
                   + left, top, fw, fh);
             }
           } else if (isLeftToRight()) {
-            if (align == Align.START) {
+            if (alignment == Alignment.START) {
               setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (align == Align.CENTER) {
+            } else if (alignment == Alignment.CENTER) {
               setBounds(layoutPanel, child, left,
                   ((height - decPanelBorderHeight) / 2) - (fh / 2) + top, fw,
                   fh);
@@ -617,11 +625,11 @@ public class BoxLayout extends BaseLayout {
                   (height - decPanelBorderHeight) - fh + top, fw, fh);
             }
           } else { // !isLeftToRight()
-            if (align == Align.START) {
+            if (alignment == Alignment.START) {
               setBounds(layoutPanel, child, box[0] - decPanelBorderWidth
                   - (left + (fw != -1 ? fw : decPanel.getOffsetWidth())), top,
                   fw, fh);
-            } else if (align == Align.CENTER) {
+            } else if (alignment == Alignment.CENTER) {
               setBounds(layoutPanel, child, box[0] - decPanelBorderWidth
                   - (left + (fw != -1 ? fw : decPanel.getOffsetWidth())),
                   ((height - decPanelBorderHeight) / 2) - (fh / 2) + top, fw,
@@ -634,29 +642,29 @@ public class BoxLayout extends BaseLayout {
           }
         } else {
           if (orientation == Orientation.VERTICAL) {
-            if (align == Align.START) {
+            if (alignment == Alignment.START) {
               setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (align == Align.CENTER) {
+            } else if (alignment == Alignment.CENTER) {
               setBounds(layoutPanel, child, (width / 2) - (fw / 2) + left, top,
                   fw, fh);
             } else {
               setBounds(layoutPanel, child, width - fw + left, top, fw, fh);
             }
           } else if (isLeftToRight()) {
-            if (align == Align.START) {
+            if (alignment == Alignment.START) {
               setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (align == Align.CENTER) {
+            } else if (alignment == Alignment.CENTER) {
               setBounds(layoutPanel, child, left,
                   (height / 2) - (fh / 2) + top, fw, fh);
             } else {
               setBounds(layoutPanel, child, left, height - fh + top, fw, fh);
             }
           } else { // !isLeftToRight()
-            if (align == Align.START) {
+            if (alignment == Alignment.START) {
               setBounds(layoutPanel, child, box[0]
                   - (left + (fw != -1 ? fw : child.getOffsetWidth())), top, fw,
                   fh);
-            } else if (align == Align.CENTER) {
+            } else if (alignment == Alignment.CENTER) {
               setBounds(layoutPanel, child, box[0]
                   - (left + (fw != -1 ? fw : child.getOffsetWidth())),
                   (height / 2) - (fh / 2) + top, fw, fh);
@@ -691,8 +699,8 @@ public class BoxLayout extends BaseLayout {
     return runTwiceFlag;
   }
 
-  public void setAlign(Align align) {
-    this.align = align;
+  public void setAlignment(Alignment align) {
+    this.alignment = align;
   }
 
   /**
