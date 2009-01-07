@@ -22,6 +22,7 @@ import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Align;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.Button;
@@ -63,6 +64,7 @@ public class CwBoxLayoutTest_Horizontal extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new ScrollLayoutPanel(new BoxLayout());
+    ((BoxLayout)layoutPanel.getLayout()).setAlign(Align.CENTER);
 
     final Button b1 = new Button("Width: float<br>Height: float");
     final Button b2 = new Button("Width: float<br>Height: 25%");
