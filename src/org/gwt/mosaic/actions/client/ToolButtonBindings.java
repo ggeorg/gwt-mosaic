@@ -27,7 +27,6 @@ import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
 /**

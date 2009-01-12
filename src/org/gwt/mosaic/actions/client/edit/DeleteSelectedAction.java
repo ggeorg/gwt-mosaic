@@ -13,6 +13,7 @@
  */
 package org.gwt.mosaic.actions.client.edit;
 
+import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.CommandAction;
 
 import com.google.gwt.user.client.Command;
@@ -21,7 +22,7 @@ import com.google.gwt.user.client.Command;
  * {@code DeleteSelectedAction} provides the action for the {@code
  * DeleteSelectedCommand}.
  * <p>
- * The action has a default name.
+ * The action has a default name, icon and short description.
  * 
  * @author Anthony Sintes ObjectWave Corporation
  * @author georgopoulos.georgios(at)gmail.com
@@ -38,7 +39,10 @@ public final class DeleteSelectedAction extends CommandAction {
    * @param command the delete selected command that the should act upon.
    */
   public DeleteSelectedAction(DeleteSelectedCommand command) {
-    super(ACTION_CONSTANTS.deleteSelectedName(), command);
+    super(ACTION_CONSTANTS.deleteSelectedName(), ACTION_IMAGES.delete_action(),
+        command);
+    putValue(Action.SHORT_DESCRIPTION,
+        ACTION_CONSTANTS.deleteSelectedDescription());
   }
 
 }

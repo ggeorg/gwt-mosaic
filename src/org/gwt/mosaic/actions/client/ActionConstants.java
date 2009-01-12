@@ -22,32 +22,67 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface ActionConstants extends Constants {
 
-  String copyName();
+  @DefaultStringValue("Add an empty folder")
+  String addFolderDescription();
 
-  String copyShortDescription();
+  @DefaultStringValue("Add Folder")
+  String addFolderName();
 
-  String cutName();
-
-  String cutShortDescription();
-
-  String exitName();
-
-  String exitShortDescription();
-
-  String deleteSelectedName();
-
-  String deselectAllName();
-
-  String pasteName();
-
-  String pasteShortDescription();
-
-  String selectAllName();
-
-  String closeName();
-
+  @DefaultStringValue("Close All")
   String closeAllName();
 
+  @DefaultStringValue("Close")
+  String closeName();
+
+  @DefaultStringValue("Copy")
+  String copyName();
+
+  @DefaultStringValue("Copy the selection")
+  String copyShortDescription();
+
+  @DefaultStringValue("Cut")
+  String cutName();
+
+  @DefaultStringValue("Cut the selection")
+  String cutShortDescription();
+
+  @DefaultStringValue("Delete Selected")
+  String deleteSelectedName();
+  
+  @DefaultStringValue("Delete the selected objects permanently")
+  String deleteSelectedDescription();
+
+  @DefaultStringValue("Deselect All")
+  String deselectAllName();
+
+  @DefaultStringValue("Exit")
+  String exitName();
+
+  @DefaultStringValue("Exit application")
+  String exitShortDescription();
+
+  @DefaultStringValue("Browse your computer to select a file to upload")
+  String fileUploadDescription();
+
+  @DefaultStringValue("File Upload...")
+  String fileUploadName();
+
+  @DefaultStringValue("Open...")
   String openName();
+
+  @DefaultStringValue("Paste")
+  String pasteName();
+
+  @DefaultStringValue("Paste the clipboard")
+  String pasteShortDescription();
+
+  @DefaultStringValue("Reload")
+  String reloadName();
+
+  @DefaultStringValue("Reload current view")
+  String reloadShortDescription();
+
+  @DefaultStringValue("Select All")
+  String selectAllName();
 
 }
