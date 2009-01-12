@@ -20,6 +20,9 @@ import org.gwt.mosaic.ui.client.Viewport;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -31,12 +34,12 @@ import com.google.gwt.user.client.ui.Widget;
  * the following example two {@code Buttons} are placed inside a
  * {@link LayoutPanel}. Notice that only the first {@code Button} is rendered.
  * The associated layout data object declares that the {@code Button} will be
- * decorated (the {@code Button} will be placed inside a
- * {@code com.google.gwt.user.client.ui.DecoratorPanel}):
+ * decorated (the {@code Button} will be placed inside a {@code
+ * com.google.gwt.user.client.ui.DecoratorPanel}):
  * 
  * <table>
  * <tr>
- * <td> <img border="1" src="FillLayout1.jpg"> </td>
+ * <td><img border="1" src="FillLayout1.jpg"></td>
  * <td>
  * 
  * <pre>
@@ -64,7 +67,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <table>
  * <tr>
- * <td> <img border="1" src="FillLayout2.jpg"> </td>
+ * <td><img border="1" src="FillLayout2.jpg"></td>
  * <td>
  * 
  * <pre>
@@ -85,12 +88,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  * @see FillLayoutData
  */
-public class FillLayout extends BaseLayout {
+public class FillLayout extends BaseLayout implements HasAlignment {
 
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   * @see
+   * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
+   * mosaic.ui.client.layout.LayoutPanel)
    */
   public int[] getPreferredSize(LayoutPanel layoutPanel) {
     int[] result = {0, 0};
@@ -152,7 +157,9 @@ public class FillLayout extends BaseLayout {
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   * @see
+   * org.gwt.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.gwt.mosaic
+   * .ui.client.layout.LayoutPanel)
    */
   public void layoutPanel(LayoutPanel layoutPanel) {
     try {
@@ -196,10 +203,54 @@ public class FillLayout extends BaseLayout {
               - child.getOffsetHeight();
           width -= offsetWidth;
           height -= offsetHeight;
-          setBounds(layoutPanel, child, left, top, width, height);
-        } else {
-          setBounds(layoutPanel, child, left, top, width, height);
         }
+
+        HorizontalAlignmentConstant hAlignment = layoutData.getHorizontalAlignment();
+        if (hAlignment == null) {
+          hAlignment = getHorizontalAlignment();
+        }
+
+        int posLeft;
+        int widgetWidth;
+
+        if (hAlignment == null) {
+          posLeft = left;
+          widgetWidth = width;
+        } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
+          posLeft = left;
+          widgetWidth = -1;
+        } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
+          posLeft = left + (width / 2) - getFlowWidth(child) / 2;
+          widgetWidth = -1;
+        } else {
+          posLeft = left + width - getFlowWidth(child);
+          widgetWidth = -1;
+        }
+
+        VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
+        if (vAlignment == null) {
+          vAlignment = getVerticalAlignment();
+        }
+
+        int posTop;
+        int widgetHeight;
+
+        if (vAlignment == null) {
+          posTop = top;
+          widgetHeight = height;
+        } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
+          posTop = top;
+          widgetHeight = -1;
+        } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
+          posTop = top + (height / 2) - getFlowHeight(child) / 2;
+          widgetHeight = -1;
+        } else {
+          posTop = top + height - getFlowHeight(child);
+          widgetHeight = -1;
+        }
+
+        setBounds(layoutPanel, child, posLeft, posTop, widgetWidth,
+            widgetHeight);
 
         break;
       }
@@ -209,6 +260,25 @@ public class FillLayout extends BaseLayout {
     }
 
     layoutPanel.setPreferredSize(-1, -1);
+  }
+
+  private HorizontalAlignmentConstant horizontalAlignment;
+  private VerticalAlignmentConstant verticalAlignment;
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return horizontalAlignment;
+  }
+
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    this.horizontalAlignment = align;
+  }
+
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
+  }
+
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    this.verticalAlignment = align;
   }
 
 }

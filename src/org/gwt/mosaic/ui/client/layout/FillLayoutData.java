@@ -15,13 +15,18 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import com.google.gwt.user.client.ui.HasAlignment;
+
 /**
  * Layout data object for {@link FillLayout}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * @see FillLayout
  */
-public class FillLayoutData extends LayoutData {
+public class FillLayoutData extends LayoutData implements HasAlignment {
+
+  private HorizontalAlignmentConstant horizontalAlignment;
+  private VerticalAlignmentConstant verticalAlignment;
 
   /**
    * Creates a new instance of {@code FillLayoutData}. The associated widget
@@ -41,6 +46,34 @@ public class FillLayoutData extends LayoutData {
    */
   public FillLayoutData(final boolean decorate) {
     super(decorate);
+  }
+
+  public FillLayoutData(HorizontalAlignmentConstant horizontalAlignment,
+      VerticalAlignmentConstant verticalAlignment) {
+    this(horizontalAlignment, verticalAlignment, false);
+  }
+
+  public FillLayoutData(HorizontalAlignmentConstant horizontalAlignment,
+      VerticalAlignmentConstant verticalAlignment, final boolean decorate) {
+    super(decorate);
+    setHorizontalAlignment(horizontalAlignment);
+    setVerticalAlignment(verticalAlignment);
+  }
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return horizontalAlignment;
+  }
+
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    this.horizontalAlignment = align;
+  }
+
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
+  }
+
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    this.verticalAlignment = align;
   }
 
 }
