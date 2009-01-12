@@ -23,8 +23,8 @@ import com.google.gwt.user.client.ui.ImageBundle;
  */
 public interface ActionImages extends ImageBundle {
 
-  @Resource(value = "exit_action.png")
-  AbstractImagePrototype exit_action();
+  @Resource(value = "add_folder_action.png")
+  AbstractImagePrototype add_folder_action();
 
   @Resource(value = "award_star_bronze_1.png")
   AbstractImagePrototype award_star_bronze_1();
@@ -35,6 +35,24 @@ public interface ActionImages extends ImageBundle {
   @Resource(value = "bomb.png")
   AbstractImagePrototype bomb();
 
+  @Resource(value = "close_action.png")
+  AbstractImagePrototype close_action();
+
+  @Resource(value = "copy_action.png")
+  AbstractImagePrototype copy_action();
+
+  @Resource(value = "cut_action.png")
+  AbstractImagePrototype cut_action();
+
+  @Resource(value = "delete_action.png")
+  AbstractImagePrototype delete_action();
+
+  @Resource(value = "exit_action.png")
+  AbstractImagePrototype exit_action();
+
+  @Resource(value = "file_upload_action.png")
+  AbstractImagePrototype file_upload_action();
+
   @Resource(value = "menuitem_checkbox.png")
   AbstractImagePrototype menuitem_checkbox();
 
@@ -43,19 +61,13 @@ public interface ActionImages extends ImageBundle {
 
   @Resource(value = "noimage.png")
   AbstractImagePrototype noimage();
-
-  @Resource(value = "copy_action.png")
-  AbstractImagePrototype copy_action();
-
-  @Resource(value = "cut_action.png")
-  AbstractImagePrototype cut_action();
+  
+  @Resource(value = "open_action.png")
+  AbstractImagePrototype open_action();
 
   @Resource(value = "paste_action.png")
   AbstractImagePrototype paste_action();
-
-  @Resource(value = "close_action.png")
-  AbstractImagePrototype close_action();
-
-  @Resource(value = "open_action.png")
-  AbstractImagePrototype open_action();
+  
+  @Resource(value = "reload_action.png")
+  AbstractImagePrototype reload_action();
 }

@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic.actions.client.edit;
+package org.gwt.mosaic.actions.client.file;
 
 import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.CommandAction;
@@ -19,27 +19,27 @@ import org.gwt.mosaic.actions.client.CommandAction;
 import com.google.gwt.user.client.Command;
 
 /**
- * {@code CopyAction} provides the action for the {@code CopyCommand}.
+ * {@code AddFolderAction} provides the action for the {@code AddFolderCommand}.
  * <p>
  * The action has a default name, icon and short description.
  * 
- * @author Anthony Sintes ObjectWave Corporation
  * @author georgopoulos.georgios(at)gmail.com
  */
-public final class CopyAction extends CommandAction {
+public final class AddFolderAction extends CommandAction {
 
   /**
-   * This type defines the copy command.
+   * This type defines the add folder command.
    */
-  public interface CopyCommand extends Command {
+  public interface AddFolderCommand extends Command {
   }
 
   /**
-   * @param command the copy command that the action should act upon.
+   * @param command the add folder command that the action should act upon.
    */
-  public CopyAction(CopyCommand command) {
-    super(ACTION_CONSTANTS.copyName(), ACTION_IMAGES.copy_action(), command);
-    putValue(Action.SHORT_DESCRIPTION, ACTION_CONSTANTS.copyShortDescription());
+  public AddFolderAction(AddFolderCommand command) {
+    super(ACTION_CONSTANTS.addFolderName(), ACTION_IMAGES.add_folder_action(),
+        command);
+    putValue(Action.SHORT_DESCRIPTION, ACTION_CONSTANTS.addFolderDescription());
   }
 
 }
