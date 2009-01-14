@@ -39,8 +39,8 @@ import com.google.gwt.user.client.ui.Widget;
  * <h3>CSS Style Rules</h3>
  * <ul>
  * <li>.mosaic-TabLayoutPanel { the tab layout panel itself }</li>
- * <li>.mosaic-TabLayoutPanelBottom { the bottom section of the tab layout
- * panel (the deck containing the widget) }</li>
+ * <li>.mosaic-TabLayoutPanelBottom { the bottom section of the tab layout panel
+ * (the deck containing the widget) }</li>
  * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
@@ -137,7 +137,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public void add(Widget w) {
     throw new UnsupportedOperationException(
@@ -192,7 +194,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.SourcesTabEvents#addTabListener(com.google.gwt.user.client.ui.TabListener)
+   * @see
+   * com.google.gwt.user.client.ui.SourcesTabEvents#addTabListener(com.google
+   * .gwt.user.client.ui.TabListener)
    */
   public void addTabListener(TabListener listener) {
     if (tabListeners == null) {
@@ -256,16 +260,18 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
+   * .user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget widget) {
-    return deck.getWidgetIndex(widget);
+    final Widget parent = widget.getParent();
+    return parent == null ? -1 : deck.getWidgetIndex(parent);
   }
 
   /**
    * Inserts a widget into the tab panel. If the Widget is already attached to
-   * the <code>TabLayoutPanel</code>, it will be moved to the requested
-   * index.
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested index.
    * 
    * @param widget the widget to be inserted
    * @param tabText the text to be shown on its tab
@@ -292,8 +298,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
   /**
    * Inserts a widget into the tab panel. If the Widget is already attached to
-   * the <code>TabLayoutPanel</code>, it will be moved to the requested
-   * index.
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested index.
    * 
    * @param widget the widget to be inserted
    * @param tabText the text to be shown on its tab
@@ -305,8 +310,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
   /**
    * Inserts a widget into the tab panel. If the Widget is already attached to
-   * the <code>TabLayoutPanel</code>, it will be moved to the requested
-   * index.
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested index.
    * 
    * @param widget the widget to be inserted
    * @param tabWidget the widget to be shown on its tabs
@@ -370,8 +374,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents,
-   *      int)
+   * @see
+   * com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google
+   * .gwt.user.client.ui.SourcesTabEvents, int)
    */
   public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
     if (tabListeners != null) {
@@ -379,12 +384,13 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
     return true;
   }
-  
+
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.TabListener#onTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents,
-   *      int)
+   * @see
+   * com.google.gwt.user.client.ui.TabListener#onTabSelected(com.google.gwt.
+   * user.client.ui.SourcesTabEvents, int)
    */
   public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
     deck.showWidget(tabIndex);
@@ -420,7 +426,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google.gwt.user.client.ui.TabListener)
+   * @see
+   * com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google
+   * .gwt.user.client.ui.TabListener)
    */
   public void removeTabListener(TabListener listener) {
     if (tabListeners != null) {
