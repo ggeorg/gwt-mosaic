@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2008-2009 Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -87,8 +87,9 @@ public abstract class MessageBox extends WindowPanel {
     });
     alert.getButtonPanel().add(buttonOK);
 
-    final HTML html = new HTML(message);
-    alert.setWidget(html);
+    final LayoutPanel htmlWrapper = new LayoutPanel();
+    htmlWrapper.add(new HTML(message));
+    alert.setWidget(htmlWrapper);
     alert.showModal();
 
     DeferredCommand.addCommand(new Command() {
@@ -132,8 +133,9 @@ public abstract class MessageBox extends WindowPanel {
     confirm.getButtonPanel().add(buttonOK);
     confirm.getButtonPanel().add(buttonCancel);
 
-    final HTML html = new HTML(message);
-    confirm.setWidget(html);
+    final LayoutPanel htmlWrapper = new LayoutPanel();
+    htmlWrapper.add(new HTML(message));
+    confirm.setWidget(htmlWrapper);
     confirm.showModal();
 
     DeferredCommand.addCommand(new Command() {
