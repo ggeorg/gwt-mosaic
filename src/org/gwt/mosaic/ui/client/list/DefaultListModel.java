@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * The default implementation of {@link ListModel} based on a
- * {@code java.util.Vector}.
+ * The default implementation of {@link ListModel} based on a {@code
+ * java.util.Vector}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -42,8 +42,8 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * the order they are returned by the collection's iterator.
    * 
    * @param c the collection whose elements are to be placed into this model
-   * @throws {@code NullPointerException} if the specified collection is
-   *           {@code null}
+   * @throws {@code NullPointerException} if the specified collection is {@code
+   *         null}
    */
   public DefaultListModel(Collection<? extends E> c) {
     super(c);
@@ -54,7 +54,8 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * 
    * @param index index at which the specified element is to be inserted
    * @param element element to be inserted
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
+   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
+   *           {@code index < 0 || index > size()})
    */
   @Override
   public void add(int index, E element) {
@@ -100,7 +101,8 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    *          collection
    * @param c elements to be inserted
    * @return {@code true} if this model changed as a result of the call
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
+   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
+   *           {@code index < 0 || index > size()})
    * @throws NullPointerException if the specified collection is null
    */
   public boolean addAll(int index, Collection<? extends E> c) {
@@ -138,13 +140,15 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   @Override
   public void clear() {
     int index1 = super.size() - 1;
-    super.clear();
-    fireIntervalRemoved(this, 0, index1);
+    if (index1 >= 0) {
+      super.clear();
+      fireIntervalRemoved(this, 0, index1);
+    }
   }
 
   /**
-   * {@code AbstractListModel} subclasses must call this method <b>after</b>
-   * one or more elements of the list change.
+   * {@code AbstractListModel} subclasses must call this method <b>after</b> one
+   * or more elements of the list change.
    * 
    * @param source the {@link ListModel} that changed, typically {@code this}
    * @param index0 one end of the new interval
@@ -196,8 +200,8 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   }
 
   /**
-   * Returns an array of all the list data listeners registered on this
-   * {@code AbstractListModel}.
+   * Returns an array of all the list data listeners registered on this {@code
+   * AbstractListModel}.
    * 
    * @return all of this model's {@link ListDataListener ListDataListeners}, or
    *         an empty array if no list data listeners are currently registered
@@ -296,7 +300,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public void removeAllElements() {
-    clear();
+    super.removeAllElements();
   }
 
   /*
@@ -306,7 +310,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public boolean removeElement(Object o) {
-    return remove(o);
+    return super.removeElement(o);
   }
 
   /*
