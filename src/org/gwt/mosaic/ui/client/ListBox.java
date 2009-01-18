@@ -1,4 +1,6 @@
 /*
+ * Copyright 2008-2009 Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -264,7 +266,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
       changeListeners = new ChangeListenerCollection();
       dataTable.addTableSelectionListener(new TableSelectionListener() {
         public void onAllRowsDeselected(SourceTableSelectionEvents sender) {
-          // Nothing to do here!
+          changeListeners.fireChange(ListBox.this);
         }
 
         public void onCellHover(SourceTableSelectionEvents sender, int row,
@@ -278,7 +280,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
         }
 
         public void onRowDeselected(SourceTableSelectionEvents sender, int row) {
-          // Nothing to do here!
+          changeListeners.fireChange(ListBox.this);
         }
 
         public void onRowHover(SourceTableSelectionEvents sender, int row) {
@@ -463,7 +465,9 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    */
   public void intervalRemoved(ListDataEvent event) {
     if (dataModel == event.getSource()) {
-      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
+      for (int i = event.getIndex1(), n = event.getIndex0(); i >= n; --i) {
+      //for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
+      //for (int i = event.getIndex0(), n = event.getIndex1(); i < n; ++i) {
         renderOnRemove(i);
       }
     }
