@@ -1,4 +1,6 @@
 /*
+ * Copyright 2008, 2009 Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -53,6 +55,15 @@ public interface ActionImages extends ImageBundle {
   @Resource(value = "file_upload_action.png")
   AbstractImagePrototype file_upload_action();
 
+  @Resource(value = "form_add_action.png")
+  AbstractImagePrototype form_add_action();
+
+  @Resource(value = "form_delete_action.png")
+  AbstractImagePrototype form_delete_action();
+
+  @Resource(value = "form_edit_action.png")
+  AbstractImagePrototype form_edit_action();
+
   @Resource(value = "menuitem_checkbox.png")
   AbstractImagePrototype menuitem_checkbox();
 
@@ -61,13 +72,16 @@ public interface ActionImages extends ImageBundle {
 
   @Resource(value = "noimage.png")
   AbstractImagePrototype noimage();
-  
+
   @Resource(value = "open_action.png")
   AbstractImagePrototype open_action();
 
   @Resource(value = "paste_action.png")
   AbstractImagePrototype paste_action();
-  
+
   @Resource(value = "reload_action.png")
   AbstractImagePrototype reload_action();
+
+  @Resource(value = "reload_db_action.png")
+  AbstractImagePrototype reload_db_action();
 }

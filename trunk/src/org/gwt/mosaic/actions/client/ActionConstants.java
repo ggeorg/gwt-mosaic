@@ -46,11 +46,11 @@ public interface ActionConstants extends Constants {
   @DefaultStringValue("Cut the selection")
   String cutShortDescription();
 
-  @DefaultStringValue("Delete Selected")
-  String deleteSelectedName();
-  
   @DefaultStringValue("Delete the selected objects permanently")
   String deleteSelectedDescription();
+  
+  @DefaultStringValue("Delete Selected")
+  String deleteSelectedName();
 
   @DefaultStringValue("Deselect All")
   String deselectAllName();
@@ -66,6 +66,15 @@ public interface ActionConstants extends Constants {
 
   @DefaultStringValue("File Upload...")
   String fileUploadName();
+
+  @DefaultStringValue("Add")
+  String formAddName();
+
+  @DefaultStringValue("Delete")
+  String formDeleteName();
+
+  @DefaultStringValue("Edit")
+  String formEditName();
 
   @DefaultStringValue("Open...")
   String openName();
@@ -84,5 +93,4 @@ public interface ActionConstants extends Constants {
 
   @DefaultStringValue("Select All")
   String selectAllName();
-
 }
