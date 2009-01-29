@@ -1,5 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
+ * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +34,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Image;
@@ -135,8 +137,8 @@ public class CwDatePicker extends ContentWidget {
     vPanel2.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
     vPanel2.add(dateTimePicker, new BoxLayoutData(FillStyle.BOTH));
 
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn.addClickHandler(new ClickHandler() {
+      public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
         vPanel2.setCollapsed(!vPanel2.isCollapsed());
         final Image image = vPanel2.isCollapsed()
             ? Caption.IMAGES.toolPlus().createImage()

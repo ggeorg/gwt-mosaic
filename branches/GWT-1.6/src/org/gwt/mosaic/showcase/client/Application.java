@@ -1,6 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
- * 
+ * Copyright 2008 Cameron Braid.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -32,9 +33,10 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -149,8 +151,8 @@ public class Application extends Viewport implements HasLayoutManager {
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
 
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         bottomPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
         bottomPanel.layout();
       }

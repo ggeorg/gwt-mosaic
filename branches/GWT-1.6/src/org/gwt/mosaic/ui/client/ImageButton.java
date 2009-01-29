@@ -1,5 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
+ * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,26 +18,28 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.ListenerWrapper.WrappedClickListener;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ImageButton extends Widget implements SourcesClickEvents {
+public class ImageButton extends Widget implements SourcesClickEvents, HasClickHandlers {
   
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
-
-  private ClickListenerCollection clickListeners;
 
   private Image image;
 
@@ -66,29 +69,28 @@ public class ImageButton extends Widget implements SourcesClickEvents {
     getElement().setInnerHTML(image.getElement().getString());
   }
 
+
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return addHandler(handler, ClickEvent.getType());
+  }
+
+  @Deprecated
   public void addClickListener(ClickListener listener) {
-    if (clickListeners == null) {
-      clickListeners = new ClickListenerCollection();
-      sinkEvents(Event.ONCLICK);
-    }
-    clickListeners.add(listener);
+    WrappedClickListener.add(this, listener);
   }
 
   @Override
   public void onBrowserEvent(Event event) {
     DOM.eventPreventDefault(event);
     if (DOM.eventGetType(event) == Event.ONCLICK) {
-      if (clickListeners != null) {
-        clickListeners.fireClick(this);
-      }
+    	ClickEvent.fireNativeEvent(event, this);
     }
     event.cancelBubble(true);
   }
 
+  @Deprecated
   public void removeClickListener(ClickListener listener) {
-    if (clickListeners != null) {
-      clickListeners.remove(listener);
-    }
+	  WrappedClickListener.remove(this, listener);
   }
 
 }

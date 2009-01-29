@@ -1,5 +1,6 @@
 /*
  * Copyright 2008-2009 Georgios J. Georgopoulos
+ * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +23,10 @@ import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.event.CollapseHandler;
 
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -428,6 +432,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
+  public HandlerRegistration addCollapseHandler(Widget widget, CollapseHandler handler) {
+	  if (getLayout() instanceof BorderLayout) {
+        final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
+        return layoutData.addCollapseHandler(handler);
+      }
+	  else {
+		  return null;
+	  }
+  }
+
+  @Deprecated
   public void addCollapsedListener(Widget widget, CollapsedListener listener) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
@@ -435,6 +450,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
+  @Deprecated
   public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);

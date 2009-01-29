@@ -1,4 +1,6 @@
 /*
+ * Copyright 2008 Cameron Braid.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -15,6 +17,15 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
 
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -35,7 +46,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class ToolButton extends LayoutComposite implements HasHTML, HasName,
-    SourcesClickEvents, SourcesFocusEvents, HasFocus, SourcesKeyboardEvents {
+    SourcesClickEvents, SourcesFocusEvents, HasFocus, SourcesKeyboardEvents,
+    HasClickHandlers, HasFocusHandlers, HasAllKeyHandlers {
 
   public enum ToolButtonStyle {
     PUSH, MENU, SPLIT, RADIO, CHECKBOX
@@ -75,6 +87,19 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
      */
     public ButtonWidget(String html, ClickListener listener) {
       this(html);
+      addClickListener(listener);
+      init();
+    }
+    
+    /**
+     * Creates a button with the given HTML caption and click listener.
+     * 
+     * @param html the HTML caption
+     * @param listener the click listener
+     */
+    public ButtonWidget(String html, ClickHandler handler) {
+      this(html);
+      addClickHandler(handler);
       init();
     }
 
@@ -348,6 +373,17 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     addClickListener(listener);
   }
 
+  /**
+   * Creates a tool button with the given HTML caption and click handler.
+   * 
+   * @param html the HTML caption
+   * @param handler the click handler
+   */
+  public ToolButton(String html, ClickHandler handler) {
+    this(html);
+    addClickHandler(handler);
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -418,6 +454,26 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     button.removeFocusListener(listener);
   }
 
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+	return button.addClickHandler(handler); 
+  }
+
+  public HandlerRegistration addFocusHandler(FocusHandler handler) {
+	return button.addFocusHandler(handler);
+  }
+  
+  public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+	return button.addKeyDownHandler(handler);
+  }
+  
+  public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+	return button.addKeyPressHandler(handler);
+  }
+  
+  public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+	return button.addKeyUpHandler(handler);
+  }
+  
   public int getTabIndex() {
     return button.getTabIndex();
   }
