@@ -1,4 +1,6 @@
 /*
+ * Copyright 2008 Cameron Braid.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -15,8 +17,17 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.CollapsedListenerCollection;
+import org.gwt.mosaic.ui.client.ListenerWrapper;
+import org.gwt.mosaic.ui.client.ListenerWrapper.WrappedCollapsedListener;
+import org.gwt.mosaic.ui.client.event.CollapseEvent;
+import org.gwt.mosaic.ui.client.event.CollapseHandler;
+import org.gwt.mosaic.ui.client.event.HasCollapseHandlers;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -28,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @see BorderLayout
  */
-public class BorderLayoutData extends LayoutData {
+public class BorderLayoutData extends LayoutData implements HasCollapseHandlers {
 
   double preferredSize = -1.0;
 
@@ -361,25 +372,22 @@ public class BorderLayoutData extends LayoutData {
     this.minSize = minSize;
   }
 
-  private CollapsedListenerCollection collapsedListeners;
+  @Override
+  public HandlerRegistration addCollapseHandler(CollapseHandler handler) {
+	  return addHandler(handler, CollapseEvent.getType());
+  }
 
+  @Deprecated
   protected void addCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners == null) {
-      collapsedListeners = new CollapsedListenerCollection();
-    }
-    collapsedListeners.add(listener);
+	  WrappedCollapsedListener.add(this, listener);
   }
 
   protected void removeCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners != null) {
-      collapsedListeners.remove(listener);
-    }
+	  WrappedCollapsedListener.remove(handlerManager, listener);
   }
 
   protected void fireCollapsedChange(Widget sender) {
-    if (collapsedListeners != null) {
-      collapsedListeners.fireCollapsedChange(sender);
-    }
+	  CollapseEvent.fire(this, sender);
   }
 
   /**

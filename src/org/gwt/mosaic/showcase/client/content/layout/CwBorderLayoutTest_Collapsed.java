@@ -1,5 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
+ * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,16 +23,19 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
-import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
+import org.gwt.mosaic.ui.client.event.CollapseEvent;
+import org.gwt.mosaic.ui.client.event.CollapseHandler;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +47,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
-    CollapsedListener {
+    CollapseHandler {
 
   /**
    * Constructor.
@@ -87,19 +91,19 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     northPanel.getHeader().add(collapseBtn1, CaptionRegion.RIGHT);
     northPanel.add(new WidgetWrapper(new HTML("Height: 20%")));
 
-    collapseBtn1.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        layoutPanel.setCollapsed(northPanel,
-            !layoutPanel.isCollapsed(northPanel));
-        layoutPanel.layout();
-      }
+    collapseBtn1.addClickHandler(new ClickHandler() {
+    	@Override
+		public void onClick(ClickEvent event) {
+			layoutPanel.setCollapsed(northPanel, !layoutPanel.isCollapsed(northPanel));
+            layoutPanel.layout();
+		}
     });
 
     layoutPanel.add(northPanel, new BorderLayoutData(Region.NORTH,
         0.20, true));
     layoutPanel.setCollapsed(northPanel, true);
 
-    layoutPanel.addCollapsedListener(northPanel, this);
+    layoutPanel.addCollapseHandler(northPanel, this);
 
     // south panel
 
@@ -121,7 +125,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
         0.20, true));
     layoutPanel.setCollapsed(southPanel, true);
 
-    layoutPanel.addCollapsedListener(southPanel, this);
+    layoutPanel.addCollapseHandler(southPanel, this);
 
     // west panel
 
@@ -142,7 +146,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
         0.2, true));
     layoutPanel.setCollapsed(westPanel, true);
 
-    layoutPanel.addCollapsedListener(westPanel, this);
+    layoutPanel.addCollapseHandler(westPanel, this);
 
     // east panel
 
@@ -163,7 +167,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
         0.2, true));
     layoutPanel.setCollapsed(eastPanel, true);
 
-    layoutPanel.addCollapsedListener(eastPanel, this);
+    layoutPanel.addCollapseHandler(eastPanel, this);
 
     // center panel
 
@@ -181,8 +185,9 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
    * @see org.gwt.mosaic.ui.client.CollapsedListener#onCollapsedChange(com.google.gwt.user.client.ui.Widget)
    */
   @ShowcaseSource
-  public void onCollapsedChange(Widget sender) {
-    InfoPanel.show("Collapsed", "" + layoutPanel.isCollapsed(sender));
+  @Override
+  public void onCollapseChanged(CollapseEvent event) {
+    InfoPanel.show("Collapsed", "" + layoutPanel.isCollapsed(event.getTarget()));
   }
 
 }
