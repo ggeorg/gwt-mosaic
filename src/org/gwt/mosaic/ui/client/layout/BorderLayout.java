@@ -1,5 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
+ * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +22,7 @@ import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -820,7 +822,7 @@ public class BorderLayout extends BaseLayout {
         }
       };
     } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      GWT.log(this.getClass().getName(), e);
     }
   }
 

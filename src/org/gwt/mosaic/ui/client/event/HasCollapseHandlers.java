@@ -14,15 +14,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic.ui.client;
+package org.gwt.mosaic.ui.client.event;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
+
 
 /**
- * Event listener interface for a change in the collapsed property.
+ * A widget that implements this interface is a public source of
+ * {@link CollapseEvent} events.
  * 
- * @author georgopoulos.georgios(at)gmail.com
+ * @param <T> the type being collapsed
  */
-public interface CollapsedListener extends java.util.EventListener {
-  void onCollapsedChange(Widget sender);
+public interface HasCollapseHandlers extends HasHandlers {
+  /**
+   * Adds a {@link CollapseEvent} handler.
+   * 
+   * @param handler the handler
+   * @return the registration for the event
+   */
+  HandlerRegistration addCollapseHandler(CollapseHandler handler);
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
+ * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -78,6 +79,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
@@ -85,7 +88,6 @@ import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -532,8 +534,9 @@ public class Showcase implements EntryPoint {
       final ThemeButton button = new ThemeButton(
           ShowcaseConstants.STYLE_THEMES[i]);
       styleWrapper.add(button);
-      button.addClickListener(new ClickListener() {
-        public void onClick(Widget sender) {
+      button.addClickHandler(new ClickHandler() {
+          public void onClick(ClickEvent event) {
+
           // Update the current theme
           CUR_THEME = button.getTheme();
 
