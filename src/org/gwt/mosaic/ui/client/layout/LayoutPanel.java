@@ -441,4 +441,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       layoutData.removeCollapsedListener(listener);
     }
   }
+
+  public void clearPreferredSizeCache() {
+    setPreferredSize(-1, -1);
+  }
 }
