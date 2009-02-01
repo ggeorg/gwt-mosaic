@@ -721,7 +721,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     setStyleAttribute(div, "top", "");
     setStyleAttribute(div, "position", "");
     setStyleAttribute(div, "visibility", "hidden");
-    setStyleAttribute(div, "display", "table");
+    setStyleAttribute(div, "display", "inline");
     // force "auto" width
     setStyleAttribute(div, "width", "0px");
     setStyleAttribute(div, "height", "0px");

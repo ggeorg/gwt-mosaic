@@ -1257,6 +1257,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      throw new RuntimeException(e);
     }
 
     clearPreferredSizeCache(layoutPanel);
