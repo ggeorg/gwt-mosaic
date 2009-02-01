@@ -103,7 +103,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBorderSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -127,7 +127,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBoxSize(Element elem) {
     int[] size = new int[2];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -177,7 +177,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getClientSize(Element elem) {
     int[] size = new int[2];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -284,7 +284,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getMarginSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -301,7 +301,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getPaddingSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -687,6 +687,53 @@ public class DOM extends com.google.gwt.user.client.DOM {
       }
     }
     return code;
+  }
+
+  /**
+   * Returns the screen resolution in dots-per-inch.
+   * 
+   * @return the screen resolution, in dots-per-inch
+   */
+  public static int getScreenResolution() {
+    return toPixelSize("1in");
+  }
+
+  public static int toPixelSize(final String width) {
+    final BodyElement body = Document.get().getBody();
+    final Element div = DOM.createDiv();
+    setStyleAttribute(div, "left", "");
+    setStyleAttribute(div, "top", "");
+    setStyleAttribute(div, "position", "");
+    setStyleAttribute(div, "visibility", "hidden");
+    setStyleAttribute(div, "width", width);
+    try {
+      body.appendChild(div);
+      return getBoxSize(div)[0];
+    } finally {
+      body.removeChild(div);
+    }
+  }
+
+  public static int[] getStringBoxSize(final Element div, final String str) {
+    final BodyElement body = Document.get().getBody();
+    div.setInnerText(str);
+    setStyleAttribute(div, "left", "");
+    setStyleAttribute(div, "top", "");
+    setStyleAttribute(div, "position", "");
+    setStyleAttribute(div, "visibility", "hidden");
+    setStyleAttribute(div, "display", "table");
+    // force "auto" width
+    setStyleAttribute(div, "width", "0px");
+    setStyleAttribute(div, "height", "0px");
+    div.getOffsetWidth();
+    setStyleAttribute(div, "width", "auto");
+    setStyleAttribute(div, "height", "auto");
+    try {
+      body.appendChild(div);
+      return getBoxSize(div);
+    } finally {
+      body.removeChild(div);
+    }
   }
 
 }

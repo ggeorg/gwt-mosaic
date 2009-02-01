@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Base class for all layout data objects.
@@ -46,12 +47,26 @@ public class LayoutData {
    * {@code com.google.gwt.user.client.ui.DecoratorPanel}), this method returns
    * {@code true}, if not this method will return {@code false}.
    * 
-   * @return {@code true} if the child widget is placed in a
-   *         {@code com.google.gwt.user.client.ui.DecoratorPanel},
-   *         {@code false} otherwise.
+   * @return {@code true} if the child widget is placed in a {@code
+   *         com.google.gwt.user.client.ui.DecoratorPanel}, {@code false}
+   *         otherwise.
    */
   public final boolean hasDecoratorPanel() {
     return decoratorPanel != null;
+  }
+
+  /**
+   * 
+   * @param layoutPanel
+   * @param c
+   * @param x
+   * @param y
+   * @param w
+   * @param h
+   */
+  protected void setBounds(LayoutPanel layoutPanel, Widget c, int x, int y,
+      int w, int h) {
+    ((BaseLayout) layoutPanel.getLayout()).setBounds(layoutPanel, c, x, y, w, h);
   }
 
 }

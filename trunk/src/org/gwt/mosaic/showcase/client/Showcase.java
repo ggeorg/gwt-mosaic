@@ -23,8 +23,14 @@ import java.util.Map;
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
-import org.gwt.mosaic.showcase.client.content.forms.CwComplexForm;
-import org.gwt.mosaic.showcase.client.content.forms.CwSimpleForm;
+import org.gwt.mosaic.showcase.client.content.forms.CwQuickStartExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwAlignmentExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwBasicSizesExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwBoundedSizesExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwCellAlignmentExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwGroupingExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwGrowingExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwSpanExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
@@ -420,10 +426,24 @@ public class Showcase implements EntryPoint {
 
     // Forms
     TreeItem catForms = mainMenu.addItem("Forms");
-    setupMainMenuOption(catForms, new CwSimpleForm(constants),
+    setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
-    setupMainMenuOption(catForms, new CwComplexForm(constants),
+    TreeItem catBasicForms = catForms.addItem("Basic");
+    setupMainMenuOption(catBasicForms, new CwAlignmentExample(constants),
         IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwBasicSizesExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwGrowingExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwSpanExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwGroupingExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwCellAlignmentExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwBoundedSizesExample(constants),
+        IMAGES.catForms());
+    TreeItem catBuildingForms = catForms.addItem("Building");
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");

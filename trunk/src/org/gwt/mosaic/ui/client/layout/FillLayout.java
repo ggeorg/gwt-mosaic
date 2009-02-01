@@ -259,7 +259,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
 
-    layoutPanel.setPreferredSize(-1, -1);
+    clearPreferredSizeCache(layoutPanel);
   }
 
   private HorizontalAlignmentConstant horizontalAlignment;

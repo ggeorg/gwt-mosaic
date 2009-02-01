@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgopolos J. Georgios
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,11 +29,11 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
 
-  private native static void forceFlowLayout(Element elem)
-  /*-{
-    elem.style['top'] = '';
-    elem.style['left'] = '';
-  }-*/;
+  private static void changeToStaticPositioning(Element elem) {
+    DOM.setStyleAttribute(elem, "left", "");
+    DOM.setStyleAttribute(elem, "top", "");
+    DOM.setStyleAttribute(elem, "position", "");
+  }
 
   /**
    * TODO: move this method to DOM
@@ -52,7 +52,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
-      forceFlowLayout(child.getElement());
+      changeToStaticPositioning(child.getElement());
       // ggeorg: set to "0px", read and set it to "auto"
       // I don't know why but it works for widget like 'ListBox'
       child.setHeight("0px");
@@ -81,7 +81,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
-      forceFlowLayout(child.getElement());
+      changeToStaticPositioning(child.getElement());
       // ggeorg: set to "0px", read and set it to "auto"
       // I don't know why but it works for widget like 'ListBox'
       child.setWidth("0px");
@@ -166,4 +166,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     layoutPanel.setWidgetPosition(widget, x, y);
   }
 
+  protected void clearPreferredSizeCache(final LayoutPanel layoutPanel) {
+    layoutPanel.clearPreferredSizeCache();
+  }
 }
