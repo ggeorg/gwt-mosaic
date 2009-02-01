@@ -225,7 +225,7 @@ public class CwGrowingExample extends ContentWidget {
 
   private Widget newLabel(String string) {
     final Label label = new Label(string);
-    DOM.setStyleAttribute(label.getElement(), "display", "table");
+    DOM.setStyleAttribute(label.getElement(), "display", "inline");
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }
