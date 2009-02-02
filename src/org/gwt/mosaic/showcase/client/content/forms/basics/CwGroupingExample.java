@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
@@ -106,6 +107,10 @@ public class CwGroupingExample extends ContentWidget {
     return tabPanel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildWizardBar(boolean grouped) {
     FormLayout layout = new FormLayout(
         "pref, 6px:grow, pref, pref, 12px, pref, 6px, pref", "pref");
@@ -123,6 +128,10 @@ public class CwGroupingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildEditorPanel(boolean grouped) {
     FormLayout layout = new FormLayout(
         "pref, 3dlu, 35dlu, 2dlu, 35dlu, 2dlu, 35dlu, 2dlu, 35dlu",
@@ -157,10 +166,13 @@ public class CwGroupingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newLabel(String string) {
     final Label label = new Label(string);
-    DOM.setStyleAttribute(label.getElement(), "display", "inline");
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return label;
+    return new WidgetWrapper(label);
   }
 }

@@ -16,6 +16,7 @@
 package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
@@ -24,6 +25,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Provides helper methods for DOM elements.
@@ -714,14 +716,20 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
   }
 
-  public static int[] getStringBoxSize(final Element div, final String str) {
+  public static int[] getStringBoxSize(Element div, final String str) {
     final BodyElement body = Document.get().getBody();
     div.setInnerText(str);
     setStyleAttribute(div, "left", "");
     setStyleAttribute(div, "top", "");
     setStyleAttribute(div, "position", "");
     setStyleAttribute(div, "visibility", "hidden");
-    setStyleAttribute(div, "display", "inline");
+    if (UserAgent.isIE6()) {
+      final WidgetWrapper wrapper = new WidgetWrapper(new SimplePanel(div) {
+      });
+      div = wrapper.getElement();
+    } else {
+      setStyleAttribute(div, "display", "table");
+    }
     // force "auto" width
     setStyleAttribute(div, "width", "0px");
     setStyleAttribute(div, "height", "0px");
