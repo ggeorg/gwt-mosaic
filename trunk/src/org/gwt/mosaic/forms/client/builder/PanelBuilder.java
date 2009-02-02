@@ -30,10 +30,12 @@
 package org.gwt.mosaic.forms.client.builder;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.factories.DefaultWidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Label;
@@ -222,10 +224,16 @@ public class PanelBuilder extends AbstractFormBuilder {
   public final Label addLabel(String textWithMnemonic,
       CellConstraints constraints) {
     Label label = getComponentFactory().createLabel(textWithMnemonic);
-    DOM.setStyleAttribute(label.getElement(), "display", "inline");
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    add(label, constraints);
-    return label;
+    if (UserAgent.isIE6()) {
+      add(new WidgetWrapper(label), constraints);
+      return label;
+    } else {
+      DOM.setStyleAttribute(label.getElement(), "display", "table");
+      add(label, constraints);
+      return label;
+    }
+
   }
 
   /**
@@ -454,7 +462,7 @@ public class PanelBuilder extends AbstractFormBuilder {
   public final Label addTitle(String textWithMnemonic,
       CellConstraints constraints) {
     Label titleLabel = null;// XXX
-                            // getComponentFactory().createTitle(textWithMnemonic);
+    // getComponentFactory().createTitle(textWithMnemonic);
     add(titleLabel, constraints);
     return titleLabel;
   }

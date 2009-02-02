@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Label;
@@ -106,6 +107,10 @@ public class CwGrowingExample extends ContentWidget {
     return tabPanel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newAllGrowing() {
     FormLayout layout = new FormLayout("pref, 6px, pref:grow",
         "pref, 12px, pref");
@@ -121,6 +126,10 @@ public class CwGrowingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newHalfGrowing() {
     FormLayout layout = new FormLayout("pref, 6px, 0:grow, 6px, 0:grow",
         "pref, 12px, pref");
@@ -140,6 +149,10 @@ public class CwGrowingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newPercentGrowing() {
     FormLayout layout = new FormLayout(
         "pref, 6px, 0:grow(0.25), 6px, 0:grow(0.75)", "pref, 12px, pref");
@@ -159,6 +172,10 @@ public class CwGrowingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newPercent2Growing() {
     FormLayout layout = new FormLayout("pref:grow(0.33), 6px, pref:grow(0.67)",
         "pref, 12px, pref");
@@ -174,6 +191,10 @@ public class CwGrowingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newVertical1Growing() {
     FormLayout layout = new FormLayout("pref, 12px, pref",
         "pref, 6px, fill:0:grow(0.25), 6px, fill:0:grow(0.75)");
@@ -193,6 +214,10 @@ public class CwGrowingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newVertical2Growing() {
     FormLayout layout = new FormLayout("pref, 12px, pref",
         "fill:0:grow(0.25), 6px, fill:0:grow(0.75)");
@@ -210,12 +235,20 @@ public class CwGrowingExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget createTextBox(int cols) {
     TextBox textBox = new TextBox();
     textBox.setWidth(1 + "em");
     return textBox;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget createTextArea(int rows, int cols) {
     TextArea textArea = new TextArea();
     textArea.setVisibleLines(rows);
@@ -223,10 +256,13 @@ public class CwGrowingExample extends ContentWidget {
     return textArea;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newLabel(String string) {
     final Label label = new Label(string);
-    DOM.setStyleAttribute(label.getElement(), "display", "inline");
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return label;
+    return new WidgetWrapper(label);
   }
 }

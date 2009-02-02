@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
@@ -259,8 +260,7 @@ public class CwUnitsExample extends ContentWidget {
 
   private Widget newLabel(String string) {
     final Label label = new Label(string);
-    DOM.setStyleAttribute(label.getElement(), "display", "inline");
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return label;
+    return new WidgetWrapper(label);
   }
 }
