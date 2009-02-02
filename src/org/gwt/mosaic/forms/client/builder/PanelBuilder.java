@@ -38,6 +38,7 @@ import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -226,7 +227,8 @@ public class PanelBuilder extends AbstractFormBuilder {
     Label label = getComponentFactory().createLabel(textWithMnemonic);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     if (UserAgent.isIE6()) {
-      add(new WidgetWrapper(label), constraints);
+      add(new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
+          HasAlignment.ALIGN_MIDDLE), constraints);
       return label;
     } else {
       DOM.setStyleAttribute(label.getElement(), "display", "table");
