@@ -55,6 +55,7 @@ import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -236,7 +237,7 @@ public class CwCellAlignmentExample extends ContentWidget {
   private Widget newLabel(String string) {
     final Label label = new Label(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return new WidgetWrapper(label);
+    return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
+        HasAlignment.ALIGN_MIDDLE);
   }
-
 }

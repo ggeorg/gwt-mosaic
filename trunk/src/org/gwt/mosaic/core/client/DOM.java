@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -725,7 +726,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     setStyleAttribute(div, "visibility", "hidden");
     if (UserAgent.isIE6()) {
       final WidgetWrapper wrapper = new WidgetWrapper(new SimplePanel(div) {
-      });
+      }, HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_MIDDLE);
       div = wrapper.getElement();
     } else {
       setStyleAttribute(div, "display", "table");
