@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -113,7 +114,7 @@ public class CwBasicSizesExample extends ContentWidget {
         "pref, 12px, 75px, 25px, min, 25px, pref", "pref, 12px, pref");
 
     // Create a panel that uses the layout.
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     // Add components to the panel.
     panel.add(newLabel("75px"), CellConstraints.xy(3, 1));
@@ -148,7 +149,7 @@ public class CwBasicSizesExample extends ContentWidget {
         "pref, 12px, 45px, 12px, min, 12px, pref");
 
     // Create a panel that uses the layout.
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     // Add components to the panel.
     panel.add(newLabel("new TextArea() 10x40"), CellConstraints.xy(3, 1));

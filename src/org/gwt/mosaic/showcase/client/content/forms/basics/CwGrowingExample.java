@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -116,7 +117,7 @@ public class CwGrowingExample extends ContentWidget {
     FormLayout layout = new FormLayout("pref, 6px, pref:grow",
         "pref, 12px, pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
     panel.add(newLabel("Gets all extra space"), CellConstraints.xy(3, 1));
@@ -135,7 +136,7 @@ public class CwGrowingExample extends ContentWidget {
     FormLayout layout = new FormLayout("pref, 6px, 0:grow, 6px, 0:grow",
         "pref, 12px, pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
     panel.add(newLabel("Gets half of extra space"), CellConstraints.xy(3, 1));
@@ -156,7 +157,7 @@ public class CwGrowingExample extends ContentWidget {
     FormLayout layout = new FormLayout(
         "pref, 6px, 0:grow(0.25), 6px, 0:grow(0.75)", "pref, 12px, pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
     panel.add(newLabel("Gets 25% of extra space"), CellConstraints.xy(3, 1));
@@ -177,7 +178,7 @@ public class CwGrowingExample extends ContentWidget {
     FormLayout layout = new FormLayout("pref:grow(0.33), 6px, pref:grow(0.67)",
         "pref, 12px, pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Gets 33% of the space"), CellConstraints.xy(1, 1));
     panel.add(newLabel("Gets 67% of the space"), CellConstraints.xy(3, 1));
@@ -196,7 +197,7 @@ public class CwGrowingExample extends ContentWidget {
     FormLayout layout = new FormLayout("pref, 12px, pref",
         "pref, 6px, fill:0:grow(0.25), 6px, fill:0:grow(0.75)");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
     panel.add(newLabel("Gets 25% of extra space"), CellConstraints.xy(1, 3));
@@ -217,7 +218,7 @@ public class CwGrowingExample extends ContentWidget {
     FormLayout layout = new FormLayout("pref, 12px, pref",
         "fill:0:grow(0.25), 6px, fill:0:grow(0.75)");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Gets 25% of extra space"), CellConstraints.xy(1, 1));
     panel.add(newLabel("Gets 75% of extra space"), CellConstraints.xy(1, 3));

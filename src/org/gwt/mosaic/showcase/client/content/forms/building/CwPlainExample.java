@@ -50,6 +50,7 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -107,7 +108,7 @@ public class CwPlainExample extends ContentWidget {
             + "p, 3dlu, p, 3dlu, p, 3dlu, p, 9dlu, "
             + "p, 3dlu, p, 3dlu, p, 3dlu, p");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
     // panel.setBorder(Borders.DIALOG_BORDER);
 
     new CellConstraints();

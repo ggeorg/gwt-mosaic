@@ -35,6 +35,7 @@ import org.gwt.mosaic.forms.client.factories.FormFactory;
 import org.gwt.mosaic.forms.client.layout.ConstantSize;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.forms.client.layout.RowSpec;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -273,7 +274,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param layout the <code>FormLayout</code> to be used
    */
   public DefaultFormBuilder(FormLayout layout) {
-    this(layout, new LayoutPanel());
+    this(layout, new ScrollLayoutPanel());
   }
 
   /**

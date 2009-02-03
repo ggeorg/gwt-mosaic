@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -111,7 +112,7 @@ public class CwCellAlignmentExample extends ContentWidget {
     FormLayout layout = new FormLayout(
         "r:p, 4dlu, left:pref:g, center:pref:g, right:pref:g, pref:g",
         "pref, 8dlu, pref, pref, pref, pref, pref");
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Column Spec: "), CellConstraints.xy(1, 1, "r, c"));
     panel.add(newLabel(" \"left:pref:grow\" "),
@@ -163,7 +164,7 @@ public class CwCellAlignmentExample extends ContentWidget {
     FormLayout layout = new FormLayout("left:pref, 8dlu, p, c:p, p, p, p",
         "p, 4dlu, top:pref:g, center:pref:g, bottom:pref:g, pref:g");
     layout.setColumnGroups(new int[][] {{3, 5, 6, 7}});
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Row Spec:"), CellConstraints.xy(1, 1, "r, c"));
     panel.add(newLabel("\"top:pref:grow\""), CellConstraints.xy(1, 3, "r, c"));

@@ -21,6 +21,7 @@ import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.TextBox;
@@ -60,7 +61,7 @@ public class CwQuickStartExample extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
+    final LayoutPanel layoutPanel = new ScrollLayoutPanel();
 
     // Create a FormLayout instance on the given column and row specs.
     // For almost all forms you specify the columns; sometimes rows are
