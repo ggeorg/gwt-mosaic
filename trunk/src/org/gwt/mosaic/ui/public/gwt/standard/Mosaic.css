@@ -72,6 +72,13 @@ input {
 	border: 1px inset #ccc;
 }
 
+textarea {
+	margin: 0px;
+	padding: 0px;
+	text-decoration: none;
+	border: 1px inset #ccc;
+}
+
 /*** DecoratedButton ***/
 
 .mosaic-DecoratedButton {

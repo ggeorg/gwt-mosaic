@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -118,7 +119,7 @@ public class CwGroupingExample extends ContentWidget {
     if (grouped) {
       layout.setColumnGroups(new int[][] {{1, 3, 4, 6, 8}});
     }
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(new Button("Hilfe"), CellConstraints.xy(1, 1));
     panel.add(new Button("< Zur\u00Fcck"), CellConstraints.xy(3, 1));
@@ -141,7 +142,7 @@ public class CwGroupingExample extends ContentWidget {
       layout.setRowGroups(new int[][] {{1, 3, 5, 7, 9, 11, 13, 15, 17}});
     }
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("File number:"), CellConstraints.xy(1, 1));
     panel.add(new TextBox(), CellConstraints.xyw(3, 1, 7));

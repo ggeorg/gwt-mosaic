@@ -52,6 +52,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -157,7 +158,7 @@ public class CwUnitsExample extends ContentWidget {
     FormLayout layout = new FormLayout("6*(c:p, 4dlu), c:p",
         "pref, 6dlu, top:pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
     // panel.setBorder(Borders.DIALOG_BORDER);
 
     panel.add(newLabel("72 pt"), CellConstraints.xy(1, 1));
@@ -192,7 +193,7 @@ public class CwUnitsExample extends ContentWidget {
     FormLayout layout = new FormLayout("6*(c:p, 4dlu), c:p",
         "pref, 6dlu, top:pref, 25dlu, pref, 6dlu, top:pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
     // panel.setBorder(Borders.DIALOG_BORDER);
 
     panel.add(newLabel("4 rows"), CellConstraints.xy(1, 1));
@@ -256,6 +257,7 @@ public class CwUnitsExample extends ContentWidget {
   private LayoutPanel buildVerticalPanel(String height, int rows) {
     FormLayout layout = new FormLayout("pref", "fill:" + height);
     LayoutPanel panel = new LayoutPanel(layout);
+    panel.setPadding(0);
     panel.add(createTextArea(rows, 5), CellConstraints.xy(1, 1));
     return panel;
   }
@@ -264,7 +266,7 @@ public class CwUnitsExample extends ContentWidget {
 
   private Widget createTextBox(int cols) {
     TextBox textBox = new TextBox();
-    textBox.setWidth(1 + "em");
+    textBox.setWidth(cols + "em");
     return textBox;
   }
 

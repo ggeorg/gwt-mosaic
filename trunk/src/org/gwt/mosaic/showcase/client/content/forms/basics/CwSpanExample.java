@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -112,7 +113,7 @@ public class CwSpanExample extends ContentWidget {
     FormLayout layout = new FormLayout("pref, 8px, 100px, 4px, 200px",
         "pref, 6px, pref, 6px, pref, 6px, pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Name:"), CellConstraints.xy(1, 1));
     panel.add(new TextBox(), CellConstraints.xyw(3, 1, 3));
@@ -138,7 +139,7 @@ public class CwSpanExample extends ContentWidget {
     FormLayout layout = new FormLayout("200px, 25px, 200px",
         "2*(pref, 2px, pref, 9px), pref, 2px, pref");
 
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     panel.add(newLabel("Name:"), CellConstraints.xy(1, 1));
     panel.add(new TextBox(), CellConstraints.xy(1, 3));

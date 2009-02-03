@@ -35,6 +35,7 @@ import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.factories.DefaultWidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -113,7 +114,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * @param layout the FormLayout to use
    */
   public PanelBuilder(FormLayout layout) {
-    this(layout, new LayoutPanel());
+    this(layout, new ScrollLayoutPanel());
   }
 
   /**

@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -111,7 +112,7 @@ public class CwAlignmentExample extends ContentWidget {
     FormLayout layout = new FormLayout(
         "left:pref, 15px, center:pref, 15px, right:pref, 15px, fill:pref, 15px, pref",
         "pref, 12px, pref, 4px, pref, 4px, pref, 4px, pref, 4px, pref");
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     // Add components to the panel.
     panel.add(newLabel("Left"), CellConstraints.xy(1, 1));
@@ -161,7 +162,7 @@ public class CwAlignmentExample extends ContentWidget {
         "top:pref, 9dlu, center:pref, 9dlu, bottom:pref, 9dlu, fill:pref, 9dlu, pref");
 
     // Create a panel that uses the layout.
-    LayoutPanel panel = new LayoutPanel(layout);
+    LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     // Add components to the panel.
     panel.add(newLabel("Top"), CellConstraints.xy(1, 1));

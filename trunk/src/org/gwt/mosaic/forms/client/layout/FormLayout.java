@@ -43,11 +43,9 @@ import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
-import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -1161,23 +1159,29 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * mosaic.ui.client.layout.LayoutPanel)
    */
   public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    final Dimension d = preferredLayoutSize(layoutPanel);
-    final int[] result = new int[] {d.width, d.height};
+    final int[] result = {0, 0};
 
     try {
-      final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
-      result[0] += (margins[1] + margins[3]);
-      result[1] += (margins[0] + margins[2]);
+      if (layoutPanel == null) {
+        return result;
+      }
 
-      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
-      result[0] += (paddings[1] + paddings[3]);
-      result[1] += (paddings[0] + paddings[2]);
+      constraintMap.clear();
+
+      for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+        Widget widget = iter.next();
+        addLayoutComponent(widget, getLayoutData(widget));
+      }
+
+      final Dimension d = preferredLayoutSize(layoutPanel);
+      result[0] = d.width;
+      result[1] = d.height;
 
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
 
-    //layoutPanel.setPreferredSize(result[0], result[1]);
+    cachePreferredSize(layoutPanel, result[0], result[1]);
 
     return result;
   }
@@ -1404,11 +1408,18 @@ public final class FormLayout extends BaseLayout implements Serializable {
         }
       }
     }
-    final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+
     // XXX Insets insets = layoutPanel.getInsets();
-    int width = maxWidth + paddings[1] + paddings[3];
-    int height = maxHeight + paddings[0] + paddings[2];
-    return new Dimension(width, height);
+
+    final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
+    maxWidth += (margins[1] + margins[3]);
+    maxHeight += (margins[0] + margins[2]);
+
+    final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    maxWidth += paddings[1] + paddings[3];
+    maxHeight += paddings[0] + paddings[2];
+
+    return new Dimension(maxWidth, maxHeight);
   }
 
   /**
