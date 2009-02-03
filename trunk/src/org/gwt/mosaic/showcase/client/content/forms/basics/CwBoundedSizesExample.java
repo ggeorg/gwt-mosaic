@@ -167,14 +167,14 @@ public class CwBoundedSizesExample extends ContentWidget {
 
     //builder.setDefaultDialogBorder();
 
-    builder.addLabel("File number:", new CellConstraints().xy(1, 1));
-    builder.add(new TextBox(), new CellConstraints().xyw(3, 1, 7));
-    builder.addLabel("RFQ number:", new CellConstraints().xy(1, 3));
-    builder.add(new TextBox(), new CellConstraints().xyw(3, 3, 7));
-    builder.addLabel("Entry date:", new CellConstraints().xy(1, 5));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 5));
-    builder.addLabel("Sales Person:", new CellConstraints().xy(1, 7));
-    builder.add(new TextBox(), new CellConstraints().xyw(3, 7, 7));
+    builder.addLabel("File number:", CellConstraints.xy(1, 1));
+    builder.add(new TextBox(), CellConstraints.xyw(3, 1, 7));
+    builder.addLabel("RFQ number:", CellConstraints.xy(1, 3));
+    builder.add(new TextBox(), CellConstraints.xyw(3, 3, 7));
+    builder.addLabel("Entry date:", CellConstraints.xy(1, 5));
+    builder.add(new TextBox(), CellConstraints.xy(3, 5));
+    builder.addLabel("Sales Person:", CellConstraints.xy(1, 7));
+    builder.add(new TextBox(), CellConstraints.xyw(3, 7, 7));
 
     return builder.getPanel();
   }
@@ -192,18 +192,18 @@ public class CwBoundedSizesExample extends ContentWidget {
 
     // builder.setDefaultDialogBorder();
 
-    builder.addLabel("Shipper:", new CellConstraints().xy(1, 1));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 1));
-    builder.add(new TextBox(), new CellConstraints().xyw(5, 1, 5));
-    builder.addLabel("Consignee:", new CellConstraints().xy(1, 3));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 3));
-    builder.add(new TextBox(), new CellConstraints().xyw(5, 3, 5));
-    builder.addLabel("Departure:", new CellConstraints().xy(1, 5));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 5));
-    builder.add(new TextBox(), new CellConstraints().xyw(5, 5, 5));
-    builder.addLabel("Destination:", new CellConstraints().xy(1, 7));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 7));
-    builder.add(new TextBox(), new CellConstraints().xyw(5, 7, 5));
+    builder.addLabel("Shipper:", CellConstraints.xy(1, 1));
+    builder.add(new TextBox(), CellConstraints.xy(3, 1));
+    builder.add(new TextBox(), CellConstraints.xyw(5, 1, 5));
+    builder.addLabel("Consignee:", CellConstraints.xy(1, 3));
+    builder.add(new TextBox(), CellConstraints.xy(3, 3));
+    builder.add(new TextBox(), CellConstraints.xyw(5, 3, 5));
+    builder.addLabel("Departure:", CellConstraints.xy(1, 5));
+    builder.add(new TextBox(), CellConstraints.xy(3, 5));
+    builder.add(new TextBox(), CellConstraints.xyw(5, 5, 5));
+    builder.addLabel("Destination:", CellConstraints.xy(1, 7));
+    builder.add(new TextBox(), CellConstraints.xy(3, 7));
+    builder.add(new TextBox(), CellConstraints.xyw(5, 7, 5));
 
     return builder.getPanel();
   }

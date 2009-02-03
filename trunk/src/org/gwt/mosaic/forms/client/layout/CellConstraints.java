@@ -121,7 +121,7 @@ import com.google.gwt.user.client.ui.Widget;
  * the Forms' issue tracker where you can track the progress.
  * 
  * @author Karsten Lentzsch
- * @version $Revision: 1.8 $
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public final class CellConstraints extends LayoutData implements Cloneable,
     Serializable {
@@ -172,13 +172,6 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    */
   public static final Alignment BOTTOM = new Alignment("bottom",
       Alignment.VERTICAL);
-
-  /**
-   * An array of all enumeration values used to canonicalize deserialized
-   * alignments.
-   */
-  private static final Alignment[] VALUES = {
-      DEFAULT, FILL, LEFT, RIGHT, CENTER, TOP, BOTTOM};
 
   /**
    * A reusable <code>Insets</code> object to reduce object instantiation.
@@ -414,15 +407,15 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xy(1, 1);
-     * cc.xy(1, 3);
-     * </pre>
+   * cc.xy(1, 1);
+   * cc.xy(1, 3);
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
    * @return this
    */
-  public CellConstraints xy(int col, int row) {
+  public static CellConstraints xy(int col, int row) {
     return xywh(col, row, 1, 1);
   }
 
@@ -434,11 +427,11 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xy(1, 3, "left, bottom");
-     * cc.xy(1, 3, "l, b");
-     * cc.xy(1, 3, "center, fill");
-     * cc.xy(1, 3, "c, f");
-     * </pre>
+   * cc.xy(1, 3, "left, bottom");
+   * cc.xy(1, 3, "l, b");
+   * cc.xy(1, 3, "center, fill");
+   * cc.xy(1, 3, "c, f");
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
@@ -447,7 +440,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * 
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public CellConstraints xy(int col, int row, String encodedAlignments) {
+  public static CellConstraints xy(int col, int row, String encodedAlignments) {
     return xywh(col, row, 1, 1, encodedAlignments);
   }
 
@@ -459,9 +452,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xy(1, 3, CellConstraints.LEFT,   CellConstraints.BOTTOM);
-     * cc.xy(1, 3, CellConstraints.CENTER, CellConstraints.FILL);
-     * </pre>
+   * cc.xy(1, 3, CellConstraints.LEFT,   CellConstraints.BOTTOM);
+   * cc.xy(1, 3, CellConstraints.CENTER, CellConstraints.FILL);
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
@@ -469,7 +462,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @param rowAlign vertical component alignment
    * @return this
    */
-  public CellConstraints xy(int col, int row, Alignment colAlign,
+  public static CellConstraints xy(int col, int row, Alignment colAlign,
       Alignment rowAlign) {
     return xywh(col, row, 1, 1, colAlign, rowAlign);
   }
@@ -482,16 +475,16 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xyw(1, 3, 7);
-     * cc.xyw(1, 3, 2);
-     * </pre>
+   * cc.xyw(1, 3, 7);
+   * cc.xyw(1, 3, 2);
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
    * @param colSpan the column span or grid width
    * @return this
    */
-  public CellConstraints xyw(int col, int row, int colSpan) {
+  public static CellConstraints xyw(int col, int row, int colSpan) {
     return xywh(col, row, colSpan, 1, DEFAULT, DEFAULT);
   }
 
@@ -517,7 +510,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @return this
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public CellConstraints xyw(int col, int row, int colSpan,
+  public static CellConstraints xyw(int col, int row, int colSpan,
       String encodedAlignments) {
     return xywh(col, row, colSpan, 1, encodedAlignments);
   }
@@ -531,9 +524,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xyw(1, 3, 2, CellConstraints.LEFT,   CellConstraints.BOTTOM);
-     * cc.xyw(1, 3, 7, CellConstraints.CENTER, CellConstraints.FILL);
-     * </pre>
+   * cc.xyw(1, 3, 2, CellConstraints.LEFT,   CellConstraints.BOTTOM);
+   * cc.xyw(1, 3, 7, CellConstraints.CENTER, CellConstraints.FILL);
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
@@ -543,7 +536,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @return this
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public CellConstraints xyw(int col, int row, int colSpan, Alignment colAlign,
+  public static CellConstraints xyw(int col, int row, int colSpan, Alignment colAlign,
       Alignment rowAlign) {
     return xywh(col, row, colSpan, 1, colAlign, rowAlign);
   }
@@ -555,9 +548,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xywh(1, 3, 2, 1);
-     * cc.xywh(1, 3, 7, 3);
-     * </pre>
+   * cc.xywh(1, 3, 2, 1);
+   * cc.xywh(1, 3, 7, 3);
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
@@ -565,7 +558,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @param rowSpan the row span or grid height
    * @return this
    */
-  public CellConstraints xywh(int col, int row, int colSpan, int rowSpan) {
+  public static CellConstraints xywh(int col, int row, int colSpan, int rowSpan) {
     return xywh(col, row, colSpan, rowSpan, DEFAULT, DEFAULT);
   }
 
@@ -577,11 +570,11 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xywh(1, 3, 2, 1, "left, bottom");
-     * cc.xywh(1, 3, 2, 1, "l, b");
-     * cc.xywh(1, 3, 7, 3, "center, fill");
-     * cc.xywh(1, 3, 7, 3, "c, f");
-     * </pre>
+   * cc.xywh(1, 3, 2, 1, "left, bottom");
+   * cc.xywh(1, 3, 2, 1, "l, b");
+   * cc.xywh(1, 3, 7, 3, "center, fill");
+   * cc.xywh(1, 3, 7, 3, "c, f");
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
@@ -591,7 +584,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @return this
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public CellConstraints xywh(int col, int row, int colSpan, int rowSpan,
+  public static CellConstraints xywh(int col, int row, int colSpan, int rowSpan,
       String encodedAlignments) {
     CellConstraints result = xywh(col, row, colSpan, rowSpan);
     result.setAlignments(encodedAlignments, true);
@@ -606,9 +599,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.xywh(1, 3, 2, 1, CellConstraints.LEFT,   CellConstraints.BOTTOM);
-     * cc.xywh(1, 3, 7, 3, CellConstraints.CENTER, CellConstraints.FILL);
-     * </pre>
+   * cc.xywh(1, 3, 2, 1, CellConstraints.LEFT,   CellConstraints.BOTTOM);
+   * cc.xywh(1, 3, 7, 3, CellConstraints.CENTER, CellConstraints.FILL);
+   * </pre>
    * 
    * @param col the new column index
    * @param row the new row index
@@ -619,16 +612,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @return this
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public CellConstraints xywh(int col, int row, int colSpan, int rowSpan,
-      Alignment colAlign, Alignment rowAlign) {
-    this.gridX = col;
-    this.gridY = row;
-    this.gridWidth = colSpan;
-    this.gridHeight = rowSpan;
-    this.hAlign = colAlign;
-    this.vAlign = rowAlign;
-    ensureValidOrientations(hAlign, vAlign);
-    return this;
+  public static CellConstraints xywh(int col, int row, int colSpan,
+      int rowSpan, Alignment colAlign, Alignment rowAlign) {
+    return new CellConstraints(col, row, colSpan, rowSpan, colAlign, rowAlign);
   }
 
   // Setters with Row-Column Order ******************************************
@@ -641,9 +627,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rc(1, 1);
-     * cc.rc(3, 1);
-     * </pre>
+   * cc.rc(1, 1);
+   * cc.rc(3, 1);
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -663,11 +649,11 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rc(3, 1, "bottom, left");
-     * cc.rc(3, 1, "b, l");
-     * cc.rc(3, 1, "fill, center");
-     * cc.rc(3, 1, "f, c");
-     * </pre>
+   * cc.rc(3, 1, "bottom, left");
+   * cc.rc(3, 1, "b, l");
+   * cc.rc(3, 1, "fill, center");
+   * cc.rc(3, 1, "f, c");
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -690,9 +676,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rc(3, 1, CellConstraints.BOTTOM, CellConstraints.LEFT);
-     * cc.rc(3, 1, CellConstraints.FILL,   CellConstraints.CENTER);
-     * </pre>
+   * cc.rc(3, 1, CellConstraints.BOTTOM, CellConstraints.LEFT);
+   * cc.rc(3, 1, CellConstraints.FILL,   CellConstraints.CENTER);
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -715,9 +701,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rcw(3, 1, 7);
-     * cc.rcw(3, 1, 2);
-     * </pre>
+   * cc.rcw(3, 1, 7);
+   * cc.rcw(3, 1, 2);
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -739,11 +725,11 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rcw(3, 1, 7, "bottom, left");
-     * cc.rcw(3, 1, 7, "b, l");
-     * cc.rcw(3, 1, 2, "fill, center");
-     * cc.rcw(3, 1, 2, "f, c");
-     * </pre>
+   * cc.rcw(3, 1, 7, "bottom, left");
+   * cc.rcw(3, 1, 7, "b, l");
+   * cc.rcw(3, 1, 2, "fill, center");
+   * cc.rcw(3, 1, 2, "f, c");
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -769,9 +755,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rcw(3, 1, 2, CellConstraints.BOTTOM, CellConstraints.LEFT);
-     * cc.rcw(3, 1, 7, CellConstraints.FILL,   CellConstraints.CENTER);
-     * </pre>
+   * cc.rcw(3, 1, 2, CellConstraints.BOTTOM, CellConstraints.LEFT);
+   * cc.rcw(3, 1, 7, CellConstraints.FILL,   CellConstraints.CENTER);
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -796,9 +782,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rchw(1, 3, 2, 1);
-     * cc.rchw(1, 3, 7, 3);
-     * </pre>
+   * cc.rchw(1, 3, 2, 1);
+   * cc.rchw(1, 3, 7, 3);
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -820,11 +806,11 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rchw(3, 1, 1, 2, "bottom, left");
-     * cc.rchw(3, 1, 1, 2, "b, l");
-     * cc.rchw(3, 1, 3, 7, "fill, center");
-     * cc.rchw(3, 1, 3, 7, "f, c");
-     * </pre>
+   * cc.rchw(3, 1, 1, 2, "bottom, left");
+   * cc.rchw(3, 1, 1, 2, "b, l");
+   * cc.rchw(3, 1, 3, 7, "fill, center");
+   * cc.rchw(3, 1, 3, 7, "f, c");
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -851,9 +837,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * cc.rchw(3, 1, 1, 2, CellConstraints.BOTTOM, CellConstraints.LEFT);
-     * cc.rchw(3, 1, 3, 7, CellConstraints.FILL,   CellConstraints.CENTER);
-     * </pre>
+   * cc.rchw(3, 1, 1, 2, CellConstraints.BOTTOM, CellConstraints.LEFT);
+   * cc.rchw(3, 1, 3, 7, CellConstraints.FILL,   CellConstraints.CENTER);
+   * </pre>
    * 
    * @param row the new row index
    * @param col the new column index
@@ -880,11 +866,11 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * sequence, one of
    * 
    * <pre>
-     * "x, y"
-     * "x, y, w, h"
-     * "x, y, hAlign, vAlign"
-     * "x, y, w, h, hAlign, vAlign"
-     * </pre>
+   * "x, y"
+   * "x, y, w, h"
+   * "x, y, hAlign, vAlign"
+   * "x, y, w, h, hAlign, vAlign"
+   * </pre>
    * 
    * @param encodedConstraints represents horizontal and vertical alignment
    * 
@@ -1212,6 +1198,16 @@ public final class CellConstraints extends LayoutData implements Cloneable,
   // Misc *****************************************************************
 
   /**
+   * Creates a copy of this cell constraints object.
+   * 
+   * @return a copy of this cell constraints object
+   */
+  public Object clone() {
+    return new CellConstraints(gridX, gridY, gridWidth, gridHeight, hAlign,
+        vAlign, (Insets) insets.clone());
+  }
+
+  /**
    * Constructs and returns a string representation of this constraints object.
    * 
    * @return string representation of this constraints object
@@ -1305,7 +1301,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    */
   public static final class Alignment implements Serializable {
     private static final long serialVersionUID = -8628301485993064488L;
-    
+
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
     private static final int BOTH = 2;
@@ -1366,16 +1362,6 @@ public final class CellConstraints extends LayoutData implements Cloneable,
 
     private boolean isVertical() {
       return orientation != HORIZONTAL;
-    }
-
-    // Serialization *********************************************************
-
-    private static int nextOrdinal = 0;
-
-    private final int ordinal = nextOrdinal++;
-
-    private Object readResolve() {
-      return VALUES[ordinal]; // Canonicalize
     }
 
   }

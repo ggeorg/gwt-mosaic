@@ -80,23 +80,23 @@ public class CwQuickStartExample extends ContentWidget {
     // Fill the grid with components; the builder offers to create
     // frequently used components, e.g. separators and labels.
 
-    builder.addSeparator("General", new CellConstraints().xyw(1, 1, 7));
+    builder.addSeparator("General", CellConstraints.xyw(1, 1, 7));
 
-    builder.addLabel("Company", new CellConstraints().xy(1, 3));
-    builder.add(new TextBox(), new CellConstraints().xyw(3, 3, 5));
-    builder.addLabel("Contact", new CellConstraints().xy(1, 5));
-    builder.add(new TextBox(), new CellConstraints().xyw(3, 5, 5));
+    builder.addLabel("Company", CellConstraints.xy(1, 3));
+    builder.add(new TextBox(), CellConstraints.xyw(3, 3, 5));
+    builder.addLabel("Contact", CellConstraints.xy(1, 5));
+    builder.add(new TextBox(), CellConstraints.xyw(3, 5, 5));
 
-    builder.addSeparator("Proppeler", new CellConstraints().xyw(1, 7, 7));
+    builder.addSeparator("Proppeler", CellConstraints.xyw(1, 7, 7));
 
-    builder.addLabel("PTI/kW", new CellConstraints().xy(1, 9));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 9));
-    builder.addLabel("Power/kW", new CellConstraints().xy(5, 9));
-    builder.add(new TextBox(), new CellConstraints().xy(7, 9));
-    builder.addLabel("R/mm", new CellConstraints().xy(1, 11));
-    builder.add(new TextBox(), new CellConstraints().xy(3, 11));
-    builder.addLabel("D/mm", new CellConstraints().xy(5, 11));
-    builder.add(new TextBox(), new CellConstraints().xy(7, 11));
+    builder.addLabel("PTI/kW", CellConstraints.xy(1, 9));
+    builder.add(new TextBox(), CellConstraints.xy(3, 9));
+    builder.addLabel("Power/kW", CellConstraints.xy(5, 9));
+    builder.add(new TextBox(), CellConstraints.xy(7, 9));
+    builder.addLabel("R/mm", CellConstraints.xy(1, 11));
+    builder.add(new TextBox(), CellConstraints.xy(3, 11));
+    builder.addLabel("D/mm", CellConstraints.xy(5, 11));
+    builder.add(new TextBox(), CellConstraints.xy(7, 11));
 
     // The builder holds the layout container that we now return.
     layoutPanel.add(builder.getPanel());

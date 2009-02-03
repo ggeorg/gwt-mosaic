@@ -69,12 +69,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    */
   protected LayoutPanel(Element elem) {
     super(elem);
-    
+
     // Setting the panel's position style to 'relative' causes it to be treated
     // as a new positioning context for its children.
     DOM.setStyleAttribute(getElement(), "position", "relative");
     DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-    
+
     setStyleName(DEFAULT_STYLENAME);
     setLayout(new FillLayout());
   }
@@ -280,12 +280,14 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   /*
    * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout.LayoutManager)
+   * @see
+   * org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout
+   * .LayoutManager)
    */
   public void setLayout(LayoutManager layout) {
     this.layout = layout;
     if (layoutClassName != null) {
-      removeStyleName(layoutClassName);
+      removeStyleName(getStylePrimaryName() + "-" + layoutClassName);
     }
     layoutClassName = layout.getClass().getName();
     final int dotPos = layoutClassName.lastIndexOf('.');
@@ -364,9 +366,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       return;
     }
 
-//    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
-//        + parent.getClass().getName()
-//        + "') is not an instance of HasLayoutManager.", null);
+    // GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+    // + parent.getClass().getName()
+    // + "') is not an instance of HasLayoutManager.", null);
 
     // Set the initial size & layout
     DeferredCommand.addCommand(new Command() {

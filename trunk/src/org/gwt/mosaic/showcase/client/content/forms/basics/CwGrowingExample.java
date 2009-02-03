@@ -118,11 +118,11 @@ public class CwGrowingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Fixed"), new CellConstraints().xy(1, 1));
-    panel.add(newLabel("Gets all extra space"), new CellConstraints().xy(3, 1));
+    panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Gets all extra space"), CellConstraints.xy(3, 1));
 
-    panel.add(createTextBox(5), new CellConstraints().xy(1, 3));
-    panel.add(createTextBox(5), new CellConstraints().xy(3, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(1, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(3, 3));
 
     return panel;
   }
@@ -137,15 +137,13 @@ public class CwGrowingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Fixed"), new CellConstraints().xy(1, 1));
-    panel.add(newLabel("Gets half of extra space"), new CellConstraints().xy(3,
-        1));
-    panel.add(newLabel("gets half of extra space"), new CellConstraints().xy(5,
-        1));
+    panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Gets half of extra space"), CellConstraints.xy(3, 1));
+    panel.add(newLabel("gets half of extra space"), CellConstraints.xy(5, 1));
 
-    panel.add(createTextBox(5), new CellConstraints().xy(1, 3));
-    panel.add(createTextBox(5), new CellConstraints().xy(3, 3));
-    panel.add(createTextBox(5), new CellConstraints().xy(5, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(1, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(3, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(5, 3));
 
     return panel;
   }
@@ -160,15 +158,13 @@ public class CwGrowingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Fixed"), new CellConstraints().xy(1, 1));
-    panel.add(newLabel("Gets 25% of extra space"), new CellConstraints().xy(3,
-        1));
-    panel.add(newLabel("Gets 75% of extra space"), new CellConstraints().xy(5,
-        1));
+    panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Gets 25% of extra space"), CellConstraints.xy(3, 1));
+    panel.add(newLabel("Gets 75% of extra space"), CellConstraints.xy(5, 1));
 
-    panel.add(createTextBox(5), new CellConstraints().xy(1, 3));
-    panel.add(createTextBox(5), new CellConstraints().xy(3, 3));
-    panel.add(createTextBox(5), new CellConstraints().xy(5, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(1, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(3, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(5, 3));
 
     return panel;
   }
@@ -183,11 +179,11 @@ public class CwGrowingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Gets 33% of the space"), new CellConstraints().xy(1, 1));
-    panel.add(newLabel("Gets 67% of the space"), new CellConstraints().xy(3, 1));
+    panel.add(newLabel("Gets 33% of the space"), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Gets 67% of the space"), CellConstraints.xy(3, 1));
 
-    panel.add(createTextBox(5), new CellConstraints().xy(1, 3));
-    panel.add(createTextBox(5), new CellConstraints().xy(3, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(1, 3));
+    panel.add(createTextBox(5), CellConstraints.xy(3, 3));
 
     return panel;
   }
@@ -202,15 +198,13 @@ public class CwGrowingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Fixed"), new CellConstraints().xy(1, 1));
-    panel.add(newLabel("Gets 25% of extra space"), new CellConstraints().xy(1,
-        3));
-    panel.add(newLabel("Gets 75% of extra space"), new CellConstraints().xy(1,
-        5));
+    panel.add(newLabel("Fixed"), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Gets 25% of extra space"), CellConstraints.xy(1, 3));
+    panel.add(newLabel("Gets 75% of extra space"), CellConstraints.xy(1, 5));
 
-    panel.add(createTextArea(4, 30), new CellConstraints().xy(3, 1));
-    panel.add(createTextArea(4, 30), new CellConstraints().xy(3, 3));
-    panel.add(createTextArea(4, 30), new CellConstraints().xy(3, 5));
+    panel.add(createTextArea(4, 30), CellConstraints.xy(3, 1));
+    panel.add(createTextArea(4, 30), CellConstraints.xy(3, 3));
+    panel.add(createTextArea(4, 30), CellConstraints.xy(3, 5));
 
     return panel;
   }
@@ -225,13 +219,11 @@ public class CwGrowingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Gets 25% of extra space"), new CellConstraints().xy(1,
-        1));
-    panel.add(newLabel("Gets 75% of extra space"), new CellConstraints().xy(1,
-        3));
+    panel.add(newLabel("Gets 25% of extra space"), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Gets 75% of extra space"), CellConstraints.xy(1, 3));
 
-    panel.add(createTextArea(4, 30), new CellConstraints().xy(3, 1));
-    panel.add(createTextArea(4, 30), new CellConstraints().xy(3, 3));
+    panel.add(createTextArea(4, 30), CellConstraints.xy(3, 1));
+    panel.add(createTextArea(4, 30), CellConstraints.xy(3, 3));
 
     return panel;
   }

@@ -113,7 +113,7 @@ public abstract class AbstractFormBuilder {
     currentCellConstraints = new CellConstraints();
     // ComponentOrientation orientation = container.getComponentOrientation();
     leftToRight = true;// TODO orientation.isLeftToRight() ||
-                       // !orientation.isHorizontal();
+    // !orientation.isHorizontal();
   }
 
   // Accessors ************************************************************
@@ -504,7 +504,7 @@ public abstract class AbstractFormBuilder {
     appendRow(FormFactory.PARAGRAPH_GAP_ROWSPEC);
   }
 
-  // Adding Components ****************************************************
+  // Adding Widgets ********************************************************
 
   /**
    * Adds a component to the panel using the given cell constraints.
@@ -521,34 +521,35 @@ public abstract class AbstractFormBuilder {
   /**
    * Adds a component to the panel using the given encoded cell constraints.
    * 
-   * @param component the component to add
+   * @param widget the component to add
    * @param encodedCellConstraints the component's encoded cell constraints
    * @return the added component
    */
-  public final Widget add(Widget component, String encodedCellConstraints) {
-    layoutPanel.add(component, new CellConstraints(encodedCellConstraints));
-    return component;
+  public final Widget add(Widget widget, String encodedCellConstraints) {
+    layoutPanel.add(widget, new CellConstraints(encodedCellConstraints));
+    return widget;
   }
 
   /**
-   * Adds a component to the container using the default cell constraints. Note
-   * that when building from left to right, this method won't adjust the cell
-   * constraints if the column span is larger than 1. In this case you should
-   * use {@link #add(Component, CellConstraints)} with a cell constraints object
-   * created by {@link #createLeftAdjustedConstraints(int)}.
+   * Adds a {@code Widget} to the {@link LayoutPanel} using the default cell
+   * constraints. Note that when building from left to right, this method won't
+   * adjust the cell constraints if the column span is larger than 1. In this
+   * case you should use {@link #add(Widget, CellConstraints)} with a cell
+   * constraints object created by {@link #createLeftAdjustedConstraints(int)}.
    * 
-   * @param component the component to add
-   * @return the added component
+   * @param widget the {@code Widget} to add
+   * @return the added {@code Widget}
    * 
-   * @see #add(Component, CellConstraints)
+   * @see #add(Widget, CellConstraints)
    * @see #createLeftAdjustedConstraints(int)
    */
-  public final Widget add(Widget component) {
-    add(component, currentCellConstraints);
-    return component;
+  public final Widget add(Widget widget) {
+    // ggeorg: default was without clone()
+    add(widget, (CellConstraints) currentCellConstraints.clone());
+    return widget;
   }
 
-  // Misc *****************************************************************
+  // Misc ******************************************************************
 
   /**
    * Returns the CellConstraints object that is used as a cursor and holds the

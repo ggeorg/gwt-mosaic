@@ -42,50 +42,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.gwt.mosaic.showcase.client.content.forms.basics;
+package org.gwt.mosaic.showcase.client.content.forms.building;
 
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.forms.client.layout.CellConstraints;
+import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Demonstrates the different FormLayout alignments.
+ * Combines the FormLayout with the PanelBuilder. Columns and rows are specified
+ * before the panel is filled with components. The builder's cursor is used to
+ * determine the location of the next component. And the builder's convenience
+ * methods are used to add labels and separators.
+ * <p>
+ * This panel building style is intended for learning purposes only. The
+ * recommended style is demonstrated in the {@link CwDefaultFormBuilderExample}.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-LayoutPanel"})
-public class CwSpanExample extends ContentWidget {
+public class CwDefaultFormBuilderExample extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwSpanExample(CwConstants constants) {
+  public CwDefaultFormBuilderExample(CwConstants constants) {
     super(constants);
   }
 
   @Override
   public String getDescription() {
-    return "Demonstrates how components can span multiple columns and rows.";
+    return "Demonstrates how to fill a FormLayout using the DefaultFormBuilder. "
+        + "Defines columns statically and rows dynamically, "
+        + "and appends widgets via the DefaultFormBuilder.";
   }
 
   @Override
   public String getName() {
-    return "Span";
+    return "Default Form";
   }
 
   /**
@@ -94,75 +94,55 @@ public class CwSpanExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
+    // Column specs only, rows will be added dynamically.
+    FormLayout layout = new FormLayout(
+        "right:[40dlu,pref], 3dlu, 70dlu, 7dlu, "
+            + "right:[40dlu,pref], 3dlu, 70dlu");
+    DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+    // builder.setDefaultDialogBorder();
 
-    final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
-    tabPanel.add(newColumnSpan(), "Column Span");
-    tabPanel.add(newRowSpan(), "Row Span");
+    builder.appendSeparator("Flange");
 
-    return tabPanel;
+    builder.append("Identifier:", new TextBox());
+    builder.nextLine();
+
+    builder.append("PTI/kW:", new TextBox());
+    builder.append("Power/kW:", new TextBox());
+
+    builder.append("s/mm:", new TextBox());
+    builder.nextLine();
+
+    builder.appendSeparator("Diameters");
+
+    builder.append("da/mm:", new TextBox());
+    builder.append("di/mm:", new TextBox());
+
+    builder.append("da2/mm:", new TextBox());
+    builder.append("di2/mm:", new TextBox());
+
+    builder.append("R/mm:", new TextBox());
+    builder.append("D/mm:", new TextBox());
+
+    builder.appendSeparator("Criteria");
+
+    builder.append("Location:", createLocationComboBox());
+    builder.append("k-factor:", new TextBox());
+
+    return builder.getPanel();
   }
 
   /**
+   * Creates and returns a combo box for the project types.
    * 
+   * @return a combo box for the project type
    */
   @ShowcaseSource
-  private Widget newColumnSpan() {
-    FormLayout layout = new FormLayout("pref, 8px, 100px, 4px, 200px",
-        "pref, 6px, pref, 6px, pref, 6px, pref");
-
-    LayoutPanel panel = new LayoutPanel(layout);
-
-    panel.add(newLabel("Name:"), CellConstraints.xy(1, 1));
-    panel.add(new TextBox(), CellConstraints.xyw(3, 1, 3));
-
-    panel.add(newLabel("Phone:"), CellConstraints.xy(1, 3));
-    panel.add(new TextBox(), CellConstraints.xyw(3, 3, 3));
-
-    panel.add(newLabel("ZIP, City:"), CellConstraints.xy(1, 5));
-    panel.add(new TextBox(), CellConstraints.xy(3, 5));
-    panel.add(new TextBox(), CellConstraints.xy(5, 5));
-
-    panel.add(newLabel("Country:"), CellConstraints.xy(1, 7));
-    panel.add(new TextBox(), CellConstraints.xyw(3, 7, 3));
-
-    return panel;
+  private ListBox createLocationComboBox() {
+    final ListBox listBox = new ListBox();
+    listBox.addItem("Propeller nut thread");
+    listBox.addItem("Stern tube front area");
+    listBox.addItem("Shaft taper");
+    return listBox;
   }
 
-  /**
-   * 
-   */
-  @ShowcaseSource
-  private Widget newRowSpan() {
-    FormLayout layout = new FormLayout("200px, 25px, 200px",
-        "2*(pref, 2px, pref, 9px), pref, 2px, pref");
-
-    LayoutPanel panel = new LayoutPanel(layout);
-
-    panel.add(newLabel("Name:"), CellConstraints.xy(1, 1));
-    panel.add(new TextBox(), CellConstraints.xy(1, 3));
-
-    panel.add(newLabel("Phone:"), CellConstraints.xy(1, 5));
-    panel.add(new TextBox(), CellConstraints.xy(1, 7));
-
-    panel.add(newLabel("Fax:"), CellConstraints.xy(1, 9));
-    panel.add(new TextBox(), CellConstraints.xy(1, 11));
-
-    panel.add(newLabel("Notes:"), CellConstraints.xy(3, 1));
-    panel.add(new TextArea(), CellConstraints.xywh(3, 3, 1, 9));
-
-    return panel;
-  }
-
-  /**
-   * 
-   */
-  @ShowcaseSource
-  private Widget newLabel(String string) {
-    final Label label = new Label(string);
-    DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
-        HasAlignment.ALIGN_MIDDLE);
-  }
 }

@@ -188,11 +188,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addLabel("Name:");       // No Mnemonic
-     * addLabel("N&ame:");      // Mnemonic is 'a'
-     * addLabel("Save &as:");   // Mnemonic is the second 'a'
-     * addLabel("Look&&Feel:"); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addLabel("Name:");       // No Mnemonic
+   * addLabel("N&ame:");      // Mnemonic is 'a'
+   * addLabel("Save &as:");   // Mnemonic is the second 'a'
+   * addLabel("Look&&Feel:"); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -201,7 +201,8 @@ public class PanelBuilder extends AbstractFormBuilder {
    * @see WidgetFactory
    */
   public final Widget addLabel(String textWithMnemonic) {
-    return addLabel(textWithMnemonic, cellConstraints());
+    return addLabel(textWithMnemonic,
+        (CellConstraints) cellConstraints().clone());
   }
 
   /**
@@ -209,11 +210,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addLabel("Name:",       cc.xy(1, 1)); // No Mnemonic
-     * addLabel("N&ame:",      cc.xy(1, 1)); // Mnemonic is 'a'
-     * addLabel("Save &as:",   cc.xy(1, 1)); // Mnemonic is the second 'a'
-     * addLabel("Look&&Feel:", cc.xy(1, 1)); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addLabel("Name:",       cc.xy(1, 1)); // No Mnemonic
+   * addLabel("N&ame:",      cc.xy(1, 1)); // Mnemonic is 'a'
+   * addLabel("Save &as:",   cc.xy(1, 1)); // Mnemonic is the second 'a'
+   * addLabel("Look&&Feel:", cc.xy(1, 1)); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -229,13 +230,11 @@ public class PanelBuilder extends AbstractFormBuilder {
     if (UserAgent.isIE6()) {
       add(new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
           HasAlignment.ALIGN_MIDDLE), constraints);
-      return label;
     } else {
       DOM.setStyleAttribute(label.getElement(), "display", "table");
       add(label, constraints);
-      return label;
     }
-
+    return label;
   }
 
   /**
@@ -243,11 +242,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addLabel("Name:",       "1, 1"); // No Mnemonic
-     * addLabel("N&ame:",      "1, 1"); // Mnemonic is 'a'
-     * addLabel("Save &as:",   "1, 1"); // Mnemonic is the second 'a'
-     * addLabel("Look&&Feel:", "1, 1"); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addLabel("Name:",       "1, 1"); // No Mnemonic
+   * addLabel("N&ame:",      "1, 1"); // Mnemonic is 'a'
+   * addLabel("Save &as:",   "1, 1"); // Mnemonic is the second 'a'
+   * addLabel("Look&&Feel:", "1, 1"); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -284,36 +283,36 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <strong>Wrong:</strong>
    * 
    * <pre>
-     * CellConstraints cc = new CellConstraints();
-     * builder.add(
-     *     nameLabel,
-     *     cc.xy(1, 7),         // will be modified by the code below
-     *     nameField,
-     *     cc.xy(3, 7)          // sets the single instance to (3, 7)
-     * );
-     * </pre>
+   * CellConstraints cc = new CellConstraints();
+   * builder.add(
+   *     nameLabel,
+   *     cc.xy(1, 7),         // will be modified by the code below
+   *     nameField,
+   *     cc.xy(3, 7)          // sets the single instance to (3, 7)
+   * );
+   * </pre>
    * <strong>Correct:</strong>
    * 
    * <pre>
-     * // Using a single CellConstraints instance and cloning
-     * CellConstraints cc = new CellConstraints();
-     * builder.add(
-     *     nameLabel,
-     *     (CellConstraints) cc.xy(1, 7).clone(), // cloned before the next modification
-     *     nameField,
-     *     cc.xy(3, 7)                            // sets this instance to (3, 7)
-     * );
-     *
-     * // Using two CellConstraints instances
-     * CellConstraints cc1 = new CellConstraints();
-     * CellConstraints cc2 = new CellConstraints();
-     * builder.add(
-     *     nameLabel,
-     *     cc1.xy(1, 7),       // sets instance 1 to (1, 7)
-     *     nameField,
-     *     cc2.xy(3, 7)        // sets instance 2 to (3, 7)
-     * );
-     * </pre>
+   * // Using a single CellConstraints instance and cloning
+   * CellConstraints cc = new CellConstraints();
+   * builder.add(
+   *     nameLabel,
+   *     (CellConstraints) cc.xy(1, 7).clone(), // cloned before the next modification
+   *     nameField,
+   *     cc.xy(3, 7)                            // sets this instance to (3, 7)
+   * );
+   *
+   * // Using two CellConstraints instances
+   * CellConstraints cc1 = new CellConstraints();
+   * CellConstraints cc2 = new CellConstraints();
+   * builder.add(
+   *     nameLabel,
+   *     cc1.xy(1, 7),       // sets instance 1 to (1, 7)
+   *     nameField,
+   *     cc2.xy(3, 7)        // sets instance 2 to (3, 7)
+   * );
+   * </pre>
    * 
    * @param label the label to add
    * @param labelConstraints the label's cell constraints
@@ -498,11 +497,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addSeparator("Name");       // No Mnemonic
-     * addSeparator("N&ame");      // Mnemonic is 'a'
-     * addSeparator("Save &as");   // Mnemonic is the second 'a'
-     * addSeparator("Look&&Feel"); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addSeparator("Name");       // No Mnemonic
+   * addSeparator("N&ame");      // Mnemonic is 'a'
+   * addSeparator("Save &as");   // Mnemonic is the second 'a'
+   * addSeparator("Look&&Feel"); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
    *          ampersand (<tt>&amp;</tt>) to mark a mnemonic
@@ -517,11 +516,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addSeparator("Name",       cc.xy(1, 1)); // No Mnemonic
-     * addSeparator("N&ame",      cc.xy(1, 1)); // Mnemonic is 'a'
-     * addSeparator("Save &as",   cc.xy(1, 1)); // Mnemonic is the second 'a'
-     * addSeparator("Look&&Feel", cc.xy(1, 1)); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addSeparator("Name",       cc.xy(1, 1)); // No Mnemonic
+   * addSeparator("N&ame",      cc.xy(1, 1)); // Mnemonic is 'a'
+   * addSeparator("Save &as",   cc.xy(1, 1)); // Mnemonic is the second 'a'
+   * addSeparator("Look&&Feel", cc.xy(1, 1)); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
    *          ampersand (<tt>&amp;</tt>) to mark a mnemonic
@@ -543,11 +542,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addSeparator("Name",       "1, 1"); // No Mnemonic
-     * addSeparator("N&ame",      "1, 1"); // Mnemonic is 'a'
-     * addSeparator("Save &as",   "1, 1"); // Mnemonic is the second 'a'
-     * addSeparator("Look&&Feel", "1, 1"); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addSeparator("Name",       "1, 1"); // No Mnemonic
+   * addSeparator("N&ame",      "1, 1"); // Mnemonic is 'a'
+   * addSeparator("Save &as",   "1, 1"); // Mnemonic is the second 'a'
+   * addSeparator("Look&&Feel", "1, 1"); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
    *          ampersand (<tt>&amp;</tt>) to mark a mnemonic
@@ -565,11 +564,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addSeparator("Name",       3); // No Mnemonic
-     * addSeparator("N&ame",      3); // Mnemonic is 'a'
-     * addSeparator("Save &as",   3); // Mnemonic is the second 'a'
-     * addSeparator("Look&&Feel", 3); // No mnemonic, text is "look&feel"
-     * </pre>
+   * addSeparator("Name",       3); // No Mnemonic
+   * addSeparator("N&ame",      3); // Mnemonic is 'a'
+   * addSeparator("Save &as",   3); // Mnemonic is the second 'a'
+   * addSeparator("Look&&Feel", 3); // No mnemonic, text is "look&feel"
+   * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
    *          ampersand (<tt>&amp;</tt>) to mark a mnemonic
