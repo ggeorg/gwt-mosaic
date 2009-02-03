@@ -113,15 +113,14 @@ public class CwCellAlignmentExample extends ContentWidget {
         "pref, 8dlu, pref, pref, pref, pref, pref");
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Column Spec: "), new CellConstraints().xy(1, 1, "r, c"));
-    panel.add(newLabel(" \"left:pref:grow\" "), new CellConstraints().xy(3, 1,
+    panel.add(newLabel("Column Spec: "), CellConstraints.xy(1, 1, "r, c"));
+    panel.add(newLabel(" \"left:pref:grow\" "),
+        CellConstraints.xy(3, 1, "c, c"));
+    panel.add(newLabel(" \"center:pref:grow\" "), CellConstraints.xy(4, 1,
         "c, c"));
-    panel.add(newLabel(" \"center:pref:grow\" "), new CellConstraints().xy(4,
-        1, "c, c"));
-    panel.add(newLabel(" \"right:pref:grow\" "), new CellConstraints().xy(5, 1,
+    panel.add(newLabel(" \"right:pref:grow\" "), CellConstraints.xy(5, 1,
         "c, c"));
-    panel.add(newLabel(" \"pref:grow\" "), new CellConstraints().xy(6, 1,
-        "c, c"));
+    panel.add(newLabel(" \"pref:grow\" "), CellConstraints.xy(6, 1, "c, c"));
 
     int row = 3;
     addHorizontalButton(panel, 3, row, CellConstraints.DEFAULT);
@@ -166,14 +165,13 @@ public class CwCellAlignmentExample extends ContentWidget {
     layout.setColumnGroups(new int[][] {{3, 5, 6, 7}});
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("Row Spec:"), new CellConstraints().xy(1, 1, "r, c"));
-    panel.add(newLabel("\"top:pref:grow\""), new CellConstraints().xy(1, 3,
-        "r, c"));
-    panel.add(newLabel("\"center:pref:grow\""), new CellConstraints().xy(1, 4,
-        "r, c"));
-    panel.add(newLabel("\"bottom:pref:grow\""), new CellConstraints().xy(1, 5,
-        "r, c"));
-    panel.add(newLabel("\"pref:grow\""), new CellConstraints().xy(1, 6, "r, c"));
+    panel.add(newLabel("Row Spec:"), CellConstraints.xy(1, 1, "r, c"));
+    panel.add(newLabel("\"top:pref:grow\""), CellConstraints.xy(1, 3, "r, c"));
+    panel.add(newLabel("\"center:pref:grow\""),
+        CellConstraints.xy(1, 4, "r, c"));
+    panel.add(newLabel("\"bottom:pref:grow\""),
+        CellConstraints.xy(1, 5, "r, c"));
+    panel.add(newLabel("\"pref:grow\""), CellConstraints.xy(1, 6, "r, c"));
 
     int col = 3;
     addVerticalButton(panel, col, 3, CellConstraints.DEFAULT);

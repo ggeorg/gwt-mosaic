@@ -43,9 +43,11 @@ import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
+import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -797,7 +799,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
    *           been added to the container
    */
   public CellConstraints getConstraints(Widget widget) {
-    return (CellConstraints) getConstraints0(widget);// .clone();
+    return (CellConstraints) getConstraints0(widget).clone();
   }
 
   private CellConstraints getConstraints0(Widget widget) {
@@ -827,7 +829,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       throw new NullPointerException("The constraints must not be null.");
 
     constraints.ensureValidGridBounds(getColumnCount(), getRowCount());
-    constraintMap.put(widget, constraints);
+    constraintMap.put(widget, (CellConstraints) constraints.clone());
   }
 
   /**
@@ -1047,7 +1049,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       return;
     Widget firstComponent = (Widget) componentSet.iterator().next();
     Widget container = firstComponent.getParent();
-// XXX    invalidateAndRepaint(container);
+    // XXX invalidateAndRepaint(container);
   }
 
   /**
@@ -1070,7 +1072,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
     if (FormUtils.equals(b, constraints.honorsVisibility))
       return;
     constraints.honorsVisibility = b;
-//XXX    invalidateAndRepaint(widget.getParent());
+    // XXX invalidateAndRepaint(widget.getParent());
   }
 
   // Implementing the LayoutManager and LayoutManager2 Interfaces *********
@@ -1130,7 +1132,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @see Container#doLayout()
    */
   public Dimension minimumLayoutSize(LayoutPanel layoutPanel) {
-    return computeLayoutSize(layoutPanel, minimumWidthMeasure, minimumHeightMeasure);
+    return computeLayoutSize(layoutPanel, minimumWidthMeasure,
+        minimumHeightMeasure);
   }
 
   /**
@@ -1148,6 +1151,35 @@ public final class FormLayout extends BaseLayout implements Serializable {
   public Dimension preferredLayoutSize(LayoutPanel layoutParent) {
     return computeLayoutSize(layoutParent, preferredWidthMeasure,
         preferredHeightMeasure);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
+   * mosaic.ui.client.layout.LayoutPanel)
+   */
+  public int[] getPreferredSize(LayoutPanel layoutPanel) {
+    final Dimension d = preferredLayoutSize(layoutPanel);
+    final int[] result = new int[] {d.width, d.height};
+
+    try {
+      final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
+      result[0] += (margins[1] + margins[3]);
+      result[1] += (margins[0] + margins[2]);
+
+      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+      result[0] += (paddings[1] + paddings[3]);
+      result[1] += (paddings[0] + paddings[2]);
+
+    } catch (Exception e) {
+      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+    }
+
+    //layoutPanel.setPreferredSize(result[0], result[1]);
+
+    return result;
   }
 
   /**
@@ -1228,7 +1260,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       if (layoutPanel == null) {
         return;
       }
-      
+
       constraintMap.clear();
 
       for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
@@ -1701,16 +1733,16 @@ public final class FormLayout extends BaseLayout implements Serializable {
     return sum;
   }
 
-//  private static void invalidateAndRepaint(LayoutPanel container) {
-//    if (container == null)
-//      return;
-//    if (container instanceof JComponent) {
-//      ((JComponent) container).revalidate();
-//    } else {
-//      container.invalidate();
-//    }
-//    container.repaint();
-//  }
+  // private static void invalidateAndRepaint(LayoutPanel container) {
+  // if (container == null)
+  // return;
+  // if (container instanceof JComponent) {
+  // ((JComponent) container).revalidate();
+  // } else {
+  // container.invalidate();
+  // }
+  // container.repaint();
+  // }
 
   /**
    * Components are taken into account, if a) they are visible, or b) they have
@@ -1913,22 +1945,21 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @param parent the <code>Container</code> to inspect
    * @return an object that comprises the grid x and y origins
    */
-//  public LayoutInfo getLayoutInfo(LayoutPanel parent) {
-//    initializeColAndRowWidgetLists();
-//    Dimension size = parent.getSize();
-//
-//    Insets insets = parent.getInsets();
-//    int totalWidth = size.width - insets.left - insets.right;
-//    int totalHeight = size.height - insets.top - insets.bottom;
-//
-//    int[] x = computeGridOrigins(parent, totalWidth, insets.left, colSpecs,
-//        colWidgets, colGroupIndices, minimumWidthMeasure, preferredWidthMeasure);
-//    int[] y = computeGridOrigins(parent, totalHeight, insets.top, rowSpecs,
-//        rowWidgets, rowGroupIndices, minimumHeightMeasure,
-//        preferredHeightMeasure);
-//    return new LayoutInfo(x, y);
-//  }
-
+  // public LayoutInfo getLayoutInfo(LayoutPanel parent) {
+  // initializeColAndRowWidgetLists();
+  // Dimension size = parent.getSize();
+  //
+  // Insets insets = parent.getInsets();
+  // int totalWidth = size.width - insets.left - insets.right;
+  // int totalHeight = size.height - insets.top - insets.bottom;
+  //
+  // int[] x = computeGridOrigins(parent, totalWidth, insets.left, colSpecs,
+  // colWidgets, colGroupIndices, minimumWidthMeasure, preferredWidthMeasure);
+  // int[] y = computeGridOrigins(parent, totalHeight, insets.top, rowSpecs,
+  // rowWidgets, rowGroupIndices, minimumHeightMeasure,
+  // preferredHeightMeasure);
+  // return new LayoutInfo(x, y);
+  // }
   /**
    * Stores column and row origins.
    */
@@ -2005,29 +2036,10 @@ public final class FormLayout extends BaseLayout implements Serializable {
     for (int i = 0; i < result.length; i++) {
       result[i] = new int[array[i].length];
       for (int j = 0; j < array[i].length; j++) {
-              result[i][j] = array[i][j];
+        result[i][j] = array[i][j];
       }
     }
     return result;
-  }
-
-  // Serialization ********************************************************
-
-  /**
-   * In addition to the default serialization mechanism this class invalidates
-   * the component size cache. The cache will be populated again after the
-   * deserialization. Also, the fields <code>colComponents</code> and
-   * <code>rowComponents</code> have been marked as transient to exclude them
-   * from the serialization.
-   */
-//  private void writeObject(ObjectOutputStream out) throws IOException {
-//    invalidateCaches();
-//    out.defaultWriteObject();
-//  }
-
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

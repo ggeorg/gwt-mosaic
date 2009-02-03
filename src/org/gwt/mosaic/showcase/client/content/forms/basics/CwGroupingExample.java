@@ -120,11 +120,11 @@ public class CwGroupingExample extends ContentWidget {
     }
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(new Button("Hilfe"), new CellConstraints().xy(1, 1));
-    panel.add(new Button("< Zur\u00Fcck"), new CellConstraints().xy(3, 1));
-    panel.add(new Button("Vor >"), new CellConstraints().xy(4, 1));
-    panel.add(new Button("Beenden"), new CellConstraints().xy(6, 1));
-    panel.add(new Button("Abbrechen"), new CellConstraints().xy(8, 1));
+    panel.add(new Button("Hilfe"), CellConstraints.xy(1, 1));
+    panel.add(new Button("< Zur\u00Fcck"), CellConstraints.xy(3, 1));
+    panel.add(new Button("Vor >"), CellConstraints.xy(4, 1));
+    panel.add(new Button("Beenden"), CellConstraints.xy(6, 1));
+    panel.add(new Button("Abbrechen"), CellConstraints.xy(8, 1));
 
     return panel;
   }
@@ -143,26 +143,26 @@ public class CwGroupingExample extends ContentWidget {
 
     LayoutPanel panel = new LayoutPanel(layout);
 
-    panel.add(newLabel("File number:"), new CellConstraints().xy(1, 1));
-    panel.add(new TextBox(), new CellConstraints().xyw(3, 1, 7));
-    panel.add(newLabel("BL/MBL number:"), new CellConstraints().xy(1, 3));
-    panel.add(new TextBox(), new CellConstraints().xy(3, 3));
-    panel.add(new TextBox(), new CellConstraints().xy(5, 3));
-    panel.add(newLabel("Entry date:"), new CellConstraints().xy(1, 5));
-    panel.add(new TextBox(), new CellConstraints().xy(3, 5));
-    panel.add(newLabel("RFQ number:"), new CellConstraints().xy(1, 7));
-    panel.add(new TextBox(), new CellConstraints().xyw(3, 7, 7));
-    panel.add(newLabel("Goods:"), new CellConstraints().xy(1, 9));
-    panel.add(new CheckBox("Dangerous"), new CellConstraints().xyw(3, 9, 7));
-    panel.add(newLabel("Shipper:"), new CellConstraints().xy(1, 11));
-    panel.add(new TextBox(), new CellConstraints().xyw(3, 11, 7));
-    panel.add(newLabel("Customer:"), new CellConstraints().xy(1, 13));
-    panel.add(new TextBox(), new CellConstraints().xyw(3, 13, 5));
-    panel.add(new Button("\u2026"), new CellConstraints().xy(9, 13));
-    panel.add(newLabel("Port of loading:"), new CellConstraints().xy(1, 15));
-    panel.add(new TextBox(), new CellConstraints().xyw(3, 15, 7));
-    panel.add(newLabel("Destination:"), new CellConstraints().xy(1, 17));
-    panel.add(new TextBox(), new CellConstraints().xyw(3, 17, 7));
+    panel.add(newLabel("File number:"), CellConstraints.xy(1, 1));
+    panel.add(new TextBox(), CellConstraints.xyw(3, 1, 7));
+    panel.add(newLabel("BL/MBL number:"), CellConstraints.xy(1, 3));
+    panel.add(new TextBox(), CellConstraints.xy(3, 3));
+    panel.add(new TextBox(), CellConstraints.xy(5, 3));
+    panel.add(newLabel("Entry date:"), CellConstraints.xy(1, 5));
+    panel.add(new TextBox(), CellConstraints.xy(3, 5));
+    panel.add(newLabel("RFQ number:"), CellConstraints.xy(1, 7));
+    panel.add(new TextBox(), CellConstraints.xyw(3, 7, 7));
+    panel.add(newLabel("Goods:"), CellConstraints.xy(1, 9));
+    panel.add(new CheckBox("Dangerous"), CellConstraints.xyw(3, 9, 7));
+    panel.add(newLabel("Shipper:"), CellConstraints.xy(1, 11));
+    panel.add(new TextBox(), CellConstraints.xyw(3, 11, 7));
+    panel.add(newLabel("Customer:"), CellConstraints.xy(1, 13));
+    panel.add(new TextBox(), CellConstraints.xyw(3, 13, 5));
+    panel.add(new Button("\u2026"), CellConstraints.xy(9, 13));
+    panel.add(newLabel("Port of loading:"), CellConstraints.xy(1, 15));
+    panel.add(new TextBox(), CellConstraints.xyw(3, 15, 7));
+    panel.add(newLabel("Destination:"), CellConstraints.xy(1, 17));
+    panel.add(new TextBox(), CellConstraints.xyw(3, 17, 7));
 
     return panel;
   }

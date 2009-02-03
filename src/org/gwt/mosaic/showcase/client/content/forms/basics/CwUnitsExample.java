@@ -45,6 +45,7 @@
 package org.gwt.mosaic.showcase.client.content.forms.basics;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
@@ -108,108 +109,124 @@ public class CwUnitsExample extends ContentWidget {
     return tabPanel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildHorizontalUnitsPanel() {
     FormLayout layout = new FormLayout(
         "right:pref, 1dlu, left:pref, 4dlu, left:pref");
-//    DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-//    builder.setDefaultDialogBorder();
-//
-//    builder.append("72", newLabel("pt"), buildHorizontalPanel("72pt"));
-//    builder.append("25.4", newLabel("mm"), buildHorizontalPanel("25.4mm"));
-//    builder.append("2.54", newLabel("cm"), buildHorizontalPanel("2.54cm"));
-//    builder.append("1", newLabel("in"), buildHorizontalPanel("1in"));
-//    builder.append("72", newLabel("px"), buildHorizontalPanel("72px"));
-//    builder.append("96", newLabel("px"), buildHorizontalPanel("96px"));
-//    builder.append("120", newLabel("px"), buildHorizontalPanel("120px"));
-//
-//    return builder.getPanel();
-    return null;
+    DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+    // builder.setDefaultDialogBorder();
+
+    builder.append("72", newLabel("pt"), buildHorizontalPanel("72pt"));
+    builder.append("25.4", newLabel("mm"), buildHorizontalPanel("25.4mm"));
+    builder.append("2.54", newLabel("cm"), buildHorizontalPanel("2.54cm"));
+    builder.append("1", newLabel("in"), buildHorizontalPanel("1in"));
+    builder.append("72", newLabel("px"), buildHorizontalPanel("72px"));
+    builder.append("96", newLabel("px"), buildHorizontalPanel("96px"));
+    builder.append("120", newLabel("px"), buildHorizontalPanel("120px"));
+
+    return builder.getPanel();
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildHorizontalDluPanel() {
     FormLayout layout = new FormLayout(
         "right:pref, 1dlu, left:pref, 4dlu, left:pref");
-    //DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-//    builder.setDefaultDialogBorder();
-//
-//    builder.append("9", newLabel("cols"), buildHorizontalPanel(9));
-//    builder.append("50", newLabel("dlu"), buildHorizontalPanel("50dlu"));
-//    builder.append("75", newLabel("px"), buildHorizontalPanel("75px"));
-//    builder.append("88", newLabel("px"), buildHorizontalPanel("88px"));
-//    builder.append("100", newLabel("px"), buildHorizontalPanel("100px"));
-//
-//    return builder.getPanel();
-    return null;
+    DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+    // builder.setDefaultDialogBorder();
+
+    builder.append("9", newLabel("cols"), buildHorizontalPanel(9));
+    builder.append("50", newLabel("dlu"), buildHorizontalPanel("50dlu"));
+    builder.append("75", newLabel("px"), buildHorizontalPanel("75px"));
+    builder.append("88", newLabel("px"), buildHorizontalPanel("88px"));
+    builder.append("100", newLabel("px"), buildHorizontalPanel("100px"));
+
+    return builder.getPanel();
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildVerticalUnitsPanel() {
     FormLayout layout = new FormLayout("6*(c:p, 4dlu), c:p",
         "pref, 6dlu, top:pref");
 
     LayoutPanel panel = new LayoutPanel(layout);
+    // panel.setBorder(Borders.DIALOG_BORDER);
 
-    panel.add(newLabel("72 pt"), new CellConstraints().xy(1, 1));
-    panel.add(buildVerticalPanel("72pt"), new CellConstraints().xy(1, 3));
+    panel.add(newLabel("72 pt"), CellConstraints.xy(1, 1));
+    panel.add(buildVerticalPanel("72pt"), CellConstraints.xy(1, 3));
 
-    panel.add(newLabel("25.4 mm"), new CellConstraints().xy(3, 1));
-    panel.add(buildVerticalPanel("25.4mm"), new CellConstraints().xy(3, 3));
+    panel.add(newLabel("25.4 mm"), CellConstraints.xy(3, 1));
+    panel.add(buildVerticalPanel("25.4mm"), CellConstraints.xy(3, 3));
 
-    panel.add(newLabel("2.54 cm"), new CellConstraints().xy(5, 1));
-    panel.add(buildVerticalPanel("2.54cm"), new CellConstraints().xy(5, 3));
+    panel.add(newLabel("2.54 cm"), CellConstraints.xy(5, 1));
+    panel.add(buildVerticalPanel("2.54cm"), CellConstraints.xy(5, 3));
 
-    panel.add(newLabel("1 in"), new CellConstraints().xy(7, 1));
-    panel.add(buildVerticalPanel("1in"), new CellConstraints().xy(7, 3));
+    panel.add(newLabel("1 in"), CellConstraints.xy(7, 1));
+    panel.add(buildVerticalPanel("1in"), CellConstraints.xy(7, 3));
 
-    panel.add(newLabel("72 px"), new CellConstraints().xy(9, 1));
-    panel.add(buildVerticalPanel("72px"), new CellConstraints().xy(9, 3));
+    panel.add(newLabel("72 px"), CellConstraints.xy(9, 1));
+    panel.add(buildVerticalPanel("72px"), CellConstraints.xy(9, 3));
 
-    panel.add(newLabel("96 px"), new CellConstraints().xy(11, 1));
-    panel.add(buildVerticalPanel("96px"), new CellConstraints().xy(11, 3));
+    panel.add(newLabel("96 px"), CellConstraints.xy(11, 1));
+    panel.add(buildVerticalPanel("96px"), CellConstraints.xy(11, 3));
 
-    panel.add(newLabel("120 px"), new CellConstraints().xy(13, 1));
-    panel.add(buildVerticalPanel("120px"), new CellConstraints().xy(13, 3));
+    panel.add(newLabel("120 px"), CellConstraints.xy(13, 1));
+    panel.add(buildVerticalPanel("120px"), CellConstraints.xy(13, 3));
 
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildVerticalDluPanel() {
     FormLayout layout = new FormLayout("6*(c:p, 4dlu), c:p",
         "pref, 6dlu, top:pref, 25dlu, pref, 6dlu, top:pref");
 
     LayoutPanel panel = new LayoutPanel(layout);
+    // panel.setBorder(Borders.DIALOG_BORDER);
 
-    panel.add(newLabel("4 rows"), new CellConstraints().xy(1, 1));
-    panel.add(buildVerticalPanel("pref", 4), new CellConstraints().xy(1, 3));
+    panel.add(newLabel("4 rows"), CellConstraints.xy(1, 1));
+    panel.add(buildVerticalPanel("pref", 4), CellConstraints.xy(1, 3));
 
-    panel.add(newLabel("42 dlu"), new CellConstraints().xy(3, 1));
-    panel.add(buildVerticalPanel("42dlu", 4), new CellConstraints().xy(3, 3));
+    panel.add(newLabel("42 dlu"), CellConstraints.xy(3, 1));
+    panel.add(buildVerticalPanel("42dlu", 4), CellConstraints.xy(3, 3));
 
-    panel.add(newLabel("57 px"), new CellConstraints().xy(5, 1));
-    panel.add(buildVerticalPanel("57px", 4), new CellConstraints().xy(5, 3));
+    panel.add(newLabel("57 px"), CellConstraints.xy(5, 1));
+    panel.add(buildVerticalPanel("57px", 4), CellConstraints.xy(5, 3));
 
-    panel.add(newLabel("63 px"), new CellConstraints().xy(7, 1));
-    panel.add(buildVerticalPanel("63px", 4), new CellConstraints().xy(7, 3));
+    panel.add(newLabel("63 px"), CellConstraints.xy(7, 1));
+    panel.add(buildVerticalPanel("63px", 4), CellConstraints.xy(7, 3));
 
-    panel.add(newLabel("68 px"), new CellConstraints().xy(9, 1));
-    panel.add(buildVerticalPanel("68px", 4), new CellConstraints().xy(9, 3));
+    panel.add(newLabel("68 px"), CellConstraints.xy(9, 1));
+    panel.add(buildVerticalPanel("68px", 4), CellConstraints.xy(9, 3));
 
-    panel.add(newLabel("field"), new CellConstraints().xy(1, 5));
-    panel.add(createTextBox(4), new CellConstraints().xy(1, 7));
+    panel.add(newLabel("field"), CellConstraints.xy(1, 5));
+    panel.add(createTextBox(4), CellConstraints.xy(1, 7));
 
-    panel.add(newLabel("14 dlu"), new CellConstraints().xy(3, 5));
-    panel.add(buildVerticalPanel("14dlu"), new CellConstraints().xy(3, 7));
+    panel.add(newLabel("14 dlu"), CellConstraints.xy(3, 5));
+    panel.add(buildVerticalPanel("14dlu"), CellConstraints.xy(3, 7));
 
-    panel.add(newLabel("21 px"), new CellConstraints().xy(5, 5));
-    panel.add(buildVerticalPanel("21px"), new CellConstraints().xy(5, 7));
+    panel.add(newLabel("21 px"), CellConstraints.xy(5, 5));
+    panel.add(buildVerticalPanel("21px"), CellConstraints.xy(5, 7));
 
-    panel.add(newLabel("23 px"), new CellConstraints().xy(7, 5));
-    panel.add(buildVerticalPanel("23px"), new CellConstraints().xy(7, 7));
+    panel.add(newLabel("23 px"), CellConstraints.xy(7, 5));
+    panel.add(buildVerticalPanel("23px"), CellConstraints.xy(7, 7));
 
-    panel.add(newLabel("24 px"), new CellConstraints().xy(9, 5));
-    panel.add(buildVerticalPanel("24px"), new CellConstraints().xy(9, 7));
+    panel.add(newLabel("24 px"), CellConstraints.xy(9, 5));
+    panel.add(buildVerticalPanel("24px"), CellConstraints.xy(9, 7));
 
-    panel.add(newLabel("button"), new CellConstraints().xy(11, 5));
-    panel.add(new Button("..."), new CellConstraints().xy(11, 7));
+    panel.add(newLabel("button"), CellConstraints.xy(11, 5));
+    panel.add(new Button("..."), CellConstraints.xy(11, 7));
 
     return panel;
   }
@@ -226,9 +243,9 @@ public class CwUnitsExample extends ContentWidget {
   private LayoutPanel buildHorizontalPanel(int columns) {
     FormLayout layout = new FormLayout("pref, 4dlu, pref", "pref");
     LayoutPanel panel = new LayoutPanel(layout);
-    CellConstraints cc = new CellConstraints();
-    panel.add(createTextBox(columns), cc.xy(1, 1));
-    panel.add(newLabel("Width of new JTextField(" + columns + ")"), cc.xy(3, 1));
+    panel.add(createTextBox(columns), CellConstraints.xy(1, 1));
+    panel.add(newLabel("Width of new TextBox(" + columns + ")"),
+        CellConstraints.xy(3, 1));
     return panel;
   }
 
@@ -239,8 +256,7 @@ public class CwUnitsExample extends ContentWidget {
   private LayoutPanel buildVerticalPanel(String height, int rows) {
     FormLayout layout = new FormLayout("pref", "fill:" + height);
     LayoutPanel panel = new LayoutPanel(layout);
-    CellConstraints cc = new CellConstraints();
-    panel.add(createTextArea(rows, 5), cc.xy(1, 1));
+    panel.add(createTextArea(rows, 5), CellConstraints.xy(1, 1));
     return panel;
   }
 

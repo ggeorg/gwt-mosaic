@@ -116,15 +116,15 @@ public class CwBasicSizesExample extends ContentWidget {
     LayoutPanel panel = new LayoutPanel(layout);
 
     // Add components to the panel.
-    panel.add(newLabel("75px"), new CellConstraints().xy(3, 1));
-    panel.add(newLabel("Min"), new CellConstraints().xy(5, 1));
-    panel.add(newLabel("Pref"), new CellConstraints().xy(7, 1));
+    panel.add(newLabel("75px"), CellConstraints.xy(3, 1));
+    panel.add(newLabel("Min"), CellConstraints.xy(5, 1));
+    panel.add(newLabel("Pref"), CellConstraints.xy(7, 1));
 
-    panel.add(newLabel("new TextBox() 15"), new CellConstraints().xy(1, 3));
+    panel.add(newLabel("new TextBox() 15"), CellConstraints.xy(1, 3));
 
-    panel.add(createTextBox(15), new CellConstraints().xy(3, 3));
-    panel.add(createTextBox(15), new CellConstraints().xy(5, 3));
-    panel.add(createTextBox(15), new CellConstraints().xy(7, 3));
+    panel.add(createTextBox(15), CellConstraints.xy(3, 3));
+    panel.add(createTextBox(15), CellConstraints.xy(5, 3));
+    panel.add(createTextBox(15), CellConstraints.xy(7, 3));
 
     return panel;
   }
@@ -151,15 +151,15 @@ public class CwBasicSizesExample extends ContentWidget {
     LayoutPanel panel = new LayoutPanel(layout);
 
     // Add components to the panel.
-    panel.add(newLabel("new TextArea() 10x40"), new CellConstraints().xy(3, 1));
+    panel.add(newLabel("new TextArea() 10x40"), CellConstraints.xy(3, 1));
 
-    panel.add(newLabel("45px"), new CellConstraints().xy(1, 3));
-    panel.add(newLabel("Min"), new CellConstraints().xy(1, 5));
-    panel.add(newLabel("Pref"), new CellConstraints().xy(1, 7));
+    panel.add(newLabel("45px"), CellConstraints.xy(1, 3));
+    panel.add(newLabel("Min"), CellConstraints.xy(1, 5));
+    panel.add(newLabel("Pref"), CellConstraints.xy(1, 7));
 
-    panel.add(createTextArea(10, 40), new CellConstraints().xy(3, 3));
-    panel.add(createTextArea(10, 40), new CellConstraints().xy(3, 5));
-    panel.add(createTextArea(10, 40), new CellConstraints().xy(3, 7));
+    panel.add(createTextArea(10, 40), CellConstraints.xy(3, 3));
+    panel.add(createTextArea(10, 40), CellConstraints.xy(3, 5));
+    panel.add(createTextArea(10, 40), CellConstraints.xy(3, 7));
 
     return panel;
   }

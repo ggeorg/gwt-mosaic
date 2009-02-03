@@ -114,42 +114,40 @@ public class CwAlignmentExample extends ContentWidget {
     LayoutPanel panel = new LayoutPanel(layout);
 
     // Add components to the panel.
-    panel.add(newLabel("Left"), new CellConstraints().xy(1, 1));
-    panel.add(new Button("Name"), new CellConstraints().xy(1, 3));
-    panel.add(new Button("Phone"), new CellConstraints().xy(1, 5));
-    panel.add(new Button("Fax"), new CellConstraints().xy(1, 7));
-    panel.add(new Button("Email"), new CellConstraints().xy(1, 9));
-    panel.add(new Button("Address"), new CellConstraints().xy(1, 11));
+    panel.add(newLabel("Left"), CellConstraints.xy(1, 1));
+    panel.add(new Button("Name"), CellConstraints.xy(1, 3));
+    panel.add(new Button("Phone"), CellConstraints.xy(1, 5));
+    panel.add(new Button("Fax"), CellConstraints.xy(1, 7));
+    panel.add(new Button("Email"), CellConstraints.xy(1, 9));
+    panel.add(new Button("Address"), CellConstraints.xy(1, 11));
 
-    panel.add(newLabel("Center"), new CellConstraints().xy(3, 1));
-    panel.add(new Button("Name"), new CellConstraints().xy(3, 3));
-    panel.add(new Button("Phone"), new CellConstraints().xy(3, 5));
-    panel.add(new Button("Fax"), new CellConstraints().xy(3, 7));
-    panel.add(new Button("Email"), new CellConstraints().xy(3, 9));
-    panel.add(new Button("Address"), new CellConstraints().xy(3, 11));
+    panel.add(newLabel("Center"), CellConstraints.xy(3, 1));
+    panel.add(new Button("Name"), CellConstraints.xy(3, 3));
+    panel.add(new Button("Phone"), CellConstraints.xy(3, 5));
+    panel.add(new Button("Fax"), CellConstraints.xy(3, 7));
+    panel.add(new Button("Email"), CellConstraints.xy(3, 9));
+    panel.add(new Button("Address"), CellConstraints.xy(3, 11));
 
-    panel.add(newLabel("Right"), new CellConstraints().xy(5, 1));
-    panel.add(new Button("Name"), new CellConstraints().xy(5, 3));
-    panel.add(new Button("Phone"), new CellConstraints().xy(5, 5));
-    panel.add(new Button("Fax"), new CellConstraints().xy(5, 7));
-    panel.add(new Button("Email"), new CellConstraints().xy(5, 9));
-    panel.add(new Button("Address"), new CellConstraints().xy(5, 11));
+    panel.add(newLabel("Right"), CellConstraints.xy(5, 1));
+    panel.add(new Button("Name"), CellConstraints.xy(5, 3));
+    panel.add(new Button("Phone"), CellConstraints.xy(5, 5));
+    panel.add(new Button("Fax"), CellConstraints.xy(5, 7));
+    panel.add(new Button("Email"), CellConstraints.xy(5, 9));
+    panel.add(new Button("Address"), CellConstraints.xy(5, 11));
 
-    panel.add(newLabel("Fill"),
-        new CellConstraints().xy(7, 1, "center, center"));
-    panel.add(new Button("Name"), new CellConstraints().xy(7, 3));
-    panel.add(new Button("Phone"), new CellConstraints().xy(7, 5));
-    panel.add(new Button("Fax"), new CellConstraints().xy(7, 7));
-    panel.add(new Button("Email"), new CellConstraints().xy(7, 9));
-    panel.add(new Button("Address"), new CellConstraints().xy(7, 11));
+    panel.add(newLabel("Fill"), CellConstraints.xy(7, 1, "center, center"));
+    panel.add(new Button("Name"), CellConstraints.xy(7, 3));
+    panel.add(new Button("Phone"), CellConstraints.xy(7, 5));
+    panel.add(new Button("Fax"), CellConstraints.xy(7, 7));
+    panel.add(new Button("Email"), CellConstraints.xy(7, 9));
+    panel.add(new Button("Address"), CellConstraints.xy(7, 11));
 
-    panel.add(newLabel("Default"), new CellConstraints().xy(9, 1,
-        "center, center"));
-    panel.add(new Button("Name"), new CellConstraints().xy(9, 3));
-    panel.add(new Button("Phone"), new CellConstraints().xy(9, 5));
-    panel.add(new Button("Fax"), new CellConstraints().xy(9, 7));
-    panel.add(new Button("Email"), new CellConstraints().xy(9, 9));
-    panel.add(new Button("Address"), new CellConstraints().xy(9, 11));
+    panel.add(newLabel("Default"), CellConstraints.xy(9, 1, "center, center"));
+    panel.add(new Button("Name"), CellConstraints.xy(9, 3));
+    panel.add(new Button("Phone"), CellConstraints.xy(9, 5));
+    panel.add(new Button("Fax"), CellConstraints.xy(9, 7));
+    panel.add(new Button("Email"), CellConstraints.xy(9, 9));
+    panel.add(new Button("Address"), CellConstraints.xy(9, 11));
 
     return panel;
   }
@@ -166,25 +164,25 @@ public class CwAlignmentExample extends ContentWidget {
     LayoutPanel panel = new LayoutPanel(layout);
 
     // Add components to the panel.
-    panel.add(newLabel("Top"), new CellConstraints().xy(1, 1));
-    panel.add(createSmallButton(), new CellConstraints().xy(3, 1));
-    panel.add(createMediumButton(), new CellConstraints().xy(5, 1));
+    panel.add(newLabel("Top"), CellConstraints.xy(1, 1));
+    panel.add(createSmallButton(), CellConstraints.xy(3, 1));
+    panel.add(createMediumButton(), CellConstraints.xy(5, 1));
 
-    panel.add(newLabel("Center"), new CellConstraints().xy(1, 3));
-    panel.add(createSmallButton(), new CellConstraints().xy(3, 3));
-    panel.add(createMediumButton(), new CellConstraints().xy(5, 3));
+    panel.add(newLabel("Center"), CellConstraints.xy(1, 3));
+    panel.add(createSmallButton(), CellConstraints.xy(3, 3));
+    panel.add(createMediumButton(), CellConstraints.xy(5, 3));
 
-    panel.add(newLabel("Bottom"), new CellConstraints().xy(1, 5));
-    panel.add(createSmallButton(), new CellConstraints().xy(3, 5));
-    panel.add(createMediumButton(), new CellConstraints().xy(5, 5));
+    panel.add(newLabel("Bottom"), CellConstraints.xy(1, 5));
+    panel.add(createSmallButton(), CellConstraints.xy(3, 5));
+    panel.add(createMediumButton(), CellConstraints.xy(5, 5));
 
-    panel.add(newLabel("Fill"), new CellConstraints().xy(1, 7));
-    panel.add(createSmallButton(), new CellConstraints().xy(3, 7));
-    panel.add(createMediumButton(), new CellConstraints().xy(5, 7));
+    panel.add(newLabel("Fill"), CellConstraints.xy(1, 7));
+    panel.add(createSmallButton(), CellConstraints.xy(3, 7));
+    panel.add(createMediumButton(), CellConstraints.xy(5, 7));
 
-    panel.add(newLabel("Default"), new CellConstraints().xy(1, 9));
-    panel.add(createSmallButton(), new CellConstraints().xy(3, 9));
-    panel.add(createMediumButton(), new CellConstraints().xy(5, 9));
+    panel.add(newLabel("Default"), CellConstraints.xy(1, 9));
+    panel.add(createSmallButton(), CellConstraints.xy(3, 9));
+    panel.add(createMediumButton(), CellConstraints.xy(5, 9));
 
     return panel;
   }
