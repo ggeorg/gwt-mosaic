@@ -1,0 +1,186 @@
+/*
+ * Copyright 2009 GWT Mosaic Georgopoulos J. Georgios.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package org.gwt.mosaic.ui.client;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.util.DelayedRunnable;
+
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowResizeListener;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupListener;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
+
+/**
+ * Displays a loading message and adds a gray overlay.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public class LoadingPanel extends PopupPanel implements WindowResizeListener,
+    PopupListener {
+
+  private GlassPanel glassPanel;
+
+  private final Widget boundaryWidget;
+
+  private final AbsolutePanel glassPanelParent;
+
+  public static LoadingPanel show(String text) {
+    return show(text, false);
+  }
+
+  public static LoadingPanel show(Widget boundaryWidget, String text) {
+    return show(boundaryWidget, text, false);
+  }
+
+  public static LoadingPanel show(String text, boolean asHTML) {
+    if (asHTML) {
+      return show(new HTML(text));
+    } else {
+      return show(new Label(text));
+    }
+  }
+
+  public static LoadingPanel show(Widget boundaryWidget, String text,
+      boolean asHTML) {
+    if (asHTML) {
+      return show(boundaryWidget, new HTML(text));
+    } else {
+      return show(boundaryWidget, new Label(text));
+    }
+  }
+
+  public static LoadingPanel show(Widget w) {
+    return show(null, w);
+  }
+
+  public static LoadingPanel show(Widget boundaryWidget, Widget w) {
+    final LoadingPanel loadingPanel = new LoadingPanel(boundaryWidget);
+    loadingPanel.setWidget(w);
+    if (loadingPanel.glassPanel == null) {
+      loadingPanel.glassPanel = new GlassPanel(false);
+      loadingPanel.glassPanel.addStyleName("mosaic-GlassPanel-loading");
+      DOM.setStyleAttribute(loadingPanel.glassPanel.getElement(), "zIndex",
+          DOM.getStyleAttribute(loadingPanel.getElement(), "zIndex"));
+    }
+    if (RootPanel.get() == loadingPanel.glassPanelParent) {
+      RootPanel.get().add(loadingPanel.glassPanel, 0, 0);
+    } else {
+      RootPanel.get().add(loadingPanel.glassPanelParent);
+      loadingPanel.glassPanelParent.add(loadingPanel.glassPanel, 0, 0);
+      loadingPanel.adjustGlassPanelBounds();
+    }
+    loadingPanel.center();
+    loadingPanel.addPopupListener(loadingPanel);
+    return loadingPanel;
+  }
+
+  /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-LoadingPanel";
+
+  protected LoadingPanel(Widget boundaryWidget) {
+    super(false, false);
+    ensureDebugId("mosaicInfoPanel-simplePopup");
+
+    this.boundaryWidget = boundaryWidget;
+    if (boundaryWidget != null) {
+      if (boundaryWidget instanceof AbsolutePanel) {
+        glassPanelParent = (AbsolutePanel) boundaryWidget;
+      } else {
+        glassPanelParent = new AbsolutePanel();
+      }
+    } else {
+      glassPanelParent = RootPanel.get();
+    }
+
+    setAnimationEnabled(true);
+
+    Window.addWindowResizeListener(this);
+
+    addStyleName(DEFAULT_STYLENAME);
+    DOM.setIntStyleAttribute(getElement(), "zIndex", Integer.MAX_VALUE);
+  }
+
+  public Widget getBoudaryWidget() {
+    return boundaryWidget;
+  }
+
+  /**
+   * Centers the popup in the browser window and shows it. If the popup was
+   * already showing, then the popup is centered.
+   */
+  public void center() {
+    setPopupPositionAndShow(new PositionCallback() {
+      public void setPosition(int offsetWidth, int offsetHeight) {
+        int left = (glassPanelParent.getOffsetWidth() - offsetWidth) >> 1;
+        int top = (glassPanelParent.getOffsetHeight() - offsetHeight) >> 1;
+        setPopupPosition(glassPanelParent.getAbsoluteLeft()
+            + glassPanelParent.getElement().getScrollLeft() + left,
+            glassPanelParent.getAbsoluteTop()
+                + glassPanelParent.getElement().getScrollTop() + top);
+      }
+    });
+  }
+
+  protected void adjustGlassPanelBounds() {
+    if (RootPanel.get() == glassPanelParent
+        || boundaryWidget instanceof AbsolutePanel) {
+      return;
+    }
+    int[] size = DOM.getBoxSize(boundaryWidget.getElement());
+    RootPanel.get().setWidgetPosition(glassPanelParent,
+        boundaryWidget.getAbsoluteLeft(), boundaryWidget.getAbsoluteTop());
+    glassPanelParent.setPixelSize(size[0], size[1]);
+    glassPanel.removeFromParent();
+    glassPanelParent.add(glassPanel, 0, 0);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int,
+   * int)
+   */
+  public void onWindowResized(int width, int height) {
+    new DelayedRunnable() {
+      public void run() {
+        center();
+        adjustGlassPanelBounds();
+      }
+    };
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.PopupListener#onPopupClosed(com.google.gwt
+   * .user.client.ui.PopupPanel, boolean)
+   */
+  public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+    Window.removeWindowResizeListener(this);
+    glassPanelParent.removeFromParent();
+    glassPanelParent.setSize("", "");
+  }
+
+}
