@@ -34,6 +34,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.ListBox;
+import org.gwt.mosaic.ui.client.LoadingPanel;
 import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
@@ -41,6 +42,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.TextBox;
@@ -79,6 +82,12 @@ public class CwListBoxBinding extends ContentWidget {
   }
 
   /**
+   * 
+   */
+  @ShowcaseData
+  private ListBox<Customer> listBox;
+
+  /**
    * Initialize this example.
    */
   @ShowcaseSource
@@ -86,14 +95,14 @@ public class CwListBoxBinding extends ContentWidget {
   protected Widget onInitialize() {
     BeanAdapterFactory.addProvider(new TextBoxAdapterProvider());
     BeanAdapterFactory.addProvider(new ListBoxAdapterProvider());
-    
+
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     layoutPanel.setPadding(0);
 
-    final ListBox<Customer> listBox = new ListBox<Customer>(new String[] {
-        "Id", "Discount Code", "Name"});
+    listBox = new ListBox<Customer>(
+        new String[] {"Id", "Discount Code", "Name"});
     listBox.setCellRenderer(new CellRenderer<Customer>() {
       public void renderCell(ListBox<Customer> litsBox, int row, int column,
           Customer item) {
@@ -144,26 +153,54 @@ public class CwListBoxBinding extends ContentWidget {
     bindingGroup.addBinding(textBoxBinding1);
     bindingGroup.addBinding(textBoxBinding2);
     bindingGroup.bind();
-    
+
     layoutPanel.add(listBox, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel.add(textBox1, new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel.add(textBox2, new BoxLayoutData(FillStyle.HORIZONTAL));
-    
-    // RPC call to fetch the data
-    CustomerServiceFactory.get().getCustomers(new AsyncCallback<List<Customer>>() {
-      public void onFailure(Throwable caught) {
-        Window.alert("Error: " + caught.getLocalizedMessage());
-      }
-
-      public void onSuccess(List<Customer> result) {
-        if (result != null) {
-          list.clear();
-          list.addAll(result);
-        }
-      }
-    });
 
     return layoutPanel;
+  }
+
+  /**
+   * This method is called immediately after a widget becomes attached to the
+   * browser's document.
+   * 
+   * @see org.gwt.mosaic.showcase.client.ContentWidget#onLoad()
+   */
+  @ShowcaseSource
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    // Run after loading
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        // RPC call to fetch the data
+        final LoadingPanel loadingPanel = LoadingPanel.show(listBox,
+            "Loading...");
+        CustomerServiceFactory.get().getCustomers(
+            new AsyncCallback<List<Customer>>() {
+              public void onFailure(Throwable caught) {
+                try {
+                  Window.alert("Error: " + caught.getLocalizedMessage());
+                } finally {
+                  loadingPanel.hide();
+                }
+              }
+
+              public void onSuccess(List<Customer> result) {
+                try {
+                  if (result != null) {
+                    list.clear();
+                    list.addAll(result);
+                  }
+                } finally {
+                  loadingPanel.hide();
+                }
+              }
+            });
+      }
+    });
   }
 
   @Override

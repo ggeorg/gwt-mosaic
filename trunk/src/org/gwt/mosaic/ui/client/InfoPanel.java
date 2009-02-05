@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2008-2009 GWT Mosaic Georgopoulos J. Georgios.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -206,7 +206,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
   }
 
   public void onWindowResized(int width, int height) {
-    new DelayedRunnable(333) {
+    new DelayedRunnable() {
       public void run() {
         final int width = Window.getClientWidth();
         getWidget().setPixelSize(Math.max(width / 3, WIDTH), HEIGHT);

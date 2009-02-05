@@ -287,6 +287,7 @@ textarea {
 
 /*** GlassPanel ***/
 
+.mosaic-GlassPanel-loading,
 .gwt-GlassPanel {
 	/* Override glass panel color to be `green` */
 	background-color: #000 !important;
