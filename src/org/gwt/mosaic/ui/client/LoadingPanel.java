@@ -41,7 +41,7 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
 
   private GlassPanel glassPanel;
 
-  private final Widget boundaryWidget;
+  private final Widget targetWidget;
 
   private final AbsolutePanel glassPanelParent;
 
@@ -49,8 +49,8 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     return show(text, false);
   }
 
-  public static LoadingPanel show(Widget boundaryWidget, String text) {
-    return show(boundaryWidget, text, false);
+  public static LoadingPanel show(Widget targetWidget, String text) {
+    return show(targetWidget, text, false);
   }
 
   public static LoadingPanel show(String text, boolean asHTML) {
@@ -61,12 +61,12 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     }
   }
 
-  public static LoadingPanel show(Widget boundaryWidget, String text,
+  public static LoadingPanel show(Widget targetWidget, String text,
       boolean asHTML) {
     if (asHTML) {
-      return show(boundaryWidget, new HTML(text));
+      return show(targetWidget, new HTML(text));
     } else {
-      return show(boundaryWidget, new Label(text));
+      return show(targetWidget, new Label(text));
     }
   }
 
@@ -74,8 +74,8 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     return show(null, w);
   }
 
-  public static LoadingPanel show(Widget boundaryWidget, Widget w) {
-    final LoadingPanel loadingPanel = new LoadingPanel(boundaryWidget);
+  public static LoadingPanel show(Widget targetWidget, Widget w) {
+    final LoadingPanel loadingPanel = new LoadingPanel(targetWidget);
     loadingPanel.setWidget(w);
     if (loadingPanel.glassPanel == null) {
       loadingPanel.glassPanel = new GlassPanel(false);
@@ -100,14 +100,12 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
    */
   private static final String DEFAULT_STYLENAME = "mosaic-LoadingPanel";
 
-  protected LoadingPanel(Widget boundaryWidget) {
+  protected LoadingPanel(Widget targetWidget) {
     super(false, false);
     ensureDebugId("mosaicInfoPanel-simplePopup");
 
-    this.boundaryWidget = (RootPanel.get() != boundaryWidget) ? boundaryWidget
-        : null;
-    glassPanelParent = (this.boundaryWidget != null) ? new AbsolutePanel()
-        : null;
+    this.targetWidget = (RootPanel.get() != targetWidget) ? targetWidget : null;
+    glassPanelParent = (this.targetWidget != null) ? new AbsolutePanel() : null;
 
     setAnimationEnabled(true);
 
@@ -118,7 +116,7 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
   }
 
   public Widget getBoudaryWidget() {
-    return boundaryWidget;
+    return targetWidget;
   }
 
   /**
@@ -149,9 +147,9 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     if (glassPanelParent == null) {
       return;
     }
-    int[] size = DOM.getBoxSize(boundaryWidget.getElement());
+    int[] size = DOM.getBoxSize(targetWidget.getElement());
     RootPanel.get().setWidgetPosition(glassPanelParent,
-        boundaryWidget.getAbsoluteLeft(), boundaryWidget.getAbsoluteTop());
+        targetWidget.getAbsoluteLeft(), targetWidget.getAbsoluteTop());
     glassPanelParent.setPixelSize(size[0], size[1]);
     glassPanel.removeFromParent();
     glassPanelParent.add(glassPanel, 0, 0);
