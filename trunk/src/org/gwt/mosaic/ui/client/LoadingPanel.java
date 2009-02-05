@@ -81,7 +81,7 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
       DOM.setStyleAttribute(loadingPanel.glassPanel.getElement(), "zIndex",
           DOM.getStyleAttribute(loadingPanel.getElement(), "zIndex"));
     }
-    if (RootPanel.get() == loadingPanel.glassPanelParent) {
+    if (loadingPanel.glassPanelParent== null) {
       RootPanel.get().add(loadingPanel.glassPanel, 0, 0);
     } else {
       RootPanel.get().add(loadingPanel.glassPanelParent);
@@ -102,16 +102,10 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     super(false, false);
     ensureDebugId("mosaicInfoPanel-simplePopup");
 
-    this.boundaryWidget = boundaryWidget;
-    if (boundaryWidget != null) {
-      if (boundaryWidget instanceof AbsolutePanel) {
-        glassPanelParent = (AbsolutePanel) boundaryWidget;
-      } else {
-        glassPanelParent = new AbsolutePanel();
-      }
-    } else {
-      glassPanelParent = RootPanel.get();
-    }
+    this.boundaryWidget = (RootPanel.get() != boundaryWidget) ? boundaryWidget
+        : null;
+    glassPanelParent = (this.boundaryWidget != null) ? new AbsolutePanel()
+        : null;
 
     setAnimationEnabled(true);
 
@@ -132,19 +126,24 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
   public void center() {
     setPopupPositionAndShow(new PositionCallback() {
       public void setPosition(int offsetWidth, int offsetHeight) {
-        int left = (glassPanelParent.getOffsetWidth() - offsetWidth) >> 1;
-        int top = (glassPanelParent.getOffsetHeight() - offsetHeight) >> 1;
-        setPopupPosition(glassPanelParent.getAbsoluteLeft()
-            + glassPanelParent.getElement().getScrollLeft() + left,
-            glassPanelParent.getAbsoluteTop()
-                + glassPanelParent.getElement().getScrollTop() + top);
+        if (glassPanelParent == null) {
+          int left = (Window.getClientWidth() - offsetWidth) >> 1;
+          int top = (Window.getClientHeight() - offsetHeight) >> 1;
+          setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop() + top);
+        } else {
+          int left = (glassPanelParent.getOffsetWidth() - offsetWidth) >> 1;
+          int top = (glassPanelParent.getOffsetHeight() - offsetHeight) >> 1;
+          setPopupPosition(glassPanelParent.getAbsoluteLeft()
+              + glassPanelParent.getElement().getScrollLeft() + left,
+              glassPanelParent.getAbsoluteTop()
+                  + glassPanelParent.getElement().getScrollTop() + top);
+        }
       }
     });
   }
 
   protected void adjustGlassPanelBounds() {
-    if (RootPanel.get() == glassPanelParent
-        || boundaryWidget instanceof AbsolutePanel) {
+    if (glassPanelParent == null) {
       return;
     }
     int[] size = DOM.getBoxSize(boundaryWidget.getElement());
@@ -179,8 +178,11 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
    */
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     Window.removeWindowResizeListener(this);
-    glassPanelParent.removeFromParent();
-    glassPanelParent.setSize("", "");
+    if (glassPanelParent != null) {
+      glassPanelParent.removeFromParent();
+      glassPanelParent.setSize("", "");
+    }
+    glassPanel.removeFromParent();
   }
 
 }
