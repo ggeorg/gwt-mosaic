@@ -76,6 +76,9 @@ public interface ActionImages extends ImageBundle {
   @Resource(value = "open_action.png")
   AbstractImagePrototype open_action();
 
+  @Resource(value = "open_parent_folder_action.png")
+  AbstractImagePrototype open_parent_folder_action();
+
   @Resource(value = "paste_action.png")
   AbstractImagePrototype paste_action();
 
