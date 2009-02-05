@@ -18,6 +18,8 @@ package org.gwt.mosaic.ui.client;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.util.DelayedRunnable;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -81,7 +83,7 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
       DOM.setStyleAttribute(loadingPanel.glassPanel.getElement(), "zIndex",
           DOM.getStyleAttribute(loadingPanel.getElement(), "zIndex"));
     }
-    if (loadingPanel.glassPanelParent== null) {
+    if (loadingPanel.glassPanelParent == null) {
       RootPanel.get().add(loadingPanel.glassPanel, 0, 0);
     } else {
       RootPanel.get().add(loadingPanel.glassPanelParent);
@@ -129,7 +131,8 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
         if (glassPanelParent == null) {
           int left = (Window.getClientWidth() - offsetWidth) >> 1;
           int top = (Window.getClientHeight() - offsetHeight) >> 1;
-          setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop() + top);
+          setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop()
+              + top);
         } else {
           int left = (glassPanelParent.getOffsetWidth() - offsetWidth) >> 1;
           int top = (glassPanelParent.getOffsetHeight() - offsetHeight) >> 1;
@@ -182,7 +185,12 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
       glassPanelParent.removeFromParent();
       glassPanelParent.setSize("", "");
     }
-    glassPanel.removeFromParent();
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        glassPanel.removeFromParent();
+      }
+    });
   }
 
 }
