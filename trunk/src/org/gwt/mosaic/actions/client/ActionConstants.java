@@ -79,6 +79,12 @@ public interface ActionConstants extends Constants {
   @DefaultStringValue("Open...")
   String openName();
 
+  @DefaultStringValue("Open the parent folder")
+  String openParentFolderDescription();
+
+  @DefaultStringValue("Open Parent")
+  String openParentFolderName();
+
   @DefaultStringValue("Paste")
   String pasteName();
 
