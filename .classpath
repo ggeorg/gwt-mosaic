@@ -9,8 +9,7 @@
 	<classpathentry kind="lib" path="lib/toplink-essentials.jar"/>
 	<classpathentry kind="lib" path="lib/toplink-essentials-agent.jar"/>
 	<classpathentry kind="lib" path="lib/gwtx-1.5-20081912.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-incubator-trunk-r1441.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.2.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GWT_1_6"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
