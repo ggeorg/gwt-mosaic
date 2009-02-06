@@ -46,6 +46,10 @@ import org.gwt.mosaic.core.client.DOM;
  */
 public abstract class AbstractUnitConverter implements UnitConverter {
 
+  private static final int DTP_RESOLUTION = 72;
+
+  // Unit Converter Implementation *****************************************
+
   /**
    * Converts Inches and returns pixels.
    * 
@@ -53,7 +57,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given Inches as pixels
    */
   public int inchAsPixel(final double in) {
-    return inchAsPixel(in, getDPI());
+    return inchAsPixel(in, getDefaultScreenResolution());
   }
 
   /**
@@ -63,7 +67,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given Millimeters as pixels
    */
   public int millimeterAsPixel(double mm) {
-    return millimeterAsPixel(mm, getDPMM());
+    return millimeterAsPixel(mm, getDefaultScreenResolution());
   }
 
   /**
@@ -73,7 +77,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given Centimeters as pixels
    */
   public int centimeterAsPixel(double cm) {
-    return centimeterAsPixel(cm, getDPCM());
+    return centimeterAsPixel(cm, getDefaultScreenResolution());
   }
 
   /**
@@ -83,7 +87,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given Points as pixels
    */
   public int pointAsPixel(int pt) {
-    return pointAsPixel(pt, getDPPT());
+    return pointAsPixel(pt, getDefaultScreenResolution());
   }
 
   /**
@@ -93,7 +97,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    *          units per pixels
    */
   public int dialogUnitXAsPixel(int dluX) {
-    return dialogUnitXAsPixel(dluX, getDialogBaseUnitsX() / 4);
+    return dialogUnitXAsPixel(dluX, getDialogBaseUnitsX());
   }
 
   /**
@@ -103,7 +107,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given vertical dialog units as pixels
    */
   public int dialogUnitYAsPixel(int dluY) {
-    return dialogUnitYAsPixel(dluY, getDialogBaseUnitsY() / 8);
+    return dialogUnitYAsPixel(dluY, getDialogBaseUnitsY());
   }
 
   // Abstract Behavior *****************************************************
@@ -130,7 +134,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * Converts Inches and returns pixels.
    * 
    * @param in the Inches
-   * @param dpi the resolution
+   * @param dpi the resolution in dpi
    * @return the given Inches as pixels
    */
   protected final int inchAsPixel(double in, int dpi) {
@@ -141,33 +145,33 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * Converts Millimeters and returns pixels.
    * 
    * @param mm Millimeters
-   * @param dpmm the resolution
+   * @param dpi the resolution in dpi
    * @return the given Millimeters as pixels
    */
-  protected final int millimeterAsPixel(double mm, int dpmm) {
-    return (int) Math.round(dpmm * mm);
+  protected final int millimeterAsPixel(double mm, int dpi) {
+    return (int) Math.round(dpi * mm * 10 / 254);
   }
 
   /**
    * Converts Centimeters and returns pixels.
    * 
    * @param cm Centimeters
-   * @param dpcm the resolution
+   * @param dpi the resolution in dpi
    * @return the given Centimeters as pixels
    */
-  protected final int centimeterAsPixel(double cm, int dpcm) {
-    return (int) Math.round(dpcm * cm);
+  protected final int centimeterAsPixel(double cm, int dpi) {
+    return (int) Math.round(dpi * cm * 100 / 254);
   }
 
   /**
    * Converts DTP Points and returns pixels.
    * 
    * @param pt DTP Points
-   * @param dppt the resolution in dpi
+   * @param dpi the resolution in dpi
    * @return the given Points as pixels
    */
-  protected final int pointAsPixel(int pt, int dppt) {
-    return Math.round(dppt * pt);
+  protected final int pointAsPixel(int pt, int dpi) {
+    return Math.round(dpi * pt / DTP_RESOLUTION);
   }
 
   /**
@@ -178,7 +182,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given dialog base units as pixels
    */
   protected int dialogUnitXAsPixel(int dluX, double dialogBaseUnitsX) {
-    return (int) Math.round(dluX * dialogBaseUnitsX);
+    return (int) Math.round(dluX * dialogBaseUnitsX / 4);
   }
 
   /**
@@ -189,64 +193,23 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given dialog base units as pixels
    */
   protected int dialogUnitYAsPixel(int dluY, double dialogBaseUnitsY) {
-    return (int) Math.round(dluY * dialogBaseUnitsY);
+    return (int) Math.round(dluY * dialogBaseUnitsY / 8);
   }
 
   // Helper Code ************************************************************
 
-  private static int dpi = -1;
+  private static int defaultScreenResolution = -1;
 
   /**
-   * Returns the screen resolution in dots-per-inch.
+   * Returns the default screen resolution in dots-per-inch.
    * 
    * @return the screen resolution, in dots-per-inch
    */
-  private int getDPI() {
-    if (dpi == -1) {
-      dpi = DOM.getScreenResolution();
+  private int getDefaultScreenResolution() {
+    if (defaultScreenResolution == -1) {
+      defaultScreenResolution = DOM.getScreenResolution();
     }
-    return dpi;
+    return defaultScreenResolution;
   }
 
-  private static int dpmm = -1;
-
-  /**
-   * Returns the screen resolution in dots-per-millimeter.
-   * 
-   * @return the screen resolution, in dots-per-millimeter
-   */
-  private static int getDPMM() {
-    if (dpmm == -1) {
-      dpmm = DOM.toPixelSize("1mm");
-    }
-    return dpmm;
-  }
-
-  private static int dpcm = -1;
-
-  /**
-   * Returns the screen resolution in dots-per-centimeter.
-   * 
-   * @return the screen resolution, in dots-per-centimeter
-   */
-  private static int getDPCM() {
-    if (dpcm == -1) {
-      dpcm = DOM.toPixelSize("1cm");
-    }
-    return dpcm;
-  }
-
-  private static int dppt = -1;
-
-  /**
-   * Returns the screen resolution in dots-per-point.
-   * 
-   * @return the screen resolution, in dots-per-point
-   */
-  private static int getDPPT() {
-    if (dppt == -1) {
-      dppt = DOM.toPixelSize("1pt");
-    }
-    return dppt;
-  }
 }
