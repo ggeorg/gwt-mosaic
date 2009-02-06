@@ -372,7 +372,6 @@ public class BorderLayoutData extends LayoutData implements HasCollapseHandlers 
     this.minSize = minSize;
   }
 
-  @Override
   public HandlerRegistration addCollapseHandler(CollapseHandler handler) {
 	  return addHandler(handler, CollapseEvent.getType());
   }

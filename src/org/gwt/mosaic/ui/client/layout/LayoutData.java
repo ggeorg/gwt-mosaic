@@ -34,7 +34,6 @@ public class LayoutData implements HasHandlers {
 
   protected HandlerManager handlerManager;
   
-  @Override
   public void fireEvent(GwtEvent<?> event) {
 	  if (handlerManager != null) handlerManager.fireEvent(event);		
   }

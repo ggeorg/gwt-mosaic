@@ -92,8 +92,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     northPanel.add(new WidgetWrapper(new HTML("Height: 20%")));
 
     collapseBtn1.addClickHandler(new ClickHandler() {
-    	@Override
-		public void onClick(ClickEvent event) {
+    	public void onClick(ClickEvent event) {
 			layoutPanel.setCollapsed(northPanel, !layoutPanel.isCollapsed(northPanel));
             layoutPanel.layout();
 		}
@@ -185,7 +184,6 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
    * @see org.gwt.mosaic.ui.client.CollapsedListener#onCollapsedChange(com.google.gwt.user.client.ui.Widget)
    */
   @ShowcaseSource
-  @Override
   public void onCollapseChanged(CollapseEvent event) {
     InfoPanel.show("Collapsed", "" + layoutPanel.isCollapsed(event.getTarget()));
   }

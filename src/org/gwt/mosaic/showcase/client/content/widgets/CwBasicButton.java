@@ -93,7 +93,6 @@ public class CwBasicButton extends ContentWidget implements ClickHandler {
    * @see ClickHandler#onClick(ClickEvent)
    */
   @ShowcaseSource
-  @Override
   public void onClick(ClickEvent event) {
     InfoPanel.show(((Button) event.getSource()).getText(), constants.mosaicBasicButtonClickMessage());
   }
