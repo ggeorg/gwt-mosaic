@@ -96,7 +96,6 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
    * @see ClickHandler#onClick(ClickEvent)
    */
   @ShowcaseSource
-  @Override
   public void onClick(ClickEvent event) {
 
     if (event.getSource() instanceof PushButton) {
