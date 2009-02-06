@@ -103,7 +103,8 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     }
 
     protected void init() {
-      sinkEvents(Event.MOUSEEVENTS);
+      // ggeorg: for Event.ONCLICK see issue 39
+      sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
       addStyleName(DEFAULT_STYLE_NAME);
     }
 
