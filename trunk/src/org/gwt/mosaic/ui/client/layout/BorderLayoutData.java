@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -109,12 +111,12 @@ public class BorderLayoutData extends LayoutData {
    * should be undecorated. The region of the widget added to a
    * {@link LayoutPanel} is specified by the {@code region} parameter. The
    * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
-   * horizontally, while the height of the widgets is specified by the
-   * {@code preferredSize} parameter; the {@link Region#EAST} and
-   * {@link Region#WEST} child widgets are stretched vertically, while the width
-   * of the widgets is specified by the {@code preferredSize} parameter; the
-   * {@link Region#CENTER} child widget will be stretched both horizontally and
-   * vertically to fill any space left over.
+   * horizontally, while the height of the widgets is specified by the {@code
+   * preferredSize} parameter; the {@link Region#EAST} and {@link Region#WEST}
+   * child widgets are stretched vertically, while the width of the widgets is
+   * specified by the {@code preferredSize} parameter; the {@link Region#CENTER}
+   * child widget will be stretched both horizontally and vertically to fill any
+   * space left over.
    * <p>
    * For {@code preferredSize} parameter values > 0 and <= 1 are in ratios of
    * the available client area except paddings, 0 and values > 1 are in pixels,
@@ -136,12 +138,12 @@ public class BorderLayoutData extends LayoutData {
    * should be undecorated. The region of the widget added to a
    * {@link LayoutPanel} is specified by the {@code region} parameter. The
    * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
-   * horizontally, while the height of the widgets is specified by the
-   * {@code preferredSize} parameter; the {@link Region#EAST} and
-   * {@link Region#WEST} child widgets are stretched vertically, while the width
-   * of the widgets is specified by the {@code preferredSize} parameter; the
-   * {@link Region#CENTER} child widget will be stretched both horizontally and
-   * vertically to fill any space left over.
+   * horizontally, while the height of the widgets is specified by the {@code
+   * preferredSize} parameter; the {@link Region#EAST} and {@link Region#WEST}
+   * child widgets are stretched vertically, while the width of the widgets is
+   * specified by the {@code preferredSize} parameter; the {@link Region#CENTER}
+   * child widget will be stretched both horizontally and vertically to fill any
+   * space left over.
    * <p>
    * For {@code preferredSize} parameter values > 0 and <= 1 are in ratios of
    * the available client area except paddings, 0 and values > 1 are in pixels,
