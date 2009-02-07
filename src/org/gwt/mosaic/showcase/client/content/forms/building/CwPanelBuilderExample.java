@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -90,6 +90,11 @@ public class CwPanelBuilderExample extends ContentWidget {
   public String getName() {
     return "PanelBuilder";
   }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
+  }
 
   /**
    * Initialize this example.
@@ -142,6 +147,7 @@ public class CwPanelBuilderExample extends ContentWidget {
    * 
    * @return a combo box for the approval status
    */
+  @ShowcaseSource
   private ListBox createApprovalStatusComboBox() {
     final ListBox listBox = new ListBox();
     listBox.addItem("In Progress");
@@ -155,6 +161,7 @@ public class CwPanelBuilderExample extends ContentWidget {
    * 
    * @return a combo box for the project type
    */
+  @ShowcaseSource
   private ListBox createProjectTypeComboBox() {
     final ListBox listBox = new ListBox();
     listBox.addItem("New Building");

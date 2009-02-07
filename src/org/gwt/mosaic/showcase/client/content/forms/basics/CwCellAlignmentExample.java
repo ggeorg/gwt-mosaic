@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,6 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
@@ -61,12 +60,12 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Demonstrates the different FormLayout alignments.
+ * Demonstrates how FormLayout applies the default column and row alignments to
+ * cells, and how to override the defaults.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwCellAlignmentExample extends ContentWidget {
 
   /**
@@ -80,12 +79,20 @@ public class CwCellAlignmentExample extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "Demonstrates how FormLayout applies the default column and row alignments to cells - and how to override the defaults.";
+    return "Demonstrates how FormLayout applies the default column and row alignments to cells - "
+        + "and how to override the defaults. The buttons show the cell constraint alignments. "
+        + "Cells that specify no alignment use the column and row defaults. "
+        + "Column default is Fill, row default is Center.";
   }
 
   @Override
   public String getName() {
     return "Cell Alignments";
+  }
+
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

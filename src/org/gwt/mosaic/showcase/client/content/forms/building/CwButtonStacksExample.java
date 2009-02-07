@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -113,6 +113,7 @@ public class CwButtonStacksExample extends ContentWidget {
   @ShowcaseSource
   private Widget buildButtonStackNoBuilder() {
     LayoutPanel buttonStack = new LayoutPanel(new FormLayout("p", "p, 4px, p"));
+    buttonStack.setPadding(0);
     buttonStack.add(new Button("Yes"), CellConstraints.xy(1, 1));
     buttonStack.add(new Button("No"), CellConstraints.xy(1, 3));
     return wrap(buttonStack,

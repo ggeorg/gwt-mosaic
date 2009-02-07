@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,6 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
@@ -67,7 +66,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwBasicSizesExample extends ContentWidget {
 
   /**
@@ -81,12 +79,19 @@ public class CwBasicSizesExample extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "Demonstrates the basic FormLayout sizing options: constant, minimum and preferred";
+    return "Demonstrates the basic FormLayout sizing options: "
+        + "constant, minimum and preferred. "
+        + "The text components have different minimum and preferred sizes.";
   }
 
   @Override
   public String getName() {
     return "Basic Sizes";
+  }
+
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

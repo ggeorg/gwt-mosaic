@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,13 +54,16 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Combines the FormLayout with the PanelBuilder. Columns and rows are specified
- * before the panel is filled with components. The builder's cursor is used to
- * determine the location of the next component. And the builder's convenience
- * methods are used to add labels and separators.
- * <p>
- * This panel building style is intended for learning purposes only. The
- * recommended style is demonstrated in the {@link CwDefaultFormBuilderExample}.
+ * Uses the FormLayout and the <code>DefaultFormBuilder</code>.
+ * Columns are specified before the panel is filled with components,
+ * rows are added dynamically. The builder is used to hold a cursor,
+ * to add rows dynamically, and to fill components.
+ * The builder's convenience methods are used to add labels and separators.<p>
+ *
+ * This panel building style is recommended unless you have a more
+ * powerful builder or don't want to add rows dynamically.
+ * See the {@link DynamicRowsExample} for an implementation that specifies
+ * rows before the panel is filled with components.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
@@ -86,6 +89,11 @@ public class CwDefaultFormBuilderExample extends ContentWidget {
   @Override
   public String getName() {
     return "Default Form";
+  }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

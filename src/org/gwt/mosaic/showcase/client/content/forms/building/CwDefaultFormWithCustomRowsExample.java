@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,14 +55,15 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Combines the FormLayout with the PanelBuilder. Columns and rows are specified
- * before the panel is filled with components. The builder's cursor is used to
- * determine the location of the next component. And the builder's convenience
- * methods are used to add labels and separators.
- * <p>
- * This panel building style is intended for learning purposes only. The
- * recommended style is demonstrated in the
- * {@link CwDefaultFormWithCustomRowsExample}.
+ * Shows three approaches how to add custom rows to a form that is built using a
+ * DefaultFormBuilder.
+ * <ol>
+ * <li>single custom row,
+ * <li>standard + custom row,
+ * <li>multiple standard rows.
+ * </ol>
+ * These differ in the position of the 'Comment' label, the alignment of font
+ * baselines and the height of the custom row.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
@@ -89,6 +90,11 @@ public class CwDefaultFormWithCustomRowsExample extends ContentWidget {
   @Override
   public String getName() {
     return "Custom Rows";
+  }
+
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

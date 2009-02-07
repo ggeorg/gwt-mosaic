@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -84,6 +84,11 @@ public class CwButtonBarsExample extends ContentWidget {
   public String getName() {
     return "Button Bars";
   }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
+  }
 
   /**
    * Initialize this example.
@@ -108,6 +113,7 @@ public class CwButtonBarsExample extends ContentWidget {
   private Widget buildButtonBar1Panel() {
     final LayoutPanel buttonBar = new LayoutPanel(new FormLayout(
         "0:grow, p, 4px, p", "p"));
+    buttonBar.setPadding(0);
     buttonBar.add(new Button("Yes"), new CellConstraints(2, 1));
     buttonBar.add(new Button("No"), new CellConstraints(4, 1));
     return wrap(buttonBar,
