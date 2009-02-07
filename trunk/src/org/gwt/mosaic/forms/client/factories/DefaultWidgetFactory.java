@@ -29,7 +29,7 @@
  */
 package org.gwt.mosaic.forms.client.factories;
 
-import org.gwt.mosaic.forms.client.Separator;
+import org.gwt.mosaic.ui.client.Separator;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * A singleton implementation of the {@link WidgetFactory} interface that
  * creates UI components as required by the
- * {@link com.jgoodies.forms.builder.PanelBuilder}.
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder}.
  * <p>
  * 
  * The texts used in methods <code>#createLabel(String)</code> and

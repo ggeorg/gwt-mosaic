@@ -41,7 +41,7 @@ import org.gwt.mosaic.forms.client.util.LayoutStyle;
  * @author Karsten Lentzsch
  * @version $Revision: 1.11 $
  * 
- * @see com.jgoodies.forms.layout.FormLayout
+ * @see com.FormLayout.forms.layout.FormLayout
  * @see ColumnSpec
  */
 public final class FormFactory {

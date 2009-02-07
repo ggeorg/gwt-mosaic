@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * An interface that defines the factory methods as used by the
- * {@link com.jgoodies.forms.builder.PanelBuilder} and its subclasses.
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder} and its subclasses.
  * <p>
  * 
  * The String arguments passed to the methods <code>#createLabel(String)</code>,
@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Revision: 1.6 $
  * 
  * @see DefaultWidgetFactory
- * @see com.jgoodies.forms.builder.PanelBuilder
+ * @see org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder
  */
 
 public interface WidgetFactory {
