@@ -44,7 +44,7 @@
  */
 package org.gwt.mosaic.showcase.client.content.forms.building;
 
-import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
+import org.gwt.mosaic.forms.client.builder.ButtonBarBuilder;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
@@ -54,7 +54,6 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -63,14 +62,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class CwButtonsBarExample extends ContentWidget {
+public class CwButtonBarsExample extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwButtonsBarExample(CwConstants constants) {
+  public CwButtonBarsExample(CwConstants constants) {
     super(constants);
   }
 
@@ -94,11 +93,11 @@ public class CwButtonsBarExample extends ContentWidget {
   protected Widget onInitialize() {
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(buildButtonBar1Panel(), "No Builder");
-    // tabPanel.add(buildButtonBar2Panel(), "Builder");
-    // tabPanel.add(buildButtonBar3Panel(), "Related");
-    // tabPanel.add(buildButtonBar4Panel(), "Unrelated ");
-    // tabPanel.add(buildButtonMixedBar1Panel(), "Mix");
-    // tabPanel.add(buildButtonMixedBar2Panel(), "Mix Narrow");
+    tabPanel.add(buildButtonBar2Panel(), "Builder");
+    tabPanel.add(buildButtonBar3Panel(), "Related");
+    tabPanel.add(buildButtonBar4Panel(), "Unrelated");
+    tabPanel.add(buildButtonMixedBar1Panel(), "Mix");
+    tabPanel.add(buildButtonMixedBar2Panel(), "Mix Narrow");
     return tabPanel;
   }
 
@@ -111,7 +110,6 @@ public class CwButtonsBarExample extends ContentWidget {
         "0:grow, p, 4px, p", "p"));
     buttonBar.add(new Button("Yes"), new CellConstraints(2, 1));
     buttonBar.add(new Button("No"), new CellConstraints(4, 1));
-
     return wrap(buttonBar,
         "This bar has been built without a ButtonBarBuilder:\n"
             + " o buttons have no minimum widths,\n"
@@ -119,8 +117,100 @@ public class CwButtonsBarExample extends ContentWidget {
             + " o gaps may be inconsistent between team members.");
   }
 
+  /**
+   * Builder.
+   */
+  @ShowcaseSource
+  private Widget buildButtonBar2Panel() {
+    ButtonBarBuilder builder = new ButtonBarBuilder();
+    builder.addGlue();
+    builder.addGriddedButtons(new Button[] {new Button("Yes"), new Button("No")});
+    return wrap(builder.getPanel(),
+        "This bar has been built with a ButtonBarBuilder:\n"
+            + " o buttons have a minimum widths,\n"
+            + " o the button order honors the platform default,\n"
+            + " o the button gap is a logical size that follows a style guide.");
+  }
+
+  /**
+   * Related.
+   */
+  @ShowcaseSource
+  private Widget buildButtonBar3Panel() {
+    ButtonBarBuilder builder = new ButtonBarBuilder();
+    builder.addGlue();
+    builder.addGridded(new Button("One"));
+    builder.addRelatedGap();
+    builder.addGridded(new Button("Two"));
+    builder.addRelatedGap();
+    builder.addGridded(new Button("Three"));
+    return wrap(builder.getPanel(),
+        "This bar uses the logical gap for related buttons.\n");
+  }
+
+  /**
+   * Unrelated.
+   */
+  @ShowcaseSource
+  private Widget buildButtonBar4Panel() {
+    ButtonBarBuilder builder = new ButtonBarBuilder();
+    builder.addGlue();
+    builder.addGridded(new Button("One"));
+    builder.addUnrelatedGap();
+    builder.addGridded(new Button("Two"));
+    builder.addUnrelatedGap();
+    builder.addGridded(new Button("Three"));
+    return wrap(builder.getPanel(),
+        "This bar uses the logical gap for unrelated buttons.\n"
+            + "It is a little bit wider than the related gap.");
+  }
+
+  /**
+   * Mix.
+   */
+  @ShowcaseSource
+  private Widget buildButtonMixedBar1Panel() {
+    ButtonBarBuilder builder = new ButtonBarBuilder();
+    builder.addGridded(new Button("Help"));
+    builder.addUnrelatedGap();
+    builder.addGlue();
+    builder.addFixed(new Button("Copy to Clipboard"));
+    builder.addUnrelatedGap();
+    builder.addGriddedButtons(new Button[] {
+        new Button("OK"), new Button("Cancel")});
+    return wrap(builder.getPanel(),
+        "Demonstrates a glue (between Help and the rest),\n"
+            + "has related and unrelated buttons and an ungridded button\n"
+            + "with a default margin (Copy to Clipboard).");
+  }
+
+  /**
+   * Mix Narrow.
+   */
+  @ShowcaseSource
+  private Widget buildButtonMixedBar2Panel() {
+    ButtonBarBuilder builder = new ButtonBarBuilder();
+    builder.addGridded(new Button("Help"));
+    builder.addUnrelatedGap();
+    builder.addGlue();
+    builder.addFixedNarrow(new Button("Copy to Clipboard"));
+    builder.addUnrelatedGap();
+    builder.addGriddedButtons(new Button[] {
+        new Button("OK"), new Button("Cancel")});
+    return wrap(builder.getPanel(),
+        "Demonstrates a glue (between Help and the rest),\n"
+            + "has related and unrelated buttons and an ungridded button\n"
+            + "with a narrow margin (Copy to Clipboard).\n\n"
+            + "Note that some look&feels do not support the narrow margin\n"
+            + "feature, and conversely, others have only narrow margins.");
+  }
+
   // Helper Code ************************************************************
 
+  /**
+   * Helper Code.
+   */
+  @ShowcaseSource
   private static Widget wrap(Widget buttonBar, String text) {
     TextArea textArea = new TextArea();
     textArea.setText(text);
@@ -133,10 +223,9 @@ public class CwButtonsBarExample extends ContentWidget {
     FormLayout layout = new FormLayout("fill:100dlu:grow",
         "fill:56dlu:grow, 4dlu, p");
     LayoutPanel panel = new LayoutPanel(layout);
-    CellConstraints cc = new CellConstraints();
     // panel.setBorder(Borders.DIALOG_BORDER);
-    panel.add(textArea, cc.xy(1, 1));
-    panel.add(buttonBar, cc.xy(1, 3));
+    panel.add(textArea, CellConstraints.xy(1, 1));
+    panel.add(buttonBar, CellConstraints.xy(1, 3));
     return panel;
   }
 
