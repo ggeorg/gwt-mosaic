@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,6 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
@@ -66,7 +65,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwAlignmentExample extends ContentWidget {
 
   /**
@@ -80,12 +78,19 @@ public class CwAlignmentExample extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "Demonstrates the FormLayout alignment options.";
+    return "Demonstrates the FormLayout alignment options. "
+        + "Column alignments are: left, center, right, fill, "
+        + "default Row alignments are: top, center, bottom, fill, default";
   }
 
   @Override
   public String getName() {
     return "Alignments";
+  }
+
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

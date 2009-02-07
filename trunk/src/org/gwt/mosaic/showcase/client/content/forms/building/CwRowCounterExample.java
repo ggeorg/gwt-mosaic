@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,6 +91,11 @@ public class CwRowCounterExample extends ContentWidget {
   public String getName() {
     return "Row Counter";
   }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
+  }
 
   /**
    * Initialize this example.
@@ -147,6 +152,7 @@ public class CwRowCounterExample extends ContentWidget {
    * 
    * @return a combo box for different materials
    */
+  @ShowcaseSource
   private ListBox materialComboBox() {
     final ListBox listBox = new ListBox();
     listBox.addItem("C45E, ReH=600");
@@ -159,6 +165,7 @@ public class CwRowCounterExample extends ContentWidget {
    * 
    * @return a combo box for a bunch of ice classes
    */
+  @ShowcaseSource
   private ListBox iceClassComboBox() {
     final ListBox listBox = new ListBox();
     listBox.addItem("E");

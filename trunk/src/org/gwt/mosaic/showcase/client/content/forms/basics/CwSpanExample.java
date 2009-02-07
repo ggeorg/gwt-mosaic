@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -62,7 +62,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Demonstrates the different FormLayout alignments.
+ * Demonstrates how components can span multiple columns and rows.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
@@ -87,6 +87,11 @@ public class CwSpanExample extends ContentWidget {
   @Override
   public String getName() {
     return "Span";
+  }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

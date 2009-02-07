@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -120,6 +120,10 @@ public class CwWidgetOrientationExample extends ContentWidget {
     return rowBuilder.getPanel();
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget buildSample(String title, boolean leftToRight) {
     String leftToRightSpecs = "right:pref, 4dlu, pref:grow, 3dlu, pref:grow";
     FormLayout layout = leftToRight ? new FormLayout(leftToRightSpecs)
@@ -152,8 +156,10 @@ public class CwWidgetOrientationExample extends ContentWidget {
    * Provides some convenience behavior for flipping side in column
    * specifications, arrays of column specifications and encoded column specs.
    */
+  @ShowcaseSource
   private static final class OrientationUtils {
 
+    @ShowcaseSource
     private OrientationUtils() {
       // Overrides default constructor; prevents instantiation.
     }
@@ -166,6 +172,7 @@ public class CwWidgetOrientationExample extends ContentWidget {
      * @param spec the original column specification
      * @return the column specification with flipped default alignment
      */
+    @ShowcaseSource
     static ColumnSpec flipped(ColumnSpec spec) {
       DefaultAlignment alignment = spec.getDefaultAlignment();
       if (alignment == ColumnSpec.LEFT)
@@ -182,6 +189,7 @@ public class CwWidgetOrientationExample extends ContentWidget {
      * @param original the original array of column specifications
      * @return an array of flipped column specs in reversed order
      */
+    @ShowcaseSource
     static ColumnSpec[] flipped(ColumnSpec[] original) {
       int length = original.length;
       ColumnSpec[] flipped = new ColumnSpec[length];
@@ -200,6 +208,7 @@ public class CwWidgetOrientationExample extends ContentWidget {
      *          specifications
      * @return an array of flipped column specs in reversed order
      */
+    @ShowcaseSource
     static ColumnSpec[] flipped(String encodedColumnSpecs) {
       return flipped(ColumnSpec.decodeSpecs(encodedColumnSpecs));
     }
@@ -213,6 +222,7 @@ public class CwWidgetOrientationExample extends ContentWidget {
      * @return the flipped cell constraints with flipped horizontal alignment,
      *         and flipped left and right insets - if any
      */
+    @ShowcaseSource
     static CellConstraints flipHorizontally(CellConstraints cc) {
       CellConstraints.Alignment flippedHAlign = cc.hAlign;
       if (flippedHAlign == CellConstraints.LEFT)
@@ -242,6 +252,7 @@ public class CwWidgetOrientationExample extends ContentWidget {
      * @return the flipped cell constraints with flipped horizontal alignment,
      *         and flipped left and right insets - if any
      */
+    @ShowcaseSource
     static CellConstraints flipHorizontally(CellConstraints cc, int columnCount) {
       CellConstraints flipped = flipHorizontally(cc);
       flipped.gridX = columnCount + 1 - cc.gridX;

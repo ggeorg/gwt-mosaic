@@ -44,7 +44,6 @@
  */
 package org.gwt.mosaic.showcase.client.content.forms.factories;
 
-import org.gwt.mosaic.forms.client.builder.ButtonBarBuilder;
 import org.gwt.mosaic.forms.client.builder.PanelBuilder;
 import org.gwt.mosaic.forms.client.factories.ButtonBarFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
@@ -52,7 +51,6 @@ import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;

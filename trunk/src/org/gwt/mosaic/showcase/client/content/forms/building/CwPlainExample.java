@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -93,6 +93,11 @@ public class CwPlainExample extends ContentWidget {
   @Override
   public String getName() {
     return "Plain";
+  }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**

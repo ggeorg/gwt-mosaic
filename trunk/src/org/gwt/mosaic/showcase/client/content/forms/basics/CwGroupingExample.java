@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,6 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
@@ -63,12 +62,11 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Demonstrates the basic FormLayout sizes: constant, minimum, preferred.
+ * Demonstrates how columns and rows can be grouped in FormLayout.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwGroupingExample extends ContentWidget {
 
   /**
@@ -90,6 +88,11 @@ public class CwGroupingExample extends ContentWidget {
   public String getName() {
     return "Grouping";
   }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
+  }
 
   /**
    * Initialize this example.
@@ -97,15 +100,12 @@ public class CwGroupingExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(buildWizardBar(false), "Ungrouped Bar");
     tabPanel.add(buildWizardBar(true), "Grouped Bar");
     tabPanel.add(buildEditorPanel(false), "Ungrouped Rows");
     tabPanel.add(buildEditorPanel(true), "Grouped Rows");
-
+    
     return tabPanel;
   }
 

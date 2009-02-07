@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -64,7 +64,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Demonstrates the basic FormLayout sizes: constant, minimum, preferred.
+ * Demonstrates the different sizing units provided by the FormLayout: Pixel,
+ * Dialog Units (dlu), Point, Millimeter, Centimeter and Inches. Pt, mm, cm, in
+ * honor the screen resolution; dlus honor the font size too.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
@@ -83,13 +85,19 @@ public class CwUnitsExample extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "Demonstrates the different sizing units supported by the FormLayout:"
-        + "Pixel, Dialog Units (dlu), Point, Millimeter, Centimeter and Inch.";
+    return "Demonstrates the different sizing units supported by the FormLayout: "
+        + "Pixel, Dialog Units (dlu), Point, Millimeter, Centimeter and Inch. "
+        + "Pt, mm, cm, and in honor the screen resolution; dlus honor the font's pixel size too.";
   }
 
   @Override
   public String getName() {
     return "Units";
+  }
+
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**
@@ -234,6 +242,10 @@ public class CwUnitsExample extends ContentWidget {
 
   // Helper Code ************************************************************
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private LayoutPanel buildHorizontalPanel(String width) {
     FormLayout layout = new FormLayout(width, "pref");
     LayoutPanel panel = new LayoutPanel(layout);
@@ -241,6 +253,10 @@ public class CwUnitsExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private LayoutPanel buildHorizontalPanel(int columns) {
     FormLayout layout = new FormLayout("pref, 4dlu, pref", "pref");
     LayoutPanel panel = new LayoutPanel(layout);
@@ -250,10 +266,18 @@ public class CwUnitsExample extends ContentWidget {
     return panel;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private LayoutPanel buildVerticalPanel(String height) {
     return buildVerticalPanel(height, 10);
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private LayoutPanel buildVerticalPanel(String height, int rows) {
     FormLayout layout = new FormLayout("pref", "fill:" + height);
     LayoutPanel panel = new LayoutPanel(layout);
@@ -264,12 +288,20 @@ public class CwUnitsExample extends ContentWidget {
 
   // Component Creation *****************************************************
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget createTextBox(int cols) {
     TextBox textBox = new TextBox();
     textBox.setWidth(cols + "em");
     return textBox;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget createTextArea(int rows, int cols) {
     TextArea textArea = new TextArea();
     textArea.setVisibleLines(rows);
@@ -277,6 +309,10 @@ public class CwUnitsExample extends ContentWidget {
     return textArea;
   }
 
+  /**
+   * 
+   */
+  @ShowcaseSource
   private Widget newLabel(String string) {
     final Label label = new Label(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");

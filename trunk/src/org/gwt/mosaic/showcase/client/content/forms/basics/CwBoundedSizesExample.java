@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,19 +50,17 @@ import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Demonstrates the different FormLayout alignments.
+ * Demonstrates the basic FormLayout sizes: constant, minimum, preferred.
  * 
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwBoundedSizesExample extends ContentWidget {
 
   /**
@@ -84,6 +82,11 @@ public class CwBoundedSizesExample extends ContentWidget {
   @Override
   public String getName() {
     return "Bounded Sizes";
+  }
+  
+  @Override
+  public boolean hasStyle() {
+    return false;
   }
 
   /**
