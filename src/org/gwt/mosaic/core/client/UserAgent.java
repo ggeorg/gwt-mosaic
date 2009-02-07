@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,11 @@ import org.gwt.mosaic.core.client.impl.UserAgentImpl;
 
 import com.google.gwt.core.client.GWT;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ *
+ */
 public final class UserAgent {
   
   private static final UserAgentImpl impl = GWT.create(UserAgentImpl.class);

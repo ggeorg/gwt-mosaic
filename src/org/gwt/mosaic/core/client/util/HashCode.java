@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopoulos J. Georgios.
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -58,6 +58,9 @@ package org.gwt.mosaic.core.client.util;
  * </code></pre>
  * 
  * @see java.util.List#hashCode()
+ * 
+ * @author http://harmony.apache.org/
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public final class HashCode {
   /**
@@ -108,8 +111,8 @@ public final class HashCode {
    * @return combined hashCode
    */
   public static int combine(int hashCode, float value) {
-    //int v = Float.floatToIntBits(value);
-    int v = (int)(value * 0xffff); // XXX
+    // FIXME int v = Float.floatToIntBits(value);
+    int v = (int) (value * 0xffff); // XXX
     return combine(hashCode, v);
   }
 
@@ -121,8 +124,8 @@ public final class HashCode {
    * @return combined hashCode
    */
   public static int combine(int hashCode, double value) {
-    // long v = Double.doubleToLongBits(value);
-    long v = (long)(value * 0xffffffff); // XXX
+    // FIXME long v = Double.doubleToLongBits(value);
+    long v = (long) (value * 0xffffffff); // XXX
     return combine(hashCode, v);
   }
 

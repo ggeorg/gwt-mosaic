@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgopolos J. Georgios
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package org.gwt.mosaic.core.client;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ *
  */
 public interface Shape {
   public boolean contains(double x, double y);

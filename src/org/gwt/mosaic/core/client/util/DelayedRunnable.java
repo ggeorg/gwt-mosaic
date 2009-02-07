@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,11 +20,12 @@ import org.gwt.mosaic.core.client.CoreConstants;
 import com.google.gwt.user.client.Timer;
 
 /**
- * A helper class for delayed execution based on
- * {@code com.google.gwt.user.client.Timer}.
- * 
+ * A helper class for delayed execution based on {@code
+ * com.google.gwt.user.client.Timer}.
  * <p>
+ * 
  * Example:
+ * 
  * <pre>
  * new DelayedRunnable() {
  *   &#64;Override
@@ -45,8 +46,8 @@ public abstract class DelayedRunnable implements CoreConstants {
   };
 
   /**
-   * Creates a {@code com.google.gwt.user.client.Timer} and calls
-   * {@code com.google.gwt.user.client.Timer#schedule(int)} with the default
+   * Creates a {@code com.google.gwt.user.client.Timer} and calls {@code
+   * com.google.gwt.user.client.Timer#schedule(int)} with the default
    * {@link CoreConstants#DEFAULT_DELAY_MILLIS} value.
    */
   public DelayedRunnable() {
@@ -54,8 +55,8 @@ public abstract class DelayedRunnable implements CoreConstants {
   }
 
   /**
-   * Creates a {@code com.google.gwt.user.client.Timer} and calls
-   * {@code com.google.gwt.user.client.Timer#schedule(int)} with a given value.
+   * Creates a {@code com.google.gwt.user.client.Timer} and calls {@code
+   * com.google.gwt.user.client.Timer#schedule(int)} with a given value.
    * 
    * @param delayMillis how long to wait before the timer elapses, in
    *          milliseconds

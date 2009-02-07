@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,11 @@ import org.gwt.mosaic.core.client.UserAgent;
 
 import com.google.gwt.user.client.Element;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ *
+ */
 public class DOMImpl {
 
   protected native boolean testOP_SCROLL(String str)

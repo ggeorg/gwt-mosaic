@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * Provides helper methods for DOM elements.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class DOM extends com.google.gwt.user.client.DOM {
 
