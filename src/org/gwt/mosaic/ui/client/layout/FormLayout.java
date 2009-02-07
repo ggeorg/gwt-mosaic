@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- * @deprecated Replaced by org.gwt.mosaic.forms.client.layout.FormLayout
+ * 
  */
 public class FormLayout extends GridLayout {
 
