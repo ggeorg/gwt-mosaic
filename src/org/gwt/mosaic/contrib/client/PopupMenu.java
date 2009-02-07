@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2009 GWT Mosaic Alejandro D. Garin.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
  * A {@link org.gwt.mosaic.ui.client.PopupMenu} which allows to add disabled
  * menu items.
  * 
- * @author georgopoulos.georgios(at)gmail.com
  * @author Alejandro D. Garin
  * 
  */
