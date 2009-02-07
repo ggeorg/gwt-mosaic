@@ -80,8 +80,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * Sometimes a form consists of many standardized rows but has a few rows that
  * require a customization. The DefaultFormBuilder can do everything that the
- * superclasses {@link com.jgoodies.forms.builder.AbstractFormBuilder} and
- * {@link com.jgoodies.forms.builder.PanelBuilder} can do; among other things:
+ * superclasses {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.AbstractFormBuilder} and
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder} can do; among other things:
  * appending new rows and moving the cursor. Again, ask yourself if the
  * DefaultFormBuilder is the appropriate builder. As a rule of thumb you should
  * have more components than builder commands. There are different ways to add
@@ -219,9 +219,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  * 
- * @see com.jgoodies.forms.builder.AbstractFormBuilder
+ * @see org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.AbstractFormBuilder
  * @see com.jgoodies.forms.factories.FormFactory
- * @see com.jgoodies.forms.layout.FormLayout
+ * @see com.FormLayout.forms.layout.FormLayout
  */
 public final class DefaultFormBuilder extends PanelBuilder {
 
