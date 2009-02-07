@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * @author Alejandro D. Garin
  * 
  */
 public class PopupMenu extends AbstractDecoratedPopupPanel implements
