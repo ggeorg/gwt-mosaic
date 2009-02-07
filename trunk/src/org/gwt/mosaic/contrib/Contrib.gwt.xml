@@ -1,5 +1,5 @@
 <!--                                                                        -->
-<!-- Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.           -->
+<!-- Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.                -->
 <!--                                                                        -->
 <!-- Licensed under the Apache License, Version 2.0 (the "License"); you    -->
 <!-- may not use this file except in compliance with the License. You may   -->
@@ -15,20 +15,4 @@
 <!--                                                                        -->
 
 <module>
-
-	<!-- Fall through to this rule is the browser isn't Opera -->
-	<replace-with
-		class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorker">
-		<when-type-is
-			class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorker" />
-	</replace-with>
-
-	<!-- Opera has a different MouseWorker implementation -->
-	<replace-with
-		class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorkerOpera">
-		<when-type-is
-			class="org.mosaic.ui.client.treetable.ScrollTreeTable.MouseResizeWorker" />
-		<when-property-is name="user.agent" value="opera" />
-	</replace-with>
-
 </module>
