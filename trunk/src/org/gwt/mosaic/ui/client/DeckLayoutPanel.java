@@ -1,5 +1,7 @@
 /*
- * Copyright 2008-2009 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
+ * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -104,7 +106,9 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
+   * .user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget child) {
     return getWidget().getWidgetIndex(child);
@@ -145,7 +149,9 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public boolean remove(Widget w) {
     return super.getWidget().remove(w);

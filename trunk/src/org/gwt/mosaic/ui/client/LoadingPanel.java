@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 GWT Mosaic Georgopoulos J. Georgios.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * Displays a loading message and adds a gray overlay.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     PopupListener {
