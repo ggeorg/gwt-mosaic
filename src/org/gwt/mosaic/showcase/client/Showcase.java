@@ -32,13 +32,17 @@ import org.gwt.mosaic.showcase.client.content.forms.basics.CwGroupingExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwGrowingExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwSpanExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwUnitsExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwButtonsBarExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwDefaultFormBuilderExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwDefaultFormWithCustomAreasExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwDefaultFormWithCustomRowsExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwDynamicRowsExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwFormDebugExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwIndentColumnExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPanelBuilderExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPlainExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientationExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
@@ -469,6 +473,14 @@ public class Showcase implements EntryPoint {
         new CwDefaultFormWithCustomRowsExample(constants), IMAGES.catForms());
     setupMainMenuOption(catBuildingForms,
         new CwDefaultFormWithCustomAreasExample(constants), IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwIndentColumnExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwFormDebugExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwWidgetOrientationExample(
+        constants), IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwButtonsBarExample(
+        constants), IMAGES.catForms());
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");

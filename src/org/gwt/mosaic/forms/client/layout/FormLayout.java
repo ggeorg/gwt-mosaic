@@ -108,8 +108,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <strong>Example 2</strong> (Using PanelBuilder):<br>
  * This example creates the same panel as above using the
- * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder} to add components to the
- * form.
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder}
+ * to add components to the form.
  * 
  * <pre>
  * FormLayout layout = new FormLayout(
@@ -1956,21 +1956,24 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @param parent the <code>Container</code> to inspect
    * @return an object that comprises the grid x and y origins
    */
-  // public LayoutInfo getLayoutInfo(LayoutPanel parent) {
-  // initializeColAndRowWidgetLists();
-  // Dimension size = parent.getSize();
-  //
-  // Insets insets = parent.getInsets();
-  // int totalWidth = size.width - insets.left - insets.right;
-  // int totalHeight = size.height - insets.top - insets.bottom;
-  //
-  // int[] x = computeGridOrigins(parent, totalWidth, insets.left, colSpecs,
-  // colWidgets, colGroupIndices, minimumWidthMeasure, preferredWidthMeasure);
-  // int[] y = computeGridOrigins(parent, totalHeight, insets.top, rowSpecs,
-  // rowWidgets, rowGroupIndices, minimumHeightMeasure,
-  // preferredHeightMeasure);
-  // return new LayoutInfo(x, y);
-  // }
+  public LayoutInfo getLayoutInfo(LayoutPanel parent) {
+    initializeColAndRowWidgetLists();
+    int[] size = DOM.getBoxSize(parent.getElement());
+
+    // FIXME
+    // Insets insets = parent.getInsets();
+    int totalWidth = size[0];// - insets.left - insets.right;
+    int totalHeight = size[1];// - insets.top - insets.bottom;
+
+    int[] x = computeGridOrigins(parent, totalWidth, 0/* insets.left */,
+        colSpecs, colWidgets, colGroupIndices, minimumWidthMeasure,
+        preferredWidthMeasure);
+    int[] y = computeGridOrigins(parent, totalHeight, 0/* insets.top */,
+        rowSpecs, rowWidgets, rowGroupIndices, minimumHeightMeasure,
+        preferredHeightMeasure);
+    return new LayoutInfo(x, y);
+  }
+
   /**
    * Stores column and row origins.
    */

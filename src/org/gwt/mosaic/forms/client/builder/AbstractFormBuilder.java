@@ -181,7 +181,7 @@ public abstract class AbstractFormBuilder {
    * @see ComponentOrientation
    */
   public final void setLeftToRight(boolean b) {
-    leftToRight = true; // TODO b;
+    leftToRight = b;
   }
 
   // Accessing the Cursor Location and Extent *****************************
