@@ -21,6 +21,7 @@ import java.io.Serializable;
  * 
  * @author Denis M. Kishenko
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class Rectangle implements /*Shape,*/ Serializable {
   private static final long serialVersionUID = -4345857070255674764L;
