@@ -33,7 +33,9 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   private static void changeToStaticPositioning(Element elem) {
     DOM.setStyleAttribute(elem, "left", "");
     DOM.setStyleAttribute(elem, "top", "");
-    DOM.setStyleAttribute(elem, "position", "");
+    // ggeorg: see
+    // http://groups.google.com/group/gwt-mosaic/browse_thread/thread/83d2bd6d6791ca62
+    // DOM.setStyleAttribute(elem, "position", "");
   }
 
   /**
