@@ -58,10 +58,9 @@
 
 	<!-- Internationalization support. -->
 	<extend-property name="locale" values="en" />
-	<!--
 	<extend-property name="locale" values="ar" />
 	<extend-property name="locale" values="el" />
 	<extend-property name="locale" values="fr" />
 	<extend-property name="locale" values="zh" />
-	 -->
+	
 </module>
