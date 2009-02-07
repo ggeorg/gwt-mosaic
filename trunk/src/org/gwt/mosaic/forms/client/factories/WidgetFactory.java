@@ -31,10 +31,12 @@ package org.gwt.mosaic.forms.client.factories;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 /**
  * An interface that defines the factory methods as used by the
- * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder} and its subclasses.
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder}
+ * and its subclasses.
  * <p>
  * 
  * The String arguments passed to the methods <code>#createLabel(String)</code>,
@@ -87,8 +89,7 @@ public interface WidgetFactory {
    *          <tt>&amp;</tt>) to mark a mnemonic
    * @return an emphasized title label
    */
-  //Label createTitle(String textWithMnemonic);
-
+  // Label createTitle(String textWithMnemonic);
   /**
    * Creates and returns a labeled separator. Useful to separate paragraphs in a
    * panel, which is often a better choice than a <code>TitledBorder</code>.
@@ -109,6 +110,7 @@ public interface WidgetFactory {
    *          <code>SwingConstants.RIGHT</code>
    * @return a title label with separator on the side
    */
-  Widget createSeparator(String textWithMnemonic, int alignment);
+  Widget createSeparator(String textWithMnemonic,
+      HorizontalAlignmentConstant alignment);
 
 }

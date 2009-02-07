@@ -36,12 +36,14 @@ import org.gwt.mosaic.forms.client.factories.DefaultWidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
+import org.gwt.mosaic.ui.client.Separator;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 /**
  * An general purpose panel builder that uses the {@link FormLayout} to lay out
@@ -530,10 +532,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    */
   public final Widget addSeparator(String textWithMnemonic,
       CellConstraints constraints) {
-    // int titleAlignment = isLeftToRight() ? SwingConstants.LEFT
-    // : SwingConstants.RIGHT;
+    HorizontalAlignmentConstant titleAlignment = isLeftToRight()
+        ? Separator.ALIGN_LEFT : Separator.ALIGN_RIGHT;
     Widget titledSeparator = getComponentFactory().createSeparator(
-        textWithMnemonic, 0/* titleAlignment */);
+        textWithMnemonic, titleAlignment);
     add(titledSeparator, constraints);
     return titledSeparator;
   }
