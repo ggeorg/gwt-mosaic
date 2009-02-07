@@ -39,6 +39,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * amount of time.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class InfoPanel extends DecoratedPopupPanel implements HasText,
     WindowResizeListener, PopupListener {
