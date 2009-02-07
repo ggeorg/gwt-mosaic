@@ -108,7 +108,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <strong>Example 2</strong> (Using PanelBuilder):<br>
  * This example creates the same panel as above using the
- * {@link com.jgoodies.forms.builder.PanelBuilder} to add components to the
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder} to add components to the
  * form.
  * 
  * <pre>
@@ -152,7 +152,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @see ColumnSpec
  * @see RowSpec
  * @see CellConstraints
- * @see com.jgoodies.forms.builder.AbstractFormBuilder
+ * @see org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.AbstractFormBuilder
  * @see com.jgoodies.forms.builder.ButtonBarBuilder
  * @see com.jgoodies.forms.builder.DefaultFormBuilder
  * @see com.jgoodies.forms.factories.FormFactory
