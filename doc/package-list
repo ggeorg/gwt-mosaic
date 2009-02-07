@@ -9,8 +9,8 @@ org.gwt.mosaic.core.client
 org.gwt.mosaic.core.client.impl
 org.gwt.mosaic.core.client.util
 org.gwt.mosaic.core.client.util.regex
-org.gwt.mosaic.forms.client
 org.gwt.mosaic.forms.client.builder
+org.gwt.mosaic.forms.client.debug
 org.gwt.mosaic.forms.client.factories
 org.gwt.mosaic.forms.client.layout
 org.gwt.mosaic.forms.client.util
@@ -18,6 +18,7 @@ org.gwt.mosaic.ui.client
 org.gwt.mosaic.ui.client.datepicker
 org.gwt.mosaic.ui.client.infopanel
 org.gwt.mosaic.ui.client.layout
+org.gwt.mosaic.ui.client.layout.builder
 org.gwt.mosaic.ui.client.list
 org.gwt.mosaic.ui.client.table
 org.gwt.mosaic.ui.client.treetable
