@@ -45,6 +45,7 @@ import org.gwt.mosaic.showcase.client.content.forms.building.CwPanelBuilderExamp
 import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPlainExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientationExample;
+import org.gwt.mosaic.showcase.client.content.forms.factories.CwButtonBarFactoryExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
@@ -442,6 +443,7 @@ public class Showcase implements EntryPoint {
     TreeItem catForms = mainMenu.addItem("Forms");
     setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
+    
     TreeItem catBasicForms = catForms.addItem("Basic");
     setupMainMenuOption(catBasicForms, new CwAlignmentExample(constants),
         IMAGES.catForms());
@@ -486,6 +488,10 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catBuildingForms, new CwButtonStacksExample(constants),
         IMAGES.catForms());
     setupMainMenuOption(catBuildingForms, new CwButtonOrderExample(constants),
+        IMAGES.catForms());
+    
+    TreeItem catFactoriesForms = catForms.addItem("Factories");
+    setupMainMenuOption(catFactoriesForms, new CwButtonBarFactoryExample(constants),
         IMAGES.catForms());
 
     // Trees

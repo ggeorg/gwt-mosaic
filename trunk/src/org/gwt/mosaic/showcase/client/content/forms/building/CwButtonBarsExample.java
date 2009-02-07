@@ -224,6 +224,7 @@ public class CwButtonBarsExample extends ContentWidget {
         "fill:56dlu:grow, 4dlu, p");
     LayoutPanel panel = new LayoutPanel(layout);
     // panel.setBorder(Borders.DIALOG_BORDER);
+    panel.setPadding(0);
     panel.add(textArea, CellConstraints.xy(1, 1));
     panel.add(buttonBar, CellConstraints.xy(1, 3));
     return panel;

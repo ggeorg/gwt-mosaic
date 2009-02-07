@@ -231,6 +231,7 @@ public class CwButtonStacksExample extends ContentWidget {
         "fill:56dlu:grow");
     LayoutPanel panel = new LayoutPanel(layout);
     // panel.setBorder(Borders.DIALOG_BORDER);
+    panel.setPadding(0);
     panel.add(textArea, CellConstraints.xy(1, 1));
     panel.add(buttonBar, CellConstraints.xy(3, 1));
     return panel;

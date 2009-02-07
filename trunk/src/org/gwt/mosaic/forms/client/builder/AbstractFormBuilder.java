@@ -110,6 +110,7 @@ public abstract class AbstractFormBuilder {
     this.layout = layout;
 
     container.setLayout(layout);
+    container.setPadding(0);
     currentCellConstraints = new CellConstraints();
     // ComponentOrientation orientation = container.getComponentOrientation();
     leftToRight = true;// TODO orientation.isLeftToRight() ||
