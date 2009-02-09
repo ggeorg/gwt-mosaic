@@ -21,8 +21,9 @@ import org.gwt.mosaic.core.client.util.HashCode;
 
 /**
  * 
+ * @author http://harmony.apache.org/
  * @author georgopoulos.georgios(at)gmail.com
- *
+ * 
  */
 public class Dimension implements Serializable {
   private static final long serialVersionUID = -5761695848507043940L;
@@ -30,24 +31,16 @@ public class Dimension implements Serializable {
   public int width;
   public int height;
 
-  public Dimension(Dimension d) {
-    this(d.width, d.height);
-  }
-
   public Dimension() {
     this(0, 0);
   }
 
-  public Dimension(int width, int height) {
-    setSize(width, height);
+  public Dimension(Dimension d) {
+    this(d.width, d.height);
   }
 
-  @Override
-  public int hashCode() {
-    HashCode hash = new HashCode();
-    hash.append(width);
-    hash.append(height);
-    return hash.hashCode();
+  public Dimension(int width, int height) {
+    setSize(width, height);
   }
 
   @Override
@@ -62,9 +55,28 @@ public class Dimension implements Serializable {
     return false;
   }
 
+  public int getHeight() {
+    return height;
+  }
+
+  public Dimension getSize() {
+    return new Dimension(width, height);
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
   @Override
-  public String toString() {
-    return getClass().getName() + "[width=" + width + ",height=" + height + "]";
+  public int hashCode() {
+    HashCode hash = new HashCode();
+    hash.append(width);
+    hash.append(height);
+    return hash.hashCode();
+  }
+
+  public void setSize(Dimension d) {
+    setSize(d.width, d.height);
   }
 
   public void setSize(int width, int height) {
@@ -72,11 +84,8 @@ public class Dimension implements Serializable {
     this.height = height;
   }
 
-  public void setSize(Dimension d) {
-    setSize(d.width, d.height);
-  }
-
-  public Dimension getSize() {
-    return new Dimension(width, height);
+  @Override
+  public String toString() {
+    return getClass().getName() + "[width=" + width + ",height=" + height + "]";
   }
 }
