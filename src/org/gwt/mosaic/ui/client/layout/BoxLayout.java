@@ -203,27 +203,6 @@ public class BoxLayout extends BaseLayout {
   private int[] margins = {0, 0};
   private int[] paddings = {0, 0};
 
-  @Override
-  public void flushCache() {
-    widgetSizes.clear();
-    initialized = false;
-  }
-
-  protected boolean init(LayoutPanel layoutPanel) {
-    if (initialized) {
-      return true;
-    }
-
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
-    
-    visibleWidgetCount = getVisibleWidgetCount(layoutPanel);
-
-    initialized = true;
-
-    return true;
-  }
-
   /**
    * Creates a new instance of {@code BoxLayout} with horizontal orientation.
    */
@@ -247,6 +226,12 @@ public class BoxLayout extends BaseLayout {
   public BoxLayout(Orientation orientation, Alignment alignment) {
     this.orientation = orientation;
     this.alignment = alignment;
+  }
+
+  @Override
+  public void flushCache() {
+    widgetSizes.clear();
+    initialized = false;
   }
 
   public Alignment getAlignment() {
@@ -451,6 +436,19 @@ public class BoxLayout extends BaseLayout {
       ++result;
     }
     return result;
+  }
+
+  protected boolean init(LayoutPanel layoutPanel) {
+    if (initialized) {
+      return true;
+    }
+
+    margins = DOM.getMarginSizes(layoutPanel.getElement());
+    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    
+    visibleWidgetCount = getVisibleWidgetCount(layoutPanel);
+
+    return initialized = true;
   }
 
   /**
