@@ -218,7 +218,7 @@ public class BorderLayout extends BaseLayout {
   private boolean initialized = false;
 
   private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-  
+
   private int[] margins = {0, 0};
   private int[] paddings = {0, 0};
 
@@ -231,26 +231,6 @@ public class BorderLayout extends BaseLayout {
     center = null;
     widgetSizes.clear();
     initialized = false;
-  }
-
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
-  }
-
-  protected boolean init(LayoutPanel layoutPanel) {
-    if (initialized) {
-      return true;
-    }
-
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
-    
-    scanForPanels(layoutPanel);
-
-    initialized = true;
-
-    return true;
   }
 
   /*
@@ -437,8 +417,23 @@ public class BorderLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ".getPreferredSize(): "
           + e.getLocalizedMessage());
     }
+    
+    layoutPanel.setPreferredSize(result[0], result[1]);
 
     return result;
+  }
+
+  protected boolean init(LayoutPanel layoutPanel) {
+    if (initialized) {
+      return true;
+    }
+
+    margins = DOM.getMarginSizes(layoutPanel.getElement());
+    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+
+    scanForPanels(layoutPanel);
+
+    return initialized = true;
   }
 
   protected boolean isCollapsed(LayoutPanel layoutPanel, Widget widget) {
@@ -854,12 +849,17 @@ public class BorderLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ".layoutPanel(): "
           + e.getLocalizedMessage());
     }
-    
+
     if (runTwice()) {
       recalculate(widgetSizes);
     }
-    
-    //layoutPanel.setPreferredSize(-1, -1);
+
+    layoutPanel.setPreferredSize(-1, -1);
+  }
+
+  @Override
+  public boolean runTwice() {
+    return runTwiceFlag;
   }
 
   private void scanForPanels(LayoutPanel layoutPanel) {

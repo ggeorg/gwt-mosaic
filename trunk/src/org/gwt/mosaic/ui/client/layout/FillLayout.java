@@ -15,7 +15,11 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Viewport;
 
 import com.google.gwt.core.client.GWT;
@@ -94,22 +98,85 @@ public class FillLayout extends BaseLayout implements HasAlignment {
   private boolean initialized = false;
 
   private Widget child;
-
   private FillLayoutData layoutData;
-  
+
+  private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
+
   private int[] margins = {0, 0};
   private int[] paddings = {0, 0};
 
+  private boolean runTwiceFlag;
+
+  private HorizontalAlignmentConstant horizontalAlignment;
+
+  private VerticalAlignmentConstant verticalAlignment;
+
   @Override
   public void flushCache() {
-    this.initialized = false;
+    widgetSizes.clear();
+    initialized = false;
+  }
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return horizontalAlignment;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
+   * mosaic.ui.client.layout.LayoutPanel)
+   */
+  public int[] getPreferredSize(LayoutPanel layoutPanel) {
+    int[] result = {0, 0};
+
+    try {
+      if (layoutPanel == null || !init(layoutPanel)) {
+        return result;
+      }
+
+      final Dimension dim = widgetSizes.get(child);
+      if (dim == null) {
+        result[0] = getFlowWidth(child);
+        result[1] = getFlowHeight(child);
+      } else {
+        result[0] = dim.getWidth();
+        result[1] = dim.getHeight();
+      }
+
+      if (layoutData.hasDecoratorPanel()) {
+        final DecoratorPanel decPanel = layoutData.decoratorPanel;
+        result[0] += decPanel.getOffsetWidth() - child.getOffsetWidth();
+        result[1] += decPanel.getOffsetHeight() - child.getOffsetHeight();
+      }
+
+      result[0] += (margins[1] + margins[3]);
+      result[1] += (margins[0] + margins[2]);
+
+      result[0] += (paddings[1] + paddings[3]);
+      result[1] += (paddings[0] + paddings[2]);
+
+    } catch (Exception e) {
+      GWT.log(e.getMessage(), e);
+      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
+          + e.getLocalizedMessage());
+    }
+
+    layoutPanel.setPreferredSize(result[0], result[1]);
+
+    return result;
+  }
+
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
   }
 
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
     }
-    
+
     margins = DOM.getMarginSizes(layoutPanel.getElement());
     paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
@@ -138,46 +205,6 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       break;
     }
     return initialized;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
-   * mosaic.ui.client.layout.LayoutPanel)
-   */
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
-
-    try {
-      if (layoutPanel == null || !init(layoutPanel)) {
-        return result;
-      }
-
-      result[0] = getFlowWidth(child);
-      result[1] = getFlowHeight(child);
-
-      if (layoutData.hasDecoratorPanel()) {
-        final DecoratorPanel decPanel = layoutData.decoratorPanel;
-        result[0] += decPanel.getOffsetWidth() - child.getOffsetWidth();
-        result[1] += decPanel.getOffsetHeight() - child.getOffsetHeight();
-      }
-
-      result[0] += (margins[1] + margins[3]);
-      result[1] += (margins[0] + margins[2]);
-
-      result[0] += (paddings[1] + paddings[3]);
-      result[1] += (paddings[0] + paddings[2]);
-
-    } catch (Exception e) {
-      GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ": " + e.getLocalizedMessage());
-    }
-
-    layoutPanel.setPreferredSize(result[0], result[1]);
-
-    return result;
   }
 
   /*
@@ -218,6 +245,8 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       int posLeft;
       int widgetWidth;
 
+      runTwiceFlag = false;
+
       if (hAlignment == null) {
         posLeft = left;
         widgetWidth = width;
@@ -225,10 +254,22 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         posLeft = left;
         widgetWidth = -1;
       } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
-        posLeft = left + (width / 2) - getFlowWidth(child) / 2;
+        Dimension dim = widgetSizes.get(child);
+        if (dim == null) {
+          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+              getFlowHeight(child)));
+          runTwiceFlag = true;
+        }
+        posLeft = left + (width / 2) - dim.getWidth() / 2;
         widgetWidth = -1;
       } else {
-        posLeft = left + width - getFlowWidth(child);
+        Dimension dim = widgetSizes.get(child);
+        if (dim == null) {
+          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+              getFlowHeight(child)));
+          runTwiceFlag = true;
+        }
+        posLeft = left + width - dim.getWidth();
         widgetWidth = -1;
       }
 
@@ -247,10 +288,22 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         posTop = top;
         widgetHeight = -1;
       } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
-        posTop = top + (height / 2) - getFlowHeight(child) / 2;
+        Dimension dim = widgetSizes.get(child);
+        if (dim == null) {
+          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+              getFlowHeight(child)));
+          runTwiceFlag = true;
+        }
+        posTop = top + (height / 2) - dim.getHeight() / 2;
         widgetHeight = -1;
       } else {
-        posTop = top + height - getFlowHeight(child);
+        Dimension dim = widgetSizes.get(child);
+        if (dim == null) {
+          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+              getFlowHeight(child)));
+          runTwiceFlag = true;
+        }
+        posTop = top + height - dim.getHeight();
         widgetHeight = -1;
       }
 
@@ -258,25 +311,24 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ": " + e.getLocalizedMessage());
+      Window.alert(this.getClass().getName() + ".layoutPanel(): "
+          + e.getLocalizedMessage());
+    }
+
+    if (runTwice()) {
+      recalculate(widgetSizes);
     }
 
     clearPreferredSizeCache(layoutPanel);
   }
 
-  private HorizontalAlignmentConstant horizontalAlignment;
-  private VerticalAlignmentConstant verticalAlignment;
-
-  public HorizontalAlignmentConstant getHorizontalAlignment() {
-    return horizontalAlignment;
+  @Override
+  public boolean runTwice() {
+    return runTwiceFlag;
   }
 
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     this.horizontalAlignment = align;
-  }
-
-  public VerticalAlignmentConstant getVerticalAlignment() {
-    return verticalAlignment;
   }
 
   public void setVerticalAlignment(VerticalAlignmentConstant align) {
