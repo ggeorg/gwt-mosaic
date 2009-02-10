@@ -148,6 +148,24 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     // });
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
+   */
+  public void layout(boolean invalidate) {
+    layoutPanel.layout(invalidate);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   */
+  public void invalidate(boolean layout) {
+    layoutPanel.invalidate(layout);
+  }
+
   private int decorationWidthCache = 0;
   private int decorationHeightCache = 0;
 
@@ -248,4 +266,5 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
       setContentSize(size[0] - decorationWidthCache, size[1]);
     }
   }
+
 }

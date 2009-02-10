@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -53,20 +53,16 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * A generic application that includes a title bar, main menu, content area, and
  * some external links at the top.
  * </p>
- * <h3>CSS Style Rules</h3>
- * <ul class="css">
- * <li>.Application { Applied to the entire Application }</li>
- * <li>.Application-top { The top portion of the Application }</li>
- * <li>.Application-title { The title widget }</li>
- * <li>.Application-links { The main external links }</li>
- * <li>.Application-options { The options widget }</li>
- * <li>.Application-menu { The main menu }</li>
- * <li>.Application-content-wrapper { The element around the content }</li>
- * </ul>
+ * <h3>CSS Style Rules</h3> <ul class="css"> <li>.Application { Applied to the
+ * entire Application }</li> <li>.Application-top { The top portion of the
+ * Application }</li> <li>.Application-title { The title widget }</li> <li>
+ * .Application-links { The main external links }</li> <li>.Application-options
+ * { The options widget }</li> <li>.Application-menu { The main menu }</li> <li>
+ * .Application-content-wrapper { The element around the content }</li> </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class Application extends Viewport implements HasLayoutManager {
+public class Application extends Viewport {
   /**
    * Images used in the {@link Application}.
    */
@@ -156,9 +152,9 @@ public class Application extends Viewport implements HasLayoutManager {
       }
     });
 
-    bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST,
-        200, 100, 350, true));
-    //bottomPanel.setCollapsed(westPanel, true);
+    bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST, 200, 100, 350,
+        true));
+    // bottomPanel.setCollapsed(westPanel, true);
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());
@@ -262,7 +258,7 @@ public class Application extends Viewport implements HasLayoutManager {
       public void onTreeItemSelected(TreeItem item) {
         if (listener != null) {
           listener.onMenuItemSelected(item);
-          contentWrapper.layout();
+          contentWrapper.layout(true);
         }
       }
 
@@ -327,12 +323,4 @@ public class Application extends Viewport implements HasLayoutManager {
     return getWidget().getPreferredSize();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
-   */
-  public void layout() {
-    getWidget().layout();
-  }
 }

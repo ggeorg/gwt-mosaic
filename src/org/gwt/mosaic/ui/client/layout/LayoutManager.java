@@ -16,12 +16,28 @@
 package org.gwt.mosaic.ui.client.layout;
 
 /**
- * Defines the interface for classes that know how to lay out a
- * <code>LayoutPanel</code>.
+ * Defines the interface for classes that know how to lay out a {@code
+ * LayoutPanel}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public interface LayoutManager {
+
+  /**
+   * Computes and returns the size of the {@link LayoutPanel} according to this
+   * layout.
+   * <p>
+   * This method computes the preferred size that the client area of the
+   * {@link LayoutPanel} must be in order to position all children at their
+   * preferred size inside the panel according to the layout algorithm encoded
+   * by this layout.
+   * <p>
+   * TODO: caching of child preferred sizes
+   * 
+   * @param layoutPanel a {@link LayoutPanel} widget using this layout.
+   * @return an array ({@code width, height} ) containing the computed size.
+   */
+  int[] getPreferredSize(LayoutPanel layoutPanel);
 
   /**
    * Lays out the specified {@link LayoutPanel} according to this layout.
@@ -38,30 +54,19 @@ public interface LayoutManager {
   void layoutPanel(LayoutPanel layoutPanel);
 
   /**
-   * Computes and returns the size of the {@link LayoutPanel} according to this
-   * layout.
-   * <p>
-   * This method computes the preferred size that the client area of the
-   * {@link LayoutPanel} must be in order to position all children at their
-   * preferred size inside the panel according to the layout algorithm encoded
-   * by this layout.
-   * <p>
-   * TODO: caching of child preferred sizes
-   * 
-   * @param layoutPanel a {@link LayoutPanel} widget using this layout.
-   * @return an array ({@code {width, height}}) containing the computed size.
-   */
-  int[] getPreferredSize(LayoutPanel layoutPanel);
-
-  /**
    * Indicates whether {@link #layoutPanel(LayoutPanel)} has to run twice. This
    * method is called by a {@link LayoutPanel#layout()} internally to check if
-   * {@link #layoutPanel(LayoutPanel)} should be run again because e.g.: text
+   * {@link #layoutPanel(LayoutPanel)} should be run twice because e.g.: text
    * wrapping.
    * 
    * @return {@code true} if {@link #layoutPanel(LayoutPanel)} has to run twice,
    *         {@code false} otherwise.
    */
   boolean runTwice();
+
+  /**
+   * Instructs the layout to flush any cached values.
+   */
+  void flushCache();
 
 }

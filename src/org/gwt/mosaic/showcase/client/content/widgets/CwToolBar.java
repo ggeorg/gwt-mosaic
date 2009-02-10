@@ -105,6 +105,8 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     layoutPanel.setPadding(5);
 
     final CaptionLayoutPanel toolBox = new CaptionLayoutPanel(Window.getTitle());
+    toolBox.setPadding(0);
+    toolBox.setWidgetSpacing(0);
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
     toolBox.add(createToolBar1(), new BoxLayoutData(FillStyle.HORIZONTAL));
     toolBox.add(createToolBar2(), new BoxLayoutData(FillStyle.HORIZONTAL));

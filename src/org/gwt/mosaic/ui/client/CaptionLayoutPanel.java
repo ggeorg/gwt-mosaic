@@ -233,4 +233,8 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     body.setPadding(padding);
   }
 
+  public void setWidgetSpacing(int spacing) {
+    body.setWidgetSpacing(spacing);
+  }
+
 }
