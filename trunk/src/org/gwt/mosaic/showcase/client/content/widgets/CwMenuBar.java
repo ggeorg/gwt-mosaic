@@ -109,6 +109,7 @@ public class CwMenuBar extends ContentWidget {
     layoutPanel.setPadding(5);
 
     final CaptionLayoutPanel toolBox = new CaptionLayoutPanel(Window.getTitle());
+    toolBox.setPadding(0);
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
     toolBox.add(createMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
 

@@ -120,6 +120,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return widget;
   }
 
+  /**
+   * Returns the {@link LayoutManager} which is associated with this panel, or
+   * {@link FillLayout} if one has not been set.
+   * 
+   * @return the panel's {@link LayoutManager}
+   * 
+   * @see #layout()
+   * @see #setLayout(LayoutManager)
+   */
   public LayoutManager getLayout() {
     return layout;
   }
@@ -141,6 +150,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
    */
   public int[] getPreferredSize() {
+    if (!isAttached()) {
+      return new int[] {0, 0};
+    }
     if (preferredSizeCache[0] >= -1 && preferredSizeCache[1] >= 0) {
       return preferredSizeCache;
     } else {
@@ -241,6 +253,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * @see org.mosaic.ui.client.layout.HasLayout#layout()
    */
   public void layout() {
+    layout(false);
+  }
+
+  public void layout(boolean invalidate) {
+    if (!isAttached()) {
+      return;
+    }
+    if (invalidate) {
+      invalidate(false);
+    }
     layout.layoutPanel(this);
     if (layout.runTwice()) {
       layout.layoutPanel(this);
@@ -277,12 +299,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return super.remove(widget);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Sets the {@link LayoutManager} for this panel.
    * 
-   * @see
-   * org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout
-   * .LayoutManager)
+   * @param layout the specified layout manager
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout
+   *      .LayoutManager)
+   * 
+   * @see #layout()
+   * @see #setLayout(LayoutManager)
    */
   public void setLayout(LayoutManager layout) {
     this.layout = layout;
@@ -338,29 +364,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   protected void onLoad() {
     super.onLoad();
 
-    Widget parent = getParent();
-
-    if (parent == getDecoratorWidget(this)) {
-      parent = parent.getParent();
-    } else {
-      if (parent instanceof LayoutComposite) {
-        parent = parent.getParent();
-        if (parent == getDecoratorWidget(parent)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof FormPanel) {
-        parent = parent.getParent();
-        if (parent == getDecoratorWidget(parent)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof DecoratorPanel) {
-        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
-          parent = parent.getParent();
-        }
-      }
-    }
+    Widget parent = findParent();
 
     if (parent instanceof HasLayoutManager || parent instanceof Viewport) {
       return;
@@ -446,5 +450,56 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   public void clearPreferredSizeCache() {
     setPreferredSize(-1, -1);
+  }
+
+  public Widget findParent() {
+    Widget parent = getParent();
+
+    if (parent == getDecoratorWidget(this)) {
+      parent = parent.getParent();
+    } else {
+      if (parent instanceof LayoutComposite) {
+        parent = parent.getParent();
+        if (parent == getDecoratorWidget(parent)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof FormPanel) {
+        parent = parent.getParent();
+        if (parent == getDecoratorWidget(parent)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof DecoratorPanel) {
+        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
+          parent = parent.getParent();
+        }
+      }
+    }
+
+    return parent;
+  }
+
+  /**
+   * Lays out this {@code LayoutPanel} and all of its child widgets.
+   * <p>
+   * The {@code #layout(boolean)} method is used to cause a {@code LayoutPanel}
+   * to lay out its child widgets again. It should be invoked when this {@code
+   * LayoutPanel's} child widgets are modified (added to or removed from the
+   * container, or layout-related information changed) after the {@code
+   * LayoutPanel} has been attached.
+   */
+  public void invalidate(boolean layout) {
+    getLayout().flushCache();
+
+    final Widget parent = findParent();
+
+    if (parent instanceof Viewport || !(parent instanceof HasLayoutManager)) {
+      if (layout) {
+        layout(false);
+      }
+    } else {
+      ((HasLayoutManager) parent).invalidate(layout);
+    }
   }
 }

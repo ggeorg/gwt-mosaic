@@ -15,11 +15,51 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import org.gwt.mosaic.core.client.Dimension;
+
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public interface HasLayoutManager {
+  /**
+   * If the receiver has a {@link LayoutManager}, asks the layout to
+   * <em>lay out</em> (that is, set the size and location of) the receiver's
+   * children. If the receiver does not have a layout, do nothing.
+   * <p>
+   * This method should be invoked when this receiver's children are modified
+   * (added or removed from the receiver, or layout-related information changed)
+   * after the receiver has been displayed.
+   * 
+   * @see #layout(boolean)
+   */
   void layout();
-  int[] getPreferredSize();
+  
+  /**
+   * 
+   * @param invalidate
+   */
+  void layout(boolean invalidate);
+  
+  /**
+   * 
+   */
+  void invalidate(boolean layout);
+
+  /**
+   * Returns the preferred size of the receiver.
+   * <p>
+   * The <em>preferred size</em> of a receiver is the size that it would be best
+   * be displayed at.
+   * <p>
+   * Note: some implementations may cache the value returned from the
+   * {@link LayoutManager}. Implementations that cache need not invoke
+   * {@link LayoutManager#getPreferredSize(LayoutPanel)} every time this method
+   * is invoked, rather the {@link LayoutManager} will only be queried after
+   * receiver becomes invalid.
+   * 
+   * @return an instance of {@link Dimension} that represents the preferred size
+   *         of this receiver.
+   */
+  int[] getPreferredSize(); // TODO Dimension getPreferredSize();
 }

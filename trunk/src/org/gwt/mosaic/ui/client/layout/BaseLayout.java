@@ -15,7 +15,11 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -23,12 +27,21 @@ import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * This class is the abstract base class for layouts.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
+
+  protected void recalculate(Map<Widget, Dimension> widgetSizes) {
+    for (Iterator<Map.Entry<Widget, Dimension>> iter = widgetSizes.entrySet().iterator(); iter.hasNext();) {
+      Map.Entry<Widget, Dimension> entry = iter.next();
+      Widget w = entry.getKey();
+      entry.getValue().setSize(getFlowWidth(w), getFlowHeight(w));
+    }
+  }
 
   private static void changeToStaticPositioning(Element elem) {
     DOM.setStyleAttribute(elem, "left", "");
@@ -176,5 +189,14 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
 
   protected void clearPreferredSizeCache(final LayoutPanel layoutPanel) {
     layoutPanel.clearPreferredSizeCache();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#flushCache()
+   */
+  public void flushCache() {
+    // Nothing to do here!
   }
 }

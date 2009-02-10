@@ -74,4 +74,22 @@ public abstract class LayoutComposite extends Composite implements
   public void layout() {
     getWidget().layout();
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
+   */
+  public void layout(boolean invalidate) {
+    getWidget().layout(invalidate);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   */
+  public void invalidate(boolean layout) {
+    getWidget().invalidate(layout);
+  }
 }

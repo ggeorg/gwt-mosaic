@@ -16,10 +16,13 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -191,6 +194,36 @@ public class BoxLayout extends BaseLayout {
 
   private boolean runTwiceFlag;
 
+  private boolean initialized = false;
+
+  private int visibleWidgetCount = 0;
+
+  private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
+  
+  private int[] margins = {0, 0};
+  private int[] paddings = {0, 0};
+
+  @Override
+  public void flushCache() {
+    widgetSizes.clear();
+    initialized = false;
+  }
+
+  protected boolean init(LayoutPanel layoutPanel) {
+    if (initialized) {
+      return true;
+    }
+
+    margins = DOM.getMarginSizes(layoutPanel.getElement());
+    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    
+    visibleWidgetCount = getVisibleWidgetCount(layoutPanel);
+
+    initialized = true;
+
+    return true;
+  }
+
   /**
    * Creates a new instance of {@code BoxLayout} with horizontal orientation.
    */
@@ -252,16 +285,14 @@ public class BoxLayout extends BaseLayout {
     int[] result = {0, 0};
 
     try {
-      if (layoutPanel == null) {
+      if (layoutPanel == null || !init(layoutPanel)) {
         return result;
       }
 
-      final int[] margins = DOM.getMarginSizes(layoutPanel.getElement());
-      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
       int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]);
       int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]);
 
-      final int size = getVisibleWidgetCount(layoutPanel);
+      final int size = visibleWidgetCount;
       if (size == 0) {
         result[0] = width;
         result[1] = height;
@@ -307,7 +338,12 @@ public class BoxLayout extends BaseLayout {
               width += (int) layoutData.preferredWidth;
             }
           } else {
-            width += getFlowWidth(child);
+            final Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              width += getFlowWidth(child);
+            } else {
+              width += dim.getWidth();
+            }
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
@@ -323,7 +359,12 @@ public class BoxLayout extends BaseLayout {
               layoutData.calcHeight = (int) layoutData.preferredHeight;
             }
           } else {
-            layoutData.calcHeight = getFlowHeight(child);
+            final Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              layoutData.calcHeight = getFlowHeight(child);
+            } else {
+              layoutData.calcHeight = dim.getHeight();
+            }
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
@@ -341,7 +382,12 @@ public class BoxLayout extends BaseLayout {
               height += (int) layoutData.preferredHeight;
             }
           } else {
-            height += getFlowHeight(child);
+            final Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              height += getFlowHeight(child);
+            } else {
+              height += dim.getHeight();
+            }
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
@@ -357,7 +403,12 @@ public class BoxLayout extends BaseLayout {
               layoutData.calcWidth = (int) layoutData.preferredWidth;
             }
           } else {
-            layoutData.calcWidth = getFlowWidth(child);
+            final Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              layoutData.calcWidth = getFlowWidth(child);
+            } else {
+              layoutData.calcWidth = dim.getWidth();
+            }
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
@@ -423,17 +474,16 @@ public class BoxLayout extends BaseLayout {
    */
   public void layoutPanel(LayoutPanel layoutPanel) {
     try {
-      if (layoutPanel == null) {
+      if (layoutPanel == null || !init(layoutPanel)) {
         return;
       }
 
-      final int size = getVisibleWidgetCount(layoutPanel);
+      final int size = visibleWidgetCount;
       if (size == 0) {
         return;
       }
 
       final int[] box = DOM.getClientSize(layoutPanel.getElement());
-      final int[] paddings = DOM.getPaddingSizes(layoutPanel.getElement());
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -492,7 +542,13 @@ public class BoxLayout extends BaseLayout {
             }
             fillWidth -= layoutData.calcWidth;
           } else {
-            layoutData.calcWidth = getFlowWidth(child);
+            Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+                  getFlowHeight(child)));
+              runTwiceFlag = true;
+            }
+            layoutData.calcWidth = dim.getWidth();
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
@@ -500,7 +556,6 @@ public class BoxLayout extends BaseLayout {
               layoutData.calcWidth += decPanelBorderWidth;
             }
             fillWidth -= layoutData.calcWidth;
-            runTwiceFlag = true;
           }
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
@@ -512,14 +567,19 @@ public class BoxLayout extends BaseLayout {
               layoutData.calcHeight = (int) layoutData.preferredHeight;
             }
           } else {
-            layoutData.calcHeight = getFlowHeight(child);
+            Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+                  getFlowHeight(child)));
+              runTwiceFlag = true;
+            }
+            layoutData.calcHeight = dim.getHeight();
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
                   - child.getOffsetHeight();
               layoutData.calcHeight += decPanelBorderHeight;
             }
-            runTwiceFlag = true;
           }
         } else { // Orientation.VERTICAL
           if (layoutData.fillHeight) {
@@ -533,7 +593,13 @@ public class BoxLayout extends BaseLayout {
             }
             fillHeight -= layoutData.calcHeight;
           } else {
-            layoutData.calcHeight = getFlowHeight(child);
+            Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+                  getFlowHeight(child)));
+              runTwiceFlag = true;
+            }
+            layoutData.calcHeight = dim.getHeight();
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderHeight = decPanel.getOffsetHeight()
@@ -541,7 +607,6 @@ public class BoxLayout extends BaseLayout {
               layoutData.calcHeight += decPanelBorderHeight;
             }
             fillHeight -= layoutData.calcHeight;
-            runTwiceFlag = true;
           }
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
@@ -553,14 +618,19 @@ public class BoxLayout extends BaseLayout {
               layoutData.calcWidth = (int) layoutData.preferredWidth;
             }
           } else {
-            layoutData.calcWidth = getFlowWidth(child);
+            Dimension dim = widgetSizes.get(child);
+            if (dim == null) {
+              widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
+                  getFlowHeight(child)));
+              runTwiceFlag = true;
+            }
+            layoutData.calcWidth = dim.getWidth();
             if (layoutData.hasDecoratorPanel()) {
               final DecoratorPanel decPanel = layoutData.decoratorPanel;
               final int decPanelBorderWidth = decPanel.getOffsetWidth()
                   - child.getOffsetWidth();
               layoutData.calcWidth += decPanelBorderWidth;
             }
-            runTwiceFlag = true;
           }
         }
       }
@@ -686,6 +756,10 @@ public class BoxLayout extends BaseLayout {
       }
     } catch (Exception e) {
       Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
+    }
+    
+    if (runTwice()) {
+      recalculate(widgetSizes);
     }
 
     layoutPanel.setPreferredSize(-1, -1);
