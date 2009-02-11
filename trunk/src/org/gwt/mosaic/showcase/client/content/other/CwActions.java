@@ -509,7 +509,7 @@ public class CwActions extends ContentWidget {
 
         DeferredCommand.addCommand(new Command() {
           public void execute() {
-            panel.layout();
+            panel.layout(true);
           }
         });
       }
