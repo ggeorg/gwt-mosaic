@@ -1,10 +1,9 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with this
- * work for additional information regarding copyright ownership. The ASF
- * licenses this file to You under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopolos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -84,6 +83,18 @@ public abstract class ActionBindings<T> {
       return image;
     }
 
+    private HasLayoutManager getParent(Widget widget) {
+      Widget parent = widget.getParent();
+      if (parent == null) {
+        return null;
+      }
+      if (parent instanceof HasLayoutManager) {
+        return (HasLayoutManager) parent;
+      } else {
+        return getParent(parent);
+      }
+    }
+
     public String getText() {
       if (target instanceof HasText) {
         return ((HasText) target).getText();
@@ -105,6 +116,15 @@ public abstract class ActionBindings<T> {
         return ((UIObject) target).isVisible();
       } else {
         throw new UnsupportedOperationException();
+      }
+    }
+
+    public void invalidate() {
+      if (target instanceof Widget) {
+        HasLayoutManager lm = getParent((Widget) target);
+        if (lm != null) {
+          lm.invalidate(false);
+        }
       }
     }
 
@@ -142,6 +162,7 @@ public abstract class ActionBindings<T> {
       if (target instanceof HasHTML) {
         String oldValue = ((HasHTML) target).getHTML();
         ((HasHTML) target).setHTML(html);
+        invalidate();
         changeSupport.firePropertyChange("html", oldValue, html);
       } else {
         throw new UnsupportedOperationException();
@@ -151,28 +172,8 @@ public abstract class ActionBindings<T> {
     public void setImage(AbstractImagePrototype image) {
       AbstractImagePrototype oldValue = this.image;
       this.image = image;
+      invalidate();
       changeSupport.firePropertyChange("image", oldValue, image);
-    }
-
-    private HasLayoutManager getParent(Widget widget) {
-      Widget parent = widget.getParent();
-      if (parent == null) {
-        return null;
-      }
-      if (parent instanceof HasLayoutManager) {
-        return (HasLayoutManager) parent;
-      } else {
-        return getParent(parent);
-      }
-    }
-
-    public void invalidate() {
-      if (target instanceof Widget) {
-        HasLayoutManager lm = getParent((Widget) target);
-        if (lm != null) {
-          lm.invalidate(false);
-        }
-      }
     }
 
     public void setText(String text) {
@@ -202,6 +203,7 @@ public abstract class ActionBindings<T> {
         Boolean oldValue = toBoolean(((UIObject) target).isVisible(),
             Boolean.TRUE);
         ((UIObject) target).setVisible(visible);
+        invalidate();
         changeSupport.firePropertyChange("visible", oldValue, visible);
       } else {
         throw new UnsupportedOperationException();
