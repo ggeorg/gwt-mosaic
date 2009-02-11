@@ -60,6 +60,7 @@ import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -1149,23 +1150,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
         minimumHeightMeasure);
   }
 
-  /**
-   * Determines the preferred size of the <code>parent</code> container using
-   * this form layout.
-   * <p>
-   * 
-   * Most applications do not call this method directly.
-   * 
-   * @param layoutParent the container in which to do the layout
-   * @return the preferred size of the <code>parent</code> container
-   * 
-   * @see Container#getPreferredSize()
-   */
-  public Dimension preferredLayoutSize(LayoutPanel layoutParent) {
-    return computeLayoutSize(layoutParent, preferredWidthMeasure,
-        preferredHeightMeasure);
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -1181,12 +1165,16 @@ public final class FormLayout extends BaseLayout implements Serializable {
         return result;
       }
 
-      final Dimension d = preferredLayoutSize(layoutPanel);
+      final Dimension d = computeLayoutSize(layoutPanel, preferredWidthMeasure,
+          preferredHeightMeasure);
+
       result[0] = d.width;
       result[1] = d.height;
 
     } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      GWT.log(e.getMessage(), e);
+      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
+          + e.getLocalizedMessage());
     }
 
     cachePreferredSize(layoutPanel, result[0], result[1]);
@@ -1286,7 +1274,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       int[] y = computeGridOrigins(layoutPanel, height, top, rowSpecs,
           rowWidgets, rowGroupIndices, minimumHeightMeasure,
           preferredHeightMeasure);
-      
+
       runTwiceFlag = false;
 
       layoutComponents(layoutPanel, x, y);
@@ -1295,7 +1283,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
       throw new RuntimeException(e);
     }
-    
+
     if (runTwice()) {
       recalculate(componentSizeCache.minimumSizes);
     }
@@ -2064,7 +2052,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   private boolean initialized = false;
 
-  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
+  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
+  // Dimension>();
 
   private int[] margins = {0, 0};
   private int[] paddings = {0, 0};
@@ -2090,12 +2079,12 @@ public final class FormLayout extends BaseLayout implements Serializable {
       Widget widget = iter.next();
       addLayoutComponent(widget, getLayoutData(widget));
     }
-    
+
     initializeColAndRowWidgetLists();
 
     return initialized = true;
   }
-  
+
   @Override
   public boolean runTwice() {
     return runTwiceFlag;

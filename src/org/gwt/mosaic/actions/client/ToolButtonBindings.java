@@ -96,6 +96,7 @@ public class ToolButtonBindings extends ActionBindings<ToolButton>
     public void setText(String text) {
       String oldValue = this.text;
       this.text = text;
+      invalidate();
       changeSupport.firePropertyChange("text", oldValue, text);
       target.setHTML(createLabel());
     }
