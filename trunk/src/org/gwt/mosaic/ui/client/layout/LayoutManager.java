@@ -31,8 +31,6 @@ public interface LayoutManager {
    * {@link LayoutPanel} must be in order to position all children at their
    * preferred size inside the panel according to the layout algorithm encoded
    * by this layout.
-   * <p>
-   * TODO: caching of child preferred sizes
    * 
    * @param layoutPanel a {@link LayoutPanel} widget using this layout.
    * @return an array ({@code width, height} ) containing the computed size.
@@ -46,8 +44,6 @@ public interface LayoutManager {
    * the layout algorithm encoded by this layout. Child widgets of the
    * {@link LayoutPanel} are positioned in the client area of the panel. The
    * position of the {@link LayoutPanel} is not altered by this method.
-   * <p>
-   * TODO: caching of child preferred sizes
    * 
    * @param layoutPanel the {@link LayoutPanel} to be laid out
    */
@@ -57,7 +53,7 @@ public interface LayoutManager {
    * Indicates whether {@link #layoutPanel(LayoutPanel)} has to run twice. This
    * method is called by a {@link LayoutPanel#layout()} internally to check if
    * {@link #layoutPanel(LayoutPanel)} should be run twice because e.g.: text
-   * wrapping.
+   * line wrapping.
    * 
    * @return {@code true} if {@link #layoutPanel(LayoutPanel)} has to run twice,
    *         {@code false} otherwise.

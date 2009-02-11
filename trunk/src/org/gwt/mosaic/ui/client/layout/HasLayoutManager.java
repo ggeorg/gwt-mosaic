@@ -18,34 +18,12 @@ package org.gwt.mosaic.ui.client.layout;
 import org.gwt.mosaic.core.client.Dimension;
 
 /**
+ * Defines the interface for classes that use a {@link LayoutManager} to
+ * <em>lay out</em> its child widgets.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public interface HasLayoutManager {
-  /**
-   * If the receiver has a {@link LayoutManager}, asks the layout to
-   * <em>lay out</em> (that is, set the size and location of) the receiver's
-   * children. If the receiver does not have a layout, do nothing.
-   * <p>
-   * This method should be invoked when this receiver's children are modified
-   * (added or removed from the receiver, or layout-related information changed)
-   * after the receiver has been displayed.
-   * 
-   * @see #layout(boolean)
-   */
-  void layout();
-  
-  /**
-   * 
-   * @param invalidate
-   */
-  void layout(boolean invalidate);
-  
-  /**
-   * 
-   */
-  void invalidate(boolean layout);
-
   /**
    * Returns the preferred size of the receiver.
    * <p>
@@ -58,8 +36,53 @@ public interface HasLayoutManager {
    * is invoked, rather the {@link LayoutManager} will only be queried after
    * receiver becomes invalid.
    * 
-   * @return an instance of {@link Dimension} that represents the preferred size
-   *         of this receiver.
+   * @return an instance of (TODO {@link Dimension}) that represents the
+   *         preferred size of this receiver.
    */
   int[] getPreferredSize(); // TODO Dimension getPreferredSize();
+
+  /**
+   * Invalidates the receiver. The receiver and all parents above it are marked
+   * as needing to be laid out.
+   * 
+   * @param doLayout if {@code true} {@link #layout()} is called on the last
+   *          parent
+   * 
+   * @see #layout()
+   * @see #layout(boolean)
+   */
+  void invalidate(boolean doLayout);
+
+  /**
+   * If the receiver has a {@link LayoutManager}, asks the layout to
+   * <em>lay out</em> (that is, set the size and location of) the receiver's
+   * children. If the receiver does not have a layout, do nothing.
+   * <p>
+   * This method should be invoked when this receiver's children are modified
+   * (added or removed from the receiver, or layout-related information changed)
+   * after the receiver has been displayed.
+   * <p>
+   * Note: this is equivalent to {@link #layout(false)}.
+   * 
+   * @see #layout(boolean)
+   * @see #invalidate(boolean)
+   */
+  void layout();
+
+  /**
+   * If the receiver has a {@link LayoutManager}, asks the layout to
+   * <em>lay out</em> (that is, set the size and location of) the receiver's
+   * children. If the receiver does not have a layout, do nothing.
+   * <p>
+   * This method should be invoked when this receiver's children are modified
+   * (added or removed from the receiver, or layout-related information changed)
+   * after the receiver has been displayed.
+   * 
+   * @param doInvalidate if {@code true} {@link #invalidate(false)} is called
+   *          before the layout lays out the receiver's children
+   * 
+   * @see #layout()
+   * @see #invalidate(boolean)
+   */
+  void layout(boolean doInvalidate);
 }
