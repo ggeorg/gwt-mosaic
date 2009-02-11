@@ -409,7 +409,13 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public boolean remove(int index) {
     final Widget widget = deck.getWidget(index);
-    return remove(widget);
+
+    if (widget == null) {
+      return false;
+    }
+    
+    tabBar.removeTab(index);
+    return deck.remove(widget);
   }
 
   /**
@@ -420,9 +426,17 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public boolean remove(Widget widget) {
     assert (widget != null);
+    
+    int widgetToRemoveIndex = getWidgetIndex(widget);
 
-    tabBar.removeTab(deck.getWidgetIndex(widget));
-    return deck.remove(widget);
+    if (widgetToRemoveIndex == -1) {
+      // tabBar.removeTab will add 1 to the index, ignoring the fact that
+      // the widget was not found - it's probably correct to return instead
+      return false;
+    }
+
+    tabBar.removeTab(widgetToRemoveIndex);
+    return deck.remove(widget.getParent());
   }
 
   /*
