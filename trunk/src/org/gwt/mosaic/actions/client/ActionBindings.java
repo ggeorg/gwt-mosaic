@@ -26,12 +26,14 @@ import org.gwt.beansbinding.core.client.Property;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -152,10 +154,32 @@ public abstract class ActionBindings<T> {
       changeSupport.firePropertyChange("image", oldValue, image);
     }
 
+    private HasLayoutManager getParent(Widget widget) {
+      Widget parent = widget.getParent();
+      if (parent == null) {
+        return null;
+      }
+      if (parent instanceof HasLayoutManager) {
+        return (HasLayoutManager) parent;
+      } else {
+        return getParent(parent);
+      }
+    }
+
+    public void invalidate() {
+      if (target instanceof Widget) {
+        HasLayoutManager lm = getParent((Widget) target);
+        if (lm != null) {
+          lm.invalidate(false);
+        }
+      }
+    }
+
     public void setText(String text) {
       if (target instanceof HasText) {
         String oldValue = ((HasText) target).getText();
         ((HasText) target).setText(text);
+        invalidate();
         changeSupport.firePropertyChange("text", oldValue, text);
       } else {
         throw new UnsupportedOperationException();
