@@ -1,5 +1,7 @@
 /*
- * Copyright 2008-2009 Georgios J. Georgopoulos
+ * Copyright 2008 Google Inc.
+ * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -155,7 +157,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * @param tabText the text to be shown on its tab
    */
   public void add(Widget w, String tabText) {
-    add(w, tabText, false);
+    insert(w, tabText, getWidgetCount());
   }
 
   /**
@@ -166,14 +168,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * @param asHTML <code>true</code> to treat the specified text as HTML
    */
   public void add(Widget w, String tabText, boolean asHTML) {
-    assert (w != null);
-
-    tabBar.addTab(tabText, asHTML);
-
-    final LayoutPanel panel = new LayoutPanel();
-    panel.add(w);
-
-    deck.add(panel);
+    insert(w, tabText, asHTML, getWidgetCount());
   }
 
   /**
@@ -183,14 +178,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * @param tabWidget the widget to be shown in the tab
    */
   public void add(Widget w, Widget tabWidget) {
-    assert (w != null);
-
-    tabBar.addTab(tabWidget);
-
-    final LayoutPanel panel = new LayoutPanel();
-    panel.add(w);
-
-    deck.add(panel);
+    insert(w, tabWidget, getWidgetCount());
   }
 
   /*
@@ -267,8 +255,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * .user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget widget) {
-    final Widget parent = widget.getParent();
-    return parent == null ? -1 : deck.getWidgetIndex(parent);
+    return deck.getWidgetIndex(widget);
   }
 
   /**
@@ -351,9 +338,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
       }
 
       public void remove() {
-        // TODO
         throw new UnsupportedOperationException(
-            "Use TabLayoutPanel.remove() to alter the TabBar");
+            "Use TabLayoutPanel.remove()");
       }
     };
   }
@@ -413,7 +399,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     if (widget == null) {
       return false;
     }
-    
+
     tabBar.removeTab(index);
     return deck.remove(widget);
   }
@@ -426,17 +412,17 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public boolean remove(Widget widget) {
     assert (widget != null);
-    
-    int widgetToRemoveIndex = getWidgetIndex(widget);
 
-    if (widgetToRemoveIndex == -1) {
+    int index = getWidgetIndex(widget);
+
+    if (index == -1) {
       // tabBar.removeTab will add 1 to the index, ignoring the fact that
       // the widget was not found - it's probably correct to return instead
       return false;
     }
 
-    tabBar.removeTab(widgetToRemoveIndex);
-    return deck.remove(widget.getParent());
+    tabBar.removeTab(index);
+    return deck.remove(widget);
   }
 
   /*
