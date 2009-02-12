@@ -171,28 +171,29 @@
 		</copy>
 	</target>
 
-	<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
-		<jvmarg line="-Xmx512m" />
-		<jvmarg value="-Dgwt.args=-out www-test" />
-
-		<sysproperty key="basedir" value="." />
-		<!--<formatter type="xml" />
-	      <formatter usefile="false" type="plain" />
-	      -->
-		<classpath>
-			<path refid="gwt.classpath" />
-			<pathelement path="build/classes" />
-			<pathelement path="src" />
-			<pathelement path="test" />
-		</classpath>
-		<batchtest todir="">
-			<fileset dir="test">
-				<include name="**/**Test.java" />
-			</fileset>
-		</batchtest>
-	</junit>
-
+	<!-- NOTE: junitest Requires env.JUNIT3_HOME environment variable set -->
 	<target name="junitest">
+		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
+			<jvmarg line="-Xmx512m" />
+			<jvmarg value="-Dgwt.args=-out www-test" />
+
+			<sysproperty key="basedir" value="." />
+			<!--<formatter type="xml" />
+		      <formatter usefile="false" type="plain" />
+		      -->
+			<classpath>
+				<pathelement location="${env.JUNIT3_HOME}/junit.jar" />				
+				<path refid="gwt.classpath" />
+				<pathelement path="build/classes" />
+				<pathelement path="src" />
+				<pathelement path="test" />
+			</classpath>
+			<batchtest todir="">
+				<fileset dir="test">
+					<include name="**/**Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>		
 	</target>
 
 	<!-- ======= -->
