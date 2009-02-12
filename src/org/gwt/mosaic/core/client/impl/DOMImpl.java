@@ -16,8 +16,6 @@
 package org.gwt.mosaic.core.client.impl;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Point;
-import org.gwt.mosaic.core.client.UserAgent;
 
 import com.google.gwt.user.client.Element;
 
@@ -27,12 +25,6 @@ import com.google.gwt.user.client.Element;
  *
  */
 public class DOMImpl {
-
-  protected native boolean testOP_SCROLL(String str)
-  /*-{
-    var OP_SCROLL = /^(?:inline|table-row)$/i;
-    return OP_SCROLL.test(str);
-  }-*/;
 
   /**
    * Gets an attribute of the given element's style.
@@ -71,80 +63,6 @@ public class DOMImpl {
     }
     elem.getStyle().setProperty(attr, value);
   }
-
-  public Point getXY(Element elem) {
-    // manually calculate by crawling up offsetParents
-    Point pos = new Point(elem.getOffsetLeft(), elem.getOffsetTop());
-    Element parentNode = (Element) elem.getOffsetParent();
-
-    // safari: subtract body offsets if elem is abs (or any offsetParent),
-    // unless body is offsetParent
-    boolean accountForBody = UserAgent.isSafari()
-        && "absolute".equals(getStyleAttribute(elem, "position"))
-        && elem.getOffsetParent() == elem.getOwnerDocument().getBody();
-
-    if (parentNode != elem) {
-      while (parentNode != null) {
-        pos.x += parentNode.getOffsetLeft();
-        pos.y += parentNode.getOffsetTop();
-        if (!accountForBody && UserAgent.isSafari()
-            && "absolute".equals(getStyleAttribute(parentNode, "position"))) {
-          accountForBody = true;
-        }
-        parentNode = (Element) parentNode.getOffsetParent();
-      }
-    }
-
-    if (accountForBody) { // safari doubles in this case
-      pos.x -= elem.getOwnerDocument().getBody().getOffsetLeft();
-      pos.y -= elem.getOwnerDocument().getBody().getOffsetTop();
-    }
-    parentNode = (Element) elem.getParentNode();
-
-    // account for any scrolled ancestors
-    while (parentNode.getTagName() != null
-        && !("body".equals(parentNode.getTagName()) || "html".equals(parentNode.getTagName()))) {
-      if (parentNode.getScrollTop() != 0 || parentNode.getScrollLeft() != 0) {
-        // work around opera inline/table scrollLeft/Top bug (false reports
-        // offset as scroll)
-        if (testOP_SCROLL(getStyleAttribute(parentNode, "display"))) {
-          if (!UserAgent.isOpera()
-              || !"visible".equals(getStyleAttribute(parentNode, "overflow"))) {
-            pos.x -= parentNode.getScrollLeft();
-            pos.y -= parentNode.getScrollTop();
-          }
-        }
-      }
-
-      parentNode = (Element) parentNode.getParentNode();
-    }
-
-    return pos;
-  }
-
-  /**
-   * Returns the left scroll value of the document.
-   * 
-   * @param doc the document to get the scroll value of
-   * @return the amount that the document is scrolled to the left
-   */
-  public native int getDocumenScrollLeft(Element doc)
-  /*-{
-    doc = doc || document;
-    return Math.max(doc.documentElement.scrollLeft, doc.body.scrollLeft);
-  }-*/;
-
-  /**
-   * Returns the top scroll value of the document.
-   * 
-   * @param doc the document to get the scroll value of
-   * @return the amount that the document is scrolled to the top
-   */
-  public native int getDocumenScrollTop(Element doc) 
-  /*-{
-    doc = doc || document;
-    return Math.max(doc.documentElement.scrollTop, doc.body.scrollTop);
-  }-*/;
 
   /**
    * Gets the cell index of a cell within a table row.

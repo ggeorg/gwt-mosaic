@@ -18,7 +18,6 @@ package org.gwt.mosaic.ui.client;
 import java.util.ArrayList;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Region;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
@@ -99,15 +98,8 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
    */
   @Override
   public void show() {
-
-    /*
-     * TODO Depending on the width and height of the popup and the distance from
-     * the widget to the bottom and right edges of the window, the popup may be
-     * displayed directly above the widget, and/or its right edge may be aligned
-     * with the right edge of the widget.
-     */
-    Region r = DOM.getRegion(relativeWidget.getElement());
-    setPopupPosition(r.left, r.bottom);
+    setPopupPosition(relativeWidget.getAbsoluteLeft(),
+        relativeWidget.getAbsoluteTop() + relativeWidget.getOffsetHeight());
 
     super.show();
 
