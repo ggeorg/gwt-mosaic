@@ -549,14 +549,14 @@ public abstract class FormSpec implements Serializable {
   // Helper Code **********************************************************
 
   /**
-   * Computes the maximum size for the given list of components, using this form
+   * Computes the maximum size for the given list of widgets, using this form
    * spec and the specified measure.
    * <p>
    * 
    * Invoked by FormLayout to determine the size of one of my elements
    * 
-   * @param layoutPanel the layout container
-   * @param widgets the list of components to measure
+   * @param layoutPanel the layout panel
+   * @param widgets the list of widgets to measure
    * @param minMeasure the measure used to determine the minimum size
    * @param prefMeasure the measure used to determine the preferred size
    * @param defaultMeasure the measure used to determine the default size
