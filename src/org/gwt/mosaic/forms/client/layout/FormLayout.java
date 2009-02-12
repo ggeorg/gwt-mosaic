@@ -56,6 +56,7 @@ import java.util.Set;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -105,19 +106,17 @@ import com.google.gwt.user.client.ui.Widget;
  * the columns and rows are specified before components are added to the form.
  * 
  * <pre>
- * FormLayout layout = new FormLayout(
- *      "right:pref, 6dlu, 50dlu, 4dlu, default",  // columns
- *      "pref, 3dlu, pref, 3dlu, pref");           // rows
- *
+ * FormLayout layout = new FormLayout(&quot;right:pref, 6dlu, 50dlu, 4dlu, default&quot;, // columns
+ *     &quot;pref, 3dlu, pref, 3dlu, pref&quot;); // rows
  * CellConstraints cc = new CellConstraints();
  * JPanel panel = new JPanel(layout);
- * panel.add(new JLabel("Label1"),   cc.xy  (1, 1));
- * panel.add(new JTextField(),       cc.xywh(3, 1, 3, 1));
- * panel.add(new JLabel("Label2"),   cc.xy  (1, 3));
- * panel.add(new JTextField(),       cc.xy  (3, 3));
- * panel.add(new JLabel("Label3"),   cc.xy  (1, 5));
- * panel.add(new JTextField(),       cc.xy  (3, 5));
- * panel.add(new JButton("/u2026"),  cc.xy  (5, 5));
+ * panel.add(new JLabel(&quot;Label1&quot;), cc.xy(1, 1));
+ * panel.add(new JTextField(), cc.xywh(3, 1, 3, 1));
+ * panel.add(new JLabel(&quot;Label2&quot;), cc.xy(1, 3));
+ * panel.add(new JTextField(), cc.xy(3, 3));
+ * panel.add(new JLabel(&quot;Label3&quot;), cc.xy(1, 5));
+ * panel.add(new JTextField(), cc.xy(3, 5));
+ * panel.add(new JButton(&quot;/u2026&quot;), cc.xy(5, 5));
  * return panel;
  * </pre>
  * <p>
@@ -128,19 +127,17 @@ import com.google.gwt.user.client.ui.Widget;
  * to add components to the form.
  * 
  * <pre>
- * FormLayout layout = new FormLayout(
- *      "right:pref, 6dlu, 50dlu, 4dlu, default",  // columns
- *      "pref, 3dlu, pref, 3dlu, pref");           // rows
- *
+ * FormLayout layout = new FormLayout(&quot;right:pref, 6dlu, 50dlu, 4dlu, default&quot;, // columns
+ *     &quot;pref, 3dlu, pref, 3dlu, pref&quot;); // rows
  * PanelBuilder builder = new PanelBuilder(layout);
  * CellConstraints cc = new CellConstraints();
- * builder.addLabel("Label1",         cc.xy  (1, 1));
- * builder.add(new JTextField(),      cc.xywh(3, 1, 3, 1));
- * builder.addLabel("Label2",         cc.xy  (1, 3));
- * builder.add(new JTextField(),      cc.xy  (3, 3));
- * builder.addLabel("Label3",         cc.xy  (1, 5));
- * builder.add(new JTextField(),      cc.xy  (3, 5));
- * builder.add(new JButton("/u2026"), cc.xy  (5, 5));
+ * builder.addLabel(&quot;Label1&quot;, cc.xy(1, 1));
+ * builder.add(new JTextField(), cc.xywh(3, 1, 3, 1));
+ * builder.addLabel(&quot;Label2&quot;, cc.xy(1, 3));
+ * builder.add(new JTextField(), cc.xy(3, 3));
+ * builder.addLabel(&quot;Label3&quot;, cc.xy(1, 5));
+ * builder.add(new JTextField(), cc.xy(3, 5));
+ * builder.add(new JButton(&quot;/u2026&quot;), cc.xy(5, 5));
  * return builder.getPanel();
  * </pre>
  * <p>
@@ -151,14 +148,12 @@ import com.google.gwt.user.client.ui.Widget;
  * source distribution.
  * 
  * <pre>
- * FormLayout layout = new FormLayout(
- *      "right:pref, 6dlu, 50dlu, 4dlu, default"); // 5 columns; add rows later
- *
+ * FormLayout layout = new FormLayout(&quot;right:pref, 6dlu, 50dlu, 4dlu, default&quot;); // 5 columns; add rows later
  * DefaultFormBuilder builder = new DefaultFormBuilder(layout);
- * builder.append("Label1", new JTextField(), 3);
- * builder.append("Label2", new JTextField());
- * builder.append("Label3", new JTextField());
- * builder.append(new JButton("/u2026"));
+ * builder.append(&quot;Label1&quot;, new JTextField(), 3);
+ * builder.append(&quot;Label2&quot;, new JTextField());
+ * builder.append(&quot;Label3&quot;, new JTextField());
+ * builder.append(new JButton(&quot;/u2026&quot;));
  * return builder.getPanel();
  * </pre>
  * 
@@ -288,17 +283,13 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * 
    * <pre>
    * // Label, gap, widget
-   * FormLayout layout = new FormLayout(
-   *      "pref, 4dlu, pref");
-   *
+   * FormLayout layout = new FormLayout(&quot;pref, 4dlu, pref&quot;);
    * // Right-aligned label, gap, widget, gap, widget
-   * FormLayout layout = new FormLayout(
-   *      "right:pref, 4dlu, 50dlu, 4dlu, 50dlu");
-   *
+   * FormLayout layout = new FormLayout(&quot;right:pref, 4dlu, 50dlu, 4dlu, 50dlu&quot;);
    * // Left-aligned labels, gap, widgets, gap, widgets
-   * FormLayout layout = new FormLayout(
-   *      "left:pref, 4dlu, pref, 4dlu, pref");
+   * FormLayout layout = new FormLayout(&quot;left:pref, 4dlu, pref, 4dlu, pref&quot;);
    * </pre>
+   * 
    * See the class comment for more examples.
    * 
    * @param encodedColumnSpecs comma separated encoded column specifications
@@ -323,20 +314,15 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * 
    * <pre>
    * // Label, gap, component
-   * FormLayout layout = new FormLayout(
-   *      "pref, 4dlu, pref",
-   *      myLayoutMap);
-   *
+   * FormLayout layout = new FormLayout(&quot;pref, 4dlu, pref&quot;, myLayoutMap);
    * // Right-aligned label, gap, component, gap, component
-   * FormLayout layout = new FormLayout(
-   *      "right:pref, &#x0040;lcgap, 50dlu, 4dlu, 50dlu",
-   *      myLayoutMap);
-   *
+   * FormLayout layout = new FormLayout(&quot;right:pref, @lcgap, 50dlu, 4dlu, 50dlu&quot;,
+   *     myLayoutMap);
    * // Left-aligned labels, gap, components, gap, components
-   * FormLayout layout = new FormLayout(
-   *      "left:pref, &#x0040;lcgap, pref, &#x0040;myGap, pref",
-   *      myLayoutMap);
+   * FormLayout layout = new FormLayout(&quot;left:pref, @lcgap, pref, @myGap, pref&quot;,
+   *     myLayoutMap);
    * </pre>
+   * 
    * See the class comment for more examples.
    * 
    * @param encodedColumnSpecs comma separated encoded column specifications
@@ -361,22 +347,16 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * <strong>Examples:</strong>
    * 
    * <pre>
-   * FormLayout layout = new FormLayout(
-   *      "pref, 4dlu, pref",               // columns
-   *      "p, 3dlu, p");                    // rows
-   *
-   * FormLayout layout = new FormLayout(
-   *      "right:pref, 4dlu, pref",         // columns
-   *      "p, 3dlu, p, 3dlu, fill:p:grow"); // rows
-   *
-   * FormLayout layout = new FormLayout(
-   *      "left:pref, 4dlu, 50dlu",         // columns
-   *      "p, 2px, p, 3dlu, p, 9dlu, p");   // rows
-   *
-   * FormLayout layout = new FormLayout(
-   *      "max(75dlu;pref), 4dlu, default", // columns
-   *      "p, 3dlu, p, 3dlu, p, 3dlu, p");  // rows
+   * FormLayout layout = new FormLayout(&quot;pref, 4dlu, pref&quot;, // columns
+   *     &quot;p, 3dlu, p&quot;); // rows
+   * FormLayout layout = new FormLayout(&quot;right:pref, 4dlu, pref&quot;, // columns
+   *     &quot;p, 3dlu, p, 3dlu, fill:p:grow&quot;); // rows
+   * FormLayout layout = new FormLayout(&quot;left:pref, 4dlu, 50dlu&quot;, // columns
+   *     &quot;p, 2px, p, 3dlu, p, 9dlu, p&quot;); // rows
+   * FormLayout layout = new FormLayout(&quot;max(75dlu;pref), 4dlu, default&quot;, // columns
+   *     &quot;p, 3dlu, p, 3dlu, p, 3dlu, p&quot;); // rows
    * </pre>
+   * 
    * See the class comment for more examples.
    * 
    * @param encodedColumnSpecs comma separated encoded column specifications
@@ -399,26 +379,20 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * <strong>Examples:</strong>
    * 
    * <pre>
-   * FormLayout layout = new FormLayout(
-   *      "pref, 4dlu, pref",               // columns
-   *      "p, 3dlu, p",                     // rows
-   *      myLayoutMap);                     // custom LayoutMap
-   *
-   * FormLayout layout = new FormLayout(
-   *      "right:pref, 4dlu, pref",         // columns
-   *      "p, &#x0040;lgap, p, &#x0040;lgap, fill:p:grow",// rows
-   *      myLayoutMap);                     // custom LayoutMap
-   *
-   * FormLayout layout = new FormLayout(
-   *      "left:pref, 4dlu, 50dlu",         // columns
-   *      "p, 2px, p, 3dlu, p, 9dlu, p",    // rows
-   *      myLayoutMap);                     // custom LayoutMap
-   *
-   * FormLayout layout = new FormLayout(
-   *      "max(75dlu;pref), 4dlu, default", // columns
-   *      "p, 3dlu, p, 3dlu, p, 3dlu, p",   // rows
-   *      myLayoutMap);                     // custom LayoutMap
+   * FormLayout layout = new FormLayout(&quot;pref, 4dlu, pref&quot;, // columns
+   *     &quot;p, 3dlu, p&quot;, // rows
+   *     myLayoutMap); // custom LayoutMap
+   * FormLayout layout = new FormLayout(&quot;right:pref, 4dlu, pref&quot;, // columns
+   *     &quot;p, @lgap, p, @lgap, fill:p:grow&quot;,// rows
+   *     myLayoutMap); // custom LayoutMap
+   * FormLayout layout = new FormLayout(&quot;left:pref, 4dlu, 50dlu&quot;, // columns
+   *     &quot;p, 2px, p, 3dlu, p, 9dlu, p&quot;, // rows
+   *     myLayoutMap); // custom LayoutMap
+   * FormLayout layout = new FormLayout(&quot;max(75dlu;pref), 4dlu, default&quot;, // columns
+   *     &quot;p, 3dlu, p, 3dlu, p, 3dlu, p&quot;, // rows
+   *     myLayoutMap); // custom LayoutMap
    * </pre>
+   * 
    * See the class comment for more examples.
    * 
    * @param encodedColumnSpecs comma separated encoded column specifications
@@ -877,12 +851,11 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * // Group columns 1, 3 and 4.
-     * setColumnGroups(new int[][]{ {1, 3, 4}});
-     *
-     * // Group columns 1, 3, 4, and group columns 7 and 9
-     * setColumnGroups(new int[][]{ {1, 3, 4}, {7, 9}});
-     * </pre>
+   * // Group columns 1, 3 and 4.
+   * setColumnGroups(new int[][] {{1, 3, 4}});
+   * // Group columns 1, 3, 4, and group columns 7 and 9
+   * setColumnGroups(new int[][] { {1, 3, 4}, {7, 9}});
+   * </pre>
    * 
    * @param colGroupIndices a two-dimensional array of column groups indices
    * @throws IndexOutOfBoundsException if an index is outside the grid
@@ -950,12 +923,11 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * // Group rows 1 and 2.
-     * setRowGroups(new int[][]{ {1, 2}});
-     *
-     * // Group rows 1 and 2, and group rows 5, 7, and 9.
-     * setRowGroups(new int[][]{ {1, 2}, {5, 7, 9}});
-     * </pre>
+   * // Group rows 1 and 2.
+   * setRowGroups(new int[][] {{1, 2}});
+   * // Group rows 1 and 2, and group rows 5, 7, and 9.
+   * setRowGroups(new int[][] { {1, 2}, {5, 7, 9}});
+   * </pre>
    * 
    * @param rowGroupIndices a two-dimensional array of row group indices.
    * @throws IndexOutOfBoundsException if an index is outside the grid
@@ -1328,12 +1300,12 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   /**
    * Computes and returns the layout size of the given <code>parent</code>
-   * container using the specified measures.
+   * layout panel using the specified measures.
    * 
-   * @param layoutPanel the container in which to do the layout
+   * @param layoutPanel the layout panel in which to do the layout
    * @param defaultWidthMeasure the measure used to compute the default width
    * @param defaultHeightMeasure the measure used to compute the default height
-   * @return the layout size of the <code>parent</code> container
+   * @return the layout size of the <code>parent</code> layout panel
    */
   private Dimension computeLayoutSize(LayoutPanel layoutPanel,
       Measure defaultWidthMeasure, Measure defaultHeightMeasure) {
@@ -1514,7 +1486,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * Computes and returns the sizes for the given form specs, widget lists and
    * measures for minimum, preferred, and default size.
    * 
-   * @param layoutPanel the layout container
+   * @param layoutPanel the layout panel
    * @param formSpecs the column or row specs, resp.
    * @param widgetLists the widgets list for each col/row
    * @param minMeasure the measure used to determine min sizes
@@ -1687,13 +1659,11 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * <strong>Examples:</strong>
    * 
    * <pre>
-   * "pref, 4dlu, pref, 2dlu, p:grow, 2dlu,      pref" ->
+   * &quot;pref, 4dlu, pref, 2dlu, p:grow, 2dlu,      pref&quot; -&gt;
    * [4,    3,    2,    1,    0,      MAX_VALUE, MAX_VALUE]
-   *
-   * "p:grow, 4dlu, p:grow, 9dlu,      pref" ->
+   * &quot;p:grow, 4dlu, p:grow, 9dlu,      pref&quot; -&gt;
    * [0,      1,    0,      MAX_VALUE, MAX_VALUE]
-   *
-   * "p, 4dlu, p, 2dlu, 0:grow" ->
+   * &quot;p, 4dlu, p, 2dlu, 0:grow&quot; -&gt;
    * [4, 3,    2, 1,    0]
    * </pre>
    * 
@@ -1879,8 +1849,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
      */
     private ComponentSizeCache(int initialCapacity) {
       minimumSizes = new HashMap<Widget, Dimension>(initialCapacity);
-      // preferredSizes = new HashMap<Widget, Dimension>(initialCapacity);
-      preferredSizes = minimumSizes;
+      preferredSizes = new HashMap<Widget, Dimension>(initialCapacity);
+      // preferredSizes = minimumSizes;
     }
 
     /**
@@ -1888,7 +1858,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
      */
     void invalidate() {
       minimumSizes.clear();
-      // preferredSizes.clear();
+      preferredSizes.clear();
     }
 
     /**
@@ -1902,7 +1872,14 @@ public final class FormLayout extends BaseLayout implements Serializable {
     Dimension getMinimumSize(Widget widget) {
       Dimension size = minimumSizes.get(widget);
       if (size == null) {
-        size = new Dimension(getFlowWidth(widget), getFlowHeight(widget)); // widget.getMinimumSize();
+        if (UserAgent.isIE6()) {
+          size = new Dimension(getFlowWidth(widget), getFlowHeight(widget)); // widget.getMinimumSize();
+        } else {
+          size = new Dimension(DOM.toPixelSize(DOM.getStyleAttribute(
+              widget.getElement(), "minWidth")),
+              DOM.toPixelSize(DOM.getStyleAttribute(widget.getElement(),
+                  "minHeight")));
+        }
         minimumSizes.put(widget, size);
       }
       return size;
