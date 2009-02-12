@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.core.client.impl;
 
-import org.gwt.mosaic.core.client.Point;
-
 import com.google.gwt.user.client.Element;
 
 /**
@@ -84,24 +82,6 @@ public class DOMImplIE6 extends DOMImpl {
       default:
         elem.style[attr] = value;
     };
-  }-*/;
-
-  public Point getXY(Element elem) {
-    return new Point(getX(elem), getY(elem));
-  }
-
-  public native int getX(Element elem)
-  /*-{
-    var box = elem.getBoundingClientRect();
-    var rootNode = elem.ownerDocument;
-    return box.left + this.@org.gwt.mosaic.core.client.impl.DOMImpl::getDocumenScrollLeft(Lcom/google/gwt/user/client/Element;)(rootNode);
-  }-*/;
-
-  public native int getY(Element elem)
-  /*-{
-    var box = elem.getBoundingClientRect();
-    var rootNode = elem.ownerDocument;
-    return box.top + this.@org.gwt.mosaic.core.client.impl.DOMImpl::getDocumenScrollTop(Lcom/google/gwt/user/client/Element;)(rootNode);
   }-*/;
 
 }
