@@ -30,14 +30,18 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 final class SplitBar extends Widget implements SourcesMouseEvents {
+  
+  private static GlassPanel glassPanel;
 
   private MouseListenerCollection mouseListeners;
 
@@ -72,6 +76,12 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
 
     @Override
     public void dragStart() {
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+      }
+      RootPanel.get().add(glassPanel, 0, 0);
+      
       super.dragStart();
 
       WidgetLocation currentDraggableLocation = new WidgetLocation(
@@ -178,6 +188,8 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
           layoutData.maxSize);
 
       super.dragEnd();
+      
+      glassPanel.removeFromParent();
 
       if (context.boundaryPanel instanceof HasLayoutManager) {
         new DelayedRunnable(33) {
