@@ -178,9 +178,7 @@
 			<jvmarg value="-Dgwt.args=-out www-test" />
 
 			<sysproperty key="basedir" value="." />
-			<!--<formatter type="xml" />
-		      <formatter usefile="false" type="plain" />
-		      -->
+			<formatter type="plain" usefile="false"/>			
 			<classpath>
 				<pathelement location="${env.JUNIT3_HOME}/junit.jar" />				
 				<path refid="gwt.classpath" />
