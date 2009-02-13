@@ -25,7 +25,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class LayoutData {
 
-  final transient DecoratorPanel decoratorPanel;
+  final DecoratorPanel decoratorPanel;
+  
+  String cachedWidth, cachedHeight; 
 
   /**
    * Creates a new instance of {@code LayoutData} by specifying that the
