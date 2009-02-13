@@ -19,8 +19,7 @@ import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -40,21 +39,25 @@ public class FillLayoutTest extends GWTTestCase {
     fillLayout.setWidgetSpacing(0);
     final Button button = new Button();
     fillLayout.add(button);
-   
+
     RootPanel.get().add(fillLayout);
-   
+
     assertEquals(FillLayout.class,fillLayout.getLayout().getClass());
     assertEquals(1,fillLayout.getWidgetCount());
     assertEquals(0,fillLayout.getWidgetSpacing());
     assertEquals(0,fillLayout.getPadding());
-   
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
+
+    Timer timer = new Timer() {
+      public void run() {
         assertEquals(200,((Button)fillLayout.getWidget(0)).getOffsetWidth());
         assertEquals(150,((Button)fillLayout.getWidget(0)).getOffsetHeight());
-        assertEquals(button,fillLayout.getWidget(0));
+        assertEquals(button,fillLayout.getWidget(0));      
+
+        finishTest();
       }
-    });    
+    };
+    delayTestFinish(500);
+    timer.schedule(300);    
   }
   public void testBounds() {
     final LayoutPanel fillLayout = new LayoutPanel();
@@ -62,7 +65,7 @@ public class FillLayoutTest extends GWTTestCase {
     fillLayout.add(button);
     TextArea textArea = new TextArea();
     fillLayout.add(textArea);
-   
+
     assertEquals(2,fillLayout.getWidgetCount());
     assertEquals(button,fillLayout.getWidget(0));
     assertEquals(textArea,fillLayout.getWidget(1));

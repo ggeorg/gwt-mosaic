@@ -17,13 +17,13 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -38,10 +38,16 @@ public class BoxLayoutTest extends GWTTestCase {
   }
 
   public void testCreateBoxLayout() {
+    final LayoutPanel fillBrowserLayout = new LayoutPanel(new FillLayout());
+    fillBrowserLayout.setPixelSize(Window.getClientWidth(), Window.getClientHeight());   
+    fillBrowserLayout.setWidgetSpacing(0);
+    fillBrowserLayout.setPadding(0); 
+
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
 
-    layoutPanel.setWidgetSpacing(5);
+    layoutPanel.setWidgetSpacing(0);
+    layoutPanel.setPadding(0);     
 
     final Button b1 = new Button("Button 1");
     final Button b2 = new Button("Button 2");
@@ -50,7 +56,8 @@ public class BoxLayoutTest extends GWTTestCase {
     final Button b4 = new Button("Button 4");
 
     final LayoutPanel horizontalPanel = new LayoutPanel(new BoxLayout());
-    horizontalPanel.setWidgetSpacing(2);
+    horizontalPanel.setWidgetSpacing(0);
+    horizontalPanel.setPadding(0); 
 
     final Button b11 = new Button("Button 11");
     final Button b12 = new Button("Button 12");
@@ -65,29 +72,37 @@ public class BoxLayoutTest extends GWTTestCase {
     horizontalPanel.add(b14, new BoxLayoutData(FillStyle.BOTH));
 
     layoutPanel.add(b1, new BoxLayoutData(FillStyle.HORIZONTAL));
-    layoutPanel.add(horizontalPanel, new BoxLayoutData(FillStyle.BOTH, true));
+    layoutPanel.add(horizontalPanel, new BoxLayoutData(FillStyle.BOTH, false));
     layoutPanel.add(b2, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel.add(b3);
     layoutPanel.add(b4, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    RootPanel.get().add(layoutPanel);
+    fillBrowserLayout.add(layoutPanel);
 
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
+    RootPanel.get().add(fillBrowserLayout);
+
+    Timer timer = new Timer() {
+      public void run() {
         int clientWidth = Window.getClientWidth();
-        assertEquals(5, layoutPanel.getWidgetSpacing());
+
+        assertEquals(0, layoutPanel.getWidgetSpacing());
+
         assertEquals(clientWidth, b1.getOffsetWidth());
         assertEquals(clientWidth, b2.getOffsetWidth());
         assertEquals("Button11 prefered width", 100, b11.getOffsetWidth());
         assertEquals("Button3 width", 70, b3.getOffsetWidth());
-        int b14width = clientWidth - b11.getOffsetWidth()
-            - b12.getOffsetWidth() - b13.getOffsetHeight();
+        int b14width = clientWidth - b11.getOffsetWidth() - b12.getOffsetWidth() - b13.getOffsetWidth();
         assertEquals(
             "Button14 should be the diferente between client width and the other buttons",
             b14width, b14.getOffsetWidth());
 
         assertEquals(horizontalPanel.getOffsetHeight(), b2.getOffsetHeight());
+
+        finishTest();
       }
-    });
+    };
+
+    delayTestFinish(500);
+    timer.schedule(300);      
   }
 }
