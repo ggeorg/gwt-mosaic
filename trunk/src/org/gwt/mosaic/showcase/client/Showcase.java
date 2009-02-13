@@ -48,6 +48,7 @@ import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientation
 import org.gwt.mosaic.showcase.client.content.forms.factories.CwButtonBarFactoryExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
+import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Frames;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest2;
@@ -421,6 +422,7 @@ public class Showcase implements EntryPoint {
     TreeItem catFillLayoutTests = catLayoutTests.addItem("FillLayout");
     setupMainMenuOption(catFillLayoutTests, new CwFillLayoutTest1(constants),
         IMAGES.catPanels());
+    
     TreeItem catBoxLayoutTests = catLayoutTests.addItem("BoxLayout");
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest1(constants),
         IMAGES.catPanels());
@@ -432,9 +434,13 @@ public class Showcase implements EntryPoint {
         constants), IMAGES.catPanels());
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(
         constants), IMAGES.catPanels());
+    
     TreeItem catBorderLayoutTests = catLayoutTests.addItem("BorderLayout");
     setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(
         constants), IMAGES.catPanels());
+    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Frames(
+        constants), IMAGES.catPanels());
+    
     TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
     setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
