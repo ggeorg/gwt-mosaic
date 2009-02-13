@@ -68,6 +68,20 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
+      Object layoutDataObject = getLayoutData(child);
+      if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+        LayoutData layoutData = (LayoutData) layoutDataObject;
+        if (layoutData.cachedHeight == null) {
+          layoutData.cachedHeight = child.getElement().getStyle().getProperty(
+              "height");
+          if (layoutData.cachedHeight != null
+              && layoutData.cachedHeight.length() > 0) {
+            return DOM.toPixelSize(layoutData.cachedHeight);
+          } else {
+            layoutData.cachedHeight = "".intern();
+          }
+        }
+      }
       changeToStaticPositioning(child.getElement());
       // ggeorg: set to "0px", read and set it to "auto"
       // I don't know why but it works for widget like 'ListBox'
@@ -97,6 +111,20 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
+      Object layoutDataObject = getLayoutData(child);
+      if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+        LayoutData layoutData = (LayoutData) layoutDataObject;
+        if (layoutData.cachedWidth == null) {
+          layoutData.cachedWidth = child.getElement().getStyle().getProperty(
+              "width");
+          if (layoutData.cachedWidth != null
+              && layoutData.cachedWidth.length() > 0) {
+            return DOM.toPixelSize(layoutData.cachedWidth);
+          } else {
+            layoutData.cachedWidth = "".intern();
+          }
+        }
+      }
       changeToStaticPositioning(child.getElement());
       // ggeorg: set to "0px", read and set it to "auto"
       // I don't know why but it works for widget like 'ListBox'
