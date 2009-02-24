@@ -21,6 +21,7 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
+import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
 
 import com.google.gwt.user.client.Command;
@@ -494,7 +495,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
     final Widget parent = findParent();
 
-    if (parent instanceof Viewport || !(parent instanceof HasLayoutManager)) {
+    if (parent instanceof Viewport
+        || parent instanceof DecoratedLayoutPopupPanel
+        || parent instanceof LayoutPopupPanel
+        || !(parent instanceof HasLayoutManager)) {
       if (layout) {
         layout(false);
       }
