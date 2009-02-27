@@ -73,7 +73,7 @@ public class Main implements EntryPoint {
     LayoutPanel panel = new LayoutPanel(new BorderLayout());
     panel.add(new Label("Sour Cream"), new BorderLayoutData(Region.NORTH));
     panel.add(new Label("Creme Fraiche"), new BorderLayoutData(Region.SOUTH));
-    panel.add(new Label()); // add an empty text in the center
+    panel.add(new Label()); // add empty label at Region.CENTER
     w.setWidget(panel);
 
     w.pack();
