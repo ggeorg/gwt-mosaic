@@ -44,3 +44,49 @@ public class Main implements EntryPoint {
  * `w.setWidget(new Label("bonbon"))` This statement adds a label to the WindowPanel.
  * `w.setPixelSize(100, 100)` This statement sets the size of the WindowPanel.
  * `w.show()` This statement makes the WindowPanel visible.
+
+== LayoutManager Example ==
+
+This WindowPanel example shows a WindowPanel containing two labels. It demonstrates the BorderLayout layout manager that the LayoutPanel is set to. WindowPanel is using by default the a FillLayout layout manager which will cause the LayoutPanel to use all of the available space.
+
+If you dragged a corner of the WindowPanel to enlarge it, you would see that the layout manager arranges the labels in their appropriate place i.e. at the NORTH and SOUTH positions of the WindowPanel.
+
+{{{
+import org.gwt.mosaic.ui.client.WindowPanel;
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
+import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Main implements EntryPoint {
+
+  private void createWindowPanel() {
+    WindowPanel w = new WindowPanel("Dairy Products");
+
+    LayoutPanel panel = new LayoutPanel(new BorderLayout());
+    panel.add(new Label("Sour Cream"), new BorderLayoutData(Region.NORTH));
+    panel.add(new Label("Creme Fraiche"), new BorderLayoutData(Region.SOUTH));
+    panel.add(new Label()); // add an empty text in the center
+    w.setWidget(panel);
+
+    w.pack();
+    w.show();
+  }
+
+  public void onModuleLoad() {
+    RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
+      public void onClick(Widget sender) {
+        createWindowPanel();
+      }
+    }));
+  }
+
+}
+}}}
