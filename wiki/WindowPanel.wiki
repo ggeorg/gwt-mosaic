@@ -4,9 +4,38 @@
 
 A WindowPanel is a GWT PopupPanel that has decorations such as a border, a title, and supports image buttons that close or maximize the window. 
 
-= Details =
+= Creating and showing window panels =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== Simple WindowPanel ==
+
+This WindowPanel example displays an untitled WindowPanel containing a label. The WindowPanel would be displayed in the upper left of the browser's content area (it can be displayed in other parts of the browser's content area, as shown in a later example).
+
+{{{
+import org.gwt.mosaic.ui.client.WindowPanel;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Main implements EntryPoint {
+
+  private void createWindowPanel() {
+    WindowPanel w = new WindowPanel();
+    w.setWidget(new Label("bonbon"));
+    w.setPixelSize(100, 100);
+    w.show();
+  }
+
+  public void onModuleLoad() {
+    RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
+      public void onClick(Widget sender) {
+        createWindowPanel();
+      }
+    }));
+  }
+
+}
+}}}
