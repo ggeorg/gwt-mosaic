@@ -6,7 +6,7 @@ A WindowPanel is a GWT PopupPanel that has decorations such as a border, a title
 
 = Creating and showing window panels =
 
-== Simple WindowPanel ==
+== Simple WindowPanel Example ==
 
 This WindowPanel example displays an untitled WindowPanel containing a label. The WindowPanel would be displayed in the upper left of the browser's content area (it can be displayed in other parts of the browser's content area, as shown in a later example).
 
@@ -39,3 +39,5 @@ public class Main implements EntryPoint {
 
 }
 }}}
+
+ * `WindowPanel w = new WindowPanel();`: This constructs a WindowPanel, which is a popup panel that can contain widgets you choose to put in it. At this stage of execution the WindowPanel is not yet visible to the user.
