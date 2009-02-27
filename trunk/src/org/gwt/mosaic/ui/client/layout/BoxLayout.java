@@ -57,17 +57,15 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *   
+ * 
  *   LayoutPanel panel = new LayoutPanel(new BoxLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"));
- *   panel.add(new Button("Button 2"));
- *   panel.add(new Button("Button 3"));
- *   panel.add(new Button("Button 4"));
- *
+ *   panel.add(new Button(&quot;Button 1&quot;));
+ *   panel.add(new Button(&quot;Button 2&quot;));
+ *   panel.add(new Button(&quot;Button 3&quot;));
+ *   panel.add(new Button(&quot;Button 4&quot;));
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -88,17 +86,15 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *   
+ * 
  *   LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"));
- *   panel.add(new Button("Button 2"));
- *   panel.add(new Button("Button 3"));
- *   panel.add(new Button("Button 4"));
- *
+ *   panel.add(new Button(&quot;Button 1&quot;));
+ *   panel.add(new Button(&quot;Button 2&quot;));
+ *   panel.add(new Button(&quot;Button 3&quot;));
+ *   panel.add(new Button(&quot;Button 4&quot;));
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -125,18 +121,16 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *   
+ * 
  *   LayoutPanel panel = new LayoutPanel(new BoxLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"), new BoxLayoutData(FillStyle.BOTH));
- *   panel.add(new Button("Button 2"), new BoxLayoutData(FillStyle.VERTICAL));
- *   panel.add(new Button("Button 3"), new BoxLayoutData(FillStyle.HORIZONTAL));
- *   panel.add(new Button("Button 4"), new BoxLayoutData(-1.0, 0.5));
- *   panel.add(new Button("Button 5"), new BoxLayoutData(-1.0, 150.0));
- *
+ *   panel.add(new Button(&quot;Button 1&quot;), new BoxLayoutData(FillStyle.BOTH));
+ *   panel.add(new Button(&quot;Button 2&quot;), new BoxLayoutData(FillStyle.VERTICAL));
+ *   panel.add(new Button(&quot;Button 3&quot;), new BoxLayoutData(FillStyle.HORIZONTAL));
+ *   panel.add(new Button(&quot;Button 4&quot;), new BoxLayoutData(-1.0, 0.5));
+ *   panel.add(new Button(&quot;Button 5&quot;), new BoxLayoutData(-1.0, 150.0));
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -153,18 +147,16 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *   
+ * 
  *   LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"), new BoxLayoutData(FillStyle.BOTH));
- *   panel.add(new Button("Button 2"), new BoxLayoutData(FillStyle.VERTICAL));
- *   panel.add(new Button("Button 3"), new BoxLayoutData(FillStyle.HORIZONTAL));
- *   panel.add(new Button("Button 4"), new BoxLayoutData(0.5, -1.0));
- *   panel.add(new Button("Button 5"), new BoxLayoutData(150.0, -1.0));
- *
+ *   panel.add(new Button(&quot;Button 1&quot;), new BoxLayoutData(FillStyle.BOTH));
+ *   panel.add(new Button(&quot;Button 2&quot;), new BoxLayoutData(FillStyle.VERTICAL));
+ *   panel.add(new Button(&quot;Button 3&quot;), new BoxLayoutData(FillStyle.HORIZONTAL));
+ *   panel.add(new Button(&quot;Button 4&quot;), new BoxLayoutData(0.5, -1.0));
+ *   panel.add(new Button(&quot;Button 5&quot;), new BoxLayoutData(150.0, -1.0));
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -199,7 +191,7 @@ public class BoxLayout extends BaseLayout {
   private int visibleWidgetCount = 0;
 
   private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-  
+
   private int[] margins = {0, 0};
   private int[] paddings = {0, 0};
 
@@ -445,7 +437,7 @@ public class BoxLayout extends BaseLayout {
 
     margins = DOM.getMarginSizes(layoutPanel.getElement());
     paddings = DOM.getPaddingSizes(layoutPanel.getElement());
-    
+
     visibleWidgetCount = getVisibleWidgetCount(layoutPanel);
 
     return initialized = true;
@@ -755,7 +747,7 @@ public class BoxLayout extends BaseLayout {
     } catch (Exception e) {
       Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
     }
-    
+
     if (runTwice()) {
       recalculate(widgetSizes);
     }
