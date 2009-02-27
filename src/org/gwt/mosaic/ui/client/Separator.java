@@ -15,7 +15,12 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import com.google.gwt.user.client.ui.Composite;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -26,7 +31,7 @@ import com.google.gwt.user.client.ui.Label;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class Separator extends Composite implements HasHorizontalAlignment {
+public class Separator extends LayoutComposite implements HasHorizontalAlignment {
 
   private static final String DEFAULT_STYLENAME = "mosaic-FormSeparator";
 
@@ -38,23 +43,23 @@ public class Separator extends Composite implements HasHorizontalAlignment {
 
   public Separator(String text, HorizontalAlignmentConstant align) {
     this.align = checkHorizontalAlignment(align);
-    final HorizontalPanel panel = new HorizontalPanel();
-    panel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-    // panel.setWidth("100%");
+    final LayoutPanel layoutPanel = getWidget();
+    layoutPanel.setLayout(new BoxLayout(Alignment.CENTER));
+    layoutPanel.setPadding(0);
+    layoutPanel.setWidgetSpacing(8);
+    
     final Label l = new Label(text);
     l.setWordWrap(false);
+    
     final HTML hr = new HTML("<hr></hr>");
+    
     if (this.align == Separator.ALIGN_LEFT) {
-      panel.add(l);
-      panel.add(new HTML("&nbsp;"));
-      panel.add(hr);
+      layoutPanel.add(l);
+      layoutPanel.add(hr, new BoxLayoutData(FillStyle.HORIZONTAL));
     } else {
-      panel.add(hr);
-      panel.add(new HTML("&nbsp;"));
-      panel.add(l);
+      layoutPanel.add(hr, new BoxLayoutData(FillStyle.HORIZONTAL));
+      layoutPanel.add(l);
     }
-    panel.setCellWidth(hr, "99%");
-    initWidget(panel);
     setStyleName(DEFAULT_STYLENAME);
   }
 
