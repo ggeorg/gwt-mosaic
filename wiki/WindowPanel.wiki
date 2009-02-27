@@ -52,6 +52,9 @@ This WindowPanel example shows a WindowPanel containing two labels. It demonstra
 If you dragged a corner of the WindowPanel to enlarge it, you would see that the layout manager arranges the labels in their appropriate place i.e. at the NORTH and SOUTH positions of the WindowPanel.
 
 {{{
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
@@ -61,6 +64,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,12 +75,23 @@ public class Main implements EntryPoint {
     WindowPanel w = new WindowPanel("Dairy Products");
 
     LayoutPanel panel = new LayoutPanel(new BorderLayout());
-    panel.add(new Label("Sour Cream"), new BorderLayoutData(Region.NORTH));
-    panel.add(new Label("Creme Fraiche"), new BorderLayoutData(Region.SOUTH));
-    panel.add(new Label()); // add empty label at Region.CENTER
+    panel.add(newLabel("Sour Cream"), new BorderLayoutData(Region.NORTH));
+    panel.add(newLabel("Creme Fraiche"), new BorderLayoutData(Region.SOUTH));
+    panel.add(newLabel("")); // add empty label at Region.CENTER
     w.setWidget(panel);
 
     w.pack();
+  }
+  
+  private Widget newLabel(String text) {
+    Label label = new Label(text);
+    if (UserAgent.isIE6()) {
+      return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
+          HasAlignment.ALIGN_MIDDLE);
+    } else {
+      DOM.setStyleAttribute(label.getElement(), "display", "table");
+      return label;
+    }
   }
 
   public void onModuleLoad() {
@@ -90,11 +105,158 @@ public class Main implements EntryPoint {
 }
 }}}
 
+ * `w.pack()` The `pack` method sizes the WindowPanel, by using the layout manager, so that all its contents are at or above their preferred sizes. In general, using `pack` is preferable to calling any other sizing method.
+ * `private Widget newLabel(String text)` This method sets the CSS `display` attribute of a label to `table`. The default CSS `display` attribute for a `Label` is `block` which results to bad preferred size calculations.
+
+== Centered Example ==
+
+This WindowPanel example displays a WindowPanel with a LayoutPanel containg labels. It uses the WindowPanel.center() method to get the WindowPanel centered on the screen.
+
 {{{
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Main implements EntryPoint {
+
+  private void createWindowPanel() {
+    WindowPanel w = new WindowPanel("Desserts");
+
+    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.add(newLabel("Jelly"));
+    panel.add(newLabel("Baklava"));
+    panel.add(newLabel("Tiramisu"));
+    panel.add(newLabel("Pavlova"));
+    panel.add(newLabel("Kulfi"));
+    w.setWidget(panel);
+
+    w.pack();
+    w.center();
+  }
+
+  private Widget newLabel(String text) {
+    Label label = new Label(text);
+    if (UserAgent.isIE6()) {
+      return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
+          HasAlignment.ALIGN_MIDDLE);
+    } else {
+      DOM.setStyleAttribute(label.getElement(), "display", "table");
+      return label;
+    }
+  }
+
+  public void onModuleLoad() {
+    RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
+      public void onClick(Widget sender) {
+        createWindowPanel();
+      }
+    }));
+  }
+
+}
+}}}
+
+== WindowPanel and LayoutPopupPanel Example ==
+
+This example displays a WindowPanel and a LayoutPopupPanel. The LayoutPopupPanel does not have a title bar, window-management buttons, or other trimmings associated with the WindowPanel but it can be displayed anywhere on the browser's content area.
+
+Note: DecoratedLayoutPopupPanel, the base class of WindowPanel, is like LayoutPopupPanel but with a DecoratorPanel.
+
+{{{
+package org.gwt.mosaic.demo.client;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.ui.client.LayoutPopupPanel;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.WindowPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Main implements EntryPoint {
+
+  private void createWindowPanel() {
+    WindowPanel w = new WindowPanel("Desserts");
+
+    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.add(newLabel("Jelly"));
+    panel.add(newLabel("Baklava"));
+    panel.add(newLabel("Tiramisu"));
+    panel.add(newLabel("Pavlova"));
+    panel.add(newLabel("Kulfi"));
+    w.setWidget(panel);
+
+    w.pack();
+  }
+
+  private void createLayoutPopupPanel() {
+    LayoutPopupPanel lp = new LayoutPopupPanel();
+
+    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.add(newLabel("Jelly"));
+    panel.add(newLabel("Baklava"));
+    panel.add(newLabel("Tiramisu"));
+    panel.add(newLabel("Pavlova"));
+    panel.add(newLabel("Kulfi"));
+    lp.setWidget(panel);
+
+    lp.pack();
+    lp.center();
+  }
+
+  private Widget newLabel(String text) {
+    Label label = new Label(text);
+    if (UserAgent.isIE6()) {
+      return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
+          HasAlignment.ALIGN_MIDDLE);
+    } else {
+      DOM.setStyleAttribute(label.getElement(), "display", "table");
+      return label;
+    }
+  }
+
+  public void onModuleLoad() {
+    RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
+      public void onClick(Widget sender) {
+        createWindowPanel();
+        createLayoutPopupPanel();
+      }
+    }));
+  }
+
+}
+}}}
+
+= Specifying WindowPanel Icons and Buttons =
+
+{{{
+import org.gwt.mosaic.ui.client.Caption;
+import org.gwt.mosaic.ui.client.ImageButton;
+import org.gwt.mosaic.ui.client.WindowPanel;
+import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
+import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
+import org.gwt.mosaic.ui.client.WindowPanel.WindowStateListener;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
@@ -106,15 +268,98 @@ import com.google.gwt.user.client.ui.Widget;
 public class Main implements EntryPoint {
 
   private void createWindowPanel() {
-    WindowPanel w = new WindowPanel("Desserts");
+    WindowPanel w = new WindowPanel("My Frame");
+    
+    w.getHeader().add(Caption.IMAGES.gwtMosaicLogo().createImage());
+    
+    addMaximizeButton(w, CaptionRegion.RIGHT);
+    addMinimizeButton(w, CaptionRegion.RIGHT);
+    
+    w.setWidget(new Label("bonbon"));
+    
+    w.pack();
+    w.center();
+  }
+  
+  private void addMaximizeButton(final WindowPanel windowPanel,
+      CaptionRegion captionRegion) {
+    final ImageButton maximizeBtn = new ImageButton(
+        Caption.IMAGES.windowMaximize());
+    maximizeBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (windowPanel.getWindowState() == WindowState.MAXIMIZED) {
+          windowPanel.setWindowState(WindowState.NORMAL);
+        } else {
+          windowPanel.setWindowState(WindowState.MAXIMIZED);
+        }
+      }
+    });
+    windowPanel.addWindowStateListener(new WindowStateListener() {
+      public void onWindowStateChange(WindowPanel sender) {
+        if (sender.getWindowState() == WindowState.MAXIMIZED) {
+          maximizeBtn.setImage(Caption.IMAGES.windowRestore().createImage());
+        } else {
+          maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
+        }
 
-    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    panel.add(new Label("Jelly"));
-    panel.add(new Label("Baklava"));
-    panel.add(new Label("Tiramisu"));
-    panel.add(new Label("Pavlova"));
-    panel.add(new Label("Kulfi"));
-    w.setWidget(panel);
+      }
+    });
+    windowPanel.getHeader().add(maximizeBtn, captionRegion);
+  }
+  
+  private void addMinimizeButton(final WindowPanel windowPanel,
+      CaptionRegion captionRegion) {
+    final ImageButton minimizeBtn = new ImageButton(
+        Caption.IMAGES.windowMinimize());
+    minimizeBtn.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        windowPanel.setWindowState(WindowState.MINIMIZED);
+      }
+    });
+    windowPanel.getHeader().add(minimizeBtn, captionRegion);
+  }
+
+  public void onModuleLoad() {
+    RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
+      public void onClick(Widget sender) {
+        createWindowPanel();
+      }
+    }));
+  }
+
+}
+}}}
+
+= Responding to WindowPanel-Closing Events =
+
+{{{
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.WindowPanel;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.WindowCloseListener;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Main implements EntryPoint {
+
+  private void createWindowPanel() {
+    WindowPanel w = new WindowPanel("My Frame");
+
+    w.addWindowCloseListener(new WindowCloseListener() {
+      public void onWindowClosed() {
+        InfoPanel.show("WindowPanel", "onWindowClosed()");
+      }
+
+      public String onWindowClosing() {
+        return "Are you sure you want to close this WindowPanel?";
+      }
+    });
+
+    w.setWidget(new Label("bonbon"));
 
     w.pack();
     w.center();
