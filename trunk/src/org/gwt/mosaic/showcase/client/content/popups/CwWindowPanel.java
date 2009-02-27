@@ -28,6 +28,7 @@ import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolButton;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
@@ -44,6 +45,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -166,26 +168,27 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
    * The 'fixed' window panel.
    */
   @ShowcaseSource
-  private void createFixedWindowPanel(boolean enableLoadListener) {
+  private void createFixedWindowPanel() {
     fixed = new WindowPanel("Fixed");
     fixed.setResizable(false);
     fixed.setAnimationEnabled(true);
     final Image img = new Image("MeteoraGreece.JPG");
-    fixed.setWidget(img);
+    fixed.setWidget(new WidgetWrapper(img));
 
-    if (enableLoadListener) {
     img.addLoadListener(new LoadListener() {
       public void onError(Widget sender) {
-        // Ignore
+        // ignore
       }
 
       public void onLoad(Widget sender) {
-        fixed.hide();
-        createFixedWindowPanel(false);
-        fixed.center();
+        DeferredCommand.addCommand(new Command() {
+          public void execute() {
+            fixed.pack();
+            fixed.center();
+          }
+        });
       }
     });
-    }
 
     fixed.getHeader().add(Showcase.IMAGES.window().createImage());
 
@@ -470,6 +473,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (basic.getWindowState() == WindowState.MINIMIZED) {
           basic.setWindowState(WindowState.NORMAL);
         } else {
+          basic.pack();
           basic.center();
         }
       }
@@ -485,6 +489,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (layout.getWindowState() == WindowState.MINIMIZED) {
           layout.setWindowState(WindowState.NORMAL);
         } else {
+          layout.pack();
           layout.center();
         }
       }
@@ -510,11 +515,12 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     btn4.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (fixed == null) {
-          createFixedWindowPanel(true);
+          createFixedWindowPanel();
         }
         if (fixed.getWindowState() == WindowState.MINIMIZED) {
           fixed.setWindowState(WindowState.NORMAL);
         } else {
+          fixed.pack();
           fixed.center();
         }
       }
@@ -541,6 +547,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
         if (zIndex.getWindowState() == WindowState.MINIMIZED) {
           zIndex.setWindowState(WindowState.NORMAL);
         } else {
+          zIndex.pack();
           zIndex.center();
         }
       }
