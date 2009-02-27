@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -86,6 +88,7 @@ import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
+import org.gwt.mosaic.showcase.client.content.validation.basic.CwSimpleDomainValidationExample;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -422,7 +425,7 @@ public class Showcase implements EntryPoint {
     TreeItem catFillLayoutTests = catLayoutTests.addItem("FillLayout");
     setupMainMenuOption(catFillLayoutTests, new CwFillLayoutTest1(constants),
         IMAGES.catPanels());
-    
+
     TreeItem catBoxLayoutTests = catLayoutTests.addItem("BoxLayout");
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest1(constants),
         IMAGES.catPanels());
@@ -434,13 +437,13 @@ public class Showcase implements EntryPoint {
         constants), IMAGES.catPanels());
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(
         constants), IMAGES.catPanels());
-    
+
     TreeItem catBorderLayoutTests = catLayoutTests.addItem("BorderLayout");
     setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(
         constants), IMAGES.catPanels());
     setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Frames(
         constants), IMAGES.catPanels());
-    
+
     TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
     setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
@@ -449,7 +452,7 @@ public class Showcase implements EntryPoint {
     TreeItem catForms = mainMenu.addItem("Forms");
     setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
-    
+
     TreeItem catBasicForms = catForms.addItem("Basic");
     setupMainMenuOption(catBasicForms, new CwAlignmentExample(constants),
         IMAGES.catForms());
@@ -495,10 +498,17 @@ public class Showcase implements EntryPoint {
         IMAGES.catForms());
     setupMainMenuOption(catBuildingForms, new CwButtonOrderExample(constants),
         IMAGES.catForms());
-    
+
     TreeItem catFactoriesForms = catForms.addItem("Factories");
-    setupMainMenuOption(catFactoriesForms, new CwButtonBarFactoryExample(constants),
-        IMAGES.catForms());
+    setupMainMenuOption(catFactoriesForms, new CwButtonBarFactoryExample(
+        constants), IMAGES.catForms());
+
+    // Validation
+    TreeItem catValidation = mainMenu.addItem("Validation");
+
+    TreeItem catBasicValidation = catValidation.addItem("Basic");
+    setupMainMenuOption(catBasicValidation,
+        new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");
