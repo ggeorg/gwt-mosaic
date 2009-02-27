@@ -1,0 +1,12 @@
+#summary WindowPanel tutorial.
+
+= Introduction =
+
+A WindowPanel is a GWT PopupPanel that has decorations such as a border, a title, and supports image buttons that close or maximize the window. 
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
