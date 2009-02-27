@@ -1,4 +1,5 @@
 #summary WindowPanel tutorial.
+#labels Featured
 
 = Introduction =
 
