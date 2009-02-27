@@ -1265,8 +1265,12 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 
 /*** mosaic-FormSeparator **/
 
-.mosaic-FormSeparator td {
+.mosaic-FormSeparator {
 	font-weight: bold;
+}
+
+.mosaic-FormSeparator hr {
+	/* border: 4px solid #4d4d4d; */
 }
 
 /*** Basic Button with Images ***/
