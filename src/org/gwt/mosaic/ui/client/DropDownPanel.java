@@ -84,8 +84,8 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
   }
 
   @Override
-  protected void afterLoad() {
-    super.afterLoad();
+  protected void onLoad() {
+    super.onLoad();
     final int[] prefSize = getPreferredSize();
     setWidth(Math.max(prefSize[0], relativeWidget.getOffsetWidth()) + "px");
     layout();

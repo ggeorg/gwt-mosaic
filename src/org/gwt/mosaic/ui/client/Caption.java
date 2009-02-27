@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -26,6 +27,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -75,7 +77,14 @@ public class Caption extends LayoutComposite implements HasHTML,
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
 
-    layoutPanel.add(caption, new BoxLayoutData(FillStyle.BOTH));
+    if (UserAgent.isIE6()) {
+      final WidgetWrapper wrapper = new WidgetWrapper(caption,
+          HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_MIDDLE);
+      layoutPanel.add(wrapper, new BoxLayoutData(FillStyle.BOTH));
+    } else {
+      layoutPanel.add(caption, new BoxLayoutData(FillStyle.BOTH));
+      DOM.setStyleAttribute(caption.getElement(), "display", "table");
+    }
 
     caption.setStyleName(DEFAULT_STYLENAME + "-text");
 
@@ -98,7 +107,8 @@ public class Caption extends LayoutComposite implements HasHTML,
         leftIconBox = new HorizontalPanel();
         leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
         leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL), 0);
+        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL),
+            0);
       }
       leftIconBox.add(w);
     } else {
@@ -115,7 +125,7 @@ public class Caption extends LayoutComposite implements HasHTML,
       }
     }
   }
-  
+
   public void addClickListener(ClickListener listener) {
     if (clickListeners == null) {
       clickListeners = new ClickListenerCollection();
