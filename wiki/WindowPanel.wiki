@@ -40,4 +40,7 @@ public class Main implements EntryPoint {
 }
 }}}
 
- * `WindowPanel w = new WindowPanel();`: This constructs a WindowPanel, which is a popup panel that can contain widgets you choose to put in it. At this stage of execution the WindowPanel is not yet visible to the user.
+ * `WindowPanel w = new WindowPanel()` This constructs a WindowPanel, which is a popup panel that can contain widgets you choose to put in it. At this stage of execution the WindowPanel is not yet visible to the user.
+ * `w.setWidget(new Label("bonbon"))` This statement adds a label to the WindowPanel.
+ * `w.setPixelSize(100, 100)` This statement sets the size of the WindowPanel.
+ * `w.show()` This statement makes the WindowPanel visible.
