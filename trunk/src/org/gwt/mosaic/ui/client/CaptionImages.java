@@ -57,4 +57,7 @@ public interface CaptionImages extends ImageBundle {
 
   @Resource("window-button-restore.png")
   AbstractImagePrototype windowRestore();
+  
+  @Resource("gwt-mosaic-20x16.png")
+  AbstractImagePrototype gwtMosaicLogo();
 }
