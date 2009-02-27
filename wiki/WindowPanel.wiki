@@ -77,7 +77,47 @@ public class Main implements EntryPoint {
     w.setWidget(panel);
 
     w.pack();
-    w.show();
+  }
+
+  public void onModuleLoad() {
+    RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
+      public void onClick(Widget sender) {
+        createWindowPanel();
+      }
+    }));
+  }
+
+}
+}}}
+
+{{{
+import org.gwt.mosaic.ui.client.WindowPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Main implements EntryPoint {
+
+  private void createWindowPanel() {
+    WindowPanel w = new WindowPanel("Desserts");
+
+    LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    panel.add(new Label("Jelly"));
+    panel.add(new Label("Baklava"));
+    panel.add(new Label("Tiramisu"));
+    panel.add(new Label("Pavlova"));
+    panel.add(new Label("Kulfi"));
+    w.setWidget(panel);
+
+    w.pack();
+    w.center();
   }
 
   public void onModuleLoad() {
