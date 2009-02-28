@@ -886,6 +886,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       glassPanel.removeFromParent();
     }
     fireClosedImpl();
+    if (modal) {
+      modal = false;
+    }
   }
 
   public boolean isActive() {

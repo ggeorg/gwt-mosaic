@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -54,27 +56,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
      */
     public ButtonWidget() {
       super();
-      init();
-    }
-
-    /**
-     * Creates a button with the given HTML caption.
-     * 
-     * @param html the HTML caption
-     */
-    public ButtonWidget(String html) {
-      super(html);
-      init();
-    }
-
-    /**
-     * Creates a button with the given HTML caption and click listener.
-     * 
-     * @param html the HTML caption
-     * @param listener the click listener
-     */
-    public ButtonWidget(String html, ClickListener listener) {
-      this(html);
       init();
     }
 
