@@ -16,7 +16,7 @@ public final class ButtonHelper {
   
   public static String createButtonLabel(AbstractImagePrototype image, String text,
       ButtonLabelType type) {
-    final HTML html = new HTML(text);
+    final HTML html = new HTML(text, false);
     final Image img = image.createImage();
     if (type == ButtonLabelType.TEXT_ONLY) {
       return text;

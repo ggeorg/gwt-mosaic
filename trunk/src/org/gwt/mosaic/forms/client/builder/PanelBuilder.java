@@ -45,18 +45,16 @@
 package org.gwt.mosaic.forms.client.builder;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.UserAgent;
-import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.factories.DefaultWidgetFactory;
+import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.Separator;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.dev.jjs.ast.JLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
@@ -90,19 +88,17 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentC
  * This example creates a panel with 3 columns and 3 rows.
  * 
  * <pre>
- * FormLayout layout = new FormLayout(
- *      "right:pref, 6dlu, 50dlu, 4dlu, default",  // columns
- *      "pref, 3dlu, pref, 3dlu, pref");           // rows
- *
+ * FormLayout layout = new FormLayout(&quot;right:pref, 6dlu, 50dlu, 4dlu, default&quot;, // columns
+ *     &quot;pref, 3dlu, pref, 3dlu, pref&quot;); // rows
  * PanelBuilder builder = new PanelBuilder(layout);
  * CellConstraints cc = new CellConstraints();
- * builder.addLabel("&Title",      cc.xy  (1, 1));
- * builder.add(new JTextField(),   cc.xywh(3, 1, 3, 1));
- * builder.addLabel("&Price",      cc.xy  (1, 3));
- * builder.add(new JTextField(),   cc.xy  (3, 3));
- * builder.addLabel("&Author",     cc.xy  (1, 5));
- * builder.add(new JTextField(),   cc.xy  (3, 5));
- * builder.add(new JButton("..."), cc.xy  (5, 5));
+ * builder.addLabel(&quot;&amp;Title&quot;, cc.xy(1, 1));
+ * builder.add(new JTextField(), cc.xywh(3, 1, 3, 1));
+ * builder.addLabel(&quot;&amp;Price&quot;, cc.xy(1, 3));
+ * builder.add(new JTextField(), cc.xy(3, 3));
+ * builder.addLabel(&quot;&amp;Author&quot;, cc.xy(1, 5));
+ * builder.add(new JTextField(), cc.xy(3, 5));
+ * builder.add(new JButton(&quot;...&quot;), cc.xy(5, 5));
  * return builder.getPanel();
  * </pre>
  * 
@@ -206,10 +202,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addLabel("Name:");       // No Mnemonic
-   * addLabel("N&ame:");      // Mnemonic is 'a'
-   * addLabel("Save &as:");   // Mnemonic is the second 'a'
-   * addLabel("Look&&Feel:"); // No mnemonic, text is "look&feel"
+   * addLabel(&quot;Name:&quot;); // No Mnemonic
+   * addLabel(&quot;N&amp;ame:&quot;); // Mnemonic is 'a'
+   * addLabel(&quot;Save &amp;as:&quot;); // Mnemonic is the second 'a'
+   * addLabel(&quot;Look&amp;&amp;Feel:&quot;); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
@@ -228,10 +224,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addLabel("Name:",       cc.xy(1, 1)); // No Mnemonic
-   * addLabel("N&ame:",      cc.xy(1, 1)); // Mnemonic is 'a'
-   * addLabel("Save &as:",   cc.xy(1, 1)); // Mnemonic is the second 'a'
-   * addLabel("Look&&Feel:", cc.xy(1, 1)); // No mnemonic, text is "look&feel"
+   * addLabel(&quot;Name:&quot;, cc.xy(1, 1)); // No Mnemonic
+   * addLabel(&quot;N&amp;ame:&quot;, cc.xy(1, 1)); // Mnemonic is 'a'
+   * addLabel(&quot;Save &amp;as:&quot;, cc.xy(1, 1)); // Mnemonic is the second 'a'
+   * addLabel(&quot;Look&amp;&amp;Feel:&quot;, cc.xy(1, 1)); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
@@ -245,13 +241,7 @@ public class PanelBuilder extends AbstractFormBuilder {
       CellConstraints constraints) {
     Label label = getComponentFactory().createLabel(textWithMnemonic);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    if (UserAgent.isIE6()) {
-      add(new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
-          HasAlignment.ALIGN_MIDDLE), constraints);
-    } else {
-      DOM.setStyleAttribute(label.getElement(), "display", "table");
-      add(label, constraints);
-    }
+    add(label, constraints);
     return label;
   }
 
@@ -260,10 +250,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addLabel("Name:",       "1, 1"); // No Mnemonic
-   * addLabel("N&ame:",      "1, 1"); // Mnemonic is 'a'
-   * addLabel("Save &as:",   "1, 1"); // Mnemonic is the second 'a'
-   * addLabel("Look&&Feel:", "1, 1"); // No mnemonic, text is "look&feel"
+   * addLabel(&quot;Name:&quot;, &quot;1, 1&quot;); // No Mnemonic
+   * addLabel(&quot;N&amp;ame:&quot;, &quot;1, 1&quot;); // Mnemonic is 'a'
+   * addLabel(&quot;Save &amp;as:&quot;, &quot;1, 1&quot;); // Mnemonic is the second 'a'
+   * addLabel(&quot;Look&amp;&amp;Feel:&quot;, &quot;1, 1&quot;); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
@@ -302,33 +292,24 @@ public class PanelBuilder extends AbstractFormBuilder {
    * 
    * <pre>
    * CellConstraints cc = new CellConstraints();
-   * builder.add(
-   *     nameLabel,
-   *     cc.xy(1, 7),         // will be modified by the code below
-   *     nameField,
-   *     cc.xy(3, 7)          // sets the single instance to (3, 7)
+   * builder.add(nameLabel, cc.xy(1, 7), // will be modified by the code below
+   *     nameField, cc.xy(3, 7) // sets the single instance to (3, 7)
    * );
    * </pre>
+   * 
    * <strong>Correct:</strong>
    * 
    * <pre>
    * // Using a single CellConstraints instance and cloning
    * CellConstraints cc = new CellConstraints();
-   * builder.add(
-   *     nameLabel,
-   *     (CellConstraints) cc.xy(1, 7).clone(), // cloned before the next modification
-   *     nameField,
-   *     cc.xy(3, 7)                            // sets this instance to (3, 7)
+   * builder.add(nameLabel, (CellConstraints) cc.xy(1, 7).clone(), // cloned before the next modification
+   *     nameField, cc.xy(3, 7) // sets this instance to (3, 7)
    * );
-   *
    * // Using two CellConstraints instances
    * CellConstraints cc1 = new CellConstraints();
    * CellConstraints cc2 = new CellConstraints();
-   * builder.add(
-   *     nameLabel,
-   *     cc1.xy(1, 7),       // sets instance 1 to (1, 7)
-   *     nameField,
-   *     cc2.xy(3, 7)        // sets instance 2 to (3, 7)
+   * builder.add(nameLabel, cc1.xy(1, 7), // sets instance 1 to (1, 7)
+   *     nameField, cc2.xy(3, 7) // sets instance 2 to (3, 7)
    * );
    * </pre>
    * 
@@ -378,35 +359,28 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <strong>Wrong:</strong>
    * 
    * <pre>
-     * builder.addLabel(
-     *     "&Name:",            // Mnemonic is 'N'
-     *     cc.xy(1, 7),         // will be modified by the code below
-     *     nameField,
-     *     cc.xy(3, 7)          // sets the single instance to (3, 7)
-     * );
-     * </pre>
+   * builder.addLabel(&quot;&amp;Name:&quot;, // Mnemonic is 'N'
+   *     cc.xy(1, 7), // will be modified by the code below
+   *     nameField, cc.xy(3, 7) // sets the single instance to (3, 7)
+   * );
+   * </pre>
+   * 
    * <strong>Correct:</strong>
    * 
    * <pre>
-     * // Using a single CellConstraints instance and cloning
-     * CellConstraints cc = new CellConstraints();
-     * builder.addLabel(
-     *     "&Name:",
-     *     (CellConstraints) cc.xy(1, 7).clone(), // cloned before the next modification
-     *     nameField,
-     *     cc.xy(3, 7)                            // sets this instance to (3, 7)
-     * );
-     *
-     * // Using two CellConstraints instances
-     * CellConstraints cc1 = new CellConstraints();
-     * CellConstraints cc2 = new CellConstraints();
-     * builder.addLabel(
-     *     "&Name:",           // Mnemonic is 'N'
-     *     cc1.xy(1, 7),       // sets instance 1 to (1, 7)
-     *     nameField,
-     *     cc2.xy(3, 7)        // sets instance 2 to (3, 7)
-     * );
-     * </pre>
+   * // Using a single CellConstraints instance and cloning
+   * CellConstraints cc = new CellConstraints();
+   * builder.addLabel(&quot;&amp;Name:&quot;, (CellConstraints) cc.xy(1, 7).clone(), // cloned before the next modification
+   *     nameField, cc.xy(3, 7) // sets this instance to (3, 7)
+   * );
+   * // Using two CellConstraints instances
+   * CellConstraints cc1 = new CellConstraints();
+   * CellConstraints cc2 = new CellConstraints();
+   * builder.addLabel(&quot;&amp;Name:&quot;, // Mnemonic is 'N'
+   *     cc1.xy(1, 7), // sets instance 1 to (1, 7)
+   *     nameField, cc2.xy(3, 7) // sets instance 2 to (3, 7)
+   * );
+   * </pre>
    * 
    * @param textWithMnemonic the label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -444,11 +418,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addTitle("Name");       // No mnemonic
-     * addTitle("N&ame");      // Mnemonic is 'a'
-     * addTitle("Save &as");   // Mnemonic is the second 'a'
-     * addTitle("Look&&Feel"); // No mnemonic, text is Look&Feel
-     * </pre>
+   * addTitle(&quot;Name&quot;); // No mnemonic
+   * addTitle(&quot;N&amp;ame&quot;); // Mnemonic is 'a'
+   * addTitle(&quot;Save &amp;as&quot;); // Mnemonic is the second 'a'
+   * addTitle(&quot;Look&amp;&amp;Feel&quot;); // No mnemonic, text is Look&amp;Feel
+   * </pre>
    * 
    * @param textWithMnemonic the title label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -465,11 +439,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addTitle("Name",       cc.xy(1, 1)); // No mnemonic
-     * addTitle("N&ame",      cc.xy(1, 1)); // Mnemonic is 'a'
-     * addTitle("Save &as",   cc.xy(1, 1)); // Mnemonic is the second 'a'
-     * addTitle("Look&&Feel", cc.xy(1, 1)); // No mnemonic, text is Look&Feel
-     * </pre>
+   * addTitle(&quot;Name&quot;, cc.xy(1, 1)); // No mnemonic
+   * addTitle(&quot;N&amp;ame&quot;, cc.xy(1, 1)); // Mnemonic is 'a'
+   * addTitle(&quot;Save &amp;as&quot;, cc.xy(1, 1)); // Mnemonic is the second 'a'
+   * addTitle(&quot;Look&amp;&amp;Feel&quot;, cc.xy(1, 1)); // No mnemonic, text is Look&amp;Feel
+   * </pre>
    * 
    * @param textWithMnemonic the title label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -491,11 +465,11 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-     * addTitle("Name",       "1, 1"); // No mnemonic
-     * addTitle("N&ame",      "1, 1"); // Mnemonic is 'a'
-     * addTitle("Save &as",   "1, 1"); // Mnemonic is the second 'a'
-     * addTitle("Look&&Feel", "1, 1"); // No mnemonic, text is Look&Feel
-     * </pre>
+   * addTitle(&quot;Name&quot;, &quot;1, 1&quot;); // No mnemonic
+   * addTitle(&quot;N&amp;ame&quot;, &quot;1, 1&quot;); // Mnemonic is 'a'
+   * addTitle(&quot;Save &amp;as&quot;, &quot;1, 1&quot;); // Mnemonic is the second 'a'
+   * addTitle(&quot;Look&amp;&amp;Feel&quot;, &quot;1, 1&quot;); // No mnemonic, text is Look&amp;Feel
+   * </pre>
    * 
    * @param textWithMnemonic the title label's text - may contain an ampersand (
    *          <tt>&amp;</tt>) to mark a mnemonic
@@ -515,10 +489,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addSeparator("Name");       // No Mnemonic
-   * addSeparator("N&ame");      // Mnemonic is 'a'
-   * addSeparator("Save &as");   // Mnemonic is the second 'a'
-   * addSeparator("Look&&Feel"); // No mnemonic, text is "look&feel"
+   * addSeparator(&quot;Name&quot;); // No Mnemonic
+   * addSeparator(&quot;N&amp;ame&quot;); // Mnemonic is 'a'
+   * addSeparator(&quot;Save &amp;as&quot;); // Mnemonic is the second 'a'
+   * addSeparator(&quot;Look&amp;&amp;Feel&quot;); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
@@ -534,10 +508,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addSeparator("Name",       cc.xy(1, 1)); // No Mnemonic
-   * addSeparator("N&ame",      cc.xy(1, 1)); // Mnemonic is 'a'
-   * addSeparator("Save &as",   cc.xy(1, 1)); // Mnemonic is the second 'a'
-   * addSeparator("Look&&Feel", cc.xy(1, 1)); // No mnemonic, text is "look&feel"
+   * addSeparator(&quot;Name&quot;, cc.xy(1, 1)); // No Mnemonic
+   * addSeparator(&quot;N&amp;ame&quot;, cc.xy(1, 1)); // Mnemonic is 'a'
+   * addSeparator(&quot;Save &amp;as&quot;, cc.xy(1, 1)); // Mnemonic is the second 'a'
+   * addSeparator(&quot;Look&amp;&amp;Feel&quot;, cc.xy(1, 1)); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
@@ -560,10 +534,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addSeparator("Name",       "1, 1"); // No Mnemonic
-   * addSeparator("N&ame",      "1, 1"); // Mnemonic is 'a'
-   * addSeparator("Save &as",   "1, 1"); // Mnemonic is the second 'a'
-   * addSeparator("Look&&Feel", "1, 1"); // No mnemonic, text is "look&feel"
+   * addSeparator(&quot;Name&quot;, &quot;1, 1&quot;); // No Mnemonic
+   * addSeparator(&quot;N&amp;ame&quot;, &quot;1, 1&quot;); // Mnemonic is 'a'
+   * addSeparator(&quot;Save &amp;as&quot;, &quot;1, 1&quot;); // Mnemonic is the second 'a'
+   * addSeparator(&quot;Look&amp;&amp;Feel&quot;, &quot;1, 1&quot;); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
@@ -582,10 +556,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * <p>
    * 
    * <pre>
-   * addSeparator("Name",       3); // No Mnemonic
-   * addSeparator("N&ame",      3); // Mnemonic is 'a'
-   * addSeparator("Save &as",   3); // Mnemonic is the second 'a'
-   * addSeparator("Look&&Feel", 3); // No mnemonic, text is "look&feel"
+   * addSeparator(&quot;Name&quot;, 3); // No Mnemonic
+   * addSeparator(&quot;N&amp;ame&quot;, 3); // Mnemonic is 'a'
+   * addSeparator(&quot;Save &amp;as&quot;, 3); // Mnemonic is the second 'a'
+   * addSeparator(&quot;Look&amp;&amp;Feel&quot;, 3); // No mnemonic, text is &quot;look&amp;feel&quot;
    * </pre>
    * 
    * @param textWithMnemonic the separator label's text - may contain an
