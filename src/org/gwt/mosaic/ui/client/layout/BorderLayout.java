@@ -29,7 +29,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -921,7 +921,7 @@ public class BorderLayout extends BaseLayout {
 
     if (center == null) {
       if (placeHolder == null) {
-        placeHolder = new WidgetWrapper(new HTML("CENTER"));
+        placeHolder = new WidgetWrapper(new SimplePanel());
         layoutPanel.add(placeHolder);
       }
       center = placeHolder;
