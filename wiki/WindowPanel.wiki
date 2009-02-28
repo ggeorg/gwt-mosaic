@@ -99,9 +99,7 @@ public class Main implements EntryPoint {
 This WindowPanel example displays a WindowPanel with a LayoutPanel containg labels. It uses the WindowPanel.center() method to get the WindowPanel centered on the screen.
 
 {{{
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.UserAgent;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -110,8 +108,6 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -121,26 +117,15 @@ public class Main implements EntryPoint {
     WindowPanel w = new WindowPanel("Desserts");
 
     LayoutPanel panel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    panel.add(newLabel("Jelly"));
-    panel.add(newLabel("Baklava"));
-    panel.add(newLabel("Tiramisu"));
-    panel.add(newLabel("Pavlova"));
-    panel.add(newLabel("Kulfi"));
+    panel.add(new Label("Jelly"));
+    panel.add(new Label("Baklava"));
+    panel.add(new Label("Tiramisu"));
+    panel.add(new Label("Pavlova"));
+    panel.add(new Label("Kulfi"));
     w.setWidget(panel);
 
     w.pack();
     w.center();
-  }
-
-  private Widget newLabel(String text) {
-    Label label = new Label(text);
-    if (UserAgent.isIE6()) {
-      return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
-          HasAlignment.ALIGN_MIDDLE);
-    } else {
-      DOM.setStyleAttribute(label.getElement(), "display", "table");
-      return label;
-    }
   }
 
   public void onModuleLoad() {
