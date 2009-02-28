@@ -90,26 +90,29 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
 
     layoutPanel1.add(new Button("Plain", new ClickListener() {
       public void onClick(Widget sender) {
-        LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        final LayoutPopupPanel popup = new LayoutPopupPanel(true);
         popup.add(createContent1());
+        popup.pack();
         popup.center();
       }
     }));
-    
+
     layoutPanel1.add(new Button("Plain 512x?", new ClickListener() {
       public void onClick(Widget sender) {
         LayoutPopupPanel popup = new LayoutPopupPanel(true);
-        popup.setWidth("512px");
         popup.add(createContent1());
+        popup.pack();
+        popup.setWidth("512px");
         popup.center();
       }
     }));
-    
+
     layoutPanel1.add(new Button("Plain ?x384", new ClickListener() {
       public void onClick(Widget sender) {
         LayoutPopupPanel popup = new LayoutPopupPanel(true);
-        popup.setHeight("384px");
         popup.add(createContent1());
+        popup.pack();
+        popup.setHeight("384px");
         popup.center();
       }
     }));
@@ -117,54 +120,58 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     layoutPanel1.add(new Button("Plain 512x384", new ClickListener() {
       public void onClick(Widget sender) {
         final LayoutPopupPanel popup = new LayoutPopupPanel(true);
-        popup.setSize("512px", "384px");
         popup.add(createContent2(popup));
+        popup.setSize("512px", "384px");
         popup.center();
       }
     }));
-    
+
     // --------------
-    
+
     LayoutPanel layoutPanel2 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel2);
-    
+
     layoutPanel2.add(new Button("Decorated", new ClickListener() {
       public void onClick(Widget sender) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
         popup.add(createContent1());
+        popup.pack();
         popup.center();
       }
     }));
-    
+
     layoutPanel2.add(new Button("Decorated 512x?", new ClickListener() {
       public void onClick(Widget sender) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
-        popup.setWidth("512px");
         popup.add(createContent1());
+        popup.pack();
+        popup.setWidth("512px");
         popup.center();
       }
     }));
-    
+
     layoutPanel2.add(new Button("Decorated ?x384", new ClickListener() {
       public void onClick(Widget sender) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
-        popup.setHeight("384px");
         popup.add(createContent1());
+        popup.pack();
+        popup.setHeight("384px");
         popup.center();
       }
     }));
 
     layoutPanel2.add(new Button("Decorated 512x384", new ClickListener() {
       public void onClick(Widget sender) {
-        final DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
-        popup.setSize("512px", "384px");
+        final DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(
+            true);
         popup.add(createContent2(popup));
+        popup.setSize("512px", "384px");
         popup.center();
       }
     }));
-    
-    // ==============
-    
+
+    // --------------
+
     LayoutPanel layoutPanel3 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel3);
 
@@ -172,24 +179,27 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       public void onClick(Widget sender) {
         WindowPanel popup = new WindowPanel("WindowPanel");
         popup.add(createContent1());
+        popup.pack();
         popup.center();
       }
     }));
-    
+
     layoutPanel3.add(new Button("WindowPanel 512x?", new ClickListener() {
       public void onClick(Widget sender) {
         WindowPanel popup = new WindowPanel("WindowPanel 512x?");
-        popup.setWidth("512px");
         popup.add(createContent1());
+        popup.pack();
+        popup.setWidth("512px");
         popup.center();
       }
     }));
-    
+
     layoutPanel3.add(new Button("WindowPanel ?x384", new ClickListener() {
       public void onClick(Widget sender) {
         WindowPanel popup = new WindowPanel("WindowPanel ?x384");
-        popup.setHeight("384px");
         popup.add(createContent1());
+        popup.pack();
+        popup.setHeight("384px");
         popup.center();
       }
     }));
@@ -197,8 +207,8 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     layoutPanel3.add(new Button("WindowPanel 512x384", new ClickListener() {
       public void onClick(Widget sender) {
         WindowPanel popup = new WindowPanel("WindowPanel 512x384");
-        popup.setSize("512px", "384px");
         popup.add(createContent2(popup));
+        popup.setSize("512px", "384px");
         popup.center();
       }
     }));
@@ -210,17 +220,15 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     final LayoutPanel panel = new LayoutPanel(new BorderLayout());
     panel.setPadding(0);
 
-    panel.add(new Button("North"), new BorderLayoutData(
-        Region.NORTH));
-    panel.add(new Button("South"), new BorderLayoutData(
-        Region.SOUTH));
+    panel.add(new Button("North"), new BorderLayoutData(Region.NORTH));
+    panel.add(new Button("South"), new BorderLayoutData(Region.SOUTH));
     panel.add(new Button("West"), new BorderLayoutData(Region.WEST));
     panel.add(new Button("East"), new BorderLayoutData(Region.EAST));
     panel.add(new Button("Center"));
 
     return panel;
   }
-  
+
   private ClickListener cl1, cl2;
 
   private Widget createContent2(final PopupPanel popup) {
@@ -252,7 +260,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     panel.add(new Button("West"), new BorderLayoutData(Region.WEST));
     panel.add(new Button("East"), new BorderLayoutData(Region.EAST));
     panel.add(new Button("Click Me!", cl1));
-    
+
     return panel;
   }
 

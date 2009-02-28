@@ -1,6 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2008 Cameron Braid.
+ * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,10 +25,32 @@ import java.util.Map;
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
-import org.gwt.mosaic.showcase.client.content.forms.CwComplexForm;
-import org.gwt.mosaic.showcase.client.content.forms.CwSimpleForm;
+import org.gwt.mosaic.showcase.client.content.forms.CwQuickStartExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwAlignmentExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwBasicSizesExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwBoundedSizesExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwCellAlignmentExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwGroupingExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwGrowingExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwSpanExample;
+import org.gwt.mosaic.showcase.client.content.forms.basics.CwUnitsExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwButtonBarsExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwButtonOrderExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwButtonStacksExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwDefaultFormBuilderExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwDefaultFormWithCustomAreasExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwDefaultFormWithCustomRowsExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwDynamicRowsExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwFormDebugExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwIndentColumnExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwPanelBuilderExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwPlainExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientationExample;
+import org.gwt.mosaic.showcase.client.content.forms.factories.CwButtonBarFactoryExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
+import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Frames;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest2;
@@ -65,6 +88,7 @@ import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
+import org.gwt.mosaic.showcase.client.content.validation.basic.CwSimpleDomainValidationExample;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -79,8 +103,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
@@ -88,6 +110,7 @@ import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -402,6 +425,7 @@ public class Showcase implements EntryPoint {
     TreeItem catFillLayoutTests = catLayoutTests.addItem("FillLayout");
     setupMainMenuOption(catFillLayoutTests, new CwFillLayoutTest1(constants),
         IMAGES.catPanels());
+
     TreeItem catBoxLayoutTests = catLayoutTests.addItem("BoxLayout");
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest1(constants),
         IMAGES.catPanels());
@@ -413,19 +437,78 @@ public class Showcase implements EntryPoint {
         constants), IMAGES.catPanels());
     setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(
         constants), IMAGES.catPanels());
+
     TreeItem catBorderLayoutTests = catLayoutTests.addItem("BorderLayout");
     setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(
         constants), IMAGES.catPanels());
+    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Frames(
+        constants), IMAGES.catPanels());
+
     TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
     setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
 
     // Forms
     TreeItem catForms = mainMenu.addItem("Forms");
-    setupMainMenuOption(catForms, new CwSimpleForm(constants),
+    setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
-    setupMainMenuOption(catForms, new CwComplexForm(constants),
+
+    TreeItem catBasicForms = catForms.addItem("Basic");
+    setupMainMenuOption(catBasicForms, new CwAlignmentExample(constants),
         IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwBasicSizesExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwGrowingExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwSpanExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwGroupingExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwUnitsExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwCellAlignmentExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBasicForms, new CwBoundedSizesExample(constants),
+        IMAGES.catForms());
+
+    TreeItem catBuildingForms = catForms.addItem("Building");
+    setupMainMenuOption(catBuildingForms, new CwPlainExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwPanelBuilderExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwRowCounterExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwDynamicRowsExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwDefaultFormBuilderExample(
+        constants), IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms,
+        new CwDefaultFormWithCustomRowsExample(constants), IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms,
+        new CwDefaultFormWithCustomAreasExample(constants), IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwIndentColumnExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwFormDebugExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwWidgetOrientationExample(
+        constants), IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwButtonBarsExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwButtonStacksExample(constants),
+        IMAGES.catForms());
+    setupMainMenuOption(catBuildingForms, new CwButtonOrderExample(constants),
+        IMAGES.catForms());
+
+    TreeItem catFactoriesForms = catForms.addItem("Factories");
+    setupMainMenuOption(catFactoriesForms, new CwButtonBarFactoryExample(
+        constants), IMAGES.catForms());
+
+    // Validation
+    TreeItem catValidation = mainMenu.addItem("Validation");
+
+    TreeItem catBasicValidation = catValidation.addItem("Basic");
+    setupMainMenuOption(catBasicValidation,
+        new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");
@@ -534,9 +617,8 @@ public class Showcase implements EntryPoint {
       final ThemeButton button = new ThemeButton(
           ShowcaseConstants.STYLE_THEMES[i]);
       styleWrapper.add(button);
-      button.addClickHandler(new ClickHandler() {
-          public void onClick(ClickEvent event) {
-
+      button.addClickListener(new ClickListener() {
+        public void onClick(Widget sender) {
           // Update the current theme
           CUR_THEME = button.getTheme();
 

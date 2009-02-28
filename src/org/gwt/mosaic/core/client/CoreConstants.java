@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ package org.gwt.mosaic.core.client;
  * Common used constant values in the {@code org.gwt.mosaic.core} package.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public interface CoreConstants {
   /** The minimum possible delay before the timer elapses, in milliseconds */ 

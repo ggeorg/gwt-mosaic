@@ -1,10 +1,9 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with this
- * work for additional information regarding copyright ownership. The ASF
- * licenses this file to You under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopolos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -25,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ToggleButtonBindings extends ButtonBaseActionSupport {
+public class ToggleButtonBindings extends ButtonBaseBindings {
 
   public final class ToggleButtonBean extends ButtonBaseBean {
     public ToggleButtonBean(ToggleButton target) {

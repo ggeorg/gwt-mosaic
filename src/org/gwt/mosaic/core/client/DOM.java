@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
@@ -23,12 +24,15 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Provides helper methods for DOM elements.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class DOM extends com.google.gwt.user.client.DOM {
 
@@ -103,7 +107,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBorderSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -127,7 +131,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBoxSize(Element elem) {
     int[] size = new int[2];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -177,7 +181,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getClientSize(Element elem) {
     int[] size = new int[2];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -208,44 +212,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   /*-{
     return elem.clientWidth;
   }-*/;
-
-  /**
-   * Returns the left scroll value of the document.
-   * 
-   * @return the amount that the document is scrolled to the left
-   */
-  public static int getDocumenScrollLeft() {
-    return impl.getDocumenScrollLeft(null);
-  }
-
-  /**
-   * Returns the left scroll value of the document.
-   * 
-   * @param doc the document to get the scroll value of
-   * @return the amount that the document is scrolled to the left
-   */
-  public static int getDocumenScrollLeft(Element doc) {
-    return impl.getDocumenScrollLeft(doc);
-  }
-
-  /**
-   * Returns the top scroll value of the document.
-   * 
-   * @return the amount that the document is scrolled to the top
-   */
-  public static int getDocumenScrollTop() {
-    return impl.getDocumenScrollTop(null);
-  }
-
-  /**
-   * Returns the top scroll value of the document.
-   * 
-   * @param doc the document to get the scroll value of
-   * @return the amount that the document is scrolled to the top
-   */
-  public static int getDocumenScrollTop(Element doc) {
-    return impl.getDocumenScrollTop(doc);
-  }
 
   /**
    * Returns the height of the document.
@@ -284,7 +250,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getMarginSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -301,7 +267,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getPaddingSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /*&& !CompatMode.isStandardsMode()*/) {
+    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -313,27 +279,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
     size[3] = parseInt(getStyleAttribute(elem, "paddingLeft"), 10, 0);
 
     return size;
-  }
-
-  /**
-   * Returns the region position of the given element. The element must be part
-   * of the DOM tree to have a region (display:none or elements not appended
-   * return <code>null</code>).
-   * 
-   * @param elem the element whose current region position we want to know
-   * @return a region containing "top, left, bottom, right" member data
-   */
-  public static Region getRegion(Element elem) {
-    // has to be part of document to have region
-    if ((elem.getParentNode() == null || elem.getOffsetParent() == null || "none".equals(getStyleAttribute(
-        elem, "display")))
-        && ((com.google.gwt.dom.client.Element) elem) != elem.getOwnerDocument().getBody()) {
-      return null;
-    }
-
-    final Point pos = getXY(elem);
-    return new Region(pos.x, pos.y, pos.x + elem.getOffsetWidth(), pos.y
-        + elem.getOffsetHeight());
   }
 
   /**
@@ -355,50 +300,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
    */
   public static String getStyleAttribute(Element elem, String attr) {
     return impl.getStyleAttribute(elem, attr);
-  }
-
-  /**
-   * Gets the current X position of an element based on page coordinates. The
-   * element must be part of the DOM tree to have coordinates (display: none or
-   * elements not appended return <code>null</code>).
-   * 
-   * @param elem the element whose current X position we want to know
-   * @return the X position of the element
-   */
-  public static Integer getX(Element elem) {
-    final Point pos = getXY(elem);
-    return pos != null ? pos.x : null;
-  }
-
-  /**
-   * Gets the current position of an element based on page coordinates. Element
-   * must be part of the DOM tree to have page coordinates (display:none or
-   * elements not appended return <code>null</code>).
-   * 
-   * @param elem the element whose current position we want to know
-   * @return the XY position of the element
-   */
-  public static Point getXY(Element elem) {
-    // has to be part of document to have page XY
-    if ((elem.getParentNode() == null || elem.getOffsetParent() == null || "none".equals(getStyleAttribute(
-        elem, "display")))
-        && ((com.google.gwt.dom.client.Element) elem) != elem.getOwnerDocument().getBody()) {
-      return null;
-    }
-    return impl.getXY(elem);
-  }
-
-  /**
-   * Gets the current Y position of an element based on page coordinates. The
-   * element must be part of the DOM tree to have coordinates (display: none or
-   * elements not appended return <code>null</code>).
-   * 
-   * @param elem the element whose current Y position we want to know
-   * @return the Y position of the element
-   */
-  public static Integer getY(Element elem) {
-    final Point pos = getXY(elem);
-    return pos != null ? pos.y : null;
   }
 
   public static boolean isArrowKey(int code) {
@@ -563,103 +464,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
-   * Set the X position of an HTML element in page coordinates, regardless of
-   * how the element is positioned. The element must be part of the DOM tree to
-   * have page coordinates (display: none or elements not appended return
-   * <code>null</code>).
-   * 
-   * @param elem the element whose current X position we want to set
-   * @param x the value to use as the X coordinate for the element
-   * @return new XY position of the element
-   */
-  public static Point setX(Element elem, int x) {
-    return setXY(elem, new Point(x, Integer.MIN_VALUE));
-  }
-
-  /**
-   * Sets the position of an HTML element in page coordinates, regardless or how
-   * the element is positioned. The element must be part of the DOM tree to have
-   * page coordinates (display:none or elements not appended return
-   * <code>false</code>).
-   * 
-   * @param elem the element whose current XY position we want to set
-   * @param pos contains the X & Y values for new position (coordinates are
-   *          page-based)
-   * @return the new XY position of the element
-   */
-  public static Point setXY(Element elem, Point pos) {
-    return setXY(elem, pos, false);
-  }
-
-  /**
-   * Sets the position of an HTML element in page coordinates, regardless or how
-   * the element is positioned. The element must be part of the DOM tree to have
-   * page coordinates (display:none or elements not appended return
-   * <code>false</code>).
-   * 
-   * @param elem the element whose current XY position we want to set
-   * @param pos contains the X & Y values for new position (coordinates are
-   *          page-based)
-   * @param noRetry by default we try and set the position a second time if the
-   *          first fails
-   * @return the new XY position of the element
-   */
-  public static Point setXY(Element elem, Point pos, boolean noRetry) {
-    String style_pos = getStyleAttribute(elem, "position");
-    if ("static".equals(style_pos)) { // default to relative
-      setStyleAttribute(elem, "position", "relative");
-      style_pos = "relative";
-    }
-
-    final Point pageXY = getXY(elem);
-    if (pageXY == null) { // has to be part of doc to have pageXY
-      return null;
-    }
-
-    Integer deltaX = parseInt(getStyleAttribute(elem, "left"));
-    Integer deltaY = parseInt(getStyleAttribute(elem, "top"));
-
-    if (deltaX == null) { // in case of 'auto'
-      deltaX = ("relative".equals(style_pos) ? 0 : elem.getOffsetLeft());
-    }
-    if (deltaY == null) { // in case of 'auto'
-      deltaY = ("relative".equals(style_pos) ? 0 : elem.getOffsetTop());
-    }
-
-    if (pos.x != Integer.MIN_VALUE) {
-      elem.getStyle().setPropertyPx("left", pos.x - pageXY.x + deltaX);
-    }
-    if (pos.y != Integer.MIN_VALUE) {
-      elem.getStyle().setPropertyPx("top", pos.y - pageXY.y + deltaY);
-    }
-
-    if (!noRetry) {
-      final Point newXY = getXY(elem);
-
-      // if retry is true, try one more time if we miss
-      if (!pos.equals(newXY)) {
-        setXY(elem, pos, true);
-      }
-    }
-
-    return getXY(elem);
-  }
-
-  /**
-   * Set the Y position of an HTML element in page coordinates, regardless of
-   * how the element is positioned. The element must be part of the DOM tree to
-   * have page coordinates (display: none or elements not appended return
-   * <code>null</code>).
-   * 
-   * @param elem the element whose current Y position we want to set
-   * @param y the value to use as the Y coordinate for the element
-   * @return new XY position of the element
-   */
-  public static Point setY(Element elem, int y) {
-    return setXY(elem, new Point(Integer.MIN_VALUE, y));
-  }
-
-  /**
    * Normalized key codes. Also switches KEY_RIGHT and KEY_LEFT in RTL
    * languages.
    */
@@ -687,6 +491,59 @@ public class DOM extends com.google.gwt.user.client.DOM {
       }
     }
     return code;
+  }
+
+  /**
+   * Returns the screen resolution in dots-per-inch.
+   * 
+   * @return the screen resolution, in dots-per-inch
+   */
+  public static int getScreenResolution() {
+    return toPixelSize("1in");
+  }
+
+  public static int toPixelSize(final String width) {
+    final BodyElement body = Document.get().getBody();
+    final Element div = DOM.createDiv();
+    setStyleAttribute(div, "left", "");
+    setStyleAttribute(div, "top", "");
+    setStyleAttribute(div, "position", "");
+    setStyleAttribute(div, "visibility", "hidden");
+    setStyleAttribute(div, "width", width);
+    try {
+      body.appendChild(div);
+      return getBoxSize(div)[0];
+    } finally {
+      body.removeChild(div);
+    }
+  }
+
+  public static int[] getStringBoxSize(Element div, final String str) {
+    final BodyElement body = Document.get().getBody();
+    div.setInnerText(str);
+    setStyleAttribute(div, "left", "");
+    setStyleAttribute(div, "top", "");
+    setStyleAttribute(div, "position", "");
+    setStyleAttribute(div, "visibility", "hidden");
+    if (UserAgent.isIE6()) {
+      final WidgetWrapper wrapper = new WidgetWrapper(new SimplePanel(div) {
+      }, HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_MIDDLE);
+      div = wrapper.getElement();
+    } else {
+      setStyleAttribute(div, "display", "table");
+    }
+    // force "auto" width
+    setStyleAttribute(div, "width", "0px");
+    setStyleAttribute(div, "height", "0px");
+    div.getOffsetWidth();
+    setStyleAttribute(div, "width", "auto");
+    setStyleAttribute(div, "height", "auto");
+    try {
+      body.appendChild(div);
+      return getBoxSize(div);
+    } finally {
+      body.removeChild(div);
+    }
   }
 
 }

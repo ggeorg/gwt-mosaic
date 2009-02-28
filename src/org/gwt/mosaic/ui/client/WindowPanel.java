@@ -21,6 +21,7 @@ import java.util.Vector;
 
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.util.DelayedRunnable;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
@@ -29,6 +30,8 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -56,8 +59,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * Example:
  * 
  * <pre>
- * WindowPanel windowPanel = new WindowPanel("CaptionText");
- * windowPanel.add(new Button("Click me!"));
+ * WindowPanel windowPanel = new WindowPanel(&quot;CaptionText&quot;);
+ * windowPanel.add(new Button(&quot;Click me!&quot;));
  * windowPanel.show();
  * </pre>
  * 
@@ -1016,9 +1019,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
 
       final Widget boundaryPanel = windowController.getBoundaryPanel();
+      final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
       if (isCollapsed()) {
-        restoredLeft = getAbsoluteLeft() - boundaryPanel.getAbsoluteLeft();
-        restoredTop = getAbsoluteTop() - boundaryPanel.getAbsoluteTop();
+        restoredLeft = getAbsoluteLeft() - borders[3]
+            - boundaryPanel.getAbsoluteLeft();
+        restoredTop = getAbsoluteTop() - borders[0]
+            - boundaryPanel.getAbsoluteTop();
         final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
         final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
@@ -1027,8 +1033,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
             getLayoutPanel().getPreferredSize()[1]);
       } else {
         if (oldState != WindowState.MINIMIZED) {
-          restoredLeft = getAbsoluteLeft() - boundaryPanel.getAbsoluteLeft();
-          restoredTop = getAbsoluteTop() - boundaryPanel.getAbsoluteTop();
+          restoredLeft = getAbsoluteLeft() - borders[3]
+              - boundaryPanel.getAbsoluteLeft();
+          restoredTop = getAbsoluteTop() - borders[0]
+              - boundaryPanel.getAbsoluteTop();
           restoredWidth = contentWidth;
           restoredHeight = contentHeight;
         }
@@ -1072,14 +1080,18 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   @Override
-  protected void afterLoad() {
-    super.afterLoad();
+  protected void onLoad() {
+    super.onLoad();
 
-    if (windowState == WindowState.MAXIMIZED) {
-      maximizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
-    } else if (windowState == WindowState.MINIMIZED) {
-      minimizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
-    }
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        if (windowState == WindowState.MAXIMIZED) {
+          maximizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
+        } else if (windowState == WindowState.MINIMIZED) {
+          minimizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
+        }
+      }
+    });
   }
 
   final private Timer maximizeTimer = new Timer() {
@@ -1093,27 +1105,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       minimize(WindowState.NORMAL);
     }
   };
-
-  /**
-   * Causes this {@code WindowPanel} to be sized to fit the preferred size and
-   * layouts of its subcomponents. The {@link #layout()} method is called after
-   * the preferred size is calculated.
-   * 
-   * @see #show()
-   * @see #showModal()
-   */
-  public void pack() {
-    if (!isAttached()) {
-      show();
-      return;
-    }
-    // setSize("auto", "auto");
-    // getLayoutPanel().setSize("0px", "0px");
-    final int[] size = getLayoutPanel().getPreferredSize();
-    setContentSize(size[0], size[1]);
-    // delayedLayout(MIN_DELAY_MILLIS);
-    layout();
-  }
 
   public void removeCollapsedListener(CollapsedListener listener) {
     if (collapsedListeners != null) {
@@ -1276,6 +1267,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     try {
       if (windowController != null) {
         final Widget boundaryPanel = windowController.getBoundaryPanel();
+        int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
+        left += borders[3];
+        top += borders[0];
         super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
             + boundaryPanel.getAbsoluteTop());
       } else {
@@ -1378,6 +1372,13 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
             DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
       }
       windowController.getBoundaryPanel().add(glassPanel, 0, 0);
+
+      new DelayedRunnable() {
+        @Override
+        public void run() {
+          WindowPanel.super.show();
+        }
+      };
     }
 
     super.show();
@@ -1404,30 +1405,13 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   public void showModal() {
     modal = true;
-    center();
-
-    // boolean initiallyShowing = showing;
-    // boolean initiallyAnimated = isAnimationEnabled;
-    //
-    // if (!initiallyShowing) {
-    // setVisible(false);
-    // setAnimationEnabled(false);
-    // show();
-    // }
-    //
-    // int left = (Window.getClientWidth() - getOffsetWidth()) >> 1;
-    // int top = (Window.getClientHeight() - getOffsetHeight()) >> 1;
-    // setPopupPosition(Window.getScrollLeft() + left, Window.getScrollTop() +
-    // top);
-    //
-    // if (!initiallyShowing) {
-    // hide();
-    // setVisible(true);
-    // setAnimationEnabled(initiallyAnimated);
-    // show();
-    // }
-
-    toFront();
+    pack();
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        center();
+        toFront();
+      }
+    });
   }
 
   /**

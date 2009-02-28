@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -34,8 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class Viewport extends Composite implements HasWidgets, WindowResizeListener,
-    WindowCloseListener {
+public class Viewport extends Composite implements HasWidgets,
+    WindowResizeListener, WindowCloseListener {
 
   private Timer delayedResize = new Timer() {
     @Override
@@ -69,7 +71,9 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public void add(Widget widget) {
     add(widget, false);
@@ -79,7 +83,7 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
     final LayoutPanel panel = getWidget();
     panel.clear();
     panel.add(widget, new FillLayoutData(decorate));
-    
+
     onLoad();
   }
 
@@ -141,7 +145,7 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
    * (non-Javadoc)
    * 
    * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int,
-   *      int)
+   * int)
    */
   public void onWindowResized(int width, int height) {
     delayedResize.schedule(333);
@@ -150,7 +154,9 @@ public class Viewport extends Composite implements HasWidgets, WindowResizeListe
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public boolean remove(Widget w) {
     return getWidget().remove(w);

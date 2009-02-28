@@ -1,7 +1,7 @@
 /*
- * Copyright 2006-2008 Google Inc.
+ * Copyright 2008 Google Inc.
  * 
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -71,6 +71,7 @@ import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
  * <li>.gwt-ScrollTable .footerWrapper { wrapper around the footer table }</li>
  * </ul>
  * 
+ * @author GWT Incubator project
  * @author georgopoulos.georgios(at)gmail.com
  */
 public abstract class ColumnWidget extends LayoutComposite {

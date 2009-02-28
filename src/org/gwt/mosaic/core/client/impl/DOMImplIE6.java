@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,13 @@
  */
 package org.gwt.mosaic.core.client.impl;
 
-import org.gwt.mosaic.core.client.Point;
-
 import com.google.gwt.user.client.Element;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ *
+ */
 public class DOMImplIE6 extends DOMImpl {
 
   /*
@@ -79,24 +82,6 @@ public class DOMImplIE6 extends DOMImpl {
       default:
         elem.style[attr] = value;
     };
-  }-*/;
-
-  public Point getXY(Element elem) {
-    return new Point(getX(elem), getY(elem));
-  }
-
-  public native int getX(Element elem)
-  /*-{
-    var box = elem.getBoundingClientRect();
-    var rootNode = elem.ownerDocument;
-    return box.left + this.@org.gwt.mosaic.core.client.impl.DOMImpl::getDocumenScrollLeft(Lcom/google/gwt/user/client/Element;)(rootNode);
-  }-*/;
-
-  public native int getY(Element elem)
-  /*-{
-    var box = elem.getBoundingClientRect();
-    var rootNode = elem.ownerDocument;
-    return box.top + this.@org.gwt.mosaic.core.client.impl.DOMImpl::getDocumenScrollTop(Lcom/google/gwt/user/client/Element;)(rootNode);
   }-*/;
 
 }

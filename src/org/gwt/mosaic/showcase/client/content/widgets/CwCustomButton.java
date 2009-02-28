@@ -1,6 +1,5 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,9 +29,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-CustomButton", ".gwt-PushButton", ".gwt-ToggleButton"})
-public class CwCustomButton extends ContentWidget implements ClickHandler {
+public class CwCustomButton extends ContentWidget implements ClickListener {
 
   /**
    * The constants used in this Page.
@@ -93,16 +91,15 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
   /**
    * Fired when the user clicks on a button.
    * 
-   * @see ClickHandler#onClick(ClickEvent)
+   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
   @ShowcaseSource
-  public void onClick(ClickEvent event) {
-
-    if (event.getSource() instanceof PushButton) {
+  public void onClick(Widget sender) {
+    if (sender instanceof PushButton) {
       InfoPanel.show(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonClicked());
     } else {
-      ToggleButton btn = (ToggleButton) event.getSource();
+      ToggleButton btn = (ToggleButton) sender;
       InfoPanel.show(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonDown()
               + new Boolean(btn.isDown()).toString());
@@ -131,8 +128,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     // Add a normal PushButton
     final PushButton normalPushButton = new PushButton(
         MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
-        MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage());
-    normalPushButton.addClickHandler(this);
+        MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage(), this);
     normalPushButton.ensureDebugId("mosaicCustomButton-push-normal");
 
     pushBtnPanel.add(new WidgetWrapper(normalPushButton));
@@ -140,8 +136,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     // Add a disabled PushButton
     final PushButton disabledPushButton = new PushButton(
         MessageBox.MESSAGEBOX_IMAGES.dialogInformation().createImage(),
-        MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage());
-    disabledPushButton.addClickHandler(this);
+        MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage(), this);
     disabledPushButton.ensureDebugId("mosaicCustomButton-push-disabled");
     disabledPushButton.setEnabled(false);
 

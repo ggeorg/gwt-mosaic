@@ -1,6 +1,5 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2008 Cameron Braid.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,10 +31,10 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -47,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
 @ShowcaseStyle( {
     ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button",
     ".mosaic-Split-Button", ".mosaic-Checkbox-Button", ".mosaic-Radio-Button"})
-public class CwToolButton extends ContentWidget implements ClickHandler {
+public class CwToolButton extends ContentWidget implements ClickListener {
 
   /**
    * The constants used in this Page.
@@ -318,11 +317,11 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
   /**
    * Fired when the user clicks on a button.
    * 
-   * @see ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
+   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
   @ShowcaseSource
-  public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-    final Button btn = (Button) event.getSource();
+  public void onClick(Widget sender) {
+    final Button btn = (Button) sender;
     InfoPanel.show(btn.getText(), "Clicked!");
   }
 

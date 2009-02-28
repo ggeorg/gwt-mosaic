@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,11 @@ package org.gwt.mosaic.core.client;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ *
+ */
 public class Region implements Serializable {
   private static final long serialVersionUID = 3365575120114516987L;
 

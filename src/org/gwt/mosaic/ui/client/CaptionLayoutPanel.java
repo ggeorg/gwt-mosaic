@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2009 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -231,6 +231,10 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   public void setPadding(int padding) {
     body.setPadding(padding);
+  }
+
+  public void setWidgetSpacing(int spacing) {
+    body.setWidgetSpacing(spacing);
   }
 
 }

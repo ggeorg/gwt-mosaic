@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.MessageBoxType;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
@@ -403,8 +404,8 @@ public class CwMessageBox extends ContentWidget {
       }
     };
     prompt.setAnimationEnabled(true);
-    // final int width = Window.getClientWidth();
-    // prompt.setWidth(Math.max(width / 3, 256) + "px");
+    final int width = Window.getClientWidth();
+    prompt.setWidth(Math.max(width / 3, 256) + "px");
 
     RichTextToolbar toolbar = new RichTextToolbar(area);
     toolbar.ensureDebugId("cwRichText-toolbar");
@@ -413,7 +414,7 @@ public class CwMessageBox extends ContentWidget {
     panel.setPadding(0);
     panel.setWidgetSpacing(0);
     panel.add(toolbar, new BoxLayoutData(FillStyle.HORIZONTAL));
-    panel.add(area, new BoxLayoutData(FillStyle.BOTH));
+    panel.add(new WidgetWrapper(area), new BoxLayoutData(FillStyle.BOTH));
 
     Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {

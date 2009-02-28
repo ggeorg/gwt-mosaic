@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     implements HasLayoutManager {
@@ -100,13 +101,45 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   protected void onLoad() {
-    afterLoad();
+    // afterLoad();
+
+    calculateDecorationSize();
+
+    if (desiredWidth != null && desiredHeight != null) {
+      setSize(desiredWidth, desiredHeight);
+    } else if (desiredWidth != null) {
+      setWidth(desiredWidth);
+    } else if (desiredHeight != null) {
+      setHeight(desiredHeight);
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         layout();
       }
     });
+  }
+
+  /**
+   * Causes this popup to be sized to fit the preferred size and layouts of its
+   * subcomponents. The {@link #layout()} method is called after the preferred
+   * size is calculated.
+   * 
+   * @see #show()
+   * @see #showModal()
+   */
+  public void pack() {
+    if (!isAttached()) {
+      show();
+      pack();
+    } else {
+      // setSize("auto", "auto");
+      //getLayoutPanel().setSize("0px", "0px");
+      int[] size = getLayoutPanel().getPreferredSize();
+      setContentSize(size[0], size[1]);
+      // delayedLayout(MIN_DELAY_MILLIS);
+      layout();
+    }
   }
 
   protected LayoutPanel getLayoutPanel() {
@@ -138,94 +171,113 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   public void layout() {
     layoutPanel.layout();
 
-    // DeferredCommand.addCommand(new Command() {
-    // public void execute() {
-    // System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
-    // }
-    // });
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        System.out.println(getOffsetWidth() + "X" + getOffsetHeight());
+      }
+    });
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
+   */
+  public void layout(boolean invalidate) {
+    layoutPanel.layout(invalidate);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   */
+  public void invalidate(boolean layout) {
+    layoutPanel.invalidate(layout);
   }
 
   private int decorationWidthCache = 0;
   private int decorationHeightCache = 0;
 
-  private void calculateDecorationSize(int[] size) {
+  private void calculateDecorationSize() {
+    final int[] size = DOM.getBoxSize(layoutPanel.getElement());
     final int[] box = DOM.getBoxSize(getElement());
-    decorationWidthCache = (box[0] - size[0]);
-    decorationHeightCache = (box[1] - size[1]);
+    decorationWidthCache = box[0] - size[0];
+    decorationHeightCache = box[1] - size[1];
   }
 
-  private boolean initialized = false;
+  // private boolean initialized = false;
 
-  protected void afterLoad() {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-
-    int[] prefSize = layoutPanel.getPreferredSize();
-
-    if (desiredWidth != null && desiredHeight != null) {
-      layoutPanel.setSize(desiredWidth, desiredHeight);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      calculateDecorationSize(size);
-      final int w = size[0];// - decorationWidthCache;
-      final int h = size[1];// - decorationHeightCache;
-      setPixelSize(w, h);
-      layout();
-
-      // run twice
-      prefSize = layoutPanel.getPreferredSize();
-      setPixelSize(w, h);
-
-    } else if (desiredWidth != null) {
-      layoutPanel.setWidth(desiredWidth);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      calculateDecorationSize(size);
-      final int w = size[0];// - decorationWidthCache;
-      final int h = prefSize[1] + decorationHeightCache;
-      setPixelSize(w, h);
-      layout();
-
-      // run twice
-      prefSize = layoutPanel.getPreferredSize();
-      setPixelSize(w, prefSize[1] + decorationHeightCache);
-
-    } else if (desiredHeight != null) {
-      layoutPanel.setHeight(desiredHeight);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      calculateDecorationSize(size);
-      final int w = prefSize[0];
-      final int h = size[1];// - decorationHeightCache;
-      setPixelSize(w, h);
-      layout();
-
-      // run twice
-      prefSize = layoutPanel.getPreferredSize();
-      setPixelSize(prefSize[0], h);
-
-    } else {
-      layoutPanel.setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      calculateDecorationSize(size);
-      setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
-      layout();
-
-      // run twice
-      prefSize = layoutPanel.getPreferredSize();
-      setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
-    }
-
-    layout();
-  }
+  // protected void afterLoad() {
+  // if (initialized) {
+  // return;
+  // }
+  // initialized = true;
+  //
+  // int[] prefSize = layoutPanel.getPreferredSize();
+  //
+  // if (desiredWidth != null && desiredHeight != null) {
+  // layoutPanel.setSize(desiredWidth, desiredHeight);
+  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
+  // calculateDecorationSize(size);
+  // final int w = size[0];// - decorationWidthCache;
+  // final int h = size[1];// - decorationHeightCache;
+  // setPixelSize(w, h);
+  // layout();
+  //
+  // // run twice
+  // prefSize = layoutPanel.getPreferredSize();
+  // setPixelSize(w, h);
+  //
+  // } else if (desiredWidth != null) {
+  // layoutPanel.setWidth(desiredWidth);
+  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
+  // calculateDecorationSize(size);
+  // final int w = size[0];// - decorationWidthCache;
+  // final int h = prefSize[1] + decorationHeightCache;
+  // setPixelSize(w, h);
+  // layout();
+  //
+  // // run twice
+  // prefSize = layoutPanel.getPreferredSize();
+  // setPixelSize(w, prefSize[1] + decorationHeightCache);
+  //
+  // } else if (desiredHeight != null) {
+  // layoutPanel.setHeight(desiredHeight);
+  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
+  // calculateDecorationSize(size);
+  // final int w = prefSize[0];
+  // final int h = size[1];// - decorationHeightCache;
+  // setPixelSize(w, h);
+  // layout();
+  //
+  // // run twice
+  // prefSize = layoutPanel.getPreferredSize();
+  // setPixelSize(prefSize[0], h);
+  //
+  // } else {
+  // layoutPanel.setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache
+  // + 1);
+  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
+  // calculateDecorationSize(size);
+  // setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache + 1);
+  // layout();
+  //
+  // // run twice
+  // prefSize = layoutPanel.getPreferredSize();
+  // setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache + 1);
+  // }
+  //
+  // layout();
+  // }
 
   private String desiredHeight = null;
 
   @Override
   public void setHeight(String height) {
     // super.setHeight(height);
-    if (!isAttached()) {
-      this.desiredHeight = height;
-    } else {
+    desiredHeight = height;
+    if (isAttached()) {
       layoutPanel.setHeight(height);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       setContentSize(size[0], size[1] - decorationHeightCache);
@@ -237,12 +289,12 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   @Override
   public void setWidth(String width) {
     // super.setWidth(width);
-    if (!isAttached()) {
-      this.desiredWidth = width;
-    } else {
+    desiredWidth = width;
+    if (isAttached()) {
       layoutPanel.setWidth(width);
       final int[] size = DOM.getBoxSize(layoutPanel.getElement());
       setContentSize(size[0] - decorationWidthCache, size[1]);
     }
   }
+
 }

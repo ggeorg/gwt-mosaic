@@ -59,8 +59,7 @@ public class CwGridLayout extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(3, 3,
-        GridLayout.ALIGN_CENTER, null));
+    final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(3, 3));
 
     final Button b11 = new Button("Button 1-1");
     final Button b12 = new Button("Button 1-2");
@@ -70,7 +69,7 @@ public class CwGridLayout extends ContentWidget {
 
     final Button b31 = new Button("Button 3-1");
     GridLayoutData gl = new GridLayoutData(1, 3, true);
-    gl.setHorizontalAlignment(GridLayoutData.ALIGN_LEFT);
+    gl.setHorizontalAlignment(GridLayoutData.ALIGN_CENTER);
     gl.setVerticalAlignment(GridLayoutData.ALIGN_MIDDLE);
     layoutPanel.add(b11, gl);
     layoutPanel.add(b12);
