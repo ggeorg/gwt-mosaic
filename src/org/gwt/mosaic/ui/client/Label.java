@@ -131,7 +131,7 @@ public class Label extends Composite implements SourcesClickEvents,
 
     if (UserAgent.isIE6()) {
       final WidgetWrapper wrapper = new WidgetWrapper(label,
-          HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_MIDDLE);
+          HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP);
       super.initWidget(wrapper);
     } else {
       DOM.setStyleAttribute(label.getElement(), "display", "table");
@@ -164,12 +164,14 @@ public class Label extends Composite implements SourcesClickEvents,
   }
 
   public HorizontalAlignmentConstant getHorizontalAlignment() {
-    // FIXME for IE6
     return label.getHorizontalAlignment();
   }
 
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-    // FIXME for IE6
+    if (UserAgent.isIE6()) {
+      WidgetWrapper wrapper = (WidgetWrapper) getWidget();
+      wrapper.setHorizontalAlignment(align);
+    }
     label.setHorizontalAlignment(align);
   }
 
