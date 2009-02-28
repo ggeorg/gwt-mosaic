@@ -1,6 +1,6 @@
 /*
- * Copyright 2008 Cameron Braid.
- *
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -17,17 +17,8 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.CollapsedListenerCollection;
-import org.gwt.mosaic.ui.client.ListenerWrapper;
-import org.gwt.mosaic.ui.client.ListenerWrapper.WrappedCollapsedListener;
-import org.gwt.mosaic.ui.client.event.CollapseEvent;
-import org.gwt.mosaic.ui.client.event.CollapseHandler;
-import org.gwt.mosaic.ui.client.event.HasCollapseHandlers;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.HasChangeHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -39,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @see BorderLayout
  */
-public class BorderLayoutData extends LayoutData implements HasCollapseHandlers {
+public class BorderLayoutData extends LayoutData {
 
   double preferredSize = -1.0;
 
@@ -120,12 +111,12 @@ public class BorderLayoutData extends LayoutData implements HasCollapseHandlers 
    * should be undecorated. The region of the widget added to a
    * {@link LayoutPanel} is specified by the {@code region} parameter. The
    * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
-   * horizontally, while the height of the widgets is specified by the
-   * {@code preferredSize} parameter; the {@link Region#EAST} and
-   * {@link Region#WEST} child widgets are stretched vertically, while the width
-   * of the widgets is specified by the {@code preferredSize} parameter; the
-   * {@link Region#CENTER} child widget will be stretched both horizontally and
-   * vertically to fill any space left over.
+   * horizontally, while the height of the widgets is specified by the {@code
+   * preferredSize} parameter; the {@link Region#EAST} and {@link Region#WEST}
+   * child widgets are stretched vertically, while the width of the widgets is
+   * specified by the {@code preferredSize} parameter; the {@link Region#CENTER}
+   * child widget will be stretched both horizontally and vertically to fill any
+   * space left over.
    * <p>
    * For {@code preferredSize} parameter values > 0 and <= 1 are in ratios of
    * the available client area except paddings, 0 and values > 1 are in pixels,
@@ -147,12 +138,12 @@ public class BorderLayoutData extends LayoutData implements HasCollapseHandlers 
    * should be undecorated. The region of the widget added to a
    * {@link LayoutPanel} is specified by the {@code region} parameter. The
    * {@link Region#NORTH} and {@link Region#SOUTH} child widgets are stretched
-   * horizontally, while the height of the widgets is specified by the
-   * {@code preferredSize} parameter; the {@link Region#EAST} and
-   * {@link Region#WEST} child widgets are stretched vertically, while the width
-   * of the widgets is specified by the {@code preferredSize} parameter; the
-   * {@link Region#CENTER} child widget will be stretched both horizontally and
-   * vertically to fill any space left over.
+   * horizontally, while the height of the widgets is specified by the {@code
+   * preferredSize} parameter; the {@link Region#EAST} and {@link Region#WEST}
+   * child widgets are stretched vertically, while the width of the widgets is
+   * specified by the {@code preferredSize} parameter; the {@link Region#CENTER}
+   * child widget will be stretched both horizontally and vertically to fill any
+   * space left over.
    * <p>
    * For {@code preferredSize} parameter values > 0 and <= 1 are in ratios of
    * the available client area except paddings, 0 and values > 1 are in pixels,
@@ -372,21 +363,25 @@ public class BorderLayoutData extends LayoutData implements HasCollapseHandlers 
     this.minSize = minSize;
   }
 
-  public HandlerRegistration addCollapseHandler(CollapseHandler handler) {
-	  return addHandler(handler, CollapseEvent.getType());
-  }
+  private CollapsedListenerCollection collapsedListeners;
 
-  @Deprecated
   protected void addCollapsedListener(CollapsedListener listener) {
-	  WrappedCollapsedListener.add(this, listener);
+    if (collapsedListeners == null) {
+      collapsedListeners = new CollapsedListenerCollection();
+    }
+    collapsedListeners.add(listener);
   }
 
   protected void removeCollapsedListener(CollapsedListener listener) {
-	  WrappedCollapsedListener.remove(handlerManager, listener);
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
   }
 
   protected void fireCollapsedChange(Widget sender) {
-	  CollapseEvent.fire(this, sender);
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
   }
 
   /**

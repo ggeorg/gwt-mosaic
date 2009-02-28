@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,12 +19,18 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
-public class WidgetWrapper extends Composite {
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ *
+ */
+public class WidgetWrapper extends Composite implements HasAlignment {
 
   private static final String DEFAULT_STYLE_NAME = "mosaic-WidgetWrapper";
+
+  private HorizontalAlignmentConstant alignLeft;
+  private VerticalAlignmentConstant alignTop;
 
   public WidgetWrapper(Widget widget) {
     this(widget, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
@@ -36,7 +42,9 @@ public class WidgetWrapper extends Composite {
     grid.setBorderWidth(0);
     grid.setCellPadding(0);
     grid.setCellSpacing(0);
-    grid.getCellFormatter().setAlignment(0, 0, alignLeft, alignTop);
+    this.alignLeft = alignLeft;
+    this.alignTop = alignTop;
+    setAlignment(grid);
     grid.setWidget(0, 0, widget);
     initWidget(grid);
     addStyleName(DEFAULT_STYLE_NAME);
@@ -49,6 +57,28 @@ public class WidgetWrapper extends Composite {
    */
   public Grid getWidget() {
     return (Grid) super.getWidget();
+  }
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return alignLeft;
+  }
+
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    alignLeft = align;
+    setAlignment(getWidget());
+  }
+
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return alignTop;
+  }
+
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    alignTop = align;
+    setAlignment(getWidget());
+  }
+  
+  private void setAlignment(Grid grid) {
+    grid.getCellFormatter().setAlignment(0, 0, alignLeft, alignTop);
   }
 
 }

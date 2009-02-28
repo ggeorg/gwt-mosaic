@@ -72,6 +72,13 @@ input {
 	border: 1px inset #ccc;
 }
 
+textarea {
+	margin: 0px;
+	padding: 0px;
+	text-decoration: none;
+	border: 1px inset #ccc;
+}
+
 /*** DecoratedButton ***/
 
 .mosaic-DecoratedButton {
@@ -280,6 +287,7 @@ input {
 
 /*** GlassPanel ***/
 
+.mosaic-GlassPanel-loading,
 .gwt-GlassPanel {
 	/* Override glass panel color to be `green` */
 	background-color: #000 !important;
@@ -1257,8 +1265,12 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 
 /*** mosaic-FormSeparator **/
 
-.mosaic-FormSeparator td {
+.mosaic-FormSeparator {
 	font-weight: bold;
+}
+
+.mosaic-FormSeparator hr {
+	/* border: 4px solid #4d4d4d; */
 }
 
 /*** Basic Button with Images ***/
@@ -1270,7 +1282,6 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	filter: alpha(opacity=40);
 }
 
-.gwt-Button,
-.gwt-Button table td {
+.gwt-Button {
 	white-space: nowrap;
 }

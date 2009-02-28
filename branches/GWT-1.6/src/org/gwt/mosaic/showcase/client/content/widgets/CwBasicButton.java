@@ -1,6 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2008 Cameron Braid.
+ * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,9 +41,10 @@ import com.google.gwt.user.client.ui.Widget;
  * Example file.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 @ShowcaseStyle( {".gwt-Button"})
-public class CwBasicButton extends ContentWidget implements ClickHandler {
+public class CwBasicButton extends ContentWidget {
 
   /**
    * The constants used in this <code>ContentWidget</code>.
@@ -90,11 +92,12 @@ public class CwBasicButton extends ContentWidget implements ClickHandler {
   /**
    * Fired when the user clicks on a button.
    * 
-   * @see ClickHandler#onClick(ClickEvent)
+   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
   @ShowcaseSource
-  public void onClick(ClickEvent event) {
-    InfoPanel.show(((Button) event.getSource()).getText(), constants.mosaicBasicButtonClickMessage());
+  public void onClick(Widget sender) {
+    InfoPanel.show(((Button) sender).getText(),
+        constants.mosaicBasicButtonClickMessage());
   }
 
   /**
@@ -117,9 +120,14 @@ public class CwBasicButton extends ContentWidget implements ClickHandler {
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     // Add a normal button
-    Button normalButton = new Button(constants.mosaicBasicButtonNormal(), this);
+    Button normalButton = new Button(constants.mosaicBasicButtonNormal(),
+        new ClickHandler() {
+          public void onClick(ClickEvent event) {
+            InfoPanel.show(((Button) event.getSource()).getText(),
+                constants.mosaicBasicButtonClickMessage());
+          }
+        });
     normalButton.ensureDebugId("mosaicBasicButton-normal");
-
     hBox1.add(normalButton);
 
     // Add a disabled button

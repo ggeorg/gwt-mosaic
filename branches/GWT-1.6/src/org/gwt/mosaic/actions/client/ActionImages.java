@@ -1,5 +1,5 @@
 /*
- * Copyright 2008, 2009 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopolos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -75,6 +75,9 @@ public interface ActionImages extends ImageBundle {
 
   @Resource(value = "open_action.png")
   AbstractImagePrototype open_action();
+
+  @Resource(value = "open_parent_folder_action.png")
+  AbstractImagePrototype open_parent_folder_action();
 
   @Resource(value = "paste_action.png")
   AbstractImagePrototype paste_action();

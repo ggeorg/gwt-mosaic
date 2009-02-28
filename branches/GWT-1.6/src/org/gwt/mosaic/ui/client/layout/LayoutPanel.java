@@ -1,6 +1,5 @@
 /*
- * Copyright 2008-2009 Georgios J. Georgopoulos
- * Copyright 2008 Cameron Braid.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,11 +21,9 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
+import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
-import org.gwt.mosaic.ui.client.event.CollapseHandler;
 
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -73,12 +70,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    */
   protected LayoutPanel(Element elem) {
     super(elem);
-    
+
     // Setting the panel's position style to 'relative' causes it to be treated
     // as a new positioning context for its children.
     DOM.setStyleAttribute(getElement(), "position", "relative");
     DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-    
+
     setStyleName(DEFAULT_STYLENAME);
     setLayout(new FillLayout());
   }
@@ -124,6 +121,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return widget;
   }
 
+  /**
+   * Returns the {@link LayoutManager} which is associated with this panel, or
+   * {@link FillLayout} if one has not been set.
+   * 
+   * @return the panel's {@link LayoutManager}
+   * 
+   * @see #layout()
+   * @see #setLayout(LayoutManager)
+   */
   public LayoutManager getLayout() {
     return layout;
   }
@@ -145,6 +151,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
    */
   public int[] getPreferredSize() {
+    if (!isAttached()) {
+      return new int[] {0, 0};
+    }
     if (preferredSizeCache[0] >= -1 && preferredSizeCache[1] >= 0) {
       return preferredSizeCache;
     } else {
@@ -245,6 +254,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * @see org.mosaic.ui.client.layout.HasLayout#layout()
    */
   public void layout() {
+    layout(false);
+  }
+
+  public void layout(boolean invalidate) {
+    if (!isAttached()) {
+      return;
+    }
+    if (invalidate) {
+      invalidate(false);
+    }
     layout.layoutPanel(this);
     if (layout.runTwice()) {
       layout.layoutPanel(this);
@@ -281,15 +300,21 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return super.remove(widget);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Sets the {@link LayoutManager} for this panel.
    * 
-   * @see org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout.LayoutManager)
+   * @param layout the specified layout manager
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout
+   *      .LayoutManager)
+   * 
+   * @see #layout()
+   * @see #setLayout(LayoutManager)
    */
   public void setLayout(LayoutManager layout) {
     this.layout = layout;
     if (layoutClassName != null) {
-      removeStyleName(layoutClassName);
+      removeStyleName(getStylePrimaryName() + "-" + layoutClassName);
     }
     layoutClassName = layout.getClass().getName();
     final int dotPos = layoutClassName.lastIndexOf('.');
@@ -340,37 +365,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   protected void onLoad() {
     super.onLoad();
 
-    Widget parent = getParent();
-
-    if (parent == getDecoratorWidget(this)) {
-      parent = parent.getParent();
-    } else {
-      if (parent instanceof LayoutComposite) {
-        parent = parent.getParent();
-        if (parent == getDecoratorWidget(parent)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof FormPanel) {
-        parent = parent.getParent();
-        if (parent == getDecoratorWidget(parent)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof DecoratorPanel) {
-        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
-          parent = parent.getParent();
-        }
-      }
-    }
+    Widget parent = findParent();
 
     if (parent instanceof HasLayoutManager || parent instanceof Viewport) {
       return;
     }
 
-//    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
-//        + parent.getClass().getName()
-//        + "') is not an instance of HasLayoutManager.", null);
+    // GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+    // + parent.getClass().getName()
+    // + "') is not an instance of HasLayoutManager.", null);
 
     // Set the initial size & layout
     DeferredCommand.addCommand(new Command() {
@@ -432,17 +435,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
-  public HandlerRegistration addCollapseHandler(Widget widget, CollapseHandler handler) {
-	  if (getLayout() instanceof BorderLayout) {
-        final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-        return layoutData.addCollapseHandler(handler);
-      }
-	  else {
-		  return null;
-	  }
-  }
-
-  @Deprecated
   public void addCollapsedListener(Widget widget, CollapsedListener listener) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
@@ -450,11 +442,68 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
-  @Deprecated
   public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
       layoutData.removeCollapsedListener(listener);
+    }
+  }
+
+  public void clearPreferredSizeCache() {
+    setPreferredSize(-1, -1);
+  }
+
+  public Widget findParent() {
+    Widget parent = getParent();
+
+    if (parent == getDecoratorWidget(this)) {
+      parent = parent.getParent();
+    } else {
+      if (parent instanceof LayoutComposite) {
+        parent = parent.getParent();
+        if (parent == getDecoratorWidget(parent)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof FormPanel) {
+        parent = parent.getParent();
+        if (parent == getDecoratorWidget(parent)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof DecoratorPanel) {
+        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
+          parent = parent.getParent();
+        }
+      }
+    }
+
+    return parent;
+  }
+
+  /**
+   * Lays out this {@code LayoutPanel} and all of its child widgets.
+   * <p>
+   * The {@code #layout(boolean)} method is used to cause a {@code LayoutPanel}
+   * to lay out its child widgets again. It should be invoked when this {@code
+   * LayoutPanel's} child widgets are modified (added to or removed from the
+   * container, or layout-related information changed) after the {@code
+   * LayoutPanel} has been attached.
+   */
+  public void invalidate(boolean layout) {
+    getLayout().flushCache();
+
+    final Widget parent = findParent();
+
+    if (parent instanceof Viewport
+        || parent instanceof DecoratedLayoutPopupPanel
+        || parent instanceof LayoutPopupPanel
+        || !(parent instanceof HasLayoutManager)) {
+      if (layout) {
+        layout(false);
+      }
+    } else {
+      ((HasLayoutManager) parent).invalidate(layout);
     }
   }
 }

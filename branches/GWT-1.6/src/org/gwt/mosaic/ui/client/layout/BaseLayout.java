@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,11 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -23,17 +27,29 @@ import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * This class is the abstract base class for layouts.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
 
-  private native static void forceFlowLayout(Element elem)
-  /*-{
-    elem.style['top'] = '';
-    elem.style['left'] = '';
-  }-*/;
+  protected void recalculate(Map<Widget, Dimension> widgetSizes) {
+    for (Iterator<Map.Entry<Widget, Dimension>> iter = widgetSizes.entrySet().iterator(); iter.hasNext();) {
+      Map.Entry<Widget, Dimension> entry = iter.next();
+      Widget w = entry.getKey();
+      entry.getValue().setSize(getFlowWidth(w), getFlowHeight(w));
+    }
+  }
+
+  private static void changeToStaticPositioning(Element elem) {
+    DOM.setStyleAttribute(elem, "left", "");
+    DOM.setStyleAttribute(elem, "top", "");
+    // ggeorg: see
+    // http://groups.google.com/group/gwt-mosaic/browse_thread/thread/83d2bd6d6791ca62
+    // DOM.setStyleAttribute(elem, "position", "");
+  }
 
   /**
    * TODO: move this method to DOM
@@ -52,7 +68,21 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
-      forceFlowLayout(child.getElement());
+      Object layoutDataObject = getLayoutData(child);
+      if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+        LayoutData layoutData = (LayoutData) layoutDataObject;
+        if (layoutData.cachedHeight == null) {
+          layoutData.cachedHeight = child.getElement().getStyle().getProperty(
+              "height");
+          if (layoutData.cachedHeight != null
+              && layoutData.cachedHeight.length() > 0) {
+            return DOM.toPixelSize(layoutData.cachedHeight);
+          } else {
+            layoutData.cachedHeight = "".intern();
+          }
+        }
+      }
+      changeToStaticPositioning(child.getElement());
       // ggeorg: set to "0px", read and set it to "auto"
       // I don't know why but it works for widget like 'ListBox'
       child.setHeight("0px");
@@ -81,7 +111,21 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
-      forceFlowLayout(child.getElement());
+      Object layoutDataObject = getLayoutData(child);
+      if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+        LayoutData layoutData = (LayoutData) layoutDataObject;
+        if (layoutData.cachedWidth == null) {
+          layoutData.cachedWidth = child.getElement().getStyle().getProperty(
+              "width");
+          if (layoutData.cachedWidth != null
+              && layoutData.cachedWidth.length() > 0) {
+            return DOM.toPixelSize(layoutData.cachedWidth);
+          } else {
+            layoutData.cachedWidth = "".intern();
+          }
+        }
+      }
+      changeToStaticPositioning(child.getElement());
       // ggeorg: set to "0px", read and set it to "auto"
       // I don't know why but it works for widget like 'ListBox'
       child.setWidth("0px");
@@ -166,4 +210,21 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     layoutPanel.setWidgetPosition(widget, x, y);
   }
 
+  protected void cachePreferredSize(final LayoutPanel layoutPanel, int width,
+      int height) {
+    layoutPanel.setPreferredSize(width, height);
+  }
+
+  protected void clearPreferredSizeCache(final LayoutPanel layoutPanel) {
+    layoutPanel.clearPreferredSizeCache();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#flushCache()
+   */
+  public void flushCache() {
+    // Nothing to do here!
+  }
 }

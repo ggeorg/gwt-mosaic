@@ -1,6 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008 Google Inc. Copyright 2008 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,8 +27,9 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 /**
  * Date picker.
  */
-public class DatePicker extends com.google.gwt.widgetideas.datepicker.client.DatePicker
-    implements HasLayoutManager {
+public class DatePicker extends
+    com.google.gwt.widgetideas.datepicker.client.DatePicker implements
+    HasLayoutManager {
 
   /**
    * The default style name.
@@ -40,14 +40,16 @@ public class DatePicker extends com.google.gwt.widgetideas.datepicker.client.Dat
    * Sets up the date picker.
    */
   protected void setup() {
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
     initWidget(layoutPanel);
-    
-    layoutPanel.add(this.getMonthSelector(), new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    layoutPanel.add(this.getMonthSelector(), new BoxLayoutData(
+        FillStyle.HORIZONTAL));
     showDate(new Date());
     layoutPanel.add(this.getCalendarView(), new BoxLayoutData(FillStyle.BOTH));
-    
+
     setStyleName(DEFAULT_STYLENAME);
   }
 
@@ -77,5 +79,23 @@ public class DatePicker extends com.google.gwt.widgetideas.datepicker.client.Dat
    */
   public void layout() {
     getWidget().layout();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
+   */
+  public void layout(boolean invalidate) {
+    getWidget().layout(invalidate);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   */
+  public void invalidate(boolean layout) {
+    getWidget().invalidate(layout);
   }
 }

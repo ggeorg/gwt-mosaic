@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2009 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ClickListenerCollection;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -37,6 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
  * A widget that is used as a header in e.g. <code>WindowPanel</code>.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class Caption extends LayoutComposite implements HasHTML,
     SourcesMouseEvents {
@@ -97,7 +97,8 @@ public class Caption extends LayoutComposite implements HasHTML,
         leftIconBox = new HorizontalPanel();
         leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
         leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL), 0);
+        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL),
+            0);
       }
       leftIconBox.add(w);
     } else {
@@ -114,7 +115,7 @@ public class Caption extends LayoutComposite implements HasHTML,
       }
     }
   }
-  
+
   public void addClickListener(ClickListener listener) {
     if (clickListeners == null) {
       clickListeners = new ClickListenerCollection();

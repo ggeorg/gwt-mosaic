@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package org.gwt.mosaic.ui.client;
 import java.util.ArrayList;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Region;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
@@ -30,6 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
  * A popup panel that can position itself relative to another widget.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class DropDownPanel extends DecoratedLayoutPopupPanel {
 
@@ -84,8 +84,8 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
   }
 
   @Override
-  protected void afterLoad() {
-    super.afterLoad();
+  protected void onLoad() {
+    super.onLoad();
     final int[] prefSize = getPreferredSize();
     setWidth(Math.max(prefSize[0], relativeWidget.getOffsetWidth()) + "px");
     layout();
@@ -98,15 +98,8 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
    */
   @Override
   public void show() {
-
-    /*
-     * TODO Depending on the width and height of the popup and the distance from
-     * the widget to the bottom and right edges of the window, the popup may be
-     * displayed directly above the widget, and/or its right edge may be aligned
-     * with the right edge of the widget.
-     */
-    Region r = DOM.getRegion(relativeWidget.getElement());
-    setPopupPosition(r.left, r.bottom);
+    setPopupPosition(relativeWidget.getAbsoluteLeft(),
+        relativeWidget.getAbsoluteTop() + relativeWidget.getOffsetHeight());
 
     super.show();
 
