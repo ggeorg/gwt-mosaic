@@ -333,6 +333,7 @@ public class Main implements EntryPoint {
 = Using an AbsolutePanel as a Boundary Panel =
 
 {{{
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.Label;
@@ -364,7 +365,6 @@ public class Main implements EntryPoint {
     w.setWidget(new Label("bonbon"));
     w.pack();
   }
-  
 
   private void addMaximizeButton(final WindowPanel windowPanel,
       CaptionRegion captionRegion) {
@@ -386,18 +386,17 @@ public class Main implements EntryPoint {
         } else {
           maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
         }
-
       }
     });
     windowPanel.getHeader().add(maximizeBtn, captionRegion);
   }
 
-
   public void onModuleLoad() {
     boundaryPanel = new AbsolutePanel();
     boundaryPanel.setPixelSize(512, 256);
     boundaryPanel.getElement().getStyle().setProperty("border",
-        "1px dotted #f00");
+        "2px solid #f00");
+    DOM.setStyleAttribute(boundaryPanel.getElement(), "background", "#ff0");
     RootPanel.get().add(boundaryPanel, 10, 50);
 
     RootPanel.get().add(new Button("Create WindowPanel", new ClickListener() {
