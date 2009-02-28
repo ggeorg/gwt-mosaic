@@ -1406,15 +1406,21 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @see #center()
    * @see #isModal()
    */
-  public void showModal() {
+  public void showModal(boolean doPack) {
     modal = true;
-    pack();
+    if (doPack) {
+      pack();
+    }
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         center();
         toFront();
       }
     });
+  }
+
+  public void showModal() {
+    showModal(true);
   }
 
   /**
