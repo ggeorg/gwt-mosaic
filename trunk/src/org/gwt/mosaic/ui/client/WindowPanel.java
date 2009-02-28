@@ -1019,9 +1019,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
 
       final Widget boundaryPanel = windowController.getBoundaryPanel();
+      final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
       if (isCollapsed()) {
-        restoredLeft = getAbsoluteLeft() - boundaryPanel.getAbsoluteLeft();
-        restoredTop = getAbsoluteTop() - boundaryPanel.getAbsoluteTop();
+        restoredLeft = getAbsoluteLeft() - borders[3]
+            - boundaryPanel.getAbsoluteLeft();
+        restoredTop = getAbsoluteTop() - borders[0]
+            - boundaryPanel.getAbsoluteTop();
         final int[] size = DOM.getClientSize(boundaryPanel.getElement());
         final int[] size2 = DOM.getBoxSize(getElement());
         final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
@@ -1030,8 +1033,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
             getLayoutPanel().getPreferredSize()[1]);
       } else {
         if (oldState != WindowState.MINIMIZED) {
-          restoredLeft = getAbsoluteLeft() - boundaryPanel.getAbsoluteLeft();
-          restoredTop = getAbsoluteTop() - boundaryPanel.getAbsoluteTop();
+          restoredLeft = getAbsoluteLeft() - borders[3]
+              - boundaryPanel.getAbsoluteLeft();
+          restoredTop = getAbsoluteTop() - borders[0]
+              - boundaryPanel.getAbsoluteTop();
           restoredWidth = contentWidth;
           restoredHeight = contentHeight;
         }
@@ -1262,6 +1267,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     try {
       if (windowController != null) {
         final Widget boundaryPanel = windowController.getBoundaryPanel();
+        int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
+        left += borders[3];
+        top += borders[0];
         super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
             + boundaryPanel.getAbsoluteTop());
       } else {
