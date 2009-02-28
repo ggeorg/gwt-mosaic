@@ -14,12 +14,12 @@ A WindowPanel is a GWT PopupPanel that has decorations such as a border, a title
 This WindowPanel example displays an untitled WindowPanel containing a label. The WindowPanel would be displayed in the upper left of the browser's content area (it can be displayed in other parts of the browser's content area, as shown in a later example).
 
 {{{
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.WindowPanel;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
