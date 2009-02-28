@@ -330,7 +330,7 @@ public class Main implements EntryPoint {
 }
 }}}
 
-= Using an AbsolutePanel as Boundary Panel =
+= Using an AbsolutePanel as a Boundary Panel =
 
 {{{
 import org.gwt.mosaic.ui.client.Caption;
