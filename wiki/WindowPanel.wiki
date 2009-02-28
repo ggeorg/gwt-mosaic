@@ -207,6 +207,7 @@ public class Main implements EntryPoint {
 {{{
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
@@ -215,7 +216,6 @@ import org.gwt.mosaic.ui.client.WindowPanel.WindowStateListener;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -288,24 +288,24 @@ public class Main implements EntryPoint {
 
 {{{
 import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.WindowPanel;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Main implements EntryPoint {
 
   private void createWindowPanel() {
-    WindowPanel w = new WindowPanel("My Frame");
+    final WindowPanel w = new WindowPanel("My Frame");
 
     w.addWindowCloseListener(new WindowCloseListener() {
       public void onWindowClosed() {
-        InfoPanel.show("WindowPanel", "onWindowClosed()");
+        InfoPanel.show(w.getCaption(), "onWindowClosed()");
       }
 
       public String onWindowClosing() {
