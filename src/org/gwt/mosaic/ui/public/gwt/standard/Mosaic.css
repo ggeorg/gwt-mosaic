@@ -1282,7 +1282,6 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	filter: alpha(opacity=40);
 }
 
-.gwt-Button,
-.gwt-Button table td {
+.gwt-Button {
 	white-space: nowrap;
 }

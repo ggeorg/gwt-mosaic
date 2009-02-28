@@ -45,17 +45,14 @@
 package org.gwt.mosaic.forms.client.builder;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.forms.client.factories.FormFactory;
 import org.gwt.mosaic.forms.client.layout.ConstantSize;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.forms.client.layout.RowSpec;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -95,13 +92,15 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * Sometimes a form consists of many standardized rows but has a few rows that
  * require a customization. The DefaultFormBuilder can do everything that the
- * superclasses {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.AbstractFormBuilder} and
- * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder} can do; among other things:
- * appending new rows and moving the cursor. Again, ask yourself if the
- * DefaultFormBuilder is the appropriate builder. As a rule of thumb you should
- * have more components than builder commands. There are different ways to add
- * custom rows. Find below example code that presents and compares the pros and
- * cons of three approaches.
+ * superclasses
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.AbstractFormBuilder}
+ * and
+ * {@link org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.PanelBuilder}
+ * can do; among other things: appending new rows and moving the cursor. Again,
+ * ask yourself if the DefaultFormBuilder is the appropriate builder. As a rule
+ * of thumb you should have more components than builder commands. There are
+ * different ways to add custom rows. Find below example code that presents and
+ * compares the pros and cons of three approaches.
  * <p>
  * 
  * The texts used in methods <code>#append(String, ...)</code> and
@@ -118,49 +117,35 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * public void build() {
- *     FormLayout layout = new FormLayout(
- *         "right:max(40dlu;pref), 3dlu, 80dlu, 7dlu, " // 1st major colum
- *       + "right:max(40dlu;pref), 3dlu, 80dlu",        // 2nd major column
- *         "");                                         // add rows dynamically
- *     DefaultFormBuilder builder = new DefaultFormBuilder(layout);
- *     builder.setDefaultDialogBorder();
- *
- *     builder.appendSeparator("Flange");
- *
- *     builder.append("Identifier", identifierField);
- *     builder.nextLine();
- *
- *     builder.append("PTI [kW]",   new JTextField());
- *     builder.append("Power [kW]", new JTextField());
- *
- *     builder.append("s [mm]",     new JTextField());
- *     builder.nextLine();
- *
- *     builder.appendSeparator("Diameters");
- *
- *     builder.append("da [mm]",    new JTextField());
- *     builder.append("di [mm]",    new JTextField());
- *
- *     builder.append("da2 [mm]",   new JTextField());
- *     builder.append("di2 [mm]",   new JTextField());
- *
- *     builder.append("R [mm]",     new JTextField());
- *     builder.append("D [mm]",     new JTextField());
- *
- *     builder.appendSeparator("Criteria");
- *
- *     builder.append("Location",   buildLocationComboBox());
- *     builder.append("k-factor",   new JTextField());
- *
- *     builder.appendSeparator("Bolts");
- *
- *     builder.append("Material",   ViewerUIFactory.buildMaterialComboBox());
- *     builder.nextLine();
- *
- *     builder.append("Numbers",    new JTextField());
- *     builder.nextLine();
- *
- *     builder.append("ds [mm]",    new JTextField());
+ *   FormLayout layout = new FormLayout(
+ *       &quot;right:max(40dlu;pref), 3dlu, 80dlu, 7dlu, &quot; // 1st major colum
+ *           + &quot;right:max(40dlu;pref), 3dlu, 80dlu&quot;, // 2nd major column
+ *       &quot;&quot;); // add rows dynamically
+ *   DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+ *   builder.setDefaultDialogBorder();
+ *   builder.appendSeparator(&quot;Flange&quot;);
+ *   builder.append(&quot;Identifier&quot;, identifierField);
+ *   builder.nextLine();
+ *   builder.append(&quot;PTI [kW]&quot;, new JTextField());
+ *   builder.append(&quot;Power [kW]&quot;, new JTextField());
+ *   builder.append(&quot;s [mm]&quot;, new JTextField());
+ *   builder.nextLine();
+ *   builder.appendSeparator(&quot;Diameters&quot;);
+ *   builder.append(&quot;da [mm]&quot;, new JTextField());
+ *   builder.append(&quot;di [mm]&quot;, new JTextField());
+ *   builder.append(&quot;da2 [mm]&quot;, new JTextField());
+ *   builder.append(&quot;di2 [mm]&quot;, new JTextField());
+ *   builder.append(&quot;R [mm]&quot;, new JTextField());
+ *   builder.append(&quot;D [mm]&quot;, new JTextField());
+ *   builder.appendSeparator(&quot;Criteria&quot;);
+ *   builder.append(&quot;Location&quot;, buildLocationComboBox());
+ *   builder.append(&quot;k-factor&quot;, new JTextField());
+ *   builder.appendSeparator(&quot;Bolts&quot;);
+ *   builder.append(&quot;Material&quot;, ViewerUIFactory.buildMaterialComboBox());
+ *   builder.nextLine();
+ *   builder.append(&quot;Numbers&quot;, new JTextField());
+ *   builder.nextLine();
+ *   builder.append(&quot;ds [mm]&quot;, new JTextField());
  * }
  * </pre>
  * <p>
@@ -169,60 +154,52 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * public JComponent buildPanel() {
- *     initComponents();
- *
- *     FormLayout layout = new FormLayout(
- *             "right:pref, 3dlu, default:grow",
- *             "");
- *     DefaultFormBuilder builder = new DefaultFormBuilder(layout);
- *     builder.setDefaultDialogBorder();
- *     builder.setRowGroupingEnabled(true);
- *
- *     CellConstraints cc = new CellConstraints();
- *
- *     // In this approach, we add a gap and a custom row.
- *     // The advantage of this approach is, that we can express
- *     // the row spec and comment area cell constraints freely.
- *     // The disadvantage is the misalignment of the leading label.
- *     // Also the row's height may be inconsistent with other rows.
- *     builder.appendSeparator("Single Custom Row");
- *     builder.append("Name", name1Field);
- *     builder.appendRow(builder.getLineGapSpec());
- *     builder.appendRow(new RowSpec("top:31dlu")); // Assumes line is 14, gap is 3
- *     builder.nextLine(2);
- *     builder.append("Comment");
- *     builder.add(new JScrollPane(comment1Area),
- *                 cc.xy(builder.getColumn(), builder.getRow(), "fill, fill"));
- *     builder.nextLine();
- *
- *     // In this approach, we append a standard row with gap before it.
- *     // The advantage is, that the leading label is aligned well.
- *     // The disadvantage is that the comment area now spans
- *     // multiple cells and is slightly less flexible.
- *     // Also the row's height may be inconsistent with other rows.
- *     builder.appendSeparator("Standard + Custom Row");
- *     builder.append("Name", name2Field);
- *     builder.append("Comment");
- *     builder.appendRow(new RowSpec("17dlu")); // Assumes line is 14, gap is 3
- *     builder.add(new JScrollPane(comment2Area),
- *                 cc.xywh(builder.getColumn(), builder.getRow(), 1, 2));
- *     builder.nextLine(2);
- *
- *     // In this approach, we append two standard rows with associated gaps.
- *     // The advantage is, that the leading label is aligned well,
- *     // and the height is consistent with other rows.
- *     // The disadvantage is that the comment area now spans
- *     // multiple cells and is slightly less flexible.
- *     builder.appendSeparator("Two Standard Rows");
- *     builder.append("Name", name3Field);
- *     builder.append("Comment");
- *     builder.nextLine();
- *     builder.append("");
- *     builder.nextRow(-2);
- *     builder.add(new JScrollPane(comment3Area),
- *                 cc.xywh(builder.getColumn(), builder.getRow(), 1, 3));
- *
- *     return builder.getPanel();
+ *   initComponents();
+ *   FormLayout layout = new FormLayout(&quot;right:pref, 3dlu, default:grow&quot;, &quot;&quot;);
+ *   DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+ *   builder.setDefaultDialogBorder();
+ *   builder.setRowGroupingEnabled(true);
+ *   CellConstraints cc = new CellConstraints();
+ *   // In this approach, we add a gap and a custom row.
+ *   // The advantage of this approach is, that we can express
+ *   // the row spec and comment area cell constraints freely.
+ *   // The disadvantage is the misalignment of the leading label.
+ *   // Also the row's height may be inconsistent with other rows.
+ *   builder.appendSeparator(&quot;Single Custom Row&quot;);
+ *   builder.append(&quot;Name&quot;, name1Field);
+ *   builder.appendRow(builder.getLineGapSpec());
+ *   builder.appendRow(new RowSpec(&quot;top:31dlu&quot;)); // Assumes line is 14, gap is 3
+ *   builder.nextLine(2);
+ *   builder.append(&quot;Comment&quot;);
+ *   builder.add(new JScrollPane(comment1Area), cc.xy(builder.getColumn(),
+ *       builder.getRow(), &quot;fill, fill&quot;));
+ *   builder.nextLine();
+ *   // In this approach, we append a standard row with gap before it.
+ *   // The advantage is, that the leading label is aligned well.
+ *   // The disadvantage is that the comment area now spans
+ *   // multiple cells and is slightly less flexible.
+ *   // Also the row's height may be inconsistent with other rows.
+ *   builder.appendSeparator(&quot;Standard + Custom Row&quot;);
+ *   builder.append(&quot;Name&quot;, name2Field);
+ *   builder.append(&quot;Comment&quot;);
+ *   builder.appendRow(new RowSpec(&quot;17dlu&quot;)); // Assumes line is 14, gap is 3
+ *   builder.add(new JScrollPane(comment2Area), cc.xywh(builder.getColumn(),
+ *       builder.getRow(), 1, 2));
+ *   builder.nextLine(2);
+ *   // In this approach, we append two standard rows with associated gaps.
+ *   // The advantage is, that the leading label is aligned well,
+ *   // and the height is consistent with other rows.
+ *   // The disadvantage is that the comment area now spans
+ *   // multiple cells and is slightly less flexible.
+ *   builder.appendSeparator(&quot;Two Standard Rows&quot;);
+ *   builder.append(&quot;Name&quot;, name3Field);
+ *   builder.append(&quot;Comment&quot;);
+ *   builder.nextLine();
+ *   builder.append(&quot;&quot;);
+ *   builder.nextRow(-2);
+ *   builder.add(new JScrollPane(comment3Area), cc.xywh(builder.getColumn(),
+ *       builder.getRow(), 1, 3));
+ *   return builder.getPanel();
  * }
  * </pre>
  * <p>
@@ -361,10 +338,10 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * builder.setParagraphGapSize(Sizes.DLUY14);
-     * builder.setParagraphGapSize(Sizes.dluY(22));
-     * builder.setParagraphGapSize(Sizes.pixel(42));
-     * </pre>
+   * builder.setParagraphGapSize(Sizes.DLUY14);
+   * builder.setParagraphGapSize(Sizes.dluY(22));
+   * builder.setParagraphGapSize(Sizes.pixel(42));
+   * </pre>
    * 
    * @param paragraphGapSize the <code>ConstantSize</code> that describes the
    *          size of the gaps between paragraphs
@@ -475,13 +452,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
   public Label append(String textWithMnemonic) {
     Label label = getComponentFactory().createLabel(textWithMnemonic);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    if (UserAgent.isIE6()) {
-      append(new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
-          HasAlignment.ALIGN_MIDDLE));
-    } else {
-      DOM.setStyleAttribute(label.getElement(), "display", "table");
-      append(label);
-    }
+    append(label);
     return label;
   }
 
@@ -578,8 +549,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param colSpan the column span for the second component
    * @return the created label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2,
-      int colSpan) {
+  public Label append(String textWithMnemonic, Widget c1, Widget c2, int colSpan) {
     Label label = append(textWithMnemonic, c1);
     append(c2, colSpan);
     return label;
@@ -599,8 +569,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param c3 the third component to add
    * @return the added label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2,
-      Widget c3) {
+  public Label append(String textWithMnemonic, Widget c1, Widget c2, Widget c3) {
     Label label = append(textWithMnemonic, c1, c2);
     append(c3);
     return label;
@@ -621,8 +590,8 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param c4 the fourth component to add
    * @return the added label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2,
-      Widget c3, Widget c4) {
+  public Label append(String textWithMnemonic, Widget c1, Widget c2, Widget c3,
+      Widget c4) {
     Label label = append(textWithMnemonic, c1, c2, c3);
     append(c4);
     return label;
@@ -636,14 +605,12 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param textWithMnemonic the label's text - may mark a mnemonic
    * @return the added title label
    */
-//  public Label appendTitle(String textWithMnemonic) {
-//    Label titleLabel = getComponentFactory().createTitle(textWithMnemonic);
-//    append(titleLabel);
-//    return titleLabel;
-//  }
-
+  // public Label appendTitle(String textWithMnemonic) {
+  // Label titleLabel = getComponentFactory().createTitle(textWithMnemonic);
+  // append(titleLabel);
+  // return titleLabel;
+  // }
   // Appending Separators ---------------------------------------------------
-
   /**
    * Adds a separator without text that spans all columns.
    * 

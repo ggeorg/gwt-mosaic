@@ -44,7 +44,8 @@
  */
 package org.gwt.mosaic.forms.client.factories;
 
-import com.google.gwt.user.client.ui.Label;
+import org.gwt.mosaic.ui.client.Label;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
