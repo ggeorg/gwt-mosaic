@@ -338,6 +338,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    */
   protected ToolButton(Element element) {
     // TODO
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -551,7 +552,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
   public void addMouseWheelListener(MouseWheelListener listener) {
     button.addMouseWheelListener(listener);
   }
-  
+
   /**
    * Programmatic equivalent of the user clicking the button.
    */
