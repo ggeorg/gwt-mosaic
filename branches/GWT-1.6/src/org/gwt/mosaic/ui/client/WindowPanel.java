@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -30,6 +32,13 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.AbstractWindowClosingEvent;
+import com.google.gwt.user.client.BaseListenerWrapper;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -38,9 +47,12 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HasCaption;
+import com.google.gwt.user.client.ui.ListenerWrapper;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.PopupListener;
@@ -594,11 +606,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     });
 
     final ImageButton closeBtn = new ImageButton(CAPTION_IMAGES.windowClose());
-    closeBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    closeBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         hide();
       }
     });
+
     panel.getHeader().add(closeBtn, CaptionRegion.RIGHT);
 
     panel.getHeader().addDoubleClickListener(new DoubleClickListener() {
@@ -1458,4 +1471,49 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       setWindowOrder(curIndex);
     }
   }
+
+  @Deprecated
+  static class WrappedWindowCloseListener extends
+      ListenerWrapper<WindowCloseListener> implements Window.ClosingHandler,
+      CloseHandler<Window> {
+
+    public static void add(WindowPanel source, WindowCloseListener listener) {
+      WrappedWindowCloseListener handler = new WrappedWindowCloseListener(
+          listener);
+      source.addWindowClosingHandler(handler);
+      // TODO source.addCloseHandler(handler);
+    }
+
+    public static void remove(Widget eventSource, WindowCloseListener listener) {
+      baseRemove(eventSource, listener, AbstractWindowClosingEvent.getType(),
+          CloseEvent.getType());
+    }
+
+    protected WrappedWindowCloseListener(WindowCloseListener listener) {
+      super(listener);
+    }
+
+    public void onWindowClosing(ClosingEvent event) {
+      String message = getListener().onWindowClosing();
+      if (event.getMessage() == null) {
+        event.setMessage(message);
+      }
+    }
+
+    public void onClose(CloseEvent<Window> event) {
+      getListener().onWindowClosed();
+    }
+
+  }
+
+  /**
+   * Adds a {@link Window.ClosingEvent} handler.
+   * 
+   * @param handler the handler
+   * @return the handler registration
+   */
+  public HandlerRegistration addWindowClosingHandler(ClosingHandler handler) {
+    return addHandler(handler, AbstractWindowClosingEvent.getType());
+  }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,12 +44,12 @@ public class CwBottomTabBars extends AbstractLayoutPage {
 
   @Override
   public String getDescription() {
-    return "TabBar @ Bottom description";
+    return "TabBar at Bottom description";
   }
 
   @Override
   public String getName() {
-    return "TabBar @ Bottom";
+    return "TabBar at Bottom";
   }
 
   /**

@@ -44,16 +44,18 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.LoadListener;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -68,7 +70,7 @@ import com.google.gwt.user.client.ui.Widget;
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
     ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
     ".dragdrop-movable-panel"})
-public class CwWindowPanel extends ContentWidget implements ClickListener {
+public class CwWindowPanel extends ContentWidget implements ClickHandler {
 
   private WindowPanel basic;
 
@@ -100,8 +102,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
       CaptionRegion captionRegion) {
     final ImageButton maximizeBtn = new ImageButton(
         Caption.IMAGES.windowMaximize());
-    maximizeBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    maximizeBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (windowPanel.getWindowState() == WindowState.MAXIMIZED) {
           windowPanel.setWindowState(WindowState.NORMAL);
         } else {
@@ -131,8 +133,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
       CaptionRegion captionRegion) {
     final ImageButton minimizeBtn = new ImageButton(
         Caption.IMAGES.windowMinimize());
-    minimizeBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    minimizeBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         windowPanel.setWindowState(WindowState.MINIMIZED);
       }
     });
@@ -175,12 +177,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     final Image img = new Image("MeteoraGreece.JPG");
     fixed.setWidget(new WidgetWrapper(img));
 
-    img.addLoadListener(new LoadListener() {
-      public void onError(Widget sender) {
-        // ignore
-      }
-
-      public void onLoad(Widget sender) {
+    img.addLoadHandler(new LoadHandler() {
+      public void onLoad(LoadEvent event) {
         DeferredCommand.addCommand(new Command() {
           public void execute() {
             fixed.pack();
@@ -296,8 +294,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     addMinimizeButton(sized, CaptionRegion.RIGHT);
 
     final ImageButton refreshBtn = new ImageButton(Caption.IMAGES.toolRefresh());
-    refreshBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    refreshBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         frame.setUrl(frame.getUrl());
       }
     });
@@ -332,8 +330,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
 
     // Add a button to upload the file
     Button uploadButton = new Button("Upload File");
-    uploadButton.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    uploadButton.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         String filename = fileUpload.getFilename();
         if (filename.length() == 0) {
           MessageBox.alert("Upload File", "You must select a file to upload");
@@ -447,11 +445,11 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
   /**
    * Fired when the user clicks on a button.
    * 
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
-    final Button btn = (Button) sender;
+  public void onClick(ClickEvent event) {
+    final Button btn = (Button) event.getSource();
     InfoPanel.show(btn.getText(), "Clicked!");
   }
 
@@ -465,8 +463,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
 
     Button btn1 = new Button("Basic");
-    btn1.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    btn1.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (basic == null) {
           createBasicWindowPanel();
         }
@@ -481,8 +479,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(btn1);
 
     Button btn2 = new Button("Layout");
-    btn2.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    btn2.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (layout == null) {
           createLayoutWindowPanel();
         }
@@ -497,8 +495,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(btn2);
 
     Button btn3 = new Button("Sized");
-    btn3.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    btn3.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (sized == null) {
           createSizedWindowPanel();
         }
@@ -512,8 +510,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(btn3);
 
     Button btn4 = new Button("Fixed");
-    btn4.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    btn4.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (fixed == null) {
           createFixedWindowPanel();
         }
@@ -528,8 +526,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(btn4);
 
     Button btn5 = new Button("Modal");
-    btn5.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    btn5.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (modal == null) {
           createModalWindowPanel();
         }
@@ -539,8 +537,8 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     layoutPanel.add(btn5);
 
     Button btn6 = new Button("z-index Test");
-    btn6.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    btn6.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (zIndex == null) {
           createZIndexWindowPanel();
         }
