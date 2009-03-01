@@ -439,10 +439,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google
    * .gwt.user.client.ui.TabListener)
    */
+  @Deprecated
   public void removeTabListener(TabListener listener) {
-    // if (tabListeners != null) {
-    // tabListeners.remove(listener);
-    // }
     WrappedTabListener.remove(this, listener);
   }
 

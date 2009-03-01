@@ -55,7 +55,7 @@ public class CwVerticalSplitPanel extends ContentWidget {
 
   @Override
   public String getName() {
-    return "HorizontalSplitPanel";
+    return "VerticalSplitPanel";
   }
 
   /**
@@ -87,7 +87,7 @@ public class CwVerticalSplitPanel extends ContentWidget {
     p1.setPadding(0);
     p1.add(new Button("NORTH"), new BorderLayoutData(Region.NORTH));
     p1.add(new Button("SOUTH"), new BorderLayoutData(Region.SOUTH));
-    p1.add(new Button("WETS"), new BorderLayoutData(Region.WEST));
+    p1.add(new Button("WEST"), new BorderLayoutData(Region.WEST));
     p1.add(new Button("EAST"), new BorderLayoutData(Region.EAST));
     p1.add(new Button("CENTER"));
     hSplit.setTopWidget(p1);

@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
 import org.gwt.mosaic.showcase.client.content.forms.CwQuickStartExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwAlignmentExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwBasicSizesExample;
@@ -44,8 +43,8 @@ import org.gwt.mosaic.showcase.client.content.forms.building.CwDynamicRowsExampl
 import org.gwt.mosaic.showcase.client.content.forms.building.CwFormDebugExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwIndentColumnExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPanelBuilderExample;
-import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPlainExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientationExample;
 import org.gwt.mosaic.showcase.client.content.forms.factories.CwButtonBarFactoryExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
@@ -103,14 +102,19 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -121,18 +125,13 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * Entry point classes define {@code #onModuleLoad()}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
-
-  static {
-    GWTBeansBinding.init();
-  }
 
   /**
    * The type passed into the
@@ -141,6 +140,10 @@ public class Showcase implements EntryPoint {
   private static final class GeneratorInfo {
   }
 
+  /**
+   * A special version of the ToggleButton that cannot be clicked if down. If
+   * one theme button is pressed, all of the others are depressed.
+   */
   private static final class ThemeButton extends ToggleButton {
     private static List<ThemeButton> allButtons = null;
 
@@ -193,6 +196,10 @@ public class Showcase implements EntryPoint {
    * The current style theme.
    */
   public static String CUR_THEME = ShowcaseConstants.STYLE_THEMES[0];
+
+  static {
+    GWTBeansBinding.init();
+  }
 
   /**
    * Get the URL of the page, without an hash of query string.
@@ -291,10 +298,10 @@ public class Showcase implements EntryPoint {
     setupOptionsPanel();
     setupMainMenu(constants);
 
-    // Setup a history listener to reselect the associate menu item
-    final HistoryListener historyListener = new HistoryListener() {
-      public void onHistoryChanged(String historyToken) {
-        TreeItem item = itemTokens.get(historyToken);
+    // Setup a history handler to reselect the associate menu item
+    final ValueChangeHandler<String> historyHandler = new ValueChangeHandler<String>() {
+      public void onValueChange(ValueChangeEvent<String> event) {
+        TreeItem item = itemTokens.get(event.getValue());
         if (item == null) {
           item = app.getMainMenu().getItem(0).getChild(0);
         }
@@ -307,22 +314,23 @@ public class Showcase implements EntryPoint {
         displayContentWidget(itemWidgets.get(item));
       }
     };
-    History.addHistoryListener(historyListener);
+    History.addValueChangeHandler(historyHandler);
 
     // Add an listener that sets the content widget when a menu item is selected
-    app.setListener(new ApplicationListener() {
-      public void onMenuItemSelected(TreeItem item) {
+    app.addSelectionHandler(new SelectionHandler<TreeItem>() {
+      public void onSelection(SelectionEvent<TreeItem> event) {
+        TreeItem item = event.getSelectedItem();
         ContentWidget content = itemWidgets.get(item);
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
         }
+        app.contentWrapper.layout(true);
       }
     });
 
     // Show the initial example
-    String initToken = History.getToken();
-    if (initToken.length() > 0) {
-      historyListener.onHistoryChanged(initToken);
+    if (History.getToken().length() > 0) {
+      History.fireCurrentHistoryState();
     } else { // Use the first token available
       TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0);
       app.getMainMenu().setSelectedItem(firstItem, false);
@@ -598,8 +606,8 @@ public class Showcase implements EntryPoint {
         }
       }
     }
-    localeBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
+    localeBox.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
         String localeName = localeBox.getValue(localeBox.getSelectedIndex());
         Window.open(getHostPageLocation() + "?locale=" + localeName, "_self",
             "");
@@ -617,8 +625,8 @@ public class Showcase implements EntryPoint {
       final ThemeButton button = new ThemeButton(
           ShowcaseConstants.STYLE_THEMES[i]);
       styleWrapper.add(button);
-      button.addClickListener(new ClickListener() {
-        public void onClick(Widget sender) {
+      button.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
           // Update the current theme
           CUR_THEME = button.getTheme();
 
