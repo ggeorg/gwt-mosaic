@@ -247,6 +247,7 @@ public abstract class ContentWidget extends LayoutPanel implements
         // Initialize the showcase widget (if any) and add it to the page
         if (result != null) {
           panel1.add(result, new BoxLayoutData(FillStyle.BOTH));
+          panel1.layout(true);
         }
         onInitializeComplete();
       }
