@@ -18,22 +18,26 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -116,18 +120,18 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
-        Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+//    layoutPanel.setPadding(0);
+//    layoutPanel.setWidgetSpacing(20);
 
     //
     // push buttons
     //
 
-    final CaptionLayoutPanel pushBtnPanel = new CaptionLayoutPanel(
-        constants.mosaicCustomButtonPush());
+    final CaptionLayoutPanel pushBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonPush());
+    pushBtnPanel.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
     pushBtnPanel.setLayout(new BoxLayout());
-    pushBtnPanel.setPadding(5);
-    pushBtnPanel.getHeader().add(Caption.IMAGES.gwtMosaicLogo().createImage());
+    pushBtnPanel.setPadding(15);
 
     // Add a normal PushButton
     final PushButton normalPushButton = new PushButton(
@@ -135,7 +139,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
         MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage(), this);
     normalPushButton.ensureDebugId("mosaicCustomButton-push-normal");
 
-    pushBtnPanel.add(normalPushButton);
+    pushBtnPanel.add(new WidgetWrapper(normalPushButton));
 
     // Add a disabled PushButton
     final PushButton disabledPushButton = new PushButton(
@@ -144,19 +148,18 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     disabledPushButton.ensureDebugId("mosaicCustomButton-push-disabled");
     disabledPushButton.setEnabled(false);
 
-    pushBtnPanel.add(disabledPushButton);
-
-    layoutPanel.add(pushBtnPanel, new BoxLayoutData(FillStyle.BOTH, true));
+    pushBtnPanel.add(new WidgetWrapper(disabledPushButton));
+    
+    layoutPanel.add(pushBtnPanel, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     //
     // toggle buttons
     //
-
-    final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(
-        constants.mosaicCustomButtonToggle());
+    
+    final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonToggle());
+    toggleBtnPanel.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
     toggleBtnPanel.setLayout(new BoxLayout());
-    toggleBtnPanel.setPadding(5);
-    toggleBtnPanel.getHeader().add(Caption.IMAGES.gwtMosaicLogo().createImage());
+    toggleBtnPanel.setPadding(15);
 
     // Add a normal ToggleButton
     final ToggleButton normalToggleButton = new ToggleButton(
@@ -164,7 +167,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
         MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage(), this);
     normalToggleButton.ensureDebugId("mosaicCustomButton-toggle-normal");
 
-    toggleBtnPanel.add(normalToggleButton);
+    toggleBtnPanel.add(new WidgetWrapper(normalToggleButton));
 
     // Add a disabled PushButton
     ToggleButton disabledToggleButton = new ToggleButton(
@@ -173,11 +176,25 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     disabledToggleButton.ensureDebugId("mosaicCustomButton-toggle-disabled");
     disabledToggleButton.setEnabled(false);
 
-    toggleBtnPanel.add(disabledToggleButton);
-
+    toggleBtnPanel.add(new WidgetWrapper(disabledToggleButton));
+    
     layoutPanel.add(toggleBtnPanel, new BoxLayoutData(FillStyle.BOTH, true));
-
+    
     return layoutPanel;
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }

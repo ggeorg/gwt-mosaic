@@ -25,6 +25,9 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -63,7 +66,7 @@ public class CwStackLayoutPanel extends AbstractLayoutPage {
         Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(5);
 
-    // Create a DeckLayoutPanel
+    // Create a StackLayoutPanel
     final StackLayoutPanel stack = new StackLayoutPanel();
 
     final LayoutPanel panel1 = new LayoutPanel();
@@ -89,4 +92,18 @@ public class CwStackLayoutPanel extends AbstractLayoutPage {
     return layoutPanel;
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }

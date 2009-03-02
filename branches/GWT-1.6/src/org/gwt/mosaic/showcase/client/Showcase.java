@@ -332,7 +332,7 @@ public class Showcase implements EntryPoint {
     if (History.getToken().length() > 0) {
       History.fireCurrentHistoryState();
     } else { // Use the first token available
-      TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0);
+      TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0).getChild(0);
       app.getMainMenu().setSelectedItem(firstItem, false);
       app.getMainMenu().ensureSelectedItemVisible();
       displayContentWidget(itemWidgets.get(firstItem));
@@ -370,12 +370,16 @@ public class Showcase implements EntryPoint {
 
     // Widgets
     TreeItem catWidgets = mainMenu.addItem("Widgets");
-    setupMainMenuOption(catWidgets, new CwBasicButton(constants),
+    
+    // Trees
+    TreeItem catButtons = catWidgets.addItem("Buttons");
+    setupMainMenuOption(catButtons, new CwBasicButton(constants),
         IMAGES.catWidgets());
-    setupMainMenuOption(catWidgets, new CwCustomButton(constants),
+    setupMainMenuOption(catButtons, new CwCustomButton(constants),
         IMAGES.catWidgets());
-    setupMainMenuOption(catWidgets, new CwToolButton(constants),
+    setupMainMenuOption(catButtons, new CwToolButton(constants),
         IMAGES.catWidgets());
+    
     setupMainMenuOption(catWidgets, new CwComboBox(constants),
         IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwDatePicker(constants),
@@ -384,6 +388,34 @@ public class Showcase implements EntryPoint {
         IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwMenuBar(constants),
         IMAGES.catWidgets());
+    
+    // Trees
+    TreeItem catTrees = catWidgets.addItem("Trees");
+    setupMainMenuOption(catTrees, new CwBasicTree(constants), IMAGES.catLists());
+    setupMainMenuOption(catTrees, new CwLazyTree(constants), IMAGES.catLists());
+    setupMainMenuOption(catTrees, new CwVerboseTree(constants),
+        IMAGES.catLists());
+    
+    // Tables
+    TreeItem catTables = catWidgets.addItem("Lists & Tables");
+    setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwSimpleTable(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwScrollTable(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
+        IMAGES.catTables());
+    // setupMainMenuOption(catTables, new TablePage(constants),
+    // images.catTables());
+
+    // TreeTables
+    TreeItem catTreeTables = mainMenu.addItem("TreeTables");
+    setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants),
+        IMAGES.catLists());
+    setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
+        IMAGES.catLists());
 
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
@@ -517,34 +549,6 @@ public class Showcase implements EntryPoint {
     TreeItem catBasicValidation = catValidation.addItem("Basic");
     setupMainMenuOption(catBasicValidation,
         new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
-
-    // Trees
-    TreeItem catTrees = mainMenu.addItem("Trees");
-    setupMainMenuOption(catTrees, new CwBasicTree(constants), IMAGES.catLists());
-    setupMainMenuOption(catTrees, new CwLazyTree(constants), IMAGES.catLists());
-    setupMainMenuOption(catTrees, new CwVerboseTree(constants),
-        IMAGES.catLists());
-
-    // Tables
-    TreeItem catTables = mainMenu.addItem("Lists & Tables");
-    setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwSimpleTable(constants),
-        IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwScrollTable(constants),
-        IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
-        IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
-        IMAGES.catTables());
-    // setupMainMenuOption(catTables, new TablePage(constants),
-    // images.catTables());
-
-    // TreeTables
-    TreeItem catTreeTables = mainMenu.addItem("TreeTables");
-    setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants),
-        IMAGES.catLists());
-    setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
-        IMAGES.catLists());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");

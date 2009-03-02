@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -26,6 +28,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -34,21 +38,21 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A widget used to show the examples in the content panel. It includes a tab
- * bar with options to view the example, view the source, or view the css style
- * rules.
+ * A widget used to show gwt-mosaic examples in the ContentPanel. It includes a
+ * tab bar with options to view the example, view the source, or view the css
+ * style rules.
  * <p>
  * This widget uses a lazy initialization mechanism so that the content is not
  * rendered until the onInitialize method is called, which happens the first
- * time the widget is added to the page. The data in the source and css tabs are
- * loaded using RPC call to the server.
+ * time the {@code Widget} is added to the page. The data in the source and css
+ * tabs are loaded using RPC call to the server.
  * 
  * <h3>CSS Style Rules</h3>
  * <ul class="css">
@@ -56,15 +60,16 @@ import com.google.gwt.user.client.ui.Widget;
  * <li>.sc-ContentWidget-tabBar { Applied to the TabBar }</li>
  * <li>.sc-ContentWidget-deckPanel { Applied to the DeckPanel }</li>
  * <li>.sc-ContentWidget-name { Applied to the name }</li>
- * <li>.sc-ContentWidget-description { Applied to the description }</li>
- * </ul>
+ * <li>.sc-ContentWidget-description { Applied to the description }</li> </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
-public abstract class ContentWidget extends LayoutPanel implements TabListener {
+public abstract class ContentWidget extends LayoutPanel implements
+    SelectionHandler<Integer> {
 
   /**
-   * The constants used in this Page.
+   * The constants used in this Content Widget.
    */
   public static interface CwConstants extends Constants {
     String mosaicPageExample();
@@ -95,11 +100,6 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
   private DecoratedTabLayoutPanel tabPanel;
 
   /**
-   * A boolean indicating whether or not this widget has been initialized.
-   */
-  private boolean initialized = false;
-
-  /**
    * A boolean indicating whether or not the RPC request for the source code has
    * been sent.
    */
@@ -120,6 +120,8 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
    */
   private HTML styleWidget = null;
 
+  private boolean initialized = false;
+
   /**
    * Constructor.
    * 
@@ -129,6 +131,8 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     this.constants = constants;
     setStyleName(DEFAULT_STYLE_NAME);
   }
+
+  protected abstract void asyncOnInitialize(final AsyncCallback<Widget> callback);
 
   private String createTabBarCaption(AbstractImagePrototype image, String text) {
     StringBuffer sb = new StringBuffer();
@@ -189,7 +193,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     initialized = true;
 
     tabPanel = new DecoratedTabLayoutPanel(true);
-    tabPanel.addTabListener(this);
+    tabPanel.addSelectionHandler(this);
     tabPanel.setPadding(5);
     add(tabPanel);
 
@@ -234,20 +238,24 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
           constants.mosaicPageStyle()), true);
     }
 
-    // Initialize the widget and add it to the page
-    final Widget widget = onInitialize();
-    if (widget != null) {
-      panel1.add(widget, new BoxLayoutData(FillStyle.BOTH));
-    }
-    onInitializeComplete();
+    asyncOnInitialize(new AsyncCallback<Widget>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("exception: " + caught);
+      }
+
+      public void onSuccess(Widget result) {
+        // Initialize the showcase widget (if any) and add it to the page
+        if (result != null) {
+          panel1.add(result, new BoxLayoutData(FillStyle.BOTH));
+        }
+        onInitializeComplete();
+      }
+    });
+    
   }
 
   public final boolean isInitialized() {
     return initialized;
-  }
-
-  public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-    return true;
   }
 
   /**
@@ -273,9 +281,11 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     initialize();
   }
 
-  public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+  public void onSelection(SelectionEvent<Integer> event) {
+    int tabIndex = event.getSelectedItem().intValue();
+
     // Load the source code
-    final String tabHTML = tabPanel.getTabHTML(tabIndex);    
+    final String tabHTML = tabPanel.getTabHTML(tabIndex);
     if (!sourceLoaded && tabHTML.contains(constants.mosaicPageSource())) {
       sourceLoaded = true;
       String className = this.getClass().getName();
