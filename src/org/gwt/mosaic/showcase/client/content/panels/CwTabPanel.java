@@ -30,7 +30,12 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -85,7 +90,8 @@ public class CwTabPanel extends ContentWidget {
     tabPanel.setAnimationEnabled(true);
 
     // Add a home tab
-    String[] tabTitles = {"Home", "GWT Mosaic Logo", "More Info", "Border Layout"};
+    String[] tabTitles = {
+        "Home", "GWT Mosaic Logo", "More Info", "Border Layout"};
     HTML homeText = new HTML("Click one of the tabs to see more content.");
     tabPanel.add(homeText, tabTitles[0]);
 
@@ -124,8 +130,8 @@ public class CwTabPanel extends ContentWidget {
 
     final CheckBox checkBox = new CheckBox("Resize Animation");
     checkBox.setChecked(tabPanel.isAnimationEnabled());
-    checkBox.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    checkBox.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         tabPanel.setAnimationEnabled(checkBox.isChecked());
       }
     });
@@ -173,4 +179,18 @@ public class CwTabPanel extends ContentWidget {
     return layoutPanel;
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }

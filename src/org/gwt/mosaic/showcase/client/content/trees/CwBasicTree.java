@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -20,21 +22,24 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.gen2.complexpanel.client.FastTree;
+import com.google.gwt.gen2.complexpanel.client.FastTreeItem;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.FastTree;
-import com.google.gwt.widgetideas.client.FastTreeItem;
 
 /**
  * Example file.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle({".gwt-FastTree"})
+@ShowcaseStyle( {".gwt-FastTree"})
 public class CwBasicTree extends ContentWidget {
 
   /**
@@ -45,10 +50,10 @@ public class CwBasicTree extends ContentWidget {
   public CwBasicTree(CwConstants constants) {
     super(constants);
   }
-  
+
   @Override
   public String getDescription() {
-    return "Basic GWT Incubator FastTree demo";
+    return "Basic GWT Incubator FastTree demo. ";
   }
 
   @Override
@@ -64,30 +69,37 @@ public class CwBasicTree extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
-    
-    final FastTree t = new FastTree();
-    final FastTreeItem a = t.addItem("A root tree item");
-    a.addItem("A child");
-    final FastTreeItem aXb = a.addItem("Another child");
+
+    FastTree t = new FastTree();
+    FastTreeItem a = t.addItem("A root tree item");
+    a.addItem("A child with different style");
+    a.addItem("regular style");
+    FastTreeItem aXb = a.addItem("Another child");
     aXb.addItem("a grand child");
-    final FastTreeItem widgetBranch = a.addItem(new CheckBox("A checkbox child"));
-    final FastTreeItem textBoxParent = widgetBranch.addItem("A TextBox parent");
+    FastTreeItem widgetBranch = a.addItem(new CheckBox("A checkbox child"));
+    FastTreeItem textBoxParent = widgetBranch.addItem("A TextBox parent");
     textBoxParent.addItem(new TextBox());
     textBoxParent.addItem("and another one...");
     textBoxParent.addItem(new TextArea());
-    
-    final ListBox lb = new ListBox();
+
+    ListBox lb = new ListBox();
     for (int i = 0; i < 100; i++) {
       lb.addItem(i + "");
     }
     widgetBranch.addItem("A ListBox parent").addItem(lb);
-    
+
     final ScrollPanel panel = new ScrollPanel();
     layoutPanel.add(panel);
     layoutPanel.setPadding(0);
     panel.add(t);
-    
+
     return layoutPanel;
+  }
+
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    // This is the first demo loaded, so go ahead and load it synchronously.
+    callback.onSuccess(onInitialize());
   }
 
 }
