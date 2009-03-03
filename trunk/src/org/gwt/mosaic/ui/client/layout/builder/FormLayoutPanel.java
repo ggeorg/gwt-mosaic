@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- * 
+ * @deprecated
  */
 public interface FormLayoutPanel {
 

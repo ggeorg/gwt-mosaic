@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- * 
+ * @deprecated replaced by {@code org.gwt.mosaic.forms.client.layout.FormLayout}
  */
 public class FormLayout extends GridLayout {
 

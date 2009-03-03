@@ -18,7 +18,7 @@ package org.gwt.mosaic.ui.client.layout.builder;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- * 
+ * @deprecated
  */
 public class AbstractFormBuilder {
 

@@ -28,7 +28,8 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- * 
+ * @deprecated replaced by {@code
+ *             org.gwt.mosaic.forms.client.builder.PanelBuilder}
  */
 public class PanelBuilder extends AbstractFormBuilder implements
     HasHorizontalAlignment {
