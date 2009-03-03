@@ -43,7 +43,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
+ * panel.add(new Button(&quot;Button 1&quot;),
+ *     new BorderLayoutData(BorderLayoutRegion.SOUTH));
  * </pre>
  * 
  * <p>
@@ -52,14 +53,14 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button("Button 1"), new BorderLayoutData(true));
+ * panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(true));
  * </pre>
  * 
  * or
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button("Button 1"));
+ * panel.add(new Button(&quot;Button 1&quot;));
  * </pre>
  * 
  * <p>
@@ -83,18 +84,15 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH));
- *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH));
- *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST));
- *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST));
- *   panel.add(new Button("Button 5"));
- *
+ *   panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(Region.NORTH));
+ *   panel.add(new Button(&quot;Button 2&quot;), new BorderLayoutData(Region.SOUTH));
+ *   panel.add(new Button(&quot;Button 3&quot;), new BorderLayoutData(Region.WEST));
+ *   panel.add(new Button(&quot;Button 4&quot;), new BorderLayoutData(Region.EAST));
+ *   panel.add(new Button(&quot;Button 5&quot;));
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -121,18 +119,16 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH, 50));
- *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH, 0.3));
- *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST, 200, 10, 300));
- *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST, -1));
- *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
- *
+ *   panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(Region.NORTH, 50));
+ *   panel.add(new Button(&quot;Button 2&quot;), new BorderLayoutData(Region.SOUTH, 0.3));
+ *   panel.add(new Button(&quot;Button 3&quot;), new BorderLayoutData(Region.WEST, 200, 10,
+ *       300));
+ *   panel.add(new Button(&quot;Button 4&quot;), new BorderLayoutData(Region.EAST, -1));
+ *   panel.add(new Button(&quot;Button 5&quot;), new BorderLayoutData(true));
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -153,37 +149,31 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
- *
  *   final LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *
  *   ClickListener clickListener = new ClickListener() {
  *     public void onClick(Widget sender) {
  *       panel.setCollapsed(sender, !panel.isCollapsed(sender));
  *       panel.layout();
  *     }
  *   };
- *
- *   Button button1 = new Button("Button 1", clickListener);
- *   Button button2 = new Button("Button 2", clickListener);
- *   Button button3 = new Button("Button 3", clickListener);
- *   Button button4 = new Button("Button 4", clickListener);
- *
+ *   Button button1 = new Button(&quot;Button 1&quot;, clickListener);
+ *   Button button2 = new Button(&quot;Button 2&quot;, clickListener);
+ *   Button button3 = new Button(&quot;Button 3&quot;, clickListener);
+ *   Button button4 = new Button(&quot;Button 4&quot;, clickListener);
  *   panel.add(button1, new BorderLayoutData(Region.NORTH));
  *   panel.add(button2, new BorderLayoutData(Region.SOUTH));
  *   panel.add(button3, new BorderLayoutData(Region.WEST));
  *   panel.add(button4, new BorderLayoutData(Region.EAST));
- *  
- *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
- *   
+ * 
+ *   panel.add(new Button(&quot;Button 5&quot;), new BorderLayoutData(true));
+ * 
  *   panel.setCollapsed(button1, true);
  *   panel.setCollapsed(button2, true);
  *   panel.setCollapsed(button3, true);
  *   panel.setCollapsed(button4, true);
- *
  *   viewport.add(panel, true);
- *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -203,6 +193,7 @@ public class BorderLayout extends BaseLayout {
   };
 
   private Widget north, east, south, west, center;
+  private Widget northCollapsed, eastCollapsed, southCollapsed, westCollapsed;
 
   private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
 
@@ -417,7 +408,7 @@ public class BorderLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ".getPreferredSize(): "
           + e.getLocalizedMessage());
     }
-    
+
     layoutPanel.setPreferredSize(result[0], result[1]);
 
     return result;
@@ -501,13 +492,13 @@ public class BorderLayout extends BaseLayout {
             northCollapsedImageButton.addStyleName("NorthCollapsedImageButton");
             northCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(north, false);
+                layoutPanel.setCollapsed(northCollapsed, false);
                 layoutPanel.remove(northCollapsedImageButton);
                 northCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                north.setVisible(true);
+                northCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -516,6 +507,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            northCollapsed = north;
             north.setVisible(false);
           }
           Dimension dim = widgetSizes.get(northCollapsedImageButton);
@@ -591,13 +583,13 @@ public class BorderLayout extends BaseLayout {
             southCollapsedImageButton.addStyleName("SouthCollapsedImageButton");
             southCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(south, false);
+                layoutPanel.setCollapsed(southCollapsed, false);
                 layoutPanel.remove(southCollapsedImageButton);
                 southCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                south.setVisible(true);
+                southCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -606,6 +598,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            southCollapsed = south;
             south.setVisible(false);
           }
           Dimension dim = widgetSizes.get(southCollapsedImageButton);
@@ -680,13 +673,13 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
             westCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(west, false);
+                layoutPanel.setCollapsed(westCollapsed, false);
                 layoutPanel.remove(westCollapsedImageButton);
                 westCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                west.setVisible(true);
+                westCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -695,6 +688,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            westCollapsed = west;
             west.setVisible(false);
           }
           Dimension dim = widgetSizes.get(westCollapsedImageButton);
@@ -765,13 +759,13 @@ public class BorderLayout extends BaseLayout {
             eastCollapsedImageButton.addStyleName("EastCollapsedImageButton");
             eastCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(east, false);
+                layoutPanel.setCollapsed(eastCollapsed, false);
                 layoutPanel.remove(eastCollapsedImageButton);
                 eastCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                east.setVisible(true);
+                eastCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -780,6 +774,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            eastCollapsed = east;
             east.setVisible(false);
           }
           Dimension dim = widgetSizes.get(eastCollapsedImageButton);
@@ -864,13 +859,6 @@ public class BorderLayout extends BaseLayout {
 
   private void scanForPanels(LayoutPanel layoutPanel) {
     final int size = layoutPanel.getWidgetCount();
-
-    north = null;
-    south = null;
-    west = null;
-    east = null;
-    center = null;
-
     for (int i = 0; i < size; i++) {
       Widget child = layoutPanel.getWidget(i);
       if (child == placeHolder) {
@@ -934,8 +922,7 @@ public class BorderLayout extends BaseLayout {
   protected void setCollapsed(LayoutPanel layoutPanel, Widget widget,
       boolean collapse) {
     try {
-      if (layoutPanel != null) {
-        scanForPanels(layoutPanel);
+      if (layoutPanel != null && init(layoutPanel)) {
         if (widget == west || widget == east || widget == north
             || widget == south) {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
