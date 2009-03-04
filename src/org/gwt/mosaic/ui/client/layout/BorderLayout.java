@@ -204,6 +204,7 @@ public class BorderLayout extends BaseLayout {
   };
 
   private Widget north, east, south, west, center;
+  private Widget northCollapsed, eastCollapsed, southCollapsed, westCollapsed;
 
   private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
 
@@ -502,13 +503,13 @@ public class BorderLayout extends BaseLayout {
             northCollapsedImageButton.addStyleName("NorthCollapsedImageButton");
             northCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
-                layoutPanel.setCollapsed(north, false);
+                layoutPanel.setCollapsed(northCollapsed, false);
                 layoutPanel.remove(northCollapsedImageButton);
                 northCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                north.setVisible(true);
+                northCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -517,6 +518,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            northCollapsed = north;
             north.setVisible(false);
           }
           Dimension dim = widgetSizes.get(northCollapsedImageButton);
@@ -592,13 +594,13 @@ public class BorderLayout extends BaseLayout {
             southCollapsedImageButton.addStyleName("SouthCollapsedImageButton");
             southCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
-                layoutPanel.setCollapsed(south, false);
+                layoutPanel.setCollapsed(southCollapsed, false);
                 layoutPanel.remove(southCollapsedImageButton);
                 southCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                south.setVisible(true);
+                southCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -607,6 +609,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            southCollapsed = south;
             south.setVisible(false);
           }
           Dimension dim = widgetSizes.get(southCollapsedImageButton);
@@ -681,13 +684,13 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
             westCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
-                layoutPanel.setCollapsed(west, false);
+                layoutPanel.setCollapsed(westCollapsed, false);
                 layoutPanel.remove(westCollapsedImageButton);
                 westCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                west.setVisible(true);
+                westCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -696,6 +699,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            westCollapsed = west;
             west.setVisible(false);
           }
           Dimension dim = widgetSizes.get(westCollapsedImageButton);
@@ -766,13 +770,13 @@ public class BorderLayout extends BaseLayout {
             eastCollapsedImageButton.addStyleName("EastCollapsedImageButton");
             eastCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
-                layoutPanel.setCollapsed(east, false);
+                layoutPanel.setCollapsed(eastCollapsed, false);
                 layoutPanel.remove(eastCollapsedImageButton);
                 eastCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
                 }
-                east.setVisible(true);
+                eastCollapsed.setVisible(true);
                 layoutPanel.layout();
                 return;
               }
@@ -781,6 +785,7 @@ public class BorderLayout extends BaseLayout {
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
+            eastCollapsed = east;
             east.setVisible(false);
           }
           Dimension dim = widgetSizes.get(eastCollapsedImageButton);
@@ -865,13 +870,6 @@ public class BorderLayout extends BaseLayout {
 
   private void scanForPanels(LayoutPanel layoutPanel) {
     final int size = layoutPanel.getWidgetCount();
-
-    north = null;
-    south = null;
-    west = null;
-    east = null;
-    center = null;
-
     for (int i = 0; i < size; i++) {
       Widget child = layoutPanel.getWidget(i);
       if (child == placeHolder) {
@@ -935,8 +933,7 @@ public class BorderLayout extends BaseLayout {
   protected void setCollapsed(LayoutPanel layoutPanel, Widget widget,
       boolean collapse) {
     try {
-      if (layoutPanel != null) {
-        scanForPanels(layoutPanel);
+      if (layoutPanel != null && init(layoutPanel)) {
         if (widget == west || widget == east || widget == north
             || widget == south) {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
