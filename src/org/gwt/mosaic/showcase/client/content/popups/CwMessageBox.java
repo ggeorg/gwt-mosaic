@@ -22,6 +22,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.HTML;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
@@ -45,7 +46,6 @@ import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -112,7 +112,7 @@ public class CwMessageBox extends ContentWidget {
     VerticalPanel vPanel = new VerticalPanel();
     vPanel.setSpacing(4);
 
-    layoutPanel.add(vPanel);
+    layoutPanel.add(vPanel, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     //
     // Alert Box
@@ -120,8 +120,9 @@ public class CwMessageBox extends ContentWidget {
 
     HTML alertDesc = new HTML(
         "<b>Alert Box</b>"
-            + "<br><small>An alert box is often used if you want to make sure information comes through to the user. "
-            + "When an alert box pops up, the user will have to click \"OK\" to proceed.</small>");
+            + "<br>An alert box is often used if you want to make sure information comes through to the user. "
+            + "When an alert box pops up, the user will have to click \"OK\" to proceed.");
+    alertDesc.addToResizableWidgetCollection();
     vPanel.add(alertDesc);
 
     Button alertBtn = new Button("Warning");
@@ -177,10 +178,10 @@ public class CwMessageBox extends ContentWidget {
     //
 
     HTML confirmDesc = new HTML(
-        "<hr><b>Confirmation Box</b>"
-            + "<br><small>A confirm box is often used if you want the user to verify or accept something. "
+        "<b>Confirmation Box</b>"
+            + "<br>A confirm box is often used if you want the user to verify or accept something. "
             + "When a confirm box pops up, the user will have to click either \"OK\" or \"Cancel\" to proceed."
-            + "If the user clicks \"OK\", the box returns true. If the user clicks \"Cancel\", the box returns false.</small>");
+            + "If the user clicks \"OK\", the box returns true. If the user clicks \"Cancel\", the box returns false.");
     vPanel.add(confirmDesc);
 
     Button confirmBtn = new Button("Show Me");
@@ -201,10 +202,10 @@ public class CwMessageBox extends ContentWidget {
     //
 
     HTML promptDesc = new HTML(
-        "<hr><b>Prompt Box</b>"
-            + "<br><small>A prompt box is often used if you want the user to input a value. "
+        "<b>Prompt Box</b>"
+            + "<br>A prompt box is often used if you want the user to input a value. "
             + "When a prompt box pops up, the user will have to click either \"OK\" or \"Cancel\" to proceed after entering an input value. "
-            + "If the user clicks \"OK\" the box returns the input value. If the user clicks \"Cancel\" the box returns null.</small>");
+            + "If the user clicks \"OK\" the box returns the input value. If the user clicks \"Cancel\" the box returns null.");
     vPanel.add(promptDesc);
 
     Button promptBtn1 = new Button("Standard");
@@ -267,8 +268,8 @@ public class CwMessageBox extends ContentWidget {
     // Custom
     //
 
-    HTML customDesc = new HTML("<hr><b>Custom</b>"
-        + "<br><small>Some custom MessageBox examples.</small>");
+    HTML customDesc = new HTML("<b>Custom</b>"
+        + "<br>Some custom MessageBox examples.");
     vPanel.add(customDesc);
 
     Button customBtn1 = new Button("Login Form");
