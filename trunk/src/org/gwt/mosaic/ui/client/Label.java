@@ -19,12 +19,15 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasText;
@@ -36,6 +39,8 @@ import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.SourcesMouseWheelEvents;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.ResizableWidget;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * A widget that contains arbitrary text, <i>not</i> interpreted as HTML.
@@ -136,6 +141,55 @@ public class Label extends Composite implements SourcesClickEvents,
     } else {
       DOM.setStyleAttribute(label.getElement(), "display", "table");
       super.initWidget(label);
+    }
+  }
+
+  private ResizableWidget resizableWidget = null;
+
+  public void addToResizableWidgetCollection() {
+    if (resizableWidget == null) {
+      resizableWidget = new ResizableWidget() {
+        public com.google.gwt.user.client.Element getElement() {
+          return label.getElement();
+        }
+
+        public boolean isAttached() {
+          return Label.this.isAttached();
+        }
+
+        public void onResize(int width, int height) {
+          Widget parent = Label.this.getParent();
+          if (parent != null) {
+            if (parent instanceof DecoratorPanel) {
+              parent = parent.getParent();
+            } else {
+              if (parent instanceof LayoutComposite) {
+                parent = parent.getParent();
+                if (parent instanceof DecoratorPanel) {
+                  parent = parent.getParent();
+                }
+              }
+              if (parent instanceof FormPanel) {
+                parent = parent.getParent();
+                if (parent instanceof DecoratorPanel) {
+                  parent = parent.getParent();
+                }
+              }
+            }
+          }
+
+          if (parent instanceof HasLayoutManager) {
+            ((HasLayoutManager) parent).layout(true);
+          }
+        }
+      };
+    }
+    ResizableWidgetCollection.get().add(resizableWidget);
+  }
+
+  public void removeFromResizableWidgetCollection() {
+    if (resizableWidget != null) {
+      ResizableWidgetCollection.get().remove(resizableWidget);
     }
   }
 

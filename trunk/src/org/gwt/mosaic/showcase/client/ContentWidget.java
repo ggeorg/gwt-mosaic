@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -20,6 +22,7 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.HTML;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -35,7 +38,6 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,8 +58,7 @@ import com.google.gwt.user.client.ui.Widget;
  * <li>.sc-ContentWidget-tabBar { Applied to the TabBar }</li>
  * <li>.sc-ContentWidget-deckPanel { Applied to the DeckPanel }</li>
  * <li>.sc-ContentWidget-name { Applied to the name }</li>
- * <li>.sc-ContentWidget-description { Applied to the description }</li>
- * </ul>
+ * <li>.sc-ContentWidget-description { Applied to the description }</li> </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -210,6 +211,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     HTML descWidget = new HTML(getDescription());
     descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
     panel1.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+    descWidget.addToResizableWidgetCollection();
 
     // Add source code tab
     if (hasSource()) {
@@ -275,7 +277,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
 
   public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
     // Load the source code
-    final String tabHTML = tabPanel.getTabHTML(tabIndex);    
+    final String tabHTML = tabPanel.getTabHTML(tabIndex);
     if (!sourceLoaded && tabHTML.contains(constants.mosaicPageSource())) {
       sourceLoaded = true;
       String className = this.getClass().getName();
