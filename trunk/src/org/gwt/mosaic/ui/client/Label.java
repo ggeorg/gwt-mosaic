@@ -17,8 +17,6 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.google.gwt.dom.client.Document;
@@ -134,14 +132,9 @@ public class Label extends Composite implements SourcesClickEvents,
     // Check that the widget is assigned to label.
     assert (widget == label);
 
-    if (UserAgent.isIE6()) {
-      final WidgetWrapper wrapper = new WidgetWrapper(label,
-          HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP);
-      super.initWidget(wrapper);
-    } else {
-      DOM.setStyleAttribute(label.getElement(), "display", "table");
-      super.initWidget(label);
-    }
+    final WidgetWrapper wrapper = new WidgetWrapper(label,
+        HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP);
+    super.initWidget(wrapper);
   }
 
   private ResizableWidget resizableWidget = null;
@@ -222,11 +215,8 @@ public class Label extends Composite implements SourcesClickEvents,
   }
 
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-    if (UserAgent.isIE6()) {
-      WidgetWrapper wrapper = (WidgetWrapper) getWidget();
-      wrapper.setHorizontalAlignment(align);
-    }
-    label.setHorizontalAlignment(align);
+    WidgetWrapper wrapper = (WidgetWrapper) getWidget();
+    wrapper.setHorizontalAlignment(align);
   }
 
   public String getText() {
