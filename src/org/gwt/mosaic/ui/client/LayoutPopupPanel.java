@@ -156,11 +156,11 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   public void layout() {
     layoutPanel.layout();
 
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
-      }
-    });
+    // DeferredCommand.addCommand(new Command() {
+    // public void execute() {
+    // System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
+    // }
+    // });
   }
 
   /*
