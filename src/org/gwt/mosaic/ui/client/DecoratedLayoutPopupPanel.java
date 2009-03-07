@@ -171,11 +171,11 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   public void layout() {
     layoutPanel.layout();
 
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        System.out.println(getOffsetWidth() + "X" + getOffsetHeight());
-      }
-    });
+//    DeferredCommand.addCommand(new Command() {
+//      public void execute() {
+//        System.out.println(getOffsetWidth() + "X" + getOffsetHeight());
+//      }
+//    });
   }
 
   /*
@@ -205,71 +205,6 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     decorationWidthCache = box[0] - size[0];
     decorationHeightCache = box[1] - size[1];
   }
-
-  // private boolean initialized = false;
-
-  // protected void afterLoad() {
-  // if (initialized) {
-  // return;
-  // }
-  // initialized = true;
-  //
-  // int[] prefSize = layoutPanel.getPreferredSize();
-  //
-  // if (desiredWidth != null && desiredHeight != null) {
-  // layoutPanel.setSize(desiredWidth, desiredHeight);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // final int w = size[0];// - decorationWidthCache;
-  // final int h = size[1];// - decorationHeightCache;
-  // setPixelSize(w, h);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(w, h);
-  //
-  // } else if (desiredWidth != null) {
-  // layoutPanel.setWidth(desiredWidth);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // final int w = size[0];// - decorationWidthCache;
-  // final int h = prefSize[1] + decorationHeightCache;
-  // setPixelSize(w, h);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(w, prefSize[1] + decorationHeightCache);
-  //
-  // } else if (desiredHeight != null) {
-  // layoutPanel.setHeight(desiredHeight);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // final int w = prefSize[0];
-  // final int h = size[1];// - decorationHeightCache;
-  // setPixelSize(w, h);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(prefSize[0], h);
-  //
-  // } else {
-  // layoutPanel.setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache
-  // + 1);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache + 1);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache + 1);
-  // }
-  //
-  // layout();
-  // }
 
   private String desiredHeight = null;
 
