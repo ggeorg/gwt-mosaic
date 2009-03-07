@@ -82,6 +82,13 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     HasCaption, CoreConstants {
 
   /**
+   * Double click caption action.
+   */
+  public enum CaptionAction {
+    COLLAPSE, MAXIMIZE, NONE
+  }
+
+  /**
    * WindowPanel direction constant, used in {@link ResizeDragController}.
    */
   static final class DirectionConstant {
@@ -164,7 +171,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       if (!modal) {
         glassPanel.removeFromParent();
       }
-      panel.hideContents(false);
+      if (hideContentsOnMove) {
+        panel.hideContents(false);
+      }
     }
 
     public void dragMove() {
@@ -187,7 +196,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         toFront();
       }
 
-      panel.hideContents(true);
+      panel.hideContents(hideContentsOnMove);
       if (!modal) {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
@@ -412,6 +421,45 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     void onWindowStateChange(WindowPanel sender);
   }
 
+  @Deprecated
+  static class WrappedWindowCloseListener extends
+      ListenerWrapper<WindowCloseListener> implements Window.ClosingHandler,
+      CloseHandler<Window> {
+
+    public static void add(WindowPanel source, WindowCloseListener listener) {
+      WrappedWindowCloseListener handler = new WrappedWindowCloseListener(
+          listener);
+      source.addWindowClosingHandler(handler);
+      // TODO source.addCloseHandler(handler);
+    }
+
+    public static void remove(Widget eventSource, WindowCloseListener listener) {
+      baseRemove(eventSource, listener, AbstractWindowClosingEvent.getType(),
+          CloseEvent.getType());
+    }
+
+    protected WrappedWindowCloseListener(WindowCloseListener listener) {
+      super(listener);
+    }
+
+    public void onClose(CloseEvent<Window> event) {
+      getListener().onWindowClosed();
+    }
+
+    public void onWindowClosing(ClosingEvent event) {
+      String message = getListener().onWindowClosing();
+      if (event.getMessage() == null) {
+        event.setMessage(message);
+      }
+    }
+
+  }
+
+  /**
+   * Double click caption action.
+   */
+  private CaptionAction captionAction = CaptionAction.COLLAPSE;
+
   /**
    * The caption images to use.
    */
@@ -459,12 +507,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   static final DirectionConstant NORTH_EAST = new DirectionConstant(
       DIRECTION_NORTH | DIRECTION_EAST, "ne");
-
   /**
    * Specifies that resizing occur at the north-west edge.
    */
   static final DirectionConstant NORTH_WEST = new DirectionConstant(
       DIRECTION_NORTH | DIRECTION_WEST, "nw");
+
   /**
    * Specifies that resizing occur at the south edge.
    */
@@ -476,7 +524,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   static final DirectionConstant SOUTH_EAST = new DirectionConstant(
       DIRECTION_SOUTH | DIRECTION_EAST, "se");
-
   /**
    * Specifies that resizing occur at the south-west edge.
    */
@@ -487,9 +534,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST,
       "w");
-  private static final int Z_INDEX_BASE = 10000;
 
+  private static final int Z_INDEX_BASE = 10000;
   private static final int Z_INDEX_MODAL_OFFSET = 1000;
+
   private static Vector<WindowPanel> windowPanelOrder = new Vector<WindowPanel>();
 
   private List<WindowCloseListener> closingListeners;
@@ -511,6 +559,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   private boolean resizable;
 
   private boolean modal;
+
+  private boolean hideContentsOnMove = true;
 
   private final Timer layoutTimer = new Timer() {
     public void run() {
@@ -567,6 +617,18 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private boolean fireWindowCloseEvents = true;
 
+  final private Timer maximizeTimer = new Timer() {
+    public void run() {
+      maximize(WindowState.NORMAL);
+    }
+  };
+
+  final private Timer minimizeTimer = new Timer() {
+    public void run() {
+      minimize(WindowState.NORMAL);
+    }
+  };
+
   /**
    * Creates a new empty window with default layout.
    */
@@ -616,7 +678,15 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     panel.getHeader().addDoubleClickListener(new DoubleClickListener() {
       public void onDoubleClick(Widget sender) {
-        setCollapsed(!isCollapsed());
+        if (captionAction == CaptionAction.COLLAPSE) {
+          setCollapsed(!isCollapsed());
+        } else if (captionAction == CaptionAction.MAXIMIZE) {
+          if (getWindowState() == WindowState.MAXIMIZED) {
+            setWindowState(WindowState.NORMAL);
+          } else {
+            setWindowState(WindowState.MAXIMIZED);
+          }
+        }
       }
     });
     panel.getHeader().addClickListener(new ClickListener() {
@@ -673,6 +743,16 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       closingListeners = new ArrayList<WindowCloseListener>();
     }
     closingListeners.add(listener);
+  }
+
+  /**
+   * Adds a {@link Window.ClosingEvent} handler.
+   * 
+   * @param handler the handler
+   * @return the handler registration
+   */
+  public HandlerRegistration addWindowClosingHandler(ClosingHandler handler) {
+    return addHandler(handler, AbstractWindowClosingEvent.getType());
   }
 
   /**
@@ -733,6 +813,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   public void close() {
     super.hide();
+  }
+
+  protected void delayedLayout(int delayMillis) {
+    layoutTimer.schedule(delayMillis);
   }
 
   /**
@@ -841,6 +925,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return panel.getHeader().getText();
   }
 
+  public CaptionAction getCaptionAction() {
+    return captionAction;
+  }
+
   public int getContentHeight() {
     return contentHeight;
   }
@@ -910,6 +998,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   public boolean isCollapsed() {
     return panel.isCollapsed();
+  }
+
+  public boolean isHideContentsOnMove() {
+    return hideContentsOnMove;
   }
 
   /**
@@ -1110,18 +1202,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     });
   }
 
-  final private Timer maximizeTimer = new Timer() {
-    public void run() {
-      maximize(WindowState.NORMAL);
-    }
-  };
-
-  final private Timer minimizeTimer = new Timer() {
-    public void run() {
-      minimize(WindowState.NORMAL);
-    }
-  };
-
   public void removeCollapsedListener(CollapsedListener listener) {
     if (collapsedListeners != null) {
       collapsedListeners.remove(listener);
@@ -1206,6 +1286,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     panel.getHeader().setText(text);
   }
 
+  public void setCaptionAction(CaptionAction captionAction) {
+    this.captionAction = captionAction;
+  }
+
   public void setCollapsed(boolean collapsed) {
     if (collapsed == isCollapsed()) {
       return;
@@ -1259,10 +1343,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     super.setContentSize(width, height);
   }
 
-  protected void delayedLayout(int delayMillis) {
-    layoutTimer.schedule(delayMillis);
-  }
-
   public void setFooter(Widget footer) {
     if (getFooter() != null) {
       getFooter().removeStyleName("Footer");
@@ -1271,6 +1351,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (getFooter() != null) {
       getFooter().addStyleName("Footer");
     }
+  }
+
+  public void setHideContentsOnMove(boolean hideContents) {
+    this.hideContentsOnMove = hideContents;
   }
 
   /*
@@ -1470,50 +1554,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     } else {
       setWindowOrder(curIndex);
     }
-  }
-
-  @Deprecated
-  static class WrappedWindowCloseListener extends
-      ListenerWrapper<WindowCloseListener> implements Window.ClosingHandler,
-      CloseHandler<Window> {
-
-    public static void add(WindowPanel source, WindowCloseListener listener) {
-      WrappedWindowCloseListener handler = new WrappedWindowCloseListener(
-          listener);
-      source.addWindowClosingHandler(handler);
-      // TODO source.addCloseHandler(handler);
-    }
-
-    public static void remove(Widget eventSource, WindowCloseListener listener) {
-      baseRemove(eventSource, listener, AbstractWindowClosingEvent.getType(),
-          CloseEvent.getType());
-    }
-
-    protected WrappedWindowCloseListener(WindowCloseListener listener) {
-      super(listener);
-    }
-
-    public void onWindowClosing(ClosingEvent event) {
-      String message = getListener().onWindowClosing();
-      if (event.getMessage() == null) {
-        event.setMessage(message);
-      }
-    }
-
-    public void onClose(CloseEvent<Window> event) {
-      getListener().onWindowClosed();
-    }
-
-  }
-
-  /**
-   * Adds a {@link Window.ClosingEvent} handler.
-   * 
-   * @param handler the handler
-   * @return the handler registration
-   */
-  public HandlerRegistration addWindowClosingHandler(ClosingHandler handler) {
-    return addHandler(handler, AbstractWindowClosingEvent.getType());
   }
 
 }
