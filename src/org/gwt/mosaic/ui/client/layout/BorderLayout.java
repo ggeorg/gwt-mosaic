@@ -869,6 +869,13 @@ public class BorderLayout extends BaseLayout {
   }
 
   private void scanForPanels(LayoutPanel layoutPanel) {
+    
+    north = null;
+    south = null;
+    west = null;
+    south = null;
+    center = null;
+    
     final int size = layoutPanel.getWidgetCount();
     for (int i = 0; i < size; i++) {
       Widget child = layoutPanel.getWidget(i);
@@ -933,7 +940,8 @@ public class BorderLayout extends BaseLayout {
   protected void setCollapsed(LayoutPanel layoutPanel, Widget widget,
       boolean collapse) {
     try {
-      if (layoutPanel != null && init(layoutPanel)) {
+      if (layoutPanel != null) {
+        scanForPanels(layoutPanel);
         if (widget == west || widget == east || widget == north
             || widget == south) {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
