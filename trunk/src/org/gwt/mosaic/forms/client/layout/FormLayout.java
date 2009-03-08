@@ -1149,8 +1149,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
           + e.getLocalizedMessage());
     }
 
-    cachePreferredSize(layoutPanel, result[0], result[1]);
-
     return result;
   }
 
@@ -1260,7 +1258,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
       recalculate(componentSizeCache.minimumSizes);
     }
 
-    clearPreferredSizeCache(layoutPanel);
   }
 
   // Layout Algorithm *****************************************************

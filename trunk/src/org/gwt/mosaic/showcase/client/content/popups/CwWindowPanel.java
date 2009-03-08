@@ -173,7 +173,10 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
     fixed.setResizable(false);
     fixed.setAnimationEnabled(true);
     final Image img = new Image("MeteoraGreece.JPG");
-    fixed.setWidget(new WidgetWrapper(img));
+    final LayoutPanel w = new LayoutPanel();
+    w.add(img, new FillLayoutData(HasAlignment.ALIGN_CENTER,
+        HasAlignment.ALIGN_MIDDLE));
+    fixed.setWidget(w);
 
     img.addLoadListener(new LoadListener() {
       public void onError(Widget sender) {
@@ -183,6 +186,7 @@ public class CwWindowPanel extends ContentWidget implements ClickListener {
       public void onLoad(Widget sender) {
         DeferredCommand.addCommand(new Command() {
           public void execute() {
+            w.invalidate();
             fixed.pack();
             fixed.center();
           }

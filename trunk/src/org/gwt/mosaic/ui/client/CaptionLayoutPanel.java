@@ -165,6 +165,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     if (footer != null) {
       footer.setVisible(!flag);
     }
+    invalidate();
   }
 
   public boolean isCollapsed() {

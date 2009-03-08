@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- *
+ * 
  */
 public class WidgetWrapper extends Composite implements HasAlignment {
 
@@ -76,7 +76,7 @@ public class WidgetWrapper extends Composite implements HasAlignment {
     alignTop = align;
     setAlignment(getWidget());
   }
-  
+
   private void setAlignment(Grid grid) {
     grid.getCellFormatter().setAlignment(0, 0, alignLeft, alignTop);
   }
