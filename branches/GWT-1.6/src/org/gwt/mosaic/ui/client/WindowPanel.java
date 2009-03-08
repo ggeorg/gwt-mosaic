@@ -171,7 +171,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       if (!modal) {
         glassPanel.removeFromParent();
       }
-      if (hideContentsOnMove) {
+      if (hideContentsOnMove && !isCollapsed()) {
         panel.hideContents(false);
       }
     }
@@ -195,8 +195,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       if (!isActive()) {
         toFront();
       }
-
-      panel.hideContents(hideContentsOnMove);
+      if (!isCollapsed()) {
+        panel.hideContents(hideContentsOnMove);
+      }
       if (!modal) {
         if (glassPanel == null) {
           glassPanel = new GlassPanel(false);
@@ -1310,6 +1311,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         restoredHeight = box[1] - (size2[1] - size3[1]);
       }
       panel.setCollapsed(true);
+      
       final int width = getLayoutPanel().getOffsetWidth();
       final int[] size = getLayoutPanel().getPreferredSize();
       setContentSize(width, size[1]);
@@ -1318,6 +1320,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     } else {
       panel.setCollapsed(false);
+      
       if (getWindowState() != WindowState.MAXIMIZED) {
         setContentSize(restoredWidth, restoredHeight);
       } else {
@@ -1331,7 +1334,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         makeResizable();
       }
     }
-
+    
     layout();
   }
 

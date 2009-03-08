@@ -156,11 +156,11 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   public void layout() {
     layoutPanel.layout();
 
-//    DeferredCommand.addCommand(new Command() {
-//      public void execute() {
-//        System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
-//      }
-//    });
+    // DeferredCommand.addCommand(new Command() {
+    // public void execute() {
+    // System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
+    // }
+    // });
   }
 
   /*
@@ -175,10 +175,10 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
-  public void invalidate(boolean layout) {
-    layoutPanel.invalidate(layout);
+  public void invalidate() {
+    layoutPanel.invalidate();
   }
 
   private int decorationWidthCache = 0;

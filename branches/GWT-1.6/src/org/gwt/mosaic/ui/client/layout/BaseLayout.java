@@ -210,15 +210,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     layoutPanel.setWidgetPosition(widget, x, y);
   }
 
-  protected void cachePreferredSize(final LayoutPanel layoutPanel, int width,
-      int height) {
-    layoutPanel.setPreferredSize(width, height);
-  }
-
-  protected void clearPreferredSizeCache(final LayoutPanel layoutPanel) {
-    layoutPanel.clearPreferredSizeCache();
-  }
-
   /*
    * (non-Javadoc)
    * 

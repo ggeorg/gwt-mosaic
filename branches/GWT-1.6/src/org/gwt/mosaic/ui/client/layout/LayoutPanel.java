@@ -140,11 +140,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   private int[] preferredSizeCache = {-1, -1};
 
-  void setPreferredSize(int width, int height) {
-    preferredSizeCache[0] = width;
-    preferredSizeCache[1] = height;
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -154,15 +149,14 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (!isAttached()) {
       return new int[] {0, 0};
     }
-    if (preferredSizeCache[0] >= -1 && preferredSizeCache[1] >= 0) {
-      return preferredSizeCache;
-    } else {
-      int[] size = layout.getPreferredSize(this);
-      BaseLayout.setSize(this, size[0], size[1]);
-      //layout.flushCache();
+    if (preferredSizeCache[0] == -1 && preferredSizeCache[1] == -1) {
+      preferredSizeCache = layout.getPreferredSize(this);
+      BaseLayout.setSize(this, preferredSizeCache[0], preferredSizeCache[1]);
+      // layout.flushCache();
       layout.layoutPanel(this);
-      return layout.getPreferredSize(this);
+      preferredSizeCache = layout.getPreferredSize(this);
     }
+    return preferredSizeCache;
   }
 
   private Widget getUnDecoratedWidget(Widget widget) {
@@ -262,17 +256,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   }
 
   public void layout(boolean invalidate) {
-    if (!isAttached()) {
-      return;
-    }
     if (invalidate) {
-      invalidate(false);
+      invalidate();
     }
-    layout.layoutPanel(this);
-    if (layout.runTwice()) {
+    if (isAttached()) {
       layout.layoutPanel(this);
+      if (layout.runTwice()) {
+        layout.layoutPanel(this);
+      }
+      layoutChildren();
     }
-    layoutChildren();
   }
 
   /**
@@ -453,8 +446,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
-  public void clearPreferredSizeCache() {
-    setPreferredSize(-1, -1);
+  private void clearPreferredSizeCache() {
+    preferredSizeCache[0] = -1;
+    preferredSizeCache[1] = -1;
   }
 
   public Widget findParent() {
@@ -464,14 +458,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       parent = parent.getParent();
     } else {
       if (parent instanceof LayoutComposite) {
-        parent = parent.getParent();
-        if (parent == getDecoratorWidget(parent)) {
+        Widget thiz = parent;
+        parent = thiz.getParent();
+        if (parent == getDecoratorWidget(thiz)) {
           parent = parent.getParent();
         }
       }
       if (parent instanceof FormPanel) {
-        parent = parent.getParent();
-        if (parent == getDecoratorWidget(parent)) {
+        Widget thiz = parent;
+        parent = thiz.getParent();
+        if (parent == getDecoratorWidget(thiz)) {
           parent = parent.getParent();
         }
       }
@@ -494,20 +490,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * container, or layout-related information changed) after the {@code
    * LayoutPanel} has been attached.
    */
-  public void invalidate(boolean layout) {
+  public void invalidate() {
     getLayout().flushCache();
+
+    clearPreferredSizeCache();
 
     final Widget parent = findParent();
 
-    if (parent instanceof Viewport
-        || parent instanceof DecoratedLayoutPopupPanel
-        || parent instanceof LayoutPopupPanel
-        || !(parent instanceof HasLayoutManager)) {
-      if (layout) {
-        layout(false);
-      }
-    } else {
-      ((HasLayoutManager) parent).invalidate(layout);
+    if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
+        && !(parent instanceof DecoratedLayoutPopupPanel)
+        && !(parent instanceof LayoutPopupPanel)) {
+      ((HasLayoutManager) parent).invalidate();
     }
   }
 }

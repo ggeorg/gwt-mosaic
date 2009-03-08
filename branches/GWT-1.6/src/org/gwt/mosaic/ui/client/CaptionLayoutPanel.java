@@ -150,7 +150,9 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
+   * .user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget child) {
     return body.getWidgetIndex(child);
@@ -165,6 +167,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     if (footer != null) {
       footer.setVisible(!flag);
     }
+    invalidate();
   }
 
   public boolean isCollapsed() {
@@ -197,7 +200,9 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public boolean remove(Widget w) {
     return body.remove(w);

@@ -163,8 +163,6 @@ public class FillLayout extends BaseLayout implements HasAlignment {
           + e.getLocalizedMessage());
     }
 
-    layoutPanel.setPreferredSize(result[0], result[1]);
-
     return result;
   }
 
@@ -319,7 +317,6 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       recalculate(widgetSizes);
     }
 
-    clearPreferredSizeCache(layoutPanel);
   }
 
   @Override

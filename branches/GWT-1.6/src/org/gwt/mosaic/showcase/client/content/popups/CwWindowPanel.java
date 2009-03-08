@@ -28,7 +28,6 @@ import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.ToolButton;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
@@ -39,6 +38,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
@@ -58,6 +58,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -144,6 +145,20 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     windowPanel.getHeader().add(minimizeBtn, captionRegion);
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+
   /**
    * The 'basic' window panel.
    */
@@ -178,12 +193,16 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     fixed.setResizable(false);
     fixed.setAnimationEnabled(true);
     final Image img = new Image("MeteoraGreece.JPG");
-    fixed.setWidget(new WidgetWrapper(img));
+    final LayoutPanel w = new LayoutPanel();
+    w.add(img, new FillLayoutData(HasAlignment.ALIGN_CENTER,
+        HasAlignment.ALIGN_MIDDLE));
+    fixed.setWidget(w);
 
     img.addLoadHandler(new LoadHandler() {
       public void onLoad(LoadEvent event) {
         DeferredCommand.addCommand(new Command() {
           public void execute() {
+            w.invalidate();
             fixed.pack();
             fixed.center();
           }
@@ -558,18 +577,4 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     return layoutPanel;
   }
 
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
-  }
-  
 }

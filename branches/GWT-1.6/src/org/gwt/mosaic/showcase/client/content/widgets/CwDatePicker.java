@@ -146,7 +146,7 @@ public class CwDatePicker extends ContentWidget {
             ? Caption.IMAGES.toolPlus().createImage()
             : Caption.IMAGES.toolMinus().createImage();
         collapseBtn.setImage(image);
-        layoutPanel.layout(true);
+        layoutPanel.layout();
       }
     });
 
