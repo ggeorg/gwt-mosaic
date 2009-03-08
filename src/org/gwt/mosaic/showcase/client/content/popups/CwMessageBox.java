@@ -117,7 +117,7 @@ public class CwMessageBox extends ContentWidget {
     VerticalPanel vPanel = new VerticalPanel();
     vPanel.setSpacing(4);
 
-    layoutPanel.add(vPanel);
+    layoutPanel.add(vPanel, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     //
     // Alert Box
@@ -325,8 +325,9 @@ public class CwMessageBox extends ContentWidget {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     // Create a panel to hold all of the form widgets
     final LayoutPanel panel = new LayoutPanel(new BoxLayout(
@@ -378,6 +379,11 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(form);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -410,8 +416,9 @@ public class CwMessageBox extends ContentWidget {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     RichTextToolbar toolbar = new RichTextToolbar(area);
     toolbar.ensureDebugId("cwRichText-toolbar");
@@ -441,6 +448,11 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(panel, 0);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {

@@ -76,8 +76,9 @@ public abstract class MessageBox extends WindowPanel {
       }
     };
     alert.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    alert.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    alert.setWidth(preferredWidth + "px");
 
     final Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
@@ -87,10 +88,13 @@ public abstract class MessageBox extends WindowPanel {
     });
     alert.getButtonPanel().add(buttonOK);
 
-    final LayoutPanel htmlWrapper = new LayoutPanel();
-    htmlWrapper.add(new HTML(message));
-    alert.setWidget(htmlWrapper);
+    alert.setWidget(new HTML(message));
     alert.showModal();
+
+    if (alert.getOffsetWidth() < preferredWidth) {
+      alert.setWidth(preferredWidth + "px");
+      alert.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -113,8 +117,9 @@ public abstract class MessageBox extends WindowPanel {
       }
     };
     confirm.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    confirm.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    confirm.setWidth(preferredWidth + "px");
 
     final Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
@@ -133,10 +138,13 @@ public abstract class MessageBox extends WindowPanel {
     confirm.getButtonPanel().add(buttonOK);
     confirm.getButtonPanel().add(buttonCancel);
 
-    final LayoutPanel htmlWrapper = new LayoutPanel();
-    htmlWrapper.add(new HTML(message));
-    confirm.setWidget(htmlWrapper);
+    confirm.setWidget(new HTML(message));
     confirm.showModal();
+
+    if (confirm.getOffsetWidth() < preferredWidth) {
+      confirm.setWidth(preferredWidth + "px");
+      confirm.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -171,8 +179,9 @@ public abstract class MessageBox extends WindowPanel {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
@@ -193,6 +202,11 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(dateTimePicker, 0);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
   }
 
   public static void prompt(String caption, Date defaultValue,
@@ -212,8 +226,9 @@ public abstract class MessageBox extends WindowPanel {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     Button buttonOK = new Button("OK");
     buttonOK.addClickListener(new ClickListener() {
@@ -234,6 +249,11 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(datePicker, 0);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
   }
 
   public static void prompt(String caption, String message,
@@ -253,8 +273,9 @@ public abstract class MessageBox extends WindowPanel {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     final LayoutPanel panel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
@@ -281,6 +302,11 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(panel);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -406,8 +432,7 @@ public abstract class MessageBox extends WindowPanel {
       }
       this.image = image;
       imageWrapper = new WidgetWrapper(image);
-      layoutPanel.add(imageWrapper, new BorderLayoutData(
-          Region.WEST));
+      layoutPanel.add(imageWrapper, new BorderLayoutData(Region.WEST));
     }
   }
 
