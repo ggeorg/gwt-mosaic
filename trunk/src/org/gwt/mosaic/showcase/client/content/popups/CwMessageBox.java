@@ -22,7 +22,6 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.HTML;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
@@ -46,6 +45,7 @@ import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -120,9 +120,8 @@ public class CwMessageBox extends ContentWidget {
 
     HTML alertDesc = new HTML(
         "<b>Alert Box</b>"
-            + "<br>An alert box is often used if you want to make sure information comes through to the user. "
-            + "When an alert box pops up, the user will have to click \"OK\" to proceed.");
-    alertDesc.addToResizableWidgetCollection();
+            + "<br><small>An alert box is often used if you want to make sure information comes through to the user. "
+            + "When an alert box pops up, the user will have to click \"OK\" to proceed.</small>");
     vPanel.add(alertDesc);
 
     Button alertBtn = new Button("Warning");
@@ -321,8 +320,9 @@ public class CwMessageBox extends ContentWidget {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     // Create a panel to hold all of the form widgets
     final LayoutPanel panel = new LayoutPanel(new BoxLayout(
@@ -373,6 +373,11 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(form);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -405,8 +410,9 @@ public class CwMessageBox extends ContentWidget {
       }
     };
     prompt.setAnimationEnabled(true);
-    final int width = Window.getClientWidth();
-    prompt.setWidth(Math.max(width / 3, 256) + "px");
+    int preferredWidth = Window.getClientWidth();
+    preferredWidth = Math.max(preferredWidth / 3, 256);
+    prompt.setWidth(preferredWidth + "px");
 
     RichTextToolbar toolbar = new RichTextToolbar(area);
     toolbar.ensureDebugId("cwRichText-toolbar");
@@ -436,6 +442,11 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(panel, 0);
     prompt.showModal();
+    
+    if (prompt.getOffsetWidth() < preferredWidth) {
+      prompt.setWidth(preferredWidth + "px");
+      prompt.center();
+    }
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
