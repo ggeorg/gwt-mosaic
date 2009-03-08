@@ -25,9 +25,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that can contain arbitrary HTML.
- * 
- * This widget uses a &lt;div&gt; element, causing it to be displayed with table
- * layout (GWT's HTML widget is using block layout by default).
+ * <p>
+ * This widget uses a &lt;label&gt; element.
  * <p>
  * If you only need a simple label (text, but not HTML), then the {@link Label}
  * widget is more appropriate, as it disallows the use of HTML, which can lead
@@ -37,7 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * &lt;ul class='css'&gt;
- * &lt;li&gt;.gwt-HTML { }&lt;/li&gt;
+ * &lt;li&gt;.mosaic-HTML { }&lt;/li&gt;
  * &lt;/ul&gt;
  * </pre>
  * 
@@ -74,7 +73,7 @@ public class HTML extends Label implements HasHTML {
    */
   public HTML() {
     super();
-    setStyleName("gwt-HTML");
+    setStyleName("mosaic-HTML");
   }
 
   /**
