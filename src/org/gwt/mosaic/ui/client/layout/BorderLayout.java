@@ -409,8 +409,6 @@ public class BorderLayout extends BaseLayout {
           + e.getLocalizedMessage());
     }
 
-    layoutPanel.setPreferredSize(result[0], result[1]);
-
     return result;
   }
 
@@ -848,8 +846,7 @@ public class BorderLayout extends BaseLayout {
     if (runTwice()) {
       recalculate(widgetSizes);
     }
-
-    layoutPanel.setPreferredSize(-1, -1);
+    
   }
 
   @Override

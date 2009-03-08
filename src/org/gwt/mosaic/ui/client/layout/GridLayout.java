@@ -290,8 +290,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           + e.getLocalizedMessage());
     }
 
-    layoutPanel.setPreferredSize(result[0], result[1]);
-
     return result;
   }
 
@@ -482,7 +480,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
       recalculate(widgetSizes);
     }
 
-    layoutPanel.setPreferredSize(-1, -1);
   }
   @Override
   public boolean runTwice() {

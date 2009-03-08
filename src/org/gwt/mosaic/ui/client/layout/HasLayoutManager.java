@@ -45,13 +45,10 @@ public interface HasLayoutManager {
    * Invalidates the receiver. The receiver and all parents above it are marked
    * as needing to be laid out.
    * 
-   * @param doLayout if {@code true} {@link #layout()} is called on the last
-   *          parent
-   * 
    * @see #layout()
    * @see #layout(boolean)
    */
-  void invalidate(boolean doLayout);
+  void invalidate();
 
   /**
    * If the receiver has a {@link LayoutManager}, asks the layout to

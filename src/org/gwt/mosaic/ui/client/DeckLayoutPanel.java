@@ -180,7 +180,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
       if (oldWidget != null) {
         oldWidget.setVisible(false);
       }
-      getWidget().invalidate(false);
+      getWidget().invalidate();
     }
   }
 

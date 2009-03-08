@@ -175,10 +175,10 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
-  public void invalidate(boolean layout) {
-    layoutPanel.invalidate(layout);
+  public void invalidate() {
+    layoutPanel.invalidate();
   }
 
   private int decorationWidthCache = 0;
@@ -190,70 +190,6 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     decorationWidthCache = (box[0] - size[0]);
     decorationHeightCache = (box[1] - size[1]);
   }
-
-  // private boolean initialized = false;
-
-  // protected void afterLoad() {
-  // if (initialized) {
-  // return;
-  // }
-  // initialized = true;
-  //
-  // int[] prefSize = layoutPanel.getPreferredSize();
-  //
-  // if (desiredWidth != null && desiredHeight != null) {
-  // layoutPanel.setSize(desiredWidth, desiredHeight);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // final int w = size[0];// - decorationWidthCache;
-  // final int h = size[1];// - decorationHeightCache;
-  // setPixelSize(w, h);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(w, h);
-  //
-  // } else if (desiredWidth != null) {
-  // layoutPanel.setWidth(desiredWidth);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // final int w = size[0];// - decorationWidthCache;
-  // final int h = prefSize[1] + decorationHeightCache;
-  // setPixelSize(w, h);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(w, prefSize[1] + decorationHeightCache);
-  //
-  // } else if (desiredHeight != null) {
-  // layoutPanel.setHeight(desiredHeight);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // final int w = prefSize[0];
-  // final int h = size[1];// - decorationHeightCache;
-  // setPixelSize(w, h);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(prefSize[0], h);
-  //
-  // } else {
-  // layoutPanel.setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
-  // final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-  // calculateDecorationSize(size);
-  // setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
-  // layout();
-  //
-  // // run twice
-  // prefSize = layoutPanel.getPreferredSize();
-  // setPixelSize(prefSize[0], prefSize[1] + decorationHeightCache);
-  // }
-  //
-  // layout();
-  // }
 
   private String desiredHeight = null;
 

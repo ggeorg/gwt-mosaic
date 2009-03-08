@@ -95,7 +95,7 @@ public class DatePicker extends
    * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
    */
-  public void invalidate(boolean layout) {
-    getWidget().invalidate(layout);
+  public void invalidate() {
+    getWidget().invalidate();
   }
 }
