@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.HTML;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -37,10 +36,14 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.ResizableWidget;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * A widget used to show the examples in the content panel. It includes a tab
@@ -208,10 +211,23 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     panel1.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     // Add the description
-    HTML descWidget = new HTML(getDescription());
+    final HTML descWidget = new HTML(getDescription());
     descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
     panel1.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-    descWidget.addToResizableWidgetCollection();
+
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return descWidget.getElement();
+      }
+
+      public boolean isAttached() {
+        return descWidget.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        panel1.layout(true);
+      }
+    });
 
     // Add source code tab
     if (hasSource()) {
