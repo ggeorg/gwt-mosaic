@@ -125,8 +125,6 @@ public class FormLayout extends GridLayout {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
 
-    layoutPanel.setPreferredSize(result[0], result[1]);
-
     return result;
   }
 
@@ -289,7 +287,6 @@ public class FormLayout extends GridLayout {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
 
-    layoutPanel.setPreferredSize(-1, -1);
   }
 
   /**
