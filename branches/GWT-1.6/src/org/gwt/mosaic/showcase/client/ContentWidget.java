@@ -211,9 +211,23 @@ public abstract class ContentWidget extends LayoutPanel implements
     panel1.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     // Add the description
-    HTML descWidget = new HTML(getDescription());
+    final HTML descWidget = new HTML(getDescription());
     descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
     panel1.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return descWidget.getElement();
+      }
+
+      public boolean isAttached() {
+        return descWidget.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        panel1.layout(true);
+      }
+    });
 
     // Add source code tab
     if (hasSource()) {
