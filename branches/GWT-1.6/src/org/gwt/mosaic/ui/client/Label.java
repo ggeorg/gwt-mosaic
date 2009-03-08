@@ -17,20 +17,20 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.UserAgent;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.i18n.client.BidiUtils;
 import com.google.gwt.i18n.client.HasDirection;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWordWrap;
 import com.google.gwt.user.client.ui.MouseListener;
+import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.MouseWheelListener;
+import com.google.gwt.user.client.ui.MouseWheelListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
@@ -38,28 +38,35 @@ import com.google.gwt.user.client.ui.SourcesMouseWheelEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A widget that contains arbitrary text, <i>not</i> interpreted as HTML.
- * 
- * This widget uses a &lt;div&gt; element, causing it to be displayed with table
- * layout (GWT's Label widget is using block layout by default).
+ * A widget that contains arbitrary text, <i>or</i> interpreted as HTML.
+ * <p>
+ * This widget uses a &lt;label&gt; element.
  * 
  * <h3>CSS Style Rules</h3>
  * 
  * <pre>
  * &lt;ul class='css'&gt;
- * &lt;li&gt;.gwt-Label { }&lt;/li&gt;
+ * &lt;li&gt;.mosaic-Label { }&lt;/li&gt;
  * &lt;/ul&gt;
  * </pre>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class Label extends Composite implements SourcesClickEvents,
+public class Label extends Widget implements SourcesClickEvents,
     SourcesMouseEvents, SourcesMouseWheelEvents, HasHorizontalAlignment,
     HasText, HasWordWrap, HasDirection {
 
-  private final com.google.gwt.user.client.ui.Label label;
-
+  /**
+   * Creates a Label widget that wraps an existing &lt;div&gt; or &lt;span&gt;
+   * element.
+   * 
+   * This element must already be attached to the document. If the element is
+   * removed from the document, you must call
+   * {@link RootPanel#detachNow(Widget)}.
+   * 
+   * @param element the element to be wrapped
+   */
   public static Label wrap(Element element) {
     // Assert that the element is attached.
     assert Document.get().getBody().isOrHasChild(element);
@@ -73,12 +80,17 @@ public class Label extends Composite implements SourcesClickEvents,
     return label;
   }
 
+  private ClickListenerCollection clickListeners;
+  private HorizontalAlignmentConstant horzAlign;
+  private MouseListenerCollection mouseListeners;
+  private MouseWheelListenerCollection mouseWheelListeners;
+
   /**
    * Creates an empty label.
    */
   public Label() {
-    label = new com.google.gwt.user.client.ui.Label();
-    initWidget(label);
+    setElement(Document.get().createLabelElement());
+    setStyleName("mosaic-Label");
   }
 
   /**
@@ -104,99 +116,118 @@ public class Label extends Composite implements SourcesClickEvents,
 
   /**
    * This constructor may be used by subclasses to explicitly use an existing
-   * element. This element must be either a &lt;div&gt; or &lt;span&gt; element.
+   * element. This element must be either a &lt;label&gt; or a &lt;div&gt; or
+   * &lt;span&gt; element.
    * 
    * @param element the element to be used
    */
   protected Label(Element element) {
-    assert element.getTagName().equalsIgnoreCase("div")
+    setElement(element);
+    assert element.getTagName().equalsIgnoreCase("label")
+        || element.getTagName().equalsIgnoreCase("div")
         || element.getTagName().equalsIgnoreCase("span");
-
-    // Use protected Element constructor by sub classing.
-    label = new com.google.gwt.user.client.ui.Label(element) {
-    };
-
-    initWidget(label);
-  }
-
-  /**
-   * Set display CSS attribute to table layout.
-   * 
-   * @param widget the widget to be wrapped
-   */
-  @Override
-  protected void initWidget(Widget widget) {
-    // Check that the widget is assigned to label.
-    assert (widget == label);
-
-    if (UserAgent.isIE6()) {
-      final WidgetWrapper wrapper = new WidgetWrapper(label,
-          HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP);
-      super.initWidget(wrapper);
-    } else {
-      DOM.setStyleAttribute(label.getElement(), "display", "table");
-      super.initWidget(label);
-    }
   }
 
   public void addClickListener(ClickListener listener) {
-    label.addClickListener(listener);
-  }
-
-  public void removeClickListener(ClickListener listener) {
-    label.removeClickListener(listener);
+    if (clickListeners == null) {
+      clickListeners = new ClickListenerCollection();
+      sinkEvents(Event.ONCLICK);
+    }
+    clickListeners.add(listener);
   }
 
   public void addMouseListener(MouseListener listener) {
-    label.addMouseListener(listener);
-  }
-
-  public void removeMouseListener(MouseListener listener) {
-    label.removeMouseListener(listener);
+    if (mouseListeners == null) {
+      mouseListeners = new MouseListenerCollection();
+      sinkEvents(Event.MOUSEEVENTS);
+    }
+    mouseListeners.add(listener);
   }
 
   public void addMouseWheelListener(MouseWheelListener listener) {
-    label.addMouseWheelListener(listener);
-  }
-
-  public void removeMouseWheelListener(MouseWheelListener listener) {
-    label.removeMouseWheelListener(listener);
-  }
-
-  public HorizontalAlignmentConstant getHorizontalAlignment() {
-    return label.getHorizontalAlignment();
-  }
-
-  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-    if (UserAgent.isIE6()) {
-      WidgetWrapper wrapper = (WidgetWrapper) getWidget();
-      wrapper.setHorizontalAlignment(align);
+    if (mouseWheelListeners == null) {
+      mouseWheelListeners = new MouseWheelListenerCollection();
+      sinkEvents(Event.ONMOUSEWHEEL);
     }
-    label.setHorizontalAlignment(align);
-  }
-
-  public String getText() {
-    return label.getText();
-  }
-
-  public void setText(String text) {
-    label.setText(text);
-  }
-
-  public boolean getWordWrap() {
-    return label.getWordWrap();
-  }
-
-  public void setWordWrap(boolean wrap) {
-    label.setWordWrap(wrap);
+    mouseWheelListeners.add(listener);
   }
 
   public Direction getDirection() {
-    return label.getDirection();
+    return BidiUtils.getDirectionOnElement(getElement());
+  }
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return horzAlign;
+  }
+
+  public String getText() {
+    return getElement().getInnerText();
+  }
+
+  public boolean getWordWrap() {
+    return !getElement().getStyle().getProperty("whiteSpace").equals("nowrap");
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (event.getTypeInt()) {
+      case Event.ONCLICK:
+        if (clickListeners != null) {
+          clickListeners.fireClick(this);
+        }
+        break;
+
+      case Event.ONMOUSEDOWN:
+      case Event.ONMOUSEUP:
+      case Event.ONMOUSEMOVE:
+      case Event.ONMOUSEOVER:
+      case Event.ONMOUSEOUT:
+        if (mouseListeners != null) {
+          mouseListeners.fireMouseEvent(this, event);
+        }
+        break;
+
+      case Event.ONMOUSEWHEEL:
+        if (mouseWheelListeners != null) {
+          mouseWheelListeners.fireMouseWheelEvent(this, event);
+        }
+        break;
+    }
+  }
+
+  public void removeClickListener(ClickListener listener) {
+    if (clickListeners != null) {
+      clickListeners.remove(listener);
+    }
+  }
+
+  public void removeMouseListener(MouseListener listener) {
+    if (mouseListeners != null) {
+      mouseListeners.remove(listener);
+    }
+  }
+
+  public void removeMouseWheelListener(MouseWheelListener listener) {
+    if (mouseWheelListeners != null) {
+      mouseWheelListeners.remove(listener);
+    }
   }
 
   public void setDirection(Direction direction) {
-    label.setDirection(direction);
+    BidiUtils.setDirectionOnElement(getElement(), direction);
   }
 
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    horzAlign = align;
+    getElement().getStyle().setProperty("textAlign", align.getTextAlignString());
+  }
+
+  public void setText(String text) {
+    getElement().setInnerText(text);
+  }
+
+  public void setWordWrap(boolean wrap) {
+    getElement().getStyle().setProperty("whiteSpace",
+        wrap ? "normal" : "nowrap");
+  }
 }
