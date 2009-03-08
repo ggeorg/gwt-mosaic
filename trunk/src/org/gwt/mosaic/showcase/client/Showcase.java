@@ -88,7 +88,6 @@ import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
-import org.gwt.mosaic.showcase.client.content.validation.basic.CwSimpleDomainValidationExample;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -502,13 +501,6 @@ public class Showcase implements EntryPoint {
     TreeItem catFactoriesForms = catForms.addItem("Factories");
     setupMainMenuOption(catFactoriesForms, new CwButtonBarFactoryExample(
         constants), IMAGES.catForms());
-
-    // Validation
-    TreeItem catValidation = mainMenu.addItem("Validation");
-
-    TreeItem catBasicValidation = catValidation.addItem("Basic");
-    setupMainMenuOption(catBasicValidation,
-        new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
 
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");
