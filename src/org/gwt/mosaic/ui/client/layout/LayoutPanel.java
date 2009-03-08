@@ -157,6 +157,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (preferredSizeCache[0] >= -1 && preferredSizeCache[1] >= 0) {
       return preferredSizeCache;
     } else {
+      int[] size = layout.getPreferredSize(this);
+      BaseLayout.setSize(this, size[0], size[1]);
+      //layout.flushCache();
+      layout.layoutPanel(this);
       return layout.getPreferredSize(this);
     }
   }
