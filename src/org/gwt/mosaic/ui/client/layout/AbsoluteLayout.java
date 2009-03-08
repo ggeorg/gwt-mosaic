@@ -119,8 +119,6 @@ public class AbsoluteLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
 
-    layoutPanel.setPreferredSize(result[0], result[1]);
-
     return result;
   }
 

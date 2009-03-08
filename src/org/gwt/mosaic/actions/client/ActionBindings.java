@@ -123,7 +123,7 @@ public abstract class ActionBindings<T> {
       if (target instanceof Widget) {
         HasLayoutManager lm = getParent((Widget) target);
         if (lm != null) {
-          lm.invalidate(false);
+          lm.invalidate();
         }
       }
     }
