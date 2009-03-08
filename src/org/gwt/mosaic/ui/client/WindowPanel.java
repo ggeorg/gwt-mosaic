@@ -507,6 +507,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   static final DirectionConstant NORTH_EAST = new DirectionConstant(
       DIRECTION_NORTH | DIRECTION_EAST, "ne");
+
   /**
    * Specifies that resizing occur at the north-west edge.
    */
@@ -524,6 +525,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   static final DirectionConstant SOUTH_EAST = new DirectionConstant(
       DIRECTION_SOUTH | DIRECTION_EAST, "se");
+
   /**
    * Specifies that resizing occur at the south-west edge.
    */
@@ -673,7 +675,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         hide();
       }
     });
-
     panel.getHeader().add(closeBtn, CaptionRegion.RIGHT);
 
     panel.getHeader().addDoubleClickListener(new DoubleClickListener() {
@@ -1309,8 +1310,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         restoredHeight = box[1] - (size2[1] - size3[1]);
       }
       panel.setCollapsed(true);
+      final int width = getLayoutPanel().getOffsetWidth();
       final int[] size = getLayoutPanel().getPreferredSize();
-      setContentSize(getLayoutPanel().getOffsetWidth(), size[1]);
+      setContentSize(width, size[1]);
       if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeNotResizable();
       }
@@ -1488,6 +1490,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
+  public void showModal() {
+    showModal(true);
+  }
+
   /**
    * Centers the {@code WindowPanel} in the browser window and shows it modal
    * (centers the popup in the browser window by adding it to the {@code
@@ -1503,9 +1509,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @see #center()
    * @see #isModal()
    */
-  public void showModal() {
+  public void showModal(boolean doPack) {
     modal = true;
-    pack();
+    if (doPack) {
+      pack();
+    }
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         center();
