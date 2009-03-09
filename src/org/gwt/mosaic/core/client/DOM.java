@@ -502,20 +502,20 @@ public class DOM extends com.google.gwt.user.client.DOM {
     return toPixelSize("1in");
   }
 
+  private static Element toPixelSizeTestElem = null;
+
   public static int toPixelSize(final String width) {
-    final BodyElement body = Document.get().getBody();
-    final Element div = DOM.createDiv();
-    setStyleAttribute(div, "left", "");
-    setStyleAttribute(div, "top", "");
-    setStyleAttribute(div, "position", "");
-    setStyleAttribute(div, "visibility", "hidden");
-    setStyleAttribute(div, "width", width);
-    try {
-      body.appendChild(div);
-      return getBoxSize(div)[0];
-    } finally {
-      body.removeChild(div);
+    if (toPixelSizeTestElem == null) {
+      toPixelSizeTestElem = DOM.createDiv();
+      setStyleAttribute(toPixelSizeTestElem, "left", "");
+      setStyleAttribute(toPixelSizeTestElem, "top", "");
+      setStyleAttribute(toPixelSizeTestElem, "position", "");
+      setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
+      Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
+    setStyleAttribute(toPixelSizeTestElem, "width", width);
+
+    return getBoxSize(toPixelSizeTestElem)[0];
   }
 
   public static int[] getStringBoxSize(Element div, final String str) {
