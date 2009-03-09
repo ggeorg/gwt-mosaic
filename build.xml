@@ -74,7 +74,7 @@
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="true" fork="true">
 			<jvmarg line="-Xmx256m" />
 			<arg line="-out ${build}/www" />
-			<arg line="-style PRETTY" />
+			<!-- arg line="-style PRETTY" / -->
 			<!-- arg line="-style DETAILED" / -->
 			<arg value="${gwt.module}" />
 			<classpath refid="gwt.classpath" />
