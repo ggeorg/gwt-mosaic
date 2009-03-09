@@ -1,3 +1,51 @@
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6
+ 
+ TODO
+
+Change log for v0.1.9
+================================
+
+ - Layout performance improvements
+ 
+ 	Test for Popups/Layout PopupPanel:
+ 	
+ 		gwt-mosaic-0.1.8 Profile (6158.264ms, 197518 calls)
+ 		gwt-mosaic-0.1.9 Profile (3228.008ms, 111896 calls)
+
+ - New Label & HTML widgets based on <label> tag instead of the default GWT widgets
+ 	http://code.google.com/p/gwt-mosaic/source/detail?r=662
+ - WindowPanel new methods:
+ 	
+ 	public void setCaptionAction()
+ 	public void setCaptionAction(CaptionAction captionAction)
+ 	
+ 	where CaptionAction is: COLLAPSE, MAXIMIZE, NONE
+ 	
+ 	public boolean isHideContentsOnMove()
+ 	public void setCaptionAction(CaptionAction captionAction)
+ 	
+ - Fix for: Issue 33 : WindowPanel issues in FireFox
+ - WidgetWrapper implements HasAlignment
+ - Layout popup panels & WindowPanel improvements
+ 	WIKI: http://code.google.com/p/gwt-mosaic/wiki/WindowPanel
+ - Separator extends LayoutComposite and style changes
+ - Fix for http://groups.google.com/group/gwt-mosaic/browse_thread/thread/f609dba8143f996b
+ - Initial width & height of a widget is not ignored by the layout managers
+ 	http://code.google.com/p/gwt-mosaic/source/detail?r=600
+ 	
+ 	NOTE: this code will crash IE6, I put it in: if(!UserAgent.isIE6()){ ... }
+ 	
+ - BorderLayout is using an invisible GlassPanel so that dragging a SplitBar widget over an IFRAME is possible
+ 	http://dev.gumboo.com:8880/gwt-mosaic/#CwBorderLayoutTest_Frames
+ - Minimum size calculation fixed execpt of IE (since IE does not suppoer CSS min-width & min-height)
+ - GWT Beans Binding update (SVN trunk), see: http://code.google.com/p/gwt-beans-
+binding/source/detail?r=43
+ - Fix for: Issue 35: Cannot use getWidgetIndex or  remove(Widget widget) in TabLayoutPanel
+ - Actions API update because of layout changes  & Core modele cleanup
+
 Change log for v0.1.7
 ================================
 
