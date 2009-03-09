@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -29,21 +31,26 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 @ShowcaseStyle( {".gwt-Button"})
-public class CwBasicButton extends ContentWidget implements ClickListener {
+public class CwBasicButton extends ContentWidget implements ClickHandler {
 
   /**
-   * The constants used in this <code>ContentWidget</code>.
+   * The constants used in this Content Widget
    */
   @ShowcaseSource
   public static interface CwConstants extends Constants,
@@ -86,13 +93,13 @@ public class CwBasicButton extends ContentWidget implements ClickListener {
   }
 
   /**
-   * Fired when the user clicks on a button.
+   * Called when a native click event is fired.
    * 
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
-    InfoPanel.show(((Button) sender).getText(),
+  public void onClick(ClickEvent event) {
+    InfoPanel.show(((Button) event.getSource()).getText(),
         constants.mosaicBasicButtonClickMessage());
   }
 
@@ -174,6 +181,20 @@ public class CwBasicButton extends ContentWidget implements ClickListener {
     hBox2.add(imageButton4, new BoxLayoutData(FillStyle.VERTICAL));
 
     return layoutPanel;
+  }
+
+  // TODO @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
   }
 
 }

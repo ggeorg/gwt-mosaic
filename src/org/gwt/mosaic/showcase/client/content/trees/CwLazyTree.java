@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -19,12 +21,13 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.gen2.commonevent.shared.BeforeOpenEvent;
+import com.google.gwt.gen2.commonevent.shared.BeforeOpenHandler;
+import com.google.gwt.gen2.complexpanel.client.FastTree;
+import com.google.gwt.gen2.complexpanel.client.FastTreeItem;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.FastTree;
-import com.google.gwt.widgetideas.client.FastTreeItem;
-import com.google.gwt.widgetideas.client.HasFastTreeItems;
 
 /**
  * Example file.
@@ -63,7 +66,35 @@ public class CwLazyTree extends CwBasicTree {
     final LayoutPanel layoutPanel = new LayoutPanel();
 
     final FastTree t = new FastTree();
-    lazyCreateChild(t, 0, 50);
+    lazyCreateChild(t.getTreeRoot(), 0, 50);
+
+    t.addBeforeOpenHandler(new BeforeOpenHandler<FastTreeItem>() {
+      FastTreeItem item;
+
+      private Timer t = new Timer() {
+        public void run() {
+          lazyCreateChilds();
+        }
+      };
+
+      private void lazyCreateChilds() {
+        try {
+          for (int i = 0; i < 50; i++) {
+            lazyCreateChild(item, i, 50 + (i * 10));
+          }
+        } finally {
+          item.removeStyleName("gwt-FastTreeItem-loading");
+        }
+      }
+
+      public void onBeforeOpen(BeforeOpenEvent<FastTreeItem> event) {
+        item = (FastTreeItem) event.getTarget();
+        if (event.isFirstTime()) {
+          item.addStyleName("gwt-FastTreeItem-loading");
+          t.schedule(333);
+        }
+      }
+    });
 
     final ScrollPanel panel = new ScrollPanel();
     layoutPanel.add(panel);
@@ -79,32 +110,10 @@ public class CwLazyTree extends CwBasicTree {
    * @param children
    */
   @ShowcaseSource
-  private void lazyCreateChild(final HasFastTreeItems parent, final int index,
+  private void lazyCreateChild(final FastTreeItem parent, final int index,
       final int children) {
     final FastTreeItem item = new FastTreeItem("child" + index + " ("
-        + children + " children)") {
-      
-      private Timer t = new Timer() {
-        public void run() {
-          lazyCreateChilds();
-        }
-      };
-
-      private void lazyCreateChilds() {
-        try {
-          for (int i = 0; i < children; i++) {
-            lazyCreateChild(this, i, children + (i * 10));
-          }
-        } finally {
-          removeStyleName("gwt-FastTreeItem-loading");
-        }
-      }
-
-      public void ensureChildren() {
-        addStyleName("gwt-FastTreeItem-loading");
-        t.schedule(3333);
-      }
-    };
+        + children + " children)");
     item.becomeInteriorNode();
     parent.addItem(item);
   }

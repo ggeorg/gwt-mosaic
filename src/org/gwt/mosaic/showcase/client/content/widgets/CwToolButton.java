@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -31,10 +33,14 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -46,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
 @ShowcaseStyle( {
     ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button",
     ".mosaic-Split-Button", ".mosaic-Checkbox-Button", ".mosaic-Radio-Button"})
-public class CwToolButton extends ContentWidget implements ClickListener {
+public class CwToolButton extends ContentWidget implements ClickHandler {
 
   /**
    * The constants used in this Page.
@@ -151,7 +157,6 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     disabledPushButton.ensureDebugId("mosaicPushButton-disabled");
 
     layoutPanel.add(disabledPushButton);
-
   }
 
   /**
@@ -193,7 +198,6 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     pushButton4.ensureDebugId("mosaicPushButton-normal");
 
     layoutPanel.add(pushButton4, new BoxLayoutData(FillStyle.VERTICAL));
-
   }
 
   /**
@@ -271,7 +275,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
   @ShowcaseSource
   private void addCheckboxAndRadioButtons(LayoutPanel layoutPanel) {
     // Add a checkbox button
-    ToolButton checkButton1 = new ToolButton("Checkbox", this);
+    ToolButton checkButton1 = new ToolButton("Checkbox");
     checkButton1.setStyle(ToolButtonStyle.CHECKBOX);
     checkButton1.ensureDebugId("mosaicCheckboxButton-normal");
 
@@ -313,16 +317,30 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     layoutPanel.add(radioButton4);
 
   }
-
+  
   /**
-   * Fired when the user clicks on a button.
+   * Called when a native click event is fired.
    * 
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
-    final Button btn = (Button) sender;
+  public void onClick(ClickEvent event) {
+    final Button btn = (Button) event.getSource();
     InfoPanel.show(btn.getText(), "Clicked!");
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }

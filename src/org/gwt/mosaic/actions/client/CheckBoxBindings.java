@@ -19,11 +19,13 @@ import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.mosaic.actions.client.ToggleButtonBindings.ToggleButtonBean;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class CheckBoxBindings extends ButtonBaseBindings {
 
@@ -33,13 +35,13 @@ public class CheckBoxBindings extends ButtonBaseBindings {
     }
 
     public Boolean getSelected() {
-      return ((CheckBox) target).isChecked();
+      return ((CheckBox) target).getValue();
     }
 
     public void setSelected(Boolean selected) {
       selected = toBoolean(selected, Boolean.FALSE);
-      Boolean oldValue = ((CheckBox) target).isChecked();
-      ((CheckBox) target).setChecked(selected);
+      Boolean oldValue = ((CheckBox) target).getValue();
+      ((CheckBox) target).setValue(selected);
       changeSupport.firePropertyChange("selected", oldValue, selected);
     }
 
@@ -77,10 +79,10 @@ public class CheckBoxBindings extends ButtonBaseBindings {
   }
 
   @Override
-  public void onClick(Widget sender) {
-    Boolean newValue = ((CheckBox) sender).isChecked();
+  public void onClick(ClickEvent event) {
+    Boolean newValue = ((CheckBox) event.getSource()).getValue();
     getTargetBean().firePropertyChange("selected", !newValue, newValue);
-    super.onClick(sender);
+    super.onClick(event);
   }
 
 }

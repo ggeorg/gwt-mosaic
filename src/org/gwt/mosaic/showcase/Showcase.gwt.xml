@@ -21,6 +21,9 @@
 	<inherits name='org.gwt.mosaic.actions.Actions' />
 	<inherits name='org.gwt.mosaic.forms.Forms' />
 	<inherits name='org.gwt.mosaic.beansbinding.BeansBinding' />
+	
+	<!-- Inherit the complex panel code for FastTree                -->
+	<inherits name='com.google.gwt.gen2.complexpanel.ComplexPanel' />
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
@@ -58,9 +61,10 @@
 
 	<!-- Internationalization support. -->
 	<extend-property name="locale" values="en" />
+	<!-- 
 	<extend-property name="locale" values="ar" />
 	<extend-property name="locale" values="el" />
 	<extend-property name="locale" values="fr" />
 	<extend-property name="locale" values="zh" />
-
+	 -->
 </module>

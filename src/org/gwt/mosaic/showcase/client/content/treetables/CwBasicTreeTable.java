@@ -25,7 +25,10 @@ import org.gwt.mosaic.ui.client.treetable.FastTreeTable;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTableItem;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
@@ -268,4 +271,18 @@ public class CwBasicTreeTable extends ContentWidget {
     }
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }
