@@ -44,8 +44,8 @@ import org.gwt.mosaic.showcase.client.content.forms.building.CwDynamicRowsExampl
 import org.gwt.mosaic.showcase.client.content.forms.building.CwFormDebugExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwIndentColumnExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPanelBuilderExample;
-import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwPlainExample;
+import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientationExample;
 import org.gwt.mosaic.showcase.client.content.forms.factories.CwButtonBarFactoryExample;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
@@ -69,11 +69,8 @@ import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
-import org.gwt.mosaic.showcase.client.content.panels.CwHorizontalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
-import org.gwt.mosaic.showcase.client.content.panels.CwTabPanel;
-import org.gwt.mosaic.showcase.client.content.panels.CwVerticalSplitPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopupPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
@@ -410,14 +407,6 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
-        IMAGES.catPanels());
-
-    TreeItem catGWTPanels = catPanels.addItem("GWT Panels");
-    setupMainMenuOption(catGWTPanels, new CwTabPanel(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catGWTPanels, new CwHorizontalSplitPanel(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catGWTPanels, new CwVerticalSplitPanel(constants),
         IMAGES.catPanels());
 
     TreeItem catLayoutTests = catPanels.addItem("Tests & Demos");
