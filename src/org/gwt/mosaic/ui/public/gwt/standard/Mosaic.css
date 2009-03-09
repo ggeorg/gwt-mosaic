@@ -269,14 +269,12 @@ textarea {
 }
 .mosaic-WindowPanel .Resize-e {
 	cursor: e-resize;
-	background: #fff; /* needed by IE */
 }
 .mosaic-WindowPanel .Resize-se {
 	cursor: se-resize;
 }
 .mosaic-WindowPanel .Resize-s {
 	cursor: s-resize;
-	background: #fff; /* needed by IE */
 }
 .mosaic-WindowPanel .Resize-sw {
 	cursor: sw-resize;
