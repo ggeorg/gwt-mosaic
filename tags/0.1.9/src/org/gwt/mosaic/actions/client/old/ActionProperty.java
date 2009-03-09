@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopolos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package org.gwt.mosaic.actions.client.old;
+
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ * @deprecated
+ */
+public interface ActionProperty {
+  int TEXT = 0;
+  int TITLE = 1;
+  int IMAGE = 2;
+  int DESCRIPTION = 3;
+  int CHECKED = 4;
+  int ENABLED = 5;
+  int VISIBLE = 6;
+}
