@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.UserAgent;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -68,17 +69,19 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowHeight = preferredSize[1] + m[0] + m[2];
     } else {
-      Object layoutDataObject = getLayoutData(child);
-      if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
-        LayoutData layoutData = (LayoutData) layoutDataObject;
-        if (layoutData.cachedHeight == null) {
-          layoutData.cachedHeight = child.getElement().getStyle().getProperty(
-              "height");
-          if (layoutData.cachedHeight != null
-              && layoutData.cachedHeight.length() > 0) {
-            return DOM.toPixelSize(layoutData.cachedHeight);
-          } else {
-            layoutData.cachedHeight = "".intern();
+      if (!UserAgent.isIE6()) {
+        Object layoutDataObject = getLayoutData(child);
+        if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+          LayoutData layoutData = (LayoutData) layoutDataObject;
+          if (layoutData.cachedHeight == null) {
+            layoutData.cachedHeight = child.getElement().getStyle().getProperty(
+                "height");
+            if (layoutData.cachedHeight != null
+                && layoutData.cachedHeight.length() > 0) {
+              return DOM.toPixelSize(layoutData.cachedHeight);
+            } else {
+              layoutData.cachedHeight = "".intern();
+            }
           }
         }
       }
@@ -111,17 +114,19 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final int[] preferredSize = lp.getPreferredSize();
       flowWidth = preferredSize[0] + m[1] + m[3];
     } else {
-      Object layoutDataObject = getLayoutData(child);
-      if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
-        LayoutData layoutData = (LayoutData) layoutDataObject;
-        if (layoutData.cachedWidth == null) {
-          layoutData.cachedWidth = child.getElement().getStyle().getProperty(
-              "width");
-          if (layoutData.cachedWidth != null
-              && layoutData.cachedWidth.length() > 0) {
-            return DOM.toPixelSize(layoutData.cachedWidth);
-          } else {
-            layoutData.cachedWidth = "".intern();
+      if (!UserAgent.isIE6()) {
+        Object layoutDataObject = getLayoutData(child);
+        if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+          LayoutData layoutData = (LayoutData) layoutDataObject;
+          if (layoutData.cachedWidth == null) {
+            layoutData.cachedWidth = child.getElement().getStyle().getProperty(
+                "width");
+            if (layoutData.cachedWidth != null
+                && layoutData.cachedWidth.length() > 0) {
+              return DOM.toPixelSize(layoutData.cachedWidth);
+            } else {
+              layoutData.cachedWidth = "".intern();
+            }
           }
         }
       }

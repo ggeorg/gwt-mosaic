@@ -131,10 +131,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBoxSize(Element elem) {
     int[] size = new int[2];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
-      elem.getStyle().setProperty("zoom", "1");
-    }
-
     final int[] b = getBorderSizes(elem);
     final int[] c = getClientSize(elem);
     size[0] = c[0] + (b[1] + b[3]);
@@ -185,13 +181,8 @@ public class DOM extends com.google.gwt.user.client.DOM {
       elem.getStyle().setProperty("zoom", "1");
     }
 
-    // if (elem == elem.getOwnerDocument().getBody().cast()) {
-    // size[0] = Window.getClientWidth();
-    // size[1] = Window.getClientHeight();
-    // } else {
     size[0] = getClientWidth(elem);
     size[1] = getClientHeight(elem);
-    // }
 
     return size;
   }
