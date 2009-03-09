@@ -129,7 +129,7 @@ public class CwBasicSizesExample extends ContentWidget {
     panel.add(newLabel("Min"), CellConstraints.xy(5, 1));
     panel.add(newLabel("Pref"), CellConstraints.xy(7, 1));
 
-    panel.add(newLabel("new TextBox() 15"), CellConstraints.xy(1, 3));
+    panel.add(newLabel("new TextBox(15)"), CellConstraints.xy(1, 3));
 
     panel.add(createTextBox(15), CellConstraints.xy(3, 3));
     panel.add(createTextBox(15), CellConstraints.xy(5, 3));
@@ -144,7 +144,7 @@ public class CwBasicSizesExample extends ContentWidget {
   @ShowcaseSource
   private Widget createTextBox(int cols) {
     TextBox textBox = new TextBox();
-    textBox.setWidth(1 + "em");
+    textBox.setWidth(cols + "em");
     return textBox;
   }
 
