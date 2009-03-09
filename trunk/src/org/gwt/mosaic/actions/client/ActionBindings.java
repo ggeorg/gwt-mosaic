@@ -26,6 +26,7 @@ import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -83,18 +84,6 @@ public abstract class ActionBindings<T> {
       return image;
     }
 
-    private HasLayoutManager getParent(Widget widget) {
-      Widget parent = widget.getParent();
-      if (parent == null) {
-        return null;
-      }
-      if (parent instanceof HasLayoutManager) {
-        return (HasLayoutManager) parent;
-      } else {
-        return getParent(parent);
-      }
-    }
-
     public String getText() {
       if (target instanceof HasText) {
         return ((HasText) target).getText();
@@ -120,8 +109,8 @@ public abstract class ActionBindings<T> {
     }
 
     public void invalidate() {
-      if (target instanceof Widget) {
-        HasLayoutManager lm = getParent((Widget) target);
+      if (target instanceof Widget && !(target instanceof HasLayoutManager)) {
+        HasLayoutManager lm = WidgetHelper.getParent((Widget) target);
         if (lm != null) {
           lm.invalidate();
         }

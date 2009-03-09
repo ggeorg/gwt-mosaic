@@ -346,6 +346,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    */
   public void setHTML(String html) {
     button.setHTML(html);
+    invalidate();
   }
 
   /*
@@ -364,6 +365,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    */
   public void setText(String text) {
     button.setText(text);
+    invalidate();
   }
 
   /*

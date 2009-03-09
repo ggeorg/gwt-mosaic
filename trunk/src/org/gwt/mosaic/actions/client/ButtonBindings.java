@@ -58,7 +58,8 @@ public class ButtonBindings extends ButtonBaseBindings {
     public void setText(String text) {
       String oldValue = this.text;
       this.text = text;
-      invalidate();
+      invalidate(); // ButtonBase does not implement HasLayoutManager, so we
+                    // need to invalidate at least the button's parent
       changeSupport.firePropertyChange("text", oldValue, text);
       target.setHTML(createLabel());
     }
