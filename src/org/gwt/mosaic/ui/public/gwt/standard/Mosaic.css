@@ -49,6 +49,7 @@ a:active {
 button {
 	/*display: block;*/
 	font-size: 16pt;
+	overflow: visible;	
 }
 
 /*
