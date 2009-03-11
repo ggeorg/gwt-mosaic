@@ -321,8 +321,9 @@ public class Showcase implements EntryPoint {
         ContentWidget content = itemWidgets.get(item);
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
+
+          app.contentWrapper.layout();
         }
-        app.contentWrapper.layout();
       }
     });
 
@@ -505,14 +506,14 @@ public class Showcase implements EntryPoint {
         constants), IMAGES.catForms());
         
     // Trees
-    TreeItem catTrees = catWidgets.addItem("Trees");
+    TreeItem catTrees = mainMenu.addItem("Trees");
     setupMainMenuOption(catTrees, new CwBasicTree(constants), IMAGES.catLists());
     setupMainMenuOption(catTrees, new CwLazyTree(constants), IMAGES.catLists());
     setupMainMenuOption(catTrees, new CwVerboseTree(constants),
         IMAGES.catLists());
 
     // Tables
-    TreeItem catTables = catWidgets.addItem("Lists & Tables");
+    TreeItem catTables = mainMenu.addItem("Lists & Tables");
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
@@ -533,11 +534,11 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Validation
-    TreeItem catValidation = mainMenu.addItem("Validation");
-
-    TreeItem catBasicValidation = catValidation.addItem("Basic");
-    setupMainMenuOption(catBasicValidation,
-        new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
+//    TreeItem catValidation = mainMenu.addItem("Validation");
+//
+//    TreeItem catBasicValidation = catValidation.addItem("Basic");
+//    setupMainMenuOption(catBasicValidation,
+//        new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
