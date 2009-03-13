@@ -1,7 +1,7 @@
 #summary WindowPanel tutorial.
 #labels Featured
 
-= NOTE: This tutorial is valid only for SVN trunk version, not for current (0.1.8) =
+= NOTE: This tutorial is valid only for gwt-mosaic >= 0.1.9 =
 
 = Introduction =
 
