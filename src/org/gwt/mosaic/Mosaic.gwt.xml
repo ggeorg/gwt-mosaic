@@ -19,13 +19,6 @@
 	<!-- Inherit the core Web Toolkit stuff.                                -->
 	<inherits name='com.google.gwt.user.User' />
 
-	<!-- Includes the public resources used by the GWT themes. Those files  -->
-	<!-- do not inject a style sheet into the application.                  -->
-	<inherits
-		name='com.google.gwt.user.theme.standard.StandardResources' />
-	<inherits name="com.google.gwt.user.theme.chrome.ChromeResources" />
-	<inherits name="com.google.gwt.user.theme.dark.DarkResources" />
-
 	<!-- Other module inherits                                      -->
 	<inherits name='org.gwt.mosaic.core.Core' />
 	<inherits name='org.gwt.mosaic.ui.UI'/>
