@@ -13,6 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GWT_1_6"/>
 	<classpathentry kind="var" path="GWT16_HOME/gwt-user.jar"/>
 	<classpathentry kind="var" path="GWT16_HOME/gwt-dev-linux.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-incubator-trunk-r1543.jar"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="lib" path="lib/gwt-incubator-trunk-r1565.jar"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
