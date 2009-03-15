@@ -24,20 +24,20 @@
 	
 	<!-- Inherit the complex panel code for FastTree                -->
 	<inherits name='com.google.gwt.gen2.complexpanel.ComplexPanel' />
+	
+	<!-- Includes the public resources used by the GWT Mosaic       --> 
+	<!-- themes. Those files do not inject a style sheet into the   -->
+	<!-- application.                                               -->
+	<inherits name='org.gwt.mosaic.theme.standard.StandardResources' />
+	<inherits name="org.gwt.mosaic.theme.chrome.ChromeResources" />
+	<inherits name="org.gwt.mosaic.theme.dark.DarkResources" />
 
-	<!-- Inherit the default GWT style sheet.  You can change       -->
-	<!-- the theme of your GWT application by uncommenting          -->
+	<!-- Inherit the default GWT Mosaic style sheet. You can change -->
+	<!-- the theme of your GWT Mosaic application by uncommenting   -->
 	<!-- any one of the following lines.                            -->
-	<inherits name='com.google.gwt.user.theme.standard.Standard' />
-	<!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
-	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
-
-	<!-- Inherit the default GWT style sheet.  You can change       -->
-	<!-- the theme of your GWT application by uncommenting          -->
-	<!-- any one of the following lines.                            -->
-	<stylesheet src="gwt/standard/Mosaic.css" />
-	<!-- <stylesheet src="gwt/chrome/Mosaic.css" /> -->
-	<!-- <stylesheet src="gwt/dark/Mosaic.css" /> -->
+	<inherits name='org.gwt.mosaic.theme.standard.Standard' />
+	<!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/> -->
+	<!-- <inherits name="org.gwt.mosaic.dark.Dark"/>     -->
 
 	<!-- Enable debug ID.                                           -->
 	<inherits name="com.google.gwt.user.Debug" />
