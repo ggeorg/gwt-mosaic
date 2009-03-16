@@ -28,6 +28,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.Request;
@@ -269,7 +270,7 @@ public abstract class ContentWidget extends LayoutPanel implements
         onInitializeComplete();
       }
     });
-    
+
   }
 
   public final boolean isInitialized() {
@@ -359,7 +360,8 @@ public abstract class ContentWidget extends LayoutPanel implements
     target.setHTML("&nbsp;&nbsp;" + loadingImage);
 
     // Request the contents of the file
-    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
+    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET,
+        GWT.getModuleBaseURL() + url);
     RequestCallback realCallback = new RequestCallback() {
       public void onError(Request request, Throwable exception) {
         target.setHTML("Cannot find resource");
