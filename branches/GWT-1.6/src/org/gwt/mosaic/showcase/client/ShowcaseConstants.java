@@ -48,7 +48,7 @@ public interface ShowcaseConstants extends Constants,
   /**
    * The path to source code for examples, raw files, and style definitions.
    */
-  String DST_SOURCE = "MosaicSource/";
+  String DST_SOURCE = "gwtShowcaseSource/";
 
   /**
    * The destination folder for parsed source code from Mosaic examples.
@@ -58,7 +58,7 @@ public interface ShowcaseConstants extends Constants,
   /**
    * The destination folder for raw files that are included in entirety.
    */
-  String DST_SOURCE_RAW = "raw/";
+  String DST_SOURCE_RAW = DST_SOURCE + "raw/";
 
   /**
    * The destination folder for parsed CSS styles used in Mosaic examples.
