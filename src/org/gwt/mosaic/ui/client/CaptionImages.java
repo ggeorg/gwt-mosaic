@@ -25,6 +25,21 @@ import com.google.gwt.user.client.ui.ImageBundle;
  */
 public interface CaptionImages extends ImageBundle {
   
+  @Resource("gwt-mosaic-20x16.png")
+  AbstractImagePrototype gwtMosaicLogo();
+
+  @Resource("tool-button-arrow-down.png")
+  AbstractImagePrototype toolArrowDown();
+
+  @Resource("tool-button-arrow-left.png")
+  AbstractImagePrototype toolArrowLeft();
+
+  @Resource("tool-button-arrow-right.png")
+  AbstractImagePrototype toolArrowRight();
+  
+  @Resource("tool-button-arrow-up.png")
+  AbstractImagePrototype toolArrowUp();
+
   @Resource("tool-button-collapse-down.png")
   AbstractImagePrototype toolCollapseDown();
 
@@ -54,10 +69,7 @@ public interface CaptionImages extends ImageBundle {
 
   @Resource("window-button-minimize.png")
   AbstractImagePrototype windowMinimize();
-
+  
   @Resource("window-button-restore.png")
   AbstractImagePrototype windowRestore();
-  
-  @Resource("gwt-mosaic-20x16.png")
-  AbstractImagePrototype gwtMosaicLogo();
 }

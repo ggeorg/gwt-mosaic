@@ -58,26 +58,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel,
     HasBeforeSelectionHandlers<Integer>, HasSelectionHandlers<Integer> {
 
-  public static class DecoratedBottomTabBar extends TabBar {
-    static String[] TAB_ROW_STYLES = {"tabTop", "tabMiddle", "tabBottom"};
-
-    static final String STYLENAME_DEFAULT = "mosaic-DecoratedBottomTabBar";
-
-    /**
-     * Creates an empty {@link DecoratedTabBar}.
-     */
-    public DecoratedBottomTabBar() {
-      super();
-      setStylePrimaryName(STYLENAME_DEFAULT);
-    }
-
-    @Override
-    protected SimplePanel createTabTextWrapper() {
-      return new AbstractDecoratorPanel(TAB_ROW_STYLES, 1) {
-      };
-    }
-  }
-
   public enum TabBarPosition {
     TOP, BOTTOM
   }
@@ -87,7 +67,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   private static final String DEFAULT_STYLENAME = "mosaic-TabLayoutPanel";
 
-  private TabBar tabBar;
+  private ScrollTabBar tabBar;
 
   private final DeckLayoutPanel deck = new DeckLayoutPanel();
 
@@ -117,12 +97,12 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
     if (decorate) {
       if (region == TabBarPosition.TOP) {
-        tabBar = new DecoratedTabBar();
+        tabBar = new ScrollTabBar(true, false);
       } else {
-        tabBar = new DecoratedBottomTabBar();
+        tabBar = new ScrollTabBar(true, true);
       }
     } else {
-      tabBar = new TabBar();
+      tabBar = new ScrollTabBar();
     }
 
     deck.addStyleName(DEFAULT_STYLENAME + "Bottom");

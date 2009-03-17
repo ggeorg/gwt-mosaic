@@ -619,6 +619,21 @@ textarea {
 	text-indent: 6px;
 }
 
+/*** ScrollTabe ***/
+
+.mosaic-ScrollTabBar {
+}
+
+.mosaic-ScrollTabBar .mosaic-ScrollTabBar-NavBar {
+  margin: 0px 2px !important;	
+}
+
+.mosaic-ScrollTabBar button {
+  padding: 0px !important;
+  margin: 0px 0px 2px 0px !important;
+  border: 1px solid #ccc;
+}
+
 /*** ScrollTable ***/
 
 .gwt-ScrollTable,
