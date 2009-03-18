@@ -20,7 +20,7 @@
  * name below, and attach it to the DOM.  Use a timer to detect when the
  * element's height and width are set to 5px.
  */
-.Application-Reference-standard { 
+.Application-Reference-standard-rtl { 
 	height: 5px;
 	width: 5px;
 	zoom: 1;
@@ -73,6 +73,9 @@
 .Application-options .gwt-ToggleButton-down,
 .Application-options .gwt-ToggleButton-down-hovering {
 	cursor: default;
+}
+.Application-options .sc-ThemeButton-aegean {
+	background: #8db2e3;
 }
 .Application-options .sc-ThemeButton-standard {
 	background: #d0e4f6;
