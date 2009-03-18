@@ -457,7 +457,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (parent == getDecoratorWidget(this)) {
       parent = parent.getParent();
     } else {
-      if (parent instanceof LayoutComposite) {
+      if (parent instanceof Viewport) {
+        return parent;
+      } else if (parent instanceof LayoutComposite) {
         Widget thiz = parent;
         parent = thiz.getParent();
         if (parent == getDecoratorWidget(thiz)) {
