@@ -16,5 +16,5 @@
 
 <module>
 	<inherits name='com.google.gwt.user.theme.chrome.ChromeRTL' />
-	<stylesheet src="gwt/chrome/MosaicRTL.css"/>
+	<stylesheet src="gwt/chrome/mosaic_rtl.css"/>
 </module>

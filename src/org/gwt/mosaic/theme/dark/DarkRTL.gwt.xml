@@ -16,5 +16,5 @@
 
 <module>
 	<inherits name='com.google.gwt.user.theme.dark.DarkRTL' />
-	<stylesheet src="gwt/dark/Mosaic_rtl.css"/>
+	<stylesheet src="gwt/dark/mosaic_rtl.css"/>
 </module>

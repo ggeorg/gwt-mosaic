@@ -15,6 +15,6 @@
 <!--                                                                        -->
 
 <module>
-	<inherits name='com.google.gwt.user.theme.chrome.Chrome' />
-	<stylesheet src="gwt/chrome/mosaic.css"/>
+	<inherits name='com.google.gwt.user.theme.aegean.Aegean' />
+	<stylesheet src="gwt/aegean/mosaic.css"/>
 </module>

@@ -14,7 +14,8 @@
 <!-- limitations under the License.                                         -->
 <!--                                                                        -->
 
+<!-- Includes the public resources used by the the Aegean theme. This file  -->
+<!-- does not inject a style sheet into the application.                    -->
 <module>
-	<inherits name='com.google.gwt.user.theme.chrome.Chrome' />
-	<stylesheet src="gwt/chrome/mosaic.css"/>
+	<inherits name='com.google.gwt.user.theme.aegean.AegeanResources' />
 </module>
