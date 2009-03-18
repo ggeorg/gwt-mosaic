@@ -16,5 +16,5 @@
 
 <module>
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
-	<stylesheet src="gwt/standard/standard.css"/>
+	<stylesheet src="gwt/standard/mosaic_rtl.css"/>
 </module>

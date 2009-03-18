@@ -15,6 +15,6 @@
 <!--                                                                        -->
 
 <module>
-	<inherits name='com.google.gwt.user.theme.standard.Standard' />
-	<stylesheet src="gwt/standard/standard.css"/>
+	<inherits name="com.google.gwt.user.theme.standard.Standard" />
+	<stylesheet src="gwt/standard/mosaic.css"/>
 </module>
