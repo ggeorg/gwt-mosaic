@@ -84,7 +84,6 @@ import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
-import org.gwt.mosaic.showcase.client.content.validation.basic.CwSimpleDomainValidationExample;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -386,7 +385,6 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catWidgets, new CwSliderBar(constants),
         IMAGES.catWidgets());
 
-
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
     setupMainMenuOption(catPopups, new CwInfoPanel(constants),
@@ -504,7 +502,7 @@ public class Showcase implements EntryPoint {
     TreeItem catFactoriesForms = catForms.addItem("Factories");
     setupMainMenuOption(catFactoriesForms, new CwButtonBarFactoryExample(
         constants), IMAGES.catForms());
-        
+
     // Trees
     TreeItem catTrees = mainMenu.addItem("Trees");
     setupMainMenuOption(catTrees, new CwBasicTree(constants), IMAGES.catLists());
@@ -534,11 +532,11 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Validation
-//    TreeItem catValidation = mainMenu.addItem("Validation");
-//
-//    TreeItem catBasicValidation = catValidation.addItem("Basic");
-//    setupMainMenuOption(catBasicValidation,
-//        new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
+    // TreeItem catValidation = mainMenu.addItem("Validation");
+    //
+    // TreeItem catBasicValidation = catValidation.addItem("Basic");
+    // setupMainMenuOption(catBasicValidation,
+    // new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
@@ -659,7 +657,7 @@ public class Showcase implements EntryPoint {
   private void updateStyleSheets() {
     // Generate the names of the style sheets to include
     String gwtStyleSheet = "gwt/" + CUR_THEME + "/" + CUR_THEME + ".css";
-    String gwtMosaicStyleSheet = "gwt/" + CUR_THEME + "/Mosaic.css";
+    String gwtMosaicStyleSheet = "gwt/" + CUR_THEME + "/mosaic.css";
     String showcaseStyleSheet = CUR_THEME + "/Showcase.css";
     if (LocaleInfo.getCurrentLocale().isRTL()) {
       gwtStyleSheet = gwtStyleSheet.replace(".css", "_rtl.css");
@@ -697,7 +695,7 @@ public class Showcase implements EntryPoint {
     }
 
     // Detach the app while we manipulate the styles to avoid rendering issues
-    RootPanel.get().remove(app);
+    app.detach();
 
     // Remove the old style sheets
     for (Element elem : toRemove) {
@@ -707,7 +705,19 @@ public class Showcase implements EntryPoint {
     // Load the GWT theme style sheet
     String modulePath = GWT.getModuleBaseURL();
     Command callback = new Command() {
+      /**
+       * The number of style sheets that have been loaded and executed this
+       * command.
+       */
+      private int numStyleSheetsLoaded = 0;
+
       public void execute() {
+        // Wait until all style elements have loaded before re-attaching the app
+        numStyleSheetsLoaded++;
+        if (numStyleSheetsLoaded < 3) {
+          return;
+        }
+
         // Different themes use different background colors for the body
         // element, but IE only changes the background of the visible content
         // on the page instead of changing the background color of the entire
@@ -715,14 +725,14 @@ public class Showcase implements EntryPoint {
         // IE to redraw the background correctly.
         RootPanel.getBodyElement().getStyle().setProperty("display", "none");
         RootPanel.getBodyElement().getStyle().setProperty("display", "");
-        RootPanel.get().add(app);
+        app.attach();
       }
     };
 
     StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
-        getCurrentReferenceStyleName("gwt"), null);
+        getCurrentReferenceStyleName("gwt"), callback);
     StyleSheetLoader.loadStyleSheet(modulePath + gwtMosaicStyleSheet,
-        getCurrentReferenceStyleName("mosaic"), null);
+        getCurrentReferenceStyleName("mosaic"), callback);
 
     // Load the showcase specific style sheet after the GWT & Mosaic theme style
     // sheet so that custom styles supercede the theme styles.
