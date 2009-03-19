@@ -10,40 +10,36 @@
 To build a JAR enter:
 
 	ant
-	
-Note: please check the build.properties and choose the correct value for the
-'gwt.dev' variable (default is 'gwt-dev-linux').
 
 Other ANT targets are:
 
-	- all	: for building the JAR and the demo WAR
+	- build	: for building the JAR and the demo WAR
 	- jar	: for building the JAR only (default)
 	- war	: for building the WAR only
 	- clean
+	- javadoc
 
 2. The demo
 ============================================================================
-To compile and run the demo enter:
+To run the Showcase demo enter:
 
-	./Mosaic-compile
-	./Mosaic-shell
-
-Note: both scripts are for linux.
+	ant hosted
 
 3. Using
 ============================================================================
-To use the library you will need also gwt-dnd.jar & gwt-incubator.jar 
-from the lib directory and you have to add:
+To use the library you will need also gwt-dnd.jar, gwtx.jar, 
+gwt-beans-binding.jar and gwt-incubator.jar from the lib directory, and 
+you have to add:
 
 	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
 	<inherits name='org.gwt.mosaic.Mosaic' />
 
-	<!-- Inherit the default GWT style sheet.  You can change       -->
-	<!-- the theme of your GWT application by uncommenting          -->
+	<!-- Inherit the default GWT Mosaic style sheet. You can change -->
+	<!-- the theme of your GWT Mosaic application by uncommenting   -->
 	<!-- any one of the following lines.                            -->
-	<stylesheet src="gwt/standard/Mosaic.css" />
-	<!-- <stylesheet src="gwt/chrome/Mosaic.css" />                 -->
-	<!-- <stylesheet src="gwt/dark/Mosaic.css" />                   -->
+	<inherits name='org.gwt.mosaic.theme.standard.Standard' />
+	<!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
+	<!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
+	<!-- <inherits name='org.gwt.mosaic.theme.aegean.Aegean' />     -->
  
 in your module gwt.xml file.
-	
