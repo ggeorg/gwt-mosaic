@@ -62,7 +62,7 @@
 				<pathelement location="src" />
 				<path refid="project.class.path" />
 			</classpath>
-			<jvmarg value="-Xmx256M" />
+			<jvmarg value="-Xmx512M" />
 			<arg value="-startupUrl" />
 			<arg value="Showcase.html" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
