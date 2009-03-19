@@ -83,8 +83,6 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
       layoutPanel.setLayout(new FillLayout());
     }
     layoutPanel.add(w, new FillLayoutData(decorate));
-
-    // onLoad();
   }
 
   @Deprecated
@@ -147,7 +145,9 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
   }
 
   public void attach() {
-    RootPanel.get().add(this, Integer.MIN_VALUE, Integer.MIN_VALUE);
+    if (!isAttached()) {
+      RootPanel.get().add(this, Integer.MIN_VALUE, Integer.MIN_VALUE);
+    }
   }
 
   public void detach() {
