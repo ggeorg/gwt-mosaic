@@ -58,7 +58,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   }
 
   public CaptionLayoutPanel(final String text, boolean asHTML) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
 
@@ -185,7 +185,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   @Override
   public void layout() {
-    getWidget().layout();
+    getLayoutPanel().layout();
   }
 
   /*
@@ -222,11 +222,11 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   protected void setFooter(Widget footer) {
     if (this.footer != null) {
-      getWidget().remove(this.footer);
+      getLayoutPanel().remove(this.footer);
     }
     this.footer = footer;
     if (this.footer != null) {
-      getWidget().add(this.footer, new BoxLayoutData(FillStyle.HORIZONTAL));
+      getLayoutPanel().add(this.footer, new BoxLayoutData(FillStyle.HORIZONTAL));
     }
   }
 
