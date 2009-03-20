@@ -178,7 +178,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
   public ScrollTabBar(boolean decorated, boolean atBottom) {
     super();
 
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Alignment.END));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);

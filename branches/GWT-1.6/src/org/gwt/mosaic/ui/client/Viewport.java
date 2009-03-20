@@ -77,7 +77,7 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
 
   @Deprecated
   public void add(Widget w, boolean decorate) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.clear();
     if (!(layoutPanel.getLayout() instanceof FillLayout)) {
       layoutPanel.setLayout(new FillLayout());
@@ -87,7 +87,7 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
 
   @Deprecated
   public void clear() {
-    getWidget().clear();
+    getLayoutPanel().clear();
   }
 
   /**
@@ -95,13 +95,14 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
    * 
    * @return the internal {@link LayoutPanel}
    */
+  @Override
   public LayoutPanel getLayoutPanel() {
-    return getWidget();
+    return super.getLayoutPanel();
   }
 
   @Deprecated
   public Iterator<Widget> iterator() {
-    return getWidget().iterator();
+    return getLayoutPanel().iterator();
   }
 
   @Override
@@ -125,7 +126,7 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
 
   @Deprecated
   public boolean remove(Widget w) {
-    return getWidget().remove(w);
+    return getLayoutPanel().remove(w);
   }
 
   private void setBounds(final int x, final int y, int width, int height) {

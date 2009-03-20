@@ -308,7 +308,7 @@ public class Table<T> extends LayoutComposite implements HasFocus,
       cachedTableModel.setPreCachedRowCount(50);
       cachedTableModel.setPostCachedRowCount(50);
 
-      final LayoutPanel layoutPanel = getWidget();
+      final LayoutPanel layoutPanel = getLayoutPanel();
       table = new PagingScrollTable<T>(cachedTableModel, new DataGrid(),
           new FixedWidthFlexTable());
       layoutPanel.clear();

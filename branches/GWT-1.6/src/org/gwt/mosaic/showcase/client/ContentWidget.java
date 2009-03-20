@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.LazyLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -50,7 +51,7 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * A widget used to show gwt-mosaic examples in the ContentPanel. It includes a
- * tab bar with options to view the example, view the source, or view the css
+ * tab panel with options to view the example, view the source, or view the css
  * style rules.
  * <p>
  * This widget uses a lazy initialization mechanism so that the content is not
@@ -59,34 +60,35 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
  * tabs are loaded using RPC call to the server.
  * 
  * <h3>CSS Style Rules</h3>
+ * <pre>
  * <ul class="css">
- * <li>.mosaic-sc-Page { Applied to the entire widget }</li>
- * <li>.sc-ContentWidget-tabBar { Applied to the TabBar }</li>
- * <li>.sc-ContentWidget-deckPanel { Applied to the DeckPanel }</li>
+ * <li>.sc-ContentWidget { Applied to the entire widget }</li>
  * <li>.sc-ContentWidget-name { Applied to the name }</li>
- * <li>.sc-ContentWidget-description { Applied to the description }</li> </ul>
+ * <li>.sc-ContentWidget-description { Applied to the description }</li>
+ * </ul>
+ * </pre>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public abstract class ContentWidget extends LayoutPanel implements
+public abstract class ContentWidget extends LazyLayoutPanel implements
     SelectionHandler<Integer> {
 
   /**
    * The constants used in this Content Widget.
    */
   public static interface CwConstants extends Constants {
-    String mosaicPageExample();
+    String contentWidgetExample();
 
-    String mosaicPageSource();
+    String contentWidgetSource();
 
-    String mosaicPageStyle();
+    String contentWidgetStyle();
   }
 
   /**
    * The default style name.
    */
-  private static final String DEFAULT_STYLE_NAME = "mosaic-sc-ContentWidget";
+  private static final String DEFAULT_STYLE_NAME = "sc-ContentWidget";
 
   /**
    * The static loading image displayed when loading CSS or source code.
@@ -124,7 +126,20 @@ public abstract class ContentWidget extends LayoutPanel implements
    */
   private HTML styleWidget = null;
 
-  private boolean initialized = false;
+  /**
+   * Whether the demo widget has been initialized.
+   */
+  private boolean widgetInitialized;
+
+  /**
+   * Whether the demo widget is (asynchronously) initializing.
+   */
+  private boolean widgetInitializing;
+
+  /**
+   * A vertical panel that holds the demo widget once it is initialized.
+   */
+  private LayoutPanel widgetVpanel;
 
   /**
    * Constructor.
@@ -147,6 +162,115 @@ public abstract class ContentWidget extends LayoutPanel implements
     sb.append(text);
     sb.append("</td></tr></thead></table>");
     return sb.toString();
+  }
+
+  /**
+   * Initialize this widget by creating the elements that should be added to the
+   * page.
+   */
+  @Override
+  public final Widget createWidget() {
+    setStyleName(DEFAULT_STYLE_NAME);
+
+    tabPanel = new DecoratedTabLayoutPanel(true);
+    tabPanel.setPadding(5);
+
+    // Add a tab handler
+    tabPanel.addSelectionHandler(this);
+
+    // Create the container for the main example
+    widgetVpanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    widgetVpanel.setPadding(0);
+    widgetVpanel.setWidgetSpacing(0);
+    tabPanel.add(widgetVpanel, createTabBarCaption(
+        Showcase.IMAGES.mediaPlayGreen(), constants.contentWidgetExample()),
+        true);
+
+    // Add the name
+    HTML nameWidget = new HTML(getName(), false);
+    nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
+    widgetVpanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Add the description
+    final HTML descWidget = new HTML(getDescription());
+    descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
+    widgetVpanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Monitor word wraps
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return descWidget.getElement();
+      }
+
+      public boolean isAttached() {
+        return descWidget.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        widgetVpanel.layout(true);
+      }
+    });
+
+    // Add source code tab
+    if (hasSource()) {
+      // final LayoutPanel panel2 = new LayoutPanel();
+      sourceWidget = new HTML();
+      sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
+      // panel2.add(sourceWidget);
+      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
+          constants.contentWidgetSource()), true);
+    } else {
+      sourceLoaded = true;
+    }
+
+    // Add style tab
+    if (hasStyle()) {
+      // final LayoutPanel panel3 = new LayoutPanel();
+      styleDefs = new HashMap<String, String>();
+      styleWidget = new HTML();
+      styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
+      // panel3.add(styleWidget);
+      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
+          constants.contentWidgetStyle()), true);
+    }
+
+    return tabPanel;
+  }
+
+  @Override
+  public void ensureWidget() {
+    super.ensureWidget();
+    ensureWidgetInitialized(widgetVpanel);
+  }
+
+  /**
+   * Ensure that the demo widget has been initialized. Note that initialization
+   * can fail if there is a network failure.
+   */
+  private void ensureWidgetInitialized(final LayoutPanel vPanel) {
+    if (widgetInitializing || widgetInitialized) {
+      return;
+    }
+
+    widgetInitializing = true;
+
+    asyncOnInitialize(new AsyncCallback<Widget>() {
+      public void onFailure(Throwable reason) {
+        widgetInitializing = false;
+        Window.alert("Failed to download code for this widget (" + reason + ")");
+      }
+
+      public void onSuccess(Widget result) {
+        widgetInitializing = false;
+        widgetInitialized = true;
+
+        Widget widget = result;
+        if (widget != null) {
+          vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
+        }
+        onInitializeComplete();
+      }
+    });
   }
 
   /**
@@ -187,102 +311,11 @@ public abstract class ContentWidget extends LayoutPanel implements
   }
 
   /**
-   * Initialize this widget by creating the elements that should be added to the
-   * page.
-   */
-  public final void initialize() {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-
-    tabPanel = new DecoratedTabLayoutPanel(true);
-    tabPanel.addSelectionHandler(this);
-    tabPanel.setPadding(5);
-    add(tabPanel);
-
-    // Create the container for the main example
-    final LayoutPanel panel1 = new LayoutPanel(new BoxLayout(
-        Orientation.VERTICAL));
-    panel1.setPadding(0);
-    panel1.setWidgetSpacing(0);
-    tabPanel.add(panel1, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
-        constants.mosaicPageExample()), true);
-
-    // Add the name
-    HTML nameWidget = new HTML(getName());
-    nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
-    panel1.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    // Add the description
-    final HTML descWidget = new HTML(getDescription());
-    descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
-    panel1.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    ResizableWidgetCollection.get().add(new ResizableWidget() {
-      public Element getElement() {
-        return descWidget.getElement();
-      }
-
-      public boolean isAttached() {
-        return descWidget.isAttached();
-      }
-
-      public void onResize(int width, int height) {
-        panel1.layout(true);
-      }
-    });
-
-    // Add source code tab
-    if (hasSource()) {
-      final LayoutPanel panel2 = new LayoutPanel();
-      sourceWidget = new HTML();
-      sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
-      panel2.add(sourceWidget);
-      tabPanel.add(panel2, createTabBarCaption(Showcase.IMAGES.cup(),
-          constants.mosaicPageSource()), true);
-    } else {
-      sourceLoaded = true;
-    }
-
-    // Add style tab
-    if (hasStyle()) {
-      final LayoutPanel panel3 = new LayoutPanel();
-      styleDefs = new HashMap<String, String>();
-      styleWidget = new HTML();
-      styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
-      panel3.add(styleWidget);
-      tabPanel.add(panel3, createTabBarCaption(Showcase.IMAGES.css(),
-          constants.mosaicPageStyle()), true);
-    }
-
-    asyncOnInitialize(new AsyncCallback<Widget>() {
-      public void onFailure(Throwable caught) {
-        Window.alert("exception: " + caught);
-      }
-
-      public void onSuccess(Widget result) {
-        // Initialize the showcase widget (if any) and add it to the page
-        if (result != null) {
-          panel1.add(result, new BoxLayoutData(FillStyle.BOTH));
-          layout(true); // FIXME should be 'false'
-        }
-        onInitializeComplete();
-      }
-    });
-
-  }
-
-  public final boolean isInitialized() {
-    return initialized;
-  }
-
-  /**
    * When the widget is first initialized, this method is called. If it returns
-   * a Widget, the widget will be added as the first tab. Return
-   * <code>null</code> to disable the first tab.
+   * a Widget, the widget will be added as the first tab. Return {@code null} to
+   * disable the first tab.
    * 
-   * @return
+   * @return the widget to add to the first tab
    */
   protected abstract Widget onInitialize();
 
@@ -296,8 +329,12 @@ public abstract class ContentWidget extends LayoutPanel implements
 
   @Override
   protected void onLoad() {
-    // Initialize this widget if we haven't already
-    initialize();
+    ensureWidget();
+
+    // Select the first tab
+    if (tabPanel.getWidgetCount() > 0) {
+      tabPanel.selectTab(0);
+    }
   }
 
   public void onSelection(SelectionEvent<Integer> event) {
@@ -305,7 +342,7 @@ public abstract class ContentWidget extends LayoutPanel implements
 
     // Load the source code
     final String tabHTML = tabPanel.getTabHTML(tabIndex);
-    if (!sourceLoaded && tabHTML.contains(constants.mosaicPageSource())) {
+    if (!sourceLoaded && tabHTML.contains(constants.contentWidgetSource())) {
       sourceLoaded = true;
       String className = this.getClass().getName();
       className = className.substring(className.lastIndexOf(".") + 1);
@@ -314,7 +351,7 @@ public abstract class ContentWidget extends LayoutPanel implements
     }
 
     // Load the style definitions
-    if (hasStyle() && tabHTML.contains(constants.mosaicPageStyle())) {
+    if (hasStyle() && tabHTML.contains(constants.contentWidgetStyle())) {
       final String theme = Showcase.CUR_THEME;
       if (styleDefs.containsKey(theme)) {
         styleWidget.setHTML(styleDefs.get(theme));

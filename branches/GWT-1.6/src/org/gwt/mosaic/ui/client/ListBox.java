@@ -229,7 +229,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
       headerTable = null;
     }
 
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     columnWidget = new ColumnWidget(dataTable, headerTable) {
       @Override
       protected int getInputColumnWidth() {

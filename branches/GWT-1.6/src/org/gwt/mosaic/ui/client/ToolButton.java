@@ -326,7 +326,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    */
   public ToolButton() {
     super();
-    getWidget().add(button);
+    getLayoutPanel().add(button);
     setStyleName(DEFAULT_STYLENAME);
   }
 
