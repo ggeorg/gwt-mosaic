@@ -46,29 +46,14 @@ a:active {
 	color:#ff0000;
 }
 
-button {
-	/*display: block;*/
-	font-size: 16pt;
-}
+/*** TextBox & TextArea */
 
-/*
-.gwt-PushButton,
-.gwt-CustomButton {
-	overflow: hidden;
-	width: auto;
-	height: auto;
-}
-*/
-
-.widePanel {
-	/*width: 100%*/
-}
-
-input {
+.gwt-TextBox,
+.gwt-TextArea {
 	margin: 0px;
 	padding: 0px;
 	text-decoration: none;
-	font-size: small;
+	font-size: 10pt;
 	border: 1px inset #ccc;
 }
 
