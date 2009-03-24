@@ -92,6 +92,8 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwSliderBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -180,11 +182,6 @@ public class Showcase implements EntryPoint {
   }
 
   /**
-   * The base style name.
-   */
-  public static final String DEFAULT_STYLE_NAME = "Mosaic";
-
-  /**
    * The static images used throughout the Showcase.
    */
   public static final ShowcaseImages IMAGES = (ShowcaseImages) GWT.create(ShowcaseImages.class);
@@ -194,6 +191,9 @@ public class Showcase implements EntryPoint {
    */
   public static String CUR_THEME = ShowcaseConstants.STYLE_THEMES[0];
 
+  /**
+   * Initialize GWT Beans Binding (run property descriptor generator).
+   */
   static {
     GWTBeansBinding.init();
   }
@@ -235,44 +235,7 @@ public class Showcase implements EntryPoint {
    * A mapping of menu items to the widget display when the item is selected.
    */
   private Map<TreeItem, ContentWidget> itemWidgets = new HashMap<TreeItem, ContentWidget>();
-
-  /**
-   * Set the content to the {@link ContentWidget}.
-   * 
-   * @param content the {@link ContentWidget} to display
-   */
-  private void displayContentWidget(final ContentWidget content) {
-    if (content != null) {
-      app.setContent(content);
-    }
-  }
-
-  /**
-   * Get the token for a given content widget.
-   * 
-   * @return the content widget token.
-   */
-  private String getContentWidgetToken(ContentWidget content) {
-    String className = content.getClass().getName();
-    className = className.substring(className.lastIndexOf('.') + 1);
-    return className;
-  }
-
-  /**
-   * Get the style name of the reference element defined in the current GWT
-   * theme style sheet.
-   * 
-   * @param prefix the prefix of the reference style name
-   * @return the style name
-   */
-  private String getCurrentReferenceStyleName(String prefix) {
-    String gwtRef = prefix + "-Reference-" + CUR_THEME;
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      gwtRef += "-rtl";
-    }
-    return gwtRef;
-  }
-
+  
   /**
    * This is the entry point method.
    */
@@ -317,8 +280,11 @@ public class Showcase implements EntryPoint {
         ContentWidget content = itemWidgets.get(item);
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
-
-          app.contentWrapper.layout();
+          //content.invalidate();
+          HasLayoutManager parent = WidgetHelper.getParent(content);
+          if (parent != null) {
+            parent.layout();
+          }
         }
       }
     });
@@ -334,6 +300,44 @@ public class Showcase implements EntryPoint {
     }
 
     DOM.getElementById("splash").getStyle().setProperty("display", "none");
+  }
+
+
+  /**
+   * Set the content to the {@link ContentWidget}.
+   * 
+   * @param content the {@link ContentWidget} to display
+   */
+  private void displayContentWidget(final ContentWidget content) {
+    if (content != null) {
+      app.setContent(content);
+    }
+  }
+
+  /**
+   * Get the token for a given content widget.
+   * 
+   * @return the content widget token.
+   */
+  private String getContentWidgetToken(ContentWidget content) {
+    String className = content.getClass().getName();
+    className = className.substring(className.lastIndexOf('.') + 1);
+    return className;
+  }
+
+  /**
+   * Get the style name of the reference element defined in the current GWT
+   * theme style sheet.
+   * 
+   * @param prefix the prefix of the reference style name
+   * @return the style name
+   */
+  private String getCurrentReferenceStyleName(String prefix) {
+    String gwtRef = prefix + "-Reference-" + CUR_THEME;
+    if (LocaleInfo.getCurrentLocale().isRTL()) {
+      gwtRef += "-rtl";
+    }
+    return gwtRef;
   }
 
   /**
@@ -692,7 +696,7 @@ public class Showcase implements EntryPoint {
     }
 
     // Detach the app while we manipulate the styles to avoid rendering issues
-    app.detach();
+    app.removeFromParent();
 
     // Remove the old style sheets
     for (Element elem : toRemove) {
