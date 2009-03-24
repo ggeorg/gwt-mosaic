@@ -60,6 +60,7 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
  * tabs are loaded using RPC call to the server.
  * 
  * <h3>CSS Style Rules</h3>
+ * 
  * <pre>
  * <ul class="css">
  * <li>.sc-ContentWidget { Applied to the entire widget }</li>
@@ -150,6 +151,12 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
     this.constants = constants;
     setStyleName(DEFAULT_STYLE_NAME);
   }
+  
+  @Override
+  public void ensureWidget() {
+    super.ensureWidget();
+    ensureWidgetInitialized(widgetVpanel);
+  }
 
   protected abstract void asyncOnInitialize(final AsyncCallback<Widget> callback);
 
@@ -237,12 +244,6 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
     return tabPanel;
   }
 
-  @Override
-  public void ensureWidget() {
-    super.ensureWidget();
-    ensureWidgetInitialized(widgetVpanel);
-  }
-
   /**
    * Ensure that the demo widget has been initialized. Note that initialization
    * can fail if there is a network failure.
@@ -324,7 +325,7 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
    * the page.
    */
   protected void onInitializeComplete() {
-    // Nothing to do here!
+    layout();
   }
 
   @Override
