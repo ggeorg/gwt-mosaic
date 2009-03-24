@@ -33,6 +33,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -52,6 +53,7 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 /**
  * A generic application that includes a title bar, main menu, content area, and
  * some external links at the top.
+ * <p>
  * 
  * <h3>CSS Style Rules</h3>
  * 
@@ -70,7 +72,8 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class Application extends Viewport {
+public class Application extends Viewport implements
+    HasSelectionHandlers<TreeItem> {
   /**
    * Images used in the {@link Application}.
    */
@@ -92,7 +95,7 @@ public class Application extends Viewport {
   /**
    * The wrapper around the content.
    */
-  LayoutPanel contentWrapper;
+  private LayoutPanel contentWrapper;
 
   /**
    * The panel that holds the main links.
@@ -116,7 +119,7 @@ public class Application extends Viewport {
     super();
 
     // Setup the main layout widget
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
 
     // Setup the top panel with the title and links
@@ -138,7 +141,7 @@ public class Application extends Viewport {
 
     collapseBtn.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        bottomPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
+        bottomPanel.setCollapsed(westPanel, true);
         bottomPanel.layout();
       }
     });
@@ -151,15 +154,6 @@ public class Application extends Viewport {
     contentWrapper = new LayoutPanel(new FillLayout());
     contentWrapper.addStyleName(DEFAULT_STYLE_NAME + "-content-wrapper");
     bottomPanel.add(contentWrapper);
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
-      // HasHorizontalAlignment.ALIGN_LEFT);
-      // contentDecorator.getElement().setAttribute("align", "LEFT");
-    } else {
-      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
-      // HasHorizontalAlignment.ALIGN_RIGHT);
-      // contentDecorator.getElement().setAttribute("align", "RIGHT");
-    }
     setContent(null);
   }
 
@@ -208,7 +202,9 @@ public class Application extends Viewport {
    */
   public void setContent(Widget content) {
     contentWrapper.clear();
-    if (content != null) {
+    if (content == null) {
+      contentWrapper.add(new HTML("&nbsp;"));
+    } else {
       contentWrapper.add(content);
     }
   }
@@ -283,20 +279,6 @@ public class Application extends Viewport {
         HasVerticalAlignment.ALIGN_TOP);
     topPanel.getRowFormatter().setVerticalAlign(1,
         HasVerticalAlignment.ALIGN_TOP);
-  }
-
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }

@@ -46,37 +46,14 @@ a:active {
 	color:#ff0000;
 }
 
-button {
-	/*display: block;*/
-	font-size: 16pt;
-	width: auto;
-}
+/*** TextBox & TextArea */
 
-/*
-.gwt-PushButton,
-.gwt-CustomButton {
-	overflow: hidden;
-	width: auto;
-	height: auto;
-}
-*/
-
-.widePanel {
-	/*width: 100%*/
-}
-
-input {
+.gwt-TextBox,
+.gwt-TextArea {
 	margin: 0px;
 	padding: 0px;
 	text-decoration: none;
-	font-size: small;
-	border: 1px inset #ccc;
-}
-
-textarea {
-	margin: 0px;
-	padding: 0px;
-	text-decoration: none;
+	font-size: 10pt;
 	border: 1px inset #ccc;
 }
 
@@ -741,7 +718,7 @@ textarea {
 	border-width: 0px 1px 1px 0px;
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 3px;
+	padding: 1px 3px;
 }
 
 .gwt-ScrollTable .headerTable td,
@@ -754,22 +731,28 @@ textarea {
 }
     
 .gwt-ScrollTable .dataTable tr.hovering,
+.gwt-ScrollTable .dataTable tr.highlighted,
 .mosaic-ColumnWidget .dataTable tr.hovering,
-.mosaic-ScrollTreeTable .dataTable tr.hovering {
+.mosaic-ColumnWidget .dataTable tr.highlighted,
+.mosaic-ScrollTreeTable .dataTable tr.hovering,
+.mosaic-ScrollTreeTable .dataTable tr.highlighted {
 	background: #C3D9FF;
 }
 
-.gwt-ScrollTable .dataTable td.hovering,
-.mosaic-ColumnWidget .dataTable td.hovering,
-.mosaic-ScrollTreeTable .dataTable td.hovering {
+.gwt-ScrollTable .dataTable tr.hovering,
+.gwt-ScrollTable .dataTable tr.highlighted,
+.mosaic-ColumnWidget .dataTable tr.hovering,
+.mosaic-ColumnWidget .dataTable tr.highlighted,
+.mosaic-ScrollTreeTable .dataTable tr.hovering,
+.mosaic-ScrollTreeTable .dataTable tr.highlighted {
 	background: #FFFFAA;
 	cursor: hand;
 	cursor: pointer;
 }
 
-.gwt-ScrollTable .dataTable tr.selected,
-.mosaic-ColumnWidget .dataTable tr.selected,
-.mosaic-ScrollTreeTable .dataTable tr.selected {
+.gwt-ScrollTable .dataTable tr.selected td,
+.mosaic-ColumnWidget .dataTable tr.selected td,
+.mosaic-ScrollTreeTable .dataTable tr.selected td {
 	background: #7AA5D6;
 }
 
