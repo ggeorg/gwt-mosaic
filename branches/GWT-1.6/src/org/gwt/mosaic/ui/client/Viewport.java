@@ -145,15 +145,13 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
     }
   }
 
+  /**
+   * 
+   * @see #removeFromParent()
+   */
   public void attach() {
     if (!isAttached()) {
       RootPanel.get().add(this, Integer.MIN_VALUE, Integer.MIN_VALUE);
-    }
-  }
-
-  public void detach() {
-    if (isAttached()) {
-      removeFromParent();
     }
   }
 }
