@@ -36,7 +36,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasResizeHandlers;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.AbstractWindowClosingEvent;
 import com.google.gwt.user.client.BaseListenerWrapper;
 import com.google.gwt.user.client.Command;
@@ -81,6 +88,19 @@ import com.google.gwt.widgetideas.client.GlassPanel;
 public class WindowPanel extends DecoratedLayoutPopupPanel implements
     HasCaption, CoreConstants {
 
+  private static class WindowResizeHandler extends HandlerManager implements
+    HasResizeHandlers, HasHandlers {
+
+    public WindowResizeHandler() {
+      super(null);
+    }
+    @Override
+    public HandlerRegistration addResizeHandler(ResizeHandler handler) {
+      return addHandler(ResizeEvent.getType(), handler);
+    }
+  }
+  private static WindowResizeHandler windowPanelResizeHandler = new WindowResizeHandler();
+  
   /**
    * Double click caption action.
    */
@@ -904,6 +924,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         listener.onWindowResized(contentWidth, contentHeight);
       }
     }
+    ResizeEvent.fire(windowPanelResizeHandler, contentWidth, contentHeight);    
   }
 
   private void fireWindowStateChangeImpl() {
@@ -1567,4 +1588,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
+  public HandlerRegistration addResizeHandler(ResizeHandler handler) {
+    return addHandler(ResizeEvent.getType(), handler);
+  }
+  
+  private <H extends EventHandler> HandlerRegistration addHandler(
+      GwtEvent.Type<H> type, final H handler) {
+    return windowPanelResizeHandler.addHandler(type, handler);
+  }
 }
