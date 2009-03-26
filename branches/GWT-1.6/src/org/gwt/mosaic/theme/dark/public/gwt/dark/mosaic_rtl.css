@@ -49,6 +49,7 @@ a:active {
 /*** TextBox & TextArea */
 
 .gwt-TextBox,
+.gwt-PasswordTextBox,
 .gwt-TextArea {
 	margin: 0px;
 	padding: 0px;
