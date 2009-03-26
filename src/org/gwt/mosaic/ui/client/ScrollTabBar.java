@@ -322,10 +322,12 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   public void insertTab(String tabText, boolean asHTML, int beforeIndex) {
     tabBar.insertTab(tabText, asHTML, beforeIndex);
+    invalidate();
   }
 
   public void insertTab(Widget tabWidget, int beforeIndex) {
     tabBar.insertTab(tabWidget, beforeIndex);
+    invalidate();
   }
 
   public boolean isAnimationEnabled() {
