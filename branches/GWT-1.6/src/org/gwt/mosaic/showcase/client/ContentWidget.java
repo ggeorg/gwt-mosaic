@@ -41,8 +41,6 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -128,21 +126,6 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
   private HTML styleWidget = null;
 
   /**
-   * Whether the demo widget has been initialized.
-   */
-  private boolean widgetInitialized;
-
-  /**
-   * Whether the demo widget is (asynchronously) initializing.
-   */
-  private boolean widgetInitializing;
-
-  /**
-   * A vertical panel that holds the demo widget once it is initialized.
-   */
-  private LayoutPanel widgetVpanel;
-
-  /**
    * Constructor.
    * 
    * @param constants the constants
@@ -151,128 +134,6 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
     this.constants = constants;
     setStyleName(DEFAULT_STYLE_NAME);
   }
-  
-  @Override
-  public void ensureWidget() {
-    super.ensureWidget();
-    ensureWidgetInitialized(widgetVpanel);
-  }
-
-  protected abstract void asyncOnInitialize(final AsyncCallback<Widget> callback);
-
-  private String createTabBarCaption(AbstractImagePrototype image, String text) {
-    StringBuffer sb = new StringBuffer();
-    sb.append("<table cellspacing='0px' cellpadding='0px' border='0px'><thead><tr>");
-    sb.append("<td valign='middle'>");
-    sb.append(image.getHTML());
-    sb.append("</td><td valign='middle' style='white-space: nowrap;'>&nbsp;");
-    sb.append(text);
-    sb.append("</td></tr></thead></table>");
-    return sb.toString();
-  }
-
-  /**
-   * Initialize this widget by creating the elements that should be added to the
-   * page.
-   */
-  @Override
-  public final Widget createWidget() {
-    setStyleName(DEFAULT_STYLE_NAME);
-
-    tabPanel = new DecoratedTabLayoutPanel(true);
-    tabPanel.setPadding(5);
-
-    // Add a tab handler
-    tabPanel.addSelectionHandler(this);
-
-    // Create the container for the main example
-    widgetVpanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-    widgetVpanel.setPadding(0);
-    widgetVpanel.setWidgetSpacing(0);
-    tabPanel.add(widgetVpanel, createTabBarCaption(
-        Showcase.IMAGES.mediaPlayGreen(), constants.contentWidgetExample()),
-        true);
-
-    // Add the name
-    HTML nameWidget = new HTML(getName(), false);
-    nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
-    widgetVpanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    // Add the description
-    final HTML descWidget = new HTML(getDescription());
-    descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
-    widgetVpanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    // Monitor word wraps
-    ResizableWidgetCollection.get().add(new ResizableWidget() {
-      public Element getElement() {
-        return descWidget.getElement();
-      }
-
-      public boolean isAttached() {
-        return descWidget.isAttached();
-      }
-
-      public void onResize(int width, int height) {
-        widgetVpanel.layout(true);
-      }
-    });
-
-    // Add source code tab
-    if (hasSource()) {
-      // final LayoutPanel panel2 = new LayoutPanel();
-      sourceWidget = new HTML();
-      sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
-      // panel2.add(sourceWidget);
-      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
-          constants.contentWidgetSource()), true);
-    } else {
-      sourceLoaded = true;
-    }
-
-    // Add style tab
-    if (hasStyle()) {
-      // final LayoutPanel panel3 = new LayoutPanel();
-      styleDefs = new HashMap<String, String>();
-      styleWidget = new HTML();
-      styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
-      // panel3.add(styleWidget);
-      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
-          constants.contentWidgetStyle()), true);
-    }
-
-    return tabPanel;
-  }
-
-  /**
-   * Ensure that the demo widget has been initialized. Note that initialization
-   * can fail if there is a network failure.
-   */
-  private void ensureWidgetInitialized(final LayoutPanel vPanel) {
-    if (widgetInitializing || widgetInitialized) {
-      return;
-    }
-
-    widgetInitializing = true;
-
-    asyncOnInitialize(new AsyncCallback<Widget>() {
-      public void onFailure(Throwable reason) {
-        widgetInitializing = false;
-        Window.alert("Failed to download code for this widget (" + reason + ")");
-      }
-
-      public void onSuccess(Widget result) {
-        widgetInitializing = false;
-        widgetInitialized = true;
-
-        Widget widget = result;
-        if (widget != null) {
-          vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
-        }
-        onInitializeComplete();
-      }
-    });
-  }
 
   /**
    * Get the description of this example.
@@ -280,11 +141,6 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
    * @return a description for this example
    */
   public abstract String getDescription();
-
-  public final String getId() {
-    final String s = this.getClass().getName();
-    return s.substring(s.lastIndexOf('.') + 1, s.length());
-  }
 
   /**
    * Get the name of this example to use as a title.
@@ -328,16 +184,6 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
     layout();
   }
 
-  @Override
-  protected void onLoad() {
-    ensureWidget();
-
-    // Select the first tab
-    if (tabPanel.getWidgetCount() > 0) {
-      tabPanel.selectTab(0);
-    }
-  }
-
   public void onSelection(SelectionEvent<Integer> event) {
     int tabIndex = event.getSelectedItem().intValue();
 
@@ -377,6 +223,96 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
         requestSourceContents(srcPath + "/" + className + ".html", styleWidget,
             callback);
       }
+    }
+  }
+
+  /**
+   * Initialize this widget by creating the elements that should be added to the
+   * page.
+   */
+  @Override
+  public final Widget createWidget() {
+    setStyleName(DEFAULT_STYLE_NAME);
+
+    tabPanel = new DecoratedTabLayoutPanel(true);
+    tabPanel.setPadding(5);
+
+    // Add a tab handler
+    tabPanel.addSelectionHandler(this);
+
+    // Create the container for the main example
+    final LayoutPanel vPanel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
+    vPanel.setPadding(0);
+    vPanel.setWidgetSpacing(0);
+    tabPanel.add(vPanel, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
+        constants.contentWidgetExample()), true);
+
+    // Add the name
+    HTML nameWidget = new HTML(getName(), false);
+    nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
+    vPanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Add the description
+    final HTML descWidget = new HTML(getDescription());
+    descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
+    vPanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Monitor word wraps
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return descWidget.getElement();
+      }
+
+      public boolean isAttached() {
+        return descWidget.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        vPanel.layout(true);
+      }
+    });
+
+    // Add source code tab
+    if (hasSource()) {
+      // final LayoutPanel panel2 = new LayoutPanel();
+      sourceWidget = new HTML();
+      sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
+      // panel2.add(sourceWidget);
+      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
+          constants.contentWidgetSource()), true);
+    } else {
+      sourceLoaded = true;
+    }
+
+    // Add style tab
+    if (hasStyle()) {
+      // final LayoutPanel panel3 = new LayoutPanel();
+      styleDefs = new HashMap<String, String>();
+      styleWidget = new HTML();
+      styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
+      // panel3.add(styleWidget);
+      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
+          constants.contentWidgetStyle()), true);
+    }
+
+    // Initialize the showcase widget (if any) and add it to the page
+    Widget widget = onInitialize();
+    if (widget != null) {
+      vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
+    }
+    onInitializeComplete();
+
+    return tabPanel;
+  }
+
+  @Override
+  protected void onLoad() {
+    ensureWidget();
+
+    // Select the first tab
+    if (tabPanel.getWidgetCount() > 0) {
+      tabPanel.selectTab(0);
     }
   }
 
@@ -425,6 +361,17 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
     } catch (RequestException e) {
       realCallback.onError(request, e);
     }
+  }
+
+  private String createTabBarCaption(AbstractImagePrototype image, String text) {
+    StringBuffer sb = new StringBuffer();
+    sb.append("<table cellspacing='0px' cellpadding='0px' border='0px'><thead><tr>");
+    sb.append("<td valign='middle'>");
+    sb.append(image.getHTML());
+    sb.append("</td><td valign='middle' style='white-space: nowrap;'>&nbsp;");
+    sb.append(text);
+    sb.append("</td></tr></thead></table>");
+    return sb.toString();
   }
 
 }

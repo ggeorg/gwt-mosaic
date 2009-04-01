@@ -89,18 +89,19 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     HasCaption, CoreConstants {
 
   private static class WindowResizeHandler extends HandlerManager implements
-    HasResizeHandlers, HasHandlers {
+      HasResizeHandlers, HasHandlers {
 
     public WindowResizeHandler() {
       super(null);
     }
-    @Override
+
     public HandlerRegistration addResizeHandler(ResizeHandler handler) {
       return addHandler(ResizeEvent.getType(), handler);
     }
   }
+
   private static WindowResizeHandler windowPanelResizeHandler = new WindowResizeHandler();
-  
+
   /**
    * Double click caption action.
    */
@@ -711,8 +712,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         }
       }
     });
-    panel.getHeader().addClickHandler(new ClickHandler(){
-      @Override
+    panel.getHeader().addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
         if (!isActive()) {
           toFront();
@@ -925,7 +925,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         listener.onWindowResized(contentWidth, contentHeight);
       }
     }
-    ResizeEvent.fire(windowPanelResizeHandler, contentWidth, contentHeight);    
+    ResizeEvent.fire(windowPanelResizeHandler, contentWidth, contentHeight);
   }
 
   private void fireWindowStateChangeImpl() {
@@ -1333,7 +1333,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         restoredHeight = box[1] - (size2[1] - size3[1]);
       }
       panel.setCollapsed(true);
-      
+
       final int width = getLayoutPanel().getOffsetWidth();
       final int[] size = getLayoutPanel().getPreferredSize();
       setContentSize(width, size[1]);
@@ -1342,7 +1342,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     } else {
       panel.setCollapsed(false);
-      
+
       if (getWindowState() != WindowState.MAXIMIZED) {
         setContentSize(restoredWidth, restoredHeight);
       } else {
@@ -1356,7 +1356,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         makeResizable();
       }
     }
-    
+
     layout();
   }
 
@@ -1592,7 +1592,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public HandlerRegistration addResizeHandler(ResizeHandler handler) {
     return addHandler(ResizeEvent.getType(), handler);
   }
-  
+
   private <H extends EventHandler> HandlerRegistration addHandler(
       GwtEvent.Type<H> type, final H handler) {
     return windowPanelResizeHandler.addHandler(type, handler);

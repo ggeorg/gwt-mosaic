@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,6 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -83,20 +80,6 @@ public class CwFillLayoutTest1 extends ContentWidget {
     layoutPanel.add(grid);
     
     return layoutPanel;
-  }
-  
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
   }
 
 }

@@ -25,11 +25,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -108,20 +105,6 @@ public class CwDeckLayoutPanel extends AbstractLayoutPage {
     deck.showWidget(dropBox.getSelectedIndex());
 
     return layoutPanel;
-  }
-  
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
   }
   
 }

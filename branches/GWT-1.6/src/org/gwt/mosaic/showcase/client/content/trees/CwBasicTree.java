@@ -22,11 +22,8 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.gen2.complexpanel.client.FastTree;
 import com.google.gwt.gen2.complexpanel.client.FastTreeItem;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -94,12 +91,6 @@ public class CwBasicTree extends ContentWidget {
     panel.add(t);
 
     return layoutPanel;
-  }
-
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    // This is the first demo loaded, so go ahead and load it synchronously.
-    callback.onSuccess(onInitialize());
   }
 
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -32,10 +34,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -226,20 +225,6 @@ public class CwRadioButtonActions extends ContentWidget {
     }));
 
     panel.add(menu, new BoxLayoutData(FillStyle.HORIZONTAL));
-  }
-
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
   }
   
 }

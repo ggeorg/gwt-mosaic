@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -16,12 +18,12 @@ package org.gwt.mosaic.showcase.client.content.other;
 import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ButtonBindings;
 import org.gwt.mosaic.actions.client.CheckBoxBindings;
+import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
 import org.gwt.mosaic.actions.client.CommandAction;
 import org.gwt.mosaic.actions.client.MenuItemBindings;
 import org.gwt.mosaic.actions.client.PushButtonBindings;
 import org.gwt.mosaic.actions.client.RadioButtonBindings;
 import org.gwt.mosaic.actions.client.ToggleButtonBindings;
-import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
 import org.gwt.mosaic.actions.client.ToolButtonBindings;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
@@ -40,12 +42,9 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -558,19 +557,4 @@ public class CwActions extends ContentWidget {
 
     panel.add(menu, new BoxLayoutData(FillStyle.HORIZONTAL));
   }
-  
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
-  }
-
 }

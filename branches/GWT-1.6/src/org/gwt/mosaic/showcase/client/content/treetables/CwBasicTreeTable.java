@@ -21,14 +21,12 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.table.ScrollTable2;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTable;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTableItem;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
@@ -269,20 +267,6 @@ public class CwBasicTreeTable extends ContentWidget {
     for (int cell = 0; cell < 9; cell++) {
       headerTable.setHTML(2, cell, "Header " + cell);
     }
-  }
-
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
   }
   
 }

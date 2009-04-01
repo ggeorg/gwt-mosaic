@@ -18,33 +18,18 @@ package org.gwt.mosaic.showcase.client.content.tables;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.DoubleClickListener;
 import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.ListBox;
-import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.Table;
-import org.gwt.mosaic.ui.client.ToolBar;
-import org.gwt.mosaic.ui.client.ToolButton;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
-import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
-import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
 import org.gwt.mosaic.ui.client.Table.PagingOptions;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-import org.gwt.mosaic.ui.client.list.DefaultListModel;
 import org.gwt.mosaic.ui.client.table.DefaultTableColumnModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -135,20 +120,6 @@ public class CwSimpleTable extends ContentWidget {
     contextMenu.addItem("MenuItem 4", cmd);
 
     return contextMenu;
-  }
-
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
-      }
-    });
   }
   
 }

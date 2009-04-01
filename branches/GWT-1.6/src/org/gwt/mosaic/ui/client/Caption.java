@@ -120,12 +120,11 @@ public class Caption extends LayoutComposite implements HasHTML,
       }
     }
   }
-  
-  @Override
+
   public HandlerRegistration addClickHandler(ClickHandler handler) {
     return addDomHandler(handler, ClickEvent.getType());
   }
-  
+
   /**
    * @deprecated
    */

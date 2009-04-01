@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.util.DelayedRunnable;
 import org.gwt.mosaic.showcase.client.content.forms.CwQuickStartExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwAlignmentExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwBasicSizesExample;
@@ -77,6 +78,7 @@ import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
+import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwSimpleTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
 import org.gwt.mosaic.showcase.client.content.trees.CwBasicTree;
@@ -235,7 +237,7 @@ public class Showcase implements EntryPoint {
    * A mapping of menu items to the widget display when the item is selected.
    */
   private Map<TreeItem, ContentWidget> itemWidgets = new HashMap<TreeItem, ContentWidget>();
-  
+
   /**
    * This is the entry point method.
    */
@@ -280,7 +282,7 @@ public class Showcase implements EntryPoint {
         ContentWidget content = itemWidgets.get(item);
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
-          //content.invalidate();
+          content.invalidate();
           HasLayoutManager parent = WidgetHelper.getParent(content);
           if (parent != null) {
             parent.layout();
@@ -292,16 +294,21 @@ public class Showcase implements EntryPoint {
     // Show the initial example
     if (History.getToken().length() > 0) {
       History.fireCurrentHistoryState();
-    } else { // Use the first token available
+    } else {
+      // Use the first token available
       TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0);
       app.getMainMenu().setSelectedItem(firstItem, false);
       app.getMainMenu().ensureSelectedItemVisible();
       displayContentWidget(itemWidgets.get(firstItem));
     }
 
-    DOM.getElementById("splash").getStyle().setProperty("display", "none");
+    new DelayedRunnable(3333) {
+      @Override
+      public void run() {
+        DOM.getElementById("splash").getStyle().setProperty("display", "none");
+      }
+    };
   }
-
 
   /**
    * Set the content to the {@link ContentWidget}.
@@ -517,6 +524,8 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwScrollTable(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwScrollTable2(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
         IMAGES.catTables());
