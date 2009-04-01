@@ -145,10 +145,9 @@ public class Application extends Viewport implements
         bottomPanel.layout();
       }
     });
-
+    
     bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST, 200, 100, 350,
         true));
-    // bottomPanel.setCollapsed(westPanel, true);
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());

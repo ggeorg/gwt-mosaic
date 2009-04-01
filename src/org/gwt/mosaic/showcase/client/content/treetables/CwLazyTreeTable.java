@@ -29,11 +29,8 @@ import org.gwt.mosaic.ui.client.treetable.HasFastTreeTableItems;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
 import org.gwt.mosaic.ui.client.treetable.TreeTableLabelProvider;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.ScrollTable;
@@ -257,20 +254,6 @@ public class CwLazyTreeTable extends ContentWidget {
           default:
             return null;
         }
-      }
-    });
-  }
-
-  @Override
-  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-    GWT.runAsync(new RunAsyncCallback() {
-
-      public void onFailure(Throwable caught) {
-        callback.onFailure(caught);
-      }
-
-      public void onSuccess() {
-        callback.onSuccess(onInitialize());
       }
     });
   }
