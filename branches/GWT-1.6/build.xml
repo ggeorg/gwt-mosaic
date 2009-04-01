@@ -26,9 +26,7 @@
 		<!-- Add any additional server libs that need to be copied -->
 		<copy todir="war/WEB-INF/lib">
 			<fileset dir="lib">
-				<include name="derby.jar" />
-				<include name="toplink-esseintials.jar" />
-				<include name="toplink-esseintials-agent.jar" />
+				<include name="*.jar" />
 			</fileset>
 		</copy>
 	</target>
