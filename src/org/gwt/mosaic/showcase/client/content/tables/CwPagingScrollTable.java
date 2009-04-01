@@ -410,6 +410,15 @@ public class CwPagingScrollTable extends ContentWidget {
       // Setup the cell editor
       TextCellEditor cellEditor = new TextCellEditor() {
         @Override
+        public boolean onAccept() {
+          if (getValue().equals("")) {
+            Window.alert("You must enter a school");
+            return false;
+          }
+          return true;
+        }
+
+        @Override
         protected int getOffsetLeft() {
           return -8;
         }
@@ -417,15 +426,6 @@ public class CwPagingScrollTable extends ContentWidget {
         @Override
         protected int getOffsetTop() {
           return -10;
-        }
-
-        @Override
-        public boolean onAccept() {
-          if (getValue().equals("")) {
-            Window.alert("You must enter a school");
-            return false;
-          }
-          return true;
         }
       };
       columnDef.setCellEditor(cellEditor);
@@ -632,6 +632,16 @@ public class CwPagingScrollTable extends ContentWidget {
         FillStyle.HORIZONTAL, true));
 
     return layoutPanel;
+  }
+  
+  /**
+   * Called when initialization has completed and the widget has been added to
+   * the page.
+   */
+  protected void onInitializeComplete() {
+    super.onInitializeComplete();
+    
+    pagingScrollTable.gotoFirstPage();
   }
   
 }
