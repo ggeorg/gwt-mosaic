@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,14 +25,18 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
  */
-@ShowcaseStyle({".mosaic-DockLayoutPanel", ".mosaic-LayoutPanel"})
+@ShowcaseStyle( {".mosaic-DockLayoutPanel", ".mosaic-LayoutPanel"})
 public class CwDeckLayoutPanel extends AbstractLayoutPage {
 
   /**
@@ -53,7 +57,7 @@ public class CwDeckLayoutPanel extends AbstractLayoutPage {
   public String getName() {
     return "DeckLayoutPanel";
   }
-  
+
   /**
    * Initialize this example.
    */
@@ -91,8 +95,8 @@ public class CwDeckLayoutPanel extends AbstractLayoutPage {
     dropBox.addItem("BorderLayout");
     dropBox.addItem("Nested BorderLayout");
     dropBox.addItem("Mixed Layout");
-    dropBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
+    dropBox.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
         deck.showWidget(dropBox.getSelectedIndex());
         deck.layout();
       }
@@ -102,8 +106,22 @@ public class CwDeckLayoutPanel extends AbstractLayoutPage {
     layoutPanel.add(deck, new BoxLayoutData(FillStyle.BOTH, true));
 
     deck.showWidget(dropBox.getSelectedIndex());
-    
+
     return layoutPanel;
   }
+  
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
 
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }

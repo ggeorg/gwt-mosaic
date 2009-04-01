@@ -24,10 +24,18 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
+import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
+import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
+import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
 import com.google.gwt.user.client.ui.DecoratedTabBar;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
+import com.google.gwt.user.client.ui.ListenerWrapper;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
@@ -40,37 +48,15 @@ import com.google.gwt.user.client.ui.Widget;
  * contains another widget. Its child widgets are shown as the user selects the
  * various tabs associated with them.
  * 
- * <h3>CSS Style Rules</h3>
- * <ul>
- * <li>.mosaic-TabLayoutPanel { the tab layout panel itself }</li>
- * <li>.mosaic-TabLayoutPanelBottom { the bottom section of the tab layout panel
- * (the deck containing the widget) }</li>
- * </ul>
+ * <h3>CSS Style Rules</h3> <ul class='css'> <li>.mosaic-TabLayoutPanel { the
+ * tab layout panel itself }</li> <li>.mosaic-TabLayoutPanelBottom { the bottom
+ * section of the tab layout panel (the deck containing the widget) }</li> </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class TabLayoutPanel extends LayoutComposite implements TabListener,
-    SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel {
-
-  public static class DecoratedBottomTabBar extends TabBar {
-    static String[] TAB_ROW_STYLES = {"tabTop", "tabMiddle", "tabBottom"};
-
-    static final String STYLENAME_DEFAULT = "mosaic-DecoratedBottomTabBar";
-
-    /**
-     * Creates an empty {@link DecoratedTabBar}.
-     */
-    public DecoratedBottomTabBar() {
-      super();
-      setStylePrimaryName(STYLENAME_DEFAULT);
-    }
-
-    @Override
-    protected SimplePanel createTabTextWrapper() {
-      return new AbstractDecoratorPanel(TAB_ROW_STYLES, 1) {
-      };
-    }
-  }
+    SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel,
+    HasBeforeSelectionHandlers<Integer>, HasSelectionHandlers<Integer> {
 
   public enum TabBarPosition {
     TOP, BOTTOM
@@ -81,11 +67,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   private static final String DEFAULT_STYLENAME = "mosaic-TabLayoutPanel";
 
-  private TabBar tabBar;
+  private ScrollTabBar tabBar;
 
   private final DeckLayoutPanel deck = new DeckLayoutPanel();
-
-  private TabListenerCollection tabListeners;
 
   public TabLayoutPanel() {
     this(TabBarPosition.TOP, false, false);
@@ -107,18 +91,18 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
       boolean decorateBody) {
     super();
 
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setWidgetSpacing(0);
 
     if (decorate) {
       if (region == TabBarPosition.TOP) {
-        tabBar = new DecoratedTabBar();
+        tabBar = new ScrollTabBar(true, false);
       } else {
-        tabBar = new DecoratedBottomTabBar();
+        tabBar = new ScrollTabBar(true, true);
       }
     } else {
-      tabBar = new TabBar();
+      tabBar = new ScrollTabBar();
     }
 
     deck.addStyleName(DEFAULT_STYLENAME + "Bottom");
@@ -188,11 +172,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * com.google.gwt.user.client.ui.SourcesTabEvents#addTabListener(com.google
    * .gwt.user.client.ui.TabListener)
    */
+  @Deprecated
   public void addTabListener(TabListener listener) {
-    if (tabListeners == null) {
-      tabListeners = new TabListenerCollection();
-    }
-    tabListeners.add(listener);
+    WrappedTabListener.add(this, listener);
   }
 
   /*
@@ -338,8 +320,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
       }
 
       public void remove() {
-        throw new UnsupportedOperationException(
-            "Use TabLayoutPanel.remove()");
+        throw new UnsupportedOperationException("Use TabLayoutPanel.remove()");
       }
     };
   }
@@ -366,11 +347,16 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google
    * .gwt.user.client.ui.SourcesTabEvents, int)
    */
+  @Deprecated
   public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-    if (tabListeners != null) {
-      return tabListeners.fireBeforeTabSelected(TabLayoutPanel.this, tabIndex);
-    }
-    return true;
+    // if (tabListeners != null) {
+    // return tabListeners.fireBeforeTabSelected(TabLayoutPanel.this, tabIndex);
+    // }
+    // return true;
+
+    BeforeSelectionEvent<Integer> event = BeforeSelectionEvent.fire(this,
+        tabIndex);
+    return event == null || !event.isCanceled();
   }
 
   /*
@@ -382,10 +368,11 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
     deck.showWidget(tabIndex);
-    TabLayoutPanel.this.layout();
-    if (tabListeners != null) {
-      tabListeners.fireTabSelected(TabLayoutPanel.this, tabIndex);
-    }
+    layout();
+    // if (tabListeners != null) {
+    // tabListeners.fireTabSelected(TabLayoutPanel.this, tabIndex);
+    // }
+    SelectionEvent.fire(this, tabIndex);
   }
 
   /*
@@ -432,10 +419,9 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    * com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google
    * .gwt.user.client.ui.TabListener)
    */
+  @Deprecated
   public void removeTabListener(TabListener listener) {
-    if (tabListeners != null) {
-      tabListeners.remove(listener);
-    }
+    WrappedTabListener.remove(this, listener);
   }
 
   /**
@@ -451,4 +437,53 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     deck.setPadding(padding);
   }
 
+  public HandlerRegistration addBeforeSelectionHandler(
+      BeforeSelectionHandler<Integer> handler) {
+    return addHandler(handler, BeforeSelectionEvent.getType());
+  }
+
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<Integer> handler) {
+    return addHandler(handler, SelectionEvent.getType());
+  }
+
+  /**
+   * Glue code between listeners and handlers.
+   * 
+   * @param <T> listener type
+   * @deprecated will be removed in GWT 2.0 with the handler listeners
+   *             themselves
+   */
+  @Deprecated
+  static class WrappedTabListener extends ListenerWrapper<TabListener>
+      implements SelectionHandler<Integer>, BeforeSelectionHandler<Integer> {
+
+    public static void add(TabLayoutPanel source, TabListener listener) {
+      WrappedTabListener t = new WrappedTabListener(listener);
+      source.addBeforeSelectionHandler(t);
+      source.addSelectionHandler(t);
+    }
+
+    public static void remove(Widget eventSource, TabListener listener) {
+      baseRemove(eventSource, listener, SelectionEvent.getType(),
+          BeforeSelectionEvent.getType());
+    }
+
+    protected WrappedTabListener(TabListener listener) {
+      super(listener);
+    }
+
+    public void onSelection(SelectionEvent<Integer> event) {
+      getListener().onTabSelected((SourcesTabEvents) event.getSource(),
+          event.getSelectedItem().intValue());
+    }
+
+    public void onBeforeSelection(BeforeSelectionEvent<Integer> event) {
+      if (!getListener().onBeforeTabSelected(
+          (SourcesTabEvents) event.getSource(), event.getItem().intValue())) {
+        event.cancel();
+      }
+    }
+
+  }
 }

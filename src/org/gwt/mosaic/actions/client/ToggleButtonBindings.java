@@ -18,11 +18,13 @@ package org.gwt.mosaic.actions.client;
 import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public class ToggleButtonBindings extends ButtonBaseBindings {
 
@@ -76,10 +78,10 @@ public class ToggleButtonBindings extends ButtonBaseBindings {
   }
 
   @Override
-  public void onClick(Widget sender) {
-    Boolean newValue = ((ToggleButton) sender).isDown();
+  public void onClick(ClickEvent event) {
+    Boolean newValue = ((ToggleButton) event.getSource()).isDown();
     getTargetBean().firePropertyChange("selected", !newValue, newValue);
-    super.onClick(sender);
+    super.onClick(event);
   }
 
 }

@@ -31,9 +31,13 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -43,25 +47,33 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeImages;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 
 /**
- * <p>
  * A generic application that includes a title bar, main menu, content area, and
  * some external links at the top.
- * </p>
- * <h3>CSS Style Rules</h3> <ul class="css"> <li>.Application { Applied to the
- * entire Application }</li> <li>.Application-top { The top portion of the
- * Application }</li> <li>.Application-title { The title widget }</li> <li>
- * .Application-links { The main external links }</li> <li>.Application-options
- * { The options widget }</li> <li>.Application-menu { The main menu }</li> <li>
- * .Application-content-wrapper { The element around the content }</li> </ul>
+ * <p>
+ * 
+ * <h3>CSS Style Rules</h3>
+ * 
+ * <pre>
+ * <ul class="css">
+ * <li>.Application { Applied to the entire Application }</li>
+ * <li>.Application-top { The top portion of the Application }</li>
+ * <li>.Application-title { The title widget }</li>
+ * <li>.Application-links { The main external links }</li>
+ * <li>.Application-options { The options widget }</li>
+ * <li>.Application-menu { The main menu }</li>
+ * <li>.Application-content-wrapper { The element around the content }</li>
+ * </ul>
+ * </pre>
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
-public class Application extends Viewport {
+public class Application extends Viewport implements
+    HasSelectionHandlers<TreeItem> {
   /**
    * Images used in the {@link Application}.
    */
@@ -73,18 +85,6 @@ public class Application extends Viewport {
      */
     @Resource("noimage.png")
     AbstractImagePrototype treeLeaf();
-  }
-
-  /**
-   * A listener to handle events from the Application.
-   */
-  public interface ApplicationListener {
-    /**
-     * Fired when a menu item is selected.
-     * 
-     * @param item the item that was selected
-     */
-    void onMenuItemSelected(com.google.gwt.user.client.ui.TreeItem item);
   }
 
   /**
@@ -103,11 +103,6 @@ public class Application extends Viewport {
   private HorizontalPanel linksPanel;
 
   /**
-   * The {@link ApplicationListener}.
-   */
-  private ApplicationListener listener = null;
-
-  /**
    * The main menu.
    */
   private Tree mainMenu;
@@ -124,7 +119,7 @@ public class Application extends Viewport {
     super();
 
     // Setup the main layout widget
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
 
     // Setup the top panel with the title and links
@@ -144,9 +139,9 @@ public class Application extends Viewport {
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
 
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        bottomPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
+    collapseBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        bottomPanel.setCollapsed(westPanel, true);
         bottomPanel.layout();
       }
     });
@@ -159,15 +154,6 @@ public class Application extends Viewport {
     contentWrapper = new LayoutPanel(new FillLayout());
     contentWrapper.addStyleName(DEFAULT_STYLE_NAME + "-content-wrapper");
     bottomPanel.add(contentWrapper);
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
-      // HasHorizontalAlignment.ALIGN_LEFT);
-      // contentDecorator.getElement().setAttribute("align", "LEFT");
-    } else {
-      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
-      // HasHorizontalAlignment.ALIGN_RIGHT);
-      // contentDecorator.getElement().setAttribute("align", "RIGHT");
-    }
     setContent(null);
   }
 
@@ -181,6 +167,11 @@ public class Application extends Viewport {
       linksPanel.add(new HTML("&nbsp;|&nbsp;"));
     }
     linksPanel.add(link);
+  }
+
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<TreeItem> handler) {
+    return mainMenu.addSelectionHandler(handler);
   }
 
   /**
@@ -211,18 +202,11 @@ public class Application extends Viewport {
    */
   public void setContent(Widget content) {
     contentWrapper.clear();
-    if (content != null) {
+    if (content == null) {
+      contentWrapper.add(new HTML("&nbsp;"));
+    } else {
       contentWrapper.add(content);
     }
-  }
-
-  /**
-   * Set the {@link ApplicationListener}.
-   * 
-   * @param listener the listener
-   */
-  public void setListener(ApplicationListener listener) {
-    this.listener = listener;
   }
 
   /**
@@ -253,17 +237,6 @@ public class Application extends Viewport {
     mainMenu = new Tree(treeImages);
     mainMenu.setAnimationEnabled(true);
     mainMenu.addStyleName(DEFAULT_STYLE_NAME + "-menu");
-    mainMenu.addTreeListener(new TreeListener() {
-      public void onTreeItemSelected(TreeItem item) {
-        if (listener != null) {
-          listener.onMenuItemSelected(item);
-          contentWrapper.layout(true);
-        }
-      }
-
-      public void onTreeItemStateChanged(TreeItem item) {
-      }
-    });
   }
 
   /**
@@ -306,20 +279,6 @@ public class Application extends Viewport {
         HasVerticalAlignment.ALIGN_TOP);
     topPanel.getRowFormatter().setVerticalAlign(1,
         HasVerticalAlignment.ALIGN_TOP);
-  }
-
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
-   */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
   }
 
 }

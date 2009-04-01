@@ -27,6 +27,7 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
 import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
+import org.gwt.mosaic.showcase.client.content.widgets.CwSliderBar;
 
 import com.google.gwt.i18n.client.Constants;
 
@@ -37,16 +38,17 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface ShowcaseConstants extends Constants,
     ContentWidget.CwConstants, CwBasicButton.CwConstants,
-    CwCustomButton.CwConstants, CwToolButton.CwConstants,
-    CwComboBox.CwConstants, CwToolBar.CwConstants, CwMenuBar.CwConstants,
-    CwScrollTable.CwConstants, CwPagingScrollTable.CwConstants,
-    CwTableLoadingBenchmark.CwConstants, CwBasicTreeTable.CwConstants,
-    CwDatePicker.CwConstants, CwMessageBox.CwConstants {
+    CwSliderBar.CwConstants, CwCustomButton.CwConstants,
+    CwToolButton.CwConstants, CwComboBox.CwConstants, CwToolBar.CwConstants,
+    CwMenuBar.CwConstants, CwScrollTable.CwConstants,
+    CwPagingScrollTable.CwConstants, CwTableLoadingBenchmark.CwConstants,
+    CwBasicTreeTable.CwConstants, CwDatePicker.CwConstants,
+    CwMessageBox.CwConstants {
 
   /**
    * The path to source code for examples, raw files, and style definitions.
    */
-  String DST_SOURCE = "MosaicSource/";
+  String DST_SOURCE = "gwtShowcaseSource/";
 
   /**
    * The destination folder for parsed source code from Mosaic examples.
@@ -56,7 +58,7 @@ public interface ShowcaseConstants extends Constants,
   /**
    * The destination folder for raw files that are included in entirety.
    */
-  String DST_SOURCE_RAW = "raw/";
+  String DST_SOURCE_RAW = DST_SOURCE + "raw/";
 
   /**
    * The destination folder for parsed CSS styles used in Mosaic examples.
@@ -81,7 +83,7 @@ public interface ShowcaseConstants extends Constants,
   /**
    * The available style themes that the user can select.
    */
-  String[] STYLE_THEMES = {"standard", "chrome", "dark"};
+  String[] STYLE_THEMES = {"aegean", "standard", "chrome", "dark"};
 
   /**
    * @return text for the link to more examples

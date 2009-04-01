@@ -63,7 +63,7 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
 
   protected ComboBoxBase(String styleName) {
     super();
-    final LayoutPanel layoutPanel = super.getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.HORIZONTAL));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);

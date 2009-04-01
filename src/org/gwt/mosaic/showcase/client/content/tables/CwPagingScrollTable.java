@@ -37,9 +37,12 @@ import org.gwt.mosaic.ui.client.table.ScrollTable;
 import org.gwt.mosaic.ui.client.table.PagingScrollTable.CellRenderer;
 import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.ListBox;
@@ -528,4 +531,18 @@ public class CwPagingScrollTable extends ContentWidget {
     scrollTable.setColumnWidth(11, 45);
   }
 
+  @Override
+  protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+    GWT.runAsync(new RunAsyncCallback() {
+
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+
+      public void onSuccess() {
+        callback.onSuccess(onInitialize());
+      }
+    });
+  }
+  
 }

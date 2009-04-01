@@ -26,8 +26,9 @@ import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,8 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button(&quot;Button 1&quot;),
- *     new BorderLayoutData(BorderLayoutRegion.SOUTH));
+ * panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
  * </pre>
  * 
  * <p>
@@ -53,14 +53,14 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(true));
+ * panel.add(new Button("Button 1"), new BorderLayoutData(true));
  * </pre>
  * 
  * or
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button(&quot;Button 1&quot;));
+ * panel.add(new Button("Button 1"));
  * </pre>
  * 
  * <p>
@@ -84,15 +84,18 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
+ *
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(Region.NORTH));
- *   panel.add(new Button(&quot;Button 2&quot;), new BorderLayoutData(Region.SOUTH));
- *   panel.add(new Button(&quot;Button 3&quot;), new BorderLayoutData(Region.WEST));
- *   panel.add(new Button(&quot;Button 4&quot;), new BorderLayoutData(Region.EAST));
- *   panel.add(new Button(&quot;Button 5&quot;));
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST));
+ *   panel.add(new Button("Button 5"));
+ *
  *   viewport.add(panel, true);
+ *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -119,16 +122,18 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
+ *
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(Region.NORTH, 50));
- *   panel.add(new Button(&quot;Button 2&quot;), new BorderLayoutData(Region.SOUTH, 0.3));
- *   panel.add(new Button(&quot;Button 3&quot;), new BorderLayoutData(Region.WEST, 200, 10,
- *       300));
- *   panel.add(new Button(&quot;Button 4&quot;), new BorderLayoutData(Region.EAST, -1));
- *   panel.add(new Button(&quot;Button 5&quot;), new BorderLayoutData(true));
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH, 50));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH, 0.3));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST, 200, 10, 300));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST, -1));
+ *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
+ *
  *   viewport.add(panel, true);
+ *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -149,31 +154,37 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
+ *
  *   final LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
+ *
  *   ClickListener clickListener = new ClickListener() {
  *     public void onClick(Widget sender) {
  *       panel.setCollapsed(sender, !panel.isCollapsed(sender));
  *       panel.layout();
  *     }
  *   };
- *   Button button1 = new Button(&quot;Button 1&quot;, clickListener);
- *   Button button2 = new Button(&quot;Button 2&quot;, clickListener);
- *   Button button3 = new Button(&quot;Button 3&quot;, clickListener);
- *   Button button4 = new Button(&quot;Button 4&quot;, clickListener);
+ *
+ *   Button button1 = new Button("Button 1", clickListener);
+ *   Button button2 = new Button("Button 2", clickListener);
+ *   Button button3 = new Button("Button 3", clickListener);
+ *   Button button4 = new Button("Button 4", clickListener);
+ *
  *   panel.add(button1, new BorderLayoutData(Region.NORTH));
  *   panel.add(button2, new BorderLayoutData(Region.SOUTH));
  *   panel.add(button3, new BorderLayoutData(Region.WEST));
  *   panel.add(button4, new BorderLayoutData(Region.EAST));
- * 
- *   panel.add(new Button(&quot;Button 5&quot;), new BorderLayoutData(true));
- * 
+ *  
+ *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
+ *   
  *   panel.setCollapsed(button1, true);
  *   panel.setCollapsed(button2, true);
  *   panel.setCollapsed(button3, true);
  *   panel.setCollapsed(button4, true);
+ *
  *   viewport.add(panel, true);
+ *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -488,8 +499,8 @@ public class BorderLayout extends BaseLayout {
             northCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseDown());
             northCollapsedImageButton.addStyleName("NorthCollapsedImageButton");
-            northCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            northCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(northCollapsed, false);
                 layoutPanel.remove(northCollapsedImageButton);
                 northCollapsedImageButton = null;
@@ -579,8 +590,8 @@ public class BorderLayout extends BaseLayout {
             southCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseUp());
             southCollapsedImageButton.addStyleName("SouthCollapsedImageButton");
-            southCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            southCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(southCollapsed, false);
                 layoutPanel.remove(southCollapsedImageButton);
                 southCollapsedImageButton = null;
@@ -669,8 +680,8 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseRight());
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
-            westCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            westCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(westCollapsed, false);
                 layoutPanel.remove(westCollapsedImageButton);
                 westCollapsedImageButton = null;
@@ -755,8 +766,8 @@ public class BorderLayout extends BaseLayout {
             eastCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseLeft());
             eastCollapsedImageButton.addStyleName("EastCollapsedImageButton");
-            eastCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            eastCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(eastCollapsed, false);
                 layoutPanel.remove(eastCollapsedImageButton);
                 eastCollapsedImageButton = null;
