@@ -148,7 +148,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
           if (!isActive()) {
-            bringToFront();
+            toFront();
           }
         case Event.ONMOUSEUP:
         case Event.ONMOUSEMOVE:
@@ -674,10 +674,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     this.resizable = resizable;
 
-    final int order = windowPanelOrder.size();
-    setWindowOrder(order);
-    windowPanelOrder.add(this);
-
     windowController = new WindowController(boundaryPanel, this);
 
     if (isResizable()) {
@@ -804,7 +800,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * 
    * @deprecated Replaced by {@link #toFront()}.
    */
-  public void bringToFront() {
+  public void xbringToFront() {
     toFront();
   }
 
@@ -1014,6 +1010,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (modal) {
       modal = false;
     }
+    
+    setWindowOrder(-1);
+    windowPanelOrder.remove(this);
   }
 
   public boolean isActive() {
@@ -1510,9 +1509,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     super.show();
 
-    if (!isActive()) {
-      bringToFront();
-    }
+    final int order = windowPanelOrder.size();
+    setWindowOrder(order);
+    windowPanelOrder.add(this);
   }
 
   public void showModal() {
