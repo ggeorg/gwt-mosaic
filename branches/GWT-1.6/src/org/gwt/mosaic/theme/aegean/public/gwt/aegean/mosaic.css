@@ -108,7 +108,7 @@ a:active {
 
 .mosaic-ComboBox input {
 	border: 0px;
-	text-align: middle;
+	vertical-align: middle;	
 }
 .mosaic-ComboBox button {
 	width: 17px !important;
@@ -272,10 +272,84 @@ a:active {
 	
 }
 
-.mosaic-DropDownPanel .gwt-ListBox {
+.mosaic-DropDownPanel .mosaic-ComboBoxList {
+	background: white;
 	border: none;
 	margin: 0px;
 	padding: 0px;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable,
+.mosaic-DropDownPanel .mosaic-ColumnWidget,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable {
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 1px 0px 1px 1px;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable .headerWrapper,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .headerWrapper,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .headerWrapper {
+	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable .footerWrapper,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .footerWrapper,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .footerWrapper {
+	border-top: 1px solid #aaa;
+	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable .dataTable td,
+.mosaic-DropDownPanel .gwt-ScrollTable .headerTable td,
+.mosaic-DropDownPanel .gwt-ScrollTable .footerTable td,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .dataTable td,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .headerTable td,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .footerTable td,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .dataTable td,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .headerTable td,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .footerTable td {
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 0px 0px 0px 0px;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 1px 3px;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable .headerTable td,
+.mosaic-DropDownPanel .gwt-ScrollTable .footerTable td,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .headerTable td,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .footerTable td,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .headerTable td,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .footerTable td {
+	color: #fff;
+}
+    
+.mosaic-DropDownPanel .gwt-ScrollTable .dataTable tr.hovering,
+.mosaic-DropDownPanel .gwt-ScrollTable .dataTable tr.highlighted,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .dataTable tr.hovering,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .dataTable tr.highlighted,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .dataTable tr.hovering,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .dataTable tr.highlighted {
+	background: #C3D9FF;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable .dataTable tr.hovering,
+.mosaic-DropDownPanel .gwt-ScrollTable .dataTable tr.highlighted,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .dataTable tr.hovering,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .dataTable tr.highlighted,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .dataTable tr.hovering,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .dataTable tr.highlighted {
+	/*background: #FFFFAA;*/
+	cursor: hand;
+	cursor: pointer;
+}
+
+.mosaic-DropDownPanel .gwt-ScrollTable .dataTable tr.selected td,
+.mosaic-DropDownPanel .mosaic-ColumnWidget .dataTable tr.selected td,
+.mosaic-DropDownPanel .mosaic-ScrollTreeTable .dataTable tr.selected td {
+	background: #7AA5D6;
 }
 
 /*** WindowPanel ***/
@@ -479,192 +553,6 @@ a:active {
 	border-style: solid;
 	border-width: 3px 2px 2px 2px;
 */
-}
-
-/*** Table ***/
-
-.mosaic-Table {
-	/*border: 1px solid #b6bbbc;*/
-	border: 1px solid #bbbbbb;
-	overflow: hidden;
-	text-align: left /* Force default alignment */
-}
-
-.mosaic-Table-header-wrap {
-	height: 36px;
-	/*background: #e7edf3 url(images/table/header-bg.png) repeat-x;*/
-	background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
-	/*border-bottom: 1px solid #b6bbbc;*/
-	border-bottom: 1px solid #bbbbbb;
-	overflow: hidden;
-}
-
-.mosaic-Table-header {
-	height: 36px;
-}
-
-.mosaic-Table-header table,
-.mosaic-Table-table {
-	border-collapse: collapse;
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-.mosaic-Table-header td,
-.mosaic-Table-table td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-.mosaic-Table-header td {
-	cursor: pointer;
-}
-
-.mosaic-Table-resizer {
-	display: block;
-	height: 36px;
-	float: right;
-	background: transparent url(images/table/resizer-bg.png) repeat-y 50% 50%;
-	cursor: col-resize;
-}
-
-.mosaic-Table-caption-container {
-	float: right;
-	overflow: hidden;
-	white-space: nowrap;
-	color: #393a3c;
-	font-size: 15px;
-	padding-top: 9px;
-	text-shadow: #ffffff 2px 2px 0;
-}
-
-.mosaic-Table-header-cell-asc .mosaic-Table-caption-container {
-	background: transparent url(images/table/sort-asc.png) no-repeat right 80%;
-}
-.mosaic-Table-header-cell-desc .mosaic-Table-caption-container {
-	background: transparent url(images/table/sort-desc.png) no-repeat right 80%;
-}
-.mosaic-Table-header-cell:hover,
-.mosaic-Table-header-cell-asc:hover,
-.mosaic-Table-header-cell-desc:hover {
-	background: transparent url(images/table/header-bg-over.png) repeat-x;
-}
-
-.mosaic-Table-body {
-	background: #fff;
-}
-
-.mosaic-Table-row-spacer {
-	height: 10px;
-	overflow: hidden; /* IE hack to allow < one line height divs */
-}
-
-.mosaic-Table-row,
-.mosaic-Table-row-odd {
-	border: 0;
-	margin: 0;
-	padding: 0;
-	background-color: #fff;
-	cursor: default;
-}
-
-.mosaic-Table-row-odd {
-	background-color: #f6f7f7;
-}
-.mosaic-Table-row:hover,
-.mosaic-Table-row-odd:hover {
-	background-color: #edeeee;
-}
-.mosaic-Table .i-selected {
-	background: #d5dde0;
-	color: #456572;
-}
-.mosaic-Table-row td,
-.mosaic-Table-row-odd td {
-	padding: 0;
-}
-.mosaic-Table-cell-content {
-	white-space: nowrap;
-	overflow: hidden;
-	padding: 3px 0 3px 3px;
-	margin-right: 5px;
-	height: 18px;
-}
-/* Fix textfield size to correspond label size inside table */
-.mosaic-Table-cell-content .mosaic-textfield {
-	height: auto;
-	margin: -2px 0 -3px -3px;
-	width: 97%; /* approximate */
-}
-
-.mosaic-Table-column-selector {
-	float: right;
-	background: transparent url(images/table/colsel.png) no-repeat;
-	margin: -36px 0 0 0;
-	height: 36px;
-	width: 15px;
-	position: relative; /* hide this from IE, it works without it */
-}
-
-* html .mosaic-Table-column-selector {
-	position: static;
-}
-
-*+html .mosaic-Ttable-column-selector  {
-	position: static;
-}
-
-.mosaic-Table-focus-slot-left {
-	border-left: 2px solid #b6bbbc;
-	margin-right: -2px;
-}
-.mosaic-Table-focus-slot-right {
-	border-right: 2px solid #b6bbbc;
-	margin-left: -2px;
-}
-
-.mosaic-Table-header-drag {
-	position: absolute;
-	background: #e7edf3 url(images/table/header-bg.png) repeat-x;
-	border: 1px solid #b6bbbc;
-	padding: 4px;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	color: #464f52;
-	font-size: 15px;
-	opacity: 0.5;
-	filter: alpha(opacity=50);
-	margin-top: 20px;
-	z-index: 20000;
-}
-
-.mosaic-Table-scrollposition {
-	width: 160px;
-	height: 39px;
-	background: transparent url(images/table/scroll-position-bg.png);
-}
-
-.mosaic-Table-scrollposition span {
-	display: block;
-	margin-top: 8px;
-	text-align: center;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	color: #464f52;
-	font-size: 15px;
-	text-shadow: #ffffff 2px 2px 0;
-}
-
-
-/* row in column selector */
-.i-on div {
-	background-image: url(images/table/check.gif);
-	background-repeat: no-repeat;
-	background-position: 2px center;
-	text-indent: 6px;
-}
-.i-off div {
-	text-indent: 6px;
 }
 
 /*** ScrollTabBar ***/

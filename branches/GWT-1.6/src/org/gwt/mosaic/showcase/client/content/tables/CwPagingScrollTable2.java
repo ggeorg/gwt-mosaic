@@ -29,6 +29,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.table.PagingScrollTable2;
 
 import com.google.gwt.gen2.table.client.CachedTableModel;
 import com.google.gwt.gen2.table.client.CellRenderer;
@@ -38,9 +39,7 @@ import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.FixedWidthGridBulkRenderer;
 import com.google.gwt.gen2.table.client.ListCellEditor;
 import com.google.gwt.gen2.table.client.PagingOptions;
-import com.google.gwt.gen2.table.client.PagingScrollTable;
 import com.google.gwt.gen2.table.client.RadioCellEditor;
-import com.google.gwt.gen2.table.client.ScrollTable;
 import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.gen2.table.client.TextCellEditor;
 import com.google.gwt.gen2.table.client.TableDefinition.AbstractCellView;
@@ -58,7 +57,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-ScrollTable"})
-public class CwPagingScrollTable extends ContentWidget {
+public class CwPagingScrollTable2 extends ContentWidget {
 
   /**
    * The constants used in this Page.
@@ -76,7 +75,7 @@ public class CwPagingScrollTable extends ContentWidget {
    */
   @ShowcaseData
   private CwConstants constants;
-  
+
   /**
    * The {@link CachedTableModel} around the main table model.
    */
@@ -85,13 +84,13 @@ public class CwPagingScrollTable extends ContentWidget {
   /**
    * The {@link PagingScrollTable}.
    */
-  private PagingScrollTable<Student> pagingScrollTable = null;
-  
+  private PagingScrollTable2<Student> pagingScrollTable = null;
+
   /**
    * The {@link DataSourceTableModel}.
    */
   private DataSourceTableModel tableModel = null;
-  
+
   /**
    * The {@link DefaultTableDefinition}.
    */
@@ -102,7 +101,7 @@ public class CwPagingScrollTable extends ContentWidget {
    * 
    * @param constants the constants
    */
-  public CwPagingScrollTable(CwConstants constants) {
+  public CwPagingScrollTable2(CwConstants constants) {
     super(constants);
     this.constants = constants;
   }
@@ -119,7 +118,7 @@ public class CwPagingScrollTable extends ContentWidget {
     TableDefinition<Student> tableDef = createTableDefinition();
 
     // Create the scroll table
-    pagingScrollTable = new PagingScrollTable<Student>(cachedTableModel,
+    pagingScrollTable = new PagingScrollTable2<Student>(cachedTableModel,
         tableDef);
     pagingScrollTable.setPageSize(50);
     pagingScrollTable.setEmptyTableWidget(new HTML(
@@ -131,9 +130,9 @@ public class CwPagingScrollTable extends ContentWidget {
     pagingScrollTable.setBulkRenderer(bulkRenderer);
 
     // Setup the formatting
-    pagingScrollTable.setCellPadding(3); 
+    pagingScrollTable.setCellPadding(3);
     pagingScrollTable.setCellSpacing(0);
-    pagingScrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
+    pagingScrollTable.setResizePolicy(PagingScrollTable2.ResizePolicy.UNCONSTRAINED);
   }
 
   /**
@@ -592,7 +591,7 @@ public class CwPagingScrollTable extends ContentWidget {
 
   @Override
   public String getName() {
-    return constants.mosaicPagingScrollTableName();
+    return constants.mosaicPagingScrollTableName() + "2";
   }
 
   /**
@@ -633,15 +632,15 @@ public class CwPagingScrollTable extends ContentWidget {
 
     return layoutPanel;
   }
-  
+
   /**
    * Called when initialization has completed and the widget has been added to
    * the page.
    */
   protected void onInitializeComplete() {
     super.onInitializeComplete();
-    
+
     pagingScrollTable.gotoFirstPage();
   }
-  
+
 }

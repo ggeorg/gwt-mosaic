@@ -660,7 +660,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   }
 
   /**
-   * Selects the firs item in the list if no items are currently selected. This
+   * Selects the first item in the list if no items are currently selected. This
    * method assumes that the list has at least 1 item.
    * 
    * @return {@code true} if no item was previosly selected and the first item

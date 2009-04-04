@@ -15,6 +15,12 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import org.gwt.mosaic.ui.client.list.ComboBoxModel;
+import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
+
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.KeyboardListener;
@@ -27,7 +33,26 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
-  private final ListBox<T> listBox;
+  private final ListBox<T> listBox = new ListBox<T>() {
+
+    @Override
+    public void setElement(Element elem) {
+      super.setElement(elem);
+      sinkEvents(Event.ONMOUSEUP);
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+      super.onBrowserEvent(event);
+      if (isPopupVisible()) {
+        switch (DOM.eventGetType(event)) {
+          case Event.ONMOUSEUP:
+            updateInput();
+            return;
+        }
+      }
+    }
+  };
 
   private Timer updateTimer = new Timer() {
     public void run() {
@@ -43,45 +68,76 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * Default constructor.
    */
   public ComboBox() {
-    this(new ListBox<T>());
+    super();
+    setModel(new DefaultComboBoxModel<T>());
+    init();
   }
 
-  protected ComboBox(final ListBox<T> listBox) {
-    super();
+  /**
+   * Sets the data model that the {@code ComboBox} uses to obtain the list of
+   * items.
+   * 
+   * @param model the {@code ComboBoxModel} that provides the displayed list of
+   *          items
+   */
+  public void setModel(ComboBoxModel<T> model) {
+    // ComboBoxModel oldModel = dataModel;
+    // if (oldModel != null) {
+    // oldModel.removeListDataListener(this);
+    // }
+    dataModel = model;
+    //
+    // // set the current selected item.
+    // selectedItemReminder = dataModel.getSelectedItem();
 
-    this.listBox = listBox;
-    this.listBox.setMultipleSelect(false);
-    //this.listBox.setVisibleItemCount(10);
-    this.listBox.addStyleName("mosaic-ComboBoxList");
+    listBox.setModel(dataModel);
 
-    super.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
+    // firePropertyChange("model", oldModel, dataModel);
+  }
 
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
+  /**
+   * Returns the data model currently used by the <code>JComboBox</code>.
+   * 
+   * @return the <code>ComboBoxModel</code> that provides the displayed list of
+   *         items
+   */
+  public ComboBoxModel<T> getModel() {
+    return dataModel;
+  }
 
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-          case KEY_UP:
-            break;
-          default:
-            updateTimer.schedule(333);
+  private ComboBoxModel<T> dataModel;
+
+  protected void init() {
+    listBox.setMultipleSelect(false);
+    listBox.addStyleName("mosaic-ComboBoxList");
+  }
+
+  @Override
+  protected void updateInput() {
+    final int index = listBox.getSelectedIndex();
+    if (index != -1) {
+      ComboBox.this.setText("" + listBox.getItem(index));
+    }
+    super.updateInput();
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONKEYDOWN:
+        if (isPopupVisible()) {
+          int keyCode = DOM.eventGetKeyCode(event);
+          switch (keyCode) {
+            case KeyboardListener.KEY_UP:
+            case KeyboardListener.KEY_DOWN:
+            case KeyboardListener.KEY_LEFT:
+            case KeyboardListener.KEY_RIGHT:
+              listBox.onBrowserEvent(event);
+              return;
+          }
         }
-      }
-    });
-
-    listBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
-        setText((String)listBox.getItem(listBox.getSelectedIndex()));
-        hidePopup();
-      }
-    });
+    }
+    super.onBrowserEvent(event);
   }
 
   @Override
@@ -95,27 +151,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   }
 
   /**
-   * Adds an item to the list box. This method has the same effect as
-   * 
-   * <pre>
-   * addItem(item, item)
-   * </pre>
-   * 
-   * @param item the text of the item to be added
-   */
-  public void addItem(T item) {
-    //listBox.addItem(item);
-  }
-
-  /**
-   * Removes all items from the list box.
-   */
-  public void clear() {
-//    listBox.clear();
-//    setText("");
-  }
-
-  /**
    * Gets the number of items present in the list box.
    * 
    * @return the number of items
@@ -123,7 +158,7 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public int getItemCount() {
     return listBox.getItemCount();
   }
-  
+
   public T getItem(int index) {
     return listBox.getItem(index);
   }
@@ -138,16 +173,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public int getSelectedIndex() {
     return listBox.getSelectedIndex();
   }
-
-  /**
-   * Gets the number of items that are visible. If only one item is visible,
-   * then the box will be displayed as a drop-down list.
-   * 
-   * @return the visible item count
-   */
-//  public int getVisibleItemCount() {
-//    return listBox.getVisibleItemCount();
-//  }
 
   /**
    * Inserts an item into the list box. Has the same effect as
@@ -172,16 +197,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    */
   public boolean isItemSelected(int index) {
     return listBox.isItemSelected(index);
-  }
-
-  /**
-   * Removes the item at the specified index.
-   * 
-   * @param index the index of the item to be removed
-   * @throws IndexOutOfBoundsException if the index is out of range
-   */
-  public void removeItem(int index) {
-    //listBox.removeItem(index);
   }
 
   /**
@@ -210,12 +225,12 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public void setItem(int index, T item) {
     listBox.renderItemOnUpdate(index, item);
   }
-  
+
   /**
    * Sets the currently selected index.
    * 
-   * After calling this method, only the specified item in the list will
-   * remain selected.  For a ListBox with multiple selection enabled, see
+   * After calling this method, only the specified item in the list will remain
+   * selected. For a ListBox with multiple selection enabled, see
    * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
    * 
    * <p>
@@ -228,18 +243,5 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public void setSelectedIndex(int index) {
     listBox.setSelectedIndex(index);
   }
-  
-  /**
-   * Sets the number of items that are visible. If only one item is visible,
-   * then the box will be displayed as a drop-down list.
-   * 
-   * @param visibleItems the visible item count
-   */
-//  public void setVisibleItemCount(int visibleItems) {
-//    if (visibleItems < 2) {
-//      throw new IllegalArgumentException();
-//    }
-//    listBox.setVisibleItemCount(visibleItems);
-//  }
 
 }
