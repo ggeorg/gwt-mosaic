@@ -321,7 +321,7 @@ public class CwMessageBox extends ContentWidget {
         }
       }
     };
-    prompt.setAnimationEnabled(true);
+    prompt.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
@@ -412,7 +412,7 @@ public class CwMessageBox extends ContentWidget {
         }
       }
     };
-    prompt.setAnimationEnabled(true);
+    prompt.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");

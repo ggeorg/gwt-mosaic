@@ -19,6 +19,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.ComboBox;
 import org.gwt.mosaic.ui.client.datepicker.DateComboBox;
 import org.gwt.mosaic.ui.client.datepicker.DateTimeComboBox;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -26,6 +27,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -85,6 +87,14 @@ public class CwComboBox extends ContentWidget {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
+    
+    ComboBox<String> comboBox0 = new ComboBox<String>();
+    DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) comboBox0.getModel();
+    model.add("foo");
+    model.add("bar");
+    model.add("baz");
+    model.add("toto");
+    model.add("tintin");
 
     DateComboBox comboBox1 = new DateComboBox();
     comboBox1.ensureDebugId("mosaicAbstractComboBox-normal");
@@ -99,6 +109,7 @@ public class CwComboBox extends ContentWidget {
     DateComboBox comboBox4 = new DateComboBox();
     comboBox4.ensureDebugId("mosaicAbstractComboBox-normal");
 
+    layoutPanel.add(comboBox0, new BoxLayoutData());
     layoutPanel.add(comboBox1, new BoxLayoutData());
     layoutPanel.add(comboBox2, new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel.add(comboBox3, new BoxLayoutData(FillStyle.VERTICAL));
