@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.list.ComboBoxModel;
 import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
 
@@ -33,26 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
-  private final ListBox<T> listBox = new ListBox<T>() {
-
-    @Override
-    public void setElement(Element elem) {
-      super.setElement(elem);
-      sinkEvents(Event.ONMOUSEUP);
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-      super.onBrowserEvent(event);
-      if (isPopupVisible()) {
-        switch (DOM.eventGetType(event)) {
-          case Event.ONMOUSEUP:
-            updateInput();
-            return;
-        }
-      }
-    }
-  };
+  private final ListBox<T> listBox;
 
   private Timer updateTimer = new Timer() {
     public void run() {
@@ -68,8 +50,53 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * Default constructor.
    */
   public ComboBox() {
+    this(null);
+  }
+
+  /**
+   * 
+   * @param columns
+   */
+  public ComboBox(String[] columns) {
     super();
+
+    listBox = new ListBox<T>(columns) {
+
+      @Override
+      public void setElement(Element elem) {
+        super.setElement(elem);
+        sinkEvents(Event.ONMOUSEUP);
+      }
+
+      @Override
+      public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (isPopupVisible()) {
+          switch (DOM.eventGetType(event)) {
+            case Event.ONMOUSEUP:
+              updateInput();
+              return;
+          }
+        }
+      }
+    };
+
+    setCellRenderer(new ComboBoxCellRenderer<T>() {
+      public String getDisplayText(T item) {
+        return item.toString();
+      }
+
+      public void renderCell(ListBox<T> listBox, int row, int column, T item) {
+        if (item instanceof Widget) {
+          listBox.setWidget(row, column, (Widget) item);
+        } else {
+          listBox.setText(row, column, item.toString());
+        }
+      }
+    });
+
     setModel(new DefaultComboBoxModel<T>());
+
     init();
   }
 
@@ -112,11 +139,29 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
     listBox.addStyleName("mosaic-ComboBoxList");
   }
 
+  /**
+   * The render used to set cell contents.
+   * 
+   * @param <T>
+   */
+  public interface ComboBoxCellRenderer<T> extends CellRenderer<T> {
+    /**
+     * 
+     * @return
+     */
+    String getDisplayText(T item);
+  }
+
   @Override
   protected void updateInput() {
     final int index = listBox.getSelectedIndex();
     if (index != -1) {
-      ComboBox.this.setText("" + listBox.getItem(index));
+      if (listBox.getCellRenderer() != null) {
+        final ComboBoxCellRenderer<T> renderer = (ComboBoxCellRenderer<T>) listBox.getCellRenderer();
+        ComboBox.this.setText(renderer.getDisplayText(listBox.getItem(index)));
+      } else {
+        ComboBox.this.setText(listBox.getItem(index).toString());
+      }
     }
     super.updateInput();
   }
@@ -242,6 +287,24 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    */
   public void setSelectedIndex(int index) {
     listBox.setSelectedIndex(index);
+  }
+
+  /**
+   * Set the {@link CellRenderer} used to render cell contents.
+   * 
+   * @param cellRenderer the new renderer
+   */
+  public void setCellRenderer(ComboBoxCellRenderer<T> cellRenderer) {
+    listBox.setCellRenderer(cellRenderer);
+  }
+
+  /**
+   * Get the {@link CellRenderer} used to render cells.
+   * 
+   * @return the current renderer
+   */
+  public ComboBoxCellRenderer<T> getCellRenderer() {
+    return (ComboBoxCellRenderer<T>) listBox.getCellRenderer();
   }
 
 }

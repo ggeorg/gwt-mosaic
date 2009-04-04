@@ -37,9 +37,10 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.list.DefaultListModel;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -146,8 +147,8 @@ public class CwListBox extends ContentWidget {
     });
 
     final ToolBar toolBar = new ToolBar();
-    toolBar.add(new ToolButton("Insert", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Insert", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         MessageBox.prompt("ListBox Insert", "Please enter a new value to add",
             null, new PromptCallback<String>() {
               public void onResult(String input) {
@@ -163,8 +164,8 @@ public class CwListBox extends ContentWidget {
             });
       }
     }));
-    toolBar.add(new ToolButton("Remove", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Remove", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -181,8 +182,8 @@ public class CwListBox extends ContentWidget {
             });
       };
     }));
-    toolBar.add(new ToolButton("Edit", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Edit", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -260,8 +261,8 @@ public class CwListBox extends ContentWidget {
     });
 
     final ToolBar toolBar = new ToolBar();
-    toolBar.add(new ToolButton("Insert", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Insert", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         MessageBox.prompt("ListBox Insert",
             "Please enter a new value to add, should be a 'Married Male'",
             null, new PromptCallback<String>() {
@@ -278,8 +279,8 @@ public class CwListBox extends ContentWidget {
             });
       }
     }));
-    toolBar.add(new ToolButton("Remove", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Remove", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -296,8 +297,8 @@ public class CwListBox extends ContentWidget {
             });
       };
     }));
-    toolBar.add(new ToolButton("Edit", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Edit", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -368,5 +369,5 @@ public class CwListBox extends ContentWidget {
       return getName() + " " + getGender() + " " + String.valueOf(isMarried());
     }
   }
-  
+
 }

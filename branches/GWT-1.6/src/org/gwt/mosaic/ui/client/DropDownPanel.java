@@ -120,14 +120,12 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
   @Override
   public final void pack() {
     int[] size = getLayoutPanel().getPreferredSize();
-    int border = getOffsetHeight() - getLayoutPanel().getOffsetHeight();
-    setContentSize(Math.min(Math.max(size[0], currentAnchor.getOffsetWidth()),
-        Window.getClientWidth() - getAbsoluteLeft()
-            - (getOffsetWidth() - getLayoutPanel().getOffsetWidth())),
-        Math.min(size[1], Window.getClientHeight() - getAbsoluteTop()
+    setContentSize(currentAnchor.getOffsetWidth()
+        - (getOffsetWidth() - getLayoutPanel().getOffsetWidth()), Math.min(
+        size[1], Window.getClientHeight() - getAbsoluteTop()
             - (getOffsetHeight() - getLayoutPanel().getOffsetHeight())));
     // delayedLayout(MIN_DELAY_MILLIS);
-    layout();
+    layout(true);
   }
 
   private void setCurrentAnchor(Widget anchor) {
