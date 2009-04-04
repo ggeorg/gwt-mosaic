@@ -36,6 +36,24 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
 
+  protected int[] margins = {0, 0};
+  protected int[] paddings = {0, 0};
+  protected int[] borders = {0, 0};
+  
+  protected boolean initialized = false;
+  
+  protected boolean init(LayoutPanel layoutPanel) {
+    if (initialized) {
+      return true;
+    }
+    
+    margins = DOM.getMarginSizes(layoutPanel.getElement());
+    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    borders = DOM.getBorderSizes(layoutPanel.getElement());
+    
+    return true;
+  }
+
   protected void recalculate(Map<Widget, Dimension> widgetSizes) {
     for (Iterator<Map.Entry<Widget, Dimension>> iter = widgetSizes.entrySet().iterator(); iter.hasNext();) {
       Map.Entry<Widget, Dimension> entry = iter.next();

@@ -217,12 +217,7 @@ public class BorderLayout extends BaseLayout {
 
   private boolean runTwiceFlag;
 
-  private boolean initialized = false;
-
   private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
 
   @Override
   public void flushCache() {
@@ -249,8 +244,8 @@ public class BorderLayout extends BaseLayout {
         return result;
       }
 
-      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]);
-      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]);
+      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]) + (borders[1] + borders[3]);
+      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]) + (borders[0] + borders[2]);
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -428,8 +423,7 @@ public class BorderLayout extends BaseLayout {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    super.init(layoutPanel);
 
     scanForPanels(layoutPanel);
 
