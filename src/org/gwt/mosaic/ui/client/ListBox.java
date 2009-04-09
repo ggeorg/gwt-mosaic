@@ -411,8 +411,8 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   }
 
   /**
-   * Gets the currently-selected item. If multiple items are selected, this
-   * method will returns the first selected item ({@link #isItemSelected(int)}
+   * Gets the currently selected item. If multiple items are selected, this
+   * method will return the first selected item ({@link #isItemSelected(int)}
    * can be used to query individual items).
    * 
    * @return the selected index, or {@code -1} if none is selected
@@ -421,8 +421,8 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    */
   public int getSelectedIndex() {
     Set<Integer> selection = dataTable.getSelectedRows();
-    for (Integer i : selection) {
-      return i.intValue();
+    if (selection != null && selection.size() > 0) {
+      return selection.iterator().next();
     }
     return -1;
   }
@@ -474,7 +474,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   }
 
   /**
-   * Determines whether as individual list is selected.
+   * Determines whether an individual list item is selected.
    * 
    * @param index the index of the item to be tested
    * @return {@code true} if the item is selected
@@ -835,6 +835,18 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
 
   public void setWidget(int row, int column, Widget widget) {
     dataTable.setWidget(row, column, widget);
+  }
+  
+  public int setColumnWidth(int column, int width) {
+    return columnWidget.setColumnWidth(column, width);
+  }
+  
+  public int setColumnWidth(int column, int width, int sacrificeColumn) {
+    return columnWidget.setColumnWidth(column, width, sacrificeColumn);
+  }
+  
+  public int getColumnWidth(int column) {
+    return columnWidget.getColumnWidth(column);
   }
 
 }
