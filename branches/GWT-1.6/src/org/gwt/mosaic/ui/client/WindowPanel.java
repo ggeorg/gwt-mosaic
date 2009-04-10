@@ -101,7 +101,51 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   private static WindowResizeHandler windowPanelResizeHandler = new WindowResizeHandler();
+  
+  private final class WindowResizeHandlerImpl implements ResizeHandler {
 
+    private HandlerRegistration handlerRegistration; 
+    
+    @Override
+    public void onResize(ResizeEvent event) {
+      final Widget boundaryPanel = windowController.getBoundaryPanel();
+      // DeferredCommand.addCommand(new Command() {
+      // public void execute() {
+      getLayoutPanel().setSize("0px", "0px");
+      if (isCollapsed()) {
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+        final int[] size2 = DOM.getBoxSize(getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
+        setPopupPosition(0, 0);
+        // panel.setSize("0px", "0px");
+        setContentSize(size[0] - (size2[0] - size3[0]),
+            getLayoutPanel().getPreferredSize()[1]);
+      } else {
+        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
+        final int[] size2 = DOM.getBoxSize(getElement());
+        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
+        setPopupPosition(0, 0);
+        setContentSize(size[0] - (size2[0] - size3[0]), size[1]
+            - (size2[1] - size3[1]));
+      }
+      delayedLayout(MIN_DELAY_MILLIS);
+      // }
+      // });
+    }
+
+    public void addResizeHandler() {
+      handlerRegistration = Window.addResizeHandler(windowResizeHandler);
+    }
+
+    public void removeResizeHandler() {
+      if( handlerRegistration != null) {
+        handlerRegistration.removeHandler();
+        handlerRegistration = null;
+      }
+    }
+  }  
+  private WindowResizeHandlerImpl windowResizeHandler = new WindowResizeHandlerImpl();
+  
   /**
    * Double click caption action.
    */
@@ -608,34 +652,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   private WindowState restoredState;
 
   private List<WindowStateListener> windowStateListeners;
-
-  private WindowResizeListener windowResizeListener = new WindowResizeListener() {
-    public void onWindowResized(int width, int height) {
-      final Widget boundaryPanel = windowController.getBoundaryPanel();
-      // DeferredCommand.addCommand(new Command() {
-      // public void execute() {
-      getLayoutPanel().setSize("0px", "0px");
-      if (isCollapsed()) {
-        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-        final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
-        setPopupPosition(0, 0);
-        // panel.setSize("0px", "0px");
-        setContentSize(size[0] - (size2[0] - size3[0]),
-            getLayoutPanel().getPreferredSize()[1]);
-      } else {
-        final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-        final int[] size2 = DOM.getBoxSize(getElement());
-        final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
-        setPopupPosition(0, 0);
-        setContentSize(size[0] - (size2[0] - size3[0]), size[1]
-            - (size2[1] - size3[1]));
-      }
-      delayedLayout(MIN_DELAY_MILLIS);
-      // }
-      // });
-    }
-  };
 
   private CollapsedListenerCollection collapsedListeners;
 
@@ -1289,7 +1305,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     } else if (!isModal() && oldState == WindowState.MINIMIZED) {
       setVisible(true);
       if (getWindowState() == WindowState.MAXIMIZED) {
-        windowResizeListener.onWindowResized(-1, -1);
+        windowResizeHandler.onResize(null);
       }
     }
   }
@@ -1464,9 +1480,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         }
 
         if (this.windowState == WindowState.MAXIMIZED) {
-          Window.addWindowResizeListener(windowResizeListener);
+          windowResizeHandler.addResizeHandler();
         } else {
-          Window.removeWindowResizeListener(windowResizeListener);
+          windowResizeHandler.removeResizeHandler();
         }
       }
 
