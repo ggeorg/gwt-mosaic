@@ -1,12 +1,12 @@
 /*
  * Copyright 2008 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.google.gwt.i18n.client.Constants;
 
 /**
  * The constants used in this Page.
- * 
+ *
  * @author georgopoulos.georgios(at)gmail.com
  */
 public interface ShowcaseConstants extends Constants,
@@ -41,7 +41,8 @@ public interface ShowcaseConstants extends Constants,
     CwComboBox.CwConstants, CwToolBar.CwConstants, CwMenuBar.CwConstants,
     CwScrollTable.CwConstants, CwPagingScrollTable.CwConstants,
     CwTableLoadingBenchmark.CwConstants, CwBasicTreeTable.CwConstants,
-    CwDatePicker.CwConstants, CwMessageBox.CwConstants {
+    CwDatePicker.CwConstants, CwMessageBox.CwConstants,
+    Application.AppConstants {
 
   /**
    * The path to source code for examples, raw files, and style definitions.
@@ -107,4 +108,12 @@ public interface ShowcaseConstants extends Constants,
    * @return the title of the application
    */
   String mainTitle();
+
+  String mainMenuForms();
+
+  String mainMenuLayoutAndPanels();
+
+  String mainMenuListsAndTables();
+
+  String mainMenuOtherFeatures();
 }

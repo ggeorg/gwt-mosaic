@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.showcase.client;
 
+import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.ImageButton;
@@ -31,6 +32,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -58,7 +60,7 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * .Application-links { The main external links }</li> <li>.Application-options
  * { The options widget }</li> <li>.Application-menu { The main menu }</li> <li>
  * .Application-content-wrapper { The element around the content }</li> </ul>
- * 
+ *
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Application extends Viewport {
@@ -68,7 +70,7 @@ public class Application extends Viewport {
   public interface ApplicationImages extends TreeImages {
     /**
      * An image indicating a leaf.
-     * 
+     *
      * @return a prototype of this image
      */
     @Resource("noimage.png")
@@ -81,12 +83,18 @@ public class Application extends Viewport {
   public interface ApplicationListener {
     /**
      * Fired when a menu item is selected.
-     * 
+     *
      * @param item the item that was selected
      */
     void onMenuItemSelected(com.google.gwt.user.client.ui.TreeItem item);
   }
 
+  /**
+   * The constants used in this Page.
+   */
+  public static interface AppConstants extends Constants {
+    String mosaicApplicationSelectADemo();
+  }
   /**
    * The base style name.
    */
@@ -118,10 +126,16 @@ public class Application extends Viewport {
   private FlexTable topPanel;
 
   /**
+   * An instance of the constants.
+   */
+  @ShowcaseData
+  private AppConstants constants;
+  /**
    * Constructor.
    */
-  public Application() {
+  public Application(AppConstants constants) {
     super();
+    this.constants = constants;
 
     // Setup the main layout widget
     final LayoutPanel layoutPanel = getWidget();
@@ -137,7 +151,8 @@ public class Application extends Viewport {
     // Add the main menu
     createMainMenu();
 
-    final CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
+    final CaptionLayoutPanel westPanel =
+      new CaptionLayoutPanel(constants.mosaicApplicationSelectADemo());
     westPanel.add(new ScrollPanel(mainMenu));
     westPanel.getHeader().add(Showcase.IMAGES.showcaseDemos().createImage());
     final ImageButton collapseBtn = new ImageButton(
@@ -173,7 +188,7 @@ public class Application extends Viewport {
 
   /**
    * Add a link to the top of the page.
-   * 
+   *
    * @param link the widget to add to the mainLinks
    */
   public void addLink(Widget link) {
@@ -206,7 +221,7 @@ public class Application extends Viewport {
 
   /**
    * Set the {@link Widget} to display in the content area.
-   * 
+   *
    * @param content the content widget
    */
   public void setContent(Widget content) {
@@ -218,7 +233,7 @@ public class Application extends Viewport {
 
   /**
    * Set the {@link ApplicationListener}.
-   * 
+   *
    * @param listener the listener
    */
   public void setListener(ApplicationListener listener) {
@@ -228,7 +243,7 @@ public class Application extends Viewport {
   /**
    * Set the {@link Widget} to use as options, which appear to the right of the
    * title bar.
-   * 
+   *
    * @param options the options widget
    */
   public void setOptionsWidget(Widget options) {
@@ -237,7 +252,7 @@ public class Application extends Viewport {
 
   /**
    * Set the {@link Widget} to use as the title bar.
-   * 
+   *
    * @param title the title widget
    */
   public void setTitleWidget(Widget title) {
@@ -315,7 +330,7 @@ public class Application extends Viewport {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
   public int[] getPreferredSize() {
