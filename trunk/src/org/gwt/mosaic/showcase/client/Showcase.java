@@ -1,14 +1,14 @@
 /*
  * Copyright 2008 Google Inc.
- * 
+ *
  * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -121,7 +121,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
- * 
+ *
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
@@ -192,23 +192,23 @@ public class Showcase implements EntryPoint {
 
   /**
    * Get the URL of the page, without an hash of query string.
-   * 
+   *
    * @return the location of the page
    */
   private static native String getHostPageLocation()
   /*-{
     var s = $doc.location.href;
-  
+
     // Pull off any hash.
     var i = s.indexOf('#');
     if (i != -1)
       s = s.substring(0, i);
-  
+
     // Pull off any query string.
     i = s.indexOf('?');
     if (i != -1)
       s = s.substring(0, i);
-  
+
     // Ensure a final slash if non-empty.
     return s;
   }-*/;
@@ -216,7 +216,7 @@ public class Showcase implements EntryPoint {
   /**
    * The {@link Application}.
    */
-  private Application app = new Application();
+  private Application app;
 
   /**
    * A mapping of history tokens to their associated menu items.
@@ -230,7 +230,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Set the content to the {@link ContentWidget}.
-   * 
+   *
    * @param content the {@link ContentWidget} to display
    */
   private void displayContentWidget(final ContentWidget content) {
@@ -244,7 +244,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Get the token for a given content widget.
-   * 
+   *
    * @return the content widget token.
    */
   private String getContentWidgetToken(ContentWidget content) {
@@ -256,7 +256,7 @@ public class Showcase implements EntryPoint {
   /**
    * Get the style name of the reference element defined in the current GWT
    * theme style sheet.
-   * 
+   *
    * @param prefix the prefix of the reference style name
    * @return the style name
    */
@@ -277,6 +277,8 @@ public class Showcase implements EntryPoint {
 
     // Create the constants
     ShowcaseConstants constants = (ShowcaseConstants) GWT.create(ShowcaseConstants.class);
+
+    app = new Application(constants);
 
     // Swap out the style sheets for the RTL versions if needed
     updateStyleSheets();
@@ -331,7 +333,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Create the main links at the top of the application.
-   * 
+   *
    * @param constants the constants with text
    */
   private void setupMainLinks(ShowcaseConstants constants) {
@@ -350,7 +352,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Setup all of the options in the main menu.
-   * 
+   *
    * @param constants the constant values to use
    */
   private void setupMainMenu(ShowcaseConstants constants) {
@@ -385,7 +387,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catPopups());
 
     // Panels
-    TreeItem catPanels = mainMenu.addItem("Layout & Panels");
+    TreeItem catPanels = mainMenu.addItem(constants.mainMenuLayoutAndPanels());
     setupMainMenuOption(catPanels, new CwFillLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwBoxLayout(constants),
@@ -437,7 +439,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
 
     // Forms
-    TreeItem catForms = mainMenu.addItem("Forms");
+    TreeItem catForms = mainMenu.addItem(constants.mainMenuForms());
     setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
 
@@ -499,7 +501,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Tables
-    TreeItem catTables = mainMenu.addItem("Lists & Tables");
+    TreeItem catTables = mainMenu.addItem(constants.mainMenuListsAndTables());
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
@@ -520,7 +522,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Other
-    TreeItem catOther = mainMenu.addItem("Other Features");
+    TreeItem catOther = mainMenu.addItem(constants.mainMenuOtherFeatures());
     setupMainMenuOption(catOther, new CwListBoxBinding(constants),
         IMAGES.catOther());
     // setupMainMenuOption(catOther, new CwActions(constants),
@@ -535,7 +537,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Add an option to the main menu.
-   * 
+   *
    * @param parent the {@link TreeItem} that is the option
    * @param content the {@link ContentWidget} to display when selected
    * @param image the icon to display next to the {@link TreeItem}
@@ -616,7 +618,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Create the title bar at the top of the Application.
-   * 
+   *
    * @param constants the constant values to use
    */
   private void setupTitlePanel(ShowcaseConstants constants) {

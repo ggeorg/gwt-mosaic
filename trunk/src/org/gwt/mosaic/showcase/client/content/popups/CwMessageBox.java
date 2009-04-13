@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,7 +55,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
- * 
+ *
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-WindowPanel", ".dragdrop-positioner"})
@@ -70,6 +70,18 @@ public class CwMessageBox extends ContentWidget {
     String mosaicMessageBoxName();
 
     String mosaicMessageBoxDescription();
+
+    String mosaicMessageBoxWarning();
+
+    String mosaicMessageBoxWarningMessage();
+
+    String mosaicMessageBoxError();
+
+    String mosaicMessageBoxErrorMessage();
+
+    String mosaicMessageBoxInfo();
+
+    String mosaicMessageBoxInfoMessage();
   }
 
   /**
@@ -80,7 +92,7 @@ public class CwMessageBox extends ContentWidget {
 
   /**
    * Constructor.
-   * 
+   *
    * @param constants the constants
    */
   public CwMessageBox(CwConstants constants) {
@@ -124,24 +136,30 @@ public class CwMessageBox extends ContentWidget {
             + "When an alert box pops up, the user will have to click \"OK\" to proceed.</small>");
     vPanel.add(alertDesc);
 
-    Button alertBtn = new Button("Warning");
+    Button alertBtn = new Button(constants.mosaicMessageBoxWarning());
     alertBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.alert("Warning", "I am a warning box!");
+        MessageBox.alert(
+          constants.mosaicMessageBoxWarning(),
+          constants.mosaicMessageBoxWarningMessage());
       }
     });
 
-    Button errorBtn = new Button("Error");
+    Button errorBtn = new Button(constants.mosaicMessageBoxError());
     errorBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.error("Error", "I am an error box!");
+        MessageBox.error(
+          constants.mosaicMessageBoxError(),
+          constants.mosaicMessageBoxErrorMessage());
       }
     });
 
-    Button infoBtn = new Button("Info");
+    Button infoBtn = new Button(constants.mosaicMessageBoxInfo());
     infoBtn.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
-        MessageBox.info("Info", "I am an info box!");
+        MessageBox.info(
+          constants.mosaicMessageBoxInfo(),
+          constants.mosaicMessageBoxInfoMessage());
       }
     });
 
@@ -300,7 +318,7 @@ public class CwMessageBox extends ContentWidget {
   }
 
   /**
-   * 
+   *
    */
   @ShowcaseSource
   private void showLoginForm() {
@@ -373,7 +391,7 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(form);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -387,7 +405,7 @@ public class CwMessageBox extends ContentWidget {
   }
 
   /**
-   * 
+   *
    */
   @ShowcaseSource
   public static void richTextAreaPrompt(final PromptCallback<String> callback) {
@@ -442,7 +460,7 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(panel, 0);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
