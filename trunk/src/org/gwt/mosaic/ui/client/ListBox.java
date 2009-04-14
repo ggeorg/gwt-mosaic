@@ -335,7 +335,9 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.list.ListDataListener#contentsChanged(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   * @see
+   * org.gwt.mosaic.ui.client.list.ListDataListener#contentsChanged(org.gwt.
+   * mosaic.ui.client.list.ListDataEvent)
    */
   public void contentsChanged(ListDataEvent event) {
     if (dataModel == event.getSource()) {
@@ -421,8 +423,8 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    */
   public int getSelectedIndex() {
     Set<Integer> selection = dataTable.getSelectedRows();
-    for (Integer i : selection) {
-      return i.intValue();
+    if (selection != null && selection.size() > 0) {
+      return selection.iterator().next();
     }
     return -1;
   }
@@ -444,7 +446,9 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.list.ListDataListener#intervalAdded(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   * @see
+   * org.gwt.mosaic.ui.client.list.ListDataListener#intervalAdded(org.gwt.mosaic
+   * .ui.client.list.ListDataEvent)
    */
   public void intervalAdded(ListDataEvent event) {
     if (dataModel == event.getSource()) {
@@ -461,13 +465,15 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.list.ListDataListener#intervalRemoved(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   * @see
+   * org.gwt.mosaic.ui.client.list.ListDataListener#intervalRemoved(org.gwt.
+   * mosaic.ui.client.list.ListDataEvent)
    */
   public void intervalRemoved(ListDataEvent event) {
     if (dataModel == event.getSource()) {
       for (int i = event.getIndex1(), n = event.getIndex0(); i >= n; --i) {
-      //for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
-      //for (int i = event.getIndex0(), n = event.getIndex1(); i < n; ++i) {
+        // for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
+        // for (int i = event.getIndex0(), n = event.getIndex1(); i < n; ++i) {
         renderOnRemove(i);
       }
     }
@@ -813,8 +819,8 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
    * <p>
    * TODO (check) Note that setting the selected index programmatically does
-   * <em>not</em> cause the {@link ChangeListener#onChange(Widget)} event to
-   * be fired.
+   * <em>not</em> cause the {@link ChangeListener#onChange(Widget)} event to be
+   * fired.
    * 
    * @param index the index of the item to be selected
    * @see #setItemSelected(int, boolean)
