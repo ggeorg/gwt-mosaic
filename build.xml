@@ -113,7 +113,7 @@
 		<echo>---------------------------------</echo>
 		<echo message="Classpath = ${classpath}" />
 		<echo>---------------------------------</echo>
-		<javadoc access="protected" classpath="${classpath}" author="true" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.gwt.mosaic.actions.*,org.gwt.mosaic.core.*,org.gwt.mosaic.forms.*,org.gwt.mosaic.ui.*" source="1.6" sourcepath="test:src" splitindex="true" use="true" version="true" />
+		<javadoc access="protected" classpath="${classpath}" author="true" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.gwt.mosaic.actions.*,org.gwt.mosaic.core.*,org.gwt.mosaic.forms.*,org.gwt.mosaic.ui.*" source="1.6" sourcepath="src" splitindex="true" use="true" version="true" />
 	</target>
 
 	<!-- ===================================== -->
