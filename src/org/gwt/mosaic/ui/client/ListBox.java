@@ -266,7 +266,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
       changeListeners = new ChangeListenerCollection();
       dataTable.addTableSelectionListener(new TableSelectionListener() {
         public void onAllRowsDeselected(SourceTableSelectionEvents sender) {
-          changeListeners.fireChange(ListBox.this);
+          //changeListeners.fireChange(ListBox.this);
         }
 
         public void onCellHover(SourceTableSelectionEvents sender, int row,
