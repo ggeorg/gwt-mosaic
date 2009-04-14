@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -23,6 +25,8 @@ import java.util.Vector;
  * java.util.Vector}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @parem <T>
  */
 public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   private static final long serialVersionUID = -7770341141882890130L;
@@ -50,20 +54,6 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   }
 
   /**
-   * Inserts the specified element at the specified position.
-   * 
-   * @param index index at which the specified element is to be inserted
-   * @param element element to be inserted
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
-   *           {@code index < 0 || index > size()})
-   */
-  @Override
-  public void add(int index, E element) {
-    super.add(index, element);
-    fireIntervalAdded(this, index, index);
-  }
-
-  /**
    * Appends the specified element to the end of this model.
    * 
    * @param e element to be appended to this model
@@ -78,6 +68,20 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Inserts the specified element at the specified position.
+   * 
+   * @param index index at which the specified element is to be inserted
+   * @param element element to be inserted
+   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
+   *           {@code index < 0 || index > size()})
+   */
+  @Override
+  public void add(int index, E element) {
+    super.add(index, element);
+    fireIntervalAdded(this, index, index);
   }
 
   /**
@@ -211,16 +215,6 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   }
 
   /**
-   * Returns the number of elements in this model.
-   * 
-   * @return the number of elements in this model
-   * @deprecated Replaced by {@link #getSize()}
-   */
-  public int size() {
-    return super.size();
-  }
-
-  /**
    * Gets the size of the list.
    * 
    * @return the number of elements currently in the list
@@ -228,41 +222,6 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   public int getSize() {
     return super.size();
-  }
-
-  /**
-   * Removes a listener object from the list.
-   * 
-   * @param listener the listener to remove
-   * @see org.gwt.mosaic.ui.client.list.ListModel#removeListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
-   */
-  public void removeListDataListener(ListDataListener listener) {
-    listenerList.remove(listener);
-  }
-
-  /**
-   * Replaces the element at the specified position in this Vector with the
-   * specified element.
-   * 
-   * @param index
-   * @param element
-   * @return the replaced element
-   */
-  @Override
-  public E set(int index, E element) {
-    E result = super.set(index, element);
-    fireContentsChanged(this, index, index);
-    return result;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#setElementAt(java.lang.Object, int)
-   */
-  @Override
-  public void setElementAt(E o, int index) {
-    set(index, o);
   }
 
   /*
@@ -323,6 +282,41 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
     remove(index);
   }
 
+  /**
+   * Removes a listener object from the list.
+   * 
+   * @param listener the listener to remove
+   * @see org.gwt.mosaic.ui.client.list.ListModel#removeListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
+   */
+  public void removeListDataListener(ListDataListener listener) {
+    listenerList.remove(listener);
+  }
+
+  /**
+   * Replaces the element at the specified position in this Vector with the
+   * specified element.
+   * 
+   * @param index
+   * @param element
+   * @return the replaced element
+   */
+  @Override
+  public E set(int index, E element) {
+    E result = super.set(index, element);
+    fireContentsChanged(this, index, index);
+    return result;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.util.Vector#setElementAt(java.lang.Object, int)
+   */
+  @Override
+  public void setElementAt(E o, int index) {
+    set(index, o);
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -331,6 +325,16 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   @Override
   public void setSize(int size) {
     // TODO
+  }
+
+  /**
+   * Returns the number of elements in this model.
+   * 
+   * @return the number of elements in this model
+   * @deprecated Replaced by {@link #getSize()}
+   */
+  public int size() {
+    return super.size();
   }
 
 }
