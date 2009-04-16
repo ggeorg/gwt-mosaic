@@ -22,6 +22,7 @@ import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * 
@@ -31,19 +32,6 @@ import com.google.gwt.gen2.table.client.TableModel;
 public class PagingScrollTable2<RowType> extends
     com.google.gwt.gen2.table.client.PagingScrollTable<RowType> implements
     HasLayoutManager {
-  
-  public static class DataGrid extends FixedWidthGrid {
-    
-    public DataGrid() {
-      // Nothing to do here!
-    }
-    
-  }
-
-  public PagingScrollTable2(TableModel<RowType> tableModel,
-      TableDefinition<RowType> tableDefinition) {
-    super(tableModel, tableDefinition);
-  }
 
   public PagingScrollTable2(TableModel<RowType> tableModel,
       FixedWidthGrid dataTable, FixedWidthFlexTable headerTable,
@@ -57,6 +45,11 @@ public class PagingScrollTable2<RowType> extends
     super(tableModel, dataTable, headerTable, tableDefinition, images);
   }
 
+  public PagingScrollTable2(TableModel<RowType> tableModel,
+      TableDefinition<RowType> tableDefinition) {
+    super(tableModel, tableDefinition);
+  }
+  
   public int[] getPreferredSize() {
     return DOM.getBoxSize(getElement());
   }
@@ -71,6 +64,14 @@ public class PagingScrollTable2<RowType> extends
 
   public void layout(boolean doInvalidate) {
     redraw();
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    // We don't need this
+    ResizableWidgetCollection.get().remove(this);
   }
 
 }

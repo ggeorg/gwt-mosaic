@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -23,6 +25,8 @@ import java.util.Vector;
  * java.util.Vector}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @parem <T>
  */
 public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   private static final long serialVersionUID = -7770341141882890130L;
@@ -50,6 +54,22 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   }
 
   /**
+   * Appends the specified element to the end of this model.
+   * 
+   * @param e element to be appended to this model
+   * @return {@code true} (as specified by {@link Collection#add})
+   */
+  @Override
+  public boolean add(E e) {
+    if (!super.add(e)) {
+      return false;
+    }
+    int index = super.size() - 1;
+    fireIntervalAdded(this, index, index);
+    return true;
+  }
+
+  /**
    * Inserts the specified element at the specified position.
    * 
    * @param index index at which the specified element is to be inserted
@@ -61,23 +81,6 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   public void add(int index, E element) {
     super.add(index, element);
     fireIntervalAdded(this, index, index);
-  }
-
-  /**
-   * Appends the specified element to the end of this model.
-   * 
-   * @param e element to be appended to this model
-   * @return {@code true} (as specified by {@link Collection#add})
-   */
-  @Override
-  public boolean add(E e) {
-    boolean result = super.add(e);
-    if (result) {
-      int index = super.size() - 1;
-      fireIntervalAdded(this, index, index);
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -106,11 +109,11 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * @throws NullPointerException if the specified collection is null
    */
   public boolean addAll(int index, Collection<? extends E> c) {
-    if (super.addAll(index, c)) {
-      fireContentsChanged(this, index, index + c.size() - 1);
-      return true;
+    if (!super.addAll(index, c)) {
+      return false;
     }
-    return false;
+    fireContentsChanged(this, index, index + c.size() - 1);
+    return true;
   }
 
   /**
@@ -211,16 +214,6 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
   }
 
   /**
-   * Returns the number of elements in this model.
-   * 
-   * @return the number of elements in this model
-   * @deprecated Replaced by {@link #getSize()}
-   */
-  public int size() {
-    return super.size();
-  }
-
-  /**
    * Gets the size of the list.
    * 
    * @return the number of elements currently in the list
@@ -230,41 +223,6 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
     return super.size();
   }
 
-  /**
-   * Removes a listener object from the list.
-   * 
-   * @param listener the listener to remove
-   * @see org.gwt.mosaic.ui.client.list.ListModel#removeListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
-   */
-  public void removeListDataListener(ListDataListener listener) {
-    listenerList.remove(listener);
-  }
-
-  /**
-   * Replaces the element at the specified position in this Vector with the
-   * specified element.
-   * 
-   * @param index
-   * @param element
-   * @return the replaced element
-   */
-  @Override
-  public E set(int index, E element) {
-    E result = super.set(index, element);
-    fireContentsChanged(this, index, index);
-    return result;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#setElementAt(java.lang.Object, int)
-   */
-  @Override
-  public void setElementAt(E o, int index) {
-    set(index, o);
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -272,7 +230,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public E remove(int index) {
-    E element = super.remove(index);
+    final E element = super.remove(index);
     fireIntervalRemoved(this, index, index);
     return element;
   }
@@ -300,7 +258,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public void removeAllElements() {
-    super.removeAllElements();
+    clear();
   }
 
   /*
@@ -310,7 +268,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public boolean removeElement(Object o) {
-    return super.removeElement(o);
+    return remove(o);
   }
 
   /*
@@ -323,14 +281,59 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
     remove(index);
   }
 
+  /**
+   * Removes a listener object from the list.
+   * 
+   * @param listener the listener to remove
+   * @see org.gwt.mosaic.ui.client.list.ListModel#removeListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
+   */
+  public void removeListDataListener(ListDataListener listener) {
+    listenerList.remove(listener);
+  }
+
+  /**
+   * Replaces the element at the specified position in this Vector with the
+   * specified element.
+   * 
+   * @param index
+   * @param element
+   * @return the replaced element
+   */
+  @Override
+  public E set(int index, E element) {
+    final E result = super.set(index, element);
+    fireContentsChanged(this, index, index);
+    return result;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.util.Vector#setElementAt(java.lang.Object, int)
+   */
+  @Override
+  public void setElementAt(E o, int index) {
+    set(index, o);
+  }
+
   /*
    * (non-Javadoc)
    * 
    * @see java.util.Vector#setSize(int)
    */
   @Override
-  public void setSize(int size) {
-    // TODO
+  public void setSize(int newSize) {
+    super.setSize(newSize);
+  }
+
+  /**
+   * Returns the number of elements in this model.
+   * 
+   * @return the number of elements in this model
+   * @deprecated Replaced by {@link #getSize()}
+   */
+  public int size() {
+    return super.size();
   }
 
 }

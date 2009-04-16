@@ -121,6 +121,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       add(widget);
     }
   }
+  
+  /**
+   * Adds a child widget to this panel.
+   * 
+   * @param w the child widget to be added
+   */
+  @Override
+  public void add(Widget w) {
+    super.add(w);
+    invalidate();
+  }
 
   public void addCollapsedListener(Widget widget, CollapsedListener listener) {
     if (getLayout() instanceof BorderLayout) {
@@ -350,6 +361,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (isAttached()) {
       layout.layoutPanel(this);
       if (layout.runTwice()) {
+        layout.flushCache();
         layout.layoutPanel(this);
       }
       layoutChildren();

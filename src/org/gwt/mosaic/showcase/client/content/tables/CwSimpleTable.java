@@ -21,7 +21,6 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.Table;
-import org.gwt.mosaic.ui.client.Table.PagingOptions;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -82,17 +81,17 @@ public class CwSimpleTable extends ContentWidget {
             new Boolean(true)},
         {"Philip", "Milne", "Pool", new Integer(10), new Boolean(false)}};
 
-    final Table<String[]> table = new Table<String[]>(data,
-        new DefaultTableColumnModel<String[]>(columnNames));
-    table.setPageSize(2);
-    // table.setContextMenu(createContextMenu());
-
-    // Create an options panel
-    PagingOptions pagingOptions = new PagingOptions(table);
-
-    // vBox.add(toolBar, new BoxLayoutData(FillStyle.HORIZONTAL));
-    vBox.add(table, new BoxLayoutData(FillStyle.BOTH));
-    vBox.add(pagingOptions);
+//    final Table<String[]> table = new Table<String[]>(data,
+//        new DefaultTableColumnModel<String[]>(columnNames));
+//    table.setPageSize(2);
+//    // table.setContextMenu(createContextMenu());
+//
+//    // Create an options panel
+//    PagingOptions pagingOptions = new PagingOptions(table);
+//
+//    // vBox.add(toolBar, new BoxLayoutData(FillStyle.HORIZONTAL));
+//    vBox.add(table, new BoxLayoutData(FillStyle.BOTH));
+//    vBox.add(pagingOptions);
 
     return vBox;
   }

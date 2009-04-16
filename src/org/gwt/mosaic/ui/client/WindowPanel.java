@@ -105,8 +105,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   private final class WindowResizeHandlerImpl implements ResizeHandler {
 
     private HandlerRegistration handlerRegistration; 
-    
-    @Override
+
     public void onResize(ResizeEvent event) {
       final Widget boundaryPanel = windowController.getBoundaryPanel();
       // DeferredCommand.addCommand(new Command() {

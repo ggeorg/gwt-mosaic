@@ -20,6 +20,7 @@ import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * 
@@ -61,12 +62,10 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
 
   @Override
   protected void onLoad() {
-    // Don't call: ResizableWidgetCollection.get().add(this);
-  }
+    super.onLoad();
 
-  @Override
-  protected void onUnload() {
-    // Don't call: ResizableWidgetCollection.get().remove(this);
+    // We don't need this
+    ResizableWidgetCollection.get().remove(this);
   }
 
   public int[] getPreferredSize() {
