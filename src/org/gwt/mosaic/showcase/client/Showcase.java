@@ -318,6 +318,9 @@ public class Showcase implements EntryPoint {
    */
   private void displayContentWidget(final ContentWidget content) {
     if (content != null) {
+      if (!content.isInitialized()) {
+        content.initialize();
+      }
       app.setContent(content);
     }
   }
