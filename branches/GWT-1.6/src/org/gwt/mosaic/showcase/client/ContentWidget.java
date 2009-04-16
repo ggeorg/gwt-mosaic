@@ -256,7 +256,7 @@ public abstract class ContentWidget extends LayoutPanel implements
         constants.contentWidgetExample()), true);
 
     // Add the name
-    HTML nameWidget = new HTML(getName(), false);
+    HTML nameWidget = new HTML(getName());
     nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
     vPanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
 
@@ -266,19 +266,19 @@ public abstract class ContentWidget extends LayoutPanel implements
     vPanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     // Monitor word wraps
-    ResizableWidgetCollection.get().add(new ResizableWidget() {
-      public Element getElement() {
-        return descWidget.getElement();
-      }
-
-      public boolean isAttached() {
-        return descWidget.isAttached();
-      }
-
-      public void onResize(int width, int height) {
-        vPanel.layout(true);
-      }
-    });
+//    ResizableWidgetCollection.get().add(new ResizableWidget() {
+//      public Element getElement() {
+//        return descWidget.getElement();
+//      }
+//
+//      public boolean isAttached() {
+//        return descWidget.isAttached();
+//      }
+//
+//      public void onResize(int width, int height) {
+//        vPanel.layout(true);
+//      }
+//    });
 
     // Add source code tab
     if (hasSource()) {
