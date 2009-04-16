@@ -139,6 +139,17 @@ public abstract class ContentWidget extends LayoutPanel implements
     setStyleName(DEFAULT_STYLE_NAME);
   }
 
+  private String createTabBarCaption(AbstractImagePrototype image, String text) {
+    StringBuffer sb = new StringBuffer();
+    sb.append("<table cellspacing='0px' cellpadding='0px' border='0px'><thead><tr>");
+    sb.append("<td valign='middle'>");
+    sb.append(image.getHTML());
+    sb.append("</td><td valign='middle' style='white-space: nowrap;'>&nbsp;");
+    sb.append(text);
+    sb.append("</td></tr></thead></table>");
+    return sb.toString();
+  }
+
   /**
    * Get the description of this example.
    * 
@@ -172,6 +183,91 @@ public abstract class ContentWidget extends LayoutPanel implements
   }
 
   /**
+   * Initialize this widget by creating the elements that should be added to the
+   * page.
+   */
+  public final void initialize() {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+
+    tabPanel = new DecoratedTabLayoutPanel(true);
+    tabPanel.setPadding(5);
+    add(tabPanel);
+
+    // Add a tab handler
+    tabPanel.addSelectionHandler(this);
+
+    // Create the container for the main example
+    final LayoutPanel vPanel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
+    vPanel.setPadding(0);
+    vPanel.setWidgetSpacing(0);
+    tabPanel.add(vPanel, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
+        constants.contentWidgetExample()), true);
+
+    // Add the name
+    HTML nameWidget = new HTML(getName());
+    nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
+    vPanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Add the description
+    final HTML descWidget = new HTML(getDescription());
+    descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
+    vPanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    // Monitor word wraps
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return descWidget.getElement();
+      }
+
+      public boolean isAttached() {
+        return descWidget.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        vPanel.layout(true);
+      }
+    });
+
+    // Add source code tab
+    if (hasSource()) {
+      // final LayoutPanel panel2 = new LayoutPanel();
+      sourceWidget = new HTML();
+      sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
+      // panel2.add(sourceWidget);
+      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
+          constants.contentWidgetSource()), true);
+    } else {
+      sourceLoaded = true;
+    }
+
+    // Add style tab
+    if (hasStyle()) {
+      // final LayoutPanel panel3 = new LayoutPanel();
+      styleDefs = new HashMap<String, String>();
+      styleWidget = new HTML();
+      styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
+      // panel3.add(styleWidget);
+      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
+          constants.contentWidgetStyle()), true);
+    }
+
+    // Initialize the widget and add it to the page
+    final Widget widget = onInitialize();
+    if (widget != null) {
+      vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
+    }
+    onInitializeComplete();
+  }
+
+  public final boolean isInitialized() {
+    return initialized;
+  }
+
+  /**
    * When the widget is first initialized, this method is called. If it returns
    * a Widget, the widget will be added as the first tab. Return {@code null} to
    * disable the first tab.
@@ -186,6 +282,12 @@ public abstract class ContentWidget extends LayoutPanel implements
    */
   protected void onInitializeComplete() {
     // Nothing to do here!
+  }
+
+  @Override
+  protected void onLoad() {
+    // Initialize this widget if we haven't already
+    initialize();
   }
 
   public void onSelection(SelectionEvent<Integer> event) {
@@ -228,97 +330,6 @@ public abstract class ContentWidget extends LayoutPanel implements
             callback);
       }
     }
-  }
-
-  /**
-   * Initialize this widget by creating the elements that should be added to the
-   * page.
-   */
-  public final void initialize() {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-
-    tabPanel = new DecoratedTabLayoutPanel(true);
-    tabPanel.setPadding(5);
-    add(tabPanel);
-
-    // Add a tab handler
-    tabPanel.addSelectionHandler(this);
-
-    // Create the container for the main example
-    final LayoutPanel vPanel = new LayoutPanel(new BoxLayout(
-        Orientation.VERTICAL));
-    vPanel.setPadding(0);
-    vPanel.setWidgetSpacing(0);
-    tabPanel.add(vPanel, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
-        constants.contentWidgetExample()), true);
-
-    // Add the name
-    HTML nameWidget = new HTML(getName());
-    nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
-    vPanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    // Add the description
-    final HTML descWidget = new HTML(getDescription());
-    descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
-    vPanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
-
-    // Monitor word wraps
-//    ResizableWidgetCollection.get().add(new ResizableWidget() {
-//      public Element getElement() {
-//        return descWidget.getElement();
-//      }
-//
-//      public boolean isAttached() {
-//        return descWidget.isAttached();
-//      }
-//
-//      public void onResize(int width, int height) {
-//        vPanel.layout(true);
-//      }
-//    });
-
-    // Add source code tab
-    if (hasSource()) {
-      // final LayoutPanel panel2 = new LayoutPanel();
-      sourceWidget = new HTML();
-      sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
-      // panel2.add(sourceWidget);
-      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
-          constants.contentWidgetSource()), true);
-    } else {
-      sourceLoaded = true;
-    }
-
-    // Add style tab
-    if (hasStyle()) {
-      // final LayoutPanel panel3 = new LayoutPanel();
-      styleDefs = new HashMap<String, String>();
-      styleWidget = new HTML();
-      styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
-      // panel3.add(styleWidget);
-      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
-          constants.contentWidgetStyle()), true);
-    }
-
-    // Initialize the widget and add it to the page
-    final Widget widget = onInitialize();
-    if (widget != null) {
-      vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
-    }
-    onInitializeComplete();
-  }
-
-  public final boolean isInitialized() {
-    return initialized;
-  }
-
-  @Override
-  protected void onLoad() {
-    // Initialize this widget if we haven't already
-    initialize();
   }
 
   /**
@@ -366,17 +377,6 @@ public abstract class ContentWidget extends LayoutPanel implements
     } catch (RequestException e) {
       realCallback.onError(request, e);
     }
-  }
-
-  private String createTabBarCaption(AbstractImagePrototype image, String text) {
-    StringBuffer sb = new StringBuffer();
-    sb.append("<table cellspacing='0px' cellpadding='0px' border='0px'><thead><tr>");
-    sb.append("<td valign='middle'>");
-    sb.append(image.getHTML());
-    sb.append("</td><td valign='middle' style='white-space: nowrap;'>&nbsp;");
-    sb.append(text);
-    sb.append("</td></tr></thead></table>");
-    return sb.toString();
   }
 
 }

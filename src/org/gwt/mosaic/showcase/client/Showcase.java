@@ -240,6 +240,46 @@ public class Showcase implements EntryPoint {
   private Map<TreeItem, ContentWidget> itemWidgets = new HashMap<TreeItem, ContentWidget>();
 
   /**
+   * Set the content to the {@link ContentWidget}.
+   * 
+   * @param content the {@link ContentWidget} to display
+   */
+  private void displayContentWidget(final ContentWidget content) {
+    if (content != null) {
+      if (!content.isInitialized()) {
+        content.initialize();
+      }
+      app.setContent(content);
+    }
+  }
+
+  /**
+   * Get the token for a given content widget.
+   * 
+   * @return the content widget token.
+   */
+  private String getContentWidgetToken(ContentWidget content) {
+    String className = content.getClass().getName();
+    className = className.substring(className.lastIndexOf('.') + 1);
+    return className;
+  }
+
+  /**
+   * Get the style name of the reference element defined in the current GWT
+   * theme style sheet.
+   * 
+   * @param prefix the prefix of the reference style name
+   * @return the style name
+   */
+  private String getCurrentReferenceStyleName(String prefix) {
+    String gwtRef = prefix + "-Reference-" + CUR_THEME;
+    if (LocaleInfo.getCurrentLocale().isRTL()) {
+      gwtRef += "-rtl";
+    }
+    return gwtRef;
+  }
+
+  /**
    * This is the entry point method.
    */
   public void onModuleLoad() {
@@ -309,46 +349,6 @@ public class Showcase implements EntryPoint {
         DOM.getElementById("splash").getStyle().setProperty("display", "none");
       }
     };
-  }
-
-  /**
-   * Set the content to the {@link ContentWidget}.
-   * 
-   * @param content the {@link ContentWidget} to display
-   */
-  private void displayContentWidget(final ContentWidget content) {
-    if (content != null) {
-      if (!content.isInitialized()) {
-        content.initialize();
-      }
-      app.setContent(content);
-    }
-  }
-
-  /**
-   * Get the token for a given content widget.
-   * 
-   * @return the content widget token.
-   */
-  private String getContentWidgetToken(ContentWidget content) {
-    String className = content.getClass().getName();
-    className = className.substring(className.lastIndexOf('.') + 1);
-    return className;
-  }
-
-  /**
-   * Get the style name of the reference element defined in the current GWT
-   * theme style sheet.
-   * 
-   * @param prefix the prefix of the reference style name
-   * @return the style name
-   */
-  private String getCurrentReferenceStyleName(String prefix) {
-    String gwtRef = prefix + "-Reference-" + CUR_THEME;
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      gwtRef += "-rtl";
-    }
-    return gwtRef;
   }
 
   /**
