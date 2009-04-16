@@ -17,18 +17,6 @@
  */
 package org.gwt.mosaic.showcase.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.LazyLayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -46,6 +34,17 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A widget used to show gwt-mosaic examples in the ContentPanel. It includes a
@@ -70,7 +69,7 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public abstract class ContentWidget extends LazyLayoutPanel implements
+public abstract class ContentWidget extends LayoutPanel implements
     SelectionHandler<Integer> {
 
   /**
@@ -103,6 +102,11 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
    * The tab panel with the contents.
    */
   private DecoratedTabLayoutPanel tabPanel;
+
+  /**
+   * A boolean indicating whether or not this widget has been initialized.
+   */
+  private boolean initialized = false;
 
   /**
    * A boolean indicating whether or not the RPC request for the source code has
@@ -181,7 +185,7 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
    * the page.
    */
   protected void onInitializeComplete() {
-    layout();
+    // Nothing to do here!
   }
 
   public void onSelection(SelectionEvent<Integer> event) {
@@ -230,12 +234,15 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
    * Initialize this widget by creating the elements that should be added to the
    * page.
    */
-  @Override
-  public final Widget createWidget() {
-    setStyleName(DEFAULT_STYLE_NAME);
+  public final void initialize() {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
 
     tabPanel = new DecoratedTabLayoutPanel(true);
     tabPanel.setPadding(5);
+    add(tabPanel);
 
     // Add a tab handler
     tabPanel.addSelectionHandler(this);
@@ -296,24 +303,22 @@ public abstract class ContentWidget extends LazyLayoutPanel implements
           constants.contentWidgetStyle()), true);
     }
 
-    // Initialize the showcase widget (if any) and add it to the page
-    Widget widget = onInitialize();
+    // Initialize the widget and add it to the page
+    final Widget widget = onInitialize();
     if (widget != null) {
       vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
     }
     onInitializeComplete();
+  }
 
-    return tabPanel;
+  public final boolean isInitialized() {
+    return initialized;
   }
 
   @Override
   protected void onLoad() {
-    ensureWidget();
-
-    // Select the first tab
-    if (tabPanel.getWidgetCount() > 0) {
-      tabPanel.selectTab(0);
-    }
+    // Initialize this widget if we haven't already
+    initialize();
   }
 
   /**
