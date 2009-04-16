@@ -607,7 +607,6 @@ a:active {
 	border-width: 0px 1px 1px 0px;
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 1px 3px;
 }
 
 .gwt-ScrollTable .headerTable td,
@@ -620,7 +619,7 @@ a:active {
 }
     
 .gwt-ScrollTable .dataTable tr.hovering,
-.gwt-ScrollTable .dataTable tr.highlighted,
+.gwt-ScrollTable .dataTable tr:highlighted,
 .mosaic-ColumnWidget .dataTable tr.hovering,
 .mosaic-ColumnWidget .dataTable tr.highlighted,
 .mosaic-ScrollTreeTable .dataTable tr.hovering,
@@ -628,12 +627,12 @@ a:active {
 	background: #C3D9FF;
 }
 
-.gwt-ScrollTable .dataTable tr.hovering,
-.gwt-ScrollTable .dataTable tr.highlighted,
-.mosaic-ColumnWidget .dataTable tr.hovering,
-.mosaic-ColumnWidget .dataTable tr.highlighted,
-.mosaic-ScrollTreeTable .dataTable tr.hovering,
-.mosaic-ScrollTreeTable .dataTable tr.highlighted {
+.gwt-ScrollTable .dataTable td.hovering,
+.gwt-ScrollTable .dataTable td.highlighted,
+.mosaic-ColumnWidget .dataTable td.hovering,
+.mosaic-ColumnWidget .dataTable td.highlighted,
+.mosaic-ScrollTreeTable .dataTable td.hovering,
+.mosaic-ScrollTreeTable .dataTable td.highlighted {
 	background: #FFFFAA;
 	cursor: hand;
 	cursor: pointer;

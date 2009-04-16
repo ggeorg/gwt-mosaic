@@ -537,7 +537,6 @@ a:active {
 	border-width: 0px 1px 1px 0px;
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 3px;
 }
 
 .gwt-ScrollTable .headerTable td,
@@ -548,13 +547,16 @@ a:active {
 .mosaic-ScrollTreeTable .footerTable td {
 	color: #fff;
 }
-    
+
+.gwt-ScrollTable .dataTable tr:hover, /* gen2 */
+.gwt-ScrollTable .dataTable tr.highlighted, /* gen2 */
 .gwt-ScrollTable .dataTable tr.hovering,
 .mosaic-ColumnWidget .dataTable tr.hovering,
 .mosaic-ScrollTreeTable .dataTable tr.hovering {
 	background: #C3D9FF;
 }
 
+.gwt-ScrollTable .dataTable td.highlighted, /* gen2 */
 .gwt-ScrollTable .dataTable td.hovering,
 .mosaic-ColumnWidget .dataTable td.hovering,
 .mosaic-ScrollTreeTable .dataTable td.hovering {
