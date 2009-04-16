@@ -174,6 +174,59 @@ public class Application extends Viewport implements
   }
 
   /**
+   * Create the main menu.
+   */
+  private void createMainMenu() {
+    // Setup the main menu
+    ApplicationImages treeImages = GWT.create(ApplicationImages.class);
+    mainMenu = new Tree(treeImages);
+    mainMenu.setAnimationEnabled(true);
+    mainMenu.addStyleName(DEFAULT_STYLE_NAME + "-menu");
+  }
+
+  /**
+   * Create the panel at the top of the page that contains the title and links.
+   */
+  private void createTopPanel() {
+    boolean isRTL = LocaleInfo.getCurrentLocale().isRTL();
+    topPanel = new FlexTable();
+    topPanel.setCellPadding(0);
+    topPanel.setCellSpacing(0);
+    topPanel.setStyleName(DEFAULT_STYLE_NAME + "-top");
+    FlexCellFormatter formatter = topPanel.getFlexCellFormatter();
+
+    // Setup the links cell
+    linksPanel = new HorizontalPanel();
+    topPanel.setWidget(0, 0, linksPanel);
+    formatter.setStyleName(0, 0, DEFAULT_STYLE_NAME + "-links");
+    if (isRTL) {
+      formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+    } else {
+      formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
+    }
+    formatter.setColSpan(0, 0, 2);
+
+    // Setup the title cell
+    setTitleWidget(null);
+    formatter.setStyleName(1, 0, DEFAULT_STYLE_NAME + "-title");
+
+    // Setup the options cell
+    setOptionsWidget(null);
+    formatter.setStyleName(1, 1, DEFAULT_STYLE_NAME + "-options");
+    if (isRTL) {
+      formatter.setHorizontalAlignment(1, 1, HasHorizontalAlignment.ALIGN_LEFT);
+    } else {
+      formatter.setHorizontalAlignment(1, 1, HasHorizontalAlignment.ALIGN_RIGHT);
+    }
+
+    // Align the content to the top
+    topPanel.getRowFormatter().setVerticalAlign(0,
+        HasVerticalAlignment.ALIGN_TOP);
+    topPanel.getRowFormatter().setVerticalAlign(1,
+        HasVerticalAlignment.ALIGN_TOP);
+  }
+
+  /**
    * @return the {@link Widget} in the content area
    */
   public Widget getContent() {
@@ -225,59 +278,6 @@ public class Application extends Viewport implements
    */
   public void setTitleWidget(Widget title) {
     topPanel.setWidget(1, 0, title);
-  }
-
-  /**
-   * Create the main menu.
-   */
-  private void createMainMenu() {
-    // Setup the main menu
-    ApplicationImages treeImages = GWT.create(ApplicationImages.class);
-    mainMenu = new Tree(treeImages);
-    mainMenu.setAnimationEnabled(true);
-    mainMenu.addStyleName(DEFAULT_STYLE_NAME + "-menu");
-  }
-
-  /**
-   * Create the panel at the top of the page that contains the title and links.
-   */
-  private void createTopPanel() {
-    boolean isRTL = LocaleInfo.getCurrentLocale().isRTL();
-    topPanel = new FlexTable();
-    topPanel.setCellPadding(0);
-    topPanel.setCellSpacing(0);
-    topPanel.setStyleName(DEFAULT_STYLE_NAME + "-top");
-    FlexCellFormatter formatter = topPanel.getFlexCellFormatter();
-
-    // Setup the links cell
-    linksPanel = new HorizontalPanel();
-    topPanel.setWidget(0, 0, linksPanel);
-    formatter.setStyleName(0, 0, DEFAULT_STYLE_NAME + "-links");
-    if (isRTL) {
-      formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-    } else {
-      formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT);
-    }
-    formatter.setColSpan(0, 0, 2);
-
-    // Setup the title cell
-    setTitleWidget(null);
-    formatter.setStyleName(1, 0, DEFAULT_STYLE_NAME + "-title");
-
-    // Setup the options cell
-    setOptionsWidget(null);
-    formatter.setStyleName(1, 1, DEFAULT_STYLE_NAME + "-options");
-    if (isRTL) {
-      formatter.setHorizontalAlignment(1, 1, HasHorizontalAlignment.ALIGN_LEFT);
-    } else {
-      formatter.setHorizontalAlignment(1, 1, HasHorizontalAlignment.ALIGN_RIGHT);
-    }
-
-    // Align the content to the top
-    topPanel.getRowFormatter().setVerticalAlign(0,
-        HasVerticalAlignment.ALIGN_TOP);
-    topPanel.getRowFormatter().setVerticalAlign(1,
-        HasVerticalAlignment.ALIGN_TOP);
   }
 
 }
