@@ -361,14 +361,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
             DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
                 getSelectedIndex()).getLastChild());
             break;
-          case Event.ONCLICK:
-            setFocus(true);
           default:
             super.onBrowserEvent(event);
             break;
         }
         break;
-
+      case Event.ONCLICK:
+        setFocus(true);
       default:
         super.onBrowserEvent(event);
     }

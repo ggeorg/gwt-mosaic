@@ -32,6 +32,8 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.client.Event;
@@ -127,9 +129,10 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     layoutPanel.add(button, new BoxLayoutData(FillStyle.VERTICAL));
 
     popup = new DropDownPanel();
-    popup.addPopupListener(new PopupListener() {
-      public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-        if (!autoClosed) {
+    popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+      @Override
+      public void onClose(CloseEvent<PopupPanel> event) {
+        if (!event.isAutoClosed()) {
           input.setFocus(true);
         }
       }

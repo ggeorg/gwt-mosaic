@@ -15,7 +15,7 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.Iterator; 
+import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.CollapsedListener;
@@ -101,6 +101,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   }
 
   /**
+   * Adds a child widget to this panel.
+   * 
+   * @param w the child widget to be added
+   */
+//  @Override
+//  public void add(Widget w) {
+//    super.add(w);
+//    invalidate();
+//  }
+
+  /**
    * Appends the specified widget to the end of this container.
    * 
    * @param widget
@@ -120,17 +131,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     } else {
       add(widget);
     }
-  }
-  
-  /**
-   * Adds a child widget to this panel.
-   * 
-   * @param w the child widget to be added
-   */
-  @Override
-  public void add(Widget w) {
-    super.add(w);
-    invalidate();
   }
 
   public void addCollapsedListener(Widget widget, CollapsedListener listener) {
