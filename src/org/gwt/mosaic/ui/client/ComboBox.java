@@ -15,18 +15,18 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event; // import
+                                         // com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.list.ComboBoxModel;
 import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
-
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -37,15 +37,15 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
   private final ListBox<T> listBox;
 
-  private Timer updateTimer = new Timer() {
-    public void run() {
-      if (!isPopupVisible()) {
-        showPopup();
-      } else {
-        onShowPopup();
-      }
-    }
-  };
+  // private Timer updateTimer = new Timer() {
+  // public void run() {
+  // if (!isPopupVisible()) {
+  // showPopup();
+  // } else {
+  // onShowPopup();
+  // }
+  // }
+  // };
 
   /**
    * Default constructor.
@@ -75,7 +75,12 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
         if (isPopupVisible()) {
           switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEUP:
-              updateInput();
+              DeferredCommand.addCommand(new Command() {
+                @Override
+                public void execute() {
+                  updateInput();
+                }
+              });
               return;
           }
         }
@@ -174,10 +179,10 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
         if (isPopupVisible()) {
           int keyCode = DOM.eventGetKeyCode(event);
           switch (keyCode) {
-            case KeyboardListener.KEY_UP:
-            case KeyboardListener.KEY_DOWN:
-            case KeyboardListener.KEY_LEFT:
-            case KeyboardListener.KEY_RIGHT:
+            case KeyCodes.KEY_UP:
+            case KeyCodes.KEY_DOWN:
+            case KeyCodes.KEY_LEFT:
+            case KeyCodes.KEY_RIGHT:
               listBox.onBrowserEvent(event);
               return;
           }
@@ -248,11 +253,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   /**
    * Sets whether an individual list item is selected.
    * 
-   * <p>
-   * Note that setting the selection programmatically does <em>not</em> cause
-   * the {@link ChangeListener#onChange(Widget)} event to be fired.
-   * </p>
-   * 
    * @param index the index of the item to be selected or unselected
    * @param selected <code>true</code> to select the item
    * @throws IndexOutOfBoundsException if the index is out of range
@@ -278,11 +278,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * After calling this method, only the specified item in the list will remain
    * selected. For a ListBox with multiple selection enabled, see
    * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
-   * 
-   * <p>
-   * Note that setting the selected index programmatically does <em>not</em>
-   * cause the {@link ChangeListener#onChange(Widget)} event to be fired.
-   * </p>
    * 
    * @param index the index of the item to be selected
    */
