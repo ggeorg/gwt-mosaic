@@ -36,8 +36,17 @@ public final class ButtonHelper {
   
   public static String createButtonLabel(AbstractImagePrototype image, String text,
       ButtonLabelType type) {
+    return createButtonLabel(image, text, type, null);
+  }
+  
+  public static String createButtonLabel(AbstractImagePrototype image, String text,
+      ButtonLabelType type, String cssName) {
     final HTML html = new HTML(text, false);
     final Image img = image.createImage();
+    if (cssName != null) {
+      html.addStyleDependentName(cssName);
+      img.addStyleDependentName(cssName);
+    }
     if (type == ButtonLabelType.TEXT_ONLY) {
       return text;
     } else if (type == ButtonLabelType.NO_TEXT) {
@@ -45,6 +54,9 @@ public final class ButtonHelper {
     } else if (type == ButtonLabelType.TEXT_ON_LEFT
         || type == ButtonLabelType.TEXT_ON_RIGHT) {
       HorizontalPanel hpanel = new HorizontalPanel();
+      if (cssName != null) {
+        hpanel.addStyleName(cssName);
+      }
       if (type == ButtonLabelType.TEXT_ON_LEFT) {
         hpanel.add(html);
         hpanel.add(new HTML("&nbsp;"));

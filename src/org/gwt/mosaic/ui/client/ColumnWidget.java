@@ -689,7 +689,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    */
   private void adoptTable(Widget table, AbsolutePanel wrapper, Region region) {
     wrapper.add(table);
-    getWidget().add(wrapper, new BorderLayoutData(region));
+    getLayoutPanel().add(wrapper, new BorderLayoutData(region));
   }
 
   /**
@@ -963,7 +963,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    */
   private void init(FixedWidthGrid dataTable, FixedWidthFlexTable headerTable,
       ScrollTableImages images) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
@@ -1472,7 +1472,7 @@ public abstract class ColumnWidget extends LayoutComposite {
   public void setFooterTable(FixedWidthFlexTable footerTable) {
     // Disown the old footer table
     if (this.footerTable != null) {
-      getWidget().remove(footerWrapper);
+      getLayoutPanel().remove(footerWrapper);
       footerWrapper.remove(footerTable);
       DOM.removeChild(footerWrapper.getElement(), footerSpacer);
     }

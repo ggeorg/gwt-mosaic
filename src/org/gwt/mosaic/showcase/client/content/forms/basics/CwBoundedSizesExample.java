@@ -210,5 +210,5 @@ public class CwBoundedSizesExample extends ContentWidget {
 
     return builder.getPanel();
   }
-
+  
 }

@@ -1,14 +1,14 @@
 /*
  * Copyright 2008 Google Inc.
- *
+ * 
  * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.showcase.client.Application.ApplicationListener;
+import org.gwt.mosaic.core.client.util.DelayedRunnable;
 import org.gwt.mosaic.showcase.client.content.forms.CwQuickStartExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwAlignmentExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwBasicSizesExample;
@@ -77,7 +77,9 @@ import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
+import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
+import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwSimpleTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
 import org.gwt.mosaic.showcase.client.content.trees.CwBasicTree;
@@ -90,8 +92,11 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
 import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
+import org.gwt.mosaic.showcase.client.content.widgets.CwSliderBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -99,14 +104,19 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -117,18 +127,13 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
- *
+ * Entry point classes define {@code #onModuleLoad()}.
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
-
-  static {
-    GWTBeansBinding.init();
-  }
 
   /**
    * The type passed into the
@@ -137,6 +142,10 @@ public class Showcase implements EntryPoint {
   private static final class GeneratorInfo {
   }
 
+  /**
+   * A special version of the ToggleButton that cannot be clicked if down. If
+   * one theme button is pressed, all of the others are depressed.
+   */
   private static final class ThemeButton extends ToggleButton {
     private static List<ThemeButton> allButtons = null;
 
@@ -176,11 +185,6 @@ public class Showcase implements EntryPoint {
   }
 
   /**
-   * The base style name.
-   */
-  public static final String DEFAULT_STYLE_NAME = "Mosaic";
-
-  /**
    * The static images used throughout the Showcase.
    */
   public static final ShowcaseImages IMAGES = (ShowcaseImages) GWT.create(ShowcaseImages.class);
@@ -191,24 +195,31 @@ public class Showcase implements EntryPoint {
   public static String CUR_THEME = ShowcaseConstants.STYLE_THEMES[0];
 
   /**
+   * Initialize GWT Beans Binding (run property descriptor generator).
+   */
+  static {
+    GWTBeansBinding.init();
+  }
+
+  /**
    * Get the URL of the page, without an hash of query string.
-   *
+   * 
    * @return the location of the page
    */
   private static native String getHostPageLocation()
   /*-{
     var s = $doc.location.href;
-
+  
     // Pull off any hash.
     var i = s.indexOf('#');
     if (i != -1)
       s = s.substring(0, i);
-
+  
     // Pull off any query string.
     i = s.indexOf('?');
     if (i != -1)
       s = s.substring(0, i);
-
+  
     // Ensure a final slash if non-empty.
     return s;
   }-*/;
@@ -216,7 +227,7 @@ public class Showcase implements EntryPoint {
   /**
    * The {@link Application}.
    */
-  private Application app;
+  private Application app = new Application();
 
   /**
    * A mapping of history tokens to their associated menu items.
@@ -230,7 +241,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Set the content to the {@link ContentWidget}.
-   *
+   * 
    * @param content the {@link ContentWidget} to display
    */
   private void displayContentWidget(final ContentWidget content) {
@@ -244,7 +255,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Get the token for a given content widget.
-   *
+   * 
    * @return the content widget token.
    */
   private String getContentWidgetToken(ContentWidget content) {
@@ -256,7 +267,7 @@ public class Showcase implements EntryPoint {
   /**
    * Get the style name of the reference element defined in the current GWT
    * theme style sheet.
-   *
+   * 
    * @param prefix the prefix of the reference style name
    * @return the style name
    */
@@ -278,8 +289,6 @@ public class Showcase implements EntryPoint {
     // Create the constants
     ShowcaseConstants constants = (ShowcaseConstants) GWT.create(ShowcaseConstants.class);
 
-    app = new Application(constants);
-
     // Swap out the style sheets for the RTL versions if needed
     updateStyleSheets();
 
@@ -289,10 +298,10 @@ public class Showcase implements EntryPoint {
     setupOptionsPanel();
     setupMainMenu(constants);
 
-    // Setup a history listener to reselect the associate menu item
-    final HistoryListener historyListener = new HistoryListener() {
-      public void onHistoryChanged(String historyToken) {
-        TreeItem item = itemTokens.get(historyToken);
+    // Setup a history handler to reselect the associate menu item
+    final ValueChangeHandler<String> historyHandler = new ValueChangeHandler<String>() {
+      public void onValueChange(ValueChangeEvent<String> event) {
+        TreeItem item = itemTokens.get(event.getValue());
         if (item == null) {
           item = app.getMainMenu().getItem(0).getChild(0);
         }
@@ -305,35 +314,46 @@ public class Showcase implements EntryPoint {
         displayContentWidget(itemWidgets.get(item));
       }
     };
-    History.addHistoryListener(historyListener);
+    History.addValueChangeHandler(historyHandler);
 
     // Add an listener that sets the content widget when a menu item is selected
-    app.setListener(new ApplicationListener() {
-      public void onMenuItemSelected(TreeItem item) {
+    app.addSelectionHandler(new SelectionHandler<TreeItem>() {
+      public void onSelection(SelectionEvent<TreeItem> event) {
+        TreeItem item = event.getSelectedItem();
         ContentWidget content = itemWidgets.get(item);
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
+          content.invalidate();
+          HasLayoutManager parent = WidgetHelper.getParent(content);
+          if (parent != null) {
+            parent.layout();
+          }
         }
       }
     });
 
     // Show the initial example
-    String initToken = History.getToken();
-    if (initToken.length() > 0) {
-      historyListener.onHistoryChanged(initToken);
-    } else { // Use the first token available
+    if (History.getToken().length() > 0) {
+      History.fireCurrentHistoryState();
+    } else {
+      // Use the first token available
       TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0);
       app.getMainMenu().setSelectedItem(firstItem, false);
       app.getMainMenu().ensureSelectedItemVisible();
       displayContentWidget(itemWidgets.get(firstItem));
     }
 
-    DOM.getElementById("splash").getStyle().setProperty("display", "none");
+    new DelayedRunnable(3333) {
+      @Override
+      public void run() {
+        DOM.getElementById("splash").getStyle().setProperty("display", "none");
+      }
+    };
   }
 
   /**
    * Create the main links at the top of the application.
-   *
+   * 
    * @param constants the constants with text
    */
   private void setupMainLinks(ShowcaseConstants constants) {
@@ -352,7 +372,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Setup all of the options in the main menu.
-   *
+   * 
    * @param constants the constant values to use
    */
   private void setupMainMenu(ShowcaseConstants constants) {
@@ -374,6 +394,8 @@ public class Showcase implements EntryPoint {
         IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwMenuBar(constants),
         IMAGES.catWidgets());
+    setupMainMenuOption(catWidgets, new CwSliderBar(constants),
+        IMAGES.catWidgets());
 
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
@@ -387,7 +409,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catPopups());
 
     // Panels
-    TreeItem catPanels = mainMenu.addItem(constants.mainMenuLayoutAndPanels());
+    TreeItem catPanels = mainMenu.addItem("Layout & Panels");
     setupMainMenuOption(catPanels, new CwFillLayout(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catPanels, new CwBoxLayout(constants),
@@ -439,7 +461,7 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
 
     // Forms
-    TreeItem catForms = mainMenu.addItem(constants.mainMenuForms());
+    TreeItem catForms = mainMenu.addItem("Forms");
     setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
 
@@ -501,13 +523,17 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Tables
-    TreeItem catTables = mainMenu.addItem(constants.mainMenuListsAndTables());
+    TreeItem catTables = mainMenu.addItem("Lists & Tables");
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwScrollTable(constants),
         IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwScrollTable2(constants),
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwPagingScrollTable2(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
         IMAGES.catTables());
@@ -521,8 +547,15 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
         IMAGES.catLists());
 
+    // Validation
+    // TreeItem catValidation = mainMenu.addItem("Validation");
+    //
+    // TreeItem catBasicValidation = catValidation.addItem("Basic");
+    // setupMainMenuOption(catBasicValidation,
+    // new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
+
     // Other
-    TreeItem catOther = mainMenu.addItem(constants.mainMenuOtherFeatures());
+    TreeItem catOther = mainMenu.addItem("Other Features");
     setupMainMenuOption(catOther, new CwListBoxBinding(constants),
         IMAGES.catOther());
     // setupMainMenuOption(catOther, new CwActions(constants),
@@ -537,7 +570,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Add an option to the main menu.
-   *
+   * 
    * @param parent the {@link TreeItem} that is the option
    * @param content the {@link ContentWidget} to display when selected
    * @param image the icon to display next to the {@link TreeItem}
@@ -581,8 +614,8 @@ public class Showcase implements EntryPoint {
         }
       }
     }
-    localeBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
+    localeBox.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
         String localeName = localeBox.getValue(localeBox.getSelectedIndex());
         Window.open(getHostPageLocation() + "?locale=" + localeName, "_self",
             "");
@@ -600,8 +633,8 @@ public class Showcase implements EntryPoint {
       final ThemeButton button = new ThemeButton(
           ShowcaseConstants.STYLE_THEMES[i]);
       styleWrapper.add(button);
-      button.addClickListener(new ClickListener() {
-        public void onClick(Widget sender) {
+      button.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
           // Update the current theme
           CUR_THEME = button.getTheme();
 
@@ -618,7 +651,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Create the title bar at the top of the Application.
-   *
+   * 
    * @param constants the constant values to use
    */
   private void setupTitlePanel(ShowcaseConstants constants) {
@@ -640,7 +673,7 @@ public class Showcase implements EntryPoint {
   private void updateStyleSheets() {
     // Generate the names of the style sheets to include
     String gwtStyleSheet = "gwt/" + CUR_THEME + "/" + CUR_THEME + ".css";
-    String gwtMosaicStyleSheet = "gwt/" + CUR_THEME + "/Mosaic.css";
+    String gwtMosaicStyleSheet = "gwt/" + CUR_THEME + "/mosaic.css";
     String showcaseStyleSheet = CUR_THEME + "/Showcase.css";
     if (LocaleInfo.getCurrentLocale().isRTL()) {
       gwtStyleSheet = gwtStyleSheet.replace(".css", "_rtl.css");
@@ -678,7 +711,7 @@ public class Showcase implements EntryPoint {
     }
 
     // Detach the app while we manipulate the styles to avoid rendering issues
-    RootPanel.get().remove(app);
+    app.removeFromParent();
 
     // Remove the old style sheets
     for (Element elem : toRemove) {
@@ -688,7 +721,19 @@ public class Showcase implements EntryPoint {
     // Load the GWT theme style sheet
     String modulePath = GWT.getModuleBaseURL();
     Command callback = new Command() {
+      /**
+       * The number of style sheets that have been loaded and executed this
+       * command.
+       */
+      private int numStyleSheetsLoaded = 0;
+
       public void execute() {
+        // Wait until all style elements have loaded before re-attaching the app
+        numStyleSheetsLoaded++;
+        if (numStyleSheetsLoaded < 3) {
+          return;
+        }
+
         // Different themes use different background colors for the body
         // element, but IE only changes the background of the visible content
         // on the page instead of changing the background color of the entire
@@ -696,14 +741,14 @@ public class Showcase implements EntryPoint {
         // IE to redraw the background correctly.
         RootPanel.getBodyElement().getStyle().setProperty("display", "none");
         RootPanel.getBodyElement().getStyle().setProperty("display", "");
-        RootPanel.get().add(app);
+        app.attach();
       }
     };
 
     StyleSheetLoader.loadStyleSheet(modulePath + gwtStyleSheet,
-        getCurrentReferenceStyleName("gwt"), null);
+        getCurrentReferenceStyleName("gwt"), callback);
     StyleSheetLoader.loadStyleSheet(modulePath + gwtMosaicStyleSheet,
-        getCurrentReferenceStyleName("mosaic"), null);
+        getCurrentReferenceStyleName("mosaic"), callback);
 
     // Load the showcase specific style sheet after the GWT & Mosaic theme style
     // sheet so that custom styles supercede the theme styles.

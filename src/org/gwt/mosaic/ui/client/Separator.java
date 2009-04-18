@@ -43,7 +43,7 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
 
   public Separator(String text, HorizontalAlignmentConstant align) {
     this.align = checkHorizontalAlignment(align);
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Alignment.CENTER));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(8);

@@ -22,6 +22,10 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ClickListenerCollection;
@@ -39,7 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public class Caption extends LayoutComposite implements HasHTML,
-    SourcesMouseEvents {
+    SourcesMouseEvents, HasClickHandlers {
   public enum CaptionRegion {
     LEFT, RIGHT
   }
@@ -69,7 +73,7 @@ public class Caption extends LayoutComposite implements HasHTML,
   }
 
   public Caption(String text, boolean asHTML) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout());
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
@@ -97,8 +101,8 @@ public class Caption extends LayoutComposite implements HasHTML,
         leftIconBox = new HorizontalPanel();
         leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
         leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL),
-            0);
+        getLayoutPanel().insert(leftIconBox,
+            new BoxLayoutData(FillStyle.VERTICAL), 0);
       }
       leftIconBox.add(w);
     } else {
@@ -106,7 +110,8 @@ public class Caption extends LayoutComposite implements HasHTML,
         rightIconBox = new HorizontalPanel();
         rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
         rightIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().add(rightIconBox, new BoxLayoutData(FillStyle.VERTICAL));
+        getLayoutPanel().add(rightIconBox,
+            new BoxLayoutData(FillStyle.VERTICAL));
       }
       if (rightIconBox.getWidgetCount() > 0) {
         rightIconBox.insert(w, 0);
@@ -116,6 +121,13 @@ public class Caption extends LayoutComposite implements HasHTML,
     }
   }
 
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return addDomHandler(handler, ClickEvent.getType());
+  }
+
+  /**
+   * @deprecated
+   */
   public void addClickListener(ClickListener listener) {
     if (clickListeners == null) {
       clickListeners = new ClickListenerCollection();
@@ -207,6 +219,7 @@ public class Caption extends LayoutComposite implements HasHTML,
         }
         break;
     }
+    super.onBrowserEvent(event);
   }
 
   public boolean remove(Widget widget) {

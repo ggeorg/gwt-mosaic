@@ -246,4 +246,5 @@ public class CwCellAlignmentExample extends ContentWidget {
     return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
         HasAlignment.ALIGN_MIDDLE);
   }
+  
 }

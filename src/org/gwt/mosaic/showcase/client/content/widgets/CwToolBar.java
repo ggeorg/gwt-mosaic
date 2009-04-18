@@ -32,11 +32,12 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -45,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-MenuBar", ".mosaic-ToolBar"})
-public class CwToolBar extends ContentWidget implements ClickListener {
+public class CwToolBar extends ContentWidget implements ClickHandler {
 
   /**
    * The constants used in this Page.
@@ -125,7 +126,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
 
     // Add a push button
     ToolButton pushButton = new ToolButton(constants.mosaicToolBarPushBtn1());
-    pushButton.addClickListener(this);
+    pushButton.addClickHandler(this);
     pushButton.ensureDebugId("mosaicPushButton-normal");
 
     toolBar.add(pushButton);
@@ -143,7 +144,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a menu button
     ToolButton menuButton = new ToolButton(constants.mosaicToolBarMenuBtn1());
     menuButton.setStyle(ToolButtonStyle.MENU);
-    menuButton.addClickListener(this);
+    menuButton.addClickHandler(this);
     menuButton.ensureDebugId("mosaicMenuButton-normal");
 
     // Make a command that we will execute from all menu items.
@@ -178,7 +179,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a menu button
     ToolButton splitButton = new ToolButton(constants.mosaicToolBarSplitBtn());
     splitButton.setStyle(ToolButtonStyle.SPLIT);
-    splitButton.addClickListener(this);
+    splitButton.addClickHandler(this);
     splitButton.ensureDebugId("mosaicSplitButton-normal");
 
     // Make a command that we will execute from all menu items.
@@ -212,7 +213,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a checkbox button
     ToolButton checkButton1 = new ToolButton("Checkbox 1");
     checkButton1.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton1.addClickListener(this);
+    checkButton1.addClickHandler(this);
     checkButton1.ensureDebugId("mosaicCheckboxButton-normal");
 
     toolBar.add(checkButton1);
@@ -220,7 +221,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a second checkbox button
     ToolButton checkButton2 = new ToolButton("Checkbox 2");
     checkButton2.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton2.addClickListener(this);
+    checkButton2.addClickHandler(this);
     checkButton2.ensureDebugId("mosaicCheckboxButton-normal");
 
     toolBar.add(checkButton2);
@@ -228,7 +229,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a third checkbox button
     ToolButton checkButton3 = new ToolButton("Checkbox 3");
     checkButton3.setStyle(ToolButtonStyle.CHECKBOX);
-    checkButton3.addClickListener(this);
+    checkButton3.addClickHandler(this);
     checkButton3.ensureDebugId("mosaicCheckboxButton-normal");
 
     toolBar.add(checkButton3);
@@ -238,7 +239,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a checkbox button
     ToolButton radioButton1 = new ToolButton("Radio 1");
     radioButton1.setStyle(ToolButtonStyle.RADIO);
-    radioButton1.addClickListener(this);
+    radioButton1.addClickHandler(this);
     radioButton1.ensureDebugId("mosaicRadioButton-normal");
 
     toolBar.add(radioButton1);
@@ -246,7 +247,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a second checkbox button
     ToolButton radioButton2 = new ToolButton("Radio 2");
     radioButton2.setStyle(ToolButtonStyle.RADIO);
-    radioButton2.addClickListener(this);
+    radioButton2.addClickHandler(this);
     radioButton2.ensureDebugId("mosaicRadioButton-normal");
 
     toolBar.add(radioButton2);
@@ -254,7 +255,7 @@ public class CwToolBar extends ContentWidget implements ClickListener {
     // Add a third checkbox button
     ToolButton radioButton3 = new ToolButton("Radio 3");
     radioButton3.setStyle(ToolButtonStyle.RADIO);
-    radioButton3.addClickListener(this);
+    radioButton3.addClickHandler(this);
     radioButton3.ensureDebugId("mosaicRadioButton-normal");
 
     toolBar.add(radioButton3);
@@ -264,12 +265,12 @@ public class CwToolBar extends ContentWidget implements ClickListener {
 
   /**
    * 
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
-    final Button btn = (Button) sender;
+  public void onClick(ClickEvent event) {
+    final Button btn = (Button) event.getSource();
     InfoPanel.show(btn.getHTML(), "Clicked!");
   }
-
+  
 }

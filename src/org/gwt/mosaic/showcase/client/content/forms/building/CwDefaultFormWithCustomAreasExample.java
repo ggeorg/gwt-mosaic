@@ -200,5 +200,5 @@ public class CwDefaultFormWithCustomAreasExample extends ContentWidget {
 
     return builder.getPanel();
   }
-
+  
 }

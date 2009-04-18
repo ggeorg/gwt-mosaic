@@ -319,4 +319,5 @@ public class CwUnitsExample extends ContentWidget {
     return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
         HasAlignment.ALIGN_MIDDLE);
   }
+  
 }

@@ -30,11 +30,12 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
@@ -75,14 +76,14 @@ public abstract class MessageBox extends WindowPanel {
         hide();
       }
     };
-    alert.setAnimationEnabled(true);
+    alert.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     alert.setWidth(preferredWidth + "px");
 
     final Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         alert.hide();
       }
     });
@@ -116,21 +117,21 @@ public abstract class MessageBox extends WindowPanel {
         callback.onResult(result);
       }
     };
-    confirm.setAnimationEnabled(true);
+    confirm.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     confirm.setWidth(preferredWidth + "px");
 
     final Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         confirm.onClose(true);
       }
     });
 
     final Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         confirm.onClose(false);
       }
     });
@@ -178,21 +179,21 @@ public abstract class MessageBox extends WindowPanel {
         }
       }
     };
-    prompt.setAnimationEnabled(true);
+    prompt.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
 
     Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(true);
       }
     });
 
     Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(false);
       }
     });
@@ -225,21 +226,21 @@ public abstract class MessageBox extends WindowPanel {
         }
       }
     };
-    prompt.setAnimationEnabled(true);
+    prompt.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
 
     Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(true);
       }
     });
 
     Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(false);
       }
     });
@@ -272,7 +273,7 @@ public abstract class MessageBox extends WindowPanel {
         }
       }
     };
-    prompt.setAnimationEnabled(true);
+    prompt.setAnimationEnabled(false);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
@@ -284,15 +285,15 @@ public abstract class MessageBox extends WindowPanel {
     panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(true);
       }
     });
 
     Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(false);
       }
     });

@@ -181,8 +181,13 @@ public class DOM extends com.google.gwt.user.client.DOM {
       elem.getStyle().setProperty("zoom", "1");
     }
 
+    // if (elem == elem.getOwnerDocument().getBody().cast()) {
+    // size[0] = Window.getClientWidth();
+    // size[1] = Window.getClientHeight();
+    // } else {
     size[0] = getClientWidth(elem);
     size[1] = getClientHeight(elem);
+    // }
 
     return size;
   }

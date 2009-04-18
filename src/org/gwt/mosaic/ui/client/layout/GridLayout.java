@@ -79,12 +79,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
    */
   protected Widget[][] widgetMatrix;
 
-  private boolean initialized = false;
-
   private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
 
   private boolean runTwiceFlag;
 
@@ -274,11 +269,10 @@ public class GridLayout extends BaseLayout implements HasAlignment {
       result[0] *= cols;
       result[1] *= rows;
 
-      result[0] += (margins[1] + margins[3]);
-      result[1] += (margins[0] + margins[2]);
-
-      result[0] += (paddings[1] + paddings[3]);
-      result[1] += (paddings[0] + paddings[2]);
+      result[0] += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+          + (borders[1] + borders[3]);
+      result[1] += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+          + (borders[0] + borders[2]);
 
       final int spacing = layoutPanel.getWidgetSpacing();
       result[0] += ((cols - 1) * spacing);
@@ -316,9 +310,8 @@ public class GridLayout extends BaseLayout implements HasAlignment {
     if (initialized) {
       return true;
     }
-
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    
+    super.init(layoutPanel);
 
     buildWidgetMatrix(layoutPanel);
 
@@ -481,6 +474,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
     }
 
   }
+
   @Override
   public boolean runTwice() {
     return runTwiceFlag;

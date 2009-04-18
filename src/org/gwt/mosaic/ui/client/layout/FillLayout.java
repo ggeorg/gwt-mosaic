@@ -95,15 +95,10 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class FillLayout extends BaseLayout implements HasAlignment {
 
-  private boolean initialized = false;
-
   private Widget child;
   private FillLayoutData layoutData;
 
   private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
 
   private boolean runTwiceFlag;
 
@@ -151,11 +146,10 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         result[1] += decPanel.getOffsetHeight() - child.getOffsetHeight();
       }
 
-      result[0] += (margins[1] + margins[3]);
-      result[1] += (margins[0] + margins[2]);
-
-      result[0] += (paddings[1] + paddings[3]);
-      result[1] += (paddings[0] + paddings[2]);
+      result[0] += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+          + (borders[1] + borders[3]);
+      result[1] += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+          + (borders[0] + borders[2]);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
@@ -175,8 +169,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    super.init(layoutPanel);
 
     final int size = layoutPanel.getWidgetCount();
 
@@ -202,6 +195,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
       break;
     }
+    
     return initialized;
   }
 

@@ -186,14 +186,9 @@ public class BoxLayout extends BaseLayout {
 
   private boolean runTwiceFlag;
 
-  private boolean initialized = false;
-
   private int visibleWidgetCount = 0;
 
   private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
 
   /**
    * Creates a new instance of {@code BoxLayout} with horizontal orientation.
@@ -266,8 +261,10 @@ public class BoxLayout extends BaseLayout {
         return result;
       }
 
-      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]);
-      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]);
+      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+          + (borders[1] + borders[3]);
+      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+          + (borders[0] + borders[2]);
 
       final int size = visibleWidgetCount;
       if (size == 0) {
@@ -433,8 +430,7 @@ public class BoxLayout extends BaseLayout {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    super.init(layoutPanel);
 
     visibleWidgetCount = getVisibleWidgetCount(layoutPanel);
 
