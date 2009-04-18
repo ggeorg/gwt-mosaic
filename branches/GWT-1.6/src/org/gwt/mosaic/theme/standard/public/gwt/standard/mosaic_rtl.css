@@ -46,6 +46,13 @@ a:active {
 	color:#ff0000;
 }
 
+/*** Button ***/
+
+.gwt-Button {
+  /* IE hack */
+  overflow: visible;
+}
+
 /*** TextBox & TextArea */
 
 .gwt-TextBox,
