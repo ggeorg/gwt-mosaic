@@ -15,13 +15,11 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.ui.client.layout.BaseLayout;
-import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
-
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
+
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 /**
  * 
@@ -61,14 +59,6 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
     super(dataTable, headerTable, images);
   }
 
-  @Override
-  protected void onLoad() {
-    super.onLoad();
-
-    // We don't need this
-    ResizableWidgetCollection.get().remove(this);
-  }
-
   public int[] getPreferredSize() {
     int width = getHeaderTable().getOffsetWidth();
     int height = getHeaderTable().getOffsetHeight()
@@ -89,6 +79,14 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
 
   public void layout(boolean doInvalidate) {
     redraw();
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    // We don't need this
+    ResizableWidgetCollection.get().remove(this);
   }
 
 }

@@ -15,7 +15,7 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.Iterator;
+import java.util.Iterator; 
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.CollapsedListener;
@@ -302,7 +302,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (invalid) {
       return;
     }
-    
+
     getLayout().flushCache();
 
     clearPreferredSizeCache();
@@ -314,7 +314,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
         && !(parent instanceof LayoutPopupPanel)) {
       ((HasLayoutManager) parent).invalidate();
     }
-    
+
     invalid = true;
   }
 
@@ -361,7 +361,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (isAttached()) {
       layout.layoutPanel(this);
       if (layout.runTwice()) {
-        layout.flushCache();
         layout.layoutPanel(this);
       }
       layoutChildren();
@@ -514,7 +513,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public void setWidgetPosition(Widget w, int left, int top) {
     super.setWidgetPosition(getDecoratorWidget(w), left, top);
   }
-  
+
   public void setWidgetSpacing(int widgetSpacing) {
     this.widgetSpacing = widgetSpacing;
   }
