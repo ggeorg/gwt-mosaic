@@ -121,7 +121,9 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
    * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
    */
   public void onResize(ResizeEvent event) {
-    resizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
+    if (isAttached()) {
+      resizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
+    }
   }
 
   @Deprecated
@@ -130,10 +132,6 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
   }
 
   private void setBounds(final int x, final int y, int width, int height) {
-    if (!isAttached()) {
-      return;
-    }
-    
     RootPanel.get().setWidgetPosition(this, x, y);
 
     final Element elem = getElement();
