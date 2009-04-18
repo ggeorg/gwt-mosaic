@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client.table;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
@@ -69,7 +70,13 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
   }
 
   public int[] getPreferredSize() {
-    return DOM.getBoxSize(getElement());
+    int width = getHeaderTable().getOffsetWidth();
+    int height = getHeaderTable().getOffsetHeight()
+        + getDataTable().getOffsetHeight();
+    if (getFooterTable() != null) {
+      height += getFooterTable().getOffsetHeight();
+    }
+    return new int[] {width, height};
   }
 
   public void invalidate() {
