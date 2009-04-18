@@ -56,8 +56,6 @@ a, a:visited, a:hover {
   /*border: 1px outset #ccc;*/
   border: 1px solid;
   border-color: #e3e3e3 #bbb #bbb #e3e3e3;
-  /* IE hack */
-  overflow: visible;
 }
 .gwt-Button:active {
   border: 1px inset #ccc;
