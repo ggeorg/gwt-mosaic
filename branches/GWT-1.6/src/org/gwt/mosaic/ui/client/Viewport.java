@@ -130,6 +130,10 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
   }
 
   private void setBounds(final int x, final int y, int width, int height) {
+    if (!isAttached()) {
+      return;
+    }
+    
     RootPanel.get().setWidgetPosition(this, x, y);
 
     final Element elem = getElement();
