@@ -19,6 +19,7 @@ import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.list.ComboBoxModel;
 import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
 
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;

@@ -26,6 +26,8 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.gwt.mosaic.core.client.DOM;
+
 /**
  * A popup panel that can position itself relative to another widget.
  * 
@@ -109,22 +111,28 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
   @Override
   protected void onLoad() {
     super.onLoad();
+    
+    pack();
 
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        pack();
-      }
-    });
+     DeferredCommand.addCommand(new Command() {
+     public void execute() {
+    // pack();
+       layout();
+     }
+     });
   }
 
   @Override
   public final void pack() {
     int[] size = getLayoutPanel().getPreferredSize();
-    setContentSize(currentAnchor.getOffsetWidth()
-        - (getOffsetWidth() - getLayoutPanel().getOffsetWidth()), Math.min(
-        size[1], Window.getClientHeight() - getAbsoluteTop()
-            - (getOffsetHeight() - getLayoutPanel().getOffsetHeight())));
-    // delayedLayout(MIN_DELAY_MILLIS);
+
+    int w = getOffsetWidth() - getLayoutPanel().getOffsetWidth();
+    int h = getOffsetHeight() - getLayoutPanel().getOffsetHeight();
+
+    setContentSize(Math.min(Math.max(size[0], currentAnchor.getOffsetWidth())
+        + w, Window.getClientWidth() - getAbsoluteLeft() - w), Math.min(size[1]
+        + h, Window.getClientHeight() - getAbsoluteTop() - h));
+
     layout(true);
   }
 
