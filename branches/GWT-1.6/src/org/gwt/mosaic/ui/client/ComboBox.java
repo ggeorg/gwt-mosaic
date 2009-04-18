@@ -76,7 +76,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
           switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEUP:
               DeferredCommand.addCommand(new Command() {
-                @Override
                 public void execute() {
                   updateInput();
                 }

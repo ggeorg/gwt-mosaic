@@ -130,7 +130,6 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
 
     popup = new DropDownPanel();
     popup.addCloseHandler(new CloseHandler<PopupPanel>() {
-      @Override
       public void onClose(CloseEvent<PopupPanel> event) {
         if (!event.isAutoClosed()) {
           input.setFocus(true);
