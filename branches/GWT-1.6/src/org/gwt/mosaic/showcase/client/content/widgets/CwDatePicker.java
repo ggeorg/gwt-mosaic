@@ -35,6 +35,8 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -154,10 +156,17 @@ public class CwDatePicker extends ContentWidget {
         vPanel2.layout();
       }
     };
+    final ValueChangeHandler<Date> _changeHandler2 = new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        vPanel2.getHeader().setText(dateTimePicker.getDate().toString());
+        vPanel2.layout();
+      }
+    };
+
     dateTimePicker.getDatePicker().addChangeHandler(changeHandler2);
-    dateTimePicker.getTimePicker().addChangeHandler(changeHandler2);
+    dateTimePicker.getTimePicker().addValueChangeHandler(_changeHandler2);
 
     return layoutPanel;
   }
-  
+
 }
