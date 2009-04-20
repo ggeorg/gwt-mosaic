@@ -627,7 +627,7 @@ a:active {
 }
     
 .gwt-ScrollTable .dataTable tr.hovering,
-.gwt-ScrollTable .dataTable tr.highlighted,
+.gwt-ScrollTable .dataTable tr:highlighted,
 .mosaic-ColumnWidget .dataTable tr.hovering,
 .mosaic-ColumnWidget .dataTable tr.highlighted,
 .mosaic-ScrollTreeTable .dataTable tr.hovering,
@@ -635,12 +635,12 @@ a:active {
 	background: #C3D9FF;
 }
 
-.gwt-ScrollTable .dataTable tr.hovering,
-.gwt-ScrollTable .dataTable tr.highlighted,
-.mosaic-ColumnWidget .dataTable tr.hovering,
-.mosaic-ColumnWidget .dataTable tr.highlighted,
-.mosaic-ScrollTreeTable .dataTable tr.hovering,
-.mosaic-ScrollTreeTable .dataTable tr.highlighted {
+.gwt-ScrollTable .dataTable td.hovering,
+.gwt-ScrollTable .dataTable td.highlighted,
+.mosaic-ColumnWidget .dataTable td.hovering,
+.mosaic-ColumnWidget .dataTable td.highlighted,
+.mosaic-ScrollTreeTable .dataTable td.hovering,
+.mosaic-ScrollTreeTable .dataTable td.highlighted {
 	background: #FFFFAA;
 	cursor: hand;
 	cursor: pointer;
@@ -704,6 +704,9 @@ a:active {
 	padding: 5px;
 	margin: 0px;
 	
+	/* required by Safari to handle the 'width' attribute */
+	position: absolute !important;
+	
 	/* debug */
 	/*
 	margin: 1px;
@@ -744,7 +747,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	border-left: none;
 	
 	/* required by Safari to handle the 'width' attribute */
-	position: absolute;
+	position: absolute !important;
 	width: 18px !important;
 	
 	padding: 1px 1px 1px 0px;
@@ -755,7 +758,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	border-right: none;
 	
 	/* required by Safari to handle the 'width' attribute */
-	position: absolute;
+	position: absolute !important;
 	width: 18px !important;
 
 	padding: 1px 0px 1px 1px;
