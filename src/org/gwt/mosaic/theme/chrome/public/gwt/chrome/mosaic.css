@@ -629,14 +629,15 @@ a:active {
 	padding: 5px;
 	margin: 0px;
 	
-	/* required by Safari to handle the 'width' attribute */
-	position: absolute !important;
-	
 	/* debug */
 	/*
 	margin: 1px;
 	border: 1px dotted #f00;
 	*/
+}
+.mosaic-LayoutPanel .mosaic-LayoutPanel {
+	/* required by Safari to handle the 'width' attribute */
+	position: absolute !important;
 }
 .mosaic-LayoutPanel-FillLayout {
 	padding: 0px;
