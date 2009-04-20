@@ -710,9 +710,9 @@ a:active {
 	border: 1px dotted #f00;
 	*/
 }
-.mosaic-LayoutPanel .mosaic-LayoutPanel {
-	/* required by Safari to handle the 'width' attribute 
-	position: absolute !important;*/
+.mosaic-LayoutPanel-FormLayout .mosaic-LayoutPanel {
+	/* required by Safari to handle the 'width' attribute */ 
+	position: absolute !important;
 }
 .mosaic-LayoutPanel-FillLayout {
 	padding: 0px;
