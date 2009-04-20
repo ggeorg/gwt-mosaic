@@ -29,6 +29,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -105,11 +106,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * 
    * @param w the child widget to be added
    */
-//  @Override
-//  public void add(Widget w) {
-//    super.add(w);
-//    invalidate();
-//  }
+  @Override
+  public void add(Widget w) {
+    super.add(w);
+    invalidate();
+  }
 
   /**
    * Appends the specified widget to the end of this container.
@@ -153,7 +154,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     } else {
       if (parent instanceof Viewport) {
         return parent;
-      } else if (parent instanceof LayoutComposite) {
+      } else if (parent instanceof LayoutComposite
+          || parent instanceof Composite) {
         Widget thiz = parent;
         parent = thiz.getParent();
         if (parent == getDecoratorWidget(thiz)) {
@@ -446,7 +448,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (w != widget) {
       ((DecoratorPanel) widget).remove(w);
     }
-    return super.remove(widget);
+    if (super.remove(widget)) {
+      invalidate();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
@@ -459,7 +466,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public void setCollapsed(Widget widget, boolean collapse) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayout borderLayout = (BorderLayout) getLayout();
-      borderLayout.setCollapsed(this, widget, collapse);
+      if (collapse != borderLayout.isCollapsed(this, widget)) {
+        borderLayout.setCollapsed(this, widget, collapse);
+        invalidate();
+      }
     }
   }
 
@@ -493,8 +503,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     layoutClassName = layoutClassName.substring(dotPos + 1,
         layoutClassName.length());
     addStyleName(getStylePrimaryName() + "-" + layoutClassName);
-
-    // System.out.println(getStyleName());
+    invalidate();
   }
 
   public void setPadding(int padding) {
