@@ -629,6 +629,9 @@ a:active {
 	padding: 5px;
 	margin: 0px;
 	
+	/* required by Safari to handle the 'width' attribute */
+	position: absolute !important;
+	
 	/* debug */
 	/*
 	margin: 1px;
@@ -669,7 +672,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	border-left: none;
 	
 	/* required by Safari to handle the 'width' attribute */
-	position: absolute;
+	position: absolute !important;
 	width: 18px !important;
 	
 	padding: 1px 1px 1px 0px;
@@ -680,7 +683,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	border-right: none;
 	
 	/* required by Safari to handle the 'width' attribute */
-	position: absolute;
+	position: absolute !important;
 	width: 18px !important;
 
 	padding: 1px 0px 1px 1px;
@@ -750,7 +753,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	background: white;
 	
 	/* required by Safari to handle the 'width' attribute */
-	position: absolute;
+	position: absolute !important;
 	width: 1px;
 	
 	padding: 0px;
