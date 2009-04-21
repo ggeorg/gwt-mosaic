@@ -34,6 +34,19 @@ import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelEvent;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasResizeHandlers;
@@ -45,7 +58,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.AbstractWindowClosingEvent;
-import com.google.gwt.user.client.BaseListenerWrapper;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -57,15 +69,11 @@ import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HasCaption;
 import com.google.gwt.user.client.ui.ListenerWrapper;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
@@ -101,10 +109,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   private static WindowResizeHandler windowPanelResizeHandler = new WindowResizeHandler();
-  
+
   private final class WindowResizeHandlerImpl implements ResizeHandler {
 
-    private HandlerRegistration handlerRegistration; 
+    private HandlerRegistration handlerRegistration;
 
     public void onResize(ResizeEvent event) {
       final Widget boundaryPanel = windowController.getBoundaryPanel();
@@ -137,14 +145,15 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
 
     public void removeResizeHandler() {
-      if( handlerRegistration != null) {
+      if (handlerRegistration != null) {
         handlerRegistration.removeHandler();
         handlerRegistration = null;
       }
     }
-  }  
+  }
+
   private WindowResizeHandlerImpl windowResizeHandler = new WindowResizeHandlerImpl();
-  
+
   /**
    * Double click caption action.
    */
@@ -167,19 +176,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  class ElementDragHandle extends Widget implements SourcesMouseEvents {
-    private MouseListenerCollection mouseListeners;
+  class ElementDragHandle extends Widget implements HasAllMouseHandlers {
 
     public ElementDragHandle(Element elem) {
       setElement(elem);
       sinkEvents(Event.MOUSEEVENTS);
-    }
-
-    public void addMouseListener(MouseListener listener) {
-      if (mouseListeners == null) {
-        mouseListeners = new MouseListenerCollection();
-      }
-      mouseListeners.add(listener);
     }
 
     protected void onAttach() {
@@ -188,19 +189,13 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     @Override
     public void onBrowserEvent(Event event) {
+      super.onBrowserEvent(event);
+
       switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
           if (!isActive()) {
             toFront();
           }
-        case Event.ONMOUSEUP:
-        case Event.ONMOUSEMOVE:
-        case Event.ONMOUSEOVER:
-        case Event.ONMOUSEOUT:
-          if (mouseListeners != null) {
-            mouseListeners.fireMouseEvent(this, event);
-          }
-          break;
       }
     }
 
@@ -208,10 +203,28 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       super.onDetach();
     }
 
-    public void removeMouseListener(MouseListener listener) {
-      if (mouseListeners != null) {
-        mouseListeners.remove(listener);
-      }
+    public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+      return addDomHandler(handler, MouseDownEvent.getType());
+    }
+
+    public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+      return addDomHandler(handler, MouseUpEvent.getType());
+    }
+
+    public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+      return addDomHandler(handler, MouseOutEvent.getType());
+    }
+
+    public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+      return addDomHandler(handler, MouseOverEvent.getType());
+    }
+
+    public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+      return addDomHandler(handler, MouseMoveEvent.getType());
+    }
+
+    public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
+      return addDomHandler(handler, MouseWheelEvent.getType());
     }
   }
 
@@ -1025,7 +1038,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (modal) {
       modal = false;
     }
-    
+
     setWindowOrder(-1);
     windowPanelOrder.remove(this);
   }

@@ -26,12 +26,23 @@ import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
 import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelEvent;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
@@ -39,11 +50,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-final class SplitBar extends Widget implements SourcesMouseEvents {
-  
-  private static GlassPanel glassPanel;
-
-  private MouseListenerCollection mouseListeners;
+final class SplitBar extends Widget implements HasAllMouseHandlers {
 
   static final class DirectionConstant {
 
@@ -67,97 +74,20 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
 
     private Widget widget = null;
 
-    public SplitBarDragController(AbsolutePanel boundaryPanel, Widget widget) {
-      super(boundaryPanel);
-      this.widget = widget;
-    }
-
     private Widget movablePanel;
 
-    @Override
-    public void dragStart() {
-      if (glassPanel == null) {
-        glassPanel = new GlassPanel(false);
-        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-      }
-      RootPanel.get().add(glassPanel, 0, 0);
-      
-      super.dragStart();
-
-      WidgetLocation currentDraggableLocation = new WidgetLocation(
-          context.draggable, context.boundaryPanel);
-      movablePanel = context.draggable;
-      context.boundaryPanel.add(movablePanel,
-          currentDraggableLocation.getLeft(), currentDraggableLocation.getTop());
-      movablePanel.addStyleName(getStylePrimaryName() + "-Movable");
-
-      // one time calculation of boundary panel location for efficiency during
-      // dragging
-      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
-      final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
-      boundaryOffsetX = widgetLocation.getLeft() + border[3];
-      boundaryOffsetY = widgetLocation.getTop() + border[0];
-      final int[] box = DOM.getClientSize(boundaryPanel.getElement());
-      dropTargetClientWidth = box[0];
-      dropTargetClientHeight = box[1];
-
-      layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-      draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
-      draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
-    }
-
     private int draggableOldAbsoluteLeft, draggableOldAbsoluteTop;
+
     private BorderLayoutData layoutData = null;
+
     private int boundaryOffsetX, boundaryOffsetY;
     private int dropTargetClientHeight, dropTargetClientWidth;
-
-    public void dragMove() {
-      int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
-      if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
-        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
-        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
-            - context.draggable.getOffsetHeight()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
-            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
-      } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
-        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
-        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
-            - context.draggable.getOffsetHeight()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
-            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
-      }
-      if ((direction & SplitBar.DIRECTION_WEST) != 0) {
-        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
-        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
-            - context.draggable.getOffsetWidth()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
-            context.draggable.getAbsoluteTop() - boundaryOffsetY);
-      } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
-        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
-        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
-            - context.draggable.getOffsetWidth()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
-            context.draggable.getAbsoluteTop() - boundaryOffsetY);
-      }
-    }
-
     private int minValue = 0;
     private int maxValue = -1;
 
-    public int getMinValue() {
-      return minValue;
-    }
-
-    public void setMinValue(int minValue) {
-      this.minValue = minValue;
-    }
-
-    public int getMaxValue() {
-      return maxValue;
-    }
-
-    public void setMaxValue(int maxValue) {
-      this.maxValue = maxValue;
+    public SplitBarDragController(AbsolutePanel boundaryPanel, Widget widget) {
+      super(boundaryPanel);
+      this.widget = widget;
     }
 
     @Override
@@ -188,7 +118,7 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
           layoutData.maxSize);
 
       super.dragEnd();
-      
+
       glassPanel.removeFromParent();
 
       if (context.boundaryPanel instanceof HasLayoutManager) {
@@ -200,9 +130,78 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
         };
       }
     }
+    public void dragMove() {
+      int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
+      if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
+        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
+        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
+            - context.draggable.getOffsetHeight()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
+            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
+      } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
+        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
+        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
+            - context.draggable.getOffsetHeight()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
+            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
+      }
+      if ((direction & SplitBar.DIRECTION_WEST) != 0) {
+        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
+        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
+            - context.draggable.getOffsetWidth()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
+            context.draggable.getAbsoluteTop() - boundaryOffsetY);
+      } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
+        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
+        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
+            - context.draggable.getOffsetWidth()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
+            context.draggable.getAbsoluteTop() - boundaryOffsetY);
+      }
+    }
+
+    @Override
+    public void dragStart() {
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+      }
+      RootPanel.get().add(glassPanel, 0, 0);
+
+      super.dragStart();
+
+      WidgetLocation currentDraggableLocation = new WidgetLocation(
+          context.draggable, context.boundaryPanel);
+      movablePanel = context.draggable;
+      context.boundaryPanel.add(movablePanel,
+          currentDraggableLocation.getLeft(), currentDraggableLocation.getTop());
+      movablePanel.addStyleName(getStylePrimaryName() + "-Movable");
+
+      // one time calculation of boundary panel location for efficiency during
+      // dragging
+      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
+      final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
+      boundaryOffsetX = widgetLocation.getLeft() + border[3];
+      boundaryOffsetY = widgetLocation.getTop() + border[0];
+      final int[] box = DOM.getClientSize(boundaryPanel.getElement());
+      dropTargetClientWidth = box[0];
+      dropTargetClientHeight = box[1];
+
+      layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
+      draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
+      draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
+    }
 
     public DirectionConstant getDirection(Widget draggable) {
       return directionMap.get(draggable);
+    }
+
+    public int getMaxValue() {
+      return maxValue;
+    }
+
+    public int getMinValue() {
+      return minValue;
     }
 
     public void makeDraggable(Widget widget,
@@ -219,7 +218,17 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
       return new BoundaryDropController(boundaryPanel, false);
     }
 
+    public void setMaxValue(int maxValue) {
+      this.maxValue = maxValue;
+    }
+
+    public void setMinValue(int minValue) {
+      this.minValue = minValue;
+    }
+
   }
+
+  private static GlassPanel glassPanel;
 
   /**
    * Specifies that resizing occur at the east edge.
@@ -283,40 +292,36 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
     dragController.makeDraggable(this, direction);
   }
 
+  public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+    return addDomHandler(handler, MouseDownEvent.getType());
+  }
+
+  public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+    return addDomHandler(handler, MouseMoveEvent.getType());
+  }
+
+  public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+    return addDomHandler(handler, MouseOutEvent.getType());
+  }
+
+  public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+    return addDomHandler(handler, MouseOverEvent.getType());
+  }
+
+  public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+    return addDomHandler(handler, MouseUpEvent.getType());
+  }
+
+  public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
+    return addDomHandler(handler, MouseWheelEvent.getType());
+  }
+
   public AbsolutePanel getBoundaryPanel() {
     return boundaryPanel;
   }
 
   public SplitBarDragController getDragController() {
     return dragController;
-  }
-
-  public void addMouseListener(MouseListener listener) {
-    if (mouseListeners == null) {
-      mouseListeners = new MouseListenerCollection();
-    }
-    mouseListeners.add(listener);
-  }
-
-  public void removeMouseListener(MouseListener listener) {
-    if (mouseListeners != null) {
-      mouseListeners.remove(listener);
-    }
-  }
-
-  @Override
-  public void onBrowserEvent(Event event) {
-    switch (DOM.eventGetType(event)) {
-      case Event.ONMOUSEDOWN:
-      case Event.ONMOUSEUP:
-      case Event.ONMOUSEMOVE:
-      case Event.ONMOUSEOVER:
-      case Event.ONMOUSEOUT:
-        if (mouseListeners != null) {
-          mouseListeners.fireMouseEvent(this, event);
-        }
-        break;
-    }
   }
 
 }
