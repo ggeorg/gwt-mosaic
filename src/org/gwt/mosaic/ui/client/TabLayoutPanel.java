@@ -17,13 +17,6 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import java.util.Iterator;
-
-import org.gwt.mosaic.ui.client.layout.BorderLayout;
-import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
-
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
@@ -31,17 +24,21 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
-import com.google.gwt.user.client.ui.DecoratedTabBar;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.ListenerWrapper;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
-import com.google.gwt.user.client.ui.TabListenerCollection;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
+import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
+
+import java.util.Iterator;
 
 /**
  * A {@link LayoutPanel} that represents a tabbed set of pages, each of which
@@ -58,8 +55,52 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel,
     HasBeforeSelectionHandlers<Integer>, HasSelectionHandlers<Integer> {
 
+  public enum CloseBehaviour {
+    SHOW_LEFT_TAB
+  }
+
   public enum TabBarPosition {
     TOP, BOTTOM
+  }
+
+  /**
+   * Glue code between listeners and handlers.
+   * 
+   * @param <T> listener type
+   * @deprecated will be removed in GWT 2.0 with the handler listeners
+   *             themselves
+   */
+  @Deprecated
+  static class WrappedTabListener extends ListenerWrapper<TabListener>
+      implements SelectionHandler<Integer>, BeforeSelectionHandler<Integer> {
+
+    public static void add(TabLayoutPanel source, TabListener listener) {
+      WrappedTabListener t = new WrappedTabListener(listener);
+      source.addBeforeSelectionHandler(t);
+      source.addSelectionHandler(t);
+    }
+
+    public static void remove(Widget eventSource, TabListener listener) {
+      baseRemove(eventSource, listener, SelectionEvent.getType(),
+          BeforeSelectionEvent.getType());
+    }
+
+    protected WrappedTabListener(TabListener listener) {
+      super(listener);
+    }
+
+    public void onBeforeSelection(BeforeSelectionEvent<Integer> event) {
+      if (!getListener().onBeforeTabSelected(
+          (SourcesTabEvents) event.getSource(), event.getItem().intValue())) {
+        event.cancel();
+      }
+    }
+
+    public void onSelection(SelectionEvent<Integer> event) {
+      getListener().onTabSelected((SourcesTabEvents) event.getSource(),
+          event.getSelectedItem().intValue());
+    }
+
   }
 
   /**
@@ -97,12 +138,12 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
     if (decorate) {
       if (region == TabBarPosition.TOP) {
-        tabBar = new ScrollTabBar(true, false);
+        tabBar = new ScrollTabBar(this, true, false);
       } else {
-        tabBar = new ScrollTabBar(true, true);
+        tabBar = new ScrollTabBar(this, true, true);
       }
     } else {
-      tabBar = new ScrollTabBar();
+      tabBar = new ScrollTabBar(this);
     }
 
     deck.addStyleName(DEFAULT_STYLENAME + "Bottom");
@@ -163,6 +204,16 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void add(Widget w, Widget tabWidget) {
     insert(w, tabWidget, getWidgetCount());
+  }
+
+  public HandlerRegistration addBeforeSelectionHandler(
+      BeforeSelectionHandler<Integer> handler) {
+    return addHandler(handler, BeforeSelectionEvent.getType());
+  }
+
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<Integer> handler) {
+    return addHandler(handler, SelectionEvent.getType());
   }
 
   /*
@@ -335,7 +386,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     int selection = tabBar.getSelectedTab();
     if (selection == -1) {
       selection = 0;
-      tabBar.selectTab(0);
+      selectTab(0);
+      return;
     }
     super.layout();
   }
@@ -369,9 +421,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
     deck.showWidget(tabIndex);
     layout();
-    // if (tabListeners != null) {
-    // tabListeners.fireTabSelected(TabLayoutPanel.this, tabIndex);
-    // }
+
     SelectionEvent.fire(this, tabIndex);
   }
 
@@ -387,6 +437,10 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
       return false;
     }
 
+    return remove(index, widget);
+  }
+
+  private boolean remove(int index, Widget widget) {
     tabBar.removeTab(index);
     return deck.remove(widget);
   }
@@ -408,8 +462,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
       return false;
     }
 
-    tabBar.removeTab(index);
-    return deck.remove(widget);
+    return remove(index, widget);
   }
 
   /*
@@ -435,55 +488,5 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
   public void setPadding(int padding) {
     deck.setPadding(padding);
-  }
-
-  public HandlerRegistration addBeforeSelectionHandler(
-      BeforeSelectionHandler<Integer> handler) {
-    return addHandler(handler, BeforeSelectionEvent.getType());
-  }
-
-  public HandlerRegistration addSelectionHandler(
-      SelectionHandler<Integer> handler) {
-    return addHandler(handler, SelectionEvent.getType());
-  }
-
-  /**
-   * Glue code between listeners and handlers.
-   * 
-   * @param <T> listener type
-   * @deprecated will be removed in GWT 2.0 with the handler listeners
-   *             themselves
-   */
-  @Deprecated
-  static class WrappedTabListener extends ListenerWrapper<TabListener>
-      implements SelectionHandler<Integer>, BeforeSelectionHandler<Integer> {
-
-    public static void add(TabLayoutPanel source, TabListener listener) {
-      WrappedTabListener t = new WrappedTabListener(listener);
-      source.addBeforeSelectionHandler(t);
-      source.addSelectionHandler(t);
-    }
-
-    public static void remove(Widget eventSource, TabListener listener) {
-      baseRemove(eventSource, listener, SelectionEvent.getType(),
-          BeforeSelectionEvent.getType());
-    }
-
-    protected WrappedTabListener(TabListener listener) {
-      super(listener);
-    }
-
-    public void onSelection(SelectionEvent<Integer> event) {
-      getListener().onTabSelected((SourcesTabEvents) event.getSource(),
-          event.getSelectedItem().intValue());
-    }
-
-    public void onBeforeSelection(BeforeSelectionEvent<Integer> event) {
-      if (!getListener().onBeforeTabSelected(
-          (SourcesTabEvents) event.getSource(), event.getItem().intValue())) {
-        event.cancel();
-      }
-    }
-
   }
 }
