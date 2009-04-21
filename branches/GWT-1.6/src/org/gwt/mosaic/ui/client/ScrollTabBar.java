@@ -1,12 +1,5 @@
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -14,6 +7,10 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -32,12 +29,17 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 
-public class ScrollTabBar extends LayoutComposite implements HasAnimation {
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-  /**
-   * The default style name.
-   */
-  private static final String DEFAULT_STYLENAME = "mosaic-ScrollTabBar";
+import java.util.ArrayList;
+import java.util.List;
+
+public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   public static class DecoratedBottomTabBar extends TabBar {
     static String[] TAB_ROW_STYLES = {"tabTop", "tabMiddle", "tabBottom"};
@@ -116,6 +118,13 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   }
 
+  private List<Widget> tabs = new ArrayList<Widget>();
+
+  /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-ScrollTabBar";
+
   /**
    * The duration of the animation.
    */
@@ -167,16 +176,22 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   private boolean isAnimationEnabled = true;
 
-  public ScrollTabBar() {
-    this(false, false);
+  public ScrollTabBar(TabLayoutPanel tabPanel) {
+    this(tabPanel, false, false);
   }
 
-  public ScrollTabBar(boolean decorated) {
-    this(decorated, false);
+  public ScrollTabBar(TabLayoutPanel tabPanel, boolean decorated) {
+    this(tabPanel, decorated, false);
   }
 
-  public ScrollTabBar(boolean decorated, boolean atBottom) {
+  private TabLayoutPanel tabPanel;
+
+  public ScrollTabBar(TabLayoutPanel tabPanel, boolean decorated,
+      boolean atBottom) {
     super();
+
+    assert tabPanel != null;
+    this.tabPanel = tabPanel;
 
     final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Alignment.END));
@@ -185,13 +200,60 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
     if (decorated) {
       if (atBottom) {
-        tabBar = new DecoratedBottomTabBar();
+        tabBar = new DecoratedBottomTabBar() {
+          @Override
+          protected void insertTabWidget(Widget widget, int beforeIndex) {
+            super.insertTabWidget(widget, beforeIndex);
+            tabs.add(beforeIndex, widget);
+          }
+
+          @Override
+          public void removeTab(int index) {
+            super.removeTab(index);
+            tabs.remove(index);
+          }
+        };
       } else {
-        tabBar = new DecoratedTabBar();
+        tabBar = new DecoratedTabBar() {
+          @Override
+          protected void insertTabWidget(Widget widget, int beforeIndex) {
+            super.insertTabWidget(widget, beforeIndex);
+            tabs.add(beforeIndex, widget);
+          }
+
+          @Override
+          public void removeTab(int index) {
+            super.removeTab(index);
+            tabs.remove(index);
+          }
+        };
       }
     } else {
-      tabBar = new TabBar();
+      tabBar = new TabBar() {
+        @Override
+        protected void insertTabWidget(Widget widget, int beforeIndex) {
+          super.insertTabWidget(widget, beforeIndex);
+          tabs.add(beforeIndex, widget);
+        }
+
+        @Override
+        public void removeTab(int index) {
+          super.removeTab(index);
+          tabs.remove(index);
+        }
+      };
     }
+
+    tabBar.addSelectionHandler(new SelectionHandler<Integer>() {
+      public void onSelection(final SelectionEvent<Integer> event) {
+        DeferredCommand.addCommand(new Command() {
+          public void execute() {
+            scrollTabIntoView();
+          }
+        });
+      }
+    });
+
     tabBarWrapper = createWrapper("tabBarWrapper");
     tabBarWrapper.add(tabBar);
 
@@ -277,16 +339,27 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
             });
           }
         });
+    navBar.add(tabBarMenuBtn);
 
     layoutPanel.add(tabBarWrapper, new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel.add(navBar);
-    layoutPanel.add(tabBarMenuBtn);
 
     DOM.setStyleAttribute(tabBarWrapper.getElement(), "overflow", "hidden");
 
     addStyleName(DEFAULT_STYLENAME);
   }
 
+  public HandlerRegistration addBeforeSelectionHandler(
+      BeforeSelectionHandler<Integer> handler) {
+    return tabBar.addBeforeSelectionHandler(handler);
+  }
+
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<Integer> handler) {
+    return tabBar.addSelectionHandler(handler);
+  }
+
+  @Deprecated
   public void addTabListener(TabListener listener) {
     tabBar.addTabListener(listener);
   }
@@ -343,49 +416,59 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
   public void layout(boolean invalidate) {
     super.layout(invalidate);
 
-    if (tabBar.getOffsetWidth() > tabBarWrapper.getOffsetWidth()) {
-      if (!navBar.isVisible()) {
-        navBar.setVisible(true);
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            layout(true);
-          }
-        });
-      } else {
-        final int scrollLeft = tabBarWrapper.getElement().getScrollLeft();
-        if (tabBarWrapper.getOffsetWidth() > tabBar.getOffsetWidth()
-            - scrollLeft) {
-          tabBarWrapper.getElement().setScrollLeft(
-              Math.min(scrollLeft, tabBar.getOffsetWidth() - scrollLeft + navBar.getOffsetWidth()));
-          DeferredCommand.addCommand(new Command() {
-            public void execute() {
-              layout(true);
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        if (tabBar.getOffsetWidth() > tabBarWrapper.getOffsetWidth()
+            + DOM.getBoxSize(navBar.getElement())[0]) {
+          if (!navBar.isVisible()) {
+            toggleNavBarVisibility(true);
+          } else {
+            final int scrollLeft = tabBarWrapper.getElement().getScrollLeft();
+            if (tabBarWrapper.getOffsetWidth() > tabBar.getOffsetWidth()
+                - scrollLeft) {
+              tabBarWrapper.getElement().setScrollLeft(
+                  Math.min(scrollLeft, tabBar.getOffsetWidth() - scrollLeft));
             }
-          });
+          }
+        } else if (navBar.isVisible()) {
+          tabBarWrapper.getElement().setScrollLeft(0);
+          toggleNavBarVisibility(false);
+        }
+
+        if (navBar.isVisible()) {
+          updateNavBarState();
         }
       }
-    } else if (tabBar.getOffsetWidth() <= tabBarWrapper.getOffsetWidth()
-        + navBar.getOffsetWidth()
-        && navBar.isVisible()) {
-      tabBarWrapper.getElement().setScrollLeft(0);
-      navBar.setVisible(false);
-      DeferredCommand.addCommand(new Command() {
-        public void execute() {
-          layout(true);
-        }
-      });
-    }
+    });
+  }
 
-    if (navBar.isVisible()) {
-      updateNavBarState();
-    }
+  private void toggleNavBarVisibility(boolean visible) {
+    navBar.setVisible(visible);
+    invalidate();
+    tabPanel.layout();
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        scrollTabIntoView();
+      }
+    });
+  }
+
+  private void scrollTabIntoView() {
+    tabs.get(tabBar.getSelectedTab()).getElement().scrollIntoView();
   }
 
   public void removeTab(int index) {
     tabBar.removeTab(index);
+    invalidate();
   }
 
-  public void selectTab(int i) {
+  @Deprecated
+  public void removeTabListener(TabListener listener) {
+    tabBar.removeTabListener(listener);
+  }
+
+  public void selectTab(final int i) {
     tabBar.selectTab(i);
   }
 
