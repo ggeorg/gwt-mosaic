@@ -291,6 +291,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
+  @Override
+  protected void insert(Widget child, Element container, int beforeIndex,
+      boolean domInsert) {
+    super.insert(child, container, beforeIndex, domInsert);
+    invalidate();
+  }
+
   /**
    * Lays out this {@code LayoutPanel} and all of its child widgets.
    * <p>
