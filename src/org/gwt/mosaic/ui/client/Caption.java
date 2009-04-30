@@ -15,11 +15,11 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -42,13 +42,10 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -130,6 +127,7 @@ public class Caption extends LayoutComposite implements HasHTML,
         rightIconBox.add(w);
       }
     }
+    invalidate();
   }
 
   public HandlerRegistration addClickHandler(ClickHandler handler) {
@@ -173,6 +171,7 @@ public class Caption extends LayoutComposite implements HasHTML,
     if (rightIconBox != null) {
       rightIconBox.clear();
     }
+    invalidate();
   }
 
   /*
@@ -257,6 +256,7 @@ public class Caption extends LayoutComposite implements HasHTML,
    */
   public void setHTML(String html) {
     caption.setHTML(html);
+    invalidate();
   }
 
   /*
@@ -266,6 +266,7 @@ public class Caption extends LayoutComposite implements HasHTML,
    */
   public void setText(String text) {
     caption.setText(text);
+    invalidate();
   }
 
   public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
