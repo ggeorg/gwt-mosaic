@@ -17,6 +17,15 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.Iterator;
+
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
+import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
@@ -24,8 +33,6 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.ListenerWrapper;
@@ -33,21 +40,19 @@ import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.gwt.mosaic.ui.client.layout.BorderLayout;
-import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
-
-import java.util.Iterator;
-
 /**
  * A {@link LayoutPanel} that represents a tabbed set of pages, each of which
  * contains another widget. Its child widgets are shown as the user selects the
  * various tabs associated with them.
  * 
- * <h3>CSS Style Rules</h3> <ul class='css'> <li>.mosaic-TabLayoutPanel { the
- * tab layout panel itself }</li> <li>.mosaic-TabLayoutPanelBottom { the bottom
- * section of the tab layout panel (the deck containing the widget) }</li> </ul>
+ * <h3>CSS Style Rules</h3>
+ * 
+ * <ul class='css'>
+ * <li>.mosaic-TabLayoutPanel { the
+ * tab layout panel itself }</li>
+ * <li>.mosaic-TabLayoutPanelBottom { the bottom
+ * section of the tab layout panel (the deck containing the widget) }</li>
+ * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -420,7 +425,13 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
     deck.showWidget(tabIndex);
-    layout();
+
+    HasLayoutManager lm = WidgetHelper.getParent(this);
+    if (lm != null) {
+      lm.layout();
+    } else {
+      layout();
+    }
 
     SelectionEvent.fire(this, tabIndex);
   }
@@ -489,4 +500,5 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   public void setPadding(int padding) {
     deck.setPadding(padding);
   }
+
 }

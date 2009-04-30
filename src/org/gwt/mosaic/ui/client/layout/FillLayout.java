@@ -21,6 +21,7 @@ import java.util.Map;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -299,7 +300,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         widgetHeight = -1;
       }
 
-      setBounds(layoutPanel, child, posLeft, posTop, widgetWidth, widgetHeight);
+      WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop, widgetWidth, widgetHeight);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);

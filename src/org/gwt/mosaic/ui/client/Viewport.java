@@ -22,6 +22,7 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -137,14 +138,17 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
     final Element elem = getElement();
     final int[] margins = DOM.getMarginSizes(elem);
 
-    if (width != -1) {
-      width -= (margins[1] + margins[3]);
-      DOM.setContentAreaWidth(elem, Math.max(0, width));
-    }
-    if (height != -1) {
-      height -= (margins[0] + margins[2]);
-      DOM.setContentAreaHeight(elem, Math.max(0, height));
-    }
+    WidgetHelper.setSize(this, width - (margins[1] + margins[3]), height
+        - (margins[0] + margins[2]));
+
+    // if (width != -1) {
+    // width -= (margins[1] + margins[3]);
+    // DOM.setContentAreaWidth(elem, Math.max(0, width));
+    // }
+    // if (height != -1) {
+    // height -= (margins[0] + margins[2]);
+    // DOM.setContentAreaHeight(elem, Math.max(0, height));
+    // }
   }
 
   /**

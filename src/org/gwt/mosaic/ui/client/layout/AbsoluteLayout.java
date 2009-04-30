@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -192,7 +193,7 @@ public class AbsoluteLayout extends BaseLayout {
         if (layoutData.dimensionPolicy.height)
           layoutData.widgetHeight += (deltaY / dh);
 
-        setBounds(layoutPanel, child, layoutData.posLeft, layoutData.posTop,
+        WidgetHelper.setBounds(layoutPanel, child, layoutData.posLeft, layoutData.posTop,
             layoutData.widgetWidth, layoutData.widgetHeight);
 
       }

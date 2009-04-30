@@ -80,6 +80,11 @@ public class ScrollLayoutPanel extends LayoutPanel {
     Element element = item.getElement();
     ensureVisibleImpl(scroll, element);
   }
+  
+  @Override
+  protected void onLayout() {
+    // don't call super.onLoad()
+  }
 
   private native void ensureVisibleImpl(Element scroll, Element e)
   /*-{

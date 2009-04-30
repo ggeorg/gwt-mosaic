@@ -131,7 +131,8 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
         + w, Window.getClientWidth() - getAbsoluteLeft() - w), Math.min(size[1]
         + h, Window.getClientHeight() - getAbsoluteTop() - h));
 
-    layout(true);
+    //layout(true);
+    invalidate();
   }
 
   private void setCurrentAnchor(Widget anchor) {

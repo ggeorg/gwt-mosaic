@@ -64,13 +64,4 @@ public class DOMImpl {
     elem.getStyle().setProperty(attr, value);
   }
 
-  /**
-   * Gets the cell index of a cell within a table row.
-   * 
-   * @param td the cell element
-   * @return the cell index
-   */
-  public int getCellIndex(Element td) {
-    return DOM.getElementPropertyInt(td, "cellIndex");
-  }
 }
