@@ -228,7 +228,7 @@ public abstract class ContentWidget extends LayoutPanel implements
       }
 
       public void onResize(int width, int height) {
-        vPanel.layout(true);
+        vPanel.invalidate();
       }
     });
 

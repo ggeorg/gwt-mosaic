@@ -183,11 +183,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.iterator();
   }
 
-  @Override
-  public void layout() {
-    getLayoutPanel().layout();
-  }
-
   /*
    * (non-Javadoc)
    * 

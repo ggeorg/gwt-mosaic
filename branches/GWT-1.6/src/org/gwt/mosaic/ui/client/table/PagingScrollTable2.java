@@ -17,6 +17,7 @@ package org.gwt.mosaic.ui.client.table;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
@@ -49,20 +50,16 @@ public class PagingScrollTable2<RowType> extends
       TableDefinition<RowType> tableDefinition) {
     super(tableModel, tableDefinition);
   }
-  
+
   public int[] getPreferredSize() {
     return DOM.getBoxSize(getElement());
   }
 
   public void invalidate() {
-    // Nothing to do here!
+    WidgetHelper.invalidate(getParent());
   }
 
   public void layout() {
-    redraw();
-  }
-
-  public void layout(boolean doInvalidate) {
     redraw();
   }
 

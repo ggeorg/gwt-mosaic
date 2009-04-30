@@ -16,18 +16,22 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.Iterator;
+import java.util.Vector;
 
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -37,6 +41,9 @@ import com.google.gwt.widgetideas.client.ResizableWidget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
+ * An {@code AbsolutePanel}
+ * 
+ * .mosaic-LayoutPanel
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
@@ -62,7 +69,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   private String width;
 
-  private boolean invalid = false;
+  private boolean invalid = true;
 
   /**
    * Creates a new <code>LayoutPanel</code> with <code>FillLayout</code>.
@@ -108,8 +115,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    */
   @Override
   public void add(Widget w) {
-    super.add(w);
+    addImpl(w);
     invalidate();
+  }
+
+  void addImpl(Widget w) {
+    super.add(w);
   }
 
   /**
@@ -215,7 +226,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
     if (preferredSizeCache[0] == -1 && preferredSizeCache[1] == -1) {
       preferredSizeCache = layout.getPreferredSize(this);
-      BaseLayout.setSize(this, preferredSizeCache[0], preferredSizeCache[1]);
+      WidgetHelper.setSize(this, preferredSizeCache[0], preferredSizeCache[1]);
       // layout.flushCache();
       layout.layoutPanel(this);
       preferredSizeCache = layout.getPreferredSize(this);
@@ -285,9 +296,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (layoutData.hasDecoratorPanel()) {
       final DecoratorPanel decPanel = layoutData.decoratorPanel;
       decPanel.setWidget(w);
-      super.insert(decPanel, getElement(), beforeIndex, true);
+      insert(decPanel, getElement(), beforeIndex, true);
     } else {
-      super.insert(w, getElement(), beforeIndex, true);
+      insert(w, getElement(), beforeIndex, true);
     }
   }
 
@@ -312,8 +323,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       return;
     }
 
-    getLayout().flushCache();
+    invalid = true;
 
+    getLayout().flushCache();
     clearPreferredSizeCache();
 
     final Widget parent = findParent();
@@ -323,9 +335,16 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
         && !(parent instanceof LayoutPopupPanel)) {
       ((HasLayoutManager) parent).invalidate();
     }
-
-    invalid = true;
+    // else {
+    // if (parent instanceof Viewport) {
+    // ((HasLayoutManager) parent).layout();
+    // } else {
+    // layout();
+    // }
+    // }
   }
+
+  private Widget parent = null;
 
   public boolean isCollapsed(Widget widget) {
     if (getLayout() instanceof BorderLayout) {
@@ -354,20 +373,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     };
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  public void layout() {
-    layout(false);
+  protected void onLayout() {
+    getElement().setScrollTop(0);
+    getElement().setScrollLeft(0);
   }
 
-  public void layout(boolean invalidate) {
-    if (invalidate) {
-      invalidate();
-    }
-    if (isAttached()) {
+  public void layout() {
+    // if (invalid) { TODO: after we cache width & size for each child widget
+    if (isAttached() && isVisible()) {
+      onLayout();
       layout.layoutPanel(this);
       if (layout.runTwice()) {
         layout.layoutPanel(this);
@@ -377,9 +391,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     invalid = false;
   }
 
-  /**
-   * 
-   */
   protected void layoutChildren() {
     final int count = getWidgetCount();
     for (int i = 0; i < count; i++) {
@@ -421,12 +432,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
           final int[] size = getPreferredSize();
           if (width != null) {
             LayoutPanel.super.setWidth(width);
-            BaseLayout.setSize(LayoutPanel.this, -1, size[1]);
+            WidgetHelper.setSize(LayoutPanel.this, -1, size[1]);
           } else if (height != null) {
-            BaseLayout.setSize(LayoutPanel.this, size[0], -1);
+            WidgetHelper.setSize(LayoutPanel.this, size[0], -1);
             LayoutPanel.super.setHeight(height);
           } else {
-            BaseLayout.setSize(LayoutPanel.this, size[0], size[1]);
+            WidgetHelper.setSize(LayoutPanel.this, size[0], size[1]);
           }
         }
         layout();
@@ -449,18 +460,28 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     });
   }
 
+  /**
+   * Removes a child widget to this panel.
+   * 
+   * @param w the child widget to be removed
+   */
   @Override
   public boolean remove(Widget w) {
     final Widget widget = getDecoratorWidget(w);
     if (w != widget) {
       ((DecoratorPanel) widget).remove(w);
     }
-    if (super.remove(widget)) {
-      invalidate();
+    final Widget parent = widget.getParent();
+    if (removeImpl(widget)) {
+      WidgetHelper.invalidate(parent);
       return true;
     } else {
       return false;
     }
+  }
+
+  boolean removeImpl(Widget w) {
+    return super.remove(w);
   }
 
   public void removeCollapsedListener(Widget widget, CollapsedListener listener) {

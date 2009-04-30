@@ -66,20 +66,4 @@ public interface HasLayoutManager {
    */
   void layout();
 
-  /**
-   * If the receiver has a {@link LayoutManager}, asks the layout to
-   * <em>lay out</em> (that is, set the size and location of) the receiver's
-   * children. If the receiver does not have a layout, do nothing.
-   * <p>
-   * This method should be invoked when this receiver's children are modified
-   * (added or removed from the receiver, or layout-related information changed)
-   * after the receiver has been displayed.
-   * 
-   * @param doInvalidate if {@code true} {@link #invalidate(false)} is called
-   *          before the layout lays out the receiver's children
-   * 
-   * @see #layout()
-   * @see #invalidate(boolean)
-   */
-  void layout(boolean doInvalidate);
 }

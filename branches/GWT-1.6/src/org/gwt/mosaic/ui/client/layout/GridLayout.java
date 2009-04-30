@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -457,7 +458,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             widgetHeight = -1;
           }
 
-          setBounds(layoutPanel, widget, posLeft, posTop, widgetWidth,
+          WidgetHelper.setBounds(layoutPanel, widget, posLeft, posTop, widgetWidth,
               widgetHeight);
 
         }

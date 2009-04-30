@@ -20,6 +20,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -77,18 +78,10 @@ public abstract class LayoutComposite extends Composite implements
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
-   */
-  public void layout(boolean invalidate) {
-    getLayoutPanel().layout(invalidate);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
     getLayoutPanel().invalidate();
   }
+
 }

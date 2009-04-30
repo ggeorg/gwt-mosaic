@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -132,8 +133,9 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   }
 
   protected void setContentSize(int width, int height) {
-    DOM.setContentAreaWidth(layoutPanel.getElement(), width);
-    DOM.setContentAreaHeight(layoutPanel.getElement(), height);
+    // DOM.setContentAreaWidth(layoutPanel.getElement(), width);
+    // DOM.setContentAreaHeight(layoutPanel.getElement(), height);
+    WidgetHelper.setSize(layoutPanel, width, height);
   }
 
   /**
@@ -161,15 +163,6 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     // System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
     // }
     // });
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
-   */
-  public void layout(boolean invalidate) {
-    layoutPanel.layout(invalidate);
   }
 
   /*

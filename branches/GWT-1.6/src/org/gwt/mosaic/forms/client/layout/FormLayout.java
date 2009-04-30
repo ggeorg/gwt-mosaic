@@ -1376,6 +1376,9 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     maxWidth += paddings[1] + paddings[3];
     maxHeight += paddings[0] + paddings[2];
+    
+    maxWidth += borders[1] + borders[3];
+    maxHeight += borders[0] + borders[2];
 
     return new Dimension(maxWidth, maxHeight);
   }
@@ -2024,13 +2027,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   private boolean runTwiceFlag;
 
-  private boolean initialized = false;
-
   // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
   // Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
 
   @Override
   public void flushCache() {
@@ -2043,9 +2041,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
     if (initialized) {
       return true;
     }
-
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    
+    super.init(layoutPanel);
 
     constraintMap.clear();
 

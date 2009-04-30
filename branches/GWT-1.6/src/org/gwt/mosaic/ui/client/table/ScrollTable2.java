@@ -15,11 +15,12 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
-
-import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 
 /**
  * 
@@ -70,14 +71,10 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
   }
 
   public void invalidate() {
-    // Nothing to do here!
+    WidgetHelper.invalidate(getParent());
   }
 
   public void layout() {
-    redraw();
-  }
-
-  public void layout(boolean doInvalidate) {
     redraw();
   }
 

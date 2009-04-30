@@ -248,6 +248,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
       public void onSelection(final SelectionEvent<Integer> event) {
         DeferredCommand.addCommand(new Command() {
           public void execute() {
+            invalidate();
             scrollTabIntoView();
           }
         });
@@ -409,12 +410,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   @Override
   public void layout() {
-    layout(false);
-  }
-
-  @Override
-  public void layout(boolean invalidate) {
-    super.layout(invalidate);
+    super.layout();
 
     DeferredCommand.addCommand(new Command() {
       public void execute() {
@@ -455,7 +451,11 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
   }
 
   private void scrollTabIntoView() {
-    tabs.get(tabBar.getSelectedTab()).getElement().scrollIntoView();
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        tabs.get(tabBar.getSelectedTab()).getElement().scrollIntoView();
+      }
+    });
   }
 
   public void removeTab(int index) {
