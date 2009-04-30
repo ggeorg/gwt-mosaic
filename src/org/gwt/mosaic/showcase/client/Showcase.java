@@ -95,7 +95,6 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwSliderBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
-import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -324,10 +323,7 @@ public class Showcase implements EntryPoint {
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
           content.invalidate();
-          HasLayoutManager parent = WidgetHelper.getParent(content);
-          if (parent != null) {
-            parent.layout();
-          }
+          WidgetHelper.getParent(content).layout();
         }
       }
     });
@@ -343,7 +339,7 @@ public class Showcase implements EntryPoint {
       displayContentWidget(itemWidgets.get(firstItem));
     }
 
-    new DelayedRunnable(3333) {
+    new DelayedRunnable() {
       @Override
       public void run() {
         DOM.getElementById("splash").getStyle().setProperty("display", "none");
