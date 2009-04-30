@@ -145,7 +145,7 @@ public class Application extends Viewport implements
         bottomPanel.layout();
       }
     });
-    
+
     bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST, 200, 100, 350,
         true));
 
