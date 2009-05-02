@@ -17,6 +17,7 @@ package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
@@ -123,27 +124,21 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   /**
    * Get's the elements <code>clientHeight</code> and <code>clientWidth</code>
-   * plus the size of the borders.
+   * plus the size of the borders and margins even if {@code visibility} is
+   * set to {@code false}.
    * <p>
    * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
    * 
    * @param elem the element to get the size of
    * @return an array of width and height
    */
-  public static int[] getBoxSize(Element elem) {
-    int[] size = new int[2];
-
-    // if (CompatMode.isStandardsMode()) {
-    // size[0] = elem.getOffsetWidth();
-    // size[1] = elem.getOffsetHeight();
-    // } else {
+  public static Dimension getBoxSize(Element elem) {
+    final int[] m = getMarginSizes(elem);
     final int[] b = getBorderSizes(elem);
-    final int[] c = getClientSize(elem);
-    size[0] = c[0] + (b[1] + b[3]);
-    size[1] = c[1] + (b[0] + b[2]);
-    // }
-
-    return size;
+    final Dimension c = getClientSize(elem);
+    c.width += (b[1] + b[3]) + (m[1] + m[3]);
+    c.height += (b[0] + b[2]) + (m[1] + m[3]);
+    return c;
   }
 
   /**
@@ -174,17 +169,11 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @param elem the element to get the size of
    * @return an array of width and height
    */
-  public static int[] getClientSize(Element elem) {
-    int[] size = new int[2];
-
+  public static Dimension getClientSize(Element elem) {
     if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
-
-    size[0] = getClientWidth(elem);
-    size[1] = getClientHeight(elem);
-
-    return size;
+    return new Dimension(getClientWidth(elem), getClientHeight(elem));
   }
 
   /**
@@ -275,7 +264,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     setStyleAttribute(div, "height", "auto");
     try {
       body.appendChild(div);
-      return getBoxSize(div);
+      return getBoxSize(div).toArray();
     } finally {
       body.removeChild(div);
     }
@@ -381,7 +370,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
     setStyleAttribute(toPixelSizeTestElem, "width", width);
 
-    return getBoxSize(toPixelSizeTestElem)[0];
+    return getBoxSize(toPixelSizeTestElem).width;
   }
 
 }

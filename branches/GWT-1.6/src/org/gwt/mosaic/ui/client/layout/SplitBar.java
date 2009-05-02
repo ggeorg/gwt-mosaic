@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.util.DelayedRunnable;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
@@ -130,6 +131,7 @@ final class SplitBar extends Widget implements HasAllMouseHandlers {
         };
       }
     }
+
     public void dragMove() {
       int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
       if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
@@ -183,9 +185,9 @@ final class SplitBar extends Widget implements HasAllMouseHandlers {
       final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
       boundaryOffsetX = widgetLocation.getLeft() + border[3];
       boundaryOffsetY = widgetLocation.getTop() + border[0];
-      final int[] box = DOM.getClientSize(boundaryPanel.getElement());
-      dropTargetClientWidth = box[0];
-      dropTargetClientHeight = box[1];
+      final Dimension box = DOM.getClientSize(boundaryPanel.getElement());
+      dropTargetClientWidth = box.width;
+      dropTargetClientHeight = box.height;
 
       layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
       draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
