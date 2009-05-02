@@ -15,6 +15,8 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
@@ -60,14 +62,15 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
     super(dataTable, headerTable, images);
   }
 
-  public int[] getPreferredSize() {
+  public Dimension getPreferredSize() {
     int width = getHeaderTable().getOffsetWidth();
     int height = getHeaderTable().getOffsetHeight()
         + getDataTable().getOffsetHeight();
     if (getFooterTable() != null) {
       height += getFooterTable().getOffsetHeight();
     }
-    return new int[] {width, height};
+    final int[] m = DOM.getMarginSizes(getElement());
+    return new Dimension(width + m[1] + m[3], height + m[0] + m[2]);
   }
 
   public void invalidate() {

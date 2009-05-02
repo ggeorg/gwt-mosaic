@@ -240,7 +240,7 @@ public class PanelBuilder extends AbstractFormBuilder {
   public final Label addLabel(String textWithMnemonic,
       CellConstraints constraints) {
     Label label = getComponentFactory().createLabel(textWithMnemonic);
-    DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
+    // XXX DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     add(label, constraints);
     return label;
   }

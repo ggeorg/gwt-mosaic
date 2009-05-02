@@ -177,43 +177,67 @@ public class WidgetHelper {
       final int height) {
     final Element elem = widget.getElement();
 
-    if ("DIV".equalsIgnoreCase(elem.getTagName())) {
-      final int[] b = DOM.getBorderSizes(elem);
-      final int[] p = DOM.getPaddingSizes(elem);
-
-      if (width >= 0) {
-        final int w = b[1] + b[3] + p[1] + p[3];
-        final int fixedWidth = DOM.fixQuirks(elem, width - w, 'w');
-        widget.setWidth(Math.max(0, fixedWidth) + "px");
-      } else if (width == -1) {
-        widget.setWidth("auto");
+    if (width >= 0) {
+      widget.setWidth(width + "px");
+      if (width != widget.getOffsetWidth()) {
+        setSize(widget, width, height, DOM.getBorderSizes(elem),
+            DOM.getPaddingSizes(elem));
+        return;
       }
+    } else if (width == -1) {
+      widget.setWidth("auto");
+    }
 
-      if (height >= 0) {
+    if (height >= 0) {
+      widget.setHeight(height + "px");
+      if (height != widget.getOffsetHeight()) {
+        final int[] b = DOM.getBorderSizes(elem);
+        final int[] p = DOM.getPaddingSizes(elem);
         final int h = b[0] + b[2] + p[0] + p[2];
         final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
         widget.setHeight(Math.max(0, fixedHeight) + "px");
-      } else if (height == -1) {
-        widget.setHeight("auto");
       }
-
-    } else {
-
-      if (width >= 0) {
-        widget.setWidth(width + "px");
-      } else if (width == -1) {
-        widget.setWidth("auto");
-      }
-
-      if (height >= 0) {
-        widget.setHeight(height + "px");
-      } else if (height == -1) {
-        widget.setHeight("auto");
-      }
-
+    } else if (height == -1) {
+      widget.setHeight("auto");
     }
 
-    // layout(widget);
+    if (width != widget.getOffsetWidth()) {
+      System.out.println(elem.getTagName() + " :: " + widget.getOffsetWidth()
+          + "x" + widget.getOffsetHeight() + " ? " + width + "x" + height);
+    }
+
+  }
+
+  private static void setSize(Widget widget, int width, int height, int[] b,
+      int[] p) {
+    final Element elem = widget.getElement();
+
+    if (width >= 0) {
+      widget.setWidth(width + "px");
+      if (width != widget.getOffsetWidth()) {
+        final int w = b[1] + b[3] + p[1] + p[3];
+        final int fixedWidth = DOM.fixQuirks(elem, width - w, 'w');
+        widget.setWidth(Math.max(0, fixedWidth) + "px");
+      }
+    } else if (width == -1) {
+      widget.setWidth("auto");
+    }
+
+    if (height >= 0) {
+      widget.setHeight(height + "px");
+      if (height != widget.getOffsetHeight()) {
+        final int h = b[0] + b[2] + p[0] + p[2];
+        final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
+        widget.setHeight(Math.max(0, fixedHeight) + "px");
+      }
+    } else if (height == -1) {
+      widget.setHeight("auto");
+    }
+
+    if (width != widget.getOffsetWidth()) {
+      System.out.println(elem.getTagName() + " :: " + widget.getOffsetWidth()
+          + "x" + widget.getOffsetHeight() + " ? " + width + "x" + height);
+    }
   }
 
   /**
@@ -243,6 +267,75 @@ public class WidgetHelper {
   public static void setXY(final LayoutPanel layoutPanel, final Widget widget,
       final Point p) {
     setXY(layoutPanel, widget, p.x, p.y);
+  }
+
+  /**
+   * Returns the current size of the {@code Widget} in the form of a
+   * {@link Dimension} object.
+   * <p>
+   * Get's the elements <code>height</code> and <code>width</code> plus the size
+   * of the borders and margins.
+   * <p>
+   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
+   * 
+   * @param widget the given {@code Widget}
+   * @return a {@link Dimension} object that indicates the size of this
+   *         component
+   */
+  public static Dimension getOffsetSize(final Widget widget) {
+    return new Dimension(widget.getOffsetWidth(), widget.getOffsetHeight());
+  }
+
+  /**
+   * 
+   * @param widget
+   * @return
+   */
+  public static Dimension getPreferredSize(Widget widget) {
+    // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
+    if (widget instanceof FormPanel) {
+      final Widget _widget = ((FormPanel) widget).getWidget();
+      if (_widget != null && (_widget instanceof HasLayoutManager)) {
+        widget = _widget;
+      }
+    }
+    if (widget instanceof HasLayoutManager) {
+      final HasLayoutManager lp = (HasLayoutManager) widget;
+      return lp.getPreferredSize();
+    } else {
+      final Element elem = widget.getElement();
+
+      final String w = widget.getElement().getStyle().getProperty("width");
+      final String prefWidth = DOM.getElementProperty(elem, "prefWidth");
+      
+      if (prefWidth == null) {
+        DOM.setElementProperty(elem, "prefWidth", w);
+        widget.setWidth(w);
+      } else {
+        widget.setWidth("auto");
+      }
+      
+      final String h = widget.getElement().getStyle().getProperty("height");
+      final String prefHeight = DOM.getElementProperty(elem, "prefHeight");
+      
+      if (prefHeight == null) {
+        DOM.setElementProperty(elem, "prefHeight", h);
+        widget.setHeight(h);
+      } else {
+        widget.setHeight("auto");
+      }
+
+      changeToStaticPositioning(elem);
+      return getOffsetSize(widget);
+    }
+  }
+
+  private static void changeToStaticPositioning(Element elem) {
+    DOM.setStyleAttribute(elem, "left", "");
+    DOM.setStyleAttribute(elem, "top", "");
+    // ggeorg: see
+    // http://groups.google.com/group/gwt-mosaic/browse_thread/thread/83d2bd6d6791ca62
+    // DOM.setStyleAttribute(elem, "position", "");
   }
 
 }

@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -62,7 +63,7 @@ public abstract class LayoutComposite extends Composite implements
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
-  public int[] getPreferredSize() {
+  public Dimension getPreferredSize() {
     return getLayoutPanel().getPreferredSize();
   }
 

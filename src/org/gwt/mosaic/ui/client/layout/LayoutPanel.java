@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
@@ -63,7 +64,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   private int widgetSpacing = 4;
 
-  private int[] preferredSizeCache = {-1, -1};
+  private Dimension preferredSizeCache = new Dimension(-1, -1);
 
   private String height;
 
@@ -153,8 +154,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   }
 
   private void clearPreferredSizeCache() {
-    preferredSizeCache[0] = -1;
-    preferredSizeCache[1] = -1;
+    preferredSizeCache.setSize(-1, -1);
   }
 
   public Widget findParent() {
@@ -220,13 +220,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * 
    * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
    */
-  public int[] getPreferredSize() {
+  public Dimension getPreferredSize() {
     if (!isAttached()) {
-      return new int[] {0, 0};
+      return new Dimension();
     }
-    if (preferredSizeCache[0] == -1 && preferredSizeCache[1] == -1) {
+    if (preferredSizeCache.width == -1 && preferredSizeCache.height == -1) {
       preferredSizeCache = layout.getPreferredSize(this);
-      WidgetHelper.setSize(this, preferredSizeCache[0], preferredSizeCache[1]);
+      WidgetHelper.setSize(this, preferredSizeCache);
       // layout.flushCache();
       layout.layoutPanel(this);
       preferredSizeCache = layout.getPreferredSize(this);
@@ -429,15 +429,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
           LayoutPanel.super.setWidth(width);
           LayoutPanel.super.setHeight(height);
         } else {
-          final int[] size = getPreferredSize();
+          final Dimension size = getPreferredSize();
           if (width != null) {
             LayoutPanel.super.setWidth(width);
-            WidgetHelper.setSize(LayoutPanel.this, -1, size[1]);
+            size.width = -1;
+            WidgetHelper.setSize(LayoutPanel.this, size);
           } else if (height != null) {
-            WidgetHelper.setSize(LayoutPanel.this, size[0], -1);
+            size.height = -1;
+            WidgetHelper.setSize(LayoutPanel.this, size);
             LayoutPanel.super.setHeight(height);
           } else {
-            WidgetHelper.setSize(LayoutPanel.this, size[0], size[1]);
+            WidgetHelper.setSize(LayoutPanel.this, size);
           }
         }
         layout();

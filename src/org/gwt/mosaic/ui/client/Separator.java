@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -23,8 +24,6 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * 
@@ -80,4 +79,5 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     throw new UnsupportedOperationException();
   }
+
 }

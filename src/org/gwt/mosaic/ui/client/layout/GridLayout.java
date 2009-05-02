@@ -224,8 +224,8 @@ public class GridLayout extends BaseLayout implements HasAlignment {
    * 
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    final Dimension result = new Dimension();
 
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
@@ -246,17 +246,16 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
           GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
 
-          final Dimension dim = widgetSizes.get(widget);
+          Dimension dim = widgetSizes.get(widget);
 
           int flowWidth, flowHeight;
 
           if (dim == null) {
-            flowWidth = getFlowWidth(widget);
-            flowHeight = getFlowHeight(widget);
-          } else {
-            flowWidth = dim.getWidth();
-            flowHeight = dim.getHeight();
+            dim = WidgetHelper.getPreferredSize(widget);
+            widgetSizes.put(widget, dim);
           }
+          flowWidth = dim.getWidth();
+          flowHeight = dim.getHeight();
 
           cellWidth = Math.max(cellWidth, (int) Math.ceil((double) flowWidth
               / (double) layoutData.colspan));
@@ -264,20 +263,20 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           cellHeight = Math.max(cellHeight, (int) Math.ceil((double) flowHeight
               / (double) layoutData.rowspan));
         }
-        result[0] = Math.max(result[0], cellWidth);
-        result[1] = Math.max(result[1], cellHeight);
+        result.width = Math.max(result.width, cellWidth);
+        result.height = Math.max(result.height, cellHeight);
       }
-      result[0] *= cols;
-      result[1] *= rows;
+      result.width *= cols;
+      result.height *= rows;
 
-      result[0] += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+      result.width += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
           + (borders[1] + borders[3]);
-      result[1] += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+      result.height += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
           + (borders[0] + borders[2]);
 
       final int spacing = layoutPanel.getWidgetSpacing();
-      result[0] += ((cols - 1) * spacing);
-      result[1] += ((rows - 1) * spacing);
+      result.width += ((cols - 1) * spacing);
+      result.height += ((rows - 1) * spacing);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
@@ -311,7 +310,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
     if (initialized) {
       return true;
     }
-    
+
     super.init(layoutPanel);
 
     buildWidgetMatrix(layoutPanel);
@@ -338,10 +337,10 @@ public class GridLayout extends BaseLayout implements HasAlignment {
         return;
       }
 
-      final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
-      int width = box[0] - (paddings[1] + paddings[3]);
-      int height = box[1] - (paddings[0] + paddings[2]);
+      int width = box.width - (paddings[1] + paddings[3]);
+      int height = box.height - (paddings[0] + paddings[2]);
       int left = paddings[3];
       int top = paddings[0];
 
@@ -403,8 +402,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
             Dimension dim = widgetSizes.get(widget);
             if (dim == null) {
-              widgetSizes.put(widget, dim = new Dimension(getFlowWidth(widget),
-                  getFlowHeight(widget)));
+              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
               runTwiceFlag = true;
             }
             posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
@@ -413,8 +411,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else {
             Dimension dim = widgetSizes.get(widget);
             if (dim == null) {
-              widgetSizes.put(widget, dim = new Dimension(getFlowWidth(widget),
-                  getFlowHeight(widget)));
+              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
               runTwiceFlag = true;
             }
             posLeft = left + (spacing + colWidth) * c + cellWidth
@@ -439,8 +436,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
             Dimension dim = widgetSizes.get(widget);
             if (dim == null) {
-              widgetSizes.put(widget, dim = new Dimension(getFlowWidth(widget),
-                  getFlowHeight(widget)));
+              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
               runTwiceFlag = true;
             }
             posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
@@ -449,8 +445,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else {
             Dimension dim = widgetSizes.get(widget);
             if (dim == null) {
-              widgetSizes.put(widget, dim = new Dimension(getFlowWidth(widget),
-                  getFlowHeight(widget)));
+              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
               runTwiceFlag = true;
             }
             posTop = top + (spacing + rowHeight) * r + cellHeight
@@ -458,8 +453,8 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             widgetHeight = -1;
           }
 
-          WidgetHelper.setBounds(layoutPanel, widget, posLeft, posTop, widgetWidth,
-              widgetHeight);
+          WidgetHelper.setBounds(layoutPanel, widget, posLeft, posTop,
+              widgetWidth, widgetHeight);
 
         }
       }

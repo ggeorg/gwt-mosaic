@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
@@ -103,16 +104,15 @@ public class AbsoluteLayout extends BaseLayout {
     panelHeight = height;
   }
 
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    final Dimension result = new Dimension();
 
     try {
       if (layoutPanel == null) {
         return result;
       }
-
-      result[0] = panelWidth;
-      result[1] = panelHeight;
+      result.width = panelWidth;
+      result.height = panelHeight;
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
@@ -132,9 +132,9 @@ public class AbsoluteLayout extends BaseLayout {
         return;
       }
 
-      final int[] box = DOM.getClientSize(layoutPanel.getElement());
-      int totalWidth = box[0];
-      int totalHeight = box[1];
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
+      int totalWidth = box.width;
+      int totalHeight = box.height;
 
       final int deltaX = totalWidth - panelWidth;
       final int deltaY = totalHeight - panelHeight;
@@ -156,14 +156,22 @@ public class AbsoluteLayout extends BaseLayout {
           layoutData = new AbsoluteLayoutData(0, 0);
           setLayoutData(child, layoutData);
         }
+        
+        Dimension clientSize = null;
 
         if (layoutData.widgetWidth == -1) {
-          int flowWidth = getFlowWidth(child);
+          if (clientSize == null) {
+            clientSize = WidgetHelper.getPreferredSize(child);
+          }
+          int flowWidth = clientSize.width;
           layoutData.widgetWidth = flowWidth;
         }
 
         if (layoutData.widgetHeight == -1) {
-          int flowHeight = getFlowHeight(child);
+          if (clientSize == null) {
+            clientSize = WidgetHelper.getPreferredSize(child);
+          }
+          int flowHeight = clientSize.height;
           layoutData.widgetHeight = flowHeight;
         }
 

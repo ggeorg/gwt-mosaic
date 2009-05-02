@@ -30,11 +30,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -328,13 +330,13 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
             }
             menu.setPopupPositionAndShow(new PositionCallback() {
               public void setPosition(int offsetWidth, int offsetHeight) {
-                final int[] box = DOM.getBoxSize(tabBarMenuBtn.getElement());
+                final Dimension box = WidgetHelper.getOffsetSize(tabBarMenuBtn);
                 int left = DOM.getAbsoluteLeft(tabBarMenuBtn.getElement());
                 if (left + offsetWidth > Window.getClientWidth()) {
-                  left += box[0] - offsetWidth;
+                  left += box.width - offsetWidth;
                 }
                 final int top = DOM.getAbsoluteTop(tabBarMenuBtn.getElement())
-                    + box[1];
+                    + box.height;
                 menu.setPopupPosition(left, top);
               }
             });
@@ -415,7 +417,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         if (tabBar.getOffsetWidth() > tabBarWrapper.getOffsetWidth()
-            + DOM.getBoxSize(navBar.getElement())[0]) {
+            + navBar.getOffsetWidth()) {
           if (!navBar.isVisible()) {
             toggleNavBarVisibility(true);
           } else {

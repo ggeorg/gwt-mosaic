@@ -124,8 +124,8 @@ public class FillLayout extends BaseLayout implements HasAlignment {
    * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
    * mosaic.ui.client.layout.LayoutPanel)
    */
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    final Dimension result = new Dimension();
 
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
@@ -134,22 +134,20 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
       final Dimension dim = widgetSizes.get(child);
       if (dim == null) {
-        result[0] = getFlowWidth(child);
-        result[1] = getFlowHeight(child);
+        result.setSize(WidgetHelper.getPreferredSize(child));
       } else {
-        result[0] = dim.getWidth();
-        result[1] = dim.getHeight();
+        result.setSize(dim);
       }
 
       if (layoutData.hasDecoratorPanel()) {
         final DecoratorPanel decPanel = layoutData.decoratorPanel;
-        result[0] += decPanel.getOffsetWidth() - child.getOffsetWidth();
-        result[1] += decPanel.getOffsetHeight() - child.getOffsetHeight();
+        result.width += decPanel.getOffsetWidth() - child.getOffsetWidth();
+        result.height += decPanel.getOffsetHeight() - child.getOffsetHeight();
       }
 
-      result[0] += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+      result.width += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
           + (borders[1] + borders[3]);
-      result[1] += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+      result.height += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
           + (borders[0] + borders[2]);
 
     } catch (Exception e) {
@@ -213,12 +211,12 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         return;
       }
 
-      final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
       final int left = paddings[3];
       final int top = paddings[0];
-      int width = box[0] - (paddings[1] + paddings[3]);
-      int height = box[1] - (paddings[0] + paddings[2]);
+      int width = box.width - (paddings[1] + paddings[3]);
+      int height = box.height - (paddings[0] + paddings[2]);
 
       if (layoutData.hasDecoratorPanel()) {
         final DecoratorPanel decPanel = layoutData.decoratorPanel;
@@ -249,8 +247,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
-          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
-              getFlowHeight(child)));
+          widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
         posLeft = left + (width / 2) - dim.getWidth() / 2;
@@ -258,8 +255,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       } else {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
-          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
-              getFlowHeight(child)));
+          widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
         posLeft = left + width - dim.getWidth();
@@ -283,8 +279,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
-          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
-              getFlowHeight(child)));
+          widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
         posTop = top + (height / 2) - dim.getHeight() / 2;
@@ -292,8 +287,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       } else {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
-          widgetSizes.put(child, dim = new Dimension(getFlowWidth(child),
-              getFlowHeight(child)));
+          widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
         posTop = top + height - dim.getHeight();

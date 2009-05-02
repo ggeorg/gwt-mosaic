@@ -60,6 +60,7 @@ import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -1129,27 +1130,19 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
    * mosaic.ui.client.layout.LayoutPanel)
    */
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    final int[] result = {0, 0};
-
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     try {
-      if (layoutPanel == null || !init(layoutPanel)) {
-        return result;
+      if (!(layoutPanel == null || !init(layoutPanel))) {
+        final Dimension d = computeLayoutSize(layoutPanel,
+            preferredWidthMeasure, preferredHeightMeasure);
+        return d;
       }
-
-      final Dimension d = computeLayoutSize(layoutPanel, preferredWidthMeasure,
-          preferredHeightMeasure);
-
-      result[0] = d.width;
-      result[1] = d.height;
-
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ".getPreferredSize(): "
           + e.getLocalizedMessage());
     }
-
-    return result;
+    return new Dimension();
   }
 
   /**
@@ -1231,12 +1224,12 @@ public final class FormLayout extends BaseLayout implements Serializable {
         return;
       }
 
-      final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
       final int left = paddings[3];
       final int top = paddings[0];
-      int width = box[0] - (paddings[1] + paddings[3]);
-      int height = box[1] - (paddings[0] + paddings[2]);
+      int width = box.width - (paddings[1] + paddings[3]);
+      int height = box.height - (paddings[0] + paddings[2]);
 
       int[] x = computeGridOrigins(layoutPanel, width, left, colSpecs,
           colWidgets, colGroupIndices, minimumWidthMeasure,
@@ -1245,8 +1238,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
           rowWidgets, rowGroupIndices, minimumHeightMeasure,
           preferredHeightMeasure);
 
-      runTwiceFlag = false;
-
       layoutComponents(layoutPanel, x, y);
 
     } catch (Exception e) {
@@ -1254,9 +1245,9 @@ public final class FormLayout extends BaseLayout implements Serializable {
       throw new RuntimeException(e);
     }
 
-    if (runTwice()) {
-      recalculate(componentSizeCache.minimumSizes);
-    }
+//    if (runTwice()) {
+//      recalculate(componentSizeCache.minimumSizes);
+//    }
 
   }
 
@@ -1376,7 +1367,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     maxWidth += paddings[1] + paddings[3];
     maxHeight += paddings[0] + paddings[2];
-    
+
     maxWidth += borders[1] + borders[3];
     maxHeight += borders[0] + borders[2];
 
@@ -1873,7 +1864,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       Dimension size = minimumSizes.get(widget);
       if (size == null) {
         if (UserAgent.isIE6()) {
-          size = new Dimension(getFlowWidth(widget), getFlowHeight(widget)); // widget.getMinimumSize();
+          size = WidgetHelper.getPreferredSize(widget); // widget.getMinimumSize();
         } else {
           size = new Dimension(DOM.toPixelSize(DOM.getStyleAttribute(
               widget.getElement(), "minWidth")),
@@ -1896,7 +1887,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
     Dimension getPreferredSize(Widget widget) {
       Dimension size = preferredSizes.get(widget);
       if (size == null) {
-        size = new Dimension(getFlowWidth(widget), getFlowHeight(widget));// widget.getPreferredSize();
+        size = WidgetHelper.getPreferredSize(widget);// widget.getPreferredSize();
         preferredSizes.put(widget, size);
       }
       return size;
@@ -1925,12 +1916,12 @@ public final class FormLayout extends BaseLayout implements Serializable {
    */
   public LayoutInfo getLayoutInfo(LayoutPanel parent) {
     initializeColAndRowWidgetLists();
-    int[] size = DOM.getBoxSize(parent.getElement());
+    final Dimension size = WidgetHelper.getOffsetSize(parent);
 
     // FIXME
     // Insets insets = parent.getInsets();
-    int totalWidth = size[0];// - insets.left - insets.right;
-    int totalHeight = size[1];// - insets.top - insets.bottom;
+    int totalWidth = size.width;// - insets.left - insets.right;
+    int totalHeight = size.height;// - insets.top - insets.bottom;
 
     int[] x = computeGridOrigins(parent, totalWidth, 0/* insets.left */,
         colSpecs, colWidgets, colGroupIndices, minimumWidthMeasure,
@@ -2025,8 +2016,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   // GWT Mosaic (NEW CODE) ************************************************
 
-  private boolean runTwiceFlag;
-
   // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
   // Dimension>();
 
@@ -2041,7 +2030,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
     if (initialized) {
       return true;
     }
-    
+
     super.init(layoutPanel);
 
     constraintMap.clear();
@@ -2058,6 +2047,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   @Override
   public boolean runTwice() {
-    return runTwiceFlag;
+    return false;
   }
 }
