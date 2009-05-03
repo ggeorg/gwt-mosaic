@@ -184,9 +184,10 @@ public class WidgetHelper {
             DOM.getPaddingSizes(elem));
         return;
       }
-    } else if (width == -1) {
-      widget.setWidth("auto");
     }
+    // else if (width == -1) {
+    // widget.setWidth("auto");
+    // }
 
     if (height >= 0) {
       widget.setHeight(height + "px");
@@ -197,15 +198,15 @@ public class WidgetHelper {
         final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
         widget.setHeight(Math.max(0, fixedHeight) + "px");
       }
-    } else if (height == -1) {
-      widget.setHeight("auto");
     }
+    // else if (height == -1) {
+    // widget.setHeight("auto");
+    // }
 
     if (width != widget.getOffsetWidth()) {
       System.out.println(elem.getTagName() + " :: " + widget.getOffsetWidth()
           + "x" + widget.getOffsetHeight() + " ? " + width + "x" + height);
     }
-
   }
 
   private static void setSize(Widget widget, int width, int height, int[] b,
@@ -219,9 +220,10 @@ public class WidgetHelper {
         final int fixedWidth = DOM.fixQuirks(elem, width - w, 'w');
         widget.setWidth(Math.max(0, fixedWidth) + "px");
       }
-    } else if (width == -1) {
-      widget.setWidth("auto");
     }
+    // else if (width == -1) {
+    // widget.setWidth("auto");
+    // }
 
     if (height >= 0) {
       widget.setHeight(height + "px");
@@ -230,9 +232,10 @@ public class WidgetHelper {
         final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
         widget.setHeight(Math.max(0, fixedHeight) + "px");
       }
-    } else if (height == -1) {
-      widget.setHeight("auto");
     }
+    // else if (height == -1) {
+    // widget.setHeight("auto");
+    // }
 
     if (width != widget.getOffsetWidth()) {
       System.out.println(elem.getTagName() + " :: " + widget.getOffsetWidth()
@@ -304,26 +307,24 @@ public class WidgetHelper {
       return lp.getPreferredSize();
     } else {
       final Element elem = widget.getElement();
-      
-      final String w = widget.getElement().getStyle().getProperty("width");
-      final String h = widget.getElement().getStyle().getProperty("height");
 
-      final String prefWidth = DOM.getElementProperty(elem, "prefWidth");
-      final String prefHeight = DOM.getElementProperty(elem, "prefHeight");
-      
+      final int prefWidth = DOM.getElementPropertyInt(elem, "prefWidth");
+      final int prefHeight = DOM.getElementPropertyInt(elem, "prefHeight");
+
       changeToStaticPositioning(elem);
 
-      if (prefWidth == null) {
-        DOM.setElementProperty(elem, "prefWidth", w);
-      } else {
+      if (prefWidth == 0) {
+        DOM.setElementPropertyInt(elem, "prefWidth", widget.getOffsetWidth());
+      } else if (prefWidth != widget.getOffsetWidth()) {
+        DOM.setElementPropertyInt(elem, "prefWidth", widget.getOffsetWidth());
         widget.setWidth("0px");
         widget.getOffsetWidth();
         widget.setWidth("auto");
       }
-
-      if (prefHeight == null) {
-        DOM.setElementProperty(elem, "prefHeight", h);
-      } else {
+      if (prefHeight == 0) {
+        DOM.setElementPropertyInt(elem, "prefHeight", widget.getOffsetHeight());
+      } else if (prefHeight != widget.getOffsetHeight()) {
+        DOM.setElementPropertyInt(elem, "prefHeight", widget.getOffsetHeight());
         widget.setHeight("0px");
         widget.getOffsetHeight();
         widget.setHeight("auto");
