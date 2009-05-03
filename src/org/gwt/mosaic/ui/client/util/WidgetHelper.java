@@ -304,28 +304,31 @@ public class WidgetHelper {
       return lp.getPreferredSize();
     } else {
       final Element elem = widget.getElement();
-
+      
       final String w = widget.getElement().getStyle().getProperty("width");
-      final String prefWidth = DOM.getElementProperty(elem, "prefWidth");
-      
-      if (prefWidth == null) {
-        DOM.setElementProperty(elem, "prefWidth", w);
-        widget.setWidth(w);
-      } else {
-        widget.setWidth("auto");
-      }
-      
       final String h = widget.getElement().getStyle().getProperty("height");
+
+      final String prefWidth = DOM.getElementProperty(elem, "prefWidth");
       final String prefHeight = DOM.getElementProperty(elem, "prefHeight");
       
+      changeToStaticPositioning(elem);
+
+      if (prefWidth == null) {
+        DOM.setElementProperty(elem, "prefWidth", w);
+      } else {
+        widget.setWidth("0px");
+        widget.getOffsetWidth();
+        widget.setWidth("auto");
+      }
+
       if (prefHeight == null) {
         DOM.setElementProperty(elem, "prefHeight", h);
-        widget.setHeight(h);
       } else {
+        widget.setHeight("0px");
+        widget.getOffsetHeight();
         widget.setHeight("auto");
       }
 
-      changeToStaticPositioning(elem);
       return getOffsetSize(widget);
     }
   }

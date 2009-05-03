@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
@@ -137,7 +138,7 @@ public class CwSliderBar extends ContentWidget {
 
     // SliderBar implements ResizableWidget
     WidgetWrapper w = new WidgetWrapper(mainSliderBar);
-    mainSliderBar.setWidth("100%");
+    mainSliderBar.setWidth("99%");
     w.setHeight("100px");
     layoutPanel.add(w, new BoxLayoutData(1.0, 64));
 

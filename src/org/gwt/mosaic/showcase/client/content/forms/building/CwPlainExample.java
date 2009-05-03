@@ -50,12 +50,10 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -216,8 +214,7 @@ public class CwPlainExample extends ContentWidget {
   private Widget newLabel(String string) {
     final Label label = new Label(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
-        HasAlignment.ALIGN_MIDDLE);
+    return label;
   }
   
 }

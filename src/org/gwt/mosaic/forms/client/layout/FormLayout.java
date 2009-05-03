@@ -56,7 +56,6 @@ import java.util.Set;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -1245,9 +1244,9 @@ public final class FormLayout extends BaseLayout implements Serializable {
       throw new RuntimeException(e);
     }
 
-//    if (runTwice()) {
-//      recalculate(componentSizeCache.minimumSizes);
-//    }
+    // if (runTwice()) {
+    // recalculate(componentSizeCache.minimumSizes);
+    // }
 
   }
 
@@ -1863,14 +1862,17 @@ public final class FormLayout extends BaseLayout implements Serializable {
     Dimension getMinimumSize(Widget widget) {
       Dimension size = minimumSizes.get(widget);
       if (size == null) {
-        if (UserAgent.isIE6()) {
-          size = WidgetHelper.getPreferredSize(widget); // widget.getMinimumSize();
-        } else {
-          size = new Dimension(DOM.toPixelSize(DOM.getStyleAttribute(
-              widget.getElement(), "minWidth")),
-              DOM.toPixelSize(DOM.getStyleAttribute(widget.getElement(),
-                  "minHeight")));
-        }
+//        if (UserAgent.isIE6()) {
+//          size = WidgetHelper.getPreferredSize(widget); // widget.getMinimumSize();
+//        } else {
+          final String minWidth = DOM.getStyleAttribute(widget.getElement(),
+              "minWidth");
+          final String minHeight = DOM.getStyleAttribute(widget.getElement(),
+              "minHeight");
+          size = new Dimension(
+              minWidth == null ? 1 : DOM.toPixelSize(minWidth),
+              minHeight == null ? 1 : DOM.toPixelSize(minHeight));
+//        }
         minimumSizes.put(widget, size);
       }
       return size;
@@ -2047,6 +2049,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   @Override
   public boolean runTwice() {
-    return false;
+    return true; // Safari
   }
 }

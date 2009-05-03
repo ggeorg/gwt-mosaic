@@ -45,6 +45,7 @@
 package org.gwt.mosaic.core.client.util;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.FontMetrics;
 
 /**
@@ -186,9 +187,9 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
   private DialogBaseUnits computeGlobalDialogBaseUnits() {
     final FontMetrics metrics = new FontMetrics();
     DOM.setStyleAttribute(metrics.getElement(), "whiteSpace", "nowrap");
-    int[] boxSize = metrics.stringBoxSize(averageCharWidthTestString);
-    return new DialogBaseUnits(
-        boxSize[0] / averageCharWidthTestString.length(), boxSize[1]);
+    final Dimension boxSize = metrics.stringBoxSize(averageCharWidthTestString);
+    return new DialogBaseUnits(boxSize.width
+        / averageCharWidthTestString.length(), boxSize.height);
   }
 
   // Helper Code ************************************************************

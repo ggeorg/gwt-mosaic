@@ -16,16 +16,13 @@
 package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.Window;
 
 /**
  * Provides helper methods for DOM elements.
@@ -124,8 +121,8 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   /**
    * Get's the elements <code>clientHeight</code> and <code>clientWidth</code>
-   * plus the size of the borders and margins even if {@code visibility} is
-   * set to {@code false}.
+   * plus the size of the borders and margins even if {@code visibility} is set
+   * to {@code false}.
    * <p>
    * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
    * 
@@ -137,7 +134,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     final int[] b = getBorderSizes(elem);
     final Dimension c = getClientSize(elem);
     c.width += (b[1] + b[3]) + (m[1] + m[3]);
-    c.height += (b[0] + b[2]) + (m[1] + m[3]);
+    c.height += (b[0] + b[2]) + (m[0] + m[2]);
     return c;
   }
 
@@ -242,31 +239,29 @@ public class DOM extends com.google.gwt.user.client.DOM {
     return toPixelSize("1in");
   }
 
-  public static int[] getStringBoxSize(Element div, final String str) {
+  public static Dimension getStringBoxSize(Element span, final String str) {
     final BodyElement body = Document.get().getBody();
-    div.setInnerText(str);
-    setStyleAttribute(div, "left", "");
-    setStyleAttribute(div, "top", "");
-    setStyleAttribute(div, "position", "");
-    setStyleAttribute(div, "visibility", "hidden");
-    if (UserAgent.isIE6()) {
-      final WidgetWrapper wrapper = new WidgetWrapper(new SimplePanel(div) {
-      }, HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_MIDDLE);
-      div = wrapper.getElement();
-    } else {
-      setStyleAttribute(div, "display", "table");
-    }
+    span.setInnerText(str);
+    setStyleAttribute(span, "left", "");
+    setStyleAttribute(span, "top", "");
+    setStyleAttribute(span, "position", "absolute");
+    setStyleAttribute(span, "visibility", "hidden");
+
     // force "auto" width
-    setStyleAttribute(div, "width", "0px");
-    setStyleAttribute(div, "height", "0px");
-    div.getOffsetWidth();
-    setStyleAttribute(div, "width", "auto");
-    setStyleAttribute(div, "height", "auto");
+    setStyleAttribute(span, "width", "0px");
+    setStyleAttribute(span, "height", "0px");
+    
+    span.getOffsetWidth();
+    span.getOffsetHeight();
+    
+    setStyleAttribute(span, "width", "auto");
+    setStyleAttribute(span, "height", "auto");
+    
     try {
-      body.appendChild(div);
-      return getBoxSize(div).toArray();
+      body.appendChild(span);
+      return getBoxSize(span);
     } finally {
-      body.removeChild(div);
+      body.removeChild(span);
     }
   }
 
@@ -361,14 +356,15 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   public static int toPixelSize(final String width) {
     if (toPixelSizeTestElem == null) {
-      toPixelSizeTestElem = DOM.createDiv();
+      toPixelSizeTestElem = DOM.createSpan();
       setStyleAttribute(toPixelSizeTestElem, "left", "");
       setStyleAttribute(toPixelSizeTestElem, "top", "");
-      setStyleAttribute(toPixelSizeTestElem, "position", "");
+      setStyleAttribute(toPixelSizeTestElem, "position", "absolute"); // Safari
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    setStyleAttribute(toPixelSizeTestElem, "width", width);
+    setStyleAttribute(toPixelSizeTestElem, "width", width == null ? "0px"
+        : width);
 
     return getBoxSize(toPixelSizeTestElem).width;
   }
