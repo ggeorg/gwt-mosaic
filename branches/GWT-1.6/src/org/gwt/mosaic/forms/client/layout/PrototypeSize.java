@@ -129,7 +129,7 @@ public final class PrototypeSize implements Size, Serializable {
       FormLayout.Measure defaultMeasure) {
     final FontMetrics metrics = new FontMetrics();
     DOM.setStyleAttribute(metrics.getElement(), "whiteSpace", "nowrap");
-    return metrics.stringBoxSize(prototype)[0];
+    return metrics.stringBoxSize(prototype).width;
   }
 
   /**

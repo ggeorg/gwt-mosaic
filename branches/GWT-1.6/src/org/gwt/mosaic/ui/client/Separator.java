@@ -15,15 +15,14 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * 
@@ -50,7 +49,7 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
     final Label l = new Label(text);
     l.setWordWrap(false);
     
-    final HTML hr = new HTML("<hr></hr>");
+    final SimplePanel hr = new SimplePanel();
     
     if (this.align == Separator.ALIGN_LEFT) {
       layoutPanel.add(l);
