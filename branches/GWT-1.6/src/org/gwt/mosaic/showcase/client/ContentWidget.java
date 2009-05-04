@@ -17,6 +17,18 @@
  */
 package org.gwt.mosaic.showcase.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -34,17 +46,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
-
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A widget used to show gwt-mosaic examples in the ContentPanel. It includes a
@@ -228,7 +229,8 @@ public abstract class ContentWidget extends LayoutPanel implements
       }
 
       public void onResize(int width, int height) {
-        vPanel.invalidate();
+        WidgetHelper.invalidate(descWidget);
+        WidgetHelper.layout((Widget) WidgetHelper.getParent(descWidget));
       }
     });
 

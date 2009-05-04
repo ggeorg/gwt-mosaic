@@ -18,8 +18,11 @@ package org.gwt.mosaic.showcase.client.content.layout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,25 +32,25 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
-public class CwFillLayout extends ContentWidget {
+public class CwFillLayoutCentered extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwFillLayout(CwConstants constants) {
+  public CwFillLayoutCentered(CwConstants constants) {
     super(constants);
   }
 
   @Override
   public String getDescription() {
-    return "FillLayout description";
+    return "The FillLayout with a centered alignment.";
   }
 
   @Override
   public String getName() {
-    return "FillLayout";
+    return "Centered";
   }
 
   /**
@@ -58,9 +61,15 @@ public class CwFillLayout extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets, default is FillLayout
     final LayoutPanel layoutPanel = new LayoutPanel();
-    
+
     final Image img = new Image("MeteoraGreece.JPG");
     layoutPanel.add(img);
+    
+    final FillLayout layout = (FillLayout) layoutPanel.getLayout();
+    layout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    layout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    
+    img.setPixelSize(512, 384);
 
     return layoutPanel;
   }

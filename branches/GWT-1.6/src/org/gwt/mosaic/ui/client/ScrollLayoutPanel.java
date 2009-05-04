@@ -28,10 +28,8 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListenerWrapper;
 import com.google.gwt.user.client.ui.ScrollListener;
-import com.google.gwt.user.client.ui.ScrollListenerCollection;
 import com.google.gwt.user.client.ui.SourcesScrollEvents;
 import com.google.gwt.user.client.ui.UIObject;
 
