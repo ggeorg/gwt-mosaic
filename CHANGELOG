@@ -1,9 +1,23 @@
+Change log for v0.2.0-rc3
+================================
+
+ - More FillLayout demos
+ - Layout management update
+ - Separator CSS changes
+ - gwt-dnd 2.6.0->2.6.2
+ - Vitali Lovich <vlovich@gmail.com>'s patch (part I) for LayoutPanel
+ - GWT Incubator gen2 TimePicker
+ - port to GWT 1.6 (part III)
+
 Change log for v0.2.0-rc1
 ================================
 
- - port to GWT 1.6
- 
- TODO
+ - port to GWT 1.6 (part II)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part I)
 
 Change log for v0.1.9
 ================================
