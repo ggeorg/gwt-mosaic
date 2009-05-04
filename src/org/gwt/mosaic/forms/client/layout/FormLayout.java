@@ -1369,6 +1369,10 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     maxWidth += borders[1] + borders[3];
     maxHeight += borders[0] + borders[2];
+    
+    // workaround for Safari
+    maxWidth += 2;
+    maxHeight += 2;
 
     return new Dimension(maxWidth, maxHeight);
   }
