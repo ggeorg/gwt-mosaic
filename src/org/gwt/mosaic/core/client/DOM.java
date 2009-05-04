@@ -16,17 +16,13 @@
 package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.Window;
 
 /**
  * Provides helper methods for DOM elements.
@@ -46,12 +42,14 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   public static final int OTHER_KEY_RIGHT = 63235;
 
+  private static Element toPixelSizeTestElem = null;
+
   /**
    * If using standards mode, and the body (i.e. RootPanel.get()) is going to be
    * your boundary panel, you'll want to ensure that the body actually has
    * height; with only absolute positioned content, the height remains 0px.
    * Usually setting 100% height on the HTML and BODY elements does the trick.
-   * 
+   * <p>
    * html,body { height: 100%; }
    */
   static {
@@ -62,7 +60,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
         Element elem = Document.get().getElementsByTagName("html").getItem(0).cast();
         elem.getStyle().setProperty("height", "100%");
       }
-      BodyElement body = Document.get().getBody();
+      BodyElement body = doc.getBody();
       body.getStyle().setProperty("height", "100%");
     }
   }
@@ -75,7 +73,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @param side the dimension ('h' or 'w') to fix (defaults to 'h')
    * @return the fixed dimension
    */
-  private static int fixQuirks(Element elem, int dim, char side) {
+  public static int fixQuirks(Element elem, int dim, char side) {
     int i1 = 0, i2 = 2;
     if (side == 'w') {
       i1 = 1;
@@ -123,30 +121,21 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   /**
    * Get's the elements <code>clientHeight</code> and <code>clientWidth</code>
-   * plus the size of the borders.
+   * plus the size of the borders and margins even if {@code visibility} is set
+   * to {@code false}.
+   * <p>
+   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
    * 
    * @param elem the element to get the size of
    * @return an array of width and height
    */
-  public static int[] getBoxSize(Element elem) {
-    int[] size = new int[2];
-
+  public static Dimension getBoxSize(Element elem) {
+    final int[] m = getMarginSizes(elem);
     final int[] b = getBorderSizes(elem);
-    final int[] c = getClientSize(elem);
-    size[0] = c[0] + (b[1] + b[3]);
-    size[1] = c[1] + (b[0] + b[2]);
-
-    return size;
-  }
-
-  /**
-   * Gets the cell index of a cell within a table row.
-   * 
-   * @param td the cell element
-   * @return the cell index
-   */
-  public static int getCellIndex(Element td) {
-    return impl.getCellIndex(td);
+    final Dimension c = getClientSize(elem);
+    c.width += (b[1] + b[3]) + (m[1] + m[3]);
+    c.height += (b[0] + b[2]) + (m[0] + m[2]);
+    return c;
   }
 
   /**
@@ -167,70 +156,39 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }-*/;
 
   /**
-   * Get's the elements <code>clientHeight</code> and <code>clientWidth</code>.
-   * <code>clientHeight/Width</code> is a non-standard, HTML-specific property
-   * introduced in the IE object model.
+   * Get's the elements {@code clientHeight} and {@code clientWidth}.
+   * <p>
+   * Both {@code clientHeight} and {@code clientWidth} are a non-standard,
+   * HTML-specific property introduced in the IE object model.
+   * <p>
+   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
    * 
    * @param elem the element to get the size of
    * @return an array of width and height
    */
-  public static int[] getClientSize(Element elem) {
-    int[] size = new int[2];
-
+  public static Dimension getClientSize(Element elem) {
     if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
-
-    size[0] = getClientWidth(elem);
-    size[1] = getClientHeight(elem);
-
-    return size;
+    return new Dimension(getClientWidth(elem), getClientHeight(elem));
   }
 
   /**
    * Returns the inner width of an element in pixels, including padding but not
    * the horizontal scrollbar width, border, or margin.
    * <p>
-   * <code>clientWidth</code> can be calculated as CSS width + CSS padding -
-   * width of vertical scrollbar (if present).
+   * {@code clientWidth} can be calculated as CSS width + CSS padding - width of
+   * vertical scrollbar (if present).
    * <p>
    * NOTE: Not part of any W3C specification.
    * 
-   * @param elem the element to get the <code>clientWidth</code> of
-   * @return the <code>clientWidth</code> of the given element
+   * @param elem the element to get the {@code clientWidth} of
+   * @return the {@code clientWidth} of the given element
    */
   private native static int getClientWidth(Element elem)
   /*-{
     return elem.clientWidth;
   }-*/;
-
-  /**
-   * Returns the height of the document.
-   * 
-   * @return the height of the actual document (which includes the body and its
-   *         margin).
-   */
-  public static native int getDocumentHeight()
-  /*-{
-    var scrollHeight = (document.compatMode != 'CSS1Compat') ?
-      document.body.scrollHeight : document.documentElement.scrollHeight;
-      
-    return Math.max(scrollHeight, @com.google.gwt.user.client.Window::getClientHeight()()); 
-  }-*/;;
-
-  /**
-   * Returns the width of the document.
-   * 
-   * @return the width of the actual document (which includes the body and its
-   *         margin).
-   */
-  public static native int getDocumentWidth()
-  /*-{
-    var scrollWidth = (document.compatMode != 'CSS1Compat') ?
-      document.body.scrollWidth : document.documentElement.scrollWidth;
-   
-    return Math.max(scrollWidth, @com.google.gwt.user.client.Window::getClientWidth()());
-  }-*/;;
 
   /**
    * Get the CSS margin size of the element passed.
@@ -253,7 +211,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
     size[3] = parseInt(getStyleAttribute(elem, "marginLeft"), 10, 0);
 
     return size;
-  };
+  }
 
   public static int[] getPaddingSizes(Element elem) {
     int[] size = new int[4];
@@ -273,13 +231,38 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
-   * Gets the row index of a row element.
+   * Returns the screen resolution in dots-per-inch.
    * 
-   * @param tr the row element
-   * @return the row index
+   * @return the screen resolution, in dots-per-inch
    */
-  public static int getRowIndex(Element tr) {
-    return getElementPropertyInt(tr, "rowIndex");
+  public static int getScreenResolution() {
+    return toPixelSize("1in");
+  }
+
+  public static Dimension getStringBoxSize(Element span, final String str) {
+    final BodyElement body = Document.get().getBody();
+    span.setInnerText(str);
+    setStyleAttribute(span, "left", "");
+    setStyleAttribute(span, "top", "");
+    setStyleAttribute(span, "position", "absolute");
+    setStyleAttribute(span, "visibility", "hidden");
+
+    // force "auto" width
+    setStyleAttribute(span, "width", "0px");
+    setStyleAttribute(span, "height", "0px");
+    
+    span.getOffsetWidth();
+    span.getOffsetHeight();
+    
+    setStyleAttribute(span, "width", "auto");
+    setStyleAttribute(span, "height", "auto");
+    
+    try {
+      body.appendChild(span);
+      return getBoxSize(span);
+    } finally {
+      body.removeChild(span);
+    }
   }
 
   /**
@@ -291,22 +274,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
    */
   public static String getStyleAttribute(Element elem, String attr) {
     return impl.getStyleAttribute(elem, attr);
-  }
-
-  public static boolean isArrowKey(int code) {
-    switch (code) {
-      case OTHER_KEY_DOWN:
-      case OTHER_KEY_RIGHT:
-      case OTHER_KEY_UP:
-      case OTHER_KEY_LEFT:
-      case KeyboardListener.KEY_DOWN:
-      case KeyboardListener.KEY_RIGHT:
-      case KeyboardListener.KEY_UP:
-      case KeyboardListener.KEY_LEFT:
-        return true;
-      default:
-        return false;
-    }
   }
 
   public static boolean isVisible(Element element) {
@@ -371,76 +338,9 @@ public class DOM extends com.google.gwt.user.client.DOM {
    *          <code>null</code>
    * @return the parsed value
    */
-  protected static int parseInt(String str, int radix, int defaultValue) {
-    Integer result = parseInt(str, radix);
+  private static int parseInt(String str, int radix, int defaultValue) {
+    final Integer result = parseInt(str, radix);
     return result == null ? defaultValue : result;
-  }
-
-  /**
-   * Gets the first child. You must *KNOW* that the first child exists and is an
-   * element to use this method safely.
-   */
-  public static native Element rawFirstChild(Element elem)
-  /*-{
-    return elem.firstChild;
-  }-*/;
-
-  /**
-   * Sets the height of the element based on the border and padding size of the
-   * element.
-   * 
-   * @param elem the elements to have it's height set
-   * @param height the height that you want it the element set to
-   * @return the new height, fixed for borders, paddings and IE QuirksMode
-   */
-  public static int setContentAreaHeight(Element elem, int height) {
-    final int[] b = getBorderSizes(elem);
-    final int[] p = getPaddingSizes(elem);
-    final int h = b[0] + b[2] + p[0] + p[2];
-    final int fixedHeight = fixQuirks(elem, height - h, 'h');
-    elem.getStyle().setPropertyPx("height", Math.max(0, fixedHeight));
-    // Intrinsic height?
-    if (height != elem.getOffsetHeight()) {
-      elem.getStyle().setPropertyPx("height",
-          Math.max(0, fixedHeight + (height - elem.getOffsetHeight())));
-      if (height != elem.getOffsetHeight()) {
-        // System.out.println(elem + " " + DOM.isVisible(elem));
-        // System.out.println("Height: " + height + " ? " +
-        // elem.getOffsetHeight());
-        elem.getStyle().setPropertyPx("height", Math.max(0, height));
-        // System.out.println(" : " + elem.getOffsetHeight());
-      }
-    }
-    return height;
-  }
-
-  /**
-   * Sets the width of the element based on the border and padding size of the
-   * element.
-   * 
-   * @param elem the elements to have it's width set
-   * @param width the width that you want it the element set to
-   * @return the new width, fixed for borders, paddings and IE QuirksMode
-   */
-  public static int setContentAreaWidth(Element elem, int width) {
-    final int[] b = getBorderSizes(elem);
-    final int[] p = getPaddingSizes(elem);
-    final int w = b[1] + b[3] + p[1] + p[3];
-    final int fixedWidth = fixQuirks(elem, width - w, 'w');
-    elem.getStyle().setPropertyPx("width", Math.max(0, fixedWidth));
-    // Intrinsic width?
-    if (width != elem.getOffsetWidth()) {
-      elem.getStyle().setPropertyPx("width",
-          Math.max(0, fixedWidth + (width - elem.getOffsetWidth())));
-      if (width != elem.getOffsetWidth()) {
-        // System.out.println(elem + " " + DOM.isVisible(elem));
-        // System.out.println("Width: " + width + " ? " +
-        // elem.getOffsetWidth());
-        elem.getStyle().setPropertyPx("width", Math.max(0, width));
-        // System.out.println(" : " + elem.getOffsetWidth());
-      }
-    }
-    return width;
   }
 
   /**
@@ -454,87 +354,19 @@ public class DOM extends com.google.gwt.user.client.DOM {
     impl.setStyleAttribute(elem, attr, value);
   }
 
-  /**
-   * Normalized key codes. Also switches KEY_RIGHT and KEY_LEFT in RTL
-   * languages.
-   */
-  public static int standardizeKeycode(int code) {
-
-    switch (code) {
-      case OTHER_KEY_DOWN:
-        code = KeyboardListener.KEY_DOWN;
-        break;
-      case OTHER_KEY_RIGHT:
-        code = KeyboardListener.KEY_RIGHT;
-        break;
-      case OTHER_KEY_UP:
-        code = KeyboardListener.KEY_UP;
-        break;
-      case OTHER_KEY_LEFT:
-        code = KeyboardListener.KEY_LEFT;
-        break;
-    }
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      if (code == KeyboardListener.KEY_RIGHT) {
-        code = KeyboardListener.KEY_LEFT;
-      } else if (code == KeyboardListener.KEY_LEFT) {
-        code = KeyboardListener.KEY_RIGHT;
-      }
-    }
-    return code;
-  }
-
-  /**
-   * Returns the screen resolution in dots-per-inch.
-   * 
-   * @return the screen resolution, in dots-per-inch
-   */
-  public static int getScreenResolution() {
-    return toPixelSize("1in");
-  }
-
-  private static Element toPixelSizeTestElem = null;
-
   public static int toPixelSize(final String width) {
     if (toPixelSizeTestElem == null) {
-      toPixelSizeTestElem = DOM.createDiv();
+      toPixelSizeTestElem = DOM.createSpan();
       setStyleAttribute(toPixelSizeTestElem, "left", "");
       setStyleAttribute(toPixelSizeTestElem, "top", "");
-      setStyleAttribute(toPixelSizeTestElem, "position", "");
+      setStyleAttribute(toPixelSizeTestElem, "position", "absolute"); // Safari
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    setStyleAttribute(toPixelSizeTestElem, "width", width);
+    setStyleAttribute(toPixelSizeTestElem, "width", width == null ? "0px"
+        : width);
 
-    return getBoxSize(toPixelSizeTestElem)[0];
-  }
-
-  public static int[] getStringBoxSize(Element div, final String str) {
-    final BodyElement body = Document.get().getBody();
-    div.setInnerText(str);
-    setStyleAttribute(div, "left", "");
-    setStyleAttribute(div, "top", "");
-    setStyleAttribute(div, "position", "");
-    setStyleAttribute(div, "visibility", "hidden");
-    if (UserAgent.isIE6()) {
-      final WidgetWrapper wrapper = new WidgetWrapper(new SimplePanel(div) {
-      }, HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_MIDDLE);
-      div = wrapper.getElement();
-    } else {
-      setStyleAttribute(div, "display", "table");
-    }
-    // force "auto" width
-    setStyleAttribute(div, "width", "0px");
-    setStyleAttribute(div, "height", "0px");
-    div.getOffsetWidth();
-    setStyleAttribute(div, "width", "auto");
-    setStyleAttribute(div, "height", "auto");
-    try {
-      body.appendChild(div);
-      return getBoxSize(div);
-    } finally {
-      body.removeChild(div);
-    }
+    return getBoxSize(toPixelSizeTestElem).width;
   }
 
 }

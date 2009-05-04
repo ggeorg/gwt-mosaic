@@ -21,8 +21,6 @@ import org.gwt.mosaic.ui.client.ComboBoxBase;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
@@ -59,28 +57,6 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
     super();
 
     this.datePicker = datePicker;
-
-    super.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-          case KEY_UP:
-            break;
-          default:
-            updateTimer.schedule(333);
-        }
-      }
-    });
 
     datePicker.addChangeHandler(new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {

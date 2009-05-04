@@ -1,3 +1,24 @@
+Change log for v0.2.0-rc3
+================================
+
+ - More FillLayout demos
+ - Layout management update
+ - Separator CSS changes
+ - gwt-dnd 2.6.0->2.6.2
+ - Vitali Lovich <vlovich@gmail.com>'s patch (part I) for LayoutPanel
+ - GWT Incubator gen2 TimePicker
+ - port to GWT 1.6 (part III)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part II)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part I)
+
 Change log for v0.1.9
 ================================
 
@@ -38,36 +59,6 @@ Change log for v0.1.9
 binding/source/detail?r=43
  - Fix for: Issue 35: Cannot use getWidgetIndex or  remove(Widget widget) in TabLayoutPanel
  - Actions API update because of layout changes  & Core modele cleanup
-
-Change log for v0.1.8
-================================
-
- - Actions API: Missing onUnBind() call in ActionBindings.unbind() added (bug fix) &
- 	more new CommandActions.
- - Fix for: http://groups.google.com/group/gwt-mosaic/browse_thread/thread/70739de5684bad14
- - AbsoluteLayout: new layout manager, thanks to Johan Rydberg 
- - Alignment support for FillLayout, BoxLayout and GridLayout.
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwBoxLayoutTest_Horizontal
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwBoxLayoutTest_Vertical
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwBoxLayoutTest_Histogram
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwGridLayout
- - Fix for: Issue 34 : Unable to get index position of tabs in TabLayoutPanel.
- - Fix for: Issue 11 : Content of MessageBox doesn't fit into the MessageBox in 
- 	IE6, Safari and Opera.
- - ListBox: intervalRemoved() bug fixed & changeListener improvements
- - DefaultListModel improvements
- - New widget: LoadingPanel
- 	http://groups.google.com/group/gwt-mosaic/browse_thread/thread/cdb4cdb0376031f9
- - Fix for: Issue 39 : [Patch] ToolButton as checkbox or radio not working
- - gwt-beans-binding-0.2.3 upgrade from 0.2.2 (this upgrade will fix 
- 	issue 36, GWT Mosaic can be compiled now with GWT 1.6)
- - FormLayout very powerful layout manager port (optional module)
- 	23 Showcase demos are ported, see Forms section:
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwQuickStartExample
- 	The old forms API is moved to org.gwt.mosaic.ui.client.layouts.builder package.
- - New Contrib module with two contributions:
- 	1. MessageTextBox, thanks to Daniele Renda
- 	2. PopupMenu with addDisabledItem(), thanks to Alejandro D. Garin
 
 Change log for v0.1.7
 ================================

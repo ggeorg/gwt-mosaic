@@ -15,20 +15,37 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelEvent;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -39,7 +56,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public class Caption extends LayoutComposite implements HasHTML,
-    SourcesMouseEvents {
+    SourcesMouseEvents, HasClickHandlers, HasDoubleClickHandlers,
+    HasAllMouseHandlers {
   public enum CaptionRegion {
     LEFT, RIGHT
   }
@@ -54,12 +72,6 @@ public class Caption extends LayoutComposite implements HasHTML,
    */
   public static final CaptionImages IMAGES = (CaptionImages) GWT.create(CaptionImages.class);
 
-  private MouseListenerCollection mouseListeners;
-
-  private ClickListenerCollection clickListeners;
-
-  private DoubleClickListenerCollection dblClickListeners;
-
   private final HTML caption = new HTML();
 
   private HorizontalPanel leftIconBox, rightIconBox;
@@ -69,7 +81,7 @@ public class Caption extends LayoutComposite implements HasHTML,
   }
 
   public Caption(String text, boolean asHTML) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout());
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
@@ -97,8 +109,8 @@ public class Caption extends LayoutComposite implements HasHTML,
         leftIconBox = new HorizontalPanel();
         leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
         leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL),
-            0);
+        getLayoutPanel().insert(leftIconBox,
+            new BoxLayoutData(FillStyle.VERTICAL), 0);
       }
       leftIconBox.add(w);
     } else {
@@ -106,7 +118,8 @@ public class Caption extends LayoutComposite implements HasHTML,
         rightIconBox = new HorizontalPanel();
         rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
         rightIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().add(rightIconBox, new BoxLayoutData(FillStyle.VERTICAL));
+        getLayoutPanel().add(rightIconBox,
+            new BoxLayoutData(FillStyle.VERTICAL));
       }
       if (rightIconBox.getWidgetCount() > 0) {
         rightIconBox.insert(w, 0);
@@ -114,30 +127,41 @@ public class Caption extends LayoutComposite implements HasHTML,
         rightIconBox.add(w);
       }
     }
+    invalidate();
   }
 
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return addDomHandler(handler, ClickEvent.getType());
+  }
+
+  /**
+   * @deprecated Use {@link #addClickHandler} instead
+   */
+  @Deprecated
   public void addClickListener(ClickListener listener) {
-    if (clickListeners == null) {
-      clickListeners = new ClickListenerCollection();
-      sinkEvents(Event.ONCLICK);
-    }
-    clickListeners.add(listener);
+    ListenerWrapper.WrappedClickListener.add(this, listener);
   }
 
+  public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+    return addDomHandler(handler, DoubleClickEvent.getType());
+  }
+
+  /**
+   * @deprecated Use {@link #addClickHandler} instead
+   */
+  @Deprecated
   public void addDoubleClickListener(DoubleClickListener listener) {
-    if (dblClickListeners == null) {
-      dblClickListeners = new DoubleClickListenerCollection();
-      sinkEvents(Event.ONDBLCLICK);
-    }
-    dblClickListeners.add(listener);
+    ListenerWrapper.WrappedDoubleClickListener.add(this, listener);
   }
 
+  /**
+   * @deprecated Use {@link #addMouseOverHandler} {@link #addMouseMoveHandler},
+   *             {@link #addMouseDownHandler}, {@link #addMouseUpHandler} and
+   *             {@link #addMouseOutHandler} instead
+   */
+  @Deprecated
   public void addMouseListener(MouseListener listener) {
-    if (mouseListeners == null) {
-      mouseListeners = new MouseListenerCollection();
-      sinkEvents(Event.MOUSEEVENTS);
-    }
-    mouseListeners.add(listener);
+    ListenerWrapper.WrappedMouseListener.add(this, listener);
   }
 
   public void clear() {
@@ -147,6 +171,7 @@ public class Caption extends LayoutComposite implements HasHTML,
     if (rightIconBox != null) {
       rightIconBox.clear();
     }
+    invalidate();
   }
 
   /*
@@ -184,31 +209,6 @@ public class Caption extends LayoutComposite implements HasHTML,
     return null;
   }
 
-  @Override
-  public void onBrowserEvent(Event event) {
-    switch (DOM.eventGetType(event)) {
-      case Event.ONMOUSEDOWN:
-      case Event.ONMOUSEUP:
-      case Event.ONMOUSEMOVE:
-      case Event.ONMOUSEOVER:
-      case Event.ONMOUSEOUT:
-        if (mouseListeners != null) {
-          mouseListeners.fireMouseEvent(this, event);
-        }
-        break;
-      case Event.ONCLICK:
-        if (clickListeners != null) {
-          clickListeners.fireClick(this);
-        }
-        break;
-      case Event.ONDBLCLICK:
-        if (dblClickListeners != null) {
-          dblClickListeners.fireDblClick(this);
-        }
-        break;
-    }
-  }
-
   public boolean remove(Widget widget) {
     if (leftIconBox != null) {
       int index = leftIconBox.getWidgetIndex(widget);
@@ -222,22 +222,31 @@ public class Caption extends LayoutComposite implements HasHTML,
     return false;
   }
 
+  /**
+   * @deprecated Use the {@link HandlerRegistration#removeHandler} method on the
+   *             object returned by {@link #addClickHandler} instead
+   */
+  @Deprecated
   public void removeClickListener(ClickListener listener) {
-    if (clickListeners != null) {
-      clickListeners.remove(listener);
-    }
+    ListenerWrapper.WrappedClickListener.remove(this, listener);
   }
 
+  /**
+   * @deprecated Use the {@link HandlerRegistration#removeHandler} method on the
+   *             object returned by an add*Handler method instead
+   */
+  @Deprecated
   public void removeDoubleClickListener(DoubleClickListener listener) {
-    if (dblClickListeners != null) {
-      dblClickListeners.remove(listener);
-    }
+    ListenerWrapper.WrappedDoubleClickListener.remove(this, listener);
   }
 
+  /**
+   * @deprecated Use the {@link HandlerRegistration#removeHandler} method on the
+   *             object returned by an add*Handler method instead
+   */
+  @Deprecated
   public void removeMouseListener(MouseListener listener) {
-    if (mouseListeners != null) {
-      mouseListeners.remove(listener);
-    }
+    ListenerWrapper.WrappedMouseListener.remove(this, listener);
   }
 
   /*
@@ -247,6 +256,7 @@ public class Caption extends LayoutComposite implements HasHTML,
    */
   public void setHTML(String html) {
     caption.setHTML(html);
+    invalidate();
   }
 
   /*
@@ -256,6 +266,31 @@ public class Caption extends LayoutComposite implements HasHTML,
    */
   public void setText(String text) {
     caption.setText(text);
+    invalidate();
+  }
+
+  public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+    return addDomHandler(handler, MouseDownEvent.getType());
+  }
+
+  public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+    return addDomHandler(handler, MouseUpEvent.getType());
+  }
+
+  public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+    return addDomHandler(handler, MouseOutEvent.getType());
+  }
+
+  public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+    return addDomHandler(handler, MouseOverEvent.getType());
+  }
+
+  public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+    return addDomHandler(handler, MouseMoveEvent.getType());
+  }
+
+  public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
+    return addDomHandler(handler, MouseWheelEvent.getType());
   }
 
 }

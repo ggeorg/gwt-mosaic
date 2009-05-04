@@ -1,7 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +27,11 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -39,49 +43,51 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
- * A widget used to show the examples in the content panel. It includes a tab
- * bar with options to view the example, view the source, or view the css style
- * rules.
+ * A widget used to show gwt-mosaic examples in the ContentPanel. It includes a
+ * tab panel with options to view the example, view the source, or view the css
+ * style rules.
  * <p>
  * This widget uses a lazy initialization mechanism so that the content is not
  * rendered until the onInitialize method is called, which happens the first
- * time the widget is added to the page. The data in the source and css tabs are
- * loaded using RPC call to the server.
+ * time the {@code Widget} is added to the page. The data in the source and css
+ * tabs are loaded using RPC call to the server.
  * 
  * <h3>CSS Style Rules</h3>
+ * 
+ * <pre>
  * <ul class="css">
- * <li>.mosaic-sc-Page { Applied to the entire widget }</li>
- * <li>.sc-ContentWidget-tabBar { Applied to the TabBar }</li>
- * <li>.sc-ContentWidget-deckPanel { Applied to the DeckPanel }</li>
+ * <li>.sc-ContentWidget { Applied to the entire widget }</li>
  * <li>.sc-ContentWidget-name { Applied to the name }</li>
- * <li>.sc-ContentWidget-description { Applied to the description }</li> </ul>
+ * <li>.sc-ContentWidget-description { Applied to the description }</li>
+ * </ul>
+ * </pre>
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
-public abstract class ContentWidget extends LayoutPanel implements TabListener {
+public abstract class ContentWidget extends LayoutPanel implements
+    SelectionHandler<Integer> {
 
   /**
-   * The constants used in this Page.
+   * The constants used in this Content Widget.
    */
   public static interface CwConstants extends Constants {
-    String mosaicPageExample();
+    String contentWidgetExample();
 
-    String mosaicPageSource();
+    String contentWidgetSource();
 
-    String mosaicPageStyle();
+    String contentWidgetStyle();
   }
 
   /**
    * The default style name.
    */
-  private static final String DEFAULT_STYLE_NAME = "mosaic-sc-ContentWidget";
+  private static final String DEFAULT_STYLE_NAME = "sc-ContentWidget";
 
   /**
    * The static loading image displayed when loading CSS or source code.
@@ -152,11 +158,6 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
    */
   public abstract String getDescription();
 
-  public final String getId() {
-    final String s = this.getClass().getName();
-    return s.substring(s.lastIndexOf('.') + 1, s.length());
-  }
-
   /**
    * Get the name of this example to use as a title.
    * 
@@ -193,28 +194,31 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     initialized = true;
 
     tabPanel = new DecoratedTabLayoutPanel(true);
-    tabPanel.addTabListener(this);
     tabPanel.setPadding(5);
     add(tabPanel);
 
+    // Add a tab handler
+    tabPanel.addSelectionHandler(this);
+
     // Create the container for the main example
-    final LayoutPanel panel1 = new LayoutPanel(new BoxLayout(
+    final LayoutPanel vPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
-    panel1.setPadding(0);
-    panel1.setWidgetSpacing(0);
-    tabPanel.add(panel1, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
-        constants.mosaicPageExample()), true);
+    vPanel.setPadding(0);
+    vPanel.setWidgetSpacing(0);
+    tabPanel.add(vPanel, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
+        constants.contentWidgetExample()), true);
 
     // Add the name
     HTML nameWidget = new HTML(getName());
     nameWidget.setStyleName(DEFAULT_STYLE_NAME + "-name");
-    panel1.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+    vPanel.add(nameWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     // Add the description
     final HTML descWidget = new HTML(getDescription());
     descWidget.setStyleName(DEFAULT_STYLE_NAME + "-description");
-    panel1.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
+    vPanel.add(descWidget, new BoxLayoutData(FillStyle.HORIZONTAL));
 
+    // Monitor word wraps
     ResizableWidgetCollection.get().add(new ResizableWidget() {
       public Element getElement() {
         return descWidget.getElement();
@@ -225,37 +229,38 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
       }
 
       public void onResize(int width, int height) {
-        panel1.layout(true);
+        WidgetHelper.invalidate(descWidget);
+        WidgetHelper.layout((Widget) WidgetHelper.getParent(descWidget));
       }
     });
 
     // Add source code tab
     if (hasSource()) {
-      final LayoutPanel panel2 = new LayoutPanel();
+      // final LayoutPanel panel2 = new LayoutPanel();
       sourceWidget = new HTML();
       sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
-      panel2.add(sourceWidget);
-      tabPanel.add(panel2, createTabBarCaption(Showcase.IMAGES.cup(),
-          constants.mosaicPageSource()), true);
+      // panel2.add(sourceWidget);
+      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
+          constants.contentWidgetSource()), true);
     } else {
       sourceLoaded = true;
     }
 
     // Add style tab
     if (hasStyle()) {
-      final LayoutPanel panel3 = new LayoutPanel();
+      // final LayoutPanel panel3 = new LayoutPanel();
       styleDefs = new HashMap<String, String>();
       styleWidget = new HTML();
       styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
-      panel3.add(styleWidget);
-      tabPanel.add(panel3, createTabBarCaption(Showcase.IMAGES.css(),
-          constants.mosaicPageStyle()), true);
+      // panel3.add(styleWidget);
+      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
+          constants.contentWidgetStyle()), true);
     }
 
     // Initialize the widget and add it to the page
     final Widget widget = onInitialize();
     if (widget != null) {
-      panel1.add(widget, new BoxLayoutData(FillStyle.BOTH));
+      vPanel.add(widget, new BoxLayoutData(FillStyle.BOTH));
     }
     onInitializeComplete();
   }
@@ -264,16 +269,12 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     return initialized;
   }
 
-  public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-    return true;
-  }
-
   /**
    * When the widget is first initialized, this method is called. If it returns
-   * a Widget, the widget will be added as the first tab. Return
-   * <code>null</code> to disable the first tab.
+   * a Widget, the widget will be added as the first tab. Return {@code null} to
+   * disable the first tab.
    * 
-   * @return
+   * @return the widget to add to the first tab
    */
   protected abstract Widget onInitialize();
 
@@ -291,10 +292,12 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     initialize();
   }
 
-  public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+  public void onSelection(SelectionEvent<Integer> event) {
+    int tabIndex = event.getSelectedItem().intValue();
+
     // Load the source code
     final String tabHTML = tabPanel.getTabHTML(tabIndex);
-    if (!sourceLoaded && tabHTML.contains(constants.mosaicPageSource())) {
+    if (!sourceLoaded && tabHTML.contains(constants.contentWidgetSource())) {
       sourceLoaded = true;
       String className = this.getClass().getName();
       className = className.substring(className.lastIndexOf(".") + 1);
@@ -303,7 +306,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     }
 
     // Load the style definitions
-    if (hasStyle() && tabHTML.contains(constants.mosaicPageStyle())) {
+    if (hasStyle() && tabHTML.contains(constants.contentWidgetStyle())) {
       final String theme = Showcase.CUR_THEME;
       if (styleDefs.containsKey(theme)) {
         styleWidget.setHTML(styleDefs.get(theme));
@@ -349,7 +352,8 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
     target.setHTML("&nbsp;&nbsp;" + loadingImage);
 
     // Request the contents of the file
-    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
+    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET,
+        GWT.getModuleBaseURL() + url);
     RequestCallback realCallback = new RequestCallback() {
       public void onError(Request request, Throwable exception) {
         target.setHTML("Cannot find resource");

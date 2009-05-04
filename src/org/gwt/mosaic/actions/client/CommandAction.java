@@ -113,7 +113,7 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   public static final ActionImages ACTION_IMAGES = GWT.create(ActionImages.class);
-  
+
   public static final ActionConstants ACTION_CONSTANTS = GWT.create(ActionConstants.class);
 
   /**
@@ -129,6 +129,17 @@ public class CommandAction extends AbstractMap<String, Object> implements
   private Set<Map.Entry<String, Object>> entrySet;
 
   private Command command;
+
+  /**
+   * This constructor creates an action without a name and an icon.
+   * 
+   * @param command the command for this action to act upon
+   */
+  public CommandAction(Command command) {
+    super();
+    setEnabled(true);
+    setCommand(command);
+  }
 
   /**
    * This constructor creates an action without an icon.
@@ -160,7 +171,8 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   /**
-   * The actionPerformed implementation, simply calls {@code Command#eexecute()}.
+   * The actionPerformed implementation, simply calls {@code Command#eexecute()}
+   * .
    * 
    * @param event the action event
    */

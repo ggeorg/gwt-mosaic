@@ -35,7 +35,7 @@ public class FontMetrics {
    * font.
    */
   public FontMetrics() {
-    elem = DOM.createDiv();
+    elem = DOM.createSpan();
     DOM.setStyleAttribute(elem, "fontSize", "1em");
     DOM.setStyleAttribute(elem, "lineHeight", "normal");
     DOM.setStyleAttribute(elem, "letterSpacing", "normal");
@@ -55,7 +55,7 @@ public class FontMetrics {
    * @param str
    * @return
    */
-  public int[] stringBoxSize(String str) {
+  public Dimension stringBoxSize(String str) {
     return DOM.getStringBoxSize(elem, str);
   }
 

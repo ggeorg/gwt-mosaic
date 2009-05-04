@@ -15,11 +15,13 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -47,13 +49,12 @@ public abstract class LayoutComposite extends Composite implements
     });
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Returns the internal {@link LayoutPanel} for this {@code LayoutComposite}.
    * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
+   * @return the internal {@link LayoutPanel}
    */
-  @Override
-  protected LayoutPanel getWidget() {
+  protected LayoutPanel getLayoutPanel() {
     return (LayoutPanel) super.getWidget();
   }
 
@@ -62,8 +63,8 @@ public abstract class LayoutComposite extends Composite implements
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
+  public Dimension getPreferredSize() {
+    return getLayoutPanel().getPreferredSize();
   }
 
   /*
@@ -72,16 +73,7 @@ public abstract class LayoutComposite extends Composite implements
    * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
   public void layout() {
-    getWidget().layout();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
-   */
-  public void layout(boolean invalidate) {
-    getWidget().layout(invalidate);
+    getLayoutPanel().layout();
   }
 
   /*
@@ -90,6 +82,7 @@ public abstract class LayoutComposite extends Composite implements
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
-    getWidget().invalidate();
+    getLayoutPanel().invalidate();
   }
+
 }

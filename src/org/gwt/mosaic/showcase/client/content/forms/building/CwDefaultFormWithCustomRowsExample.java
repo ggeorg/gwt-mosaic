@@ -128,11 +128,11 @@ public class CwDefaultFormWithCustomRowsExample extends ContentWidget {
     TextBox name1Field = newTextBox("Name - font baselines shall be aligned");
     TextBox name2Field = newTextBox("Name - font baselines shall be aligned");
     TextBox name3Field = newTextBox("Name - font baselines shall be aligned");
-    TextArea comment1Area = newTextArea(2, 20,
+    TextArea comment1Area = newTextArea(2, 2,
         "Comment - likely baselines are unaligned");
-    TextArea comment2Area = newTextArea(2, 20,
+    TextArea comment2Area = newTextArea(20, 2,
         "Comment - baselines shall be aligned");
-    TextArea comment3Area = newTextArea(2, 20,
+    TextArea comment3Area = newTextArea(2, 2,
         "Comment - baselines shall be aligned");
 
     // Column specs only, rows will be added dynamically.
@@ -185,5 +185,5 @@ public class CwDefaultFormWithCustomRowsExample extends ContentWidget {
 
     return builder.getPanel();
   }
-
+  
 }

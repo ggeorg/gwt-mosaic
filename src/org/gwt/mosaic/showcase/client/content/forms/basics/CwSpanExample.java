@@ -51,12 +51,10 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -106,6 +104,8 @@ public class CwSpanExample extends ContentWidget {
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(newColumnSpan(), "Column Span");
     tabPanel.add(newRowSpan(), "Row Span");
+    
+    tabPanel.selectTab(0);
 
     return tabPanel;
   }
@@ -168,7 +168,7 @@ public class CwSpanExample extends ContentWidget {
   private Widget newLabel(String string) {
     final Label label = new Label(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return new WidgetWrapper(label, HasAlignment.ALIGN_LEFT,
-        HasAlignment.ALIGN_MIDDLE);
+    return label;
   }
+  
 }

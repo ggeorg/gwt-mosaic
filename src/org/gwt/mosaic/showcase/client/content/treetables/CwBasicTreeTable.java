@@ -21,6 +21,7 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.table.ScrollTable2;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTable;
 import org.gwt.mosaic.ui.client.treetable.FastTreeTableItem;
 import org.gwt.mosaic.ui.client.treetable.ScrollTreeTable;
@@ -267,5 +268,5 @@ public class CwBasicTreeTable extends ContentWidget {
       headerTable.setHTML(2, cell, "Header " + cell);
     }
   }
-
+  
 }

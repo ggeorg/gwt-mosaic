@@ -21,10 +21,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * 
@@ -43,7 +41,7 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
 
   public Separator(String text, HorizontalAlignmentConstant align) {
     this.align = checkHorizontalAlignment(align);
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Alignment.CENTER));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(8);
@@ -51,7 +49,7 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
     final Label l = new Label(text);
     l.setWordWrap(false);
     
-    final HTML hr = new HTML("<hr></hr>");
+    final SimplePanel hr = new SimplePanel();
     
     if (this.align == Separator.ALIGN_LEFT) {
       layoutPanel.add(l);
@@ -80,4 +78,5 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     throw new UnsupportedOperationException();
   }
+
 }

@@ -58,7 +58,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   }
 
   public CaptionLayoutPanel(final String text, boolean asHTML) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
 
@@ -150,7 +150,9 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
+   * .user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget child) {
     return body.getWidgetIndex(child);
@@ -181,11 +183,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.iterator();
   }
 
-  @Override
-  public void layout() {
-    getWidget().layout();
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -198,7 +195,9 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public boolean remove(Widget w) {
     return body.remove(w);
@@ -218,11 +217,11 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   protected void setFooter(Widget footer) {
     if (this.footer != null) {
-      getWidget().remove(this.footer);
+      getLayoutPanel().remove(this.footer);
     }
     this.footer = footer;
     if (this.footer != null) {
-      getWidget().add(this.footer, new BoxLayoutData(FillStyle.HORIZONTAL));
+      getLayoutPanel().add(this.footer, new BoxLayoutData(FillStyle.HORIZONTAL));
     }
   }
 

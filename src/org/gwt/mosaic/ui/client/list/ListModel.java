@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -18,15 +20,18 @@ package org.gwt.mosaic.ui.client.list;
  * {@link org.gwt.mosaic.ui.client.ListBox}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @parem <T>
  */
 public interface ListModel<T> {
 
   /**
-   * Return the length of the list.
+   * Adds a listener to the list that's notified each time a change to the data
+   * model occurs.
    * 
-   * @return the length of the list.
+   * @param listener the {@code ListDataListener} to be added
    */
-  int getSize();
+  void addListDataListener(ListDataListener listener);
 
   /**
    * Retrieves a data element at the specified index.
@@ -37,12 +42,11 @@ public interface ListModel<T> {
   T getElementAt(int index);
 
   /**
-   * Adds a listener to the list that's notified each time a change to the data
-   * model occurs.
+   * Return the length of the list.
    * 
-   * @param listener the {@code ListDataListener} to be added
+   * @return the length of the list.
    */
-  void addListDataListener(ListDataListener listener);
+  int getSize();
 
   /**
    * Removes a listener from the list that's notified each time a change to the

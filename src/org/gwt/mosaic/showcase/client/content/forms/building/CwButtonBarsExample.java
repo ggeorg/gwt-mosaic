@@ -235,5 +235,5 @@ public class CwButtonBarsExample extends ContentWidget {
     panel.add(buttonBar, CellConstraints.xy(1, 3));
     return panel;
   }
-
+  
 }

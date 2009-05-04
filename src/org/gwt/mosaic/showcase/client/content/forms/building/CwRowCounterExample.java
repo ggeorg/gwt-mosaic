@@ -175,5 +175,5 @@ public class CwRowCounterExample extends ContentWidget {
     listBox.addItem("E4");
     return listBox;
   }
-
+  
 }

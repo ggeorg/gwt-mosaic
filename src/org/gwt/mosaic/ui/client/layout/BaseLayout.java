@@ -21,6 +21,7 @@ import java.util.Map;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -36,110 +37,30 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
 
+  protected int[] margins = {0, 0};
+  protected int[] paddings = {0, 0};
+  protected int[] borders = {0, 0};
+  
+  protected boolean initialized = false;
+  
+  protected boolean init(LayoutPanel layoutPanel) {
+    if (initialized) {
+      return true;
+    }
+    
+    margins = DOM.getMarginSizes(layoutPanel.getElement());
+    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    borders = DOM.getBorderSizes(layoutPanel.getElement());
+    
+    return true;
+  }
+
   protected void recalculate(Map<Widget, Dimension> widgetSizes) {
     for (Iterator<Map.Entry<Widget, Dimension>> iter = widgetSizes.entrySet().iterator(); iter.hasNext();) {
       Map.Entry<Widget, Dimension> entry = iter.next();
       Widget w = entry.getKey();
-      entry.getValue().setSize(getFlowWidth(w), getFlowHeight(w));
+      entry.getValue().setSize(WidgetHelper.getPreferredSize(w));
     }
-  }
-
-  private static void changeToStaticPositioning(Element elem) {
-    DOM.setStyleAttribute(elem, "left", "");
-    DOM.setStyleAttribute(elem, "top", "");
-    // ggeorg: see
-    // http://groups.google.com/group/gwt-mosaic/browse_thread/thread/83d2bd6d6791ca62
-    // DOM.setStyleAttribute(elem, "position", "");
-  }
-
-  /**
-   * TODO: move this method to DOM
-   */
-  public static int getFlowHeight(Widget child) {
-    final int[] m = DOM.getMarginSizes(child.getElement());
-    int flowHeight;
-    if (child instanceof FormPanel) {
-      final Widget _child = ((FormPanel) child).getWidget();
-      if (_child != null && (_child instanceof HasLayoutManager)) {
-        child = _child;
-      }
-    }
-    if (child instanceof HasLayoutManager) {
-      final HasLayoutManager lp = (HasLayoutManager) child;
-      final int[] preferredSize = lp.getPreferredSize();
-      flowHeight = preferredSize[1] + m[0] + m[2];
-    } else {
-      if (!UserAgent.isIE6()) {
-        Object layoutDataObject = getLayoutData(child);
-        if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
-          LayoutData layoutData = (LayoutData) layoutDataObject;
-          if (layoutData.cachedHeight == null) {
-            layoutData.cachedHeight = child.getElement().getStyle().getProperty(
-                "height");
-            if (layoutData.cachedHeight != null
-                && layoutData.cachedHeight.length() > 0) {
-              return DOM.toPixelSize(layoutData.cachedHeight);
-            } else {
-              layoutData.cachedHeight = "".intern();
-            }
-          }
-        }
-      }
-      changeToStaticPositioning(child.getElement());
-      // ggeorg: set to "0px", read and set it to "auto"
-      // I don't know why but it works for widget like 'ListBox'
-      child.setHeight("0px");
-      child.getOffsetHeight();
-      child.setHeight("auto");
-      // ---------------------------------
-      flowHeight = child.getOffsetHeight() + m[0] + m[2];
-    }
-    return flowHeight;
-  }
-
-  /**
-   * TODO: move this method to DOM
-   */
-  public static int getFlowWidth(Widget child) {
-    final int[] m = DOM.getMarginSizes(child.getElement());
-    int flowWidth;
-    if (child instanceof FormPanel) {
-      final Widget _child = ((FormPanel) child).getWidget();
-      if (_child != null && (_child instanceof HasLayoutManager)) {
-        child = _child;
-      }
-    }
-    if (child instanceof HasLayoutManager) {
-      final HasLayoutManager lp = (HasLayoutManager) child;
-      final int[] preferredSize = lp.getPreferredSize();
-      flowWidth = preferredSize[0] + m[1] + m[3];
-    } else {
-      if (!UserAgent.isIE6()) {
-        Object layoutDataObject = getLayoutData(child);
-        if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
-          LayoutData layoutData = (LayoutData) layoutDataObject;
-          if (layoutData.cachedWidth == null) {
-            layoutData.cachedWidth = child.getElement().getStyle().getProperty(
-                "width");
-            if (layoutData.cachedWidth != null
-                && layoutData.cachedWidth.length() > 0) {
-              return DOM.toPixelSize(layoutData.cachedWidth);
-            } else {
-              layoutData.cachedWidth = "".intern();
-            }
-          }
-        }
-      }
-      changeToStaticPositioning(child.getElement());
-      // ggeorg: set to "0px", read and set it to "auto"
-      // I don't know why but it works for widget like 'ListBox'
-      child.setWidth("0px");
-      child.getOffsetWidth();
-      child.setWidth("auto");
-      // ---------------------------------
-      flowWidth = child.getOffsetWidth() + m[1] + m[3];
-    }
-    return flowWidth;
   }
 
   /**
@@ -166,20 +87,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   }
 
   /**
-   * TODO: move this method to DOM
-   */
-  public static void setSize(final Widget widget, final int width,
-      final int height) {
-    final Element elem = widget.getElement();
-    if (width != -1) {
-      DOM.setContentAreaWidth(elem, width);
-    }
-    if (height != -1) {
-      DOM.setContentAreaHeight(elem, height);
-    }
-  }
-
-  /**
    * {@inheritDoc}
    * <p>
    * The default implementation returns {@code false}.
@@ -188,31 +95,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
    */
   public boolean runTwice() {
     return false;
-  }
-
-  protected void setBounds(final LayoutPanel layoutPanel, final Widget widget,
-      final int x, final int y, int width, int height) {
-    int[] margins = DOM.getMarginSizes(widget.getElement());
-    if (width != -1) {
-      width -= (margins[1] + margins[3]);
-    }
-    if (height != -1) {
-      height -= (margins[0] + margins[2]);
-    }
-    setXY(layoutPanel, widget, x, y);
-    setSize(widget, width, height);
-
-    if (widget instanceof FormPanel) {
-      final Widget child = ((FormPanel) widget).getWidget();
-      if (child != null && (child instanceof HasLayoutManager)) {
-        setSize(child, width, height);
-      }
-    }
-  }
-
-  protected void setXY(final LayoutPanel layoutPanel, final Widget widget,
-      final int x, final int y) {
-    layoutPanel.setWidgetPosition(widget, x, y);
   }
 
   /*

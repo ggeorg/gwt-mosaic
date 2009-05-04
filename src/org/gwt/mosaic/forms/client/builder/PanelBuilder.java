@@ -44,7 +44,6 @@
  */
 package org.gwt.mosaic.forms.client.builder;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.forms.client.factories.DefaultWidgetFactory;
 import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
@@ -54,7 +53,6 @@ import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.Separator;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.dev.jjs.ast.JLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
@@ -240,7 +238,7 @@ public class PanelBuilder extends AbstractFormBuilder {
   public final Label addLabel(String textWithMnemonic,
       CellConstraints constraints) {
     Label label = getComponentFactory().createLabel(textWithMnemonic);
-    DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
+    // XXX DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     add(label, constraints);
     return label;
   }
