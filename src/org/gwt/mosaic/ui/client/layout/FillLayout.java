@@ -152,8 +152,9 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
+
       Window.alert(this.getClass().getName() + ".getPreferredSize(): "
-          + e.getLocalizedMessage());
+          + e.toString());
     }
 
     return result;
@@ -194,7 +195,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
       break;
     }
-    
+
     return initialized;
   }
 
@@ -242,24 +243,29 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         posLeft = left;
         widgetWidth = width;
       } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
+        Dimension dim = widgetSizes.get(child);
+        if (dim == null) {
+          widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
+          runTwiceFlag = true;
+        }
         posLeft = left;
-        widgetWidth = -1;
+        widgetWidth = dim.width;
       } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
           widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
-        posLeft = left + (width / 2) - dim.getWidth() / 2;
-        widgetWidth = -1;
+        posLeft = left + (width / 2) - dim.width / 2;
+        widgetWidth = dim.width;
       } else {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
           widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
-        posLeft = left + width - dim.getWidth();
-        widgetWidth = -1;
+        posLeft = left + width - dim.width;
+        widgetWidth = dim.width;
       }
 
       VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
@@ -274,32 +280,39 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         posTop = top;
         widgetHeight = height;
       } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
+        Dimension dim = widgetSizes.get(child);
+        if (dim == null) {
+          widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
+          runTwiceFlag = true;
+        }
         posTop = top;
-        widgetHeight = -1;
+        widgetHeight = dim.height;
       } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
           widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
-        posTop = top + (height / 2) - dim.getHeight() / 2;
-        widgetHeight = -1;
+        posTop = top + (height / 2) - dim.height / 2;
+        widgetHeight = dim.height;
       } else {
         Dimension dim = widgetSizes.get(child);
         if (dim == null) {
           widgetSizes.put(child, dim = WidgetHelper.getPreferredSize(child));
           runTwiceFlag = true;
         }
-        posTop = top + height - dim.getHeight();
-        widgetHeight = -1;
+        posTop = top + height - dim.height;
+        widgetHeight = dim.height;
       }
 
-      WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop, widgetWidth, widgetHeight);
+      WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop, widgetWidth,
+          widgetHeight);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
+
       Window.alert(this.getClass().getName() + ".layoutPanel(): "
-          + e.getLocalizedMessage());
+          + e.toString());
     }
 
     if (runTwice()) {
