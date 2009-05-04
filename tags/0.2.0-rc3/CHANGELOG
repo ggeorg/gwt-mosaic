@@ -1,0 +1,115 @@
+Change log for v0.2.0-rc3
+================================
+
+ - More FillLayout demos
+ - Layout management update
+ - Separator CSS changes
+ - gwt-dnd 2.6.0->2.6.2
+ - Vitali Lovich <vlovich@gmail.com>'s patch (part I) for LayoutPanel
+ - GWT Incubator gen2 TimePicker
+ - port to GWT 1.6 (part III)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part II)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part I)
+
+Change log for v0.1.9
+================================
+
+ - Layout performance improvements
+ 
+ 	Test for Popups/Layout PopupPanel:
+ 	
+ 		gwt-mosaic-0.1.8 Profile (6158.264ms, 197518 calls)
+ 		gwt-mosaic-0.1.9 Profile (3228.008ms, 111896 calls)
+
+ - New Label & HTML widgets based on <label> tag instead of the default GWT widgets
+ 	http://code.google.com/p/gwt-mosaic/source/detail?r=662
+ - WindowPanel new methods:
+ 	
+ 	public void setCaptionAction()
+ 	public void setCaptionAction(CaptionAction captionAction)
+ 	
+ 	where CaptionAction is: COLLAPSE, MAXIMIZE, NONE
+ 	
+ 	public boolean isHideContentsOnMove()
+ 	public void setCaptionAction(CaptionAction captionAction)
+ 	
+ - Fix for: Issue 33 : WindowPanel issues in FireFox
+ - WidgetWrapper implements HasAlignment
+ - Layout popup panels & WindowPanel improvements
+ 	WIKI: http://code.google.com/p/gwt-mosaic/wiki/WindowPanel
+ - Separator extends LayoutComposite and style changes
+ - Fix for http://groups.google.com/group/gwt-mosaic/browse_thread/thread/f609dba8143f996b
+ - Initial width & height of a widget is not ignored by the layout managers
+ 	http://code.google.com/p/gwt-mosaic/source/detail?r=600
+ 	
+ 	NOTE: this code will crash IE6, I put it in: if(!UserAgent.isIE6()){ ... }
+ 	
+ - BorderLayout is using an invisible GlassPanel so that dragging a SplitBar widget over an IFRAME is possible
+ 	http://dev.gumboo.com:8880/gwt-mosaic/#CwBorderLayoutTest_Frames
+ - Minimum size calculation fixed execpt of IE (since IE does not suppoer CSS min-width & min-height)
+ - GWT Beans Binding update (SVN trunk), see: http://code.google.com/p/gwt-beans-
+binding/source/detail?r=43
+ - Fix for: Issue 35: Cannot use getWidgetIndex or  remove(Widget widget) in TabLayoutPanel
+ - Actions API update because of layout changes  & Core modele cleanup
+
+Change log for v0.1.7
+================================
+
+ - AbstractListModel & AbstractTableModel serialization problem fix making listeners transient.
+ - Action module redesign
+ - gwt-incubator_1-5_Dec_28.jar
+
+Change log for v0.1.6
+================================
+
+ - GWT Incubator upgrade (SVN version)
+ - InlineCellEditor & TableModel updates bug fix in PaggingScrollTable
+ - Showcase modules is excluded from the gwt-mosaic JAR file
+ - TableColumnModel added
+ - IE WindowPanel.onLoad() bug fix
+ - DoubleClickListener & ContextMenu support for ScrollTable & PagingScrollTable
+
+Change log for v0.1.5
+================================
+
+ - Fix for:  Issue 15 : Issue with a WindowPanel , MessageBox login, and
+MessageBox.alert
+ - GridLayout getPreferredSize() bug fix
+ - New ListBox widget: This widget is used to create a list of items where one or
+more of the items may be selected. A ListBox may contain multiple columns.
+modified.
+ - HUMANIZED_MESSAGE z-index bug in GlassPanel fix
+ - DoubleClick & ContextMenu support for ListBox
+ - New widgets: LayoutPopupPanel & DecoratedLayoutPanel
+ - WindowPanel, MessageBox & DropDownPanel update (they extend the new
+DecoratedLayoutPopupPanel)
+ - ComboBox is using the new ListBox widget (still not functional)
+ - ScrollTreeTable extends ColumnWidget
+ - New constructor added to create a LayoutPanel with the given element. The
+element is presumed to be a <div>.
+ - ScrollTable extends ColumnWidget, replaces GWT Incubator ScrollTable.
+ - PagingScrollTable extends ColumnWidget, replaces GWT Incubator PagingScrollTable.
+ - Fix for: http://groups.google.com/group/gwt-mosaic/browse_thread/thread/8db88fd8258e0ecd
+ - Keyboard navigation in ListBox
+ - Keyboard navigation for ListBox and ScrollTable/PaggingScrollTable
+ - getFlowHeight() & getFlowWidth() bug fix for ListBox
+ - Javadoc for FillLayout & LayoutManager update
+ - Javadoc for BoxLayout, a minor BoxLayout bug fix and LayoutPanel update
+ - BorderLayoutRegion enum renamed to Region
+ - FormLayout widget based showcase demo update
+ - Better initial size calculations for LayoutPanel placed in a widget that does
+not implement HasLayoutManager like the RootPanel widget.
+ - Documentation for layout managers added
+ - ListBox widget (similar to ScrollTable but with a ListModel silimar to JList)
+ - GWT Beans Binding integration & Showcase demo with a ListBox
+ - Table widget (a PaggingScrollTable wrapper with a TableModel similar to JTable) 
+ - CellEditors added in Table.
+ - GWT Beans Binding v0.2.1 & GWTx upgrade

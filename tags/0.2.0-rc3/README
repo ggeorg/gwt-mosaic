@@ -1,0 +1,45 @@
+-- GWT 1.6.0 or later is required.
+
+-- The build requires a GWT_HOME enviornment variable.
+
+-- Eclipse requires a GWT16_HOME classpath variable.
+
+
+1. Building	
+============================================================================
+To build a JAR enter:
+
+	ant
+
+Other ANT targets are:
+
+	- build	: for building the JAR and the demo WAR
+	- jar	: for building the JAR only (default)
+	- war	: for building the WAR only
+	- clean
+	- javadoc
+
+2. The demo
+============================================================================
+To run the Showcase demo enter:
+
+	ant hosted
+
+3. Using
+============================================================================
+To use the library you will need also gwt-dnd.jar, gwtx.jar, 
+gwt-beans-binding.jar and gwt-incubator.jar from the lib directory, and 
+you have to add:
+
+	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
+	<inherits name='org.gwt.mosaic.Mosaic' />
+
+	<!-- Inherit the default GWT Mosaic style sheet. You can change -->
+	<!-- the theme of your GWT Mosaic application by uncommenting   -->
+	<!-- any one of the following lines.                            -->
+	<inherits name='org.gwt.mosaic.theme.standard.Standard' />
+	<!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
+	<!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
+	<!-- <inherits name='org.gwt.mosaic.theme.aegean.Aegean' />     -->
+ 
+in your module gwt.xml file.

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- NOTE: Requires GWT_HOME environment variable set -->
+
+<project name="gwt-mosaic" default="jar" basedir=".">
+
+	<!-- ant properties -->
+	<property environment="env" />
+	<property file="build.properties" />
+
+	<!-- Configure path to GWT SDK -->
+	<property name="gwt.sdk" location="${env.GWT_HOME}" />
+
+	<path id="project.class.path">
+		<pathelement location="war/WEB-INF/classes" />
+		<pathelement location="${gwt.sdk}/gwt-user.jar" />
+		<fileset dir="${gwt.sdk}" includes="gwt-dev*.jar" />
+		<!-- Add any additional non-server libs (such as JUnit) -->
+		<fileset dir="war/WEB-INF/lib" includes="**/*.jar" />
+		<fileset dir="lib" includes="**/*.jar" />
+	</path>
+
+	<target name="libs" description="Copy libs to WEB-INF/lib">
+		<mkdir dir="war/WEB-INF/lib" />
+		<copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar" />
+		<!-- Add any additional server libs that need to be copied -->
+		<copy todir="war/WEB-INF/lib">
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="javac" depends="libs" description="Compile java source">
+		<mkdir dir="war/WEB-INF/classes" />
+		<javac srcdir="src" includes="**" encoding="utf-8" destdir="war/WEB-INF/classes" source="1.5" target="1.5" nowarn="true" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="project.class.path" />
+		</javac>
+		<copy todir="war/WEB-INF/classes">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<target name="gwtc" depends="javac" description="GWT compile to JavaScript">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<pathelement location="src" />
+				<path refid="project.class.path" />
+			</classpath>
+			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
+			<jvmarg value="-Xmx512M" />
+			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+			<arg value="org.gwt.mosaic.showcase.Showcase" />
+		</java>
+	</target>
+
+	<target name="hosted" depends="javac" description="Run hosted mode">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.HostedMode">
+			<classpath>
+				<pathelement location="src" />
+				<path refid="project.class.path" />
+			</classpath>
+			<jvmarg value="-Xmx512M" />
+			<arg value="-startupUrl" />
+			<arg value="Showcase.html" />
+			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+			<arg value="org.gwt.mosaic.showcase.Showcase" />
+		</java>
+	</target>
+
+	<target name="build" depends="gwtc" description="Build this project" />
+
+	<target name="war" depends="build" description="Create a war file">
+		<zip destfile="${ant.project.name}-${project.version}.war" basedir="war" />
+	</target>
+
+	<target name="jar" depends="javac" description="Package up the project">
+		<jar destfile="${ant.project.name}-${project.version}.jar">
+			<fileset dir="war/WEB-INF/classes">
+				<include name="**/*" />
+				<exclude name="**/showcase/**" />
+			</fileset>
+			<fileset dir="src">
+				<include name="**/*.java" />
+				<exclude name="**/showcase/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="javadoc">
+		<property name="classpath" refid="project.class.path" />
+		<javadoc access="protected" classpath="${classpath}" author="true" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.gwt.mosaic.actions.*,org.gwt.mosaic.beansbinding.*,org.gwt.mosaic.contrib.*,org.gwt.mosaic.core.*,org.gwt.mosaic.forms.*,org.gwt.mosaic.ui.*" source="1.6" sourcepath="src" splitindex="true" use="true" version="true" />
+	</target>
+
+	<target name="clean" description="Cleans this project">
+		<delete dir="war/WEB-INF/classes" failonerror="false" />
+		<delete dir="war/WEB-INF/lib" failonerror="false" />
+		<delete dir="war/showcase" failonerror="false" />
+	</target>
+</project>
