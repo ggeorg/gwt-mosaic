@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 
 /**
  * Provides helper methods for DOM elements.
@@ -111,10 +110,13 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getStyleAttribute(elem, "borderTopWidth"), 10, 0);
-    size[1] = parseInt(getStyleAttribute(elem, "borderRightWidth"), 10, 0);
-    size[2] = parseInt(getStyleAttribute(elem, "borderBottomWidth"), 10, 0);
-    size[3] = parseInt(getStyleAttribute(elem, "borderLeftWidth"), 10, 0);
+    size[0] = parseInt(getComputedStyleAttribute(elem, "borderTopWidth"), 10, 0);
+    size[1] = parseInt(getComputedStyleAttribute(elem, "borderRightWidth"), 10,
+        0);
+    size[2] = parseInt(getComputedStyleAttribute(elem, "borderBottomWidth"),
+        10, 0);
+    size[3] = parseInt(getComputedStyleAttribute(elem, "borderLeftWidth"), 10,
+        0);
 
     return size;
   }
@@ -191,6 +193,20 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }-*/;
 
   /**
+   * Gets an attribute of the given element's computed style.
+   * <p>
+   * http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-
+   * getComputedStyle
+   * 
+   * @param elem the element whose style attribute is to be retrieved
+   * @param attr the name of the style attribute to be retrieved
+   * @return the computed style attribute's value
+   */
+  public static String getComputedStyleAttribute(Element elem, String attr) {
+    return impl.getComputedStyleAttribute(elem, attr);
+  }
+
+  /**
    * Get the CSS margin size of the element passed.
    * 
    * @param elem the element to get the margin size of
@@ -205,10 +221,10 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getStyleAttribute(elem, "marginTop"), 10, 0);
-    size[1] = parseInt(getStyleAttribute(elem, "marginRight"), 10, 0);
-    size[2] = parseInt(getStyleAttribute(elem, "marginBottom"), 10, 0);
-    size[3] = parseInt(getStyleAttribute(elem, "marginLeft"), 10, 0);
+    size[0] = parseInt(getComputedStyleAttribute(elem, "marginTop"), 10, 0);
+    size[1] = parseInt(getComputedStyleAttribute(elem, "marginRight"), 10, 0);
+    size[2] = parseInt(getComputedStyleAttribute(elem, "marginBottom"), 10, 0);
+    size[3] = parseInt(getComputedStyleAttribute(elem, "marginLeft"), 10, 0);
 
     return size;
   }
@@ -222,10 +238,10 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getStyleAttribute(elem, "paddingTop"), 10, 0);
-    size[1] = parseInt(getStyleAttribute(elem, "paddingRight"), 10, 0);
-    size[2] = parseInt(getStyleAttribute(elem, "paddingBottom"), 10, 0);
-    size[3] = parseInt(getStyleAttribute(elem, "paddingLeft"), 10, 0);
+    size[0] = parseInt(getComputedStyleAttribute(elem, "paddingTop"), 10, 0);
+    size[1] = parseInt(getComputedStyleAttribute(elem, "paddingRight"), 10, 0);
+    size[2] = parseInt(getComputedStyleAttribute(elem, "paddingBottom"), 10, 0);
+    size[3] = parseInt(getComputedStyleAttribute(elem, "paddingLeft"), 10, 0);
 
     return size;
   }
@@ -250,13 +266,13 @@ public class DOM extends com.google.gwt.user.client.DOM {
     // force "auto" width
     setStyleAttribute(span, "width", "0px");
     setStyleAttribute(span, "height", "0px");
-    
+
     span.getOffsetWidth();
     span.getOffsetHeight();
-    
+
     setStyleAttribute(span, "width", "auto");
     setStyleAttribute(span, "height", "auto");
-    
+
     try {
       body.appendChild(span);
       return getBoxSize(span);
@@ -265,19 +281,9 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
   }
 
-  /**
-   * Gets an attribute of the given element's style.
-   * 
-   * @param elem the element whose style attribute is to be retrieved
-   * @param attr the name of the style attribute to be retrieved
-   * @return the style attribute's value
-   */
-  public static String getStyleAttribute(Element elem, String attr) {
-    return impl.getStyleAttribute(elem, attr);
-  }
-
   public static boolean isVisible(Element element) {
-    return !"none".equalsIgnoreCase(DOM.getStyleAttribute(element, "display"));
+    return !"none".equalsIgnoreCase(DOM.getComputedStyleAttribute(element,
+        "display"));
   }
 
   /**
@@ -351,7 +357,12 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @param value the style attribute's new value
    */
   public static void setStyleAttribute(Element elem, String attr, String value) {
-    impl.setStyleAttribute(elem, attr, value);
+    try {
+      impl.setStyleAttribute(elem, attr, value);
+    } catch (Exception ex) {
+      GWT.log("Set style attribute error, tag=" + elem.getTagName() + ", attr="
+          + attr + ", value=" + value, ex);
+    }
   }
 
   public static int toPixelSize(final String width) {
@@ -363,9 +374,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    setStyleAttribute(toPixelSizeTestElem, "width", width == null ? "0px"
-        : width);
-
+    setStyleAttribute(toPixelSizeTestElem, "width", width);
     return getBoxSize(toPixelSizeTestElem).width;
   }
 

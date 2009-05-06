@@ -1862,17 +1862,12 @@ public final class FormLayout extends BaseLayout implements Serializable {
     Dimension getMinimumSize(Widget widget) {
       Dimension size = minimumSizes.get(widget);
       if (size == null) {
-//        if (UserAgent.isIE6()) {
-//          size = WidgetHelper.getPreferredSize(widget); // widget.getMinimumSize();
-//        } else {
-          final String minWidth = DOM.getStyleAttribute(widget.getElement(),
-              "minWidth");
-          final String minHeight = DOM.getStyleAttribute(widget.getElement(),
-              "minHeight");
-          size = new Dimension(
-              minWidth == null ? 1 : DOM.toPixelSize(minWidth),
-              minHeight == null ? 1 : DOM.toPixelSize(minHeight));
-//        }
+        final String minWidth = DOM.getComputedStyleAttribute(
+            widget.getElement(), "minWidth");
+        final String minHeight = DOM.getComputedStyleAttribute(
+            widget.getElement(), "minHeight");
+        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth),
+            minHeight == null ? 1 : DOM.toPixelSize(minHeight));
         minimumSizes.put(widget, size);
       }
       return size;
