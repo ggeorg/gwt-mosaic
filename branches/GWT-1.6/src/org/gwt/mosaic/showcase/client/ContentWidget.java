@@ -230,7 +230,7 @@ public abstract class ContentWidget extends LayoutPanel implements
 
       public void onResize(int width, int height) {
         WidgetHelper.invalidate(descWidget);
-        WidgetHelper.layout((Widget) WidgetHelper.getParent(descWidget));
+        // WidgetHelper.layout((Widget) WidgetHelper.getParent(descWidget));
       }
     });
 
