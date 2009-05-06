@@ -282,7 +282,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
           glassPanel = new GlassPanel(false);
           glassPanel.addStyleName("mosaic-GlassPanel-invisible");
           DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-              DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
+              DOM.getComputedStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
         }
         getBoundaryPanel().add(glassPanel, 0, 0);
       }
@@ -1525,7 +1525,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         glassPanel = new GlassPanel(false);
         glassPanel.addStyleName("mosaic-GlassPanel-default");
         DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-            DOM.getStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
+            DOM.getComputedStyleAttribute(WindowPanel.this.getElement(), "zIndex"));
       }
       windowController.getBoundaryPanel().add(glassPanel, 0, 0);
 
