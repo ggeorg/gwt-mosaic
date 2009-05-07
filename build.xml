@@ -79,6 +79,7 @@
 			<fileset dir="war/WEB-INF/classes">
 				<include name="**/*" />
 				<exclude name="**/showcase/**" />
+				<exclude name="META-INF/persistence.xml" />
 			</fileset>
 			<fileset dir="src">
 				<include name="**/*.java" />
