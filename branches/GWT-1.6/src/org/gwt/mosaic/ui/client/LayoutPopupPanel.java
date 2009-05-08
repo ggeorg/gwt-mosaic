@@ -118,11 +118,8 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
       show();
       pack();
     } else {
-      // setSize("0px", "0px");
-      // layoutPanel.setSize("0px", "0px");
-      // layoutPanel.setSize("auto", "auto");
+      setSize("auto", "auto");
       setContentSize(getLayoutPanel().getPreferredSize());
-      // delayedLayout(MIN_DELAY_MILLIS);
       layout();
     }
   }
@@ -183,8 +180,8 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   private void calculateDecorationSize() {
     final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
     final Dimension box = WidgetHelper.getOffsetSize(this);
-    decorationWidthCache = (box.width - size.width);
-    decorationHeightCache = (box.height - size.height);
+    decorationWidthCache = box.width - size.width;
+    decorationHeightCache = box.height - size.height;
   }
 
   private String desiredHeight = null;
