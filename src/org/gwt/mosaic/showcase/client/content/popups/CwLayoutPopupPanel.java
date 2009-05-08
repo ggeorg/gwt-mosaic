@@ -33,6 +33,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -93,8 +94,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel1.add(new Button("Plain", new ClickHandler() {
       public void onClick(ClickEvent event) {
         final LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
+        System.out.println(Window.getClientWidth()+"   "+popup.getOffsetWidth());
         popup.center();
       }
     }));
@@ -102,6 +105,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel1.add(new Button("Plain 512x?", new ClickHandler() {
       public void onClick(ClickEvent event) {
         LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setWidth("512px");
@@ -112,6 +116,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel1.add(new Button("Plain ?x384", new ClickHandler() {
       public void onClick(ClickEvent event) {
         LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setHeight("384px");
@@ -122,6 +127,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel1.add(new Button("Plain 512x384", new ClickHandler() {
       public void onClick(ClickEvent event) {
         final LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent2(popup));
         popup.setSize("512px", "384px");
         popup.center();
@@ -136,6 +142,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel2.add(new Button("Decorated", new ClickHandler() {
       public void onClick(ClickEvent event) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.center();
@@ -145,6 +152,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel2.add(new Button("Decorated 512x?", new ClickHandler() {
       public void onClick(ClickEvent event) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setWidth("512px");
@@ -155,6 +163,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel2.add(new Button("Decorated ?x384", new ClickHandler() {
       public void onClick(ClickEvent event) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setHeight("384px");
@@ -166,6 +175,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
       public void onClick(ClickEvent event) {
         final DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(
             true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent2(popup));
         popup.setSize("512px", "384px");
         popup.center();
@@ -180,6 +190,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel3.add(new Button("WindowPanel", new ClickHandler() {
       public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel");
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.center();
@@ -189,6 +200,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel3.add(new Button("WindowPanel 512x?", new ClickHandler() {
       public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel 512x?");
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setWidth("512px");
@@ -199,6 +211,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel3.add(new Button("WindowPanel ?x384", new ClickHandler() {
       public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel ?x384");
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setHeight("384px");
@@ -209,6 +222,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
     layoutPanel3.add(new Button("WindowPanel 512x384", new ClickHandler() {
       public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel 512x384");
+        popup.setAnimationEnabled(true);
         popup.add(createContent2(popup));
         popup.setSize("512px", "384px");
         popup.center();

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel.AnimationType;
 
 import java.util.ArrayList;
 
@@ -64,7 +65,7 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
    * Default constructor.
    */
   public DropDownPanel() {
-    super(true, false, "menuPopup");
+    super(true, false, "menuPopup", AnimationType.ROLL_DOWN);
     setStyleName(DEFAULT_STYLENAME);
     // Issue 5 fix (ggeorg)
     // Note: z-index is already set in CSS file (see: .gwt-MenuBarPopup)

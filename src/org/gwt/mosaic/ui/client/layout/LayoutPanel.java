@@ -434,7 +434,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       return;
     }
 
-    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+    GWT.log("====================== Parent of '" + this.getClass().getName() + "' ('"
         + parent.getClass().getName()
         + "') is not an instance of HasLayoutManager.", null);
 
