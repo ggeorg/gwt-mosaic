@@ -771,7 +771,7 @@ public class BorderLayout extends BaseLayout {
 
           if (layoutData.hasDecoratorPanel()) {
             final Dimension decPanelBorderSize = getDecoratorFrameSize(
-                layoutData.decoratorPanel, west);
+                layoutData.decoratorPanel, east);
 
             _left -= decPanelBorderSize.width;
             _height -= decPanelBorderSize.height;
