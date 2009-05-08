@@ -15,16 +15,10 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.core.client.UserAgent;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,27 +34,32 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   protected int[] margins = {0, 0};
   protected int[] paddings = {0, 0};
   protected int[] borders = {0, 0};
-  
+
   protected boolean initialized = false;
-  
+
+  protected int getDecoratorFrameWidth(DecoratorPanel decPanel, Widget child) {
+    return decPanel.getOffsetWidth() - child.getOffsetWidth();
+  }
+
+  protected Dimension getDecoratorFrameSize(DecoratorPanel decPanel, Widget child) {
+    return new Dimension(decPanel.getOffsetWidth() - child.getOffsetWidth(),
+        decPanel.getOffsetHeight() - child.getOffsetHeight());
+  }
+
+  protected int getDecoratorFrameHeight(DecoratorPanel decPanel, Widget child) {
+    return decPanel.getOffsetHeight() - child.getOffsetHeight();
+  }
+
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
     }
-    
+
     margins = DOM.getMarginSizes(layoutPanel.getElement());
     paddings = DOM.getPaddingSizes(layoutPanel.getElement());
     borders = DOM.getBorderSizes(layoutPanel.getElement());
-    
-    return true;
-  }
 
-  protected void recalculate(Map<Widget, Dimension> widgetSizes) {
-    for (Iterator<Map.Entry<Widget, Dimension>> iter = widgetSizes.entrySet().iterator(); iter.hasNext();) {
-      Map.Entry<Widget, Dimension> entry = iter.next();
-      Widget w = entry.getKey();
-      entry.getValue().setSize(WidgetHelper.getPreferredSize(w));
-    }
+    return true;
   }
 
   /**

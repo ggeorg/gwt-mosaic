@@ -15,9 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Caption;
@@ -218,7 +215,8 @@ public class BorderLayout extends BaseLayout {
 
   private boolean runTwiceFlag;
 
-  private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
+  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
+  // Dimension>();
 
   @Override
   public void flushCache() {
@@ -227,8 +225,18 @@ public class BorderLayout extends BaseLayout {
     south = null;
     west = null;
     center = null;
-    widgetSizes.clear();
+    // widgetSizes.clear();
     initialized = false;
+  }
+
+  private BorderLayoutData getBorderLayoutData(Widget child) {
+    Object layoutDataObject = getLayoutData(child);
+    if (layoutDataObject == null
+        || !(layoutDataObject instanceof BorderLayoutData)) {
+      layoutDataObject = new BorderLayoutData();
+      setLayoutData(child, layoutDataObject);
+    }
+    return (BorderLayoutData) layoutDataObject;
   }
 
   /*
@@ -253,29 +261,15 @@ public class BorderLayout extends BaseLayout {
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
-      Dimension northSize = null;
-
       if (north != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
         if (layoutData.collapse) {
-          Dimension dim = widgetSizes.get(northCollapsedImageButton);
-          if (dim == null) {
-            height += (dim = WidgetHelper.getPreferredSize(northCollapsedImageButton)).height;
-            widgetSizes.put(northCollapsedImageButton, dim);
-          } else {
-            height += dim.height;
-          }
+          height += WidgetHelper.getPreferredSize(northCollapsedImageButton).height;
         } else {
           int northHeight = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            northSize = widgetSizes.get(north);
-            if (northSize == null) {
-              northHeight = (northSize = WidgetHelper.getPreferredSize(north)).height;
-              widgetSizes.put(north, northSize);
-            } else {
-              northHeight = northSize.height;
-            }
+            northHeight = WidgetHelper.getPreferredSize(north).height;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             northHeight = (int) (height * layoutData.preferredSize);
@@ -290,29 +284,15 @@ public class BorderLayout extends BaseLayout {
         height += spacing;
       }
 
-      Dimension southSize = null;
-
       if (south != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
 
         if (layoutData.collapse) {
-          Dimension dim = widgetSizes.get(southCollapsedImageButton);
-          if (dim == null) {
-            height += (dim = WidgetHelper.getPreferredSize(southCollapsedImageButton)).height;
-            widgetSizes.put(southCollapsedImageButton, dim);
-          } else {
-            height += dim.height;
-          }
+          height += WidgetHelper.getPreferredSize(southCollapsedImageButton).height;
         } else {
           int southHeight = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            southSize = widgetSizes.get(south);
-            if (southSize == null) {
-              southHeight = (southSize = WidgetHelper.getPreferredSize(south)).height;
-              widgetSizes.put(south, southSize);
-            } else {
-              southHeight = southSize.height;
-            }
+            southHeight = WidgetHelper.getPreferredSize(south).height;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             southHeight = (int) (height * layoutData.preferredSize);
@@ -333,23 +313,11 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
 
         if (layoutData.collapse) {
-          Dimension dim = widgetSizes.get(westCollapsedImageButton);
-          if (dim == null) {
-            width += (dim = WidgetHelper.getPreferredSize(westCollapsedImageButton)).width;
-            widgetSizes.put(westCollapsedImageButton, dim);
-          } else {
-            width += dim.width;
-          }
+          width += WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
         } else {
           int westWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            westSize = widgetSizes.get(west);
-            if (westSize == null) {
-              westWidth = (westSize = WidgetHelper.getPreferredSize(west)).width;
-              widgetSizes.put(west, westSize);
-            } else {
-              westWidth = westSize.width;
-            }
+            westWidth = WidgetHelper.getPreferredSize(west).width;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             westWidth = (int) (width * layoutData.preferredSize);
@@ -370,23 +338,11 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
 
         if (layoutData.collapse) {
-          Dimension dim = widgetSizes.get(eastCollapsedImageButton);
-          if (dim == null) {
-            width += (dim = WidgetHelper.getPreferredSize(eastCollapsedImageButton)).width;
-            widgetSizes.put(eastCollapsedImageButton, dim);
-          } else {
-            width += dim.width;
-          }
+          width += WidgetHelper.getPreferredSize(eastCollapsedImageButton).width;
         } else {
           int eastWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            eastSize = widgetSizes.get(east);
-            if (eastSize == null) {
-              eastWidth = (eastSize = WidgetHelper.getPreferredSize(east)).width;
-              widgetSizes.put(east, eastSize);
-            } else {
-              eastWidth = eastSize.width;
-            }
+            eastWidth = WidgetHelper.getPreferredSize(east).width;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             eastWidth = (int) (width * layoutData.preferredSize);
@@ -401,21 +357,14 @@ public class BorderLayout extends BaseLayout {
         width += spacing;
       }
 
-      Dimension centerSize = widgetSizes.get(center);
-      if (centerSize == null) {
-        width += (centerSize = WidgetHelper.getPreferredSize(center)).width;
-        widgetSizes.put(center, centerSize);
-      } else {
-        width += centerSize.width;
-      }
+      Dimension centerSize = WidgetHelper.getPreferredSize(center);
+      width += centerSize.width;
 
       if (west != null && westSize == null) {
         westSize = WidgetHelper.getPreferredSize(west);
-        widgetSizes.put(west, westSize);
       }
       if (east != null && eastSize == null) {
         eastSize = WidgetHelper.getPreferredSize(east);
-        widgetSizes.put(east, eastSize);
       }
 
       if (west != null && east != null) {
@@ -543,48 +492,37 @@ public class BorderLayout extends BaseLayout {
             northCollapsed = north;
             north.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(northCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(
-                northCollapsedImageButton,
-                dim = new Dimension(
-                    -1,
-                    WidgetHelper.getPreferredSize(northCollapsedImageButton).height));
-          }
-          h = dim.getHeight();
+          h = WidgetHelper.getPreferredSize(northCollapsedImageButton).height;
           WidgetHelper.setBounds(layoutPanel, northCollapsedImageButton, left,
               top, Math.max(0, right - left), h);
         } else {
-          int northHeight = (int) layoutData.preferredSize;
+
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(north);
-            if (dim == null) {
-              widgetSizes.put(north, dim = new Dimension(-1,
-                  WidgetHelper.getPreferredSize(north).height));
-              runTwiceFlag = true;
-            }
-            northHeight = dim.getHeight();
+            h = WidgetHelper.getPreferredSize(north).height;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            northHeight = (int) (height * layoutData.preferredSize);
+            h = (int) (height * layoutData.preferredSize);
+          } else {
+            h = (int) layoutData.preferredSize;
           }
 
-          h = northHeight;
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                - north.getOffsetWidth();
-            final int decPanelBorderHeight = decPanel.getOffsetHeight()
-                - north.getOffsetHeight();
-            WidgetHelper.setBounds(layoutPanel, north, left, top, Math.max(0,
-                right - left)
-                - decPanelBorderWidth, h);
-            // increase 'h'
-            h += decPanelBorderHeight;
-          } else {
-            WidgetHelper.setBounds(layoutPanel, north, left, top, Math.max(0,
-                right - left), h);
+          int _width = Math.max(0, right - left);
+          int _height = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _height = h;
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, north);
+
+            _width -= decPanelBorderSize.width;
+
+            // increase 'h'
+            h += decPanelBorderSize.height;
+          }
+          WidgetHelper.setBounds(layoutPanel, north, left, top, _width, _height);
 
           // split bar
           if (layoutData.resizable && northSplitBar.isAttached()) {
@@ -638,46 +576,40 @@ public class BorderLayout extends BaseLayout {
             southCollapsed = south;
             south.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(southCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(
-                southCollapsedImageButton,
-                dim = new Dimension(
-                    -1,
-                    WidgetHelper.getPreferredSize(southCollapsedImageButton).height));
-          }
-          h = dim.getHeight();
+          h = WidgetHelper.getPreferredSize(southCollapsedImageButton).height;
           WidgetHelper.setBounds(layoutPanel, southCollapsedImageButton, left,
               Math.max(0, bottom - h), Math.max(0, right - left), h);
         } else {
-          int southHeight = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(south);
-            if (dim == null) {
-              widgetSizes.put(south, dim = new Dimension(-1,
-                  WidgetHelper.getPreferredSize(south).height));
-              runTwiceFlag = true;
-            }
-            southHeight = dim.getHeight();
+            h = WidgetHelper.getPreferredSize(south).height;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            southHeight = (int) (height * layoutData.preferredSize);
+            h = (int) (height * layoutData.preferredSize);
+          } else {
+            h = (int) layoutData.preferredSize;
           }
 
-          h = (int) Math.round(southHeight);
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int _width = Math.max(0, right - left)
-                - (decPanel.getOffsetWidth() - south.getOffsetWidth());
-            final int _top = Math.max(0, bottom - h)
-                - (decPanel.getOffsetHeight() - south.getOffsetHeight());
-            WidgetHelper.setBounds(layoutPanel, south, left, _top, _width, h);
-            // increase 'h'
-            h += (decPanel.getOffsetHeight() - south.getOffsetHeight());
-          } else {
-            WidgetHelper.setBounds(layoutPanel, south, left, Math.max(0, bottom
-                - h), Math.max(0, right - left), h);
+          int _width = Math.max(0, right - left);
+          int _top = Math.max(0, bottom - h);
+          int _height = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _height = h;
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, south);
+
+            _width -= decPanelBorderSize.width;
+            _top -= decPanelBorderSize.height;
+
+            // increase 'h'
+            h += decPanelBorderSize.height;
+          }
+
+          WidgetHelper.setBounds(layoutPanel, south, left, _top, _width,
+              _height);
 
           // split bar
           if (layoutData.resizable && southSplitBar.isAttached()) {
@@ -732,41 +664,37 @@ public class BorderLayout extends BaseLayout {
             westCollapsed = west;
             west.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(westCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(westCollapsedImageButton, dim = new Dimension(
-                WidgetHelper.getPreferredSize(westCollapsedImageButton).width,
-                -1));
-          }
-          w = dim.getWidth();
+          w = WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
           WidgetHelper.setBounds(layoutPanel, westCollapsedImageButton, left,
               top, w, Math.max(0, bottom - top));
         } else {
-          int westWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(west);
-            if (dim == null) {
-              widgetSizes.put(west, dim = new Dimension(
-                  WidgetHelper.getPreferredSize(west).width, -1));
-            }
-            westWidth = dim.getWidth();
+            w = WidgetHelper.getPreferredSize(west).width;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            westWidth = (int) (width * layoutData.preferredSize);
+            w = (int) (height * layoutData.preferredSize);
+          } else {
+            w = (int) layoutData.preferredSize;
           }
 
-          w = (int) Math.round(westWidth);
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int _height = Math.max(0, bottom - top)
-                - (decPanel.getOffsetHeight() - west.getOffsetHeight());
-            WidgetHelper.setBounds(layoutPanel, west, left, top, w, _height);
-            // increase 'h'
-            w += (decPanel.getOffsetWidth() - west.getOffsetWidth());
-          } else {
-            WidgetHelper.setBounds(layoutPanel, west, left, top, w, Math.max(0,
-                bottom - top));
+          int _width = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _width = w;
           }
+          int _height = Math.max(0, bottom - top);
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, west);
+
+            _height -= decPanelBorderSize.height;
+
+            // increase 'w'
+            w += decPanelBorderSize.width;
+          }
+
+          WidgetHelper.setBounds(layoutPanel, west, left, top, _width, _height);
 
           // split bar
           if (layoutData.resizable && westSplitBar.isAttached()) {
@@ -820,46 +748,38 @@ public class BorderLayout extends BaseLayout {
             eastCollapsed = east;
             east.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(eastCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(eastCollapsedImageButton, dim = new Dimension(
-                WidgetHelper.getPreferredSize(eastCollapsedImageButton).width,
-                -1));
-          }
-          w = dim.getWidth();
+          w = WidgetHelper.getPreferredSize(eastCollapsedImageButton).width;
           WidgetHelper.setBounds(layoutPanel, eastCollapsedImageButton,
               Math.max(0, right - w), top, w, Math.max(0, bottom - top));
         } else {
-          int eastWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(east);
-            if (dim == null) {
-              widgetSizes.put(east, dim = new Dimension(
-                  WidgetHelper.getPreferredSize(east).width, -1));
-            }
-            eastWidth = dim.getWidth();
+            w = WidgetHelper.getPreferredSize(east).width;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            eastWidth = (int) (width * layoutData.preferredSize);
+            w = (int) (height * layoutData.preferredSize);
+          } else {
+            w = (int) layoutData.preferredSize;
           }
 
-          w = (int) Math.round(eastWidth);
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                - east.getOffsetWidth();
-            final int decPanelBorderHeight = decPanel.getOffsetHeight()
-                - east.getOffsetHeight();
-            final int _left = Math.max(0, right - w) - decPanelBorderWidth;
-            final int _height = Math.max(0, bottom - top)
-                - decPanelBorderHeight;
-            WidgetHelper.setBounds(layoutPanel, east, _left, top, w, _height);
-            // increase 'h'
-            w += (decPanel.getOffsetWidth() - east.getOffsetWidth());
-          } else {
-            WidgetHelper.setBounds(layoutPanel, east, Math.max(0, right - w),
-                top, w, Math.max(0, bottom - top));
+          int _left = Math.max(0, right - w);
+          int _width = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _width = w;
           }
+          int _height = Math.max(0, bottom - top);
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, west);
+
+            _left -= decPanelBorderSize.width;
+            _height -= decPanelBorderSize.height;
+
+            // increase 'h'
+            w += decPanelBorderSize.width;
+          }
+          WidgetHelper.setBounds(layoutPanel, east, _left, top, _width, _height);
 
           // split bar
           if (layoutData.resizable && eastSplitBar.isAttached()) {
@@ -871,30 +791,24 @@ public class BorderLayout extends BaseLayout {
         right -= (w + spacing);
       }
 
+      int _width = Math.max(0, right - left);
+      int _height = Math.max(0, bottom - top);
+
       BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        final DecoratorPanel decPanel = layoutData.decoratorPanel;
-        final int decPanelBorderWidth = decPanel.getOffsetWidth()
-            - center.getOffsetWidth();
-        final int decPanelBorderHeight = decPanel.getOffsetHeight()
-            - center.getOffsetHeight();
-        final int _width = Math.max(0, right - left) - decPanelBorderWidth;
-        final int _height = Math.max(0, bottom - top) - decPanelBorderHeight;
-        WidgetHelper.setBounds(layoutPanel, center, left, top, _width, _height);
-      } else {
-        WidgetHelper.setBounds(layoutPanel, center, left, top, Math.max(0,
-            right - left), Math.max(0, bottom - top));
+        final Dimension decPanelBorderSize = getDecoratorFrameSize(
+            layoutData.decoratorPanel, center);
+        _width -= decPanelBorderSize.width;
+        _height -= decPanelBorderSize.height;
       }
+
+      WidgetHelper.setBounds(layoutPanel, center, left, top, _width, _height);
+
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ".layoutPanel(): "
           + e.getLocalizedMessage());
     }
-
-    if (runTwice()) {
-      recalculate(widgetSizes);
-    }
-
   }
 
   @Override
@@ -919,13 +833,7 @@ public class BorderLayout extends BaseLayout {
         child = ((DecoratorPanel) child).getWidget();
       }
 
-      Object layoutDataObject = getLayoutData(child);
-      if (layoutDataObject == null
-          || !(layoutDataObject instanceof BorderLayoutData)) {
-        layoutDataObject = new BorderLayoutData();
-        setLayoutData(child, layoutDataObject);
-      }
-      BorderLayoutData layoutData = (BorderLayoutData) layoutDataObject;
+      BorderLayoutData layoutData = getBorderLayoutData(child);
 
       if (!DOM.isVisible(child.getElement()) && !layoutData.collapse) {
         continue;

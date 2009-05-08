@@ -16,9 +16,7 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.Iterator;
-import java.util.Vector;
 
-import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.CollapsedListener;
@@ -26,13 +24,13 @@ import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -66,9 +64,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   private Dimension preferredSizeCache = new Dimension(-1, -1);
 
-  private String height;
-
-  private String width;
+  // private String height;
+  //
+  // private String width;
 
   private boolean invalid = true;
 
@@ -344,8 +342,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     // }
   }
 
-  private Widget parent = null;
-
   public boolean isCollapsed(Widget widget) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayout borderLayout = (BorderLayout) getLayout();
@@ -425,23 +421,23 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     // Set the initial size & layout
     DeferredCommand.addCommand(new Command() {
       public void execute() {
-        if (width != null && height != null) {
-          LayoutPanel.super.setWidth(width);
-          LayoutPanel.super.setHeight(height);
-        } else {
-          final Dimension size = getPreferredSize();
-          if (width != null) {
-            LayoutPanel.super.setWidth(width);
-            size.width = -1;
-            WidgetHelper.setSize(LayoutPanel.this, size);
-          } else if (height != null) {
-            size.height = -1;
-            WidgetHelper.setSize(LayoutPanel.this, size);
-            LayoutPanel.super.setHeight(height);
-          } else {
-            WidgetHelper.setSize(LayoutPanel.this, size);
-          }
-        }
+        // if (width != null && height != null) {
+        // LayoutPanel.super.setWidth(width);
+        // LayoutPanel.super.setHeight(height);
+        // } else {
+        // final Dimension size = getPreferredSize();
+        // if (width != null) {
+        // LayoutPanel.super.setWidth(width);
+        // size.width = -1;
+        // WidgetHelper.setSize(LayoutPanel.this, size);
+        // } else if (height != null) {
+        // size.height = -1;
+        // WidgetHelper.setSize(LayoutPanel.this, size);
+        // LayoutPanel.super.setHeight(height);
+        // } else {
+        // WidgetHelper.setSize(LayoutPanel.this, size);
+        // }
+        // }
         layout();
       }
     });
@@ -505,11 +501,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   @Override
   public void setHeight(String height) {
-    if (!isAttached()) {
-      this.height = height;
-    } else {
-      super.setHeight(height);
-    }
+    // if (!isAttached()) {
+    // this.height = height;
+    // } else {
+    super.setHeight(height);
+    // }
   }
 
   /**
@@ -559,10 +555,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   @Override
   public void setWidth(String width) {
-    if (!isAttached()) {
-      this.width = width;
-    } else {
-      super.setWidth(width);
-    }
+    // if (!isAttached()) {
+    // this.width = width;
+    // } else {
+    super.setWidth(width);
+    // }
   }
 }

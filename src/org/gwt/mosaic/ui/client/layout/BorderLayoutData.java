@@ -40,6 +40,8 @@ public class BorderLayoutData extends LayoutData {
 
   int minSize = 0, maxSize = -1;
 
+  private CollapsedListenerCollection collapsedListeners;
+
   /**
    * Creates a new instance of {@code BorderLayoutData}. The associated widget
    * should be undecorated. The region of the widget added to a
@@ -127,6 +129,7 @@ public class BorderLayoutData extends LayoutData {
    * @param preferredSize the preferred size or -1 indicating that the widget's
    *          calculated preferred size should be used instead of this value.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize) {
     this(region, preferredSize, false);
   }
@@ -156,6 +159,7 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, boolean decorate) {
     super(decorate);
     this.region = region;
@@ -193,6 +197,7 @@ public class BorderLayoutData extends LayoutData {
    * @param maxSize the maximum widget size, either width or height, that the
    *          widget can be resized to by the user, by dragging a split bar.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, int minSize,
       int maxSize) {
     this(region, preferredSize, minSize, maxSize, false);
@@ -232,6 +237,7 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, int minSize,
       int maxSize, boolean decorate) {
     super(decorate);
@@ -276,6 +282,7 @@ public class BorderLayoutData extends LayoutData {
    * @param maxSize the maximum widget size, either width or height, that the
    *          widget can be resized to by the user, by dragging a split bar.
    */
+  @Deprecated
   public BorderLayoutData(Region region, int minSize, int maxSize) {
     this(region, -1.0, minSize, maxSize, false);
   }
@@ -312,9 +319,23 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
+  @Deprecated
   public BorderLayoutData(Region region, int minSize, int maxSize,
       boolean decorate) {
     this(region, -1.0, minSize, maxSize, decorate);
+  }
+
+  protected void addCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners == null) {
+      collapsedListeners = new CollapsedListenerCollection();
+    }
+    collapsedListeners.add(listener);
+  }
+
+  protected void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
   }
 
   /**
@@ -328,10 +349,11 @@ public class BorderLayoutData extends LayoutData {
    * @return the maximum widget size, either width or height, that the widget
    *         can be resized by dragging a split bar.
    */
+  @Deprecated
   public int getMaxSize() {
     return maxSize;
   }
-
+  
   /**
    * Gets the minimum widget size, either height for widgets placed on
    * {@link Region#NORTH} and {@link Region#SOUTH} or width for widgets placed
@@ -343,45 +365,9 @@ public class BorderLayoutData extends LayoutData {
    * @return the maximum widget size, either width or height, that the widget
    *         can be resized by dragging a split bar.
    */
+  @Deprecated
   public int getMinSize() {
     return minSize;
-  }
-
-  public Region getRegion() {
-    return region;
-  }
-
-  public boolean isResizable() {
-    return resizable;
-  }
-
-  protected void setMaxSize(int maxSize) {
-    this.maxSize = maxSize;
-  }
-
-  protected void setMinSize(int minSize) {
-    this.minSize = minSize;
-  }
-
-  private CollapsedListenerCollection collapsedListeners;
-
-  protected void addCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners == null) {
-      collapsedListeners = new CollapsedListenerCollection();
-    }
-    collapsedListeners.add(listener);
-  }
-
-  protected void removeCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners != null) {
-      collapsedListeners.remove(listener);
-    }
-  }
-
-  protected void fireCollapsedChange(Widget sender) {
-    if (collapsedListeners != null) {
-      collapsedListeners.fireCollapsedChange(sender);
-    }
   }
 
   /**
@@ -397,8 +383,33 @@ public class BorderLayoutData extends LayoutData {
    * @see BaseLayout#getFlowWidth(com.google.gwt.user.client.ui.Widget)
    * @see BaseLayout#getFlowHeight(com.google.gwt.user.client.ui.Widget)
    */
+  @Deprecated
   public double getPreferredSize() {
     return preferredSize;
+  }
+
+  public Region getRegion() {
+    return region;
+  }
+
+  public boolean isResizable() {
+    return resizable;
+  }
+
+  protected void removeCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
+  }
+
+  @Deprecated
+  protected void setMaxSize(int maxSize) {
+    this.maxSize = maxSize;
+  }
+
+  @Deprecated
+  protected void setMinSize(int minSize) {
+    this.minSize = minSize;
   }
 
   /**
@@ -410,7 +421,12 @@ public class BorderLayoutData extends LayoutData {
    * @param preferredSize the preferred size or -1 indicating that the widget's
    *          calculated preferred size should be used instead of this value.
    */
+  @Deprecated
   public void setPreferredSize(double preferredSize) {
     this.preferredSize = preferredSize;
+  }
+
+  public void setResizable(boolean resizable) {
+    this.resizable = resizable;
   }
 }

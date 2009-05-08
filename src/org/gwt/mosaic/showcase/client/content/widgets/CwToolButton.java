@@ -20,6 +20,7 @@ package org.gwt.mosaic.showcase.client.content.widgets;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.HTML;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
@@ -38,7 +39,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 /**

@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
@@ -122,14 +122,8 @@ final class SplitBar extends Widget implements HasAllMouseHandlers {
 
       glassPanel.removeFromParent();
 
-      if (context.boundaryPanel instanceof HasLayoutManager) {
-        new DelayedRunnable(33) {
-          public void run() {
-            ((HasLayoutManager) context.boundaryPanel).layout();
-            movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
-          }
-        };
-      }
+      WidgetHelper.layout(context.boundaryPanel);
+      movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
     }
 
     public void dragMove() {

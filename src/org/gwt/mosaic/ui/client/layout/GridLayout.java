@@ -15,9 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
@@ -79,8 +76,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
    * The widget matrix to render.
    */
   protected Widget[][] widgetMatrix;
-
-  private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
 
   private boolean runTwiceFlag;
 
@@ -185,7 +180,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
   @Override
   public void flushCache() {
-    widgetSizes.clear();
     initialized = false;
   }
 
@@ -246,14 +240,10 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
           GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
 
-          Dimension dim = widgetSizes.get(widget);
+          final Dimension dim = WidgetHelper.getPreferredSize(widget);
 
           int flowWidth, flowHeight;
 
-          if (dim == null) {
-            dim = WidgetHelper.getPreferredSize(widget);
-            widgetSizes.put(widget, dim);
-          }
           flowWidth = dim.getWidth();
           flowHeight = dim.getHeight();
 
@@ -368,16 +358,12 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
           final GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
           if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int offsetWidth = decPanel.getOffsetWidth()
-                - widget.getOffsetWidth();
-            final int offsetHeight = decPanel.getOffsetHeight()
-                - widget.getOffsetHeight();
-
-            cellWidth = colWidth * layoutData.colspan - offsetWidth + spacing
-                * (layoutData.colspan - 1);
-            cellHeight = rowHeight * layoutData.rowspan + -offsetHeight
-                + spacing * (layoutData.rowspan - 1);
+            final Dimension decPanelFrameSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, widget);
+            cellWidth = colWidth * layoutData.colspan - decPanelFrameSize.width
+                + spacing * (layoutData.colspan - 1);
+            cellHeight = rowHeight * layoutData.rowspan
+                - decPanelFrameSize.height + spacing * (layoutData.rowspan - 1);
           } else {
             cellWidth = colWidth * layoutData.colspan + spacing
                 * (layoutData.colspan - 1);
@@ -399,24 +385,17 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
             posLeft = left + (spacing + colWidth) * c;
             widgetWidth = -1;
+            runTwiceFlag = true;
           } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
-            Dimension dim = widgetSizes.get(widget);
-            if (dim == null) {
-              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
-              runTwiceFlag = true;
-            }
             posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
-                - dim.getWidth() / 2;
+                - WidgetHelper.getPreferredSize(widget).width / 2;
             widgetWidth = -1;
+            runTwiceFlag = true;
           } else {
-            Dimension dim = widgetSizes.get(widget);
-            if (dim == null) {
-              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
-              runTwiceFlag = true;
-            }
             posLeft = left + (spacing + colWidth) * c + cellWidth
-                - dim.getWidth();
+                - WidgetHelper.getPreferredSize(widget).width;
             widgetWidth = -1;
+            runTwiceFlag = true;
           }
 
           VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
@@ -433,24 +412,17 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
             posTop = top + (spacing + rowHeight) * r;
             widgetHeight = -1;
+            runTwiceFlag = true;
           } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
-            Dimension dim = widgetSizes.get(widget);
-            if (dim == null) {
-              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
-              runTwiceFlag = true;
-            }
             posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
-                - dim.getHeight() / 2;
+                - WidgetHelper.getPreferredSize(widget).height / 2;
             widgetHeight = -1;
+            runTwiceFlag = true;
           } else {
-            Dimension dim = widgetSizes.get(widget);
-            if (dim == null) {
-              widgetSizes.put(widget, dim = WidgetHelper.getPreferredSize(widget));
-              runTwiceFlag = true;
-            }
             posTop = top + (spacing + rowHeight) * r + cellHeight
-                - dim.getHeight();
+                - WidgetHelper.getPreferredSize(widget).height;
             widgetHeight = -1;
+            runTwiceFlag = true;
           }
 
           WidgetHelper.setBounds(layoutPanel, widget, posLeft, posTop,
@@ -463,10 +435,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ".layoutPanel(): "
           + e.getLocalizedMessage());
-    }
-
-    if (runTwice()) {
-      recalculate(widgetSizes);
     }
 
   }
