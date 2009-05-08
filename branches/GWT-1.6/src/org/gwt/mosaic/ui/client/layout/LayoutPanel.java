@@ -142,6 +142,26 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     } else {
       add(widget);
     }
+    
+    afterAdd(widget, layoutData);
+  }
+  
+  @Deprecated
+  private void afterAdd(Widget widget, LayoutData layoutData) {
+    if (layoutData instanceof BorderLayoutData) {
+      final BorderLayoutData data = (BorderLayoutData) layoutData;
+      if (Region.NORTH == data.region || Region.SOUTH == data.region) {
+        if (data.isResizable()) {
+          WidgetHelper.setMinHeight(widget, Math.max(1, data.minSize) + "px");
+          WidgetHelper.setMaxHeight(widget, Math.max(1, data.maxSize) + "px");
+        }
+      } else if (Region.WEST == data.region || Region.EAST == data.region) {
+        if (data.isResizable()) {
+          WidgetHelper.setMinWidth(widget, Math.max(1, data.minSize) + "px");
+          WidgetHelper.setMaxWidth(widget, Math.max(1, data.maxSize) + "px");
+        }
+      }
+    }
   }
 
   public void addCollapsedListener(Widget widget, CollapsedListener listener) {
