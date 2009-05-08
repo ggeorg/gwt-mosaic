@@ -97,26 +97,34 @@ final class SplitBar extends Widget implements HasAllMouseHandlers {
       if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
         int delta = context.draggable.getAbsoluteTop()
             - draggableOldAbsoluteTop;
-        layoutData.preferredSize = widget.getOffsetHeight() + delta;
+//        layoutData.preferredSize = widget.getOffsetHeight() + delta;
+        WidgetHelper.setSize(widget, new Dimension(-1, widget.getOffsetHeight() + delta));
+        layoutData.preferredSize = widget.getOffsetHeight();
       } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
         int delta = draggableOldAbsoluteTop
             - context.draggable.getAbsoluteTop();
-        layoutData.preferredSize = widget.getOffsetHeight() + delta;
+//        layoutData.preferredSize = widget.getOffsetHeight() + delta;
+        WidgetHelper.setSize(widget, new Dimension(-1, widget.getOffsetHeight() + delta));
+        layoutData.preferredSize = widget.getOffsetHeight();
       }
       if ((direction & SplitBar.DIRECTION_WEST) != 0) {
         int delta = context.draggable.getAbsoluteLeft()
             - draggableOldAbsoluteLeft;
-        layoutData.preferredSize = widget.getOffsetWidth() + delta;
+//        layoutData.preferredSize = widget.getOffsetWidth() + delta;
+        WidgetHelper.setSize(widget, new Dimension(widget.getOffsetWidth() + delta, -1));
+        layoutData.preferredSize = widget.getOffsetWidth();
       } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
         int delta = draggableOldAbsoluteLeft
             - context.draggable.getAbsoluteLeft();
-        layoutData.preferredSize = widget.getOffsetWidth() + delta;
+//        layoutData.preferredSize = widget.getOffsetWidth() + delta;
+        WidgetHelper.setSize(widget, new Dimension(widget.getOffsetWidth() + delta, -1));
+        layoutData.preferredSize = widget.getOffsetWidth();
       }
 
-      layoutData.preferredSize = Math.max((int) layoutData.preferredSize,
-          layoutData.minSize);
-      layoutData.preferredSize = Math.min((int) layoutData.preferredSize,
-          layoutData.maxSize);
+//      layoutData.preferredSize = Math.max((int) layoutData.preferredSize,
+//          layoutData.minSize);
+//      layoutData.preferredSize = Math.min((int) layoutData.preferredSize,
+//          layoutData.maxSize);
 
       super.dragEnd();
 
