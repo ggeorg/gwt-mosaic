@@ -34,6 +34,31 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class WidgetHelper {
 
+  private static final String MIN_WIDTH = "minWidth";
+
+  private static final String MIN_HEIGHT = "minHeight";
+
+  private static final String MAX_WIDTH = "maxWidth";
+
+  private static final String MAX_HEIGHT = "maxHeight";
+
+  /**
+   * Returns the current size of the {@code Widget} in the form of a
+   * {@link Dimension} object.
+   * <p>
+   * Get's the elements <code>height</code> and <code>width</code> plus the size
+   * of the borders and margins.
+   * <p>
+   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
+   * 
+   * @param widget the given {@code Widget}
+   * @return a {@link Dimension} object that indicates the size of this
+   *         component
+   */
+  public static Dimension getOffsetSize(final Widget widget) {
+    return new Dimension(widget.getOffsetWidth(), widget.getOffsetHeight());
+  }
+
   /**
    * Returns closest {@link HasLayoutManager} parent of the given {@code Widget}
    * .
@@ -51,6 +76,27 @@ public class WidgetHelper {
       return (HasLayoutManager) parent;
     } else {
       return getParent(parent);
+    }
+  }
+
+  /**
+   * 
+   * @param widget
+   * @return
+   */
+  public static Dimension getPreferredSize(Widget widget) {
+    // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
+    if (widget instanceof FormPanel) {
+      final Widget _widget = ((FormPanel) widget).getWidget();
+      if (_widget != null && (_widget instanceof HasLayoutManager)) {
+        widget = _widget;
+      }
+    }
+    if (widget instanceof HasLayoutManager) {
+      final HasLayoutManager lp = (HasLayoutManager) widget;
+      return lp.getPreferredSize();
+    } else {
+      return getOffsetSize(widget);
     }
   }
 
@@ -154,6 +200,29 @@ public class WidgetHelper {
     setBounds(layoutPanel, widget, r.x, r.y, r.width, r.height);
   }
 
+  public static void setMaxHeight(final Widget w, final String height) {
+    DOM.setStyleAttribute(w.getElement(), MAX_HEIGHT, height);
+  }
+
+  public static void setMaxSize(Widget widget, String width, String height) {
+    setMaxWidth(widget, width);
+    setMaxHeight(widget, height);
+  }
+  public static void setMaxWidth(final Widget w, final String width) {
+    DOM.setStyleAttribute(w.getElement(), MAX_WIDTH, width);
+  }
+  public static void setMinHeight(final Widget w, final String height) {
+    DOM.setStyleAttribute(w.getElement(), MIN_HEIGHT, height);
+  }
+  public static void setMinSize(Widget widget, String width, String height) {
+    setMinWidth(widget, width);
+    setMinHeight(widget, height);
+  }
+
+  public static void setMinWidth(final Widget w, final String width) {
+    DOM.setStyleAttribute(w.getElement(), MIN_WIDTH, width);
+  }
+
   /**
    * Resizes the given {@code Widget}.
    * 
@@ -185,9 +254,6 @@ public class WidgetHelper {
         return;
       }
     }
-    // else if (width == -1) {
-    // widget.setWidth("auto");
-    // }
 
     if (height >= 0) {
       widget.setHeight(height + "px");
@@ -198,14 +264,6 @@ public class WidgetHelper {
         final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
         widget.setHeight(Math.max(0, fixedHeight) + "px");
       }
-    }
-    // else if (height == -1) {
-    // widget.setHeight("auto");
-    // }
-
-    if (width != widget.getOffsetWidth()) {
-      System.out.println(elem.getTagName() + " :: " + widget.getOffsetWidth()
-          + "x" + widget.getOffsetHeight() + " ? " + width + "x" + height);
     }
   }
 
@@ -221,9 +279,6 @@ public class WidgetHelper {
         widget.setWidth(Math.max(0, fixedWidth) + "px");
       }
     }
-    // else if (width == -1) {
-    // widget.setWidth("auto");
-    // }
 
     if (height >= 0) {
       widget.setHeight(height + "px");
@@ -232,14 +287,6 @@ public class WidgetHelper {
         final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
         widget.setHeight(Math.max(0, fixedHeight) + "px");
       }
-    }
-    // else if (height == -1) {
-    // widget.setHeight("auto");
-    // }
-
-    if (width != widget.getOffsetWidth()) {
-      System.out.println(elem.getTagName() + " :: " + widget.getOffsetWidth()
-          + "x" + widget.getOffsetHeight() + " ? " + width + "x" + height);
     }
   }
 
@@ -271,75 +318,4 @@ public class WidgetHelper {
       final Point p) {
     setXY(layoutPanel, widget, p.x, p.y);
   }
-
-  /**
-   * Returns the current size of the {@code Widget} in the form of a
-   * {@link Dimension} object.
-   * <p>
-   * Get's the elements <code>height</code> and <code>width</code> plus the size
-   * of the borders and margins.
-   * <p>
-   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
-   * 
-   * @param widget the given {@code Widget}
-   * @return a {@link Dimension} object that indicates the size of this
-   *         component
-   */
-  public static Dimension getOffsetSize(final Widget widget) {
-    return new Dimension(widget.getOffsetWidth(), widget.getOffsetHeight());
-  }
-
-  /**
-   * 
-   * @param widget
-   * @return
-   */
-  public static Dimension getPreferredSize(Widget widget) {
-    // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
-    if (widget instanceof FormPanel) {
-      final Widget _widget = ((FormPanel) widget).getWidget();
-      if (_widget != null && (_widget instanceof HasLayoutManager)) {
-        widget = _widget;
-      }
-    }
-    if (widget instanceof HasLayoutManager) {
-      final HasLayoutManager lp = (HasLayoutManager) widget;
-      return lp.getPreferredSize();
-    } else {
-      final Element elem = widget.getElement();
-
-      final int prefWidth = DOM.getElementPropertyInt(elem, "prefWidth");
-      final int prefHeight = DOM.getElementPropertyInt(elem, "prefHeight");
-
-      changeToStaticPositioning(elem);
-
-      if (prefWidth == 0) {
-        DOM.setElementPropertyInt(elem, "prefWidth", widget.getOffsetWidth());
-      } else if (prefWidth != widget.getOffsetWidth()) {
-        DOM.setElementPropertyInt(elem, "prefWidth", widget.getOffsetWidth());
-        widget.setWidth("0px");
-        widget.getOffsetWidth();
-        widget.setWidth("auto");
-      }
-      if (prefHeight == 0) {
-        DOM.setElementPropertyInt(elem, "prefHeight", widget.getOffsetHeight());
-      } else if (prefHeight != widget.getOffsetHeight()) {
-        DOM.setElementPropertyInt(elem, "prefHeight", widget.getOffsetHeight());
-        widget.setHeight("0px");
-        widget.getOffsetHeight();
-        widget.setHeight("auto");
-      }
-
-      return getOffsetSize(widget);
-    }
-  }
-
-  private static void changeToStaticPositioning(Element elem) {
-    DOM.setStyleAttribute(elem, "left", "");
-    DOM.setStyleAttribute(elem, "top", "");
-    // ggeorg: see
-    // http://groups.google.com/group/gwt-mosaic/browse_thread/thread/83d2bd6d6791ca62
-    // DOM.setStyleAttribute(elem, "position", "");
-  }
-
 }
