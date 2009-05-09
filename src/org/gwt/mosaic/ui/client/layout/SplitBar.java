@@ -43,7 +43,6 @@ import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import java.util.HashMap;
@@ -99,35 +98,33 @@ final class SplitBar extends Widget implements HasAllMouseHandlers {
       if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
         int delta = context.draggable.getAbsoluteTop()
             - draggableOldAbsoluteTop;
-        WidgetHelper.setSize(widget, new Dimension(-1, widget.getOffsetHeight() + delta));
-        layoutData.preferredSize = widget.getOffsetHeight();
+        layoutData.preferredSize = widget.getOffsetHeight() + delta;
       } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
         int delta = draggableOldAbsoluteTop
             - context.draggable.getAbsoluteTop();
-        WidgetHelper.setSize(widget, new Dimension(-1, widget.getOffsetHeight() + delta));
-        layoutData.preferredSize = widget.getOffsetHeight();
+        layoutData.preferredSize = widget.getOffsetHeight() + delta;
       }
       if ((direction & SplitBar.DIRECTION_WEST) != 0) {
         int delta = context.draggable.getAbsoluteLeft()
             - draggableOldAbsoluteLeft;
-        WidgetHelper.setSize(widget, new Dimension(widget.getOffsetWidth() + delta, -1));
-        layoutData.preferredSize = widget.getOffsetWidth();
+        layoutData.preferredSize = widget.getOffsetWidth() + delta;
       } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
         int delta = draggableOldAbsoluteLeft
             - context.draggable.getAbsoluteLeft();
-        WidgetHelper.setSize(widget, new Dimension(widget.getOffsetWidth() + delta, -1));
-        layoutData.preferredSize = widget.getOffsetWidth();
+        layoutData.preferredSize = widget.getOffsetWidth() + delta;
       }
+
+      layoutData.preferredSize = Math.max((int) layoutData.preferredSize,
+          layoutData.minSize);
+      layoutData.preferredSize = Math.min((int) layoutData.preferredSize,
+          layoutData.maxSize);
 
       super.dragEnd();
 
       glassPanel.removeFromParent();
 
       WidgetHelper.layout(context.boundaryPanel);
-      if (UserAgent.isIE6()) {
-        // XXX temporary fix for IE7
-        WidgetHelper.layout(context.boundaryPanel);
-      }
+
       movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
     }
 
