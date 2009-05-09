@@ -37,6 +37,8 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -322,6 +324,17 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
   private static final String DEFAULT_STYLENAME = "mosaic-ToolButton";
 
   private final ButtonWidget button = new ButtonWidget();
+  
+  @Override
+  public Dimension getPreferredSize() {
+    return getLayoutPanel().getPreferredSize();
+  }
+  
+  @Override
+  public void invalidate() {
+    super.invalidate();
+    button.setSize("auto", "auto");
+  }
 
   /**
    * Creates a tool button with no caption.
