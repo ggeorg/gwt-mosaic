@@ -142,21 +142,19 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     } else {
       add(widget);
     }
-    
+
     afterAdd(widget, layoutData);
   }
-  
+
   @Deprecated
   private void afterAdd(Widget widget, LayoutData layoutData) {
     if (layoutData instanceof BorderLayoutData) {
       final BorderLayoutData data = (BorderLayoutData) layoutData;
-      if (Region.NORTH == data.region || Region.SOUTH == data.region) {
-        if (data.isResizable()) {
+      if (data.isResizable()) {
+        if (Region.NORTH == data.region || Region.SOUTH == data.region) {
           WidgetHelper.setMinHeight(widget, Math.max(1, data.minSize) + "px");
           WidgetHelper.setMaxHeight(widget, Math.max(1, data.maxSize) + "px");
-        }
-      } else if (Region.WEST == data.region || Region.EAST == data.region) {
-        if (data.isResizable()) {
+        } else if (Region.WEST == data.region || Region.EAST == data.region) {
           WidgetHelper.setMinWidth(widget, Math.max(1, data.minSize) + "px");
           WidgetHelper.setMaxWidth(widget, Math.max(1, data.maxSize) + "px");
         }
@@ -434,8 +432,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       return;
     }
 
-    GWT.log("====================== Parent of '" + this.getClass().getName() + "' ('"
-        + parent.getClass().getName()
+    GWT.log("====================== Parent of '" + this.getClass().getName()
+        + "' ('" + parent.getClass().getName()
         + "') is not an instance of HasLayoutManager.", null);
 
     // Set the initial size & layout
