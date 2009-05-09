@@ -129,7 +129,6 @@ public class BorderLayoutData extends LayoutData {
    * @param preferredSize the preferred size or -1 indicating that the widget's
    *          calculated preferred size should be used instead of this value.
    */
-  @Deprecated
   public BorderLayoutData(Region region, double preferredSize) {
     this(region, preferredSize, false);
   }
@@ -159,7 +158,6 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
-  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, boolean decorate) {
     super(decorate);
     this.region = region;
@@ -197,7 +195,6 @@ public class BorderLayoutData extends LayoutData {
    * @param maxSize the maximum widget size, either width or height, that the
    *          widget can be resized to by the user, by dragging a split bar.
    */
-  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, int minSize,
       int maxSize) {
     this(region, preferredSize, minSize, maxSize, false);
@@ -237,7 +234,6 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
-  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, int minSize,
       int maxSize, boolean decorate) {
     super(decorate);
@@ -282,7 +278,6 @@ public class BorderLayoutData extends LayoutData {
    * @param maxSize the maximum widget size, either width or height, that the
    *          widget can be resized to by the user, by dragging a split bar.
    */
-  @Deprecated
   public BorderLayoutData(Region region, int minSize, int maxSize) {
     this(region, -1.0, minSize, maxSize, false);
   }
@@ -319,7 +314,6 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
-  @Deprecated
   public BorderLayoutData(Region region, int minSize, int maxSize,
       boolean decorate) {
     this(region, -1.0, minSize, maxSize, decorate);
@@ -349,7 +343,6 @@ public class BorderLayoutData extends LayoutData {
    * @return the maximum widget size, either width or height, that the widget
    *         can be resized by dragging a split bar.
    */
-  @Deprecated
   public int getMaxSize() {
     return maxSize;
   }
@@ -365,7 +358,6 @@ public class BorderLayoutData extends LayoutData {
    * @return the maximum widget size, either width or height, that the widget
    *         can be resized by dragging a split bar.
    */
-  @Deprecated
   public int getMinSize() {
     return minSize;
   }
@@ -383,7 +375,6 @@ public class BorderLayoutData extends LayoutData {
    * @see BaseLayout#getFlowWidth(com.google.gwt.user.client.ui.Widget)
    * @see BaseLayout#getFlowHeight(com.google.gwt.user.client.ui.Widget)
    */
-  @Deprecated
   public double getPreferredSize() {
     return preferredSize;
   }
@@ -402,12 +393,10 @@ public class BorderLayoutData extends LayoutData {
     }
   }
 
-  @Deprecated
   protected void setMaxSize(int maxSize) {
     this.maxSize = maxSize;
   }
 
-  @Deprecated
   protected void setMinSize(int minSize) {
     this.minSize = minSize;
   }
@@ -421,7 +410,6 @@ public class BorderLayoutData extends LayoutData {
    * @param preferredSize the preferred size or -1 indicating that the widget's
    *          calculated preferred size should be used instead of this value.
    */
-  @Deprecated
   public void setPreferredSize(double preferredSize) {
     this.preferredSize = preferredSize;
   }

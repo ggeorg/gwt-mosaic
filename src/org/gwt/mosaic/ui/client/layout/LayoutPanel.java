@@ -15,18 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.Iterator;
-
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.ui.client.CollapsedListener;
-import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
-import org.gwt.mosaic.ui.client.LayoutComposite;
-import org.gwt.mosaic.ui.client.LayoutPopupPanel;
-import org.gwt.mosaic.ui.client.Viewport;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -38,6 +26,17 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.CollapsedListener;
+import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
+import org.gwt.mosaic.ui.client.LayoutComposite;
+import org.gwt.mosaic.ui.client.LayoutPopupPanel;
+import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
+import java.util.Iterator;
 
 /**
  * An {@code AbsolutePanel}
