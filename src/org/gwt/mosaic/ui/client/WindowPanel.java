@@ -120,7 +120,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       final Widget boundaryPanel = windowController.getBoundaryPanel();
       // DeferredCommand.addCommand(new Command() {
       // public void execute() {
-      getLayoutPanel().setSize("0px", "0px");
       if (isCollapsed()) {
         final Dimension size = DOM.getClientSize(boundaryPanel.getElement());
         final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
@@ -830,7 +829,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * 
    * @deprecated Replaced by {@link #toFront()}.
    */
-  public void xbringToFront() {
+  public void bringToFront() {
     toFront();
   }
 
