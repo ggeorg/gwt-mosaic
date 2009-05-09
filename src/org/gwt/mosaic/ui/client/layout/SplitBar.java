@@ -15,18 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
-
-import com.allen_sauer.gwt.dnd.client.AbstractDragController;
-import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
-import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
-import com.allen_sauer.gwt.dnd.client.util.Location;
-import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -46,6 +34,20 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
+
+import com.allen_sauer.gwt.dnd.client.AbstractDragController;
+import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
+import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
+import com.allen_sauer.gwt.dnd.client.util.Location;
+import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -131,6 +133,10 @@ final class SplitBar extends Widget implements HasAllMouseHandlers {
       glassPanel.removeFromParent();
 
       WidgetHelper.layout(context.boundaryPanel);
+      if (UserAgent.isIE6()) {
+        // XXX temporary fix for IE7
+        WidgetHelper.layout(context.boundaryPanel);
+      }
       movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
     }
 
