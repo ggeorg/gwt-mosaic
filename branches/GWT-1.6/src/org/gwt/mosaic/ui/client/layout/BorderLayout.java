@@ -673,7 +673,7 @@ public class BorderLayout extends BaseLayout {
             runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            w = (int) (height * layoutData.preferredSize);
+            w = (int) (width * layoutData.preferredSize);
           } else {
             w = (int) layoutData.preferredSize;
           }
@@ -757,7 +757,7 @@ public class BorderLayout extends BaseLayout {
             runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            w = (int) (height * layoutData.preferredSize);
+            w = (int) (width * layoutData.preferredSize);
           } else {
             w = (int) layoutData.preferredSize;
           }
