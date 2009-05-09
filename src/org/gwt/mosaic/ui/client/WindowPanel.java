@@ -1567,12 +1567,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (doPack) {
       pack();
     }
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
+//    DeferredCommand.addCommand(new Command() {
+//      public void execute() {
         center();
         toFront();
-      }
-    });
+//      }
+//    });
   }
 
   /**
