@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,8 +30,11 @@ import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -44,7 +47,7 @@ import com.google.gwt.user.client.ui.Widget;
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
     ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
     ".dragdrop-movable-panel"})
-public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
+public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
 
   /**
    * Constructor.
@@ -68,11 +71,11 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
   /**
    * Fired when the user clicks on a button.
    * 
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
-    final Button btn = (Button) sender;
+  public void onClick(ClickEvent event) {
+    final Button btn = (Button) event.getSource();
     InfoPanel.show(btn.getText(), "Clicked!");
   }
 
@@ -88,18 +91,21 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel1);
 
-    layoutPanel1.add(new Button("Plain", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel1.add(new Button("Plain", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         final LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
+        System.out.println(Window.getClientWidth()+"   "+popup.getOffsetWidth());
         popup.center();
       }
     }));
 
-    layoutPanel1.add(new Button("Plain 512x?", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel1.add(new Button("Plain 512x?", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setWidth("512px");
@@ -107,9 +113,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     }));
 
-    layoutPanel1.add(new Button("Plain ?x384", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel1.add(new Button("Plain ?x384", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setHeight("384px");
@@ -117,9 +124,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     }));
 
-    layoutPanel1.add(new Button("Plain 512x384", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel1.add(new Button("Plain 512x384", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         final LayoutPopupPanel popup = new LayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent2(popup));
         popup.setSize("512px", "384px");
         popup.center();
@@ -131,18 +139,20 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     LayoutPanel layoutPanel2 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel2);
 
-    layoutPanel2.add(new Button("Decorated", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel2.add(new Button("Decorated", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.center();
       }
     }));
 
-    layoutPanel2.add(new Button("Decorated 512x?", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel2.add(new Button("Decorated 512x?", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setWidth("512px");
@@ -150,9 +160,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     }));
 
-    layoutPanel2.add(new Button("Decorated ?x384", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel2.add(new Button("Decorated ?x384", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setHeight("384px");
@@ -160,10 +171,11 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     }));
 
-    layoutPanel2.add(new Button("Decorated 512x384", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel2.add(new Button("Decorated 512x384", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         final DecoratedLayoutPopupPanel popup = new DecoratedLayoutPopupPanel(
             true);
+        popup.setAnimationEnabled(true);
         popup.add(createContent2(popup));
         popup.setSize("512px", "384px");
         popup.center();
@@ -175,18 +187,20 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     LayoutPanel layoutPanel3 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel3);
 
-    layoutPanel3.add(new Button("WindowPanel", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel3.add(new Button("WindowPanel", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel");
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.center();
       }
     }));
 
-    layoutPanel3.add(new Button("WindowPanel 512x?", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel3.add(new Button("WindowPanel 512x?", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel 512x?");
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setWidth("512px");
@@ -194,9 +208,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     }));
 
-    layoutPanel3.add(new Button("WindowPanel ?x384", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel3.add(new Button("WindowPanel ?x384", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel ?x384");
+        popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
         popup.setHeight("384px");
@@ -204,9 +219,10 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
       }
     }));
 
-    layoutPanel3.add(new Button("WindowPanel 512x384", new ClickListener() {
-      public void onClick(Widget sender) {
+    layoutPanel3.add(new Button("WindowPanel 512x384", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         WindowPanel popup = new WindowPanel("WindowPanel 512x384");
+        popup.setAnimationEnabled(true);
         popup.add(createContent2(popup));
         popup.setSize("512px", "384px");
         popup.center();
@@ -229,29 +245,34 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
     return panel;
   }
 
-  private ClickListener cl1, cl2;
+  private ClickHandler cl1, cl2;
+  private HandlerRegistration clReg;
 
   private Widget createContent2(final PopupPanel popup) {
     final LayoutPanel panel = new LayoutPanel(new BorderLayout());
     panel.setPadding(0);
 
-    cl1 = new ClickListener() {
-      public void onClick(Widget sender) {
+    cl1 = new ClickHandler() {
+      public void onClick(ClickEvent event) {
         popup.setPixelSize(256, 192);
         ((HasLayoutManager) popup).layout();
         popup.center();
-        ((Button) sender).removeClickListener(this);
-        ((Button) sender).addClickListener(cl2);
+        if (clReg != null) {
+          clReg.removeHandler();
+        }
+        clReg = ((Button) event.getSource()).addClickHandler(cl2);
       }
     };
 
-    cl2 = new ClickListener() {
-      public void onClick(Widget sender) {
+    cl2 = new ClickHandler() {
+      public void onClick(ClickEvent event) {
         popup.setPixelSize(512, 384);
         ((HasLayoutManager) popup).layout();
         popup.center();
-        ((Button) sender).removeClickListener(this);
-        ((Button) sender).addClickListener(cl1);
+        if (clReg != null) {
+          clReg.removeHandler();
+        }
+        clReg = ((Button) event.getSource()).addClickHandler(cl1);
       }
     };
 
@@ -263,5 +284,5 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickListener {
 
     return panel;
   }
-
+  
 }

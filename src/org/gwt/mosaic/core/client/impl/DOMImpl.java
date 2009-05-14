@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.core.client.impl;
 
-import org.gwt.mosaic.core.client.DOM;
-
 import com.google.gwt.user.client.Element;
 
 /**
@@ -33,7 +31,7 @@ public class DOMImpl {
    * @param attr the name of the style attribute to be retrieved
    * @return the style attribute's value
    */
-  public native String getStyleAttribute(Element elem, String attr) 
+  public native String getComputedStyleAttribute(Element elem, String attr) 
   /*-{
     if (document.defaultView && document.defaultView.getComputedStyle) { // W3C DOM method
       var value = null;
@@ -44,9 +42,9 @@ public class DOMImpl {
       if (computed) { // test computed before touching for safari
         value = computed[attr];
       }
-      return elem.style[attr] || value;
+      return (elem.style[attr] || value || '');
     } else { // default to inline only
-      return el.style[attr];
+      return (el.style[attr] || '');
     }
   }-*/;
 
@@ -64,13 +62,4 @@ public class DOMImpl {
     elem.getStyle().setProperty(attr, value);
   }
 
-  /**
-   * Gets the cell index of a cell within a table row.
-   * 
-   * @param td the cell element
-   * @return the cell index
-   */
-  public int getCellIndex(Element td) {
-    return DOM.getElementPropertyInt(td, "cellIndex");
-  }
 }

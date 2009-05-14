@@ -15,9 +15,10 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -117,12 +118,8 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
       show();
       pack();
     } else {
-      // setSize("0px", "0px");
-      // layoutPanel.setSize("0px", "0px");
-      // layoutPanel.setSize("auto", "auto");
-      int[] size = getLayoutPanel().getPreferredSize();
-      setContentSize(size[0], size[1]);
-      // delayedLayout(MIN_DELAY_MILLIS);
+      setSize("auto", "auto");
+      setContentSize(getLayoutPanel().getPreferredSize());
       layout();
     }
   }
@@ -130,10 +127,15 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   protected LayoutPanel getLayoutPanel() {
     return layoutPanel;
   }
-
+  
   protected void setContentSize(int width, int height) {
-    DOM.setContentAreaWidth(layoutPanel.getElement(), width);
-    DOM.setContentAreaHeight(layoutPanel.getElement(), height);
+    setContentSize(new Dimension(width, height));
+  }
+
+  protected void setContentSize(Dimension d) {
+    // DOM.setContentAreaWidth(layoutPanel.getElement(), width);
+    // DOM.setContentAreaHeight(layoutPanel.getElement(), height);
+    WidgetHelper.setSize(layoutPanel, d);
   }
 
   /**
@@ -141,10 +143,10 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
    * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
-  public int[] getPreferredSize() {
-    int[] result = layoutPanel.getPreferredSize();
-    result[0] += decorationWidthCache;
-    result[1] += decorationHeightCache;
+  public Dimension getPreferredSize() {
+    final Dimension result = layoutPanel.getPreferredSize();
+    result.width += decorationWidthCache;
+    result.height += decorationHeightCache;
     return result;
   }
 
@@ -166,15 +168,6 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
-   */
-  public void layout(boolean invalidate) {
-    layoutPanel.layout(invalidate);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
@@ -185,10 +178,10 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   private int decorationHeightCache = 0;
 
   private void calculateDecorationSize() {
-    final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-    final int[] box = DOM.getBoxSize(getElement());
-    decorationWidthCache = (box[0] - size[0]);
-    decorationHeightCache = (box[1] - size[1]);
+    final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
+    final Dimension box = WidgetHelper.getOffsetSize(this);
+    decorationWidthCache = box.width - size.width;
+    decorationHeightCache = box.height - size.height;
   }
 
   private String desiredHeight = null;
@@ -199,8 +192,9 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     desiredHeight = height;
     if (isAttached()) {
       layoutPanel.setHeight(height);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      setContentSize(size[0], size[1] - decorationHeightCache);
+      final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
+      size.height -= decorationHeightCache;
+      setContentSize(size);
     }
   }
 
@@ -212,8 +206,9 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     desiredWidth = width;
     if (isAttached()) {
       layoutPanel.setWidth(width);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      setContentSize(size[0] - decorationWidthCache, size[1]);
+      final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
+      size.width -= decorationWidthCache;
+      setContentSize(size);
     }
   }
 

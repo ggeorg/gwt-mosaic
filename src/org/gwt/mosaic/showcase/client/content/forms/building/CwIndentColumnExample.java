@@ -134,4 +134,5 @@ public class CwIndentColumnExample extends ContentWidget {
     textBox.setEnabled(enabled);
     return textBox;
   }
+  
 }

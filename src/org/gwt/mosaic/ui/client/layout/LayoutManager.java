@@ -15,6 +15,8 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import org.gwt.mosaic.core.client.Dimension;
+
 /**
  * Defines the interface for classes that know how to lay out a {@code
  * LayoutPanel}.
@@ -33,9 +35,9 @@ public interface LayoutManager {
    * by this layout.
    * 
    * @param layoutPanel a {@link LayoutPanel} widget using this layout.
-   * @return an array ({@code width, height} ) containing the computed size.
+   * @return an instance of {@link Dimension} containing the computed size.
    */
-  int[] getPreferredSize(LayoutPanel layoutPanel);
+  Dimension getPreferredSize(LayoutPanel layoutPanel);
 
   /**
    * Lays out the specified {@link LayoutPanel} according to this layout.

@@ -16,16 +16,21 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.util.DelayedRunnable;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,21 +42,11 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class LoadingPanel extends PopupPanel implements WindowResizeListener,
-    PopupListener {
-
-  private GlassPanel glassPanel;
-
-  private final Widget targetWidget;
-
-  private final AbsolutePanel glassPanelParent;
+public class LoadingPanel extends PopupPanel implements ResizeHandler,
+    CloseHandler<PopupPanel> {
 
   public static LoadingPanel show(String text) {
     return show(text, false);
-  }
-
-  public static LoadingPanel show(Widget targetWidget, String text) {
-    return show(targetWidget, text, false);
   }
 
   public static LoadingPanel show(String text, boolean asHTML) {
@@ -60,6 +55,14 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     } else {
       return show(new Label(text));
     }
+  }
+
+  public static LoadingPanel show(Widget w) {
+    return show(null, w);
+  }
+
+  public static LoadingPanel show(Widget targetWidget, String text) {
+    return show(targetWidget, text, false);
   }
 
   public static LoadingPanel show(Widget targetWidget, String text,
@@ -71,9 +74,16 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     }
   }
 
-  public static LoadingPanel show(Widget w) {
-    return show(null, w);
-  }
+  private GlassPanel glassPanel;
+
+  private final Widget targetWidget;
+
+  private final AbsolutePanel glassPanelParent;
+
+  /**
+   * The default style name.
+   */
+  private static final String DEFAULT_STYLENAME = "mosaic-LoadingPanel";
 
   public static LoadingPanel show(Widget targetWidget, Widget w) {
     final LoadingPanel loadingPanel = new LoadingPanel(targetWidget);
@@ -82,7 +92,7 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
       loadingPanel.glassPanel = new GlassPanel(false);
       loadingPanel.glassPanel.addStyleName("mosaic-GlassPanel-loading");
       DOM.setStyleAttribute(loadingPanel.glassPanel.getElement(), "zIndex",
-          DOM.getStyleAttribute(loadingPanel.getElement(), "zIndex"));
+          DOM.getComputedStyleAttribute(loadingPanel.getElement(), "zIndex"));
     }
     if (loadingPanel.glassPanelParent == null) {
       RootPanel.get().add(loadingPanel.glassPanel, 0, 0);
@@ -92,14 +102,11 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
       loadingPanel.adjustGlassPanelBounds();
     }
     loadingPanel.center();
-    loadingPanel.addPopupListener(loadingPanel);
+    loadingPanel.addCloseHandler(loadingPanel);
     return loadingPanel;
   }
 
-  /**
-   * The default style name.
-   */
-  private static final String DEFAULT_STYLENAME = "mosaic-LoadingPanel";
+  private HandlerRegistration resizeHandlerRegistration = null;
 
   protected LoadingPanel(Widget targetWidget) {
     super(false, false);
@@ -110,14 +117,22 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
 
     setAnimationEnabled(true);
 
-    Window.addWindowResizeListener(this);
+    resizeHandlerRegistration = Window.addResizeHandler(this);
 
     addStyleName(DEFAULT_STYLENAME);
     DOM.setIntStyleAttribute(getElement(), "zIndex", Integer.MAX_VALUE);
   }
 
-  public Widget getBoudaryWidget() {
-    return targetWidget;
+  protected void adjustGlassPanelBounds() {
+    if (glassPanelParent == null) {
+      return;
+    }
+    final Dimension size = WidgetHelper.getOffsetSize(targetWidget);
+    RootPanel.get().setWidgetPosition(glassPanelParent,
+        targetWidget.getAbsoluteLeft(), targetWidget.getAbsoluteTop());
+    glassPanelParent.setPixelSize(size.width, size.height);
+    glassPanel.removeFromParent();
+    glassPanelParent.add(glassPanel, 0, 0);
   }
 
   /**
@@ -144,52 +159,30 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     });
   }
 
-  protected void adjustGlassPanelBounds() {
-    if (glassPanelParent == null) {
-      return;
-    }
-    int[] size = DOM.getBoxSize(targetWidget.getElement());
-    RootPanel.get().setWidgetPosition(glassPanelParent,
-        targetWidget.getAbsoluteLeft(), targetWidget.getAbsoluteTop());
-    glassPanelParent.setPixelSize(size[0], size[1]);
-    glassPanel.removeFromParent();
-    glassPanelParent.add(glassPanel, 0, 0);
+  public Widget getBoudaryWidget() {
+    return targetWidget;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int,
-   * int)
-   */
-  public void onWindowResized(int width, int height) {
+  public void onClose(CloseEvent<PopupPanel> event) {
+    resizeHandlerRegistration.removeHandler();
+    if (glassPanelParent != null) {
+      glassPanelParent.removeFromParent();
+      glassPanelParent.setSize("", "");
+    }
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        glassPanel.removeFromParent();
+      }
+    });
+  }
+
+  public void onResize(ResizeEvent event) {
     new DelayedRunnable() {
       public void run() {
         center();
         adjustGlassPanelBounds();
       }
     };
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.PopupListener#onPopupClosed(com.google.gwt
-   * .user.client.ui.PopupPanel, boolean)
-   */
-  public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    Window.removeWindowResizeListener(this);
-    if (glassPanelParent != null) {
-      glassPanelParent.removeFromParent();
-      glassPanelParent.setSize("", "");
-    }
-
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        glassPanel.removeFromParent();
-      }
-    });
   }
 
 }

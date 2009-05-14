@@ -61,13 +61,12 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public boolean add(E e) {
-    boolean result = super.add(e);
-    if (result) {
-      int index = super.size() - 1;
-      fireIntervalAdded(this, index, index);
-      return true;
+    if (!super.add(e)) {
+      return false;
     }
-    return false;
+    int index = super.size() - 1;
+    fireIntervalAdded(this, index, index);
+    return true;
   }
 
   /**
@@ -110,11 +109,11 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * @throws NullPointerException if the specified collection is null
    */
   public boolean addAll(int index, Collection<? extends E> c) {
-    if (super.addAll(index, c)) {
-      fireContentsChanged(this, index, index + c.size() - 1);
-      return true;
+    if (!super.addAll(index, c)) {
+      return false;
     }
-    return false;
+    fireContentsChanged(this, index, index + c.size() - 1);
+    return true;
   }
 
   /**
@@ -231,7 +230,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public E remove(int index) {
-    E element = super.remove(index);
+    final E element = super.remove(index);
     fireIntervalRemoved(this, index, index);
     return element;
   }
@@ -259,7 +258,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public void removeAllElements() {
-    super.removeAllElements();
+    clear();
   }
 
   /*
@@ -269,7 +268,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public boolean removeElement(Object o) {
-    return super.removeElement(o);
+    return remove(o);
   }
 
   /*
@@ -302,7 +301,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public E set(int index, E element) {
-    E result = super.set(index, element);
+    final E result = super.set(index, element);
     fireContentsChanged(this, index, index);
     return result;
   }
@@ -323,8 +322,8 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    * @see java.util.Vector#setSize(int)
    */
   @Override
-  public void setSize(int size) {
-    // TODO
+  public void setSize(int newSize) {
+    super.setSize(newSize);
   }
 
   /**

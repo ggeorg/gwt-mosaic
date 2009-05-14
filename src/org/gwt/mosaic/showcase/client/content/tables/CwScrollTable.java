@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -21,22 +23,19 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
-import org.gwt.mosaic.ui.client.DoubleClickListener;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.PopupMenu;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.table.ScrollTable;
-import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
 
+import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
+import com.google.gwt.gen2.table.client.FixedWidthGrid;
+import com.google.gwt.gen2.table.client.ScrollTable;
+import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
-import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
-import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellFormatter;
 
 /**
  * Example file.
@@ -78,7 +77,7 @@ public class CwScrollTable extends ContentWidget {
    * The data portion of the <code>ScrollTable</code>
    */
   @ShowcaseData
-  private DataGrid dataTable = null;
+  private FixedWidthGrid dataTable = null;
 
   /**
    * The footer portion of the <code>ScrollTable</code>
@@ -167,20 +166,20 @@ public class CwScrollTable extends ContentWidget {
     // Create the inner tables
     createHeaderTable();
     createFooterTable();
-    dataTable = new DataGrid();
-    dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
+    dataTable = new FixedWidthGrid();
+    dataTable.setSelectionPolicy(SelectionPolicy.ONE_ROW);
 
     // Add the scroll table to the page
     scrollTable = new ScrollTable(dataTable, headerTable);
     scrollTable.setFooterTable(footerTable);
-    scrollTable.setContextMenu(createContextMenu());
+//    scrollTable.setContextMenu(createContextMenu());
     
-    scrollTable.addDoubleClickListener(new DoubleClickListener() {
-      public void onDoubleClick(Widget sender) {
-        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
-            scrollTable.getDataTable().getSelectedRows().toString());
-      }
-    });
+//    scrollTable.addDoubleClickListener(new DoubleClickListener() {
+//      public void onDoubleClick(Widget sender) {
+//        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
+//            scrollTable.getDataTable().getSelectedRows().toString());
+//      }
+//    });
 
     setupScrollTable();
   }
@@ -210,16 +209,6 @@ public class CwScrollTable extends ContentWidget {
     return contextMenu;
   }
 
-  /**
-   * Get the data table.
-   * 
-   * @return the data table
-   */
-  @ShowcaseSource
-  public FixedWidthGrid getDataTable() {
-    return dataTable;
-  }
-
   @Override
   public String getDescription() {
     return constants.mosaicScrollTableDescription();
@@ -235,29 +224,9 @@ public class CwScrollTable extends ContentWidget {
     return footerTable;
   }
 
-  /**
-   * Get the header table.
-   * 
-   * @return the header table
-   */
-  @ShowcaseSource
-  public FixedWidthFlexTable getHeaderTable() {
-    return headerTable;
-  }
-
   @Override
   public String getName() {
     return constants.mosaicScrollTableName();
-  }
-
-  /**
-   * Get the scroll table.
-   * 
-   * @return the scroll table.
-   */
-  @ShowcaseSource
-  public ScrollTable getScrollTable() {
-    return scrollTable;
   }
 
   /**
@@ -329,7 +298,7 @@ public class CwScrollTable extends ContentWidget {
     scrollTable.setCellPadding(3);
     scrollTable.setCellSpacing(0);
     // scrollTable.setSize("95%", "50%");
-    // scrollTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
+    //scrollTable.setResizePolicy(ScrollTable2.ResizePolicy.FILL_WIDTH);
     scrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
 
     // Set column widths
@@ -346,5 +315,5 @@ public class CwScrollTable extends ContentWidget {
     scrollTable.setColumnWidth(10, 55);
     scrollTable.setColumnWidth(11, 45);
   }
-
+  
 }

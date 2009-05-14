@@ -33,7 +33,7 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
 
   public ToolBar() {
     super();
-    getWidget().setLayout(new BoxLayout());
+    getLayoutPanel().setLayout(new BoxLayout());
     setStyleName(DEFAULT_STYLENAME);
   }
 
@@ -43,7 +43,7 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
    */
   public Widget getWidget(int index) {
-    return getWidget().getWidget(index);
+    return getLayoutPanel().getWidget(index);
   }
 
   /*
@@ -52,7 +52,7 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetCount()
    */
   public int getWidgetCount() {
-    return getWidget().getWidgetCount();
+    return getLayoutPanel().getWidgetCount();
   }
 
   /*
@@ -61,7 +61,7 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget child) {
-    return getWidget().getWidgetIndex(child);
+    return getLayoutPanel().getWidgetIndex(child);
   }
 
   /*
@@ -70,16 +70,16 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
    * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
    */
   public boolean remove(int index) {
-    return getWidget().remove(index);
+    return getLayoutPanel().remove(index);
   }
 
   public void add(Widget widget) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.add(widget);
     if (((BoxLayout) layoutPanel.getLayout()).getOrient() == Orientation.HORIZONTAL) {
-      getWidget().add(widget, new BoxLayoutData(FillStyle.VERTICAL));
+      getLayoutPanel().add(widget, new BoxLayoutData(FillStyle.VERTICAL));
     } else {
-      getWidget().add(widget, new BoxLayoutData(FillStyle.HORIZONTAL));
+      getLayoutPanel().add(widget, new BoxLayoutData(FillStyle.HORIZONTAL));
     }
   }
 
@@ -96,14 +96,14 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
   }
 
   public void setOrient(BoxLayout.Orientation orient) {
-    final BoxLayout boxLayout = (BoxLayout) getWidget().getLayout();
+    final BoxLayout boxLayout = (BoxLayout) getLayoutPanel().getLayout();
     if (boxLayout.getOrient() != orient) {
       boxLayout.setOrient(orient);
     }
   }
 
   public BoxLayout.Orientation getOrient() {
-    return ((BoxLayout) getWidget().getLayout()).getOrient();
+    return ((BoxLayout) getLayoutPanel().getLayout()).getOrient();
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,9 +26,10 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -89,9 +90,9 @@ public class CwInfoPanel extends ContentWidget {
     layout1.setWidget(1, 1, description1);
 
     Button btn1 = new Button("Show InfoPanel");
-    btn1.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (type1.isChecked()) {
+    btn1.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        if (type1.getValue()) {
           InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption1.getText(),
               description1.getText());
         } else {
@@ -138,9 +139,9 @@ public class CwInfoPanel extends ContentWidget {
     layout2.setWidget(3, 1, message);
 
     Button btn2 = new Button("Show InfoPanel");
-    btn2.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (type2.isChecked()) {
+    btn2.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        if (type2.getValue()) {
           InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption2,
               description2);
         } else {
@@ -159,5 +160,5 @@ public class CwInfoPanel extends ContentWidget {
 
     return layoutPanel;
   }
-
+  
 }

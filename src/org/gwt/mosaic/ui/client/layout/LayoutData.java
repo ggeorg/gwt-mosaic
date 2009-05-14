@@ -16,7 +16,6 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Base class for all layout data objects.
@@ -26,8 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class LayoutData {
 
   final DecoratorPanel decoratorPanel;
-  
-  String cachedWidth, cachedHeight; 
 
   /**
    * Creates a new instance of {@code LayoutData} by specifying that the
@@ -55,20 +52,6 @@ public class LayoutData {
    */
   public final boolean hasDecoratorPanel() {
     return decoratorPanel != null;
-  }
-
-  /**
-   * 
-   * @param layoutPanel
-   * @param c
-   * @param x
-   * @param y
-   * @param w
-   * @param h
-   */
-  protected void setBounds(LayoutPanel layoutPanel, Widget c, int x, int y,
-      int w, int h) {
-    ((BaseLayout) layoutPanel.getLayout()).setBounds(layoutPanel, c, x, y, w, h);
   }
 
 }

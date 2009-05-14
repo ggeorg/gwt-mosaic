@@ -259,4 +259,5 @@ public class CwWidgetOrientationExample extends ContentWidget {
       return flipped;
     }
   }
+  
 }

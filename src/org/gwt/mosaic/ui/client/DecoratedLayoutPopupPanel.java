@@ -15,9 +15,10 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -77,7 +78,22 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
    */
   protected DecoratedLayoutPopupPanel(boolean autoHide, boolean modal,
       String prefix) {
-    super(autoHide, modal, prefix);
+    this(autoHide, modal, prefix, AnimationType.CENTER);
+  }
+
+  /**
+   * Creates an empty decorated popup panel using the specified style names.
+   * 
+   * @param autoHide <code>true</code> if the popup should be automatically
+   *          hidden when the user clicks outside of it
+   * @param modal <code>true</code> if keyboard or mouse events that do not
+   *          target the PopupPanel or its children should be ignored
+   * @param prefix the prefix applied to child style names
+   * @param type type the type of animation to use
+   */
+  protected DecoratedLayoutPopupPanel(boolean autoHide, boolean modal,
+      String prefix, AnimationType type) {
+    super(autoHide, modal, prefix, type);
 
     layoutPanel = new LayoutPanel();
     layoutPanel.setPadding(0);
@@ -134,10 +150,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
       pack();
     } else {
       // setSize("auto", "auto");
-      // getLayoutPanel().setSize("0px", "0px");
-      int[] size = getLayoutPanel().getPreferredSize();
-      setContentSize(size[0], size[1]);
-      // delayedLayout(MIN_DELAY_MILLIS);
+      setContentSize(getLayoutPanel().getPreferredSize());
       layout();
     }
   }
@@ -147,8 +160,13 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   }
 
   protected void setContentSize(int width, int height) {
-    DOM.setContentAreaWidth(layoutPanel.getElement(), width);
-    DOM.setContentAreaHeight(layoutPanel.getElement(), height);
+    setContentSize(new Dimension(width, height));
+  }
+
+  protected void setContentSize(final Dimension d) {
+    // DOM.setContentAreaWidth(layoutPanel.getElement(), width);
+    // DOM.setContentAreaHeight(layoutPanel.getElement(), height);
+    WidgetHelper.setSize(layoutPanel, d);
   }
 
   /**
@@ -156,10 +174,10 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
    * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
-  public int[] getPreferredSize() {
-    int[] result = layoutPanel.getPreferredSize();
-    result[0] += decorationWidthCache;
-    result[1] += decorationHeightCache;
+  public Dimension getPreferredSize() {
+    final Dimension result = layoutPanel.getPreferredSize();
+    result.width += decorationWidthCache;
+    result.height += decorationHeightCache;
     return result;
   }
 
@@ -181,16 +199,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
-   */
-  public void layout(boolean invalidate) {
-    layoutPanel.layout(invalidate);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
     layoutPanel.invalidate();
@@ -200,10 +209,10 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   private int decorationHeightCache = 0;
 
   private void calculateDecorationSize() {
-    final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-    final int[] box = DOM.getBoxSize(getElement());
-    decorationWidthCache = box[0] - size[0];
-    decorationHeightCache = box[1] - size[1];
+    final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
+    final Dimension box = WidgetHelper.getOffsetSize(this);
+    decorationWidthCache = box.width - size.width;
+    decorationHeightCache = box.height - size.height;
   }
 
   private String desiredHeight = null;
@@ -214,8 +223,9 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     desiredHeight = height;
     if (isAttached()) {
       layoutPanel.setHeight(height);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      setContentSize(size[0], size[1] - decorationHeightCache);
+      final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
+      size.height -= decorationHeightCache;
+      setContentSize(size);
     }
   }
 
@@ -227,8 +237,9 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     desiredWidth = width;
     if (isAttached()) {
       layoutPanel.setWidth(width);
-      final int[] size = DOM.getBoxSize(layoutPanel.getElement());
-      setContentSize(size[0] - decorationWidthCache, size[1]);
+      final Dimension size = WidgetHelper.getOffsetSize(layoutPanel);
+      size.width -= decorationWidthCache;
+      setContentSize(size);
     }
   }
 

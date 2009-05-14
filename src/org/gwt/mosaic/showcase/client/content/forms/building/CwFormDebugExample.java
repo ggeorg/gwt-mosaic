@@ -46,6 +46,7 @@ package org.gwt.mosaic.showcase.client.content.forms.building;
 
 import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
 import org.gwt.mosaic.forms.client.debug.FormDebugPanel;
+import org.gwt.mosaic.forms.client.debug.FormDebugUtils;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
@@ -135,4 +136,5 @@ public class CwFormDebugExample extends ContentWidget {
     textBox.setEnabled(enabled);
     return textBox;
   }
+  
 }

@@ -20,32 +20,25 @@ import java.util.Map;
 import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.ui.client.ColumnWidget.ResizePolicy;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.list.DefaultListModel;
 import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
 import org.gwt.mosaic.ui.client.list.ListModel;
+import org.gwt.mosaic.ui.client.table.DataTable;
+import org.gwt.mosaic.ui.client.table.ScrollTable2;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
+import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ChangeListenerCollection;
-import com.google.gwt.user.client.ui.FocusListener;
-import com.google.gwt.user.client.ui.FocusListenerCollection;
-import com.google.gwt.user.client.ui.HasFocus;
-import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.KeyboardListenerCollection;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
-import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
-import com.google.gwt.widgetideas.table.client.SourceTableSelectionEvents;
-import com.google.gwt.widgetideas.table.client.TableSelectionListener;
-import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
 
 /**
  * This widget is used to create a list of items where one or more of the items
@@ -54,9 +47,9 @@ import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
- * @param <T>
+ * @parem <T>
  */
-public class ListBox<T> extends LayoutComposite implements HasFocus,
+public class ListBox<T> extends LayoutComposite implements Focusable,
     ListDataListener {
   /**
    * The render used to set cell contents.
@@ -75,110 +68,12 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     void renderCell(ListBox<T> listBox, int row, int column, T item);
   }
 
-  private static class DataGrid extends FixedWidthGrid {
-
-    private Event onMouseDownEvent = null;
-
-    private DoubleClickListenerCollection doubleClickListeners;
-
-    private PopupMenu contextMenu;
-
-    public DataGrid() {
-      super();
-      // sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.KEYEVENTS);
-    }
-
-    public void addDoubleClickListener(DoubleClickListener listener) {
-      if (doubleClickListeners == null) {
-        doubleClickListeners = new DoubleClickListenerCollection();
-        sinkEvents(Event.ONDBLCLICK);
-      }
-      doubleClickListeners.add(listener);
-    }
-
-    public PopupMenu getContextMenu() {
-      return contextMenu;
-    }
-
-    @Override
-    protected int getInputColumnWidth() {
-      return super.getInputColumnWidth();
-    }
-
-    @Override
-    protected void hoverCell(Element cellElem) {
-      super.hoverCell(cellElem);
-    }
-
-    /**
-     * @see com.google.gwt.widgetideas.table.client.overrides.HTMLTable
-     */
-    @Override
-    public void onBrowserEvent(Event event) {
-      Element targetRow = null;
-      Element targetCell = null;
-
-      switch (DOM.eventGetType(event)) {
-        // Select a row on click
-        case Event.ONMOUSEDOWN:
-          onMouseDownEvent = event;
-          super.onBrowserEvent(event);
-          break;
-
-        // Fire double click event
-        case Event.ONDBLCLICK:
-          doubleClickListeners.fireDblClick(this);
-          break;
-
-        // Show context menu
-        case Event.ONCONTEXTMENU:
-          targetCell = getEventTargetCell(event);
-          if (targetCell == null) {
-            return;
-          }
-          targetRow = DOM.getParent(targetCell);
-          int targetRowIndex = getRowIndex(targetRow);
-          if (!isRowSelected(targetRowIndex)) {
-            super.onBrowserEvent(onMouseDownEvent);
-          }
-          DOM.eventPreventDefault(event);
-          showContextMenu(event);
-          break;
-
-        default:
-          super.onBrowserEvent(event);
-      }
-    }
-
-    public void removeDoubleClickListener(DoubleClickListener listener) {
-      if (doubleClickListeners != null) {
-        doubleClickListeners.remove(listener);
-      }
-    }
-
-    public void setContextMenu(PopupMenu contextMenu) {
-      this.contextMenu = contextMenu;
-      if (this.contextMenu != null) {
-        sinkEvents(Event.ONCONTEXTMENU);
-      }
-    }
-
-    private void showContextMenu(final Event event) {
-      contextMenu.setPopupPositionAndShow(new PositionCallback() {
-        public void setPosition(int offsetWidth, int offsetHeight) {
-          contextMenu.setPopupPosition(event.getClientX(), event.getClientY());
-        }
-      });
-    }
-
-  }
-
-  static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
+  private static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
   private static final int INSERT_AT_END = -1;
 
-  private final ColumnWidget columnWidget;
-  private final DataGrid dataTable = new DataGrid();
+  private final ScrollTable2 scrollTable;
+  private final DataTable dataTable = new DataTable();
   private final FixedWidthFlexTable headerTable;
 
   /**
@@ -199,14 +94,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    */
   private Map<Element, T> rowItems = new HashMap<Element, T>();
 
-  private DoubleClickListenerCollection doubleClickListeners;
-
-  private ChangeListenerCollection changeListeners;
-
-  private FocusListenerCollection focusListeners;
-
-  private KeyboardListenerCollection keyboardListeners;
-
   private ListModel<T> dataModel;
 
   /**
@@ -226,24 +113,17 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
       }
       setColumnsCount(columns.length);
     } else {
-      headerTable = null;
+      headerTable = new FixedWidthFlexTable();
+      // headerTable.setVisible(false);
+      setColumnsCount(1);
     }
 
-    final LayoutPanel layoutPanel = getWidget();
-    columnWidget = new ColumnWidget(dataTable, headerTable) {
-      @Override
-      protected int getInputColumnWidth() {
-        return dataTable.getInputColumnWidth();
-      }
+    scrollTable = new ScrollTable2(dataTable, headerTable);
+    scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
 
-      @Override
-      protected void hoverCell(Element cellElem) {
-        dataTable.hoverCell(cellElem);
-      }
-    };
     setMultipleSelect(false);
-    columnWidget.setResizePolicy(ResizePolicy.FILL_WIDTH);
-    layoutPanel.add(columnWidget);
+
+    getLayoutPanel().add(scrollTable);
 
     // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
     // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
@@ -257,73 +137,13 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     DOM.setElementAttribute(getElement(), "hideFocus", "true");
   }
 
-  /**
-   * 
-   * @param listener
-   */
-  public void addChangeListener(ChangeListener listener) {
-    if (changeListeners == null) {
-      changeListeners = new ChangeListenerCollection();
-      dataTable.addTableSelectionListener(new TableSelectionListener() {
-        public void onAllRowsDeselected(SourceTableSelectionEvents sender) {
-          //changeListeners.fireChange(ListBox.this);
-        }
-
-        public void onCellHover(SourceTableSelectionEvents sender, int row,
-            int cell) {
-          // Nothing to do here!
-        }
-
-        public void onCellUnhover(SourceTableSelectionEvents sender, int row,
-            int cell) {
-          // Nothing to do here!
-        }
-
-        public void onRowDeselected(SourceTableSelectionEvents sender, int row) {
-          changeListeners.fireChange(ListBox.this);
-        }
-
-        public void onRowHover(SourceTableSelectionEvents sender, int row) {
-          // Nothing to do here!
-        }
-
-        public void onRowsSelected(SourceTableSelectionEvents sender,
-            int firstRow, int numRows) {
-          changeListeners.fireChange(ListBox.this);
-        }
-
-        public void onRowUnhover(SourceTableSelectionEvents sender, int row) {
-          // Nothing to do here!
-        }
-      });
-    }
-    changeListeners.add(listener);
+  public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+    return ((DataTable) scrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
 
-  public void addDoubleClickListener(DoubleClickListener listener) {
-    if (doubleClickListeners == null) {
-      doubleClickListeners = new DoubleClickListenerCollection();
-      dataTable.addDoubleClickListener(new DoubleClickListener() {
-        public void onDoubleClick(Widget sender) {
-          doubleClickListeners.fireDblClick(ListBox.this);
-        }
-      });
-    }
-    doubleClickListeners.add(listener);
-  }
-
-  public void addFocusListener(FocusListener listener) {
-    if (focusListeners == null) {
-      focusListeners = new FocusListenerCollection();
-    }
-    focusListeners.add(listener);
-  }
-
-  public void addKeyboardListener(KeyboardListener listener) {
-    if (keyboardListeners == null) {
-      keyboardListeners = new KeyboardListenerCollection();
-    }
-    keyboardListeners.add(listener);
+  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowSelectionHandler(
+      RowSelectionHandler handler) {
+    return scrollTable.getDataTable().addRowSelectionHandler(handler);
   }
 
   private void checkIndex(int index) {
@@ -332,12 +152,13 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * The contents of the list have changed in some way. This method will be
+   * called if the change cannot be notified via the
+   * {@link #intervalAdded(ListDataEvent)} or the
+   * {@link #intervalRemoved(ListDataEvent)} methods.
    * 
-   * @see
-   * org.gwt.mosaic.ui.client.list.ListDataListener#contentsChanged(org.gwt.
-   * mosaic.ui.client.list.ListDataEvent)
+   * @param event the event
    */
   public void contentsChanged(ListDataEvent event) {
     if (dataModel == event.getSource()) {
@@ -345,9 +166,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
         if (i < getItemCount()) {
           renderItemOnUpdate(i, dataModel.getElementAt(i));
         }
-        // } else {
-        // renderItemOnInsert(dataModel.getElementAt(i), INSERT_AT_END);
-        // }
       }
     }
   }
@@ -371,8 +189,12 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * 
    * @return the number of columns
    */
-  public int getColumnsCount() {
+  public int getColumnCount() {
     return dataTable.getColumnCount();
+  }
+
+  public int getColumnWidth(int column) {
+    return scrollTable.getColumnWidth(column);
   }
 
   public PopupMenu getContextMenu() {
@@ -413,18 +235,19 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   }
 
   /**
-   * Gets the currently-selected item. If multiple items are selected, this
-   * method will returns the first selected item ({@link #isItemSelected(int)}
+   * Gets the currently selected item. If multiple items are selected, this
+   * method will return the first selected item ({@link #isItemSelected(int)}
    * can be used to query individual items).
    * 
    * @return the selected index, or {@code -1} if none is selected
    * @see #isItemSelected(int)
-   * @see #addChangeListener(ChangeListener)
    */
   public int getSelectedIndex() {
-    Set<Integer> selection = dataTable.getSelectedRows();
-    if (selection != null && selection.size() > 0) {
-      return selection.iterator().next();
+    if (dataTable.isSelectionEnabled()) {
+      Set<Integer> selection = dataTable.getSelectedRows();
+      if (selection != null && selection.size() > 0) {
+        return selection.iterator().next();
+      }
     }
     return -1;
   }
@@ -433,7 +256,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * Returns a {@code Set} of all the selected indices.
    * 
    * @return all of the selected indices in a {@code Set}
-   * @see #addChangeListener(ChangeListener)
    */
   public Set<Integer> getSelectedIndices() {
     return dataTable.getSelectedRows();
@@ -443,12 +265,11 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     return impl.getTabIndex(getElement());
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * One or more items have been added to the list. The {@code event} argument
+   * can supply the indices for the range of items added.
    * 
-   * @see
-   * org.gwt.mosaic.ui.client.list.ListDataListener#intervalAdded(org.gwt.mosaic
-   * .ui.client.list.ListDataEvent)
+   * @param event the event
    */
   public void intervalAdded(ListDataEvent event) {
     if (dataModel == event.getSource()) {
@@ -462,31 +283,27 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * One or more items have been removed from the list. The {@code event}
+   * argument can supply the indicies for range of items removed.
    * 
-   * @see
-   * org.gwt.mosaic.ui.client.list.ListDataListener#intervalRemoved(org.gwt.
-   * mosaic.ui.client.list.ListDataEvent)
+   * @param event the event
    */
   public void intervalRemoved(ListDataEvent event) {
     if (dataModel == event.getSource()) {
       for (int i = event.getIndex1(), n = event.getIndex0(); i >= n; --i) {
-        // for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
-        // for (int i = event.getIndex0(), n = event.getIndex1(); i < n; ++i) {
         renderOnRemove(i);
       }
     }
   }
 
   /**
-   * Determines whether as individual list is selected.
+   * Determines whether an individual list item is selected.
    * 
    * @param index the index of the item to be tested
    * @return {@code true} if the item is selected
    * @throws IndexOutOfBoundsException if the index is out of range
    * @see #getSelectedIndices()
-   * @see #addChangeListener(ChangeListener)
    */
   public boolean isItemSelected(int index) {
     checkIndex(index);
@@ -503,16 +320,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     return dataTable.getSelectionPolicy() == SelectionPolicy.MULTI_ROW;
   }
 
-  @Override
-  public void layout() {
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        columnWidget.fillWidth();
-      }
-    });
-    super.layout();
-  }
-
   private void moveDown() {
     if (selectFirstItemIfNodeSelected()) {
       return;
@@ -524,7 +331,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     if (selectFirstItemIfNodeSelected()) {
       return;
     }
-    selectPrevItemItem();
+    selectPrevItem();
   }
 
   /**
@@ -535,26 +342,22 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   @Override
   public void onBrowserEvent(Event event) {
     switch (DOM.eventGetType(event)) {
-      case Event.ONCLICK:
-        setFocus(true);
-        super.onBrowserEvent(event);
-        break;
       case Event.ONKEYDOWN:
         int keyCode = DOM.eventGetKeyCode(event);
         switch (keyCode) {
-          case KeyboardListener.KEY_UP:
+          case KeyCodes.KEY_UP:
             moveUp();
             eatEvent(event);
             break;
-          case KeyboardListener.KEY_DOWN:
+          case KeyCodes.KEY_DOWN:
             moveDown();
             eatEvent(event);
             break;
-          case KeyboardListener.KEY_LEFT:
+          case KeyCodes.KEY_LEFT:
             DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
                 getSelectedIndex()).getFirstChild());
             break;
-          case KeyboardListener.KEY_RIGHT:
+          case KeyCodes.KEY_RIGHT:
             DOM.scrollIntoView((Element) dataTable.getRowFormatter().getElement(
                 getSelectedIndex()).getLastChild());
             break;
@@ -563,37 +366,10 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
             break;
         }
         break;
-
+      case Event.ONCLICK:
+        setFocus(true);
       default:
         super.onBrowserEvent(event);
-    }
-  }
-
-  /**
-   * 
-   * @param listener
-   */
-  public void removeChangeListener(ChangeListener listener) {
-    if (changeListeners != null) {
-      changeListeners.remove(listener);
-    }
-  }
-
-  public void removeDoubleClickListener(DoubleClickListener listener) {
-    if (doubleClickListeners != null) {
-      doubleClickListeners.remove(listener);
-    }
-  }
-
-  public void removeFocusListener(FocusListener listener) {
-    if (focusListeners != null) {
-      focusListeners.remove(listener);
-    }
-  }
-
-  public void removeKeyboardListener(KeyboardListener listener) {
-    if (keyboardListeners != null) {
-      keyboardListeners.remove(listener);
     }
   }
 
@@ -604,23 +380,19 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * @param index the index at which to insert it
    */
   protected void renderItemOnInsert(T item, int index) {
-    if (dataTable.getColumnCount() == 0) {
-      dataTable.resizeColumns(1);
-    }
     if ((index == INSERT_AT_END) || (index == dataTable.getRowCount())) {
-      // Insert the new row
-      dataTable.insertRow(index = dataTable.getRowCount());
-    } else {
-      // Insert the new row
-      dataTable.insertRow(index);
+      index = dataTable.getRowCount();
     }
+
+    dataTable.insertRow(index);
+
     // Set the data in the new row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
       cellRenderer.renderCell(this, index, cellIndex, item);
     }
+
     // Map item with <tr>
-    final Element tr = dataTable.getRowFormatter().getElement(index);
-    rowItems.put(tr, item);
+    rowItems.put(dataTable.getRowFormatter().getElement(index), item);
   }
 
   /**
@@ -632,6 +404,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    */
   protected void renderItemOnUpdate(int index, T item) {
     checkIndex(index);
+
     if (item == null) {
       throw new NullPointerException("Cannot set an item to null");
     }
@@ -648,7 +421,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   /**
    * Removes all items from the list box.
    */
-  public void renderOnClear() {
+  protected void renderOnClear() {
     dataTable.resizeRows(0);
     rowItems.clear();
   }
@@ -659,14 +432,15 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
    * @param index the index of the item to be removed
    * @throws IndexOutOfBoundsException if the index is out of range
    */
-  public void renderOnRemove(int index) {
+  protected void renderOnRemove(int index) {
     checkIndex(index);
-    rowItems.remove(getItem(index));
+    Element tr = dataTable.getRowFormatter().getElement(index);
     dataTable.removeRow(index);
+    rowItems.remove(tr);
   }
 
   /**
-   * Selects the firs item in the list if no items are currently selected. This
+   * Selects the first item in the list if no items are currently selected. This
    * method assumes that the list has at least 1 item.
    * 
    * @return {@code true} if no item was previosly selected and the first item
@@ -697,7 +471,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
         getSelectedIndex()).getFirstChild());
   }
 
-  private void selectPrevItemItem() {
+  private void selectPrevItem() {
     int index = getSelectedIndex();
     if (index == -1) {
       return;
@@ -728,7 +502,7 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   }
 
   /**
-   * Resizes the {@code ListBox} to the specified number of columns.
+   * Resizes the {@code ListBox} to be the specified number of columns.
    * 
    * @param columns the number of columns
    * @throws IndexOutOfBoundsException
@@ -736,6 +510,14 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
   public void setColumnsCount(int columns) {
     dataTable.resizeColumns(columns);
   }
+
+  public int setColumnWidth(int column, int width) {
+    return scrollTable.setColumnWidth(column, width);
+  }
+
+  // public int setColumnWidth(int column, int width, int sacrificeColumn) {
+  // return scrollTable.setColumnWidth(column, width, sacrificeColumn);
+  // }
 
   public void setContextMenu(PopupMenu contextMenu) {
     dataTable.setContextMenu(contextMenu);
@@ -747,10 +529,6 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
     } else {
       impl.blur(getElement());
     }
-  }
-
-  public void setHTML(int row, int column, String html) {
-    dataTable.setHTML(row, column, html);
   }
 
   /**

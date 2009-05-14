@@ -43,6 +43,10 @@ public class Dimension implements Serializable {
     setSize(width, height);
   }
 
+  public Dimension(int[] size) {
+    setSize(size[0], size[1]);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
@@ -87,5 +91,9 @@ public class Dimension implements Serializable {
   @Override
   public String toString() {
     return getClass().getName() + "[width=" + width + ",height=" + height + "]";
+  }
+
+  public int[] toArray() {
+    return new int[] {width, height};
   }
 }
