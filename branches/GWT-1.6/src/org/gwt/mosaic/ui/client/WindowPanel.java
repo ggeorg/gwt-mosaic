@@ -747,7 +747,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     });
     panel.getHeader().addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        if (!isActive()) {
+        if (isShowing() && !isActive()) {
           toFront();
         }
       }
