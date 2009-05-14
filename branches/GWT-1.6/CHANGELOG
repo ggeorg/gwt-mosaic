@@ -1,3 +1,19 @@
+Change log for v0.2.0
+================================
+
+ - (Update) Layout management updates (layout management is even faster than 0.2.0-rc3)
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=831
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=827
+ - (Update) WindowPanel.showModal() without a DeferredCommand for WindowPanel.center()
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=824
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=823
+ - (Update) Animation type for WindowPanel is set to CENTER
+	http://code.google.com/p/gwt-mosaic/source/detail?r=822
+ - (Bug Fix)  Issue 48 : persistence.xml in mosaic.jar leads to deployment errors on
+EE5 servers
+ - gwt-incubator upgrade (r1624 -> r1650)
+ - (Update) DOMImplIE6 update and DOM.getStyleAttribute renamed to DOM.getComputedStyleAttribute
+
 Change log for v0.2.0-rc3
 ================================
 
