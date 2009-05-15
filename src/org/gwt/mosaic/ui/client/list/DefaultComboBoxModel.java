@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwt.mosaic.ui.client.list;
 
 import java.util.ArrayList;
@@ -5,6 +20,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * The default implementation of {@link ComboBoxModel} based on a {@code
+ * java.util.Vector}.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @parem <T>
+ */
 public class DefaultComboBoxModel<E> extends Vector<E> implements
     ComboBoxModel<E> {
   private static final long serialVersionUID = -9092492462680778920L;

@@ -15,18 +15,18 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event; // import
-                                         // com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Widget;
-
 import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.list.ComboBoxModel;
 import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
+import org.gwt.mosaic.ui.client.list.ListDataEvent;
+import org.gwt.mosaic.ui.client.list.ListDataListener;
+
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
+import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -37,15 +37,9 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
   private final ListBox<T> listBox;
 
-  // private Timer updateTimer = new Timer() {
-  // public void run() {
-  // if (!isPopupVisible()) {
-  // showPopup();
-  // } else {
-  // onShowPopup();
-  // }
-  // }
-  // };
+  private final ListDataListener listDataListener;
+
+  private T selectedItemReminder = null;
 
   /**
    * Default constructor.
@@ -61,29 +55,60 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public ComboBox(String[] columns) {
     super();
 
-    listBox = new ListBox<T>(columns) {
+    listBox = new ListBox<T>(columns);
 
-      @Override
-      public void setElement(Element elem) {
-        super.setElement(elem);
-        sinkEvents(Event.ONMOUSEUP);
-      }
-
-      @Override
-      public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-        if (isPopupVisible()) {
-          switch (DOM.eventGetType(event)) {
-            case Event.ONMOUSEUP:
-              DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                  updateInput();
-                }
-              });
-              return;
-          }
+    listBox.addRowSelectionHandler(new RowSelectionHandler() {
+      public void onRowSelection(RowSelectionEvent event) {
+        final int index = getSelectedIndex();
+        if (index != -1) {
+          dataModel.setSelectedItem(listBox.getItem(index));
+        } else {
+          dataModel.setSelectedItem(null);
         }
       }
+    });
+
+    listDataListener = new ListDataListener() {
+
+      public void contentsChanged(ListDataEvent event) {
+        final T newSelection = (T) dataModel.getSelectedItem();
+        if (selectedItemReminder == null
+            || !selectedItemReminder.equals(newSelection)) {
+          selectedItemChanged();
+        }
+      }
+
+      public void intervalAdded(ListDataEvent event) {
+        if (selectedItemReminder != dataModel.getSelectedItem()) {
+          selectedItemChanged();
+        }
+      }
+
+      public void intervalRemoved(ListDataEvent event) {
+        contentsChanged(event);
+      }
+
+      private void selectedItemChanged() {
+        // set the new selected item
+        selectedItemReminder = dataModel.getSelectedItem();
+
+        final int index = listBox.getSelectedIndex();
+        if (index != -1) {
+          listBox.setItemSelected(index, false);
+        }
+
+        Object obj;
+        for (int i = 0, c = dataModel.getSize(); i < c; i++) {
+          obj = dataModel.getElementAt(i);
+          if (obj != null && obj.equals(selectedItemReminder)) {
+            listBox.setSelectedIndex(i);
+            break;
+          }
+        }
+
+        updateInput();
+      }
+
     };
 
     setCellRenderer(new ComboBoxCellRenderer<T>() {
@@ -113,14 +138,15 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    *          items
    */
   public void setModel(ComboBoxModel<T> model) {
-    // ComboBoxModel oldModel = dataModel;
-    // if (oldModel != null) {
-    // oldModel.removeListDataListener(this);
-    // }
+    final ComboBoxModel<T> oldModel = dataModel;
+    if (oldModel != null) {
+      oldModel.removeListDataListener(listDataListener);
+    }
     dataModel = model;
-    //
-    // // set the current selected item.
-    // selectedItemReminder = dataModel.getSelectedItem();
+    dataModel.addListDataListener(listDataListener);
+
+    // set the current selected item.
+    selectedItemReminder = dataModel.getSelectedItem();
 
     listBox.setModel(dataModel);
 
@@ -159,14 +185,16 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
   @Override
   protected void updateInput() {
-    final int index = listBox.getSelectedIndex();
-    if (index != -1) {
+    final T item = dataModel.getSelectedItem();
+    if (item != null) {
       if (listBox.getCellRenderer() != null) {
         final ComboBoxCellRenderer<T> renderer = (ComboBoxCellRenderer<T>) listBox.getCellRenderer();
-        ComboBox.this.setText(renderer.getDisplayText(listBox.getItem(index)));
+        ComboBox.this.setText(renderer.getDisplayText(item));
       } else {
-        ComboBox.this.setText(listBox.getItem(index).toString());
+        ComboBox.this.setText(item.toString());
       }
+    } else {
+      ComboBox.this.setText("");
     }
     super.updateInput();
   }
@@ -209,6 +237,13 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
     return listBox.getItemCount();
   }
 
+  /**
+   * Returns the list item at the specified index.
+   * 
+   * @param index an integer indicating the list position, where the first iteme
+   *          starts at zero
+   * @return the item at the list position; or {@code null} if out of range
+   */
   public T getItem(int index) {
     return listBox.getItem(index);
   }
@@ -258,6 +293,9 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    */
   public void setItemSelected(int index, boolean selected) {
     listBox.setItemSelected(index, selected);
+    if (selected == true) {
+      dataModel.setSelectedItem(listBox.getItem(index));
+    }
   }
 
   /**
@@ -281,7 +319,8 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    * @param index the index of the item to be selected
    */
   public void setSelectedIndex(int index) {
-    listBox.setSelectedIndex(index);
+    // listBox.setSelectedIndex(index);
+    dataModel.setSelectedItem(listBox.getItem(index));
   }
 
   /**

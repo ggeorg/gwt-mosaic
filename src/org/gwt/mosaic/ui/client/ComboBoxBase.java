@@ -141,9 +141,11 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   }
 
   protected void updateInput() {
-    hidePopup();
-    input.setFocus(false);
-    input.setFocus(true);
+    if (isPopupVisible()) {
+      hidePopup();
+      input.setFocus(false);
+      input.setFocus(true);
+    }
   }
 
   @Deprecated

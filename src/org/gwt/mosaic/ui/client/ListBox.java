@@ -163,7 +163,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public void contentsChanged(ListDataEvent event) {
     if (dataModel == event.getSource()) {
       for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
-        if (i < getItemCount()) {
+        if (i >= 0 && i < getItemCount()) {
           renderItemOnUpdate(i, dataModel.getElementAt(i));
         }
       }
@@ -511,6 +511,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     dataTable.resizeColumns(columns);
   }
 
+  /**
+   * Set the width of a column.
+   * 
+   * @param column the index of the column
+   * @param width the width in pixels
+   * @return the new column width
+   */
   public int setColumnWidth(int column, int width) {
     return scrollTable.setColumnWidth(column, width);
   }
@@ -543,7 +550,11 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public void setItemSelected(int index, boolean selected) {
     checkIndex(index);
-    dataTable.selectRow(index, false);
+    if (selected) {
+      dataTable.selectRow(index, false);
+    } else {
+      dataTable.deselectRow(index);
+    }
   }
 
   /**
