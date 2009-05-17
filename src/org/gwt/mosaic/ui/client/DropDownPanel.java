@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client;
 import java.util.ArrayList;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
@@ -132,5 +133,21 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
     if (openPanels != null) {
       openPanels.remove(this);
     }
+  }
+  
+  @Override
+  public final void pack() {
+    final Dimension size = getLayoutPanel().getPreferredSize();
+
+    int w = getOffsetWidth() - getLayoutPanel().getOffsetWidth();
+    int h = getOffsetHeight() - getLayoutPanel().getOffsetHeight();
+
+    setContentSize(new Dimension(Math.min(Math.max(size.width,
+        relativeWidget.getOffsetWidth())
+        + w, Window.getClientWidth() - getAbsoluteLeft() - w), Math.min(
+        size.height + h, Window.getClientHeight() - getAbsoluteTop() - h)));
+
+    // layout(true);
+    invalidate();
   }
 }
