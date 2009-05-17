@@ -237,5 +237,5 @@ public class CwButtonStacksExample extends ContentWidget {
     panel.add(buttonBar, CellConstraints.xy(3, 1));
     return panel;
   }
-
+  
 }
