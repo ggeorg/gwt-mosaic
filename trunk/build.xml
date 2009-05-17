@@ -96,8 +96,9 @@
 				<exclude name="**/showcase/**" />
 			</fileset>
 			<fileset dir="${source.path}">
-				<include name="**" />
+				<include name="**/*" />
 				<exclude name="**/showcase/**" />
+				<exclude name="META-INF/persistence.xml" />
 			</fileset>
 		</jar>
 	</target>

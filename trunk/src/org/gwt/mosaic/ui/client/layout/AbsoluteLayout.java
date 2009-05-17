@@ -16,6 +16,8 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -24,10 +26,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * The {@code AbsoluteLayout} class is a layout manager that lays out panel's
- * widgets according to absolute positions. 
+ * widgets according to absolute positions.
  * <p>
  * The following code lays out two button, next to each other:
- *
+ * 
  * <pre>
  * LayoutPanel layoutPanel = new LayoutPanel(new AbsoluteLayout(100, 100));
  * layoutPanel.add(new Button("1"), new AbsoluteLayoutData(5, 5,  90, 40));
@@ -35,51 +37,48 @@ import com.google.gwt.user.client.ui.Widget;
  * </pre>
  * <p>
  * The following code lays out two buttons, just like in the previous example,
- * but the right button ("2") reposition itself when the layout panel is resized.
- * (The margin policy for the second button states that the margin should be
- *  expanded to the left of the widget)
- *
+ * but the right button ("2") reposition itself when the layout panel is
+ * resized. (The margin policy for the second button states that the margin
+ * should be expanded to the left of the widget)
+ * 
  * <pre>
  * LayoutPanel layoutPanel = new LayoutPanel(new AbsoluteLayout(100, 100));
  * layoutPanel.add(new Button("1"), new AbsoluteLayoutData(5, 5,  40, 25, MarginPolicy.RIGHT));
  * layoutPanel.add(new Button("2"), new AbsoluteLayoutData(55, 5, 40, 25, MarginPolicy.LEFT));
  * </pre>
- *
+ * 
  * @see AbsoluteLayoutData
  * @author johan.rydberg(at)gmail.com
  */
 public class AbsoluteLayout extends BaseLayout {
 
   /**
-   * Used with layout data {@code AbsoluteLayoutData} to specify how a
-   * widget should be repositioned when the layout panel is resized.
+   * Used with layout data {@code AbsoluteLayoutData} to specify how a widget
+   * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE    (false, false, false, false),
-    LEFT    (true,  false, false, false),
-    RIGHT   (false, true,  false, false),
-    TOP     (false, false, true,  false),
-    BOTTOM  (false, false, false, true),
-    VCENTER (false, false, true, true),
-    HCENTER (true,  true,  false, false),
-    CENTER  (true, true, true, true);  
-   
+    NONE(false, false, false, false), LEFT(true, false, false, false), RIGHT(
+        false, true, false, false), TOP(false, false, true, false), BOTTOM(
+        false, false, false, true), VCENTER(false, false, true, true), HCENTER(
+        true, true, false, false), CENTER(true, true, true, true);
+
     final boolean left, right, top, bottom;
 
     MarginPolicy(boolean l, boolean r, boolean t, boolean b) {
-      left = l; right = r; top = t; bottom = b;
+      left = l;
+      right = r;
+      top = t;
+      bottom = b;
     }
   }
 
   /**
-   * Used with layout data {@code AbsoluteLayoutData} to specify how a
-   * widget should be redimensioned when the layout panel is resized.
+   * Used with layout data {@code AbsoluteLayoutData} to specify how a widget
+   * should be redimensioned when the layout panel is resized.
    */
   public enum DimensionPolicy {
-    NONE   (false, false),
-    WIDTH  (true,  false),
-    HEIGHT (false, true),
-    BOTH   (true,  true);
+    NONE(false, false), WIDTH(true, false), HEIGHT(false, true), BOTH(true,
+        true);
 
     final boolean width, height;
 
@@ -91,7 +90,7 @@ public class AbsoluteLayout extends BaseLayout {
 
   /**
    * Dimensions of the panel.
-   */ 
+   */
   private int panelWidth, panelHeight;
 
   /**
@@ -105,16 +104,15 @@ public class AbsoluteLayout extends BaseLayout {
     panelHeight = height;
   }
 
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
-    
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    final Dimension result = new Dimension();
+
     try {
       if (layoutPanel == null) {
-	return result;
+        return result;
       }
-
-      result[0] = panelWidth;
-      result[1] = panelHeight;
+      result.width = panelWidth;
+      result.height = panelHeight;
     } catch (Exception e) {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
@@ -134,9 +132,9 @@ public class AbsoluteLayout extends BaseLayout {
         return;
       }
 
-      final int[] box = DOM.getClientSize(layoutPanel.getElement());
-      int totalWidth = box[0];
-      int totalHeight = box[1];
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
+      int totalWidth = box.width;
+      int totalHeight = box.height;
 
       final int deltaX = totalWidth - panelWidth;
       final int deltaY = totalHeight - panelHeight;
@@ -144,59 +142,67 @@ public class AbsoluteLayout extends BaseLayout {
       final int size = layoutPanel.getWidgetCount();
 
       for (int i = 0; i < size; i++) {
-	Widget child = layoutPanel.getWidget(i);
-	if (child instanceof DecoratorPanel) {
-	  child = ((DecoratorPanel) child).getWidget();
-	}
+        Widget child = layoutPanel.getWidget(i);
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
 
-	if (!DOM.isVisible(child.getElement())) {
-	  continue;
-	}
+        if (!DOM.isVisible(child.getElement())) {
+          continue;
+        }
 
-	AbsoluteLayoutData layoutData = (AbsoluteLayoutData) getLayoutData(child);
-	if (layoutData == null) {
-	  layoutData = new AbsoluteLayoutData(0, 0);
-	  setLayoutData(child, layoutData);
-	}
+        AbsoluteLayoutData layoutData = (AbsoluteLayoutData) getLayoutData(child);
+        if (layoutData == null) {
+          layoutData = new AbsoluteLayoutData(0, 0);
+          setLayoutData(child, layoutData);
+        }
+        
+        Dimension clientSize = null;
 
-	if (layoutData.widgetWidth == -1) {
-	  int flowWidth = getFlowWidth(child);
-	  layoutData.widgetWidth = flowWidth;
-	}
+        if (layoutData.widgetWidth == -1) {
+          if (clientSize == null) {
+            clientSize = WidgetHelper.getPreferredSize(child);
+          }
+          int flowWidth = clientSize.width;
+          layoutData.widgetWidth = flowWidth;
+        }
 
-	if (layoutData.widgetHeight == -1) {
-	  int flowHeight = getFlowHeight(child);
-	  layoutData.widgetHeight = flowHeight;
-	}
+        if (layoutData.widgetHeight == -1) {
+          if (clientSize == null) {
+            clientSize = WidgetHelper.getPreferredSize(child);
+          }
+          int flowHeight = clientSize.height;
+          layoutData.widgetHeight = flowHeight;
+        }
 
-	int dw = 0;
-	if (layoutData.marginPolicy.left)
-	  dw++;
-	if (layoutData.marginPolicy.right)
-	  dw++;
-	if (layoutData.dimensionPolicy.width)
-	  dw++;
+        int dw = 0;
+        if (layoutData.marginPolicy.left)
+          dw++;
+        if (layoutData.marginPolicy.right)
+          dw++;
+        if (layoutData.dimensionPolicy.width)
+          dw++;
 
-	int dh = 0;
-	if (layoutData.marginPolicy.top)
-	  dh++;
-	if (layoutData.marginPolicy.bottom)
-	  dh++;
-	if (layoutData.dimensionPolicy.height)
-	  dh++;
-	
-	if (layoutData.marginPolicy.left)
-	  layoutData.posLeft += (deltaX / dw);
-	if (layoutData.dimensionPolicy.width)
-	  layoutData.widgetWidth += (deltaX / dw);
-	
-	if (layoutData.marginPolicy.top)
-	  layoutData.posTop += (deltaY / dh);
-	if (layoutData.dimensionPolicy.height)
-	  layoutData.widgetHeight += (deltaY / dh);
+        int dh = 0;
+        if (layoutData.marginPolicy.top)
+          dh++;
+        if (layoutData.marginPolicy.bottom)
+          dh++;
+        if (layoutData.dimensionPolicy.height)
+          dh++;
 
-	setBounds(layoutPanel, child, layoutData.posLeft, layoutData.posTop, 
-	    layoutData.widgetWidth, layoutData.widgetHeight);
+        if (layoutData.marginPolicy.left)
+          layoutData.posLeft += (deltaX / dw);
+        if (layoutData.dimensionPolicy.width)
+          layoutData.widgetWidth += (deltaX / dw);
+
+        if (layoutData.marginPolicy.top)
+          layoutData.posTop += (deltaY / dh);
+        if (layoutData.dimensionPolicy.height)
+          layoutData.widgetHeight += (deltaY / dh);
+
+        WidgetHelper.setBounds(layoutPanel, child, layoutData.posLeft, layoutData.posTop,
+            layoutData.widgetWidth, layoutData.widgetHeight);
 
       }
 

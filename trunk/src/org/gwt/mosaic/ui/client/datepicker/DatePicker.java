@@ -17,6 +17,7 @@ package org.gwt.mosaic.ui.client.datepicker;
 
 import java.util.Date;
 
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
@@ -68,8 +69,8 @@ public class DatePicker extends
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
+  public Dimension getPreferredSize() {
+    return ((LayoutPanel) getWidget()).getPreferredSize();
   }
 
   /*
@@ -79,15 +80,6 @@ public class DatePicker extends
    */
   public void layout() {
     getWidget().layout();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout(boolean)
-   */
-  public void layout(boolean invalidate) {
-    getWidget().layout(invalidate);
   }
 
   /*

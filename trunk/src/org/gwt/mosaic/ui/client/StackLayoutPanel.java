@@ -69,14 +69,14 @@ public class StackLayoutPanel extends LayoutComposite {
   private ClickListener clickListener = new ClickListener() {
     public void onClick(Widget sender) {
       if (sender instanceof Caption) {
-        showStack(getWidget().getWidgetIndex(sender) >> 1);
+        showStack(getLayoutPanel().getWidgetIndex(sender) >> 1);
         layout();
       }
     }
   };
 
   public StackLayoutPanel() {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
 
@@ -104,7 +104,7 @@ public class StackLayoutPanel extends LayoutComposite {
   public void add(Widget w, String stackText, boolean asHTML) {
     final Caption caption = new Caption(stackText, asHTML);
     final LayoutPanel content = new LayoutPanel();
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     caption.addStyleName(DEFAULT_ITEM_STYLENAME);
     caption.addClickListener(clickListener);
     content.addStyleName(DEFAULT_CONTENT_STYLENAME);
@@ -116,7 +116,7 @@ public class StackLayoutPanel extends LayoutComposite {
       showStack(0);
     } else {
       setStackVisible(visibleStack, false);
-      visibleStack = getWidget().getWidgetCount() - 2;
+      visibleStack = getLayoutPanel().getWidgetCount() - 2;
       setStackVisible(visibleStack, true);
     }
   }
@@ -135,11 +135,11 @@ public class StackLayoutPanel extends LayoutComposite {
   }
 
   private boolean remove(Widget child, LayoutPanel captionLayoutPanel) {
-    int index = getWidget().getWidgetIndex(captionLayoutPanel);
-    boolean removed = getWidget().remove(index--);
+    int index = getLayoutPanel().getWidgetIndex(captionLayoutPanel);
+    boolean removed = getLayoutPanel().remove(index--);
     if (removed) {
       panels.remove(child);
-      removed = getWidget().remove(index);
+      removed = getLayoutPanel().remove(index);
     }
     if (removed) {
       // Correct visible stack for new location.
@@ -153,8 +153,8 @@ public class StackLayoutPanel extends LayoutComposite {
   }
 
   private void setStackVisible(int index, boolean visible) {
-    final Caption caption = (Caption) getWidget().getWidget(index);
-    final LayoutPanel content = (LayoutPanel) getWidget().getWidget(++index);
+    final Caption caption = (Caption) getLayoutPanel().getWidget(index);
+    final LayoutPanel content = (LayoutPanel) getLayoutPanel().getWidget(++index);
     if (visible) {
       caption.addStyleName(DEFAULT_ITEM_STYLENAME + "-selected");
     } else {
@@ -170,7 +170,7 @@ public class StackLayoutPanel extends LayoutComposite {
    */
   public void showStack(int index) {
     index <<= 1;
-    if ((index >= getWidget().getWidgetCount()) || (index < 0)
+    if ((index >= getLayoutPanel().getWidgetCount()) || (index < 0)
         || (index == visibleStack)) {
       return;
     }

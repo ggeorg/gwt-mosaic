@@ -78,24 +78,6 @@ public class Application extends Viewport {
   }
 
   /**
-   * A listener to handle events from the Application.
-   */
-  public interface ApplicationListener {
-    /**
-     * Fired when a menu item is selected.
-     *
-     * @param item the item that was selected
-     */
-    void onMenuItemSelected(com.google.gwt.user.client.ui.TreeItem item);
-  }
-
-  /**
-   * The constants used in this Page.
-   */
-  public static interface AppConstants extends Constants {
-    String mosaicApplicationSelectADemo();
-  }
-  /**
    * The base style name.
    */
   public static final String DEFAULT_STYLE_NAME = "Application";
@@ -111,11 +93,6 @@ public class Application extends Viewport {
   private HorizontalPanel linksPanel;
 
   /**
-   * The {@link ApplicationListener}.
-   */
-  private ApplicationListener listener = null;
-
-  /**
    * The main menu.
    */
   private Tree mainMenu;
@@ -126,19 +103,13 @@ public class Application extends Viewport {
   private FlexTable topPanel;
 
   /**
-   * An instance of the constants.
-   */
-  @ShowcaseData
-  private AppConstants constants;
-  /**
    * Constructor.
    */
-  public Application(AppConstants constants) {
+  public Application() {
     super();
-    this.constants = constants;
 
     // Setup the main layout widget
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
 
     // Setup the top panel with the title and links
@@ -151,8 +122,8 @@ public class Application extends Viewport {
     // Add the main menu
     createMainMenu();
 
-    final CaptionLayoutPanel westPanel =
-      new CaptionLayoutPanel(constants.mosaicApplicationSelectADemo());
+    final CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
+//      new CaptionLayoutPanel(constants.mosaicApplicationSelectADemo());
     westPanel.add(new ScrollPanel(mainMenu));
     westPanel.getHeader().add(Showcase.IMAGES.showcaseDemos().createImage());
     final ImageButton collapseBtn = new ImageButton(
@@ -168,21 +139,11 @@ public class Application extends Viewport {
 
     bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST, 200, 100, 350,
         true));
-    // bottomPanel.setCollapsed(westPanel, true);
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());
     contentWrapper.addStyleName(DEFAULT_STYLE_NAME + "-content-wrapper");
     bottomPanel.add(contentWrapper);
-    if (LocaleInfo.getCurrentLocale().isRTL()) {
-      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
-      // HasHorizontalAlignment.ALIGN_LEFT);
-      // contentDecorator.getElement().setAttribute("align", "LEFT");
-    } else {
-      // bottomPanel.setCellHorizontalAlignment(contentDecorator,
-      // HasHorizontalAlignment.ALIGN_RIGHT);
-      // contentDecorator.getElement().setAttribute("align", "RIGHT");
-    }
     setContent(null);
   }
 
@@ -197,68 +158,15 @@ public class Application extends Viewport {
     }
     linksPanel.add(link);
   }
-
-  /**
-   * @return the {@link Widget} in the content area
-   */
-  public Widget getContent() {
-    return contentWrapper.getWidget(0);
+  
+  public void addTreeListener(TreeListener listener) {
+    mainMenu.addTreeListener(listener);
   }
-
-  /**
-   * @return the main menu.
-   */
-  public Tree getMainMenu() {
-    return mainMenu;
+  
+  public void removeTreeListener(TreeListener listener) {
+    mainMenu.removeTreeListener(listener);
   }
-
-  /**
-   * @return the {@link Widget} used as the title
-   */
-  public Widget getTitleWidget() {
-    return topPanel.getWidget(0, 0);
-  }
-
-  /**
-   * Set the {@link Widget} to display in the content area.
-   *
-   * @param content the content widget
-   */
-  public void setContent(Widget content) {
-    contentWrapper.clear();
-    if (content != null) {
-      contentWrapper.add(content);
-    }
-  }
-
-  /**
-   * Set the {@link ApplicationListener}.
-   *
-   * @param listener the listener
-   */
-  public void setListener(ApplicationListener listener) {
-    this.listener = listener;
-  }
-
-  /**
-   * Set the {@link Widget} to use as options, which appear to the right of the
-   * title bar.
-   *
-   * @param options the options widget
-   */
-  public void setOptionsWidget(Widget options) {
-    topPanel.setWidget(1, 1, options);
-  }
-
-  /**
-   * Set the {@link Widget} to use as the title bar.
-   *
-   * @param title the title widget
-   */
-  public void setTitleWidget(Widget title) {
-    topPanel.setWidget(1, 0, title);
-  }
-
+  
   /**
    * Create the main menu.
    */
@@ -268,19 +176,8 @@ public class Application extends Viewport {
     mainMenu = new Tree(treeImages);
     mainMenu.setAnimationEnabled(true);
     mainMenu.addStyleName(DEFAULT_STYLE_NAME + "-menu");
-    mainMenu.addTreeListener(new TreeListener() {
-      public void onTreeItemSelected(TreeItem item) {
-        if (listener != null) {
-          listener.onMenuItemSelected(item);
-          contentWrapper.layout(true);
-        }
-      }
-
-      public void onTreeItemStateChanged(TreeItem item) {
-      }
-    });
   }
-
+  
   /**
    * Create the panel at the top of the page that contains the title and links.
    */
@@ -323,18 +220,58 @@ public class Application extends Viewport {
         HasVerticalAlignment.ALIGN_TOP);
   }
 
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
+  /**
+   * @return the {@link Widget} in the content area
+   */
+  public Widget getContent() {
+    return contentWrapper.getWidget(0);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
+  /**
+   * @return the main menu.
    */
-  public int[] getPreferredSize() {
-    return getWidget().getPreferredSize();
+  public Tree getMainMenu() {
+    return mainMenu;
+  }
+
+  /**
+   * @return the {@link Widget} used as the title
+   */
+  public Widget getTitleWidget() {
+    return topPanel.getWidget(0, 0);
+  }
+
+  /**
+   * Set the {@link Widget} to display in the content area.
+   *
+   * @param content the content widget
+   */
+  public void setContent(Widget content) {
+    contentWrapper.clear();
+    if (content == null) {
+      contentWrapper.add(new HTML("&nbsp;"));
+    } else {
+      contentWrapper.add(content);
+    }
+  }
+
+  /**
+   * Set the {@link Widget} to use as options, which appear to the right of the
+   * title bar.
+   *
+   * @param options the options widget
+   */
+  public void setOptionsWidget(Widget options) {
+    topPanel.setWidget(1, 1, options);
+  }
+
+  /**
+   * Set the {@link Widget} to use as the title bar.
+   *
+   * @param title the title widget
+   */
+  public void setTitleWidget(Widget title) {
+    topPanel.setWidget(1, 0, title);
   }
 
 }

@@ -16,7 +16,9 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.util.DelayedRunnable;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -148,10 +150,10 @@ public class LoadingPanel extends PopupPanel implements WindowResizeListener,
     if (glassPanelParent == null) {
       return;
     }
-    int[] size = DOM.getBoxSize(targetWidget.getElement());
+    final Dimension size = WidgetHelper.getOffsetSize(targetWidget);
     RootPanel.get().setWidgetPosition(glassPanelParent,
         targetWidget.getAbsoluteLeft(), targetWidget.getAbsoluteTop());
-    glassPanelParent.setPixelSize(size[0], size[1]);
+    glassPanelParent.setPixelSize(size.width, size.height);
     glassPanel.removeFromParent();
     glassPanelParent.add(glassPanel, 0, 0);
   }

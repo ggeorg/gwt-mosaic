@@ -24,15 +24,10 @@ import com.google.gwt.user.client.Element;
  */
 public class DOMImplIE6 extends DOMImpl {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.core.client.DOM#getStyleAttribute(com.google.gwt.user.client.Element,
-   *      java.lang.String)
-   */
   @Override
-  public native String getStyleAttribute(Element elem, String attr)
+  public native String getComputedStyleAttribute(Element elem, String attr)
   /*-{
+    var value;
     if (document.documentElement.currentStyle) { // IE method
       switch(attr) {
         case 'opacity' : // IE opacity uses filter
@@ -51,13 +46,13 @@ public class DOMImplIE6 extends DOMImpl {
           attr = 'styleFloat'; // fall through
         default:
           // test currentStyle before touching
-          var value = elem.currentStyle ? elem.currentStyle[attr] : null;
-          // FIX by ArekZ (exception in DOMImplIE6/Sep 22)
-          return ( ''+elem.style[attr] || value );
+          value = elem.currentStyle ? elem.currentStyle[attr] : null;
+          value = (elem.style[attr] || value || null);
       }
     } else { // default to inline only
-      return elem.style[attr];
+      value = (elem.style[attr] || null);
     }
+    return (value == null) ? null : ''+value;
   }-*/;
 
   /**

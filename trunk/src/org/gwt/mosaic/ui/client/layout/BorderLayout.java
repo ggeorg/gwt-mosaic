@@ -15,15 +15,13 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -43,8 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button(&quot;Button 1&quot;),
- *     new BorderLayoutData(BorderLayoutRegion.SOUTH));
+ * panel.add(new Button("Button 1"), new BorderLayoutData(BorderLayoutRegion.SOUTH));
  * </pre>
  * 
  * <p>
@@ -53,14 +50,14 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(true));
+ * panel.add(new Button("Button 1"), new BorderLayoutData(true));
  * </pre>
  * 
  * or
  * 
  * <pre>
  * LayoutPanel panel = new LayoutPanel(new BorderLayout());
- * panel.add(new Button(&quot;Button 1&quot;));
+ * panel.add(new Button("Button 1"));
  * </pre>
  * 
  * <p>
@@ -84,15 +81,18 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
+ *
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(Region.NORTH));
- *   panel.add(new Button(&quot;Button 2&quot;), new BorderLayoutData(Region.SOUTH));
- *   panel.add(new Button(&quot;Button 3&quot;), new BorderLayoutData(Region.WEST));
- *   panel.add(new Button(&quot;Button 4&quot;), new BorderLayoutData(Region.EAST));
- *   panel.add(new Button(&quot;Button 5&quot;));
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST));
+ *   panel.add(new Button("Button 5"));
+ *
  *   viewport.add(panel, true);
+ *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -119,16 +119,18 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
+ *
  *   LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
- *   panel.add(new Button(&quot;Button 1&quot;), new BorderLayoutData(Region.NORTH, 50));
- *   panel.add(new Button(&quot;Button 2&quot;), new BorderLayoutData(Region.SOUTH, 0.3));
- *   panel.add(new Button(&quot;Button 3&quot;), new BorderLayoutData(Region.WEST, 200, 10,
- *       300));
- *   panel.add(new Button(&quot;Button 4&quot;), new BorderLayoutData(Region.EAST, -1));
- *   panel.add(new Button(&quot;Button 5&quot;), new BorderLayoutData(true));
+ *   panel.add(new Button("Button 1"), new BorderLayoutData(Region.NORTH, 50));
+ *   panel.add(new Button("Button 2"), new BorderLayoutData(Region.SOUTH, 0.3));
+ *   panel.add(new Button("Button 3"), new BorderLayoutData(Region.WEST, 200, 10, 300));
+ *   panel.add(new Button("Button 4"), new BorderLayoutData(Region.EAST, -1));
+ *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
+ *
  *   viewport.add(panel, true);
+ *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -149,31 +151,37 @@ import com.google.gwt.user.client.ui.Widget;
  * <pre>
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
+ *
  *   final LayoutPanel panel = new LayoutPanel(new BorderLayout());
  *   panel.setPadding(10);
  *   panel.setWidgetSpacing(5);
+ *
  *   ClickListener clickListener = new ClickListener() {
  *     public void onClick(Widget sender) {
  *       panel.setCollapsed(sender, !panel.isCollapsed(sender));
  *       panel.layout();
  *     }
  *   };
- *   Button button1 = new Button(&quot;Button 1&quot;, clickListener);
- *   Button button2 = new Button(&quot;Button 2&quot;, clickListener);
- *   Button button3 = new Button(&quot;Button 3&quot;, clickListener);
- *   Button button4 = new Button(&quot;Button 4&quot;, clickListener);
+ *
+ *   Button button1 = new Button("Button 1", clickListener);
+ *   Button button2 = new Button("Button 2", clickListener);
+ *   Button button3 = new Button("Button 3", clickListener);
+ *   Button button4 = new Button("Button 4", clickListener);
+ *
  *   panel.add(button1, new BorderLayoutData(Region.NORTH));
  *   panel.add(button2, new BorderLayoutData(Region.SOUTH));
  *   panel.add(button3, new BorderLayoutData(Region.WEST));
  *   panel.add(button4, new BorderLayoutData(Region.EAST));
- * 
- *   panel.add(new Button(&quot;Button 5&quot;), new BorderLayoutData(true));
- * 
+ *  
+ *   panel.add(new Button("Button 5"), new BorderLayoutData(true));
+ *   
  *   panel.setCollapsed(button1, true);
  *   panel.setCollapsed(button2, true);
  *   panel.setCollapsed(button3, true);
  *   panel.setCollapsed(button4, true);
+ *
  *   viewport.add(panel, true);
+ *
  *   RootPanel.get().add(viewport);
  * }
  * </pre>
@@ -206,12 +214,8 @@ public class BorderLayout extends BaseLayout {
 
   private boolean runTwiceFlag;
 
-  private boolean initialized = false;
-
-  private Map<Widget, Dimension> widgetSizes = new HashMap<Widget, Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
+  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
+  // Dimension>();
 
   @Override
   public void flushCache() {
@@ -220,8 +224,18 @@ public class BorderLayout extends BaseLayout {
     south = null;
     west = null;
     center = null;
-    widgetSizes.clear();
+    // widgetSizes.clear();
     initialized = false;
+  }
+
+  private BorderLayoutData getBorderLayoutData(Widget child) {
+    Object layoutDataObject = getLayoutData(child);
+    if (layoutDataObject == null
+        || !(layoutDataObject instanceof BorderLayoutData)) {
+      layoutDataObject = new BorderLayoutData();
+      setLayoutData(child, layoutDataObject);
+    }
+    return (BorderLayoutData) layoutDataObject;
   }
 
   /*
@@ -231,15 +245,18 @@ public class BorderLayout extends BaseLayout {
    * org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui
    * .client.layout.LayoutPanel)
    */
-  public int[] getPreferredSize(LayoutPanel layoutPanel) {
-    int[] result = {0, 0};
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    final Dimension result = new Dimension();
+
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
         return result;
       }
 
-      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3]);
-      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2]);
+      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+          + (borders[1] + borders[3]);
+      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+          + (borders[0] + borders[2]);
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -247,21 +264,11 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
         if (layoutData.collapse) {
-          final Dimension dim = widgetSizes.get(northCollapsedImageButton);
-          if (dim == null) {
-            height += getFlowHeight(northCollapsedImageButton);
-          } else {
-            height += dim.getHeight();
-          }
+          height += WidgetHelper.getPreferredSize(northCollapsedImageButton).height;
         } else {
           int northHeight = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            final Dimension dim = widgetSizes.get(north);
-            if (dim == null) {
-              northHeight = getFlowHeight(north);
-            } else {
-              northHeight = dim.getHeight();
-            }
+            northHeight = WidgetHelper.getPreferredSize(north).height;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             northHeight = (int) (height * layoutData.preferredSize);
@@ -280,21 +287,11 @@ public class BorderLayout extends BaseLayout {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
 
         if (layoutData.collapse) {
-          final Dimension dim = widgetSizes.get(southCollapsedImageButton);
-          if (dim == null) {
-            height += getFlowHeight(southCollapsedImageButton);
-          } else {
-            height += dim.getHeight();
-          }
+          height += WidgetHelper.getPreferredSize(southCollapsedImageButton).height;
         } else {
           int southHeight = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            final Dimension dim = widgetSizes.get(south);
-            if (dim == null) {
-              southHeight = getFlowHeight(south);
-            } else {
-              southHeight = dim.getHeight();
-            }
+            southHeight = WidgetHelper.getPreferredSize(south).height;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             southHeight = (int) (height * layoutData.preferredSize);
@@ -309,25 +306,17 @@ public class BorderLayout extends BaseLayout {
         height += spacing;
       }
 
+      Dimension westSize = null;
+
       if (west != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
 
         if (layoutData.collapse) {
-          final Dimension dim = widgetSizes.get(westCollapsedImageButton);
-          if (dim == null) {
-            width += getFlowWidth(westCollapsedImageButton);
-          } else {
-            width += dim.getWidth();
-          }
+          width += WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
         } else {
           int westWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            final Dimension dim = widgetSizes.get(west);
-            if (dim == null) {
-              westWidth = getFlowWidth(west);
-            } else {
-              westWidth = dim.getWidth();
-            }
+            westWidth = WidgetHelper.getPreferredSize(west).width;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             westWidth = (int) (width * layoutData.preferredSize);
@@ -342,25 +331,17 @@ public class BorderLayout extends BaseLayout {
         width += spacing;
       }
 
+      Dimension eastSize = null;
+
       if (east != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
 
         if (layoutData.collapse) {
-          final Dimension dim = widgetSizes.get(eastCollapsedImageButton);
-          if (dim == null) {
-            width += getFlowWidth(eastCollapsedImageButton);
-          } else {
-            width += dim.getWidth();
-          }
+          width += WidgetHelper.getPreferredSize(eastCollapsedImageButton).width;
         } else {
           int eastWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            final Dimension dim = widgetSizes.get(east);
-            if (dim == null) {
-              eastWidth = getFlowWidth(east);
-            } else {
-              eastWidth = dim.getWidth();
-            }
+            eastWidth = WidgetHelper.getPreferredSize(east).width;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             eastWidth = (int) (width * layoutData.preferredSize);
@@ -375,22 +356,25 @@ public class BorderLayout extends BaseLayout {
         width += spacing;
       }
 
-      final Dimension dim = widgetSizes.get(center);
-      if (dim == null) {
-        width += getFlowWidth(center);
-      } else {
-        width += dim.getWidth();
+      Dimension centerSize = WidgetHelper.getPreferredSize(center);
+      width += centerSize.width;
+
+      if (west != null && westSize == null) {
+        westSize = WidgetHelper.getPreferredSize(west);
+      }
+      if (east != null && eastSize == null) {
+        eastSize = WidgetHelper.getPreferredSize(east);
       }
 
       if (west != null && east != null) {
-        height += Math.max(Math.max(getFlowHeight(west), getFlowHeight(east)),
-            getFlowHeight(center));
+        height += Math.max(Math.max(westSize.height, eastSize.height),
+            centerSize.height);
       } else if (west != null) {
-        height += Math.max(getFlowHeight(west), getFlowHeight(center));
+        height += Math.max(westSize.height, centerSize.height);
       } else if (east != null) {
-        height += Math.max(getFlowHeight(east), getFlowHeight(center));
+        height += Math.max(eastSize.height, centerSize.height);
       } else {
-        height += getFlowHeight(center);
+        height += centerSize.height;
       }
 
       BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
@@ -400,8 +384,8 @@ public class BorderLayout extends BaseLayout {
         height += (decPanel.getOffsetHeight() - center.getOffsetHeight());
       }
 
-      result[0] = width;
-      result[1] = height;
+      result.width = width;
+      result.height = height;
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
@@ -417,8 +401,7 @@ public class BorderLayout extends BaseLayout {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    super.init(layoutPanel);
 
     scanForPanels(layoutPanel);
 
@@ -450,10 +433,10 @@ public class BorderLayout extends BaseLayout {
         return;
       }
 
-      final int[] box = DOM.getClientSize(layoutPanel.getElement());
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
-      final int width = box[0] - (paddings[1] + paddings[3]);
-      final int height = box[1] - (paddings[0] + paddings[2]);
+      final int width = box.width - (paddings[1] + paddings[3]);
+      final int height = box.height - (paddings[0] + paddings[2]);
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -472,11 +455,11 @@ public class BorderLayout extends BaseLayout {
           if (northSplitBar == null) {
             northSplitBar = new SplitBar(layoutPanel, north, SplitBar.NORTH);
             northSplitBar.setStyleName("NorthSplitBar");
-            layoutPanel.add(northSplitBar);
+            layoutPanel.addImpl(northSplitBar);
           }
         } else {
           if (northSplitBar != null) {
-            layoutPanel.remove(northSplitBar);
+            layoutPanel.removeImpl(northSplitBar);
             northSplitBar = null;
           }
         }
@@ -491,7 +474,7 @@ public class BorderLayout extends BaseLayout {
             northCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
                 layoutPanel.setCollapsed(northCollapsed, false);
-                layoutPanel.remove(northCollapsedImageButton);
+                layoutPanel.removeImpl(northCollapsedImageButton);
                 northCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
@@ -501,56 +484,49 @@ public class BorderLayout extends BaseLayout {
                 return;
               }
             });
-            layoutPanel.add(northCollapsedImageButton);
+            layoutPanel.addImpl(northCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
             northCollapsed = north;
             north.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(northCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(northCollapsedImageButton, dim = new Dimension(-1,
-                getFlowHeight(northCollapsedImageButton)));
-          }
-          h = dim.getHeight();
-          setBounds(layoutPanel, northCollapsedImageButton, left, top,
-              Math.max(0, right - left), h);
+          h = WidgetHelper.getPreferredSize(northCollapsedImageButton).height;
+          WidgetHelper.setBounds(layoutPanel, northCollapsedImageButton, left,
+              top, Math.max(0, right - left), h);
         } else {
-          int northHeight = (int) layoutData.preferredSize;
+
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(north);
-            if (dim == null) {
-              widgetSizes.put(north, dim = new Dimension(-1,
-                  getFlowHeight(north)));
-              runTwiceFlag = true;
-            }
-            northHeight = dim.getHeight();
+            h = WidgetHelper.getPreferredSize(north).height;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            northHeight = (int) (height * layoutData.preferredSize);
+            h = (int) (height * layoutData.preferredSize);
+          } else {
+            h = (int) layoutData.preferredSize;
           }
 
-          h = northHeight;
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                - north.getOffsetWidth();
-            final int decPanelBorderHeight = decPanel.getOffsetHeight()
-                - north.getOffsetHeight();
-            setBounds(layoutPanel, north, left, top, Math.max(0, right - left)
-                - decPanelBorderWidth, h);
-            // increase 'h'
-            h += decPanelBorderHeight;
-          } else {
-            setBounds(layoutPanel, north, left, top, Math.max(0, right - left),
-                h);
+          int _width = Math.max(0, right - left);
+          int _height = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _height = h;
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, north);
+
+            _width -= decPanelBorderSize.width;
+
+            // increase 'h'
+            h += decPanelBorderSize.height;
+          }
+          WidgetHelper.setBounds(layoutPanel, north, left, top, _width, _height);
 
           // split bar
-          if (layoutData.resizable) {
-            setBounds(layoutPanel, northSplitBar, left, top + h, Math.max(0,
-                right - left), spacing);
+          if (layoutData.resizable && northSplitBar.isAttached()) {
+            WidgetHelper.setBounds(layoutPanel, northSplitBar, left, top + h,
+                Math.max(0, right - left), spacing);
           }
         }
         top += (h + spacing);
@@ -563,11 +539,11 @@ public class BorderLayout extends BaseLayout {
           if (southSplitBar == null) {
             southSplitBar = new SplitBar(layoutPanel, south, SplitBar.SOUTH);
             southSplitBar.setStyleName("SouthSplitBar");
-            layoutPanel.add(southSplitBar);
+            layoutPanel.addImpl(southSplitBar);
           }
         } else {
           if (southSplitBar != null) {
-            layoutPanel.remove(southSplitBar);
+            layoutPanel.removeImpl(southSplitBar);
             southSplitBar = null;
           }
         }
@@ -582,7 +558,7 @@ public class BorderLayout extends BaseLayout {
             southCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
                 layoutPanel.setCollapsed(southCollapsed, false);
-                layoutPanel.remove(southCollapsedImageButton);
+                layoutPanel.removeImpl(southCollapsedImageButton);
                 southCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
@@ -592,54 +568,52 @@ public class BorderLayout extends BaseLayout {
                 return;
               }
             });
-            layoutPanel.add(southCollapsedImageButton);
+            layoutPanel.addImpl(southCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
             southCollapsed = south;
             south.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(southCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(southCollapsedImageButton, dim = new Dimension(-1,
-                getFlowHeight(southCollapsedImageButton)));
-          }
-          h = dim.getHeight();
-          setBounds(layoutPanel, southCollapsedImageButton, left, Math.max(0,
-              bottom - h), Math.max(0, right - left), h);
+          h = WidgetHelper.getPreferredSize(southCollapsedImageButton).height;
+          WidgetHelper.setBounds(layoutPanel, southCollapsedImageButton, left,
+              Math.max(0, bottom - h), Math.max(0, right - left), h);
         } else {
-          int southHeight = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(south);
-            if (dim == null) {
-              widgetSizes.put(south, dim = new Dimension(-1,
-                  getFlowHeight(south)));
-              runTwiceFlag = true;
-            }
-            southHeight = dim.getHeight();
+            h = WidgetHelper.getPreferredSize(south).height;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            southHeight = (int) (height * layoutData.preferredSize);
+            h = (int) (height * layoutData.preferredSize);
+          } else {
+            h = (int) layoutData.preferredSize;
           }
 
-          h = (int) Math.round(southHeight);
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int _width = Math.max(0, right - left)
-                - (decPanel.getOffsetWidth() - south.getOffsetWidth());
-            final int _top = Math.max(0, bottom - h)
-                - (decPanel.getOffsetHeight() - south.getOffsetHeight());
-            setBounds(layoutPanel, south, left, _top, _width, h);
-            // increase 'h'
-            h += (decPanel.getOffsetHeight() - south.getOffsetHeight());
-          } else {
-            setBounds(layoutPanel, south, left, Math.max(0, bottom - h),
-                Math.max(0, right - left), h);
+          int _width = Math.max(0, right - left);
+          int _top = Math.max(0, bottom - h);
+          int _height = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _height = h;
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, south);
+
+            _width -= decPanelBorderSize.width;
+            _top -= decPanelBorderSize.height;
+
+            // increase 'h'
+            h += decPanelBorderSize.height;
+          }
+
+          WidgetHelper.setBounds(layoutPanel, south, left, _top, _width,
+              _height);
 
           // split bar
-          if (layoutData.resizable) {
-            setBounds(layoutPanel, southSplitBar, left, Math.max(0, bottom - h)
+          if (layoutData.resizable && southSplitBar.isAttached()) {
+            WidgetHelper.setBounds(layoutPanel, southSplitBar, left, Math.max(
+                0, bottom - h)
                 - spacing, Math.max(0, right - left), spacing);
           }
         }
@@ -653,11 +627,11 @@ public class BorderLayout extends BaseLayout {
           if (westSplitBar == null) {
             westSplitBar = new SplitBar(layoutPanel, west, SplitBar.WEST);
             westSplitBar.setStyleName("WestSplitBar");
-            layoutPanel.add(westSplitBar);
+            layoutPanel.addImpl(westSplitBar);
           }
         } else {
           if (westSplitBar != null) {
-            layoutPanel.remove(westSplitBar);
+            layoutPanel.removeImpl(westSplitBar);
             westSplitBar = null;
           }
         }
@@ -672,7 +646,7 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
                 layoutPanel.setCollapsed(westCollapsed, false);
-                layoutPanel.remove(westCollapsedImageButton);
+                layoutPanel.removeImpl(westCollapsedImageButton);
                 westCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
@@ -682,51 +656,49 @@ public class BorderLayout extends BaseLayout {
                 return;
               }
             });
-            layoutPanel.add(westCollapsedImageButton);
+            layoutPanel.addImpl(westCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
             westCollapsed = west;
             west.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(westCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(westCollapsedImageButton, dim = new Dimension(
-                getFlowWidth(westCollapsedImageButton), -1));
-          }
-          w = dim.getWidth();
-          setBounds(layoutPanel, westCollapsedImageButton, left, top, w,
-              Math.max(0, bottom - top));
+          w = WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
+          WidgetHelper.setBounds(layoutPanel, westCollapsedImageButton, left,
+              top, w, Math.max(0, bottom - top));
         } else {
-          int westWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(west);
-            if (dim == null) {
-              widgetSizes.put(west, dim = new Dimension(getFlowWidth(west), -1));
-            }
-            westWidth = dim.getWidth();
+            w = WidgetHelper.getPreferredSize(west).width;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            westWidth = (int) (width * layoutData.preferredSize);
+            w = (int) (width * layoutData.preferredSize);
+          } else {
+            w = (int) layoutData.preferredSize;
           }
 
-          w = (int) Math.round(westWidth);
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int _height = Math.max(0, bottom - top)
-                - (decPanel.getOffsetHeight() - west.getOffsetHeight());
-            setBounds(layoutPanel, west, left, top, w, _height);
-            // increase 'h'
-            w += (decPanel.getOffsetWidth() - west.getOffsetWidth());
-          } else {
-            setBounds(layoutPanel, west, left, top, w,
-                Math.max(0, bottom - top));
+          int _width = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _width = w;
           }
+          int _height = Math.max(0, bottom - top);
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, west);
+
+            _height -= decPanelBorderSize.height;
+
+            // increase 'w'
+            w += decPanelBorderSize.width;
+          }
+
+          WidgetHelper.setBounds(layoutPanel, west, left, top, _width, _height);
 
           // split bar
-          if (layoutData.resizable) {
-            setBounds(layoutPanel, westSplitBar, left + w, top, spacing,
-                Math.max(0, bottom - top));
+          if (layoutData.resizable && westSplitBar.isAttached()) {
+            WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
+                spacing, Math.max(0, bottom - top));
           }
         }
         left += (w + spacing);
@@ -739,11 +711,11 @@ public class BorderLayout extends BaseLayout {
           if (eastSplitBar == null) {
             eastSplitBar = new SplitBar(layoutPanel, east, SplitBar.EAST);
             eastSplitBar.setStyleName("EastSplitBar");
-            layoutPanel.add(eastSplitBar);
+            layoutPanel.addImpl(eastSplitBar);
           }
         } else {
           if (eastSplitBar != null) {
-            layoutPanel.remove(eastSplitBar);
+            layoutPanel.removeImpl(eastSplitBar);
             eastSplitBar = null;
           }
         }
@@ -758,7 +730,7 @@ public class BorderLayout extends BaseLayout {
             eastCollapsedImageButton.addClickListener(new ClickListener() {
               public void onClick(Widget sender) {
                 layoutPanel.setCollapsed(eastCollapsed, false);
-                layoutPanel.remove(eastCollapsedImageButton);
+                layoutPanel.removeImpl(eastCollapsedImageButton);
                 eastCollapsedImageButton = null;
                 if (layoutData.hasDecoratorPanel()) {
                   layoutData.decoratorPanel.setVisible(true);
@@ -768,85 +740,74 @@ public class BorderLayout extends BaseLayout {
                 return;
               }
             });
-            layoutPanel.add(eastCollapsedImageButton);
+            layoutPanel.addImpl(eastCollapsedImageButton);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.decoratorPanel.setVisible(false);
             }
             eastCollapsed = east;
             east.setVisible(false);
           }
-          Dimension dim = widgetSizes.get(eastCollapsedImageButton);
-          if (dim == null) {
-            widgetSizes.put(eastCollapsedImageButton, dim = new Dimension(
-                getFlowWidth(eastCollapsedImageButton), -1));
-          }
-          w = dim.getWidth();
-          setBounds(layoutPanel, eastCollapsedImageButton, Math.max(0, right
-              - w), top, w, Math.max(0, bottom - top));
+          w = WidgetHelper.getPreferredSize(eastCollapsedImageButton).width;
+          WidgetHelper.setBounds(layoutPanel, eastCollapsedImageButton,
+              Math.max(0, right - w), top, w, Math.max(0, bottom - top));
         } else {
-          int eastWidth = (int) layoutData.preferredSize;
           if (layoutData.preferredSize == -1.0) {
-            Dimension dim = widgetSizes.get(east);
-            if (dim == null) {
-              widgetSizes.put(east, dim = new Dimension(getFlowWidth(east), -1));
-            }
-            eastWidth = dim.getWidth();
+            w = WidgetHelper.getPreferredSize(east).width;
+            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
-            eastWidth = (int) (width * layoutData.preferredSize);
+            w = (int) (width * layoutData.preferredSize);
+          } else {
+            w = (int) layoutData.preferredSize;
           }
 
-          w = (int) Math.round(eastWidth);
-          if (layoutData.hasDecoratorPanel()) {
-            final DecoratorPanel decPanel = layoutData.decoratorPanel;
-            final int decPanelBorderWidth = decPanel.getOffsetWidth()
-                - east.getOffsetWidth();
-            final int decPanelBorderHeight = decPanel.getOffsetHeight()
-                - east.getOffsetHeight();
-            final int _left = Math.max(0, right - w) - decPanelBorderWidth;
-            final int _height = Math.max(0, bottom - top)
-                - decPanelBorderHeight;
-            setBounds(layoutPanel, east, _left, top, w, _height);
-            // increase 'h'
-            w += (decPanel.getOffsetWidth() - east.getOffsetWidth());
-          } else {
-            setBounds(layoutPanel, east, Math.max(0, right - w), top, w,
-                Math.max(0, bottom - top));
+          int _left = Math.max(0, right - w);
+          int _width = -1;
+          if (layoutData.preferredSize != -1.0) {
+            _width = w;
           }
+          int _height = Math.max(0, bottom - top);
+
+          if (layoutData.hasDecoratorPanel()) {
+            final Dimension decPanelBorderSize = getDecoratorFrameSize(
+                layoutData.decoratorPanel, east);
+
+            _left -= decPanelBorderSize.width;
+            _height -= decPanelBorderSize.height;
+
+            // increase 'h'
+            w += decPanelBorderSize.width;
+          }
+          WidgetHelper.setBounds(layoutPanel, east, _left, top, _width, _height);
 
           // split bar
-          if (layoutData.resizable) {
-            setBounds(layoutPanel, eastSplitBar, Math.max(0, right - w)
+          if (layoutData.resizable && eastSplitBar.isAttached()) {
+            WidgetHelper.setBounds(layoutPanel, eastSplitBar, Math.max(0, right
+                - w)
                 - spacing, top, spacing, Math.max(0, bottom - top));
           }
         }
         right -= (w + spacing);
       }
 
+      int _width = Math.max(0, right - left);
+      int _height = Math.max(0, bottom - top);
+
       BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        final DecoratorPanel decPanel = layoutData.decoratorPanel;
-        final int decPanelBorderWidth = decPanel.getOffsetWidth()
-            - center.getOffsetWidth();
-        final int decPanelBorderHeight = decPanel.getOffsetHeight()
-            - center.getOffsetHeight();
-        final int _width = Math.max(0, right - left) - decPanelBorderWidth;
-        final int _height = Math.max(0, bottom - top) - decPanelBorderHeight;
-        setBounds(layoutPanel, center, left, top, _width, _height);
-      } else {
-        setBounds(layoutPanel, center, left, top, Math.max(0, right - left),
-            Math.max(0, bottom - top));
+        final Dimension decPanelBorderSize = getDecoratorFrameSize(
+            layoutData.decoratorPanel, center);
+        _width -= decPanelBorderSize.width;
+        _height -= decPanelBorderSize.height;
       }
+
+      WidgetHelper.setBounds(layoutPanel, center, left, top, _width, _height);
+
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ".layoutPanel(): "
           + e.getLocalizedMessage());
     }
-
-    if (runTwice()) {
-      recalculate(widgetSizes);
-    }
-    
   }
 
   @Override
@@ -855,13 +816,13 @@ public class BorderLayout extends BaseLayout {
   }
 
   private void scanForPanels(LayoutPanel layoutPanel) {
-    
+
     north = null;
     south = null;
     west = null;
     south = null;
     center = null;
-    
+
     final int size = layoutPanel.getWidgetCount();
     for (int i = 0; i < size; i++) {
       Widget child = layoutPanel.getWidget(i);
@@ -871,13 +832,7 @@ public class BorderLayout extends BaseLayout {
         child = ((DecoratorPanel) child).getWidget();
       }
 
-      Object layoutDataObject = getLayoutData(child);
-      if (layoutDataObject == null
-          || !(layoutDataObject instanceof BorderLayoutData)) {
-        layoutDataObject = new BorderLayoutData();
-        setLayoutData(child, layoutDataObject);
-      }
-      BorderLayoutData layoutData = (BorderLayoutData) layoutDataObject;
+      BorderLayoutData layoutData = getBorderLayoutData(child);
 
       if (!DOM.isVisible(child.getElement()) && !layoutData.collapse) {
         continue;
@@ -914,11 +869,11 @@ public class BorderLayout extends BaseLayout {
     if (center == null) {
       if (placeHolder == null) {
         placeHolder = new WidgetWrapper(new SimplePanel());
-        layoutPanel.add(placeHolder);
+        layoutPanel.addImpl(placeHolder);
       }
       center = placeHolder;
     } else if (placeHolder != null && placeHolder != center) {
-      layoutPanel.remove(placeHolder);
+      layoutPanel.removeImpl(placeHolder);
       placeHolder = null;
     }
   }
