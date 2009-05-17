@@ -38,16 +38,6 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
 
   private DateTimeFormat formatter = DateTimeFormat.getMediumDateFormat();
 
-  private Timer updateTimer = new Timer() {
-    public void run() {
-      if (!isPopupVisible()) {
-        showPopup();
-      } else {
-        onShowPopup();
-      }
-    }
-  };
-
   /**
    * Default constructor.
    */
@@ -59,28 +49,6 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
     super();
 
     this.datePicker = datePicker;
-
-    super.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-          case KEY_UP:
-            break;
-          default:
-            updateTimer.schedule(333);
-        }
-      }
-    });
 
     datePicker.addChangeHandler(new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
