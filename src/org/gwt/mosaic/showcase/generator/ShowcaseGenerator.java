@@ -51,8 +51,7 @@ public class ShowcaseGenerator extends Generator {
    */
   private static final String[] SRC_CSS = {
       "com/google/gwt/user/theme/$THEME/public/gwt/$THEME/$THEME.css",
-      //"com/allen_sauer/gwt/dnd/public/gwt-dnd.css",
-      "org/gwt/mosaic/ui/public/gwt/$THEME/Mosaic.css",
+      "org/gwt/mosaic/theme/$THEME/public/gwt/$THEME/mosaic.css",
       "org/gwt/mosaic/showcase/public/$THEME/Showcase.css"};
 
   /**

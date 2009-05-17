@@ -69,7 +69,7 @@ public class Caption extends LayoutComposite implements HasHTML,
   }
 
   public Caption(String text, boolean asHTML) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout());
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
@@ -97,7 +97,7 @@ public class Caption extends LayoutComposite implements HasHTML,
         leftIconBox = new HorizontalPanel();
         leftIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxLeft");
         leftIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL),
+        getLayoutPanel().insert(leftIconBox, new BoxLayoutData(FillStyle.VERTICAL),
             0);
       }
       leftIconBox.add(w);
@@ -106,7 +106,7 @@ public class Caption extends LayoutComposite implements HasHTML,
         rightIconBox = new HorizontalPanel();
         rightIconBox.setStyleName(DEFAULT_STYLENAME + "-iconBoxRight");
         rightIconBox.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-        getWidget().add(rightIconBox, new BoxLayoutData(FillStyle.VERTICAL));
+        getLayoutPanel().add(rightIconBox, new BoxLayoutData(FillStyle.VERTICAL));
       }
       if (rightIconBox.getWidgetCount() > 0) {
         rightIconBox.insert(w, 0);

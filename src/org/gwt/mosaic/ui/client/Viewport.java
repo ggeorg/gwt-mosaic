@@ -17,18 +17,18 @@ package org.gwt.mosaic.ui.client;
 
 import java.util.Iterator;
 
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
-import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -36,23 +36,14 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class Viewport extends Composite implements HasWidgets,
+public class Viewport extends LayoutComposite implements
     WindowResizeListener, WindowCloseListener {
 
-  private Timer delayedResize = new Timer() {
+  private final Timer resizeTimer = new Timer() {
     @Override
     public void run() {
-      final Widget widget = Viewport.this.getWidget();
-
-      final int width = Window.getClientWidth();
-      final int height = Window.getClientHeight();
-
-      Viewport.this.setBounds(widget, 0, 0, width, height);
-
-      if (widget instanceof HasLayoutManager) {
-        final HasLayoutManager layoutWidget = (HasLayoutManager) widget;
-        layoutWidget.layout();
-      }
+      setBounds(0, 0, Window.getClientWidth(), Window.getClientHeight());
+      layout();
     }
   };
 
@@ -60,140 +51,93 @@ public class Viewport extends Composite implements HasWidgets,
    * Default constructor.
    */
   public Viewport() {
-    final LayoutPanel panel = new LayoutPanel();
-    initWidget(panel);
+    super();
 
     Window.addWindowCloseListener(this);
     Window.addWindowResizeListener(this);
+
     Window.enableScrolling(false);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client
-   * .ui.Widget)
-   */
+  @Deprecated
   public void add(Widget widget) {
     add(widget, false);
   }
 
-  public void add(Widget widget, boolean decorate) {
-    final LayoutPanel panel = getWidget();
-    panel.clear();
-    panel.add(widget, new FillLayoutData(decorate));
-
-    onLoad();
+  @Deprecated
+  public void add(Widget w, boolean decorate) {
+    final LayoutPanel layoutPanel = getLayoutPanel();
+    layoutPanel.clear();
+    if (!(layoutPanel.getLayout() instanceof FillLayout)) {
+      layoutPanel.setLayout(new FillLayout());
+    }
+    layoutPanel.add(w, new FillLayoutData(decorate));
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
-   */
+  @Deprecated
   public void clear() {
-    getWidget().clear();
+    getLayoutPanel().clear();
   }
 
+  /**
+   * Returns the internal {@link LayoutPanel} for this {@code Viewport}.
+   * 
+   * @return the internal {@link LayoutPanel}
+   */
   @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
+  public LayoutPanel getLayoutPanel() {
+    return super.getLayoutPanel();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
-   */
+  @Deprecated
   public Iterator<Widget> iterator() {
-    return getWidget().iterator();
+    return getLayoutPanel().iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Widget#onLoad()
-   */
   @Override
   protected void onLoad() {
     super.onLoad();
 
-    delayedResize.schedule(1);
+    resizeTimer.schedule(CoreConstants.MIN_DELAY_MILLIS);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.WindowCloseListener#onWindowClosed()
-   */
   public void onWindowClosed() {
     Window.removeWindowResizeListener(this);
     Window.removeWindowCloseListener(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.WindowCloseListener#onWindowClosing()
-   */
   public String onWindowClosing() {
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.WindowResizeListener#onWindowResized(int,
-   * int)
-   */
   public void onWindowResized(int width, int height) {
-    delayedResize.schedule(333);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
-   * .ui.Widget)
-   */
-  public boolean remove(Widget w) {
-    return getWidget().remove(w);
-  }
-
-  /**
-   * 
-   * @param widget
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   */
-  protected void setBounds(final Widget widget, final int x, final int y,
-      final int width, final int height) {
-    RootPanel.get().setWidgetPosition(this, x, y);
-    setSize(widget, width, height);
-  }
-
-  /**
-   * 
-   * @param widget
-   * @param width
-   * @param height
-   */
-  protected void setSize(final Widget widget, int width, int height) {
-    Element elem = widget.getElement();
-
-    int[] margins = DOM.getMarginSizes(widget.getElement());
-
-    if (width != -1) {
-      width -= (margins[1] + margins[3]);
-      DOM.setContentAreaWidth(elem, Math.max(0, width));
+    if (isAttached()) {
+      resizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
     }
-    if (height != -1) {
-      height -= (margins[0] + margins[2]);
-      DOM.setContentAreaHeight(elem, Math.max(0, height));
+  }
+
+  @Deprecated
+  public boolean remove(Widget w) {
+    return getLayoutPanel().remove(w);
+  }
+
+  private void setBounds(final int x, final int y, int width, int height) {
+    RootPanel.get().setWidgetPosition(this, x, y);
+
+    final Element elem = getElement();
+    final int[] margins = DOM.getMarginSizes(elem);
+
+    WidgetHelper.setSize(this, width - (margins[1] + margins[3]), height
+        - (margins[0] + margins[2]));
+  }
+  
+  /**
+   * 
+   * @see #removeFromParent()
+   */
+  public void attach() {
+    if (!isAttached()) {
+      RootPanel.get().add(this, Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
   }
 

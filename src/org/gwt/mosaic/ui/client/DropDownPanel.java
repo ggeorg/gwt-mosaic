@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import org.gwt.mosaic.core.client.DOM;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
@@ -86,9 +88,15 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
   @Override
   protected void onLoad() {
     super.onLoad();
-    final int[] prefSize = getPreferredSize();
-    setWidth(Math.max(prefSize[0], relativeWidget.getOffsetWidth()) + "px");
-    layout();
+
+    pack();
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        // pack();
+        layout();
+      }
+    });
   }
 
   /**

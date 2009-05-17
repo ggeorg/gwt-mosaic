@@ -16,6 +16,8 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -119,9 +121,9 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
           }
           if (style == ToolButtonStyle.MENU) {
             if (menu != null) {
-              final int box[] = DOM.getBoxSize(getElement());
+              final Dimension box = WidgetHelper.getOffsetSize(this);
               final int left = DOM.getAbsoluteLeft(getElement());
-              final int top = DOM.getAbsoluteTop(getElement()) + box[1];
+              final int top = DOM.getAbsoluteTop(getElement()) + box.height;
               menu.setPopupPosition(left, top);
               menu.show();
             }
@@ -156,9 +158,9 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
               if (menu != null) {
                 // TODO fix that code
                 // Region r = DOM.getRegion(getElement());
-                final int box[] = DOM.getBoxSize(getElement());
+                final Dimension box = WidgetHelper.getOffsetSize(this);
                 final int left = DOM.getAbsoluteLeft(getElement());
-                final int top = DOM.getAbsoluteTop(getElement()) + box[1];
+                final int top = DOM.getAbsoluteTop(getElement()) + box.height;
                 menu.setPopupPosition(left, top);
                 menu.show();
               }
@@ -305,7 +307,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    */
   public ToolButton() {
     super();
-    getWidget().add(button);
+    getLayoutPanel().add(button);
     setStyleName(DEFAULT_STYLENAME);
   }
 

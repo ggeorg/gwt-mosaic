@@ -51,6 +51,7 @@ import org.gwt.mosaic.core.client.Insets;
 import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.ui.client.layout.LayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -1082,7 +1083,7 @@ public final class CellConstraints extends LayoutData implements Cloneable,
     int y = origin(concreteVAlign, cellY, cellH, compH);
     int w = extent(concreteHAlign, cellW, compW);
     int h = extent(concreteVAlign, cellH, compH);
-    setBounds(layoutPanel, c, x, y, w, h);
+    WidgetHelper.setBounds(layoutPanel, c, x, y, w, h);
   }
 
   /**

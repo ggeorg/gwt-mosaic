@@ -27,6 +27,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -81,7 +82,7 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
   /**
    * The default style name.
    */
-  private static final String DEFAULT_STYLE_NAME = "mosaic-sc-ContentWidget";
+  private static final String DEFAULT_STYLE_NAME = "sc-ContentWidget";
 
   /**
    * The static loading image displayed when loading CSS or source code.
@@ -152,11 +153,6 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
    */
   public abstract String getDescription();
 
-  public final String getId() {
-    final String s = this.getClass().getName();
-    return s.substring(s.lastIndexOf('.') + 1, s.length());
-  }
-
   /**
    * Get the name of this example to use as a title.
    * 
@@ -225,17 +221,18 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
       }
 
       public void onResize(int width, int height) {
-        panel1.layout(true);
+        WidgetHelper.invalidate(descWidget);
+        // WidgetHelper.layout((Widget) WidgetHelper.getParent(descWidget));
       }
     });
 
     // Add source code tab
     if (hasSource()) {
-      final LayoutPanel panel2 = new LayoutPanel();
+      // final LayoutPanel panel2 = new LayoutPanel();
       sourceWidget = new HTML();
       sourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
-      panel2.add(sourceWidget);
-      tabPanel.add(panel2, createTabBarCaption(Showcase.IMAGES.cup(),
+      // panel2.add(sourceWidget);
+      tabPanel.add(sourceWidget, createTabBarCaption(Showcase.IMAGES.cup(),
           constants.mosaicPageSource()), true);
     } else {
       sourceLoaded = true;
@@ -243,12 +240,12 @@ public abstract class ContentWidget extends LayoutPanel implements TabListener {
 
     // Add style tab
     if (hasStyle()) {
-      final LayoutPanel panel3 = new LayoutPanel();
+      // final LayoutPanel panel3 = new LayoutPanel();
       styleDefs = new HashMap<String, String>();
       styleWidget = new HTML();
       styleWidget.setStyleName(DEFAULT_STYLE_NAME + "-style");
-      panel3.add(styleWidget);
-      tabPanel.add(panel3, createTabBarCaption(Showcase.IMAGES.css(),
+      // panel3.add(styleWidget);
+      tabPanel.add(styleWidget, createTabBarCaption(Showcase.IMAGES.css(),
           constants.mosaicPageStyle()), true);
     }
 

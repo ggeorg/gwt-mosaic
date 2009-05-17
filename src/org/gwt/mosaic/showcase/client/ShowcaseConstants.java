@@ -41,8 +41,7 @@ public interface ShowcaseConstants extends Constants,
     CwComboBox.CwConstants, CwToolBar.CwConstants, CwMenuBar.CwConstants,
     CwScrollTable.CwConstants, CwPagingScrollTable.CwConstants,
     CwTableLoadingBenchmark.CwConstants, CwBasicTreeTable.CwConstants,
-    CwDatePicker.CwConstants, CwMessageBox.CwConstants,
-    Application.AppConstants {
+    CwDatePicker.CwConstants, CwMessageBox.CwConstants {
 
   /**
    * The path to source code for examples, raw files, and style definitions.
@@ -82,7 +81,7 @@ public interface ShowcaseConstants extends Constants,
   /**
    * The available style themes that the user can select.
    */
-  String[] STYLE_THEMES = {"standard", "chrome", "dark"};
+  String[] STYLE_THEMES = {"aegean", "standard", "chrome", "dark"};
 
   /**
    * @return text for the link to more examples

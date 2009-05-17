@@ -63,7 +63,7 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
 
   protected ComboBoxBase(String styleName) {
     super();
-    final LayoutPanel layoutPanel = super.getWidget();
+    final LayoutPanel layoutPanel = super.getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.HORIZONTAL));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
@@ -374,7 +374,7 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     } else {
       final T w = onShowPopup();
       if (w != null) {
-        if (w != popup.getWidget()) {
+        if (w != popup.getLayoutPanel()) {
           popup.setWidget(w);
         }
         popup.show();

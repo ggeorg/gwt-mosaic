@@ -107,7 +107,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
       boolean decorateBody) {
     super();
 
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setWidgetSpacing(0);
 

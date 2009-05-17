@@ -15,17 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
-
-import com.allen_sauer.gwt.dnd.client.AbstractDragController;
-import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
-import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
-import com.allen_sauer.gwt.dnd.client.util.Location;
-import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -35,13 +24,24 @@ import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
+import com.allen_sauer.gwt.dnd.client.AbstractDragController;
+import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
+import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
+import com.allen_sauer.gwt.dnd.client.util.Location;
+import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
+
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 final class SplitBar extends Widget implements SourcesMouseEvents {
-  
-  private static GlassPanel glassPanel;
 
   private MouseListenerCollection mouseListeners;
 
@@ -67,49 +67,57 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
 
     private Widget widget = null;
 
+    private Widget movablePanel;
+
+    private int draggableOldAbsoluteLeft, draggableOldAbsoluteTop;
+
+    private BorderLayoutData layoutData = null;
+
+    private int boundaryOffsetX, boundaryOffsetY;
+    private int dropTargetClientHeight, dropTargetClientWidth;
+    private int minValue = 0;
+    private int maxValue = -1;
+
     public SplitBarDragController(AbsolutePanel boundaryPanel, Widget widget) {
       super(boundaryPanel);
       this.widget = widget;
     }
 
-    private Widget movablePanel;
-
     @Override
-    public void dragStart() {
-      if (glassPanel == null) {
-        glassPanel = new GlassPanel(false);
-        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+    public void dragEnd() {
+      int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
+      if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
+        int delta = context.draggable.getAbsoluteTop()
+            - draggableOldAbsoluteTop;
+        layoutData.preferredSize = widget.getOffsetHeight() + delta;
+      } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
+        int delta = draggableOldAbsoluteTop
+            - context.draggable.getAbsoluteTop();
+        layoutData.preferredSize = widget.getOffsetHeight() + delta;
       }
-      RootPanel.get().add(glassPanel, 0, 0);
-      
-      super.dragStart();
+      if ((direction & SplitBar.DIRECTION_WEST) != 0) {
+        int delta = context.draggable.getAbsoluteLeft()
+            - draggableOldAbsoluteLeft;
+        layoutData.preferredSize = widget.getOffsetWidth() + delta;
+      } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
+        int delta = draggableOldAbsoluteLeft
+            - context.draggable.getAbsoluteLeft();
+        layoutData.preferredSize = widget.getOffsetWidth() + delta;
+      }
 
-      WidgetLocation currentDraggableLocation = new WidgetLocation(
-          context.draggable, context.boundaryPanel);
-      movablePanel = context.draggable;
-      context.boundaryPanel.add(movablePanel,
-          currentDraggableLocation.getLeft(), currentDraggableLocation.getTop());
-      movablePanel.addStyleName(getStylePrimaryName() + "-Movable");
+      layoutData.preferredSize = Math.max((int) layoutData.preferredSize,
+          layoutData.minSize);
+      layoutData.preferredSize = Math.min((int) layoutData.preferredSize,
+          layoutData.maxSize);
 
-      // one time calculation of boundary panel location for efficiency during
-      // dragging
-      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
-      final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
-      boundaryOffsetX = widgetLocation.getLeft() + border[3];
-      boundaryOffsetY = widgetLocation.getTop() + border[0];
-      final int[] box = DOM.getClientSize(boundaryPanel.getElement());
-      dropTargetClientWidth = box[0];
-      dropTargetClientHeight = box[1];
+      super.dragEnd();
 
-      layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-      draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
-      draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
+      glassPanel.removeFromParent();
+
+      WidgetHelper.layout(context.boundaryPanel);
+
+      movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
     }
-
-    private int draggableOldAbsoluteLeft, draggableOldAbsoluteTop;
-    private BorderLayoutData layoutData = null;
-    private int boundaryOffsetX, boundaryOffsetY;
-    private int dropTargetClientHeight, dropTargetClientWidth;
 
     public void dragMove() {
       int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
@@ -141,68 +149,48 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
       }
     }
 
-    private int minValue = 0;
-    private int maxValue = -1;
+    @Override
+    public void dragStart() {
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+      }
+      RootPanel.get().add(glassPanel, 0, 0);
 
-    public int getMinValue() {
-      return minValue;
+      super.dragStart();
+
+      WidgetLocation currentDraggableLocation = new WidgetLocation(
+          context.draggable, context.boundaryPanel);
+      movablePanel = context.draggable;
+      context.boundaryPanel.add(movablePanel,
+          currentDraggableLocation.getLeft(), currentDraggableLocation.getTop());
+      movablePanel.addStyleName(getStylePrimaryName() + "-Movable");
+
+      // one time calculation of boundary panel location for efficiency during
+      // dragging
+      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
+      final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
+      boundaryOffsetX = widgetLocation.getLeft() + border[3];
+      boundaryOffsetY = widgetLocation.getTop() + border[0];
+      final Dimension box = DOM.getClientSize(boundaryPanel.getElement());
+      dropTargetClientWidth = box.width;
+      dropTargetClientHeight = box.height;
+
+      layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
+      draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
+      draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
     }
 
-    public void setMinValue(int minValue) {
-      this.minValue = minValue;
+    public DirectionConstant getDirection(Widget draggable) {
+      return directionMap.get(draggable);
     }
 
     public int getMaxValue() {
       return maxValue;
     }
 
-    public void setMaxValue(int maxValue) {
-      this.maxValue = maxValue;
-    }
-
-    @Override
-    public void dragEnd() {
-      int direction = ((SplitBarDragController) context.dragController).getDirection(context.draggable).directionBits;
-      if ((direction & SplitBar.DIRECTION_NORTH) != 0) {
-        int delta = context.draggable.getAbsoluteTop()
-            - draggableOldAbsoluteTop;
-        layoutData.preferredSize = widget.getOffsetHeight() + delta;
-      } else if ((direction & SplitBar.DIRECTION_SOUTH) != 0) {
-        int delta = draggableOldAbsoluteTop
-            - context.draggable.getAbsoluteTop();
-        layoutData.preferredSize = widget.getOffsetHeight() + delta;
-      }
-      if ((direction & SplitBar.DIRECTION_WEST) != 0) {
-        int delta = context.draggable.getAbsoluteLeft()
-            - draggableOldAbsoluteLeft;
-        layoutData.preferredSize = widget.getOffsetWidth() + delta;
-      } else if ((direction & SplitBar.DIRECTION_EAST) != 0) {
-        int delta = draggableOldAbsoluteLeft
-            - context.draggable.getAbsoluteLeft();
-        layoutData.preferredSize = widget.getOffsetWidth() + delta;
-      }
-
-      layoutData.preferredSize = Math.max((int) layoutData.preferredSize,
-          layoutData.minSize);
-      layoutData.preferredSize = Math.min((int) layoutData.preferredSize,
-          layoutData.maxSize);
-
-      super.dragEnd();
-      
-      glassPanel.removeFromParent();
-
-      if (context.boundaryPanel instanceof HasLayoutManager) {
-        new DelayedRunnable(33) {
-          public void run() {
-            ((HasLayoutManager) context.boundaryPanel).layout();
-            movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
-          }
-        };
-      }
-    }
-
-    public DirectionConstant getDirection(Widget draggable) {
-      return directionMap.get(draggable);
+    public int getMinValue() {
+      return minValue;
     }
 
     public void makeDraggable(Widget widget,
@@ -219,7 +207,17 @@ final class SplitBar extends Widget implements SourcesMouseEvents {
       return new BoundaryDropController(boundaryPanel, false);
     }
 
+    public void setMaxValue(int maxValue) {
+      this.maxValue = maxValue;
+    }
+
+    public void setMinValue(int minValue) {
+      this.minValue = minValue;
+    }
+
   }
+
+  private static GlassPanel glassPanel;
 
   /**
    * Specifies that resizing occur at the east edge.

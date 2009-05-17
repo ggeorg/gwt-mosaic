@@ -76,7 +76,7 @@ public class DateTimePicker extends LayoutComposite {
    * @param timePicker the {@link TimePicker} to be used
    */
   public DateTimePicker(DatePicker datePicker, TimePicker timePicker) {
-    final LayoutPanel layoutPanel = getWidget();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(1);
     
