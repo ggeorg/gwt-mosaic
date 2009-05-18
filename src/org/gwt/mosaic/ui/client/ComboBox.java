@@ -24,7 +24,10 @@ import org.gwt.mosaic.ui.client.list.ListDataListener;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -55,7 +58,25 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public ComboBox(String[] columns) {
     super();
 
-    listBox = new ListBox<T>(columns);
+    listBox = new ListBox<T>(columns) {
+      @Override
+      public void setElement(Element elem) {
+        super.setElement(elem);
+        sinkEvents(Event.ONMOUSEUP);
+      }
+
+      @Override
+      public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (isPopupVisible()) {
+          switch (DOM.eventGetType(event)) {
+            case Event.ONMOUSEUP:
+              hidePopup();
+              return;
+          }
+        }
+      }
+    };
 
     listBox.addRowSelectionHandler(new RowSelectionHandler() {
       public void onRowSelection(RowSelectionEvent event) {
