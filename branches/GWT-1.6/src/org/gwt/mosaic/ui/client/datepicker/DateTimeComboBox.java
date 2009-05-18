@@ -20,14 +20,11 @@ import java.util.Date;
 import org.gwt.mosaic.ui.client.ComboBoxBase;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
 /**
- *
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
@@ -37,16 +34,6 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
   private final DateTimePicker dateTimePicker;
 
   private DateTimeFormat formatter = DateTimeFormat.getMediumDateTimeFormat();
-
-  private Timer updateTimer = new Timer() {
-    public void run() {
-      if (!isPopupVisible()) {
-        showPopup();
-      } else {
-        onShowPopup();
-      }
-    }
-  };
 
   /**
    * Default constructor.
@@ -60,28 +47,6 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
 
     this.dateTimePicker = dateTimePicker;
 
-    super.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-          case KEY_UP:
-            break;
-          default:
-            updateTimer.schedule(333);
-        }
-      }
-    });
-
     final ChangeHandler<Date> changeHandler = new ChangeHandler<Date>() {
       public void onChange(ChangeEvent<Date> event) {
         setText(dateTimePicker.getDate());
@@ -89,7 +54,7 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
       }
     };
     dateTimePicker.getDatePicker().addChangeHandler(changeHandler);
-    //dateTimePicker.getTimePicker().addChangeHandler(changeHandler);
+    // dateTimePicker.getTimePicker().addChangeHandler(changeHandler);
 
     addStyleName(DEFAULT_STYLENAME);
   }
@@ -109,6 +74,32 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
    * @return the date time picker
    */
   public DateTimePicker getDateTimePicker() {
+    return dateTimePicker;
+  }
+
+  @Override
+  protected boolean onHidePopup() {
+    return true;
+  }
+
+  @Override
+  protected DateTimePicker onShowPopup() {
+    Date current = null;
+
+    String value = super.getText().trim();
+    if (value.length() != 0) {
+      try {
+        showDate(current = formatter.parse(value));
+      } catch (IllegalArgumentException e) {
+        // Ignore!
+      }
+    }
+
+    if (current == null) {
+      current = new Date();
+    }
+    dateTimePicker.showDate(current);
+
     return dateTimePicker;
   }
 
@@ -132,7 +123,11 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
       }
     }
   }
-  
+
+  protected void setText(Date value) {
+    super.setText(formatter.format(value));
+  }
+
   /**
    * Show the given date in the date picker.
    * 
@@ -143,36 +138,6 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
     dateTimePicker.getDatePicker().showDate(date);
     dateTimePicker.getTimePicker().setDateTime(date);
     setText(date);
-  }
-  
-  protected void setText(Date value) {
-    super.setText(formatter.format(value));
-  }
-
-  @Override
-  protected boolean onHidePopup() {
-    return true;
-  }
-
-  @Override
-  protected DateTimePicker onShowPopup() {
-    Date current = null;
-    
-    String value = super.getText().trim();
-    if (value.length() != 0) {
-      try {
-        showDate(current = formatter.parse(value));
-      } catch (IllegalArgumentException e) {
-        // Ignore!
-      }
-    }
-
-    if (current == null) {
-      current = new Date();
-    }
-    dateTimePicker.showDate(current);
-
-    return dateTimePicker;
   }
 
 }
