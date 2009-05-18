@@ -20,7 +20,6 @@ import java.util.Date;
 import org.gwt.mosaic.ui.client.ComboBoxBase;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
@@ -35,16 +34,6 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
   private final DatePicker datePicker;
 
   private DateTimeFormat formatter = DateTimeFormat.getMediumDateFormat();
-
-  private Timer updateTimer = new Timer() {
-    public void run() {
-      if (!isPopupVisible()) {
-        showPopup();
-      } else {
-        onShowPopup();
-      }
-    }
-  };
 
   /**
    * Default constructor.
