@@ -77,8 +77,6 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   private final Button button;
   private final DropDownPanel popup;
 
-  private boolean cancelNextClick;
-
   public ComboBoxBase() {
     this(DEFAULT_STYLENAME);
   }
@@ -119,11 +117,7 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     button = new Button();
     button.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        if (cancelNextClick) {
-          cancelNextClick = false;
-        } else {
-          showPopup();
-        }
+        showPopupTimer.schedule(CoreConstants.MIN_DELAY_MILLIS);
       }
     });
     layoutPanel.add(button, new BoxLayoutData(FillStyle.VERTICAL));
@@ -140,12 +134,8 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     setStyleName(styleName);
   }
 
-  protected void updateInput() {
-    if (isPopupVisible()) {
-      hidePopup();
-      input.setFocus(false);
-      input.setFocus(true);
-    }
+  public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+    return input.addChangeHandler(handler);
   }
 
   @Deprecated
@@ -153,8 +143,8 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     input.addChangeListener(listener);
   }
 
-  public HandlerRegistration addChangeHandler(ChangeHandler handler) {
-    return input.addChangeHandler(handler);
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return input.addClickHandler(handler);
   }
 
   @Deprecated
@@ -162,17 +152,13 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     input.addClickListener(listener);
   }
 
-  public HandlerRegistration addClickHandler(ClickHandler handler) {
-    return input.addClickHandler(handler);
+  public HandlerRegistration addFocusHandler(FocusHandler handler) {
+    return input.addFocusHandler(handler);
   }
 
   @Deprecated
   public void addFocusListener(FocusListener listener) {
     input.addFocusListener(listener);
-  }
-
-  public HandlerRegistration addFocusHandler(FocusHandler handler) {
-    return input.addFocusHandler(handler);
   }
 
   @Deprecated
@@ -254,7 +240,7 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   }
 
   protected boolean isPopupVisible() {
-    return popup.isAttached();
+    return popup.isShowing();
   }
 
   /**
@@ -385,9 +371,7 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   }
 
   protected void showPopup() {
-    if (popup.isAttached()) {
-      hidePopup(true);
-    } else {
+    if (!popup.isShowing()) {
       final T w = onShowPopup();
       if (w != null) {
         if (w != popup.getWidget()) {
@@ -396,6 +380,12 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
         popup.showRelativeTo(this);
       }
     }
+  }
+
+  protected void updateInput() {
+    input.setFocus(false);
+    input.setFocus(true);
+    input.selectAll();
   }
 
 }
