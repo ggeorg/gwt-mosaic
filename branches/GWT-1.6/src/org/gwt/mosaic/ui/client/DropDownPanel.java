@@ -17,17 +17,16 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.ArrayList;
+
+import org.gwt.mosaic.core.client.Dimension;
+
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel.AnimationType;
-
-import java.util.ArrayList;
-
-import org.gwt.mosaic.core.client.Dimension;
 
 /**
  * A popup panel that can position itself relative to another widget.
@@ -91,25 +90,6 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
   }
 
   @Override
-  public void show() {
-    if (isShowing()) {
-      return;
-    }
-    // Add this to the set of open panels.
-    if (openPanels == null) {
-      openPanels = new ArrayList<DropDownPanel>();
-      Window.addResizeHandler(resizeHandler);
-    }
-    openPanels.add(this);
-    super.show();
-  }
-
-  public void showRelativeTo(Widget anchor) {
-    setCurrentAnchor(anchor);
-    super.showRelativeTo(anchor);
-  }
-
-  @Override
   protected void onLoad() {
     super.onLoad();
 
@@ -147,6 +127,25 @@ public class DropDownPanel extends DecoratedLayoutPopupPanel {
       this.addAutoHidePartner(anchor.getElement());
     }
     currentAnchor = anchor;
+  }
+
+  @Override
+  public void show() {
+    if (isShowing()) {
+      return;
+    }
+    // Add this to the set of open panels.
+    if (openPanels == null) {
+      openPanels = new ArrayList<DropDownPanel>();
+      Window.addResizeHandler(resizeHandler);
+    }
+    openPanels.add(this);
+    super.show();
+  }
+
+  public void showRelativeTo(Widget anchor) {
+    setCurrentAnchor(anchor);
+    super.showRelativeTo(anchor);
   }
 
 }
