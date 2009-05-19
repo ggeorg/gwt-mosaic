@@ -66,12 +66,16 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
       }
 
       @Override
-      public void onBrowserEvent(Event event) {
+      public void onBrowserEvent(final Event event) {
         super.onBrowserEvent(event);
         if (isPopupVisible()) {
           switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEUP:
-              hidePopup();
+              DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                  hidePopup();
+                }
+              });
               return;
           }
         }
