@@ -268,7 +268,15 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public boolean removeElement(Object o) {
-    return remove(o);
+    int index=0;
+    for (E object : this) {
+      if (object.equals(o)) {
+        remove(index);
+        return true;
+      }
+      index++;
+    }
+    return false;
   }
 
   /*
