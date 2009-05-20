@@ -142,11 +142,7 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public void clear() {
-    int index1 = super.size() - 1;
-    if (index1 >= 0) {
-      super.clear();
-      fireIntervalRemoved(this, 0, index1);
-    }
+    this.removeAllElements();
   }
 
   /**
@@ -258,7 +254,11 @@ public class DefaultListModel<E> extends Vector<E> implements ListModel<E> {
    */
   @Override
   public void removeAllElements() {
-    clear();
+    int index1 = super.size() - 1;
+    if (index1 >= 0) {
+      super.removeAllElements();
+      fireIntervalRemoved(this, 0, index1);
+    }
   }
 
   /*
