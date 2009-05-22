@@ -53,6 +53,19 @@ a:active {
   overflow: visible;
 }
 
+/*** Basic Button with Images ***/
+
+.gwt-Button[disabled] table,
+.gwt-Button[disabled] img {
+	opacity: .5;
+	zoom: 1;
+	filter: alpha(opacity=40);
+}
+
+.gwt-Button {
+	white-space: nowrap;
+}
+
 /*** TextBox & TextArea */
 
 .gwt-TextBox,
@@ -135,6 +148,7 @@ a:active {
   border: 0px;
   /*background: url("images/hborder.png") repeat-x 0px -27px;*/
   background: #e3e3e3 url("images/button.png") repeat-x;
+  -background: #e3e3e3 url("images/button_ie6.png") repeat-x;
 }
 .mosaic-ToolButton .mosaic-Button {
   background: none;
@@ -191,6 +205,7 @@ a:active {
   padding: 3px;
   /*background: url("images/hborder.png") repeat-x 0px -27px;*/
   background: #dfe8f6 url("images/button.png") repeat-x 0px -10px;
+  -background: #dfe8f6 url(images/hborder.png) repeat-x 0px -2003px;
   border-bottom: 1px solid #8db2e3;
 }
 .mosaic-ToolBar .mosaic-ToolButton {
@@ -237,6 +252,7 @@ a:active {
 .mosaic-ToolBar .mosaic-ToolButton .mosaic-Checkbox-Button-checked:hover {
   border: 1px inset #ccc;
   background: #99bbe8 url("images/button.png") repeat-x;
+  -background: #99bbe8 url("images/button_mi_ie6.png") repeat-x;
 }
 
 /* Separator */
@@ -258,6 +274,7 @@ a:active {
 	/*background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;*/
 	border-bottom: 1px solid #99bbe8;
 	background: url(images/button.png) repeat-x;
+	-background: #dfe8f6 url(images/hborder.png) repeat-x 0px -2003px;
 }
 .mosaic-Caption-iconBoxLeft {
 	padding: 0px 0px 0px 2px;
@@ -955,6 +972,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	padding: 0px;
 	/*background: #d0e4f6;*/
 	background: url(images/slice_3_2.png) repeat-x;
+	-background: url(images/slice_3_2_ie6.png) repeat-x;
 }
 .mosaic-DecoratedBottomTabBar .tabBottomLeft,
 .mosaic-DecoratedBottomTabBar .tabBottomRight {
@@ -969,10 +987,12 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 .mosaic-DecoratedBottomTabBar .tabBottomLeft {
 	/*background: url(images/corner2.png) no-repeat 0px -6px;*/
 	background: url(images/slice_corners.png) -1px -3px;
+	-background: url(images/slice_corners_ie6.png) -1px -3px;
 }
 .mosaic-DecoratedBottomTabBar .tabBottomRight {
 	/*background: url(images/corner2.png) no-repeat -6px -6px;*/
 	background: url(images/slice_corners.png) -3px -3px;
+	-background: url(images/slice_corners_ie6.png) -3px -3px;
 }
 * html .mosaic-DecoratedBottomTabBar .tabBottomLeftInner,
 * html .mosaic-DecoratedBottomTabBar .tabBottomRightInner {
@@ -988,9 +1008,11 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-DecoratedBottomTabBar .tabMiddleLeft {
 	background: url(images/slice_2.png) repeat-y -1px 0px;
+	-background: url(images/slice_2_ie6.png) repeat-y -1px 0px;
 }
 .mosaic-DecoratedBottomTabBar .tabMiddleRight {
 	background: url(images/slice_2.png) repeat-y -2px 0px;
+	-background: url(images/slice_2_ie6.png) repeat-y -2px 0px;
 }
 .mosaic-DecoratedBottomTabBar .tabMiddleLeftInner,
 .mosaic-DecoratedBottomTabBar .tabMiddleRightInner {
@@ -1027,6 +1049,7 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	cursor: default;
 	/*background: #92c1f0;*/
 	background: #99bbe8 url("images/button.png") repeat-x;
+	-background: #99bbe8 url("images/button_mi_ie6.png") repeat-x;
 }
 .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-disabled .tabMiddleCenter,
 .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-disabled .tabMiddleCenter div,
@@ -1213,19 +1236,6 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 .mosaic-FormSeparator div {
 	border: 1px solid #4d4d4d;
 	height: 0px !important;
-}
-
-/*** Basic Button with Images ***/
-
-.gwt-Button[disabled] table,
-.gwt-Button[disabled] img {
-	opacity: .5;
-	zoom: 1;
-	filter: alpha(opacity=40);
-}
-
-.gwt-Button {
-	white-space: nowrap;
 }
 
 /*** GWT Incubator SliderBar ***/
