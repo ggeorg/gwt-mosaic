@@ -1368,7 +1368,9 @@ public abstract class ColumnWidget extends LayoutComposite {
    * @param padding the cell padding, in pixels
    */
   public void setCellPadding(int padding) {
-    headerTable.setCellPadding(padding);
+    if (headerTable != null) {
+      headerTable.setCellPadding(padding);
+    }
     dataTable.setCellPadding(padding);
     if (footerTable != null) {
       footerTable.setCellPadding(padding);
@@ -1381,7 +1383,9 @@ public abstract class ColumnWidget extends LayoutComposite {
    * @param spacing the cell spacing, in pixels
    */
   public void setCellSpacing(int spacing) {
-    headerTable.setCellSpacing(spacing);
+    if (headerTable != null) {
+      headerTable.setCellSpacing(spacing);
+    }
     dataTable.setCellSpacing(spacing);
     if (footerTable != null) {
       footerTable.setCellSpacing(spacing);
