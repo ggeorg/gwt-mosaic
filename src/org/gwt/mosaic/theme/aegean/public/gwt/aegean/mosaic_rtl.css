@@ -53,6 +53,17 @@ a:active {
   overflow: visible;
 }
 
+/*** Basic Button with Images ***/
+
+.gwt-Button[disabled] table,
+.gwt-Button[disabled] img {
+  opacity: .5;
+}
+
+.gwt-Button {
+  white-space: nowrap;
+}
+
 /*** TextBox & TextArea */
 
 .gwt-TextBox,
@@ -135,6 +146,7 @@ a:active {
   border: 0px;
   /*background: url("images/hborder.png") repeat-x 0px -27px;*/
   background: #e3e3e3 url("images/button.png") repeat-x;
+  -background: #e3e3e3 url("images/button_ie6.png") repeat-x;
 }
 .mosaic-ToolButton .mosaic-Button {
   background: none;
@@ -191,6 +203,7 @@ a:active {
   padding: 3px;
   /*background: url("images/hborder.png") repeat-x 0px -27px;*/
   background: #dfe8f6 url("images/button.png") repeat-x 0px -10px;
+  -background: #dfe8f6 url(images/hborder.png) repeat-x 0px -2003px;
   border-bottom: 1px solid #8db2e3;
 }
 .mosaic-ToolBar .mosaic-ToolButton {
@@ -237,6 +250,7 @@ a:active {
 .mosaic-ToolBar .mosaic-ToolButton .mosaic-Checkbox-Button-checked:hover {
   border: 1px inset #ccc;
   background: #99bbe8 url("images/button.png") repeat-x;
+  -background: #99bbe8 url("images/button_mi_ie6.png") repeat-x;
 }
 
 /* Separator */
@@ -258,6 +272,7 @@ a:active {
 	/*background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;*/
 	border-bottom: 1px solid #99bbe8;
 	background: url(images/button.png) repeat-x;
+	-background: #dfe8f6 url(images/hborder.png) repeat-x 0px -2003px;
 }
 .mosaic-Caption-iconBoxLeft {
 	padding: 0px 0px 0px 2px;
@@ -582,24 +597,54 @@ a:active {
 .gwt-ScrollTable,
 .mosaic-ColumnWidget,
 .mosaic-ScrollTreeTable {
-	border-color: #aaa;
-	border-style: solid;
-	border-width: 1px 0px 1px 1px;
+  /*
+  border-color: #aaa;
+  border-style: solid;
+  border-width: 1px 0px 1px 1px;
+  */
+  border: 1px solid #7AA5D6;
 }
-
 .gwt-ScrollTable .headerWrapper,
 .mosaic-ColumnWidget .headerWrapper,
 .mosaic-ScrollTreeTable .headerWrapper {
-	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+  /*background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;*/
+  background: #dfe8f6;
 }
-
 .gwt-ScrollTable .footerWrapper,
 .mosaic-ColumnWidget .footerWrapper,
 .mosaic-ScrollTreeTable .footerWrapper {
-	border-top: 1px solid #aaa;
-	background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+  /*
+  border-top: 1px solid #aaa;
+  background: #8bd url(images/scrolltable/bg_header_gradient.gif) repeat-x bottom left;
+  */
+  background: #dfe8f6;
 }
-
+.gwt-ScrollTable .dataTable,
+.mosaic-ColumnWidget .dataTable,
+.mosaic-ScrollTreeTable .dataTable {
+  background: #f8f8f8;
+  -background: white;
+}
+.gwt-ScrollTable .dataTable tr,
+.gwt-ScrollTable .headerTable tr,
+.gwt-ScrollTable .footerTable tr,
+.mosaic-ColumnWidget .dataTable tr,
+.mosaic-ColumnWidget .headerTable tr,
+.mosaic-ColumnWidget .footerTable tr,
+.mosaic-ScrollTreeTable .dataTable tr,
+.mosaic-ScrollTreeTable .headerTable tr,
+.mosaic-ScrollTreeTable .footerTable tr {
+  background: url("images/button.png") repeat-x;
+  -background-image: none;
+}
+.gwt-ScrollTable .headerTable tr,
+.gwt-ScrollTable .footerTable tr,
+.mosaic-ColumnWidget .headerTable tr,
+.mosaic-ColumnWidget .footerTable tr,
+.mosaic-ScrollTreeTable .headerTable tr,
+.mosaic-ScrollTreeTable .footerTable tr {
+  -background: #dfe8f6 url(images/hborder.png) repeat-x 0px -2003px;
+}
 .gwt-ScrollTable .dataTable td,
 .gwt-ScrollTable .headerTable td,
 .gwt-ScrollTable .footerTable td,
@@ -609,30 +654,48 @@ a:active {
 .mosaic-ScrollTreeTable .dataTable td,
 .mosaic-ScrollTreeTable .headerTable td,
 .mosaic-ScrollTreeTable .footerTable td {
-	border-color: #aaa;
-	border-style: solid;
-	border-width: 0px 1px 1px 0px;
-	white-space: nowrap;
-	overflow: hidden;
-	padding: 1px 3px;
+  /*
+  border-color: #aaa;
+  border-style: solid;
+  border-width: 0px 1px 1px 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 1px 3px;
+  */
+  font-family: arial, helvetica, verdana;
+  font-size: 9pt;
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 1px 3px;
+  margin: 0px;
 }
-
+.gwt-ScrollTable .dataTable td,
+.mosaic-ColumnWidget .dataTable td,
+.mosaic-ScrollTreeTable .dataTable td {
+  border-right: 1pt solid #eee;
+  -border-bottom: 1pt solid #eee;
+}
 .gwt-ScrollTable .headerTable td,
 .gwt-ScrollTable .footerTable td,
 .mosaic-ColumnWidget .headerTable td,
 .mosaic-ColumnWidget .footerTable td,
 .mosaic-ScrollTreeTable .headerTable td,
 .mosaic-ScrollTreeTable .footerTable td {
-	color: #fff;
+  color: black;
+  padding-top : 3px;
+  padding-bottom : 3px;
+  border-right : 1pt solid #ddd;
+  /*border-bottom : 1pt dotted #ddd;*/
 }
     
 .gwt-ScrollTable .dataTable tr.hovering,
-.gwt-ScrollTable .dataTable tr:highlighted,
+.gwt-ScrollTable .dataTable tr.highlighted,
 .mosaic-ColumnWidget .dataTable tr.hovering,
 .mosaic-ColumnWidget .dataTable tr.highlighted,
 .mosaic-ScrollTreeTable .dataTable tr.hovering,
 .mosaic-ScrollTreeTable .dataTable tr.highlighted {
-	background: #C3D9FF;
+  background: #C3D9FF;
 }
 
 .gwt-ScrollTable .dataTable td.hovering,
@@ -641,46 +704,47 @@ a:active {
 .mosaic-ColumnWidget .dataTable td.highlighted,
 .mosaic-ScrollTreeTable .dataTable td.hovering,
 .mosaic-ScrollTreeTable .dataTable td.highlighted {
-	background: #FFFFAA;
-	cursor: hand;
-	cursor: pointer;
+  background: #93c2f1;
+  cursor: hand;
+  cursor: pointer;
 }
 
 .gwt-ScrollTable .dataTable tr.selected td,
 .mosaic-ColumnWidget .dataTable tr.selected td,
 .mosaic-ScrollTreeTable .dataTable tr.selected td {
-	background: #7AA5D6;
+  /*background: #7AA5D6;*/
+  background: #93c2f1 url(images/hborder.png) repeat-x 0px -1463px;
 }
 
 .gwt-ScrollTable .pagingOptions {
-	background: #e8eef7;
-	border-top: 1px solid #aaa;
-	border-right: 1px solid #aaa;
-	padding: 1px 0px;
+  background: #e8eef7;
+  border-top: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  padding: 1px 0px;
 }
 
 .gwt-ScrollTable .pagingOptions .errorMessage {
-	color: red;
+  color: red;
 }
 
 .gwt-PagingOptions .gwt-Image {
-	cursor: hand;
-	cursor: pointer;
+  cursor: hand;
+  cursor: pointer;
 }
 
 .gwt-InlineCellEditor {
-	border: 3px solid #7AA5D6;
-	padding: 4px;
-	background: white;
-	overflow: auto;
+  border: 3px solid #7AA5D6;
+  padding: 4px;
+  background: white;
+  overflow: auto;
 }
 .gwt-InlineCellEditor .accept {
-	cursor: pointer;
-	cursor: hand;
+  cursor: pointer;
+  cursor: hand;
 }
 .gwt-InlineCellEditor .cancel {
-	cursor: pointer;
-	cursor: hand;
+  cursor: pointer;
+  cursor: hand;
 }
 
 /*** CaptionLayoutPanel ***/
@@ -767,7 +831,8 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
 	overflow: hidden; /* required by IE6 */
-	/*background: #fff;*/
+	-background: #fff;
+	-filter: alpha(opacity = 0) !important;
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar:hover {
@@ -775,11 +840,13 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar-Movable {
 	background: #000;
+	-filter: alpha(opacity = 100) !important;
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
 	overflow: hidden; /* required by IE6 */
-	/*background: #fff;*/
+	-background: #fff;
+	-filter: alpha(opacity = 0) !important;
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar:hover {
@@ -787,11 +854,13 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar-Movable {
 	background: #000;
+	-filter: alpha(opacity = 100) !important;
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar {
 	overflow: hidden; /* required by IE6 */
-	/*background: #fff;*/
+	-background: #fff;
+	-filter: alpha(opacity = 0) !important;
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar:hover {
@@ -799,18 +868,22 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar-Movable {
 	background: #000;
+	-filter: alpha(opacity = 100) !important;
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
 	overflow: hidden; /* required by IE6 */
-	/*background: #fff;*/
-	cursor: w-resize;
+	-background: #fff;
+	-filter: alpha(opacity = 0) !important;
+	cursor: e-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar:hover {
 	/*border-right: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
 	background: #000;
+	-filter: alpha(opacity = 100) !important;
+	cursor: e-resize;
 }
 
 /*** WidgetWrapper ***/
@@ -955,6 +1028,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	padding: 0px;
 	/*background: #d0e4f6;*/
 	background: url(images/slice_3_2.png) repeat-x;
+	-background: url(images/slice_3_2_ie6.png) repeat-x;
 }
 .mosaic-DecoratedBottomTabBar .tabBottomLeft,
 .mosaic-DecoratedBottomTabBar .tabBottomRight {
@@ -969,10 +1043,12 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 .mosaic-DecoratedBottomTabBar .tabBottomLeft {
 	/*background: url(images/corner2.png) no-repeat 0px -6px;*/
 	background: url(images/slice_corners.png) -1px -3px;
+	-background: url(images/slice_corners_ie6.png) -1px -3px;
 }
 .mosaic-DecoratedBottomTabBar .tabBottomRight {
 	/*background: url(images/corner2.png) no-repeat -6px -6px;*/
 	background: url(images/slice_corners.png) -3px -3px;
+	-background: url(images/slice_corners_ie6.png) -3px -3px;
 }
 * html .mosaic-DecoratedBottomTabBar .tabBottomLeftInner,
 * html .mosaic-DecoratedBottomTabBar .tabBottomRightInner {
@@ -988,9 +1064,11 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-DecoratedBottomTabBar .tabMiddleLeft {
 	background: url(images/slice_2.png) repeat-y -1px 0px;
+	-background: url(images/slice_2_ie6.png) repeat-y -1px 0px;
 }
 .mosaic-DecoratedBottomTabBar .tabMiddleRight {
 	background: url(images/slice_2.png) repeat-y -2px 0px;
+	-background: url(images/slice_2_ie6.png) repeat-y -2px 0px;
 }
 .mosaic-DecoratedBottomTabBar .tabMiddleLeftInner,
 .mosaic-DecoratedBottomTabBar .tabMiddleRightInner {
@@ -1027,6 +1105,7 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	cursor: default;
 	/*background: #92c1f0;*/
 	background: #99bbe8 url("images/button.png") repeat-x;
+	-background: #99bbe8 url("images/button_mi_ie6.png") repeat-x;
 }
 .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-disabled .tabMiddleCenter,
 .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-disabled .tabMiddleCenter div,
@@ -1188,8 +1267,9 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
   cursor: default;
   background: none;
   opacity: .5;
-  zoom: 1;
-  filter: alpha(opacity=40);
+}
+.gwt-MenuBar .gwt-MenuItem-disabled div {
+  color: #888;
 }
 
 /*** gwt-MenuBarPopup ***/
@@ -1213,19 +1293,6 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 .mosaic-FormSeparator div {
 	border: 1px solid #4d4d4d;
 	height: 0px !important;
-}
-
-/*** Basic Button with Images ***/
-
-.gwt-Button[disabled] table,
-.gwt-Button[disabled] img {
-	opacity: .5;
-	zoom: 1;
-	filter: alpha(opacity=40);
-}
-
-.gwt-Button {
-	white-space: nowrap;
 }
 
 /*** GWT Incubator SliderBar ***/

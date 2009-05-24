@@ -242,7 +242,12 @@ public class ListBox<T> extends LayoutComposite implements HasFocus,
       }
     };
     setMultipleSelect(false);
+    
+    // Setup the scroll table
+    columnWidget.setCellPadding(3);
+    columnWidget.setCellSpacing(0);
     columnWidget.setResizePolicy(ResizePolicy.FILL_WIDTH);
+    
     layoutPanel.add(columnWidget);
 
     // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
