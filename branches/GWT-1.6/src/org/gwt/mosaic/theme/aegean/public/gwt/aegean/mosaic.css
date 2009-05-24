@@ -57,13 +57,11 @@ a:active {
 
 .gwt-Button[disabled] table,
 .gwt-Button[disabled] img {
-	opacity: .5;
-	zoom: 1;
-	filter: alpha(opacity=40);
+  opacity: .5;
 }
 
 .gwt-Button {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 /*** TextBox & TextArea */
@@ -1211,8 +1209,9 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
   cursor: default;
   background: none;
   opacity: .5;
-  zoom: 1;
-  filter: alpha(opacity=40);
+}
+.gwt-MenuBar .gwt-MenuItem-disabled div {
+  color: #888;
 }
 
 /*** gwt-MenuBarPopup ***/

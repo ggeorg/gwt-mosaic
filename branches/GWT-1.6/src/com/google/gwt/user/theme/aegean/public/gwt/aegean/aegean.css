@@ -380,7 +380,6 @@ a, a:visited, a:hover {
   margin: -1px 0px 0px -1px;
 
   /* 10% transparency */
-  filter: alpha(opacity = 90) !important;
   opacity: 0.9 !important; /* non-IE */
 }
 .gwt-MenuBarPopup .menuPopupTopCenter {
@@ -1096,7 +1095,6 @@ a, a:visited, a:hover {
 }
 .gwt-ToggleButton-down {
   background-position: 0 -513px;
-  /*border: 1px inset #666;*/
   border: 1px inset #ccc;
   cursor: pointer;
   cursor: hand;
