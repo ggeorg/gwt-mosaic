@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.showcase.client.content.panels;
 
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -104,14 +105,14 @@ public class CwDynamicTabLayoutPanel extends AbstractLayoutPage {
       public void onClick(ClickEvent event) {
         tabPanel.add(new HTML("<h1>Tab #" + tabCounter + "</h1>"), "Tab #"
             + tabCounter);
-        ++tabCounter;
 
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            tabPanel.selectTab(tabPanel.getWidgetCount() - 1);
-            WidgetHelper.getParent(tabPanel).layout();
-          }
-        });
+        WidgetHelper.getParent(tabPanel).layout();
+
+        if (UserAgent.isGecko()) {
+          DeferredCommand.addCommand(layoutCmd);
+        }
+
+        ++tabCounter;
       }
     }), new BoxLayoutData(FillStyle.HORIZONTAL));
 
@@ -121,30 +122,41 @@ public class CwDynamicTabLayoutPanel extends AbstractLayoutPage {
         if (widgetIndex == -1) {
           return;
         }
-        tabPanel.selectTab(widgetIndex -1);
+        tabPanel.selectTab(widgetIndex - 1);
         tabPanel.remove(widgetIndex);
-        
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            WidgetHelper.getParent(tabPanel).layout();
-          }
-        });
+
+        WidgetHelper.getParent(tabPanel).layout();
+
+        if (UserAgent.isGecko()) {
+          DeferredCommand.addCommand(layoutCmd);
+        }
       }
     }), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     layoutPanel.add(new Button("Remove All", new ClickHandler() {
       public void onClick(ClickEvent event) {
         tabPanel.clear();
-        
-        DeferredCommand.addCommand(new Command() {
-          public void execute() {
-            WidgetHelper.getParent(tabPanel).layout();
-          }
-        });
+
+        WidgetHelper.getParent(tabPanel).layout();
+
+        if (UserAgent.isGecko()) {
+          DeferredCommand.addCommand(layoutCmd);
+        }
       }
     }), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     return layoutPanel;
   }
+
+  /**
+   * Optional layout command.
+   */
+  @ShowcaseData
+  private Command layoutCmd = new Command() {
+    public void execute() {
+      WidgetHelper.invalidate(tabPanel);
+      WidgetHelper.getParent(tabPanel).layout();
+    }
+  };
 
 }
