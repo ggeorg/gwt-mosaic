@@ -73,6 +73,7 @@ import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwDynamicTabLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
@@ -467,6 +468,8 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catLayoutPanels, new CwDynamicTabLayoutPanel(constants),
         IMAGES.catPanels());
 
     // Forms
