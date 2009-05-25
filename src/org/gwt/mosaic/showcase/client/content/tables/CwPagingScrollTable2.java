@@ -153,8 +153,8 @@ public class CwPagingScrollTable2 extends ContentWidget {
     tableDefinition = new DefaultTableDefinition<Student>();
 
     // Set the row renderer
-    String[] rowColors = new String[] {"#FFFFDD", "#EEEEEE"};
-    tableDefinition.setRowRenderer(new DefaultRowRenderer<Student>(rowColors));
+//    String[] rowColors = new String[] {"#FFFFDD", "#EEEEEE"};
+//    tableDefinition.setRowRenderer(new DefaultRowRenderer<Student>(rowColors));
 
     // First name
     {
