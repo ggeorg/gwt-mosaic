@@ -389,7 +389,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   @Override
   public void layout() {
     int selection = tabBar.getSelectedTab();
-    if (selection == -1) {
+    if (selection == -1 && tabBar.getTabCount() > 0) {
       selection = 0;
       selectTab(0);
       return;
