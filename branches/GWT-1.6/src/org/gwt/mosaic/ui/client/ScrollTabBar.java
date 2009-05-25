@@ -178,6 +178,8 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   private boolean isAnimationEnabled = true;
 
+  private TabLayoutPanel tabPanel;
+
   public ScrollTabBar(TabLayoutPanel tabPanel) {
     this(tabPanel, false, false);
   }
@@ -185,9 +187,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
   public ScrollTabBar(TabLayoutPanel tabPanel, boolean decorated) {
     this(tabPanel, decorated, false);
   }
-
-  private TabLayoutPanel tabPanel;
-
+  
   public ScrollTabBar(TabLayoutPanel tabPanel, boolean decorated,
       boolean atBottom) {
     super();
@@ -392,6 +392,15 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     return tabBar.getSelectedTab();
   }
 
+  /**
+   * Gets the number of tabs present.
+   * 
+   * @return the tab count
+   */
+  public  int getTabCount() {
+    return tabBar.getTabCount();
+  }
+
   public String getTabHTML(int tabIndex) {
     return tabBar.getTabHTML(tabIndex);
   }
@@ -440,26 +449,6 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     });
   }
 
-  private void toggleNavBarVisibility(boolean visible) {
-    navBar.setVisible(visible);
-    invalidate();
-    tabPanel.layout();
-
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        scrollTabIntoView();
-      }
-    });
-  }
-
-  private void scrollTabIntoView() {
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        tabs.get(tabBar.getSelectedTab()).getElement().scrollIntoView();
-      }
-    });
-  }
-
   public void removeTab(int index) {
     tabBar.removeTab(index);
     invalidate();
@@ -470,12 +459,32 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     tabBar.removeTabListener(listener);
   }
 
+  private void scrollTabIntoView() {
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        tabs.get(tabBar.getSelectedTab()).getElement().scrollIntoView();
+      }
+    });
+  }
+
   public void selectTab(final int i) {
     tabBar.selectTab(i);
   }
 
   public void setAnimationEnabled(boolean enable) {
     isAnimationEnabled = enable;
+  }
+
+  private void toggleNavBarVisibility(boolean visible) {
+    navBar.setVisible(visible);
+    invalidate();
+    tabPanel.layout();
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        scrollTabIntoView();
+      }
+    });
   }
 
   private void updateNavBarState() {
