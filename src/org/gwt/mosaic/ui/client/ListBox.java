@@ -120,6 +120,8 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
 
     scrollTable = new ScrollTable2(dataTable, headerTable);
     scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
+    scrollTable.setCellPadding(3);
+    scrollTable.setCellSpacing(0);
 
     setMultipleSelect(false);
 
