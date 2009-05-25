@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.showcase.client.content.panels;
 
+import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.layout.AbstractLayoutPage;
@@ -64,13 +65,13 @@ public class CwDynamicTabLayoutPanel extends AbstractLayoutPage {
   /**
    * A Tab counter.
    */
-  @ShowcaseSource
+  @ShowcaseData
   private int tabCounter = 0;
 
   /**
    * The {@link TabLayoutPanel}.
    */
-  @ShowcaseSource
+  @ShowcaseData
   private DecoratedTabLayoutPanel tabPanel;
 
   /**
