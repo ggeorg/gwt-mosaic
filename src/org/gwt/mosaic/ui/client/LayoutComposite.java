@@ -16,7 +16,9 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
@@ -30,7 +32,7 @@ public abstract class LayoutComposite extends Composite implements
     HasLayoutManager {
 
   /**
-   * Default constructor.
+   * Creates a new {@code LayoutComposite} with {@link FillLayout}.
    */
   protected LayoutComposite() {
     initWidget(new LayoutPanel());
@@ -45,6 +47,29 @@ public abstract class LayoutComposite extends Composite implements
    */
   protected LayoutComposite(Element elem) {
     initWidget(new LayoutPanel(elem) {
+    });
+  }
+
+  /**
+   * Creates a new {@code LayoutCombosite} with the specified layout manager.
+   * 
+   * @param layout the {@link LayoutManager} to use
+   */
+  protected LayoutComposite(LayoutManager layout) {
+    initWidget(new LayoutPanel(layout));
+  }
+
+  /**
+   * Creates a new {@code LayoutCombosite} with the specified layout manager and
+   * with the given element. This is protected so that it can be used by a
+   * subclass that wants to substitute another element. The element is presumed
+   * to be a &lt;div&gt;.
+   * 
+   * @param elem the element to be used for this panel.
+   * @param layout the {@link LayoutManager} to use
+   */
+  protected LayoutComposite(Element elem, LayoutManager layout) {
+    initWidget(new LayoutPanel(elem, layout) {
     });
   }
 
@@ -69,19 +94,19 @@ public abstract class LayoutComposite extends Composite implements
   /*
    * (non-Javadoc)
    * 
-   * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
-  public void layout() {
-    getLayoutPanel().layout();
+  public void invalidate() {
+    getLayoutPanel().invalidate();
   }
 
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
-  public void invalidate() {
-    getLayoutPanel().invalidate();
+  public void layout() {
+    getLayoutPanel().layout();
   }
 
 }
