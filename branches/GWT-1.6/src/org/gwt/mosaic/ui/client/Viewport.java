@@ -21,6 +21,7 @@ import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
@@ -53,8 +54,20 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
   private final HandlerRegistration resizeHandlerRegistration;
   private final HandlerRegistration closeHandlerRegistration;
 
+  /**
+   * Creates a new {@code Viewport} with {@link FillLayout}.
+   */
   public Viewport() {
-    super();
+    this(new FillLayout());
+  }
+
+  /**
+   * Creates a new {@code Viewport} with the specified layout manager.
+   * 
+   * @param layout the {@link LayoutManager} to use
+   */
+  public Viewport(LayoutManager layout) {
+    super(layout);
 
     resizeHandlerRegistration = Window.addResizeHandler(this);
     closeHandlerRegistration = Window.addCloseHandler(new CloseHandler<Window>() {
@@ -68,7 +81,7 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
       }
     });
 
-    Window.enableScrolling(false);
+    Window.enableScrolling(false);    
   }
 
   @Deprecated
