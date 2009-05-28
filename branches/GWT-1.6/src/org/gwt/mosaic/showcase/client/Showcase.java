@@ -80,6 +80,7 @@ import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopupPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
+import org.gwt.mosaic.showcase.client.content.tables.CwFilterListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable2;
@@ -469,8 +470,8 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catLayoutPanels, new CwDynamicTabLayoutPanel(constants),
-        IMAGES.catPanels());
+    setupMainMenuOption(catLayoutPanels,
+        new CwDynamicTabLayoutPanel(constants), IMAGES.catPanels());
 
     // Forms
     TreeItem catForms = mainMenu.addItem("Forms");
@@ -537,6 +538,8 @@ public class Showcase implements EntryPoint {
     // Tables
     TreeItem catTables = mainMenu.addItem("Lists & Tables");
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwFilterListBox(constants),
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwScrollTable(constants),
