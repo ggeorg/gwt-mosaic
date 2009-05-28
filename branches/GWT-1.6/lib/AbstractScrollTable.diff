@@ -1,0 +1,21 @@
+Index: src/com/google/gwt/gen2/table/client/AbstractScrollTable.java
+===================================================================
+--- src/com/google/gwt/gen2/table/client/AbstractScrollTable.java	(revision 1670)
++++ src/com/google/gwt/gen2/table/client/AbstractScrollTable.java	(working copy)
+@@ -2018,13 +2018,13 @@
+       // Determine the largest table
+       if (numHeaderCols >= numDataCols && numHeaderCols >= numFooterCols) {
+         numColumns = numHeaderCols;
+-        diff = clientWidth - info.headerTableWidth;
++        diff = Math.max(0, clientWidth - info.headerTableWidth);
+       } else if (numFooterCols >= numDataCols && numFooterCols >= numHeaderCols) {
+         numColumns = numFooterCols;
+-        diff = clientWidth - info.footerTableWidth;
++        diff = Math.max(0, clientWidth - info.footerTableWidth);
+       } else if (numDataCols > 0) {
+         numColumns = numDataCols;
+-        diff = clientWidth - info.dataTableWidth;
++        diff = Math.max(0, clientWidth - info.dataTableWidth);
+       }
+     }
+     if (numColumns <= 0) {
