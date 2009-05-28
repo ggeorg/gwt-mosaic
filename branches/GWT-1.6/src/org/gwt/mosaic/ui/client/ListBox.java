@@ -106,15 +106,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public ListBox(String[] columns) {
     super(impl.createFocusable());
 
+    headerTable = new FixedWidthFlexTable();
     if (columns != null && columns.length > 0) {
-      headerTable = new FixedWidthFlexTable();
       for (int column = 0; column < columns.length; ++column) {
         headerTable.setHTML(0, column, columns[column]);
       }
       setColumnsCount(columns.length);
     } else {
-      headerTable = new FixedWidthFlexTable();
-      // headerTable.setVisible(false);
+      headerTable.setText(0, 0, null);
+      headerTable.setVisible(false);
       setColumnsCount(1);
     }
 
@@ -275,7 +275,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public void intervalAdded(ListDataEvent event) {
     if (dataModel == event.getSource()) {
-      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
+      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n && i >= 0; ++i) {
         if (i < getItemCount()) {
           renderItemOnInsert(dataModel.getElementAt(i), i);
         } else {
@@ -293,7 +293,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public void intervalRemoved(ListDataEvent event) {
     if (dataModel == event.getSource()) {
-      for (int i = event.getIndex1(), n = event.getIndex0(); i >= n; --i) {
+      for (int i = event.getIndex1(), n = event.getIndex0(); i >= n && i >= 0; --i) {
         renderOnRemove(i);
       }
     }
