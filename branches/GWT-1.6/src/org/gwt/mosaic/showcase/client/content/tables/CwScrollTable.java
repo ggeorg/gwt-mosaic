@@ -23,17 +23,15 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
-import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.gen2.table.client.AbstractScrollTable;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.ScrollTable;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -74,28 +72,10 @@ public class CwScrollTable extends ContentWidget {
   private CwConstants constants;
 
   /**
-   * The data portion of the <code>ScrollTable</code>
-   */
-  @ShowcaseData
-  private FixedWidthGrid dataTable = null;
-
-  /**
-   * The footer portion of the <code>ScrollTable</code>
-   */
-  @ShowcaseData
-  private FixedWidthFlexTable footerTable = null;
-
-  /**
-   * The header portion of the <code>ScrollTable</code>
-   */
-  @ShowcaseData
-  private FixedWidthFlexTable headerTable = null;
-
-  /**
    * The scroll table.
    */
-  @ShowcaseSource
-  private ScrollTable scrollTable = null;
+  @ShowcaseData
+  private AbstractScrollTable scrollTable = null;
 
   /**
    * Constructor.
@@ -108,22 +88,33 @@ public class CwScrollTable extends ContentWidget {
   }
 
   /**
-   * Setup the footer table.
+   * @return the newly created data table.
    */
   @ShowcaseSource
-  protected void createFooterTable() {
-    footerTable = new FixedWidthFlexTable();
-    for (int i = 0; i < 12; i++) {
-      footerTable.setText(0, i, "Col " + i);
-    }
+  private FixedWidthGrid createDataTable() {
+    FixedWidthGrid dataTable = new FixedWidthGrid();
+    dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
+    return dataTable;
   }
 
   /**
-   * Setup the header table.
+   * @return the new footer table
    */
   @ShowcaseSource
-  protected void createHeaderTable() {
-    headerTable = new FixedWidthFlexTable();
+  private FixedWidthFlexTable createFooterTable() {
+    FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
+    for (int i = 0; i < 12; i++) {
+      footerTable.setText(0, i, "Col " + i);
+    }
+    return footerTable;
+  }
+
+  /**
+   * @return the new header table.
+   */
+  @ShowcaseSource
+  private FixedWidthFlexTable createHeaderTable() {
+    FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
 
     // Level 1 headers
     FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
@@ -156,57 +147,90 @@ public class CwScrollTable extends ContentWidget {
     headerTable.setHTML(2, 5, "GPA");
     headerTable.setHTML(2, 6, "ID");
     headerTable.setHTML(2, 7, "Pin");
+
+    return headerTable;
   }
 
   /**
    * Setup the scroll table.
    */
   @ShowcaseSource
-  protected void createScrollTable() {
-    // Create the inner tables
-    createHeaderTable();
-    createFooterTable();
-    dataTable = new FixedWidthGrid();
-    dataTable.setSelectionPolicy(SelectionPolicy.ONE_ROW);
+  protected ScrollTable createScrollTable() {
+    // Create the three component tables
+    FixedWidthFlexTable headerTable = createHeaderTable();
+    FixedWidthFlexTable footerTable = createFooterTable();
+    FixedWidthGrid dataTable = createDataTable();
 
-    // Add the scroll table to the page
-    scrollTable = new ScrollTable(dataTable, headerTable);
+    // Create the scroll table
+    ScrollTable scrollTable = new ScrollTable(dataTable, headerTable);
     scrollTable.setFooterTable(footerTable);
-//    scrollTable.setContextMenu(createContextMenu());
-    
-//    scrollTable.addDoubleClickListener(new DoubleClickListener() {
-//      public void onDoubleClick(Widget sender) {
-//        InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
-//            scrollTable.getDataTable().getSelectedRows().toString());
-//      }
-//    });
 
-    setupScrollTable();
+    // Setup the formatting
+    scrollTable.setCellPadding(3);
+    scrollTable.setCellSpacing(0);
+    scrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
+
+    // first name
+    scrollTable.setMinimumColumnWidth(0, 50);
+    scrollTable.setPreferredColumnWidth(0, 100);
+    scrollTable.setColumnTruncatable(0, false);
+
+    // last name
+    scrollTable.setMinimumColumnWidth(1, 50);
+    scrollTable.setPreferredColumnWidth(1, 100);
+    scrollTable.setColumnTruncatable(1, false);
+
+    // age
+    scrollTable.setMinimumColumnWidth(2, 35);
+    scrollTable.setPreferredColumnWidth(2, 35);
+    scrollTable.setMaximumColumnWidth(2, 35);
+
+    // gender
+    scrollTable.setMinimumColumnWidth(3, 45);
+    scrollTable.setPreferredColumnWidth(3, 45);
+    scrollTable.setMaximumColumnWidth(3, 45);
+
+    // race
+    scrollTable.setMinimumColumnWidth(4, 45);
+    scrollTable.setPreferredColumnWidth(4, 45);
+    scrollTable.setMaximumColumnWidth(4, 45);
+
+    // color
+    scrollTable.setPreferredColumnWidth(5, 80);
+
+    // sport
+    scrollTable.setMinimumColumnWidth(6, 40);
+    scrollTable.setPreferredColumnWidth(6, 110);
+
+    // college
+    scrollTable.setMinimumColumnWidth(7, 50);
+    scrollTable.setPreferredColumnWidth(7, 180);
+    scrollTable.setMaximumColumnWidth(7, 250);
+
+    // year
+    scrollTable.setPreferredColumnWidth(8, 25);
+    scrollTable.setColumnTruncatable(8, false);
+
+    // gpa
+    scrollTable.setPreferredColumnWidth(9, 35);
+    scrollTable.setColumnTruncatable(9, false);
+
+    // id
+    scrollTable.setPreferredColumnWidth(10, 55);
+    scrollTable.setColumnTruncatable(10, false);
+
+    // pin
+    scrollTable.setPreferredColumnWidth(11, 45);
+    scrollTable.setColumnTruncatable(11, false);
+
+    return scrollTable;
   }
-  
+
   /**
-   * 
-   * @return
+   * @return the data table.
    */
-  @ShowcaseSource
-  private PopupMenu createContextMenu() {
-    Command cmd = new Command() {
-      public void execute() {
-        InfoPanel.show("Menu Button", "You selected a menu item!");
-      }
-    };
-
-    PopupMenu contextMenu = new PopupMenu();
-
-    contextMenu.addItem("MenuItem 1", cmd);
-    contextMenu.addItem("MenuItem 2", cmd);
-
-    contextMenu.addSeparator();
-
-    contextMenu.addItem("MenuItem 3", cmd);
-    contextMenu.addItem("MenuItem 4", cmd);
-
-    return contextMenu;
+  public FixedWidthGrid getDataTable() {
+    return getScrollTable().getDataTable();
   }
 
   @Override
@@ -215,18 +239,29 @@ public class CwScrollTable extends ContentWidget {
   }
 
   /**
-   * Get the footer table.
-   * 
    * @return the footer table.
    */
-  @ShowcaseSource
   public FixedWidthFlexTable getFooterTable() {
-    return footerTable;
+    return getScrollTable().getFooterTable();
+  }
+
+  /**
+   * @return the header table.
+   */
+  public FixedWidthFlexTable getHeaderTable() {
+    return getScrollTable().getHeaderTable();
   }
 
   @Override
   public String getName() {
     return constants.mosaicScrollTableName();
+  }
+
+  /**
+   * @return the scroll table.
+   */
+  public AbstractScrollTable getScrollTable() {
+    return scrollTable;
   }
 
   /**
@@ -239,6 +274,7 @@ public class CwScrollTable extends ContentWidget {
   @ShowcaseSource
   public void insertDataRow(int beforeRow) {
     // Insert the new row
+    FixedWidthGrid dataTable = getDataTable();
     beforeRow = dataTable.insertRow(beforeRow);
 
     // Set the data in the new row
@@ -273,47 +309,17 @@ public class CwScrollTable extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel();
 
     // Create the tables
-    createScrollTable();
+    scrollTable = createScrollTable();
 
-    // Add some data the data table
-    dataTable.resize(0, Student.NUM_FIELDS);
+    // Add some data to the data table
+    getDataTable().resize(0, Student.NUM_FIELDS);
     for (int i = 0; i < 15; i++) {
       insertDataRow(i);
     }
-
-    // Redraw the scroll table
-    //scrollTable.redraw();
 
     layoutPanel.add(scrollTable);
 
     return layoutPanel;
   }
 
-  /**
-   * Setup the scroll table.
-   */
-  @ShowcaseSource
-  protected void setupScrollTable() {
-    // Setup the formatting
-    scrollTable.setCellPadding(3);
-    scrollTable.setCellSpacing(0);
-    // scrollTable.setSize("95%", "50%");
-    //scrollTable.setResizePolicy(ScrollTable2.ResizePolicy.FILL_WIDTH);
-    scrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
-
-    // Set column widths
-    scrollTable.setColumnWidth(0, 100);
-    scrollTable.setColumnWidth(1, 100);
-    scrollTable.setColumnWidth(2, 35);
-    scrollTable.setColumnWidth(3, 45);
-    scrollTable.setColumnWidth(4, 110);
-    scrollTable.setColumnWidth(5, 80);
-    scrollTable.setColumnWidth(6, 110);
-    scrollTable.setColumnWidth(7, 180);
-    scrollTable.setColumnWidth(8, 35);
-    scrollTable.setColumnWidth(9, 35);
-    scrollTable.setColumnWidth(10, 55);
-    scrollTable.setColumnWidth(11, 45);
-  }
-  
 }
