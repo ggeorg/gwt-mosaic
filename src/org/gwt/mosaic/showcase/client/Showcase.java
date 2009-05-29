@@ -84,6 +84,7 @@ import org.gwt.mosaic.showcase.client.content.tables.CwFilterListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable2;
+import org.gwt.mosaic.showcase.client.content.tables.CwRichListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwSimpleTable;
@@ -539,6 +540,8 @@ public class Showcase implements EntryPoint {
     TreeItem catTables = mainMenu.addItem("Lists & Tables");
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
     setupMainMenuOption(catTables, new CwFilterListBox(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwRichListBox(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
