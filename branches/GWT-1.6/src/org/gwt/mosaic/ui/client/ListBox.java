@@ -31,9 +31,12 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.gen2.table.override.client.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
@@ -74,7 +77,6 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
 
   private final ScrollTable2 scrollTable;
   private final DataTable dataTable = new DataTable();
-  private final FixedWidthFlexTable headerTable;
 
   /**
    * The cell renderer used on the data table.
@@ -102,11 +104,8 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public ListBox() {
     this(null);
   }
-
-  public ListBox(String[] columns) {
-    super(impl.createFocusable());
-
-    headerTable = new FixedWidthFlexTable();
+  
+  protected void createHeaderTable(FixedWidthFlexTable headerTable, String[] columns) {
     if (columns != null && columns.length > 0) {
       for (int column = 0; column < columns.length; ++column) {
         headerTable.setHTML(0, column, columns[column]);
@@ -117,6 +116,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
       headerTable.setVisible(false);
       setColumnsCount(1);
     }
+  }
+
+  public ListBox(String[] columns) {
+    super(impl.createFocusable());
+
+    final FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
+    createHeaderTable(headerTable, columns);
 
     scrollTable = new ScrollTable2(dataTable, headerTable);
     scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
@@ -178,6 +184,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   }
 
   /**
+   * Gets the {@link CellFormatter} associated with this table.
+   * 
+   * @return this table's cell formatter
+   */
+  public CellFormatter getCellFormatter() {
+    return scrollTable.getDataTable().getCellFormatter();
+  }
+
+  /**
    * Get the {@link CellRenderer} used to render cells.
    * 
    * @return the current renderer
@@ -193,6 +208,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public int getColumnCount() {
     return dataTable.getColumnCount();
+  }
+
+  /**
+   * @return the column resize policy
+   */
+  public ColumnResizePolicy getColumnResizePolicy() {
+    return scrollTable.getColumnResizePolicy();
   }
 
   public int getColumnWidth(int column) {
@@ -225,6 +247,26 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   }
 
   /**
+   * Get the absolute maximum width of a column.
+   * 
+   * @param column the column index
+   * @return the maximum allowable width of the column
+   */
+  public int getMaximumColumnWidth(int column) {
+    return scrollTable.getMaximumColumnWidth(column);
+  }
+
+  /**
+   * Get the absolute minimum width of a column.
+   * 
+   * @param column the column index
+   * @return the minimum allowable width of the column
+   */
+  public int getMinimumColumnWidth(int column) {
+    return scrollTable.getMinimumColumnWidth(column);
+  }
+
+  /**
    * Returns the data model.
    * 
    * @return the {@code ListModel} that provides the displayed list of items
@@ -234,6 +276,16 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
       setModel(new DefaultListModel<T>());
     }
     return dataModel;
+  }
+
+  /**
+   * Get the preferred width of a column.
+   * 
+   * @param column the column index
+   * @return the preferred width of the column
+   */
+  public int getPreferredColumnWidth(int column) {
+    return scrollTable.getPreferredColumnWidth(column);
   }
 
   /**
@@ -261,6 +313,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public Set<Integer> getSelectedIndices() {
     return dataTable.getSelectedRows();
+  }
+
+  /**
+   * @return the current sort policy
+   */
+  public SortPolicy getSortPolicy() {
+    return scrollTable.getSortPolicy();
   }
 
   public int getTabIndex() {
@@ -297,6 +356,28 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
         renderOnRemove(i);
       }
     }
+  }
+
+  /**
+   * Returns true if the specified column is sortable.
+   * 
+   * @param column the column index
+   * @return true if the column is sortable, false if it is not sortable
+   */
+  public boolean isColumnSortable(int column) {
+    return isColumnSortable(column);
+  }
+
+  /**
+   * Returns true if the specified column can be truncated. If it cannot be
+   * truncated, its minimum width will be adjusted to ensure the cell content is
+   * visible.
+   * 
+   * @param column the column index
+   * @return true if the column is truncatable, false if it is not
+   */
+  public boolean isColumnTruncatable(int column) {
+    return scrollTable.isColumnTruncatable(column);
   }
 
   /**
@@ -504,6 +585,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   }
 
   /**
+   * Set the resize policy applied to user actions that resize columns.
+   * 
+   * @param columnResizePolicy the resize policy
+   */
+  public void setColumnResizePolicy(ColumnResizePolicy columnResizePolicy) {
+    scrollTable.setColumnResizePolicy(columnResizePolicy);
+  }
+
+  /**
    * Resizes the {@code ListBox} to be the specified number of columns.
    * 
    * @param columns the number of columns
@@ -511,6 +601,30 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public void setColumnsCount(int columns) {
     dataTable.resizeColumns(columns);
+  }
+
+  /**
+   * Enable or disable sorting on a specific column. All columns are sortable by
+   * default.
+   * 
+   * @param column the index of the column
+   * @param sortable {@code true} to enable sorting for this column, {@code
+   *          false} to disable
+   */
+  public void setColumnSortable(int column, boolean sortable) {
+    scrollTable.setColumnSortable(column, sortable);
+  }
+
+  /**
+   * Enable or disable truncation on a specific column. When enabled, the column
+   * width will be adjusted to fit the content. All columns are truncatable by
+   * default.
+   * 
+   * @param column the index of the column
+   * @param truncatable true to enable truncation, false to disable
+   */
+  public void setColumnTruncatable(int column, boolean truncatable) {
+    scrollTable.setColumnTruncatable(column, truncatable);
   }
 
   /**
@@ -523,10 +637,6 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public int setColumnWidth(int column, int width) {
     return scrollTable.setColumnWidth(column, width);
   }
-
-  // public int setColumnWidth(int column, int width, int sacrificeColumn) {
-  // return scrollTable.setColumnWidth(column, width, sacrificeColumn);
-  // }
 
   public void setContextMenu(PopupMenu contextMenu) {
     dataTable.setContextMenu(contextMenu);
@@ -557,6 +667,26 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     } else {
       dataTable.deselectRow(index);
     }
+  }
+
+  /**
+   * Set the maximum width of the column.
+   * 
+   * @param column the column index
+   * @param maxWidth the maximum width
+   */
+  public void setMaximumColumnWidth(int column, int maxWidth) {
+    scrollTable.setMaximumColumnWidth(column, maxWidth);
+  }
+
+  /**
+   * Set the minimum width of the column.
+   * 
+   * @param column the column index
+   * @param minWidth the minimum width
+   */
+  public void setMinimumColumnWidth(int column, int minWidth) {
+    scrollTable.setMinimumColumnWidth(column, minWidth);
   }
 
   /**
@@ -603,6 +733,18 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   }
 
   /**
+   * Set the preferred width of a column. The table will attempt maintain the
+   * preferred width of the column. If it cannot, the preferred widths will
+   * serve as relative weights when distributing available width.
+   * 
+   * @param column the column index
+   * @param preferredWidth the preferred width
+   */
+  public void setPreferredColumnWidth(int column, int preferredWidth) {
+    scrollTable.setPreferredColumnWidth(column, preferredWidth);
+  }
+
+  /**
    * Sets the currently selected index.
    * <p>
    * After calling this method, only the specified item in the list will remain
@@ -622,6 +764,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     dataTable.selectRow(index, true);
   }
 
+  /**
+   * Set the {@link SortPolicy} that defines what columns users can sort.
+   * 
+   * @param sortPolicy the {@link SortPolicy}
+   */
+  public void setSortPolicy(SortPolicy sortPolicy) {
+    scrollTable.setSortPolicy(sortPolicy);
+  }
+
   public void setTabIndex(int index) {
     impl.setTabIndex(getElement(), index);
   }
@@ -629,7 +780,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public void setText(int row, int column, String text) {
     dataTable.setText(row, column, text);
   }
-
+  
   public void setWidget(int row, int column, Widget widget) {
     dataTable.setWidget(row, column, widget);
   }
