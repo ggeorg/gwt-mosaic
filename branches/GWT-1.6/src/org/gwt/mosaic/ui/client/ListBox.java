@@ -27,6 +27,8 @@ import org.gwt.mosaic.ui.client.list.ListModel;
 import org.gwt.mosaic.ui.client.table.DataTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable2;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -39,6 +41,7 @@ import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.gen2.table.override.client.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
@@ -104,19 +107,6 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public ListBox() {
     this(null);
   }
-  
-  protected void createHeaderTable(FixedWidthFlexTable headerTable, String[] columns) {
-    if (columns != null && columns.length > 0) {
-      for (int column = 0; column < columns.length; ++column) {
-        headerTable.setHTML(0, column, columns[column]);
-      }
-      setColumnsCount(columns.length);
-    } else {
-      headerTable.setText(0, 0, null);
-      headerTable.setVisible(false);
-      setColumnsCount(1);
-    }
-  }
 
   public ListBox(String[] columns) {
     super(impl.createFocusable());
@@ -130,6 +120,8 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     scrollTable.setCellSpacing(0);
 
     setMultipleSelect(false);
+
+    dataTable.resize(0, getColumnCount());
 
     getLayoutPanel().add(scrollTable);
 
@@ -175,6 +167,20 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
           renderItemOnUpdate(i, dataModel.getElementAt(i));
         }
       }
+    }
+  }
+
+  protected void createHeaderTable(FixedWidthFlexTable headerTable,
+      String[] columns) {
+    if (columns != null && columns.length > 0) {
+      for (int column = 0; column < columns.length; ++column) {
+        headerTable.setHTML(0, column, columns[column]);
+      }
+      setColumnsCount(columns.length);
+    } else {
+      headerTable.setText(0, 0, null);
+      headerTable.setVisible(false);
+      setColumnsCount(1);
     }
   }
 
@@ -400,7 +406,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    * @see #setMultipleSelect(boolean)
    */
   public boolean isMultipleSelect() {
-    return dataTable.getSelectionPolicy() == SelectionPolicy.MULTI_ROW;
+    return dataTable.isSelectionEnabled()
+        && (dataTable.getSelectionPolicy() == SelectionPolicy.MULTI_ROW || dataTable.getSelectionPolicy() == SelectionPolicy.CHECKBOX);
+  }
+
+  /**
+   * @return {@code true} if selection is enabled, {@code false} otherwise
+   */
+  public boolean isSelectionEnabled() {
+    return dataTable.isSelectionEnabled();
   }
 
   private void moveDown() {
@@ -653,12 +667,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   /**
    * Sets whether an individual list item is selected.
    * <p>
-   * Note that setting the selection programmatically does <em>not</em> cause
-   * the {@link ChangeListener#onChange(Widget)} event to be fired.
+   * Note that setting the selected index programmatically does <em>not</em>
+   * cause the {@link ChangeHandler#onChange(ChangeEvent)} event to be fired.
    * 
    * @param index the index of the item to be selected or unselected
    * @param selected {@code true} to select the item
    * @throws IndexOutOfBoundsException if the index is out of range
+   * @see #setSelectedIndex(int)
    */
   public void setItemSelected(int index, boolean selected) {
     checkIndex(index);
@@ -751,8 +766,8 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    * selected. For a {@code ListBox} with multiple selection enabled, see
    * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
    * <p>
-   * TODO (check) Note that setting the selected index programmatically does
-   * <em>not</em> cause the {@link ChangeListener#onChange(Widget)} event to be
+   * Note that setting the selected index programmatically does <em>not</em>
+   * cause the {@link ChangeHandler#onChange(ChangeEvent)} event to be fired.
    * fired.
    * 
    * @param index the index of the item to be selected
@@ -762,6 +777,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public void setSelectedIndex(int index) {
     checkIndex(index);
     dataTable.selectRow(index, true);
+  }
+
+  /**
+   * Enable or disable row selection.
+   * 
+   * @param enabled {@code true} to enable, {@code false} to disable
+   */
+  public void setSelectionEnabled(boolean enabled) {
+    dataTable.setSelectionEnabled(enabled);
   }
 
   /**
@@ -780,7 +804,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public void setText(int row, int column, String text) {
     dataTable.setText(row, column, text);
   }
-  
+
   public void setWidget(int row, int column, Widget widget) {
     dataTable.setWidget(row, column, widget);
   }
