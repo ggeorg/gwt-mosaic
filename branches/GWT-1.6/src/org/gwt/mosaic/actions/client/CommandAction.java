@@ -142,19 +142,6 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   /**
-   * This constructor creates an action without an icon.
-   * 
-   * @param name the action's name
-   * @param command the command for this action to act upon
-   */
-  public CommandAction(final String name, Command command) {
-    super();
-    putValue(Action.NAME, name);
-    setEnabled(true);
-    setCommand(command);
-  }
-
-  /**
    * This constructor creates an action with an icon.
    * 
    * @param name the action's name
@@ -166,6 +153,19 @@ public class CommandAction extends AbstractMap<String, Object> implements
     super();
     putValue(Action.NAME, name);
     putValue(Action.SMALL_ICON, icon);
+    setEnabled(true);
+    setCommand(command);
+  }
+
+  /**
+   * This constructor creates an action without an icon.
+   * 
+   * @param name the action's name
+   * @param command the command for this action to act upon
+   */
+  public CommandAction(final String name, Command command) {
+    super();
+    putValue(Action.NAME, name);
     setEnabled(true);
     setCommand(command);
   }
