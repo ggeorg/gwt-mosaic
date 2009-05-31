@@ -153,15 +153,6 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
 
     WidgetHelper.setSize(this, width - (margins[1] + margins[3]), height
         - (margins[0] + margins[2]));
-
-    // if (width != -1) {
-    // width -= (margins[1] + margins[3]);
-    // DOM.setContentAreaWidth(elem, Math.max(0, width));
-    // }
-    // if (height != -1) {
-    // height -= (margins[0] + margins[2]);
-    // DOM.setContentAreaHeight(elem, Math.max(0, height));
-    // }
   }
 
   /**
