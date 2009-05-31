@@ -1,0 +1,17 @@
+Index: src/com/google/gwt/gen2/table/client/AbstractScrollTable.java
+===================================================================
+--- src/com/google/gwt/gen2/table/client/AbstractScrollTable.java	(revision 1673)
++++ src/com/google/gwt/gen2/table/client/AbstractScrollTable.java	(working copy)
+@@ -274,7 +274,11 @@
+ 
+     @Override
+     public int getTableWidth(FixedWidthFlexTable table, boolean includeSpacer) {
+-      return table.getElement().getScrollWidth();
++      if (table.getColumnCount() == 1) {
++        return table.getColumnWidth(0);
++      } else {
++        return table.getElement().getScrollWidth();
++      }
+     }
+ 
+     /**
