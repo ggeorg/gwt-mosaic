@@ -122,7 +122,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  class ElementDragHandle extends Widget implements HasAllMouseHandlers {
+  final class ElementDragHandle extends Widget implements HasAllMouseHandlers {
 
     public ElementDragHandle(Element elem) {
       setElement(elem);
@@ -453,7 +453,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   }
 
-  class WindowHandlers extends HandlerManager implements HasResizeHandlers,
+  final class WindowHandlers extends HandlerManager implements HasResizeHandlers,
       HasHandlers {
 
     public WindowHandlers() {
