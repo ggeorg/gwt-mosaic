@@ -1309,18 +1309,14 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   private void resizeToBoundarySize() {
+    final Dimension size = DOM.getClientSize(boundaryPanel.getElement());
+    final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
+    final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
+    setPopupPosition(0, 0);
     if (isCollapsed()) {
-      final Dimension size = DOM.getClientSize(boundaryPanel.getElement());
-      final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
-      final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
-      setPopupPosition(0, 0);
       setContentSize(size.width - (size2.width - size3.width),
           getLayoutPanel().getPreferredSize().height);
     } else {
-      final Dimension size = DOM.getClientSize(boundaryPanel.getElement());
-      final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
-      final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
-      setPopupPosition(0, 0);
       setContentSize(size.width - (size2.width - size3.width), size.height
           - (size2.height - size3.height));
     }
@@ -1412,11 +1408,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       if (getWindowState() != WindowState.MAXIMIZED) {
         setContentSize(restoredWidth, restoredHeight);
       } else {
-        final Dimension size = DOM.getClientSize(windowController.getBoundaryPanel().getElement());
-        final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
-        final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
-        setContentSize(size.width - (size2.width - size3.width), size.height
-            - (size2.height - size3.height));
+        resizeToBoundarySize();
       }
       if (isResizable() && windowState != WindowState.MAXIMIZED) {
         makeResizable();
