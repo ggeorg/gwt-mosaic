@@ -453,8 +453,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   }
 
-  final class WindowHandlers extends HandlerManager implements HasResizeHandlers,
-      HasHandlers {
+  final class WindowHandlers extends HandlerManager implements
+      HasResizeHandlers, HasHandlers {
 
     public WindowHandlers() {
       super(null);
@@ -1481,11 +1481,16 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @see #isResizable()
    */
   public void setResizable(boolean resizable) {
+    if (this.resizable == resizable) {
+      return;
+    }
     this.resizable = resizable;
-    if (resizable) {
-      makeResizable();
-    } else {
-      makeNotResizable();
+    if (isShowing()) {
+      if (resizable) {
+        makeResizable();
+      } else {
+        makeNotResizable();
+      }
     }
   }
 
