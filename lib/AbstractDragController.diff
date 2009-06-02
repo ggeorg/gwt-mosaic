@@ -1,0 +1,22 @@
+Index: DragDrop16/src/com/allen_sauer/gwt/dnd/client/AbstractDragController.java
+===================================================================
+--- DragDrop16/src/com/allen_sauer/gwt/dnd/client/AbstractDragController.java	(revision 895)
++++ DragDrop16/src/com/allen_sauer/gwt/dnd/client/AbstractDragController.java	(working copy)
+@@ -69,7 +69,7 @@
+   /**
+    * The drag controller's drag context.
+    */
+-  protected final DragContext context;
++  protected DragContext context;
+ 
+   /**
+    * The current drag end event, created in {@link #previewDragEnd()}
+@@ -96,7 +96,7 @@
+   /**
+    * This drag controller's mouse drag handler.
+    */
+-  private MouseDragHandler mouseDragHandler;
++  protected MouseDragHandler mouseDragHandler;
+ 
+   /**
+    * Whether multiple selection behavior is enabled.

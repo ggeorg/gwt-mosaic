@@ -21,23 +21,27 @@ import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowCloseListener;
-import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * A top level panel that accepts browser window resize events.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class Viewport extends LayoutComposite implements
-    WindowResizeListener, WindowCloseListener {
+public class Viewport extends LayoutComposite implements ResizeHandler {
 
   private final Timer resizeTimer = new Timer() {
     @Override
@@ -47,21 +51,42 @@ public class Viewport extends LayoutComposite implements
     }
   };
 
+  private final HandlerRegistration resizeHandlerRegistration;
+  private final HandlerRegistration closeHandlerRegistration;
+
   /**
-   * Default constructor.
+   * Creates a new {@code Viewport} with {@link FillLayout}.
    */
   public Viewport() {
-    super();
+    this(new FillLayout());
+  }
 
-    Window.addWindowCloseListener(this);
-    Window.addWindowResizeListener(this);
+  /**
+   * Creates a new {@code Viewport} with the specified layout manager.
+   * 
+   * @param layout the {@link LayoutManager} to use
+   */
+  public Viewport(LayoutManager layout) {
+    super(layout);
 
-    Window.enableScrolling(false);
+    resizeHandlerRegistration = Window.addResizeHandler(this);
+    closeHandlerRegistration = Window.addCloseHandler(new CloseHandler<Window>() {
+      public void onClose(CloseEvent<Window> event) {
+        if (resizeHandlerRegistration != null) {
+          resizeHandlerRegistration.removeHandler();
+        }
+        if (closeHandlerRegistration != null) {
+          closeHandlerRegistration.removeHandler();
+        }
+      }
+    });
+
+    Window.enableScrolling(false);    
   }
 
   @Deprecated
-  public void add(Widget widget) {
-    add(widget, false);
+  public void add(Widget w) {
+    add(w, false);
   }
 
   @Deprecated
@@ -101,16 +126,15 @@ public class Viewport extends LayoutComposite implements
     resizeTimer.schedule(CoreConstants.MIN_DELAY_MILLIS);
   }
 
-  public void onWindowClosed() {
-    Window.removeWindowResizeListener(this);
-    Window.removeWindowCloseListener(this);
-  }
-
-  public String onWindowClosing() {
-    return null;
-  }
-
-  public void onWindowResized(int width, int height) {
+  /**
+   * Called when the browser window is resized.
+   * 
+   * @param event the {@code ResizeEvent} fired when the browser window is
+   *          resized
+   * 
+   * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
+   */
+  public void onResize(ResizeEvent event) {
     if (isAttached()) {
       resizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
     }
@@ -130,7 +154,7 @@ public class Viewport extends LayoutComposite implements
     WidgetHelper.setSize(this, width - (margins[1] + margins[3]), height
         - (margins[0] + margins[2]));
   }
-  
+
   /**
    * 
    * @see #removeFromParent()
@@ -140,5 +164,4 @@ public class Viewport extends LayoutComposite implements
       RootPanel.get().add(this, Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
   }
-
 }

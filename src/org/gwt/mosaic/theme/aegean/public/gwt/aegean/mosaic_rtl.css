@@ -831,8 +831,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
+	/*background: #fff;*/
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar:hover {
@@ -840,13 +839,11 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
+	/*background: #fff;*/
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar:hover {
@@ -854,13 +851,11 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
+	/*background: #fff;*/
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar:hover {
@@ -868,22 +863,18 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
-	cursor: e-resize;
+	/*background: #fff;*/
+	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar:hover {
 	/*border-right: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
-	cursor: e-resize;
 }
 
 /*** WidgetWrapper ***/

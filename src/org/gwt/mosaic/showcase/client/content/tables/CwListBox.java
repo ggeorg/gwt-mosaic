@@ -19,7 +19,6 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.DoubleClickListener;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.ListBox;
 import org.gwt.mosaic.ui.client.MessageBox;
@@ -37,9 +36,13 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.list.DefaultListModel;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
+import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -131,23 +134,25 @@ public class CwListBox extends ContentWidget {
     model.add("toto");
     model.add("tintin");
 
-    listBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
-        InfoPanel.show("ChangeListener",
-            listBox.getItem(listBox.getSelectedIndex()));
+    listBox.addRowSelectionHandler(new RowSelectionHandler() {
+      public void onRowSelection(RowSelectionEvent event) {
+        int index = listBox.getSelectedIndex();
+        if (index != -1) {
+          InfoPanel.show("RowSelectionHandler", listBox.getItem(index));
+        }
       }
     });
 
-    listBox.addDoubleClickListener(new DoubleClickListener() {
-      public void onDoubleClick(Widget sender) {
+    listBox.addDoubleClickHandler(new DoubleClickHandler() {
+      public void onDoubleClick(DoubleClickEvent event) {
         InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
             listBox.getItem(listBox.getSelectedIndex()));
       }
     });
 
     final ToolBar toolBar = new ToolBar();
-    toolBar.add(new ToolButton("Insert", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Insert", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         MessageBox.prompt("ListBox Insert", "Please enter a new value to add",
             null, new PromptCallback<String>() {
               public void onResult(String input) {
@@ -163,8 +168,8 @@ public class CwListBox extends ContentWidget {
             });
       }
     }));
-    toolBar.add(new ToolButton("Remove", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Remove", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -181,8 +186,8 @@ public class CwListBox extends ContentWidget {
             });
       };
     }));
-    toolBar.add(new ToolButton("Edit", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Edit", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -245,23 +250,26 @@ public class CwListBox extends ContentWidget {
     model.add(new Person("Holger Adams", "male", true));
     model.add(new Person("Juliane Adams", "female", true));
 
-    listBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
-        InfoPanel.show("ChangeListener", listBox.getItem(
-            listBox.getSelectedIndex()).getName());
+    listBox.addRowSelectionHandler(new RowSelectionHandler() {
+      public void onRowSelection(RowSelectionEvent event) {
+        int index = listBox.getSelectedIndex();
+        if (index != -1) {
+          InfoPanel.show("RowSelectionHandler", listBox.getItem(
+              listBox.getSelectedIndex()).getName());
+        }
       }
     });
 
-    listBox.addDoubleClickListener(new DoubleClickListener() {
-      public void onDoubleClick(Widget sender) {
+    listBox.addDoubleClickHandler(new DoubleClickHandler() {
+      public void onDoubleClick(DoubleClickEvent event) {
         InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, "DoubleClickListener",
             listBox.getItem(listBox.getSelectedIndex()).getName());
       }
     });
 
     final ToolBar toolBar = new ToolBar();
-    toolBar.add(new ToolButton("Insert", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Insert", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         MessageBox.prompt("ListBox Insert",
             "Please enter a new value to add, should be a 'Married Male'",
             null, new PromptCallback<String>() {
@@ -278,8 +286,8 @@ public class CwListBox extends ContentWidget {
             });
       }
     }));
-    toolBar.add(new ToolButton("Remove", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Remove", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -296,8 +304,8 @@ public class CwListBox extends ContentWidget {
             });
       };
     }));
-    toolBar.add(new ToolButton("Edit", new ClickListener() {
-      public void onClick(Widget sender) {
+    toolBar.add(new ToolButton("Edit", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         if (listBox.getSelectedIndex() == -1) {
           MessageBox.alert("ListBox Edit", "No item selected");
           return;
@@ -368,4 +376,5 @@ public class CwListBox extends ContentWidget {
       return getName() + " " + getGender() + " " + String.valueOf(isMarried());
     }
   }
+
 }

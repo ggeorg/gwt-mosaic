@@ -48,9 +48,9 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.ColumnSpec;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.forms.client.layout.RowSpec;
+import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**

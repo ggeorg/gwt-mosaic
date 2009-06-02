@@ -15,7 +15,6 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -127,6 +126,10 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
 
   protected LayoutPanel getLayoutPanel() {
     return layoutPanel;
+  }
+  
+  protected void setContentSize(int width, int height) {
+    setContentSize(new Dimension(width, height));
   }
 
   protected void setContentSize(Dimension d) {

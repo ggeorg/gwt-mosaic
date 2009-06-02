@@ -124,7 +124,7 @@ public abstract class ActionBindings<T> {
 
     public void setAccessKey(Character key) {
       if (target instanceof FocusWidget) {
-        String accessKey = DOM.getStyleAttribute(
+        String accessKey = DOM.getComputedStyleAttribute(
             ((FocusWidget) target).getElement(), "accessKey");
         Character oldValue = Character.valueOf(accessKey != null
             && accessKey.length() > 0 ? accessKey.charAt(0) : '\0');

@@ -15,7 +15,6 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -79,7 +78,22 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
    */
   protected DecoratedLayoutPopupPanel(boolean autoHide, boolean modal,
       String prefix) {
-    super(autoHide, modal, prefix);
+    this(autoHide, modal, prefix, AnimationType.CENTER);
+  }
+
+  /**
+   * Creates an empty decorated popup panel using the specified style names.
+   * 
+   * @param autoHide <code>true</code> if the popup should be automatically
+   *          hidden when the user clicks outside of it
+   * @param modal <code>true</code> if keyboard or mouse events that do not
+   *          target the PopupPanel or its children should be ignored
+   * @param prefix the prefix applied to child style names
+   * @param type type the type of animation to use
+   */
+  protected DecoratedLayoutPopupPanel(boolean autoHide, boolean modal,
+      String prefix, AnimationType type) {
+    super(autoHide, modal, prefix, type);
 
     layoutPanel = new LayoutPanel();
     layoutPanel.setPadding(0);
@@ -144,7 +158,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   protected LayoutPanel getLayoutPanel() {
     return layoutPanel;
   }
-  
+
   protected void setContentSize(int width, int height) {
     setContentSize(new Dimension(width, height));
   }
@@ -185,7 +199,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   /*
    * (non-Javadoc)
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
     layoutPanel.invalidate();

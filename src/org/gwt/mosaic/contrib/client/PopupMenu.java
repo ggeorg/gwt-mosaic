@@ -32,8 +32,12 @@ public class PopupMenu extends org.gwt.mosaic.ui.client.PopupMenu {
   private class MenuItemDisabled extends MenuItemSeparator {
     private MenuBar parentMenu;
 
-    public MenuItemDisabled(String text) {
-      DOM.setInnerText(getElement(), text);
+    public MenuItemDisabled(String text, boolean asHTML) {
+      if (asHTML) {
+        DOM.setInnerHTML(getElement(), text);
+      } else {
+        DOM.setInnerText(getElement(), text);
+      }
       DOM.setStyleAttribute(getElement(), "color", "#B5B5B5");
     }
 
@@ -43,11 +47,21 @@ public class PopupMenu extends org.gwt.mosaic.ui.client.PopupMenu {
   }
 
   /**
-   * Adds a disabled item
+   * Adds a disabled item.
    * 
    * @param the text of the disabled item
    */
   public void addDisabledItem(String text) {
-    addSeparator(new MenuItemDisabled(text));
+    addSeparator(new MenuItemDisabled(text, false));
+  }
+
+  /**
+   * Adds a disabled item.
+   * 
+   * @param text the text of the disabled item
+   * @param asHTML {@code true} if the text is HTML, {@code false} otherwise
+   */
+  public void addDisabled(String text, boolean asHTML) {
+    addSeparator(new MenuItemDisabled(text, asHTML));
   }
 }

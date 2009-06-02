@@ -152,3 +152,8 @@
 	position: absolute;
 	width: 100%;
 }
+
+.RichListBoxCell {
+	border-bottom: 1px dotted #888;	
+}
+
