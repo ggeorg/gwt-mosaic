@@ -18,6 +18,11 @@ package org.gwt.mosaic.ui.client;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.BaseListenerWrapper;
+import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -57,6 +62,27 @@ public abstract class ListenerWrapper<T> extends
 
     public void onDoubleClick(DoubleClickEvent event) {
       getListener().onDoubleClick(getSource(event));
+    }
+
+  }
+
+  static class WrapWindowPanelResize extends
+      BaseListenerWrapper<WindowResizeListener> implements ResizeHandler {
+    @Deprecated
+    public static void add(WindowPanel windowPanel, WindowResizeListener listener) {
+      windowPanel.addResizeHandler(new WrapWindowPanelResize(listener));
+    }
+    
+    public static void remove(HandlerManager manager, WindowResizeListener listener) {
+      baseRemove(manager, listener, ResizeEvent.getType());
+    }
+
+    protected WrapWindowPanelResize(WindowResizeListener listener) {
+      super(listener);
+    }
+
+    public void onResize(ResizeEvent event) {
+      getListener().onWindowResized(event.getWidth(), event.getHeight());
     }
 
   }
