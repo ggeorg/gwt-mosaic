@@ -79,7 +79,6 @@ import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel.AnimationType;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
@@ -98,6 +97,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
+@SuppressWarnings("deprecation")
 public class WindowPanel extends DecoratedLayoutPopupPanel implements
     HasCaption, CoreConstants {
 
@@ -250,13 +250,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     private int dropTargetClientWidth;
 
-    @SuppressWarnings("deprecation")
     public MoveDragController(AbsolutePanel boundaryPanel) {
       super(boundaryPanel);
 
       WindowPanel.this.addWindowCloseListener(new WindowCloseListener() {
         public void onWindowClosed() {
-          WindowPanel.this.makeNotDraggable();
           MoveDragController.this.context = null;
           MoveDragController.this.mouseDragHandler = null;
         }
@@ -343,15 +341,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     private int dropTargetClientWidth;
 
-    @SuppressWarnings("deprecation")
     public ResizeDragController(AbsolutePanel boundaryPanel) {
       super(boundaryPanel);
 
       WindowPanel.this.addWindowCloseListener(new WindowCloseListener() {
         public void onWindowClosed() {
-          if (isResizable()) {
-            WindowPanel.this.makeNotResizable();
-          }
           ResizeDragController.this.context = null;
           ResizeDragController.this.mouseDragHandler = null;
         }
@@ -678,6 +672,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private boolean resizable;
 
+  private AbsolutePanel boundaryPanel;
+
   private boolean modal;
 
   private boolean hideContentsOnMove = true;
@@ -741,12 +737,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     super(autoHide);
 
     this.resizable = resizable;
-
-    windowController = new WindowController(boundaryPanel);
-
-    if (isResizable()) {
-      makeResizable();
-    }
+    this.boundaryPanel = boundaryPanel;
 
     panel = new CaptionLayoutPanel(caption);
     panel.addCollapsedListener(new CollapsedListener() {
@@ -784,8 +775,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
         }
       }
     });
-
-    makeDraggable();
 
     super.setWidget(panel);
 
@@ -1075,6 +1064,17 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (msg != null && !Window.confirm(msg)) {
       return;
     }
+    
+    windowPanelOrder.remove(this);
+    
+    if (isResizable()) {
+      WindowPanel.this.makeNotResizable();
+    }
+    
+    WindowPanel.this.makeNotDraggable();
+
+    windowController = null;
+    
     super.hide(autoHide);
     if (modal && glassPanel != null) {
       glassPanel.removeFromParent();
@@ -1083,13 +1083,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (modal) {
       modal = false;
     }
-
-    // avoid memory leaks
-
-    setWindowOrder(-1);
-    windowPanelOrder.remove(this);
-
-    windowController = null;
   }
 
   private void makeNotDraggable() {
@@ -1161,8 +1154,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   private void makeResizable() {
-    final ResizeDragController c = windowController.getResizeDragController();
-
     if (nwResizeHandle == null) {
       nwResizeHandle = newResizeHandle(0, 0, NORTH_WEST);
     }
@@ -1555,6 +1546,15 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   @Override
   public void show() {
+    
+    windowController = new WindowController(boundaryPanel);
+
+    if (isResizable()) {
+      makeResizable();
+    }
+
+    makeDraggable();
+    
     if (modal) {
       if (glassPanel == null) {
         glassPanel = new GlassPanel(false);
