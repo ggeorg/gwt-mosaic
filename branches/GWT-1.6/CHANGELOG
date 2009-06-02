@@ -1,3 +1,32 @@
+Change log for v0.2.1
+================================
+
+ - (Bug Fix) Issue 51: WindowPanel leaks
+ - (Bug Fix) GWT Incubator IE column width bug in ScrollTable if colum count=1
+ 	patch: 
+ - (Upgrade) GWT Incubator r1670->r1673
+ - (Update) ListBox API update
+ - (Added) New ListBox demo (Rich ListBox)
+ 	demo: http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwRichListBox
+ - (Update) gwt-dnd-2.6.2 patched because of Issue 51
+ 	patch: 
+ - (Added) FilterProxyListModel & demo
+ 	demo: http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwFilterListBox
+ - (Update) New DefaultListModel implementation based on org.gwt.beansbinding.observablecollections.client.ObservableList
+ - (Update) New GWT Mosaic logo in Showcase
+ - (Update) more constructors for Viewport, LayoutComposite & LayoutPanel
+ - (Update) Hash code calculation changed for Dimension & Insets class & javadoc
+ - (Update) New TabLayoutPanel demo
+ 	demo: http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwDynamicTabLayoutPanel
+ - (Update) IE8 set to IE7 mode
+ 	diff: http://code.google.com/p/gwt-mosaic/source/diff?spec=svn860&r=860&format=side&path=/branches/GWT-1.6/war/Showcase.html
+ - (Bug Fix) TabLayoutPanel with no tabs
+ - (Update) ListBox styles
+ - (Update) Removed styles for even & odd rows in the PagingScrollTable demos
+ - (Update) Aegean theme update with Cameron's ScrollTable styles
+ - (Update) Aegean theme ported to IE6
+ - (Bug Fix) Issue 50: DefaultComboBoxModel setSelectedItem throws IndexOutOfBoundException
+
 Change log for v0.2.0
 ================================
 
