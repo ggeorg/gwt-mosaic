@@ -15,28 +15,26 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
-
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListenerWrapper;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A simple push button with image.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ImageButton extends Widget implements SourcesClickEvents,
+@SuppressWarnings("deprecation")
+public class ImageButton extends Composite implements SourcesClickEvents,
     HasClickHandlers {
 
   /**
@@ -44,12 +42,12 @@ public class ImageButton extends Widget implements SourcesClickEvents,
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
-  private ClickListenerCollection clickListeners;
+  private final SimplePanel panel = new SimplePanel();
 
   private Image image;
 
   public ImageButton() {
-    setElement(DOM.createDiv());
+    initWidget(panel);
     setStyleName(DEFAULT_STYLENAME);
   }
 
@@ -91,8 +89,6 @@ public class ImageButton extends Widget implements SourcesClickEvents,
 
   public void setImage(Image image) {
     this.image = image;
-    DOM.setEventListener(image.getElement(), this);
-    getElement().setInnerHTML(image.getElement().getString());
+    panel.setWidget(image);
   }
-
 }
