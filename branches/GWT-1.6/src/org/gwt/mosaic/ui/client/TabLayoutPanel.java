@@ -367,12 +367,14 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public Iterator<Widget> iterator() {
     return new Iterator<Widget>() {
+      final Iterator<Widget> iter = deck.iterator();
+      
       public boolean hasNext() {
-        return deck.iterator().hasNext();
+        return iter.hasNext();
       }
 
       public Widget next() {
-        return deck.iterator().next();
+        return iter.next();
       }
 
       public void remove() {
