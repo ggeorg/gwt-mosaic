@@ -15,25 +15,6 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import org.gwt.mosaic.core.client.CoreConstants;
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
-import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
-
-import com.allen_sauer.gwt.dnd.client.AbstractDragController;
-import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
-import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
-import com.allen_sauer.gwt.dnd.client.util.Location;
-import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -74,11 +55,31 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasCaption;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
+
+import com.allen_sauer.gwt.dnd.client.AbstractDragController;
+import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
+import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
+import com.allen_sauer.gwt.dnd.client.util.Location;
+import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
+
+import org.gwt.mosaic.core.client.CoreConstants;
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.util.DelayedRunnable;
+import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * A {@code WindowPanel} is a {@code DecoratedPopupPanel} that has a caption
@@ -126,7 +127,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     public ElementDragHandle(Element elem) {
       setElement(elem);
-      sinkEvents(Event.MOUSEEVENTS);
     }
 
     public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
@@ -557,11 +557,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   private CaptionAction captionAction = CaptionAction.COLLAPSE;
 
   /**
-   * The caption images to use.
-   */
-  public static final CaptionImages CAPTION_IMAGES = (CaptionImages) GWT.create(CaptionImages.class);
-
-  /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-WindowPanel";
@@ -699,6 +694,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   };
 
+  // (ggeorg) Issue 51 
+  private static final Image image = Caption.IMAGES.windowClose().createImage();
+
   /**
    * Creates a new empty window with default layout.
    */
@@ -728,7 +726,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     });
 
-    final ImageButton closeBtn = new ImageButton(CAPTION_IMAGES.windowClose());
+    // (ggeorg) Issue 51
+    final ImageButton closeBtn = new ImageButton(new Image(image.getUrl()));
     closeBtn.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
         hide();
@@ -930,19 +929,53 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   protected void doDetachChildren() {
     super.doDetachChildren();
 
-    // We need to detach the caption specifically because it is not part of the
-    // iterator of Widgets that the {@link SimplePanel} super class returns.
-    // This is similar to a {@link ComplexPanel}, but we do not want to expose
-    // the caption widget, as its just an internal implementation.
-    if (isResizable()) {
-      nResizeHandle.onDetach();
-      sResizeHandle.onDetach();
-      wResizeHandle.onDetach();
-      eResizeHandle.onDetach();
-      nwResizeHandle.onDetach();
-      neResizeHandle.onDetach();
-      swResizeHandle.onDetach();
-      seResizeHandle.onDetach();
+    if (nResizeHandle != null) {
+      if (nResizeHandle.isAttached()) {
+        nResizeHandle.onDetach();
+      }
+      nResizeHandle = null;
+    }
+    if (sResizeHandle != null) {
+      if (seResizeHandle.isAttached()) {
+        sResizeHandle.onDetach();
+      }
+      sResizeHandle = null;
+    }
+    if (wResizeHandle != null) {
+      if (wResizeHandle.isAttached()) {
+        wResizeHandle.onDetach();
+      }
+      wResizeHandle = null;
+    }
+    if (eResizeHandle != null) {
+      if (eResizeHandle.isAttached()) {
+        eResizeHandle.onDetach();
+      }
+      eResizeHandle = null;
+    }
+    if (nwResizeHandle != null) {
+      if (nwResizeHandle.isAttached()) {
+        nwResizeHandle.onDetach();
+      }
+      nwResizeHandle = null;
+    }
+    if (neResizeHandle != null) {
+      if (neResizeHandle.isAttached()) {
+        neResizeHandle.onDetach();
+      }
+      neResizeHandle = null;
+    }
+    if (swResizeHandle != null) {
+      if (swResizeHandle.isAttached()) {
+        swResizeHandle.onDetach();
+      }
+      swResizeHandle = null;
+    }
+    if (seResizeHandle != null) {
+      if (seResizeHandle.isAttached()) {
+        seResizeHandle.onDetach();
+      }
+      seResizeHandle = null;
     }
   }
 
@@ -1069,10 +1102,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     windowPanelOrder.remove(this);
 
     if (isResizable()) {
-      WindowPanel.this.makeNotResizable();
+      makeNotResizable();
     }
 
-    WindowPanel.this.makeNotDraggable();
+    makeNotDraggable();
 
     windowController = null;
 
