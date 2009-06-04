@@ -42,18 +42,13 @@ public class ImageButton extends Composite implements SourcesClickEvents,
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
-  private final SimplePanel panel = new SimplePanel();
-
-  private Image image;
-
   public ImageButton() {
-    initWidget(panel);
+    initWidget(new SimplePanel());
     setStyleName(DEFAULT_STYLENAME);
   }
 
   public ImageButton(AbstractImagePrototype image) {
-    this();
-    setImage(image.createImage());
+    this(image.createImage());
   }
 
   public ImageButton(Image image) {
@@ -79,7 +74,7 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   }
 
   public Image getImage() {
-    return image;
+    return (Image) ((SimplePanel) getWidget()).getWidget();
   }
 
   @Deprecated
@@ -88,7 +83,7 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   }
 
   public void setImage(Image image) {
-    this.image = image;
-    panel.setWidget(image);
+    ((SimplePanel) getWidget()).setWidget(image);
   }
+
 }
