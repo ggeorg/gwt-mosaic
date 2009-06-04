@@ -694,7 +694,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   };
 
-  // (ggeorg) Issue 51 
+  // (ggeorg) Issue 51
   private static final Image image = Caption.IMAGES.windowClose().createImage();
 
   /**
@@ -727,7 +727,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     });
 
     // (ggeorg) Issue 51
-    final ImageButton closeBtn = new ImageButton(new Image(image.getUrl()));
+    final ImageButton closeBtn = new ImageButton(new Image(image.getUrl(),
+        image.getOriginLeft(), image.getOriginTop(), image.getWidth(),
+        image.getHeight()));
     closeBtn.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
         hide();
