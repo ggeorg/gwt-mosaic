@@ -18,11 +18,18 @@ package org.gwt.mosaic.ui.client;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.AbstractWindowClosingEvent;
 import com.google.gwt.user.client.BaseListenerWrapper;
+import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -36,16 +43,8 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class ListenerWrapper<T> extends
     com.google.gwt.user.client.ui.ListenerWrapper<T> {
 
-  protected ListenerWrapper(T listener) {
-    super(listener);
-  }
-
   public static class WrappedDoubleClickListener extends
       ListenerWrapper<DoubleClickListener> implements DoubleClickHandler {
-
-    protected WrappedDoubleClickListener(DoubleClickListener listener) {
-      super(listener);
-    }
 
     @Deprecated
     public static WrappedDoubleClickListener add(HasDoubleClickHandlers source,
@@ -60,8 +59,44 @@ public abstract class ListenerWrapper<T> extends
       baseRemove(eventSource, listener, DoubleClickEvent.getType());
     }
 
+    protected WrappedDoubleClickListener(DoubleClickListener listener) {
+      super(listener);
+    }
+
     public void onDoubleClick(DoubleClickEvent event) {
       getListener().onDoubleClick(getSource(event));
+    }
+
+  }
+
+  static class WrapWindowPanelClose extends
+      BaseListenerWrapper<WindowCloseListener> implements ClosingHandler,
+      CloseHandler<PopupPanel> {
+    @Deprecated
+    public static void add(WindowPanel windowPanel, WindowCloseListener listener) {
+      WrapWindowPanelClose handler = new WrapWindowPanelClose(listener);
+      windowPanel.addWindowClosingHandler(handler);
+      windowPanel.addCloseHandler(handler);
+    }
+
+    public static void remove(HandlerManager manager,
+        WindowCloseListener listener) {
+      baseRemove(manager, listener, AbstractWindowClosingEvent.getType());
+    }
+
+    private WrapWindowPanelClose(WindowCloseListener listener) {
+      super(listener);
+    }
+
+    public void onClose(CloseEvent<PopupPanel> event) {
+      getListener().onWindowClosed();
+    }
+
+    public void onWindowClosing(ClosingEvent event) {
+      String message = getListener().onWindowClosing();
+      if (event.getMessage() != null) {
+        event.setMessage(message);
+      }
     }
 
   }
@@ -69,11 +104,13 @@ public abstract class ListenerWrapper<T> extends
   static class WrapWindowPanelResize extends
       BaseListenerWrapper<WindowResizeListener> implements ResizeHandler {
     @Deprecated
-    public static void add(WindowPanel windowPanel, WindowResizeListener listener) {
+    public static void add(WindowPanel windowPanel,
+        WindowResizeListener listener) {
       windowPanel.addResizeHandler(new WrapWindowPanelResize(listener));
     }
-    
-    public static void remove(HandlerManager manager, WindowResizeListener listener) {
+
+    public static void remove(HandlerManager manager,
+        WindowResizeListener listener) {
       baseRemove(manager, listener, ResizeEvent.getType());
     }
 
@@ -85,5 +122,9 @@ public abstract class ListenerWrapper<T> extends
       getListener().onWindowResized(event.getWidth(), event.getHeight());
     }
 
+  }
+
+  protected ListenerWrapper(T listener) {
+    super(listener);
   }
 }

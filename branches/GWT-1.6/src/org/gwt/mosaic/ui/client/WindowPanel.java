@@ -34,6 +34,7 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.logical.shared.HasResizeHandlers;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -453,11 +454,15 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   }
 
-  final class WindowHandlers extends HandlerManager implements
-      HasResizeHandlers, HasHandlers {
+  private class WindowHandlers extends HandlerManager implements
+      HasCloseHandlers<WindowPanel>, HasResizeHandlers, HasHandlers {
 
     public WindowHandlers() {
       super(null);
+    }
+
+    public HandlerRegistration addCloseHandler(CloseHandler<WindowPanel> handler) {
+      return addHandler(CloseEvent.getType(), handler);
     }
 
     public HandlerRegistration addResizeHandler(ResizeHandler handler) {
@@ -632,8 +637,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private static final int Z_INDEX_MODAL_OFFSET = 1000;
   private static Vector<WindowPanel> windowPanelOrder = new Vector<WindowPanel>();
-
-  private List<WindowCloseListener> closingListeners;
 
   private ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
 
@@ -821,14 +824,22 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    *          closing
    */
   public void addWindowCloseListener(WindowCloseListener listener) {
-    if (closingListeners == null) {
-      closingListeners = new ArrayList<WindowCloseListener>();
-    }
-    closingListeners.add(listener);
+    ListenerWrapper.WrapWindowPanelClose.add(this, listener);
   }
 
   /**
-   * Adds a {@link Window.ClosingEvent} handler.
+   * Adds a {@code CloseHandler} handler.
+   * 
+   * @param handler the handler
+   * @return the handler registration
+   */
+  @Override
+  public HandlerRegistration addCloseHandler(CloseHandler<PopupPanel> handler) {
+    return addHandler(handler, CloseEvent.getType());
+  }
+
+  /**
+   * Adds a {@code Window.ClosingEvent} handler.
    * 
    * @param handler the handler
    * @return the handler registration
@@ -982,27 +993,18 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   private void fireClosedImpl() {
-    if (closingListeners != null) {
-      for (WindowCloseListener listener : closingListeners) {
-        listener.onWindowClosed();
-      }
-    }
+    // if (closeHandlerInitialized) {
+    CloseEvent.fire(getHandlers(), null);
+    // }
   }
 
   private String fireClosingImpl() {
-    String ret = null;
-    if (closingListeners != null) {
-      for (WindowCloseListener listener : closingListeners) {
-        // If any listener wants to suppress the window closing event, then do
-        // so.
-        String msg = listener.onWindowClosing();
-        if (ret == null) {
-          ret = msg;
-        }
-      }
-    }
-
-    return ret;
+    // if (closeHandlerInitialized) {
+    ClosingEvent event = new ClosingEvent();
+    fireEvent(event);
+    return event.getMessage();
+    // }
+    // return null;
   }
 
   private void fireCollapsedChange(Widget sender) {
@@ -1322,10 +1324,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * 
    * @param listener the listener to be removed
    */
+  @Deprecated
   public void removeWindowCloseListener(WindowCloseListener listener) {
-    if (closingListeners != null) {
-      closingListeners.remove(listener);
-    }
+    ListenerWrapper.WrapWindowPanelClose.remove(handlers, listener);
   }
 
   /**
@@ -1333,6 +1334,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * 
    * @param listener the listener to be removed
    */
+  @Deprecated
   public void removeWindowResizeListener(WindowResizeListener listener) {
     ListenerWrapper.WrapWindowPanelResize.remove(getHandlers(), listener);
   }
@@ -1695,5 +1697,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     } else {
       setWindowOrder(curIndex);
     }
+  }
+
+  /**
+   * @return the boundary panel of this {@code WindowPanel}.
+   */
+  protected AbsolutePanel getBoundaryPanel() {
+    return boundaryPanel;
   }
 }
