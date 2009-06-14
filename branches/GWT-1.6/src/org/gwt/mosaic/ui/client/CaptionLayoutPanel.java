@@ -162,10 +162,10 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.getWidgetSpacing();
   }
 
-  void hideContents(boolean flag) {
-    body.setVisible(!flag);
+  void hideContent(boolean hideContent) {
+    body.setVisible(!hideContent);
     if (footer != null) {
-      footer.setVisible(!flag);
+      footer.setVisible(!hideContent);
     }
     invalidate();
   }
@@ -211,7 +211,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    hideContents(collapsed);
+    hideContent(collapsed);
     fireCollapsedChange(this);
   }
 

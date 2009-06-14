@@ -15,6 +15,20 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.gwt.mosaic.core.client.CoreConstants;
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.Rectangle;
+import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
+import org.gwt.mosaic.ui.client.DesktopPanel.DirectionConstant;
+import org.gwt.mosaic.ui.client.layout.FillLayout;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
+import com.allen_sauer.gwt.dnd.client.util.Location;
+import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -32,12 +46,18 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
+import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.logical.shared.HasResizeHandlers;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -63,30 +83,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
-import com.allen_sauer.gwt.dnd.client.AbstractDragController;
-import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
-import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
-import com.allen_sauer.gwt.dnd.client.util.Location;
-import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
-
-import org.gwt.mosaic.core.client.CoreConstants;
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
-import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 /**
  * A {@code WindowPanel} is a {@code DecoratedPopupPanel} that has a caption
  * area at the top and can be dragged and resized by the user. The default
- * layout for a {@code WindowPanel} is
- * {@link org.gwt.mosaic.ui.client.layout.FillLayout}.
+ * layout for a {@code WindowPanel} is {@link FillLayout}.
  * <p>
  * Example:
  * 
@@ -97,9 +97,11 @@ import java.util.Vector;
  * </pre>
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 @SuppressWarnings("deprecation")
 public class WindowPanel extends DecoratedLayoutPopupPanel implements
+    HasBeforeSelectionHandlers<WindowPanel>, HasSelectionHandlers<WindowPanel>,
     HasCaption, CoreConstants {
 
   /**
@@ -110,17 +112,37 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   /**
-   * WindowPanel direction constant, used in {@link ResizeDragController}.
+   * Represents how the window panel appears on the page.
    */
-  static final class DirectionConstant {
+  public enum WindowState {
+    MAXIMIZED, MINIMIZED, NORMAL
+  }
 
-    final int directionBits;
+  /**
+   * Event listener for a change in the window state.
+   */
+  public interface WindowStateListener {
+    void onWindowStateChange(WindowPanel sender, WindowState oldWindowState,
+        WindowState newWindowState);
+  }
 
-    final String directionLetters;
+  private class WindowHandlers extends HandlerManager implements
+      HasCloseHandlers<WindowPanel>, HasResizeHandlers, HasHandlers {
 
-    private DirectionConstant(int directionBits, String directionLetters) {
-      this.directionBits = directionBits;
-      this.directionLetters = directionLetters;
+    public WindowHandlers() {
+      super(null);
+    }
+
+    public HandlerRegistration addCloseHandler(CloseHandler<WindowPanel> handler) {
+      return addHandler(CloseEvent.getType(), handler);
+    }
+
+    public HandlerRegistration addResizeHandler(ResizeHandler handler) {
+      return addHandler(ResizeEvent.getType(), handler);
+    }
+
+    public HandlerManager getHandler() {
+      return this;
     }
   }
 
@@ -154,10 +176,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       return addDomHandler(handler, MouseWheelEvent.getType());
     }
 
-    protected void onAttach() {
-      super.onAttach();
-    }
-
     @Override
     public void onBrowserEvent(Event event) {
       super.onBrowserEvent(event);
@@ -170,493 +188,49 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     }
 
+    @Override
+    protected void onAttach() {
+      super.onAttach();
+    }
+
+    @Override
     protected void onDetach() {
       super.onDetach();
     }
   }
-
-  final class MoveDragController extends AbstractDragController {
-
-    private int boundaryOffsetX;
-
-    private int boundaryOffsetY;
-
-    private int dropTargetClientHeight;
-
-    private int dropTargetClientWidth;
-
-    public MoveDragController(AbsolutePanel boundaryPanel) {
-      super(boundaryPanel);
-
-      WindowPanel.this.addWindowCloseListener(new WindowCloseListener() {
-        public void onWindowClosed() {
-          MoveDragController.this.context = null;
-          MoveDragController.this.mouseDragHandler = null;
-        }
-
-        public String onWindowClosing() {
-          return null;
-        }
-      });
-    }
-
-    @Override
-    public void dragEnd() {
-      super.dragEnd();
-      if (!modal) {
-        glassPanel.removeFromParent();
-      }
-      if (hideContentsOnMove && !isCollapsed()) {
-        panel.hideContents(false);
-      }
-    }
-
-    public void dragMove() {
-      int desiredLeft = context.desiredDraggableX;
-      int desiredTop = context.desiredDraggableY;
-      if (getBehaviorConstrainedToBoundaryPanel()) {
-        desiredLeft = Math.max(boundaryOffsetX, Math.min(desiredLeft,
-            dropTargetClientWidth));
-        desiredTop = Math.max(boundaryOffsetY, Math.min(desiredTop,
-            dropTargetClientHeight));
-      }
-
-      DOMUtil.fastSetElementPosition(context.draggable.getElement(),
-          desiredLeft, desiredTop);
-    }
-
-    @Override
-    public void dragStart() {
-      if (!isActive()) {
-        toFront();
-      }
-      if (!isCollapsed()) {
-        panel.hideContents(hideContentsOnMove);
-      }
-      if (!modal) {
-        if (glassPanel == null) {
-          glassPanel = new GlassPanel(false);
-          glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-              DOM.getComputedStyleAttribute(WindowPanel.this.getElement(),
-                  "zIndex"));
-        }
-        getBoundaryPanel().add(glassPanel, 0, 0);
-      }
-      super.dragStart();
-
-      // one time calculation of boundary panel location for efficiency during
-      // dragging
-      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
-      boundaryOffsetX = widgetLocation.getLeft()
-          + DOMUtil.getBorderLeft(context.boundaryPanel.getElement());
-      boundaryOffsetY = widgetLocation.getTop()
-          + DOMUtil.getBorderTop(context.boundaryPanel.getElement());
-
-      dropTargetClientWidth = boundaryOffsetX
-          + DOMUtil.getClientWidth(context.boundaryPanel.getElement())
-          - context.draggable.getOffsetWidth();
-      dropTargetClientHeight = boundaryOffsetY
-          + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
-          - context.draggable.getOffsetHeight();
-    }
-  }
-
-  final class ResizeDragController extends AbstractDragController {
-
-    private static final int MIN_WIDGET_SIZE = 96;
-
-    private Map<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
-
-    private int boundaryOffsetX;
-
-    private int boundaryOffsetY;
-
-    private int dropTargetClientHeight;
-
-    private int dropTargetClientWidth;
-
-    public ResizeDragController(AbsolutePanel boundaryPanel) {
-      super(boundaryPanel);
-
-      WindowPanel.this.addWindowCloseListener(new WindowCloseListener() {
-        public void onWindowClosed() {
-          ResizeDragController.this.context = null;
-          ResizeDragController.this.mouseDragHandler = null;
-        }
-
-        public String onWindowClosing() {
-          return null;
-        }
-      });
-    }
-
-    @Override
-    public void dragEnd() {
-      super.dragEnd();
-      if (!modal) {
-        glassPanel.removeFromParent();
-      }
-      panel.hideContents(false);
-      setContentSize(contentWidth, contentHeight);
-      WindowPanel.this.delayedLayout(MIN_DELAY_MILLIS);
-    }
-
-    public void dragMove() {
-      int direction = ((ResizeDragController) context.dragController).getDirection(context.draggable).directionBits;
-      if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
-        final int delta = getBehaviorConstrainedToBoundaryPanel()
-            ? context.draggable.getAbsoluteTop()
-                - Math.max(context.desiredDraggableY, boundaryOffsetY)
-            : context.draggable.getAbsoluteTop() - context.desiredDraggableY;
-        if (delta != 0) {
-          int contentHeight = WindowPanel.this.getContentHeight();
-          int newHeight = Math.max(contentHeight + delta,
-              WindowPanel.this.panel.getHeader().getOffsetHeight());
-          if (newHeight != contentHeight) {
-            WindowPanel.this.moveBy(0, contentHeight - newHeight);
-          }
-          WindowPanel.this.setContentSize(WindowPanel.this.getContentWidth(),
-              newHeight);
-          WindowPanel.this.delayedLayout(DEFAULT_DELAY_MILLIS);
-        }
-      } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
-        final int delta = getBehaviorConstrainedToBoundaryPanel() ? Math.min(
-            context.desiredDraggableY, dropTargetClientHeight)
-            - context.draggable.getAbsoluteTop() : context.desiredDraggableY
-            - context.draggable.getAbsoluteTop();
-        if (delta != 0) {
-          int contentHeight = WindowPanel.this.getContentHeight();
-          int newHeight = Math.max(contentHeight + delta,
-              WindowPanel.this.panel.getHeader().getOffsetHeight());
-          WindowPanel.this.setContentSize(WindowPanel.this.getContentWidth(),
-              newHeight);
-          WindowPanel.this.delayedLayout(DEFAULT_DELAY_MILLIS);
-        }
-      }
-      if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
-        int delta = getBehaviorConstrainedToBoundaryPanel()
-            ? context.draggable.getAbsoluteLeft()
-                - Math.max(context.desiredDraggableX, boundaryOffsetX)
-            : context.draggable.getAbsoluteLeft() - context.desiredDraggableX;
-        if (delta != 0) {
-          int contentWidth = WindowPanel.this.getContentWidth();
-          int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
-          if (newWidth != contentWidth) {
-            WindowPanel.this.moveBy(contentWidth - newWidth, 0);
-          }
-          WindowPanel.this.setContentSize(newWidth,
-              WindowPanel.this.getContentHeight());
-          WindowPanel.this.delayedLayout(DEFAULT_DELAY_MILLIS);
-        }
-      } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
-        int delta = getBehaviorConstrainedToBoundaryPanel() ? Math.min(
-            context.desiredDraggableX, dropTargetClientWidth)
-            - context.draggable.getAbsoluteLeft() : context.desiredDraggableX
-            - context.draggable.getAbsoluteLeft();
-        if (delta != 0) {
-          int contentWidth = WindowPanel.this.getContentWidth();
-          int newWidth = Math.max(contentWidth + delta, MIN_WIDGET_SIZE);
-          WindowPanel.this.setContentSize(newWidth,
-              WindowPanel.this.getContentHeight());
-          WindowPanel.this.delayedLayout(DEFAULT_DELAY_MILLIS);
-        }
-      }
-
-    }
-
-    @Override
-    public void dragStart() {
-      panel.hideContents(true);
-      if (!modal) {
-        if (glassPanel == null) {
-          glassPanel = new GlassPanel(false);
-          glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-          final int zIndex = DOM.getIntStyleAttribute(
-              WindowPanel.this.getElement(), "zIndex");
-          DOM.setIntStyleAttribute(glassPanel.getElement(), "zIndex",
-              zIndex - 1);
-        }
-        getBoundaryPanel().add(glassPanel, 0, 0);
-      }
-      super.dragStart();
-
-      // one timecalculation of boundary panel location for efficiency during
-      // dragging
-      Location widgetLocation = new WidgetLocation(context.boundaryPanel, null);
-      boundaryOffsetX = widgetLocation.getLeft()
-          + DOMUtil.getBorderLeft(context.boundaryPanel.getElement());
-      boundaryOffsetY = widgetLocation.getTop()
-          + DOMUtil.getBorderTop(context.boundaryPanel.getElement());
-
-      dropTargetClientWidth = boundaryOffsetX
-          + DOMUtil.getClientWidth(context.boundaryPanel.getElement())
-          - context.draggable.getOffsetWidth();
-      dropTargetClientHeight = boundaryOffsetY
-          + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
-          - context.draggable.getOffsetHeight();
-    }
-
-    private DirectionConstant getDirection(Widget draggable) {
-      return directionMap.get(draggable);
-    }
-
-    public void makeDraggable(Widget widget,
-        WindowPanel.DirectionConstant direction) {
-      super.makeDraggable(widget);
-      directionMap.put(widget, direction);
-    }
-
-    protected BoundaryDropController newBoundaryDropController(
-        AbsolutePanel boundaryPanel, boolean allowDroppingOnBoundaryPanel) {
-      if (allowDroppingOnBoundaryPanel) {
-        throw new IllegalArgumentException();
-      }
-      return new BoundaryDropController(boundaryPanel, false);
-    }
-
-  }
-
-  final class WindowController {
-
-    private final AbsolutePanel boundaryPanel;
-
-    private MoveDragController moveDragController;
-
-    private ResizeDragController resizeDragController;
-
-    WindowController(AbsolutePanel boundaryPanel) {
-      this.boundaryPanel = boundaryPanel;
-
-      moveDragController = new MoveDragController(boundaryPanel);
-      moveDragController.setBehaviorConstrainedToBoundaryPanel(true);
-      // moveDragController.setBehaviorDragProxy(true);
-      moveDragController.setBehaviorMultipleSelection(false);
-      moveDragController.setBehaviorDragStartSensitivity(3);
-
-      resizeDragController = new ResizeDragController(boundaryPanel);
-      resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
-      resizeDragController.setBehaviorMultipleSelection(false);
-      resizeDragController.setBehaviorDragStartSensitivity(3);
-    }
-
-    AbsolutePanel getBoundaryPanel() {
-      return boundaryPanel;
-    }
-
-    public MoveDragController getMoveDragController() {
-      return moveDragController;
-    }
-
-    public ResizeDragController getResizeDragController() {
-      return resizeDragController;
-    }
-
-  }
-
-  private class WindowHandlers extends HandlerManager implements
-      HasCloseHandlers<WindowPanel>, HasResizeHandlers, HasHandlers {
-
-    public WindowHandlers() {
-      super(null);
-    }
-
-    public HandlerRegistration addCloseHandler(CloseHandler<WindowPanel> handler) {
-      return addHandler(CloseEvent.getType(), handler);
-    }
-
-    public HandlerRegistration addResizeHandler(ResizeHandler handler) {
-      return addHandler(ResizeEvent.getType(), handler);
-    }
-
-    public HandlerManager getHandler() {
-      return this;
-    }
-  }
-
-  private final class WindowResizeHandlerImpl implements ResizeHandler {
-
-    private HandlerRegistration handlerRegistration;
-
-    private final Timer resizeTimer = new Timer() {
-      @Override
-      public void run() {
-        resizeToBoundarySize();
-        layout();
-      }
-    };
-
-    public void addResizeHandler() {
-      handlerRegistration = Window.addResizeHandler(windowResizeHandler);
-    }
-
-    public void onResize(ResizeEvent event) {
-      if (isAttached()) {
-        resizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
-      }
-    }
-
-    public void removeResizeHandler() {
-      if (handlerRegistration != null) {
-        handlerRegistration.removeHandler();
-        handlerRegistration = null;
-      }
-    }
-  }
-
-  /**
-   * Represents how the window panel appears on the page.
-   */
-  public enum WindowState {
-    NORMAL, MINIMIZED, MAXIMIZED
-  }
-
-  /**
-   * Event listener for a change in the window state.
-   */
-  public interface WindowStateListener {
-    void onWindowStateChange(WindowPanel sender);
-  }
-
-  @Deprecated
-  static class WrappedWindowCloseListener extends
-      ListenerWrapper<WindowCloseListener> implements Window.ClosingHandler,
-      CloseHandler<Window> {
-
-    public static void add(WindowPanel source, WindowCloseListener listener) {
-      WrappedWindowCloseListener handler = new WrappedWindowCloseListener(
-          listener);
-      source.addWindowClosingHandler(handler);
-      // TODO source.addCloseHandler(handler);
-    }
-
-    public static void remove(Widget eventSource, WindowCloseListener listener) {
-      baseRemove(eventSource, listener, AbstractWindowClosingEvent.getType(),
-          CloseEvent.getType());
-    }
-
-    protected WrappedWindowCloseListener(WindowCloseListener listener) {
-      super(listener);
-    }
-
-    public void onClose(CloseEvent<Window> event) {
-      getListener().onWindowClosed();
-    }
-
-    public void onWindowClosing(ClosingEvent event) {
-      String message = getListener().onWindowClosing();
-      if (event.getMessage() == null) {
-        event.setMessage(message);
-      }
-    }
-
-  }
-
-  private WindowHandlers handlers;
-
-  private WindowResizeHandlerImpl windowResizeHandler = new WindowResizeHandlerImpl();
-
-  /**
-   * Double click caption action.
-   */
-  private CaptionAction captionAction = CaptionAction.COLLAPSE;
 
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-WindowPanel";
 
-  /**
-   * Specifies that resizing occur at the east edge.
-   */
-  static final int DIRECTION_EAST = 0x0001;
+  // (ggeorg) Issue 51
+  private static final Image image = Caption.IMAGES.windowClose().createImage();
 
-  /**
-   * Specifies that resizing occur at the both edge.
-   */
-  static final int DIRECTION_NORTH = 0x0002;
-
-  /**
-   * Specifies that resizing occur at the south edge.
-   */
-  static final int DIRECTION_SOUTH = 0x0004;
-
-  /**
-   * Specifies that resizing occur at the west edge.
-   */
-  static final int DIRECTION_WEST = 0x0008;
-
-  /**
-   * Specifies that resizing occur at the east edge.
-   */
-  static final DirectionConstant EAST = new WindowPanel.DirectionConstant(
-      DIRECTION_EAST, "e");
-
-  /**
-   * Specifies that resizing occur at the both edge.
-   */
-  static final DirectionConstant NORTH = new DirectionConstant(DIRECTION_NORTH,
-      "n");
-
-  /**
-   * Specifies that resizing occur at the north-east edge.
-   */
-  static final DirectionConstant NORTH_EAST = new DirectionConstant(
-      DIRECTION_NORTH | DIRECTION_EAST, "ne");
-
-  /**
-   * Specifies that resizing occur at the north-west edge.
-   */
-  static final DirectionConstant NORTH_WEST = new DirectionConstant(
-      DIRECTION_NORTH | DIRECTION_WEST, "nw");
-
-  /**
-   * Specifies that resizing occur at the south edge.
-   */
-  static final DirectionConstant SOUTH = new DirectionConstant(DIRECTION_SOUTH,
-      "s");
-
-  /**
-   * Specifies that resizing occur at the south-east edge.
-   */
-  static final DirectionConstant SOUTH_EAST = new DirectionConstant(
-      DIRECTION_SOUTH | DIRECTION_EAST, "se");
-
-  /**
-   * Specifies that resizing occur at the south-west edge.
-   */
-  static final DirectionConstant SOUTH_WEST = new DirectionConstant(
-      DIRECTION_SOUTH | DIRECTION_WEST, "sw");
-
-  /**
-   * Specifies that resizing occur at the west edge.
-   */
-  static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST,
-      "w");
   private static final int Z_INDEX_BASE = 10000;
 
   private static final int Z_INDEX_MODAL_OFFSET = 1000;
-  private static Vector<WindowPanel> windowPanelOrder = new Vector<WindowPanel>();
-
-  private ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
-
-  private ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
-
-  private ElementDragHandle wResizeHandle, eResizeHandle;
-
-  private int contentWidth, contentHeight;
-
-  private WindowController windowController;
-
-  private CaptionLayoutPanel panel;
-
-  private boolean resizable;
 
   private AbsolutePanel boundaryPanel;
 
-  private boolean modal;
+  /**
+   * Double click caption action.
+   */
+  private CaptionAction captionAction = CaptionAction.COLLAPSE;
+
+  private CollapsedListenerCollection collapsedListeners;
+
+  private int contentWidth, contentHeight;
+
+  private boolean fireWindowCloseEvents = true;
+
+  GlassPanel glassPanel;
+
+  private WindowHandlers handlers;
 
   private boolean hideContentsOnMove = true;
+
+  private boolean isActive = false;
 
   private final Timer layoutTimer = new Timer() {
     public void run() {
@@ -665,46 +239,52 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   };
 
-  private GlassPanel glassPanel;
-
-  private WindowState windowState = WindowState.NORMAL;
-
-  private int restoredLeft;
-
-  private int restoredTop;
-
-  private int restoredWidth;
-
-  private int restoredHeight;
-
-  private WindowState restoredState;
-
-  private List<WindowStateListener> windowStateListeners;
-
-  private CollapsedListenerCollection collapsedListeners;
-
-  private boolean fireWindowCloseEvents = true;
-
   final private Timer maximizeTimer = new Timer() {
     public void run() {
-      maximize(WindowState.NORMAL);
+      setWindowState(WindowState.MAXIMIZED);
     }
   };
 
   final private Timer minimizeTimer = new Timer() {
     public void run() {
-      minimize(WindowState.NORMAL);
+      setWindowState(WindowState.MINIMIZED);
     }
   };
 
-  // (ggeorg) Issue 51
-  private static final Image image = Caption.IMAGES.windowClose().createImage();
+  private boolean modal;
+
+  private Rectangle normalBounds = new Rectangle();
+
+  private WindowState normalWindowState;
+
+  private CaptionLayoutPanel panel;
+
+  private boolean resizable;
+
+  private WindowState windowState = WindowState.NORMAL;
+
+  private List<WindowStateListener> windowStateListeners;
+
+  ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
+
+  ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
+
+  ElementDragHandle wResizeHandle, eResizeHandle;
 
   /**
    * Creates a new empty window with default layout.
    */
   public WindowPanel() {
     this(null);
+  }
+
+  /**
+   * Creates a new empty window with the specified caption and default layout.
+   * 
+   * @param caption the caption of the window
+   */
+  public WindowPanel(String caption) {
+    this(caption, true, false);
   }
 
   /**
@@ -720,7 +300,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     super(autoHide);
 
     this.resizable = resizable;
+
+    // FIXME
     this.boundaryPanel = boundaryPanel;
+    DesktopPanel desktopPanel = DesktopPanel.get(boundaryPanel == null
+        ? RootPanel.get() : boundaryPanel);
+    desktopPanel.add(this);
 
     panel = new CaptionLayoutPanel(caption);
     panel.addCollapsedListener(new CollapsedListener() {
@@ -768,15 +353,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   /**
-   * Creates a new empty window with the specified caption and default layout.
-   * 
-   * @param caption the caption of the window
-   */
-  public WindowPanel(String caption) {
-    this(caption, true, false);
-  }
-
-  /**
    * Creates a new empty window with default layout.
    * 
    * @param caption the caption of the window
@@ -787,24 +363,36 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     this(RootPanel.get(), caption, resizable, autoHide);
   }
 
+  /**
+   * Adds a {@code BeforeSelectionHandler} handler.
+   * <p>
+   * This handler is invoked before a {@code WindowPanel} is selected
+   * (activated).
+   * 
+   * @param handler the handler
+   * @return the handler registration
+   */
+  public HandlerRegistration addBeforeSelectionHandler(
+      BeforeSelectionHandler<WindowPanel> handler) {
+    return addHandler(handler, BeforeSelectionEvent.getType());
+  }
+
+  /**
+   * Adds a {@code CloseHandler} handler.
+   * 
+   * @param handler the handler
+   * @return the handler registration
+   */
+  @Override
+  public HandlerRegistration addCloseHandler(CloseHandler<PopupPanel> handler) {
+    return addHandler(handler, CloseEvent.getType());
+  }
+
   public void addCollapsedListener(CollapsedListener listener) {
     if (collapsedListeners == null) {
       collapsedListeners = new CollapsedListenerCollection();
     }
     collapsedListeners.add(listener);
-  }
-
-  /**
-   * Adds this handler to the window panel.
-   * 
-   * @param <H> the type of handler to add
-   * @param type the event type
-   * @param handler the handler
-   * @return {@link HandlerRegistration} used to remove the handler
-   */
-  private <H extends EventHandler> HandlerRegistration addHandler(
-      GwtEvent.Type<H> type, final H handler) {
-    return getHandlers().addHandler(type, handler);
   }
 
   /**
@@ -818,24 +406,28 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   /**
+   * Adds a {@code SelectionHandler} handler.
+   * 
+   * <p>
+   * This handler is invoked when a {@code WindowPanel} is selected (activated).
+   * 
+   * @param handler the handler
+   * @return the handler registration
+   */
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<WindowPanel> handler) {
+    return addHandler(handler, SelectionEvent.getType());
+  }
+
+  /**
    * Adds a listener to receive window closing events.
    * 
    * @param listener the listener to be informed when the window panel is
    *          closing
    */
+  @Deprecated
   public void addWindowCloseListener(WindowCloseListener listener) {
     ListenerWrapper.WrapWindowPanelClose.add(this, listener);
-  }
-
-  /**
-   * Adds a {@code CloseHandler} handler.
-   * 
-   * @param handler the handler
-   * @return the handler registration
-   */
-  @Override
-  public HandlerRegistration addCloseHandler(CloseHandler<PopupPanel> handler) {
-    return addHandler(handler, CloseEvent.getType());
   }
 
   /**
@@ -868,16 +460,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   /**
-   * If this {@code WindowPanel} is visible, brings this {@code WindowPanel} to
-   * the front.
-   * 
-   * @deprecated Replaced by {@link #toFront()}.
-   */
-  public void bringToFront() {
-    toFront();
-  }
-
-  /**
    * Centers the {@code WindowPanel} in the browser window and shows it (
    * centers the popup in the browser window by adding it to the {@code
    * RootPanel}). The {@link #layout()} is called after the {@code WindowPanel}
@@ -898,17 +480,542 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  /**
-   * Close the window panel.
-   * 
-   * @deprecated Replaced by {@link #hide()}
-   */
-  public void close() {
-    super.hide();
+  public void delayedLayout(int delayMillis) {
+    layoutTimer.schedule(delayMillis);
   }
 
-  protected void delayedLayout(int delayMillis) {
-    layoutTimer.schedule(delayMillis);
+  /**
+   * Gets the caption of the {@code WindowPanel}. The caption is displayed in
+   * the {@code WindowPanel}'s frame.
+   * 
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasCaption#getCaption()
+   * @see #setCaption(String)
+   */
+  public String getCaption() {
+    return panel.getHeader().getText();
+  }
+
+  public CaptionAction getCaptionAction() {
+    return captionAction;
+  }
+
+  public int getContentHeight() {
+    return contentHeight;
+  }
+
+  public Dimension getContentSize() {
+    return new Dimension(contentWidth, contentHeight);
+  }
+
+  public int getContentWidth() {
+    return contentWidth;
+  }
+
+  /**
+   * Convenience method to get the {@link DesktopPanel} this {@code WindowPanel}
+   * belongs to.
+   * 
+   * @return the the {@link DesktopPanel} this {@code WindowPanel} belongs to
+   */
+  public DesktopPanel getDesktopPanel() {
+    return DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
+        : boundaryPanel);
+  }
+
+  public Widget getFooter() {
+    return panel.getFooter();
+  }
+
+  public Caption getHeader() {
+    return panel.getHeader();
+  }
+
+  public Rectangle getNormalBounds() {
+    return normalBounds;
+  }
+
+  public WindowState getNormalWindowState() {
+    return normalWindowState;
+  }
+
+  @Override
+  public Widget getWidget() {
+    if (panel.getWidgetCount() > 0) {
+      return panel.getWidget(0);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Gets the flag that determines the state of the window panel. Default is
+   * 'NORMAL' (ie not MINIMIZED or MAXIMIZED).
+   */
+  public WindowState getWindowState() {
+    return windowState;
+  }
+
+  /**
+   * Hides the {@code WindowPanel} (hides the popup by removing it from the
+   * {@code RootPanel}). This has no effect if it is not currently visible.
+   * 
+   * @param autoHide the value that will be passed to
+   *          {@link PopupListener#onPopupClosed(PopupPanel, boolean)} when the
+   *          popup is closed
+   * 
+   * @see #hide()
+   */
+  @Override
+  public void hide(boolean autoHide) {
+    if (!fireWindowCloseEvents) {
+      super.hide(autoHide);
+      return;
+    }
+    final String msg = fireClosingImpl();
+    if (msg != null && !Window.confirm(msg)) {
+      return;
+    }
+
+    if (isResizable()) {
+      getDesktopPanel().makeNotResizable(this);
+    }
+
+    getDesktopPanel().makeNotDraggable(this);
+
+    super.hide(autoHide);
+    if (modal && glassPanel != null) {
+      glassPanel.removeFromParent();
+    }
+    fireClosedImpl();
+    if (modal) {
+      modal = false;
+    }
+  }
+
+  /**
+   * Returns whether the {@code WindowPanel} is the currently "selected" or
+   * active {@code WindowPanel}.
+   * 
+   * @return {@code true} if this {@code WindowPanel} is currently selected
+   *         (active)
+   * @see #toFront()
+   * @see #toBack()
+   */
+  public boolean isActive() {
+    return isActive = (isActive && getDesktopPanel().isActive(this));
+  }
+
+  public boolean isCollapsed() {
+    return panel.isCollapsed();
+  }
+
+  public boolean isHideContentsOnMove() {
+    return hideContentsOnMove;
+  }
+
+  /**
+   * Indicates whether the {@code WindowPanel} is modal.
+   * 
+   * @return {@code true} if this {@code WindowPanel} is modal; {@code false}
+   *         otherwise
+   * 
+   * @see #showModal()
+   */
+  public boolean isModal() {
+    return modal;
+  }
+
+  /**
+   * Indicates whether this {@code WindowPanel} is resizable by the user. By
+   * default, all {@code WindowPanels} are initially resizable.
+   * 
+   * @return {@code true} if the user can resize this {@code WindowPanel};
+   *         {@code false} otherwise.
+   * @see #setResizable(boolean)
+   */
+  public boolean isResizable() {
+    return resizable;
+  }
+
+  public void moveBy(int right, int down) {
+    AbsolutePanel parent = (AbsolutePanel) getParent();
+    Location location = new WidgetLocation(this, parent);
+    int left = location.getLeft() + right;
+    int top = location.getTop() + down;
+    parent.setWidgetPosition(this, left, top);
+  }
+
+  public void removeCollapsedListener(CollapsedListener listener) {
+    if (collapsedListeners != null) {
+      collapsedListeners.remove(listener);
+    }
+  }
+
+  /**
+   * Removes a window closing listener.
+   * 
+   * @param listener the listener to be removed
+   */
+  @Deprecated
+  public void removeWindowCloseListener(WindowCloseListener listener) {
+    ListenerWrapper.WrapWindowPanelClose.remove(handlers, listener);
+  }
+
+  /**
+   * Removes a window panel resize listener.
+   * 
+   * @param listener the listener to be removed
+   */
+  @Deprecated
+  public void removeWindowResizeListener(WindowResizeListener listener) {
+    ListenerWrapper.WrapWindowPanelResize.remove(getHandlers(), listener);
+  }
+
+  public void removeWindowStateListener(WindowStateListener listener) {
+    if (windowStateListeners != null) {
+      windowStateListeners.remove(listener);
+    }
+  }
+
+  /**
+   * Sets the caption for this {@code WindowPanel} to the specified string.
+   * 
+   * {@inheritDoc}
+   * 
+   * @param text the caption to be displayed in the {@code WindowPanel}'s
+   *          border. A {@code null} value is treated as an empty string, "".
+   * 
+   * @see com.google.gwt.user.client.ui.HasCaption#setCaption(java.lang.String)
+   * @see #getCaption()
+   */
+  public void setCaption(final String text) {
+    panel.getHeader().setText(text);
+  }
+
+  public void setCaptionAction(CaptionAction captionAction) {
+    this.captionAction = captionAction;
+  }
+
+  public void setCollapsed(boolean collapsed) {
+    if (collapsed == isCollapsed()) {
+      return;
+    }
+
+    if (!isAttached()) {
+      panel.setCollapsed(true);
+      return;
+    }
+
+    if (collapsed) {
+      if (getWindowState() != WindowState.MAXIMIZED) {
+        final Dimension box = DOM.getClientSize(getElement());
+        final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
+        final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
+        normalBounds.width = box.width - (size2.width - size3.width);
+        normalBounds.height = box.height - (size2.height - size3.height);
+      }
+      panel.setCollapsed(true);
+
+      final int width = getLayoutPanel().getOffsetWidth();
+      setContentSize(width, getLayoutPanel().getPreferredSize().height);
+      if (isResizable() && windowState != WindowState.MAXIMIZED) {
+        getDesktopPanel().makeNotResizable(this);
+      }
+    } else {
+      panel.setCollapsed(false);
+
+      if (getWindowState() != WindowState.MAXIMIZED) {
+        setContentSize(normalBounds.width, normalBounds.height);
+      } else {
+        WidgetHelper.setSize(this,
+            DOM.getClientSize(getDesktopPanel().getElement()));
+      }
+
+      if (isResizable() && windowState != WindowState.MAXIMIZED) {
+        getDesktopPanel().makeResizable(this);
+      }
+    }
+
+    layout();
+  }
+
+  @Override
+  public void setContentSize(Dimension d) {
+    if (isResizable()) {
+      contentWidth = d.width;
+      contentHeight = d.height;
+    }
+    super.setContentSize(d);
+  }
+
+  public void setFooter(Widget footer) {
+    if (getFooter() != null) {
+      getFooter().removeStyleName("Footer");
+    }
+    panel.setFooter(footer);
+    if (getFooter() != null) {
+      getFooter().addStyleName("Footer");
+    }
+  }
+
+  public void setHideContentsOnMove(boolean hideContents) {
+    this.hideContentsOnMove = hideContents;
+  }
+
+  /**
+   * Sets the normal bounds for this {@code WindowPanel}, the bounds that this
+   * {@code WindowPanel} would be restored to from its maximized state.
+   * <p>
+   * This method is intended for use only by desktop managers.
+   * 
+   * @param r the bounds that this internal frame should be restored to
+   */
+  public void setNormalBounds(Rectangle r) {
+    assert (r != null);
+    normalBounds = r;
+  }
+
+  public void setNormalWindowState(WindowState windowState) {
+    normalWindowState = windowState;
+  }
+
+  @Override
+  public void setPopupPosition(int left, int top) {
+    try {
+      final Widget boundaryPanel = getDesktopPanel();
+      int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
+      left += borders[3];
+      top += borders[0];
+      super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
+          + boundaryPanel.getAbsoluteTop());
+    } catch (Exception ex) {
+      Window.alert(ex.getMessage());
+    }
+  }
+
+  /**
+   * Sets whether this {@code WindowPanel} is resizable by the user.
+   * 
+   * @param resizable {@code true} if this {@code WindowPanel} is resizable;
+   *          {@code false} otherwise.
+   * @see #isResizable()
+   */
+  public void setResizable(boolean resizable) {
+    if (this.resizable == resizable) {
+      return;
+    }
+    this.resizable = resizable;
+    if (isShowing()) {
+      if (resizable) {
+        getDesktopPanel().makeResizable(this);
+      } else {
+        getDesktopPanel().makeNotResizable(this);
+      }
+    }
+  }
+
+  @Override
+  public void setWidget(Widget w) {
+    panel.clear();
+    panel.add(w);
+  }
+
+  /**
+   * Sets the flag to determine the state of the window panel. Default is
+   * 'NORMAL' (ie not MINIMIZED or MAXIMIZED).
+   * 
+   * @param windowState the flag to determine the state of the window panel
+   */
+  public void setWindowState(WindowState windowState) {
+    if (this.windowState != windowState) {
+      WindowState oldWindowState = this.windowState;
+      this.windowState = windowState;
+
+      if (isAttached()) {
+        if (oldWindowState == WindowState.MINIMIZED) {
+          this.windowState = normalWindowState;
+        }
+
+        // if (this.windowState == WindowState.MAXIMIZED) {
+        // windowResizeHandler.addResizeHandler();
+        // } else {
+        // windowResizeHandler.removeResizeHandler();
+        // }
+      }
+
+      fireWindowStateChangeImpl(oldWindowState, windowState);
+    }
+  }
+
+  /**
+   * Makes the {@code WindowPanel} visible (shows the popup by adding it to the
+   * {@code RootPanel}). The {@link #layout()} is called after the {@code
+   * WindowPanel} is attached (in {@link #onLoad()}). If the {@code WindowPanel}
+   * is already attached, this will bring the {@code WindowPanel} to the front.
+   * If the {@code WindowPanel} is set to not visible by calling
+   * {@link #setVisible(boolean)} before {@link #show()} the {@code WindowPanel}
+   * will be attached but not visible.
+   * 
+   * @see #center()
+   * @see #pack()
+   * @see #setPopupPositionAndShow(com.google.gwt.user.client.ui.PopupPanel.PositionCallback)
+   * @see #showModal()
+   */
+  @Override
+  public void show() {
+
+    if (isResizable()) {
+      getDesktopPanel().makeResizable(this);
+    }
+
+    getDesktopPanel().makeDraggable(this);
+
+    if (modal) {
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-default");
+        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
+            DOM.getComputedStyleAttribute(WindowPanel.this.getElement(),
+                "zIndex"));
+      }
+      getDesktopPanel().add(glassPanel);
+
+//      new DelayedRunnable() {
+//        @Override
+//        public void run() {
+//          WindowPanel.super.show();
+//        }
+//      };
+    }
+
+    super.show();
+
+    toFront();
+  }
+
+  public void showModal() {
+    showModal(true);
+  }
+
+  /**
+   * Centers the {@code WindowPanel} in the browser window and shows it modal
+   * (centers the popup in the browser window by adding it to the {@code
+   * RootPanel} and displays a {@code
+   * com.google.gwt.widgetideas.client.GlassPanel} under it). The
+   * {@link #layout()} is called after the {@code WindowPanel} is attached (in
+   * {@link #onLoad()}). If the {@code WindowPanel} is already attached, then
+   * the {@code WindowPanel} is centered. If the {@code WindowPanel} is set to
+   * not visible by calling {@link #setVisible(boolean)} before {@link #show()}
+   * the {@code WindowPanel} will be attached and visible (not like
+   * {@link #show()}).
+   * 
+   * @see #center()
+   * @see #isModal()
+   */
+  public void showModal(boolean doPack) {
+    modal = true;
+    if (doPack) {
+      pack();
+    }
+    // DeferredCommand.addCommand(new Command() {
+    // public void execute() {
+    center();
+    toFront();
+    // }
+    // });
+  }
+
+  /**
+   * If this {@code WindowPanel} is visible, sends this {@code WindowPanel} to
+   * the back.
+   * <p>
+   * Places this {@code WindowPanel} at the bottom of the stacking order and
+   * shows it behind any other {@code WindowPanels}.
+   * 
+   * @see #toFront()
+   */
+  public void toBack() {
+    getDesktopPanel().toBack(this);
+  }
+
+  /**
+   * If this {@code WindowPanel} is visible, brings this {@code WindowPanel} to
+   * the front.
+   * <p>
+   * Places this {@code WindowPanel} at the top of the stacking order and shows
+   * it in front of any other {@code WindowPanels}.
+   * 
+   * @see #toBack()
+   */
+  public void toFront() {
+    if (isActive()) {
+      return;
+    }
+
+    BeforeSelectionEvent<WindowPanel> event = BeforeSelectionEvent.fire(this,
+        this);
+    if (event != null && event.isCanceled()) {
+      return;
+    }
+
+    isActive = true;
+    SelectionEvent.fire(this, this);
+  }
+
+  /**
+   * Adds this handler to the window panel.
+   * 
+   * @param <H> the type of handler to add
+   * @param type the event type
+   * @param handler the handler
+   * @return {@link HandlerRegistration} used to remove the handler
+   */
+  private <H extends EventHandler> HandlerRegistration addHandler(
+      GwtEvent.Type<H> type, final H handler) {
+    return getHandlers().addHandler(type, handler);
+  }
+
+  private void fireClosedImpl() {
+    // if (closeHandlerInitialized) {
+    CloseEvent.fire(getHandlers(), null);
+    // }
+  }
+
+  private String fireClosingImpl() {
+    // if (closeHandlerInitialized) {
+    ClosingEvent event = new ClosingEvent();
+    fireEvent(event);
+    return event.getMessage();
+    // }
+    // return null;
+  }
+
+  private void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
+  }
+
+  private void fireResizedImpl() {
+    ResizeEvent.fire(getHandlers(), contentWidth, contentHeight);
+  }
+
+  private void fireWindowStateChangeImpl(WindowState oldWindowState,
+      WindowState newWindowState) {
+    if (windowStateListeners != null) {
+      for (WindowStateListener listener : windowStateListeners) {
+        listener.onWindowStateChange(this, oldWindowState, newWindowState);
+      }
+    }
+  }
+
+  private WindowHandlers getHandlers() {
+    if (handlers == null) {
+      handlers = new WindowHandlers();
+    }
+    return handlers;
   }
 
   /**
@@ -992,310 +1099,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  private void fireClosedImpl() {
-    // if (closeHandlerInitialized) {
-    CloseEvent.fire(getHandlers(), null);
-    // }
-  }
-
-  private String fireClosingImpl() {
-    // if (closeHandlerInitialized) {
-    ClosingEvent event = new ClosingEvent();
-    fireEvent(event);
-    return event.getMessage();
-    // }
-    // return null;
-  }
-
-  private void fireCollapsedChange(Widget sender) {
-    if (collapsedListeners != null) {
-      collapsedListeners.fireCollapsedChange(sender);
-    }
-  }
-
-  private void fireResizedImpl() {
-    ResizeEvent.fire(getHandlers(), contentWidth, contentHeight);
-  }
-
-  private void fireWindowStateChangeImpl() {
-    if (windowStateListeners != null) {
-      for (WindowStateListener listener : windowStateListeners) {
-        listener.onWindowStateChange(this);
-      }
-    }
-  }
-
   /**
-   * Gets the caption of the {@code WindowPanel}. The caption is displayed in
-   * the {@code WindowPanel}'s frame.
-   * 
-   * {@inheritDoc}
-   * 
-   * @see com.google.gwt.user.client.ui.HasCaption#getCaption()
-   * @see #setCaption(String)
+   * @return the boundary panel of this {@code WindowPanel}.
    */
-  public String getCaption() {
-    return panel.getHeader().getText();
-  }
-
-  public CaptionAction getCaptionAction() {
-    return captionAction;
-  }
-
-  public int getContentHeight() {
-    return contentHeight;
-  }
-
-  public int getContentWidth() {
-    return contentWidth;
-  }
-
-  public Widget getFooter() {
-    return panel.getFooter();
-  }
-
-  private WindowHandlers getHandlers() {
-    if (handlers == null) {
-      handlers = new WindowHandlers();
-    }
-    return handlers;
-  }
-
-  public Caption getHeader() {
-    return panel.getHeader();
-  }
-
-  @Override
-  public Widget getWidget() {
-    if (panel.getWidgetCount() > 0) {
-      return panel.getWidget(0);
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Gets the flag that determines the state of the window panel. Default is
-   * 'NORMAL' (ie not MINIMIZED or MAXIMIZED).
-   */
-  public WindowState getWindowState() {
-    return windowState;
-  }
-
-  /**
-   * Hides the {@code WindowPanel} (hides the popup by removing it from the
-   * {@code RootPanel}). This has no effect if it is not currently visible.
-   * 
-   * @param autoHide the value that will be passed to
-   *          {@link PopupListener#onPopupClosed(PopupPanel, boolean)} when the
-   *          popup is closed
-   * 
-   * @see #hide()
-   */
-  @Override
-  public void hide(boolean autoHide) {
-    if (!fireWindowCloseEvents) {
-      super.hide(autoHide);
-      return;
-    }
-    final String msg = fireClosingImpl();
-    if (msg != null && !Window.confirm(msg)) {
-      return;
-    }
-
-    windowPanelOrder.remove(this);
-
-    if (isResizable()) {
-      makeNotResizable();
-    }
-
-    makeNotDraggable();
-
-    windowController = null;
-
-    super.hide(autoHide);
-    if (modal && glassPanel != null) {
-      glassPanel.removeFromParent();
-    }
-    fireClosedImpl();
-    if (modal) {
-      modal = false;
-    }
-  }
-
-  public boolean isActive() {
-    return windowPanelOrder.lastElement().equals(this);
-  }
-
-  public boolean isCollapsed() {
-    return panel.isCollapsed();
-  }
-
-  public boolean isHideContentsOnMove() {
-    return hideContentsOnMove;
-  }
-
-  /**
-   * Indicates whether the {@code WindowPanel} is modal.
-   * 
-   * @return {@code true} if this {@code WindowPanel} is modal; {@code false}
-   *         otherwise
-   * 
-   * @see #showModal()
-   */
-  public boolean isModal() {
-    return modal;
-  }
-
-  /**
-   * Indicates whether this {@code WindowPanel} is resizable by the user. By
-   * default, all {@code WindowPanels} are initially resizable.
-   * 
-   * @return {@code true} if the user can resize this {@code WindowPanel};
-   *         {@code false} otherwise.
-   * @see #setResizable(boolean)
-   */
-  public boolean isResizable() {
-    return resizable;
-  }
-
-  private void makeDraggable() {
-    windowController.getMoveDragController().makeDraggable(this,
-        panel.getHeader());
-  }
-
-  private void makeElementDradHandleDraggable(ElementDragHandle widget,
-      DirectionConstant direction) {
-    windowController.getResizeDragController().makeDraggable(widget, direction);
-    widget.addStyleName("Resize-" + direction.directionLetters);
-  }
-
-  private void makeNotDraggable() {
-    windowController.getMoveDragController().makeNotDraggable(this);
-  }
-
-  private void makeNotResizable() {
-    final ResizeDragController c = windowController.getResizeDragController();
-
-    c.makeNotDraggable(nwResizeHandle);
-    nwResizeHandle.removeStyleName("Resize-" + NORTH_WEST.directionLetters);
-
-    c.makeNotDraggable(nResizeHandle);
-    nResizeHandle.removeStyleName("Resize-" + NORTH.directionLetters);
-
-    c.makeNotDraggable(neResizeHandle);
-    neResizeHandle.removeStyleName("Resize-" + NORTH_EAST.directionLetters);
-
-    c.makeNotDraggable(wResizeHandle);
-    wResizeHandle.removeStyleName("Resize-" + WEST.directionLetters);
-
-    c.makeNotDraggable(eResizeHandle);
-    eResizeHandle.removeStyleName("Resize-" + EAST.directionLetters);
-
-    c.makeNotDraggable(swResizeHandle);
-    swResizeHandle.removeStyleName("Resize-" + SOUTH_WEST.directionLetters);
-
-    c.makeNotDraggable(sResizeHandle);
-    sResizeHandle.removeStyleName("Resize-" + SOUTH.directionLetters);
-
-    c.makeNotDraggable(seResizeHandle);
-    seResizeHandle.removeStyleName("Resize-" + SOUTH_EAST.directionLetters);
-  }
-
-  private void makeResizable() {
-    if (nwResizeHandle == null) {
-      nwResizeHandle = newResizeHandle(0, 0, NORTH_WEST);
-    }
-    makeElementDradHandleDraggable(nwResizeHandle, NORTH_WEST);
-
-    if (nResizeHandle == null) {
-      nResizeHandle = newResizeHandle(0, 1, NORTH);
-    }
-    makeElementDradHandleDraggable(nResizeHandle, NORTH);
-
-    if (neResizeHandle == null) {
-      neResizeHandle = newResizeHandle(0, 2, NORTH_EAST);
-    }
-    makeElementDradHandleDraggable(neResizeHandle, NORTH_EAST);
-
-    if (wResizeHandle == null) {
-      wResizeHandle = newResizeHandle(1, 0, WEST);
-    }
-    makeElementDradHandleDraggable(wResizeHandle, WEST);
-
-    if (eResizeHandle == null) {
-      eResizeHandle = newResizeHandle(1, 2, EAST);
-    }
-    makeElementDradHandleDraggable(eResizeHandle, EAST);
-
-    if (swResizeHandle == null) {
-      swResizeHandle = newResizeHandle(2, 0, SOUTH_WEST);
-    }
-    makeElementDradHandleDraggable(swResizeHandle, SOUTH_WEST);
-
-    if (sResizeHandle == null) {
-      sResizeHandle = newResizeHandle(2, 1, SOUTH);
-    }
-    makeElementDradHandleDraggable(sResizeHandle, SOUTH);
-
-    if (seResizeHandle == null) {
-      seResizeHandle = newResizeHandle(2, 2, SOUTH_EAST);
-    }
-    makeElementDradHandleDraggable(seResizeHandle, SOUTH_EAST);
-  }
-
-  protected void maximize(WindowState oldState) {
-    if (isResizable()) {
-      if (!isActive()) {
-        toFront();
-      }
-
-      final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
-      if (isCollapsed()) {
-        restoredLeft = getAbsoluteLeft() - borders[3]
-            - boundaryPanel.getAbsoluteLeft();
-        restoredTop = getAbsoluteTop() - borders[0]
-            - boundaryPanel.getAbsoluteTop();
-        resizeToBoundarySize();
-      } else {
-        if (oldState != WindowState.MINIMIZED) {
-          restoredLeft = getAbsoluteLeft() - borders[3]
-              - boundaryPanel.getAbsoluteLeft();
-          restoredTop = getAbsoluteTop() - borders[0]
-              - boundaryPanel.getAbsoluteTop();
-          restoredWidth = contentWidth;
-          restoredHeight = contentHeight;
-        }
-        resizeToBoundarySize();
-        makeNotResizable();
-      }
-      windowController.getMoveDragController().makeNotDraggable(this);
-
-      delayedLayout(MIN_DELAY_MILLIS);
-    }
-  }
-
-  protected void minimize(WindowState oldState) {
-    if (!isModal()) {
-      restoredState = oldState;
-      setVisible(false);
-    }
-  }
-
-  public void moveBy(int right, int down) {
-    AbsolutePanel parent = (AbsolutePanel) getParent();
-    Location location = new WidgetLocation(this, parent);
-    int left = location.getLeft() + right;
-    int top = location.getTop() + down;
-    parent.setWidgetPosition(this, left, top);
-  }
-
-  private ElementDragHandle newResizeHandle(int row, int col,
-      DirectionConstant direction) {
-    final Element td = getCellElement(row, col).getParentElement().cast();
-    final ElementDragHandle widget = new ElementDragHandle(td);
-    adopt(widget);
-    return widget;
+  protected AbsolutePanel getBoundaryPanel() {
+    return boundaryPanel;
   }
 
   @Override
@@ -1313,224 +1121,20 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     });
   }
 
-  public void removeCollapsedListener(CollapsedListener listener) {
-    if (collapsedListeners != null) {
-      collapsedListeners.remove(listener);
-    }
+  void hideContent(boolean hideContent) {
+    panel.hideContent(hideContent);
   }
 
-  /**
-   * Removes a window closing listener.
-   * 
-   * @param listener the listener to be removed
-   */
-  @Deprecated
-  public void removeWindowCloseListener(WindowCloseListener listener) {
-    ListenerWrapper.WrapWindowPanelClose.remove(handlers, listener);
+  ElementDragHandle newResizeHandle(int row, int col,
+      DirectionConstant direction) {
+    final Element td = getCellElement(row, col).getParentElement().cast();
+    final ElementDragHandle widget = new ElementDragHandle(td);
+    adopt(widget);
+    return widget;
   }
 
-  /**
-   * Removes a window panel resize listener.
-   * 
-   * @param listener the listener to be removed
-   */
-  @Deprecated
-  public void removeWindowResizeListener(WindowResizeListener listener) {
-    ListenerWrapper.WrapWindowPanelResize.remove(getHandlers(), listener);
-  }
-
-  public void removeWindowStateListener(WindowStateListener listener) {
-    if (windowStateListeners != null) {
-      windowStateListeners.remove(listener);
-    }
-  }
-
-  private void resizeToBoundarySize() {
-    final Dimension size = DOM.getClientSize(boundaryPanel.getElement());
-    final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
-    final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
-    setPopupPosition(0, 0);
-    if (isCollapsed()) {
-      setContentSize(size.width - (size2.width - size3.width),
-          getLayoutPanel().getPreferredSize().height);
-    } else {
-      setContentSize(size.width - (size2.width - size3.width), size.height
-          - (size2.height - size3.height));
-    }
-  }
-
-  /**
-   * Causes this {@code WindowPanel} to be sized to fit the preferred size and
-   * layouts of its subcomponents. {@link #layout()} is called after the
-   * preferred size is calculated.
-   * 
-   * @deprecated Replaced by {@link #pack()}.
-   */
-  public void resizeToFitContent() {
-    pack();
-  }
-
-  protected void restore(WindowState oldState) {
-    if (isResizable() && oldState == WindowState.MAXIMIZED) {
-      if (isCollapsed()) {
-        setPopupPosition(restoredLeft, restoredTop);
-        getLayoutPanel().setSize("0px", "0px");
-        setContentSize(restoredWidth,
-            getLayoutPanel().getPreferredSize().height);
-        makeResizable();
-      } else {
-        setPopupPosition(restoredLeft, restoredTop);
-        getLayoutPanel().setSize("0px", "0px");
-        setContentSize(restoredWidth, restoredHeight);
-        makeResizable();
-      }
-      windowController.getMoveDragController().makeDraggable(this,
-          panel.getHeader());
-      delayedLayout(MIN_DELAY_MILLIS);
-    } else if (!isModal() && oldState == WindowState.MINIMIZED) {
-      setVisible(true);
-      if (getWindowState() == WindowState.MAXIMIZED) {
-        windowResizeHandler.onResize(null);
-      }
-    }
-  }
-
-  /**
-   * Sets the caption for this {@code WindowPanel} to the specified string.
-   * 
-   * {@inheritDoc}
-   * 
-   * @param text the caption to be displayed in the {@code WindowPanel}'s
-   *          border. A {@code null} value is treated as an empty string, "".
-   * 
-   * @see com.google.gwt.user.client.ui.HasCaption#setCaption(java.lang.String)
-   * @see #getCaption()
-   */
-  public void setCaption(final String text) {
-    panel.getHeader().setText(text);
-  }
-
-  public void setCaptionAction(CaptionAction captionAction) {
-    this.captionAction = captionAction;
-  }
-
-  public void setCollapsed(boolean collapsed) {
-    if (collapsed == isCollapsed()) {
-      return;
-    }
-
-    if (!isAttached()) {
-      panel.setCollapsed(true);
-      return;
-    }
-
-    if (collapsed) {
-      if (getWindowState() != WindowState.MAXIMIZED) {
-        final Dimension box = DOM.getClientSize(getElement());
-        final Dimension size2 = WidgetHelper.getOffsetSize(WindowPanel.this);
-        final Dimension size3 = WidgetHelper.getOffsetSize(getLayoutPanel());
-        restoredWidth = box.width - (size2.width - size3.width);
-        restoredHeight = box.height - (size2.height - size3.height);
-      }
-      panel.setCollapsed(true);
-
-      final int width = getLayoutPanel().getOffsetWidth();
-      setContentSize(width, getLayoutPanel().getPreferredSize().height);
-      if (isResizable() && windowState != WindowState.MAXIMIZED) {
-        makeNotResizable();
-      }
-    } else {
-      panel.setCollapsed(false);
-
-      if (getWindowState() != WindowState.MAXIMIZED) {
-        setContentSize(restoredWidth, restoredHeight);
-      } else {
-        resizeToBoundarySize();
-      }
-      if (isResizable() && windowState != WindowState.MAXIMIZED) {
-        makeResizable();
-      }
-    }
-
-    layout();
-  }
-
-  @Override
-  public void setContentSize(Dimension d) {
-    if (isResizable()) {
-      contentWidth = d.width;
-      contentHeight = d.height;
-    }
-
-    super.setContentSize(d);
-  }
-
-  public void setFooter(Widget footer) {
-    if (getFooter() != null) {
-      getFooter().removeStyleName("Footer");
-    }
-    panel.setFooter(footer);
-    if (getFooter() != null) {
-      getFooter().addStyleName("Footer");
-    }
-  }
-
-  public void setHideContentsOnMove(boolean hideContents) {
-    this.hideContentsOnMove = hideContents;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.PopupPanel#setPopupPosition(int, int)
-   */
-  @Override
-  public void setPopupPosition(int left, int top) {
-    try {
-      if (windowController != null) {
-        final Widget boundaryPanel = windowController.getBoundaryPanel();
-        int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
-        left += borders[3];
-        top += borders[0];
-        super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
-            + boundaryPanel.getAbsoluteTop());
-      } else {
-        super.setPopupPosition(left, top);
-      }
-    } catch (Exception ex) {
-      Window.alert(ex.getMessage());
-    }
-  }
-
-  /**
-   * Sets whether this {@code WindowPanel} is resizable by the user.
-   * 
-   * @param resizable {@code true} if this {@code WindowPanel} is resizable;
-   *          {@code false} otherwise.
-   * @see #isResizable()
-   */
-  public void setResizable(boolean resizable) {
-    if (this.resizable == resizable) {
-      return;
-    }
-    this.resizable = resizable;
-    if (isShowing()) {
-      if (resizable) {
-        makeResizable();
-      } else {
-        makeNotResizable();
-      }
-    }
-  }
-
-  @Override
-  public void setWidget(Widget w) {
-    panel.clear();
-    panel.add(w);
-  }
-
-  private void setWindowOrder(int order) {
-    int zIndex = (order + Z_INDEX_BASE);
+  void setZIndex(int zIndexOffset) {
+    int zIndex = (zIndexOffset + Z_INDEX_BASE);
     if (modal) {
       zIndex += Z_INDEX_MODAL_OFFSET;
     }
@@ -1541,168 +1145,4 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  /**
-   * Sets the flag to determine the state of the window panel. Default is
-   * 'NORMAL' (ie not MINIMIZED or MAXIMIZED).
-   * 
-   * @param windowState the flag to determine the state of the window panel
-   */
-  public void setWindowState(WindowState windowState) {
-    if (this.windowState != windowState) {
-      WindowState oldState = this.windowState;
-      this.windowState = windowState;
-
-      if (isAttached()) {
-        if (oldState == WindowState.MINIMIZED) {
-          this.windowState = restoredState;
-          restore(oldState);
-        } else if (windowState == WindowState.NORMAL) {
-          restore(oldState);
-        } else if (windowState == WindowState.MAXIMIZED) {
-          maximize(oldState);
-        } else if (windowState == WindowState.MINIMIZED) {
-          minimize(oldState);
-        }
-
-        if (this.windowState == WindowState.MAXIMIZED) {
-          windowResizeHandler.addResizeHandler();
-        } else {
-          windowResizeHandler.removeResizeHandler();
-        }
-      }
-
-      fireWindowStateChangeImpl();
-    }
-  }
-
-  /**
-   * Makes the {@code WindowPanel} visible (shows the popup by adding it to the
-   * {@code RootPanel}). The {@link #layout()} is called after the {@code
-   * WindowPanel} is attached (in {@link #onLoad()}). If the {@code WindowPanel}
-   * is already attached, this will bring the {@code WindowPanel} to the front.
-   * If the {@code WindowPanel} is set to not visible by calling
-   * {@link #setVisible(boolean)} before {@link #show()} the {@code WindowPanel}
-   * will be attached but not visible.
-   * 
-   * @see #center()
-   * @see #pack()
-   * @see #setPopupPositionAndShow(com.google.gwt.user.client.ui.PopupPanel.PositionCallback)
-   * @see #showModal()
-   */
-  @Override
-  public void show() {
-
-    windowController = new WindowController(boundaryPanel);
-
-    if (isResizable()) {
-      makeResizable();
-    }
-
-    makeDraggable();
-
-    if (modal) {
-      if (glassPanel == null) {
-        glassPanel = new GlassPanel(false);
-        glassPanel.addStyleName("mosaic-GlassPanel-default");
-        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-            DOM.getComputedStyleAttribute(WindowPanel.this.getElement(),
-                "zIndex"));
-      }
-      windowController.getBoundaryPanel().add(glassPanel, 0, 0);
-
-      new DelayedRunnable() {
-        @Override
-        public void run() {
-          WindowPanel.super.show();
-        }
-      };
-    }
-
-    super.show();
-
-    final int order = windowPanelOrder.size();
-    setWindowOrder(order);
-    windowPanelOrder.add(this);
-  }
-
-  public void showModal() {
-    showModal(true);
-  }
-
-  /**
-   * Centers the {@code WindowPanel} in the browser window and shows it modal
-   * (centers the popup in the browser window by adding it to the {@code
-   * RootPanel} and displays a {@code
-   * com.google.gwt.widgetideas.client.GlassPanel} under it). The
-   * {@link #layout()} is called after the {@code WindowPanel} is attached (in
-   * {@link #onLoad()}). If the {@code WindowPanel} is already attached, then
-   * the {@code WindowPanel} is centered. If the {@code WindowPanel} is set to
-   * not visible by calling {@link #setVisible(boolean)} before {@link #show()}
-   * the {@code WindowPanel} will be attached and visible (not like
-   * {@link #show()}).
-   * 
-   * @see #center()
-   * @see #isModal()
-   */
-  public void showModal(boolean doPack) {
-    modal = true;
-    if (doPack) {
-      pack();
-    }
-    // DeferredCommand.addCommand(new Command() {
-    // public void execute() {
-    center();
-    toFront();
-    // }
-    // });
-  }
-
-  /**
-   * If this {@code WindowPanel} is visible, sends this {@code WindowPanel} to
-   * the back.
-   * <p>
-   * Places this {@code WindowPanel} at the bottom of the stacking order and
-   * shows it behind any other {@code WindowPanels}.
-   * 
-   * @see #toFront()
-   */
-  public void toBack() {
-    int curIndex = windowPanelOrder.indexOf(this);
-    if (curIndex + 1 <= windowPanelOrder.size()) {
-      windowPanelOrder.remove(this);
-      windowPanelOrder.insertElementAt(this, 0);
-      for (curIndex = 0; curIndex < windowPanelOrder.size(); curIndex++) {
-        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
-      }
-    }
-  }
-
-  /**
-   * If this {@code WindowPanel} is visible, brings this {@code WindowPanel} to
-   * the front.
-   * <p>
-   * Places this {@code WindowPanel} at the top of the stacking order and shows
-   * it in front of any other {@code WindowPanels}.
-   * 
-   * @see #toBack()
-   */
-  public void toFront() {
-    int curIndex = windowPanelOrder.indexOf(this);
-    if (curIndex + 1 < windowPanelOrder.size()) {
-      windowPanelOrder.remove(this);
-      windowPanelOrder.add(this);
-      for (; curIndex < windowPanelOrder.size(); curIndex++) {
-        windowPanelOrder.get(curIndex).setWindowOrder(curIndex);
-      }
-    } else {
-      setWindowOrder(curIndex);
-    }
-  }
-
-  /**
-   * @return the boundary panel of this {@code WindowPanel}.
-   */
-  protected AbsolutePanel getBoundaryPanel() {
-    return boundaryPanel;
-  }
 }
