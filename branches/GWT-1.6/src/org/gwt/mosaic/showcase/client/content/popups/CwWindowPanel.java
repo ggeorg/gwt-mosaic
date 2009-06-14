@@ -48,9 +48,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Frame;
@@ -59,6 +60,7 @@ import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -113,8 +115,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
       }
     });
     windowPanel.addWindowStateListener(new WindowStateListener() {
-      public void onWindowStateChange(WindowPanel sender) {
-        if (sender.getWindowState() == WindowState.MAXIMIZED) {
+      public void onWindowStateChange(WindowPanel sender,
+          WindowState oldWindowState, WindowState newWindowState) {
+        if (newWindowState == WindowState.MAXIMIZED) {
           maximizeBtn.setImage(Caption.IMAGES.windowRestore().createImage());
         } else {
           maximizeBtn.setImage(Caption.IMAGES.windowMaximize().createImage());
@@ -156,13 +159,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     addMaximizeButton(basic, CaptionRegion.RIGHT);
     addMinimizeButton(basic, CaptionRegion.RIGHT);
 
-    basic.addWindowCloseListener(new WindowCloseListener() {
-      public void onWindowClosed() {
+    basic.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         basic = null;
-      }
-
-      public String onWindowClosing() {
-        return null;
       }
     });
   }
@@ -197,13 +196,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
 
     addMinimizeButton(fixed, CaptionRegion.RIGHT);
 
-    fixed.addWindowCloseListener(new WindowCloseListener() {
-      public void onWindowClosed() {
+    fixed.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         fixed = null;
-      }
-
-      public String onWindowClosing() {
-        return null;
       }
     });
   }
@@ -245,13 +240,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     addMaximizeButton(layout, CaptionRegion.RIGHT);
     addMinimizeButton(layout, CaptionRegion.RIGHT);
 
-    layout.addWindowCloseListener(new WindowCloseListener() {
-      public void onWindowClosed() {
+    layout.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         layout = null;
-      }
-
-      public String onWindowClosing() {
-        return null;
       }
     });
   }
@@ -270,13 +261,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
 
     modal.getHeader().add(Showcase.IMAGES.window().createImage());
 
-    modal.addWindowCloseListener(new WindowCloseListener() {
-      public void onWindowClosed() {
+    modal.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         modal = null;
-      }
-
-      public String onWindowClosing() {
-        return null;
       }
     });
   }
@@ -306,13 +293,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     });
     sized.getHeader().add(refreshBtn, CaptionRegion.RIGHT);
 
-    sized.addWindowCloseListener(new WindowCloseListener() {
-      public void onWindowClosed() {
+    sized.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         sized = null;
-      }
-
-      public String onWindowClosing() {
-        return null;
       }
     });
   }
@@ -426,13 +409,9 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
 
     addMinimizeButton(zIndex, CaptionRegion.RIGHT);
 
-    zIndex.addWindowCloseListener(new WindowCloseListener() {
-      public void onWindowClosed() {
+    zIndex.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         zIndex = null;
-      }
-
-      public String onWindowClosing() {
-        return null;
       }
     });
   }
