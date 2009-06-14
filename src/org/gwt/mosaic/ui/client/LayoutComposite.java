@@ -25,8 +25,14 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
+ * A type of widget that can wrap an aggregate of multiple other widgets
+ * contained in a single {@link LayoutPanel}, hiding the wrapped
+ * {@link LayoutPanel}'s methods.
+ * 
+ * @see LayoutPanel
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public abstract class LayoutComposite extends Composite implements
     HasLayoutManager {
@@ -39,7 +45,7 @@ public abstract class LayoutComposite extends Composite implements
   }
 
   /**
-   * Creates a LayoutComposite with the given element. This is protected so that
+   * Creates a {@code LayoutComposite} with the given element. This is protected so that
    * it can be used by a subclass that wants to substitute another element. The
    * element is presumed to be a &lt;div&gt;.
    * 
