@@ -162,11 +162,7 @@ public class WidgetHelper {
    * @param y the new <i>y</i>-coordinate
    * @param width the new width
    * @param height the new height
-   * 
-   * @deprecated replaced by {@code WidgetHelper#setBounds(LayoutPanel, Widget,
-   *             Rectangle)}
    */
-  @Deprecated
   public static void setBounds(final LayoutPanel layoutPanel,
       final Widget widget, final int x, final int y, int width, int height) {
     int[] margins = DOM.getMarginSizes(widget.getElement());
@@ -208,12 +204,15 @@ public class WidgetHelper {
     setMaxWidth(widget, width);
     setMaxHeight(widget, height);
   }
+
   public static void setMaxWidth(final Widget w, final String width) {
     DOM.setStyleAttribute(w.getElement(), MAX_WIDTH, width);
   }
+
   public static void setMinHeight(final Widget w, final String height) {
     DOM.setStyleAttribute(w.getElement(), MIN_HEIGHT, height);
   }
+
   public static void setMinSize(Widget widget, String width, String height) {
     setMinWidth(widget, width);
     setMinHeight(widget, height);
@@ -239,9 +238,7 @@ public class WidgetHelper {
    * @param widget the given {@code Widget}
    * @param width the new width in pixels
    * @param height the new height in pixels
-   * @deprecated replaced by {@link #setSize(Widget, Dimension)}
    */
-  @Deprecated
   public static void setSize(final Widget widget, final int width,
       final int height) {
     final Element elem = widget.getElement();
