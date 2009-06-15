@@ -34,9 +34,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     implements HasLayoutManager {
 
-  private String desiredHeight = null;
+  private String onLoadHeight = null;
 
-  private String desiredWidth = null;
+  private String onLoaddWidth = null;
 
   /**
    * Creates an empty decorated popup panel. A child widget must be added to it
@@ -169,7 +169,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setHeight(String height) {
-    desiredHeight = height;
+    onLoadHeight = height;
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
       setContentSize(-1, DOM.toPixelSize(height) - decoratorBorder[1]);
@@ -185,7 +185,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setWidth(String width) {
-    desiredWidth = width;
+    onLoaddWidth = width;
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
       setContentSize(DOM.toPixelSize(width) - decoratorBorder[0], -1);
@@ -206,12 +206,15 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   protected void onLoad() {
-    if (desiredWidth != null && desiredHeight != null) {
-      setSize(desiredWidth, desiredHeight);
-    } else if (desiredWidth != null) {
-      setWidth(desiredWidth);
-    } else if (desiredHeight != null) {
-      setHeight(desiredHeight);
+    if (onLoaddWidth != null && onLoadHeight != null) {
+      setSize(onLoaddWidth, onLoadHeight);
+      onLoaddWidth = onLoadHeight = null;
+    } else if (onLoaddWidth != null) {
+      setWidth(onLoaddWidth);
+      onLoaddWidth = null;
+    } else if (onLoadHeight != null) {
+      setHeight(onLoadHeight);
+      onLoadHeight = null;
     }
 
     DeferredCommand.addCommand(new Command() {

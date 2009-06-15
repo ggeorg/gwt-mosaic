@@ -21,6 +21,7 @@ import java.util.List;
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.Point;
 import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.DesktopPanel.DirectionConstant;
@@ -211,8 +212,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private static final int Z_INDEX_MODAL_OFFSET = 1000;
 
-  private AbsolutePanel boundaryPanel;
-
   /**
    * Double click caption action.
    */
@@ -297,15 +296,19 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
       boolean resizable, boolean autoHide) {
+    this(DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
+        : boundaryPanel), caption, resizable, autoHide);
+  }
+
+  private DesktopPanel desktopPanel;
+
+  public WindowPanel(DesktopPanel desktopPanel, String caption,
+      boolean resizable, boolean autoHide) {
     super(autoHide);
 
     this.resizable = resizable;
 
-    // FIXME
-    this.boundaryPanel = boundaryPanel;
-    DesktopPanel desktopPanel = DesktopPanel.get(boundaryPanel == null
-        ? RootPanel.get() : boundaryPanel);
-    desktopPanel.add(this);
+    this.desktopPanel = desktopPanel;
 
     panel = new CaptionLayoutPanel(caption);
     panel.addCollapsedListener(new CollapsedListener() {
@@ -520,8 +523,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @return the the {@link DesktopPanel} this {@code WindowPanel} belongs to
    */
   public DesktopPanel getDesktopPanel() {
-    return DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
-        : boundaryPanel);
+    // return DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
+    // : boundaryPanel);
+    return desktopPanel;
   }
 
   public Widget getFooter() {
@@ -584,7 +588,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     getDesktopPanel().makeNotDraggable(this);
 
+    // restore popup position
+    beforeHidePopupPosition = getDesktopPanel().getPopupPosition(this);
+
     super.hide(autoHide);
+
     if (modal && glassPanel != null) {
       glassPanel.removeFromParent();
     }
@@ -593,6 +601,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       modal = false;
     }
   }
+
+  private Point beforeHidePopupPosition;
 
   /**
    * Returns whether the {@code WindowPanel} is the currently "selected" or
@@ -611,7 +621,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return panel.isCollapsed();
   }
 
-  public boolean isHideContentsOnMove() {
+  public boolean isHideContentOnMove() {
     return hideContentsOnMove;
   }
 
@@ -760,7 +770,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  public void setHideContentsOnMove(boolean hideContents) {
+  public void setHideContentOnMove(boolean hideContents) {
     this.hideContentsOnMove = hideContents;
   }
 
@@ -781,17 +791,46 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     normalWindowState = windowState;
   }
 
+  /**
+   * Gets the popup's left position relative to the browser's client area.
+   * 
+   * @return the popup's left position
+   */
+  @Override
+  public int getPopupLeft() {
+    final DesktopPanel boundaryPanel = getDesktopPanel();
+    if (boundaryPanel == null) {
+      return DOM.getAbsoluteLeft(getElement());
+    } else {
+      return boundaryPanel.getPopupPosition(this).x;
+    }
+  }
+
+  /**
+   * Gets the popup's top position relative to the browser's client area.
+   * 
+   * @return the popup's top position
+   */
+  @Override
+  public int getPopupTop() {
+    final DesktopPanel boundaryPanel = getDesktopPanel();
+    if (boundaryPanel == null) {
+      return DOM.getAbsoluteTop(getElement());
+    } else {
+      return boundaryPanel.getPopupPosition(this).y;
+    }
+  }
+
   @Override
   public void setPopupPosition(int left, int top) {
-    try {
-      final Widget boundaryPanel = getDesktopPanel();
-      int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
-      left += borders[3];
-      top += borders[0];
-      super.setPopupPosition(left + boundaryPanel.getAbsoluteLeft(), top
-          + boundaryPanel.getAbsoluteTop());
-    } catch (Exception ex) {
-      Window.alert(ex.getMessage());
+    final DesktopPanel boundaryPanel = getDesktopPanel();
+    if (boundaryPanel == null) {
+      super.setPopupPosition(left, top);
+    } else {
+      final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
+      super.setPopupPosition(left
+          + (boundaryPanel.getAbsoluteLeft() + borders[3]), top
+          + (boundaryPanel.getAbsoluteTop() + borders[0]));
     }
   }
 
@@ -865,6 +904,14 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   @Override
   public void show() {
+    if (isAttached()) {
+      return;
+    }
+
+    getDesktopPanel().add(this);
+    // the previous call will make the WindowPanel active, so we have to reset
+    // the internal state
+    isActive = false;
 
     if (isResizable()) {
       getDesktopPanel().makeResizable(this);
@@ -882,12 +929,18 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
       getDesktopPanel().add(glassPanel);
 
-//      new DelayedRunnable() {
-//        @Override
-//        public void run() {
-//          WindowPanel.super.show();
-//        }
-//      };
+      // new DelayedRunnable() {
+      // @Override
+      // public void run() {
+      // WindowPanel.super.show();
+      // }
+      // };
+    }
+
+    if (beforeHidePopupPosition != null) {
+      super.setPopupPosition(beforeHidePopupPosition.x,
+          beforeHidePopupPosition.y);
+      beforeHidePopupPosition = null;
     }
 
     super.show();
@@ -1097,13 +1150,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
       seResizeHandle = null;
     }
-  }
-
-  /**
-   * @return the boundary panel of this {@code WindowPanel}.
-   */
-  protected AbsolutePanel getBoundaryPanel() {
-    return boundaryPanel;
   }
 
   @Override

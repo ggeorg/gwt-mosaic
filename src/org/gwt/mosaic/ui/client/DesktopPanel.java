@@ -21,9 +21,13 @@ import java.util.Vector;
 
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.Point;
 import org.gwt.mosaic.ui.client.WindowPanel.ElementDragHandle;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowStateListener;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
@@ -48,7 +52,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  */
 public class DesktopPanel extends Composite implements
     CloseHandler<PopupPanel>, SelectionHandler<WindowPanel>,
-    WindowStateListener {
+    WindowStateListener, HasLayoutManager {
 
   /**
    * WindowPanel direction constant, used in {@link ResizeDragController}.
@@ -87,7 +91,7 @@ public class DesktopPanel extends Composite implements
       if (!w.isModal()) {
         w.glassPanel.removeFromParent();
       }
-      if (w.isHideContentsOnMove() && !w.isCollapsed()) {
+      if (w.isHideContentOnMove() && !w.isCollapsed()) {
         w.hideContent(false);
       }
     }
@@ -114,7 +118,7 @@ public class DesktopPanel extends Composite implements
         w.toFront();
       }
       if (!w.isCollapsed()) {
-        w.hideContent(w.isHideContentsOnMove());
+        w.hideContent(w.isHideContentOnMove());
       }
       if (!w.isModal()) {
         if (w.glassPanel == null) {
@@ -637,4 +641,54 @@ public class DesktopPanel extends Composite implements
     ((AbsolutePanel) getWidget()).add(glassPanel, 0, 0);
   }
 
+  public Dimension getPreferredSize() {
+    return DOM.getClientSize(getElement());
+  }
+
+  public void invalidate() {
+    final HasLayoutManager parent = WidgetHelper.getParent(this);
+    if (parent != null) {
+      parent.invalidate();
+    }
+  }
+
+  public void layout() {
+    if (windowPanels == null) {
+      return;
+    }
+    final Dimension box = DOM.getClientSize(getElement());
+    for (int i = 0, n = windowPanels.size(); i < n; i++) {
+      final WindowPanel w = windowPanels.get(i);
+      final Dimension d = WidgetHelper.getOffsetSize(w);
+
+      final Point p = getPopupPosition(w);
+      
+      p.x -= Math.max(0, (p.x + w.getOffsetWidth()) - box.width);
+      p.y -= Math.max(0, (p.y + w.getOffsetHeight()) - box.height);
+
+      w.setPopupPosition(Math.max(0, p.x), Math.max(0, p.y));
+      
+      d.width = d.width > box.width ? box.width : -1;
+      d.height = d.height > box.height ? box.height : -1;
+
+      WidgetHelper.setSize(w, d);
+
+      w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
+    }
+  }
+  
+  public void setPopupPosition(WindowPanel windowPanel, Point position) {
+    setPopupPosition(windowPanel, position.x, position.y);
+  }
+
+  public void setPopupPosition(WindowPanel windowPanel, int left, int top) {
+    windowPanel.setPopupPosition(left, top);
+  }
+
+  public Point getPopupPosition(WindowPanel windowPanel) {
+    final int[] borders = DOM.getBorderSizes(getElement());
+    return new Point(windowPanel.getAbsoluteLeft()
+        - (getAbsoluteLeft() + borders[3]), windowPanel.getAbsoluteTop()
+        - (getAbsoluteTop() + borders[0]));
+  }
 }
