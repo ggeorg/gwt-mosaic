@@ -24,7 +24,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -66,10 +67,11 @@ public class StackLayoutPanel extends LayoutComposite {
 
   private Map<Widget, LayoutPanel> panels = new HashMap<Widget, LayoutPanel>();
 
-  private ClickListener clickListener = new ClickListener() {
-    public void onClick(Widget sender) {
-      if (sender instanceof Caption) {
-        showStack(getLayoutPanel().getWidgetIndex(sender) >> 1);
+  private ClickHandler clickHandler = new ClickHandler() {
+    public void onClick(ClickEvent event) {
+      Widget w = (Widget) event.getSource();
+      if (w instanceof Caption) {
+        showStack(getLayoutPanel().getWidgetIndex(w) >> 1);
         layout();
       }
     }
@@ -106,7 +108,7 @@ public class StackLayoutPanel extends LayoutComposite {
     final LayoutPanel content = new LayoutPanel();
     final LayoutPanel layoutPanel = getLayoutPanel();
     caption.addStyleName(DEFAULT_ITEM_STYLENAME);
-    caption.addClickListener(clickListener);
+    caption.addClickHandler(clickHandler);
     content.addStyleName(DEFAULT_CONTENT_STYLENAME);
     content.add(w);
     panels.put(w, content);
@@ -161,6 +163,14 @@ public class StackLayoutPanel extends LayoutComposite {
       caption.removeStyleName(DEFAULT_ITEM_STYLENAME + "-selected");
     }
     content.setVisible(visible);
+  }
+  
+  public Caption getCaption(int index) {
+    index <<= 1;
+    if ((index >= getLayoutPanel().getWidgetCount()) || (index < 0)) {
+      return null;
+    }
+    return (Caption) getLayoutPanel().getWidget(index);
   }
 
   /**
