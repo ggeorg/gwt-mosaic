@@ -420,42 +420,59 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     // Set the initial size & layout
     DeferredCommand.addCommand(new Command() {
       public void execute() {
-        // if (width != null && height != null) {
-        // LayoutPanel.super.setWidth(width);
-        // LayoutPanel.super.setHeight(height);
-        // } else {
-        // final Dimension size = getPreferredSize();
-        // if (width != null) {
-        // LayoutPanel.super.setWidth(width);
-        // size.width = -1;
-        // WidgetHelper.setSize(LayoutPanel.this, size);
-        // } else if (height != null) {
-        // size.height = -1;
-        // WidgetHelper.setSize(LayoutPanel.this, size);
-        // LayoutPanel.super.setHeight(height);
-        // } else {
-        // WidgetHelper.setSize(LayoutPanel.this, size);
-        // }
-        // }
         layout();
       }
     });
 
     // Add to Resizable Collection
-    ResizableWidgetCollection.get().add(new ResizableWidget() {
-      public Element getElement() {
-        return LayoutPanel.this.getElement();
-      }
-
-      public boolean isAttached() {
-        return LayoutPanel.this.isAttached();
-      }
-
-      public void onResize(int width, int height) {
-        LayoutPanel.this.layout();
-      }
-    });
+    if (resizableWidget != null) {
+      ResizableWidgetCollection.get().remove(resizableWidget);
+      ResizableWidgetCollection.get().add(resizableWidget);
+    }
   }
+
+  /**
+   * Set the {@code ResizableWidget} to add to a {@code
+   * ResizableWidgetCollection} that periodically checks the outer dimensions of
+   * a widget and redraws it as necessary.
+   * 
+   * @param resizableWidget the {@code ResizableWidget}
+   */
+  public void setResizableWidget(ResizableWidget resizableWidget) {
+    ResizableWidget oldResizableWidget = this.resizableWidget;
+    this.resizableWidget = resizableWidget;
+    if (isAttached()) {
+      if (oldResizableWidget != null) {
+        ResizableWidgetCollection.get().remove(resizableWidget);
+      }
+      if (resizableWidget != null) {
+        ResizableWidgetCollection.get().add(resizableWidget);
+      }
+    }
+  }
+
+  /**
+   * Gets the {@code ResizableWidget} used.
+   * 
+   * @return the {@code ResizableWidget}
+   */
+  public ResizableWidget getResizableWidget() {
+    return resizableWidget;
+  }
+
+  private ResizableWidget resizableWidget = new ResizableWidget() {
+    public Element getElement() {
+      return LayoutPanel.this.getElement();
+    }
+
+    public boolean isAttached() {
+      return LayoutPanel.this.isAttached();
+    }
+
+    public void onResize(int width, int height) {
+      LayoutPanel.this.layout();
+    }
+  };
 
   /**
    * Removes a child widget to this panel.
