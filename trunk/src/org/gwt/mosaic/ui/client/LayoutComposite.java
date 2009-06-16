@@ -21,6 +21,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.widgetideas.client.ResizableWidget;
 
 /**
  * 
@@ -82,5 +83,25 @@ public abstract class LayoutComposite extends Composite implements
    */
   public void invalidate() {
     getLayoutPanel().invalidate();
+  }
+
+  /**
+   * Set the {@code ResizableWidget} to add to a {@code
+   * ResizableWidgetCollection} that periodically checks the outer dimensions of
+   * a widget and redraws it as necessary.
+   * 
+   * @param resizableWidget the {@code ResizableWidget}
+   */
+  public void setResizableWidget(ResizableWidget resizableWidget) {
+    getLayoutPanel().setResizableWidget(resizableWidget);
+  }
+
+  /**
+   * Gets the {@code ResizableWidget} used.
+   * 
+   * @return the {@code ResizableWidget}
+   */
+  public ResizableWidget getResizableWidget() {
+    return getLayoutPanel().getResizableWidget();
   }
 }
