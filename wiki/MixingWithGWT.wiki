@@ -16,15 +16,14 @@ Widgets are automatically laid out when they are attached to the DOM, this makes
 
 === Example 1 ===
 
-http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
+Puting a GWT panel, like HorizontalSplitPanel, into a Viewport is trivial.
 
 {{{
   public void onModuleLoad() {
     Viewport viewport = new Viewport();
     
     HorizontalSplitPanel hSplit = new HorizontalSplitPanel();
-    hSplit.ensureDebugId("cwHorizontalSplitPanel");
-    hSplit.setSize("500px", "350px");
+    hSplit.setSize("250px", "200px");
     hSplit.setSplitPosition("30%");
 
     hSplit.setRightWidget(new HTML("<b>Right</b>"));
@@ -35,3 +34,21 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
     viewport.attach();
   }
 }}}
+
+http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
+
+Note: hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. FillLayout can also be forced to respect the widget's size by providing alignemnt hints. By changing:
+
+{{{
+    viewport.getLayoutPanel().add(hSplit);
+}}}
+with
+{{{
+    viewport.getLayoutPanel().add(hSplit, new FillLayoutData(FillLayout.ALIGN_CENTER, FillLayout.ALIGN_MIDDLE, true));
+}}}
+
+the HorizontalSplitPanel is positioned in the center of the page and sized to (250px, 200px).
+
+http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
+
+
