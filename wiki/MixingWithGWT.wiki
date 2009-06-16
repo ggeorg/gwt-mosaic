@@ -304,4 +304,6 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix06.png
   }
 }}}
 
+A LayoutPanel if not added in a GWT Mosaic widget will call layout() and initialize a monitor to monitor size changes (almost like Viewport).
+
 
