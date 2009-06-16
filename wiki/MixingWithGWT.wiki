@@ -115,3 +115,17 @@ This example is using a BoxLayout to place two DisclosurePanel widgets in one ro
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix03.png
 
+Again this seems trivial, but, by replacing the following line:
+
+{{{
+    Viewport viewport = new Viewport(new BoxLayout());
+}}}
+with
+{{{
+    Viewport viewport = new Viewport(new BoxLayout(Orientation.VERTICAL));
+}}}
+
+the UI is missaligned:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/mix04.png
+
