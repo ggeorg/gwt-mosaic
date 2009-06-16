@@ -205,4 +205,5 @@ One possible workaround to fix this issue would be to extend DisclosurePanel and
   }
 }}}
 
+http://gwt-mosaic.googlecode.com/svn/wiki/mix05.png
 
