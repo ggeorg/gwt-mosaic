@@ -53,4 +53,6 @@ the HorizontalSplitPanel is positioned in the center of the page and sized to (2
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix02.png
 
+=== Example 2 ===
+
 
