@@ -14,4 +14,24 @@ All GWT Mosaic panels are based on LayoutPanel. LayoutPanel is using a layout ma
 
 Widgets are automatically laid out when they are attached to the DOM, this makes it easy to get almost all widgets to render without any issues.
 
-http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
+=== Example 1 ===
+
+|| http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png || {{{
+
+  public void onModuleLoad() {
+    Viewport viewport = new Viewport();
+    
+    HorizontalSplitPanel hSplit = new HorizontalSplitPanel();
+    hSplit.ensureDebugId("cwHorizontalSplitPanel");
+    hSplit.setSize("500px", "350px");
+    hSplit.setSplitPosition("30%");
+
+    hSplit.setRightWidget(new HTML("<b>Right</b>"));
+    hSplit.setLeftWidget(new HTML("<b>Left</b>"));
+    
+    viewport.getLayoutPanel().add(hSplit);
+    
+    viewport.attach();
+  }
+
+}}} ||
