@@ -215,4 +215,48 @@ Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adaptor c
 
 === Example 3 ===
 
+{{{
+  public void onModuleLoad() {
+
+    DateComboBox cb1 = new DateComboBox();
+    cb1.setPixelSize(256, 32);
+    RootPanel.get().add(cb1, 10, 10);
+
+    // ----------
+
+    DateComboBox cb2 = new DateComboBox() {
+      @Override
+      protected void onLoad() {
+        super.onLoad();
+        WidgetHelper.setSize(this, getPreferredSize());
+      }
+    };
+    RootPanel.get().add(cb2, 10, 60);
+
+    // ----------
+
+    DateComboBox cb3 = new DateComboBox() {
+      @Override
+      protected void onLoad() {
+        super.onLoad();
+        WidgetHelper.setSize(this, getPreferredSize().getWidth(), -1);
+      }
+    };
+    cb3.setHeight("5em");
+    RootPanel.get().add(cb3, 10, 110);
+
+    // ----------
+
+    DateComboBox cb4 = new DateComboBox() {
+      @Override
+      protected void onLoad() {
+        super.onLoad();
+        WidgetHelper.setSize(this, getPreferredSize());
+        setHeight("5em");
+      }
+    };
+    RootPanel.get().add(cb4, 10, 160);
+  }
+}}}
+
 http://gwt-mosaic.googlecode.com/svn/wiki/mix06.png
