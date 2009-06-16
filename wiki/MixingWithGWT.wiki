@@ -211,6 +211,8 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix05.png
 
 Like panels all GWT Mosaic widgets are based on LayoutPanel. Most GWT Mosaic widgets extend LayoutComposite (a Composite widget initialized with a LayoutPanel).
 
-Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adaptor classes. Such an adaptor clas is Viewport. Viewport is designed to be a top level widget. Viewport is attached to RootPanel, is a listener of window resize events, extends LayoutComposite and is resposible to trigger the layout cascade.
+Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adaptor classes. Such an adaptor class is Viewport. Viewport is designed to be a top level widget. Viewport is attached to RootPanel, is a listener of window resize events, extends LayoutComposite and is resposible to trigger the layout cascade.
 
 === Example 3 ===
+
+http://gwt-mosaic.googlecode.com/svn/wiki/mix06.png
