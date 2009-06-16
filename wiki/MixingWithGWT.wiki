@@ -16,8 +16,9 @@ Widgets are automatically laid out when they are attached to the DOM, this makes
 
 === Example 1 ===
 
-|| http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png || {{{
+http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
 
+{{{
   public void onModuleLoad() {
     Viewport viewport = new Viewport();
     
@@ -33,5 +34,4 @@ Widgets are automatically laid out when they are attached to the DOM, this makes
     
     viewport.attach();
   }
-
-}}} ||
+}}}
