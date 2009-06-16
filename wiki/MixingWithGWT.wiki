@@ -55,7 +55,7 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix02.png
 
 === Example 2 ===
 
-This example is using a BoxLayout two place two DisclosurePanel widgets in one row. This case is not trivial since DisclosurePanel changes its size in both directions. The hint FillStyle.HORIZONTAL forces LayoutPanel to ignore any size changes in the horizontal axis, however, LayoutPanel will respct any size changes in the vertical axis.
+This example is using a BoxLayout to place two DisclosurePanel widgets in one row. This case is not trivial since DisclosurePanel changes its size in both directions. The hint FillStyle.HORIZONTAL forces LayoutPanel to ignore any size changes in the horizontal axis, however, LayoutPanel will respct any size changes in the vertical axis.
 
 {{{
   public void onModuleLoad() {
