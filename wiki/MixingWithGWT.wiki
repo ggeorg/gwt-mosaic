@@ -1,8 +1,8 @@
-#summary How to mix GWT widgets (panels) with GWT Mosaic Widgets.
+#summary Mixing GWT widgets (panels) with GWT Mosaic widgets.
 
 = Introduction =
 
-Add your content here.
+GWT Mosaic is using a layout system based on absolute positioning. Like Java Swing GWT Mosaic is using Layout Managers to layout widgets in a container widget called LayoutPanel. Such a layout system relays on a cascading layout process. This is a very important concept for building complex application layouts, it allows nested layout structures, as you can layout a top level container, and the child containers will have a chance to adjust their layouts as well.
 
 
 = Details =
