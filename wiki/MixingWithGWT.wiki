@@ -16,7 +16,7 @@ Widgets are automatically laid out when they are attached to the DOM, this makes
 
 === Example 1 ===
 
-Puting a GWT panel, like HorizontalSplitPanel, into a Viewport is trivial.
+Adding a GWT panel, like HorizontalSplitPanel, into a Viewport is trivial.
 
 {{{
   public void onModuleLoad() {
@@ -55,4 +55,63 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix02.png
 
 === Example 2 ===
 
+This example is using a BoxLayout two place two DisclosurePanel widgets in one row. This case is not trivial since DisclosurePanel changes its size in both directions. The hint FillStyle.HORIZONTAL forces LayoutPanel to ignore any size changes in the horizontal axis, however, LayoutPanel will respct any size changes in the vertical axis.
+
+{{{
+  public void onModuleLoad() {
+    Viewport viewport = new Viewport(new BoxLayout());
+
+    LayoutPanel vbox = viewport.getLayoutPanel();
+    vbox.add(createAdvancedForm(), new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    vbox.add(createAdvancedForm(), new BoxLayoutData(FillStyle.HORIZONTAL, true));
+
+    viewport.attach();
+  }
+
+  private Widget createAdvancedForm() {
+    // Create a table to layout the form options
+    FlexTable layout = new FlexTable();
+    layout.setCellSpacing(6);
+    layout.setWidth("300px");
+    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+
+    // Add a title to the form
+    layout.setHTML(0, 0, "Enter Search Criteria");
+    cellFormatter.setColSpan(0, 0, 2);
+    cellFormatter.setHorizontalAlignment(0, 0,
+        HasHorizontalAlignment.ALIGN_CENTER);
+
+    // Add some standard form options
+    layout.setHTML(1, 0, "Name:");
+    layout.setWidget(1, 1, new TextBox());
+    layout.setHTML(2, 0, "Description:");
+    layout.setWidget(2, 1, new TextBox());
+
+    // Create some advanced options
+    HorizontalPanel genderPanel = new HorizontalPanel();
+    String[] genderOptions = new String[] {"male", "female"};
+    for (int i = 0; i < genderOptions.length; i++) {
+      genderPanel.add(new RadioButton("gender", genderOptions[i]));
+    }
+    Grid advancedOptions = new Grid(2, 2);
+    advancedOptions.setCellSpacing(6);
+    advancedOptions.setHTML(0, 0, "Location:");
+    advancedOptions.setWidget(0, 1, new TextBox());
+    advancedOptions.setHTML(1, 0, "Gender:");
+    advancedOptions.setWidget(1, 1, genderPanel);
+
+    // Add advanced options to form in a disclosure panel
+    DisclosurePanel advancedDisclosure = new DisclosurePanel(
+        "Advanced Criteria");
+    advancedDisclosure.setAnimationEnabled(true);
+    advancedDisclosure.ensureDebugId("cwDisclosurePanel");
+    advancedDisclosure.setContent(advancedOptions);
+    layout.setWidget(3, 0, advancedDisclosure);
+    cellFormatter.setColSpan(3, 0, 2);
+
+    return layout;
+  }
+}}}
+
+http://gwt-mosaic.googlecode.com/svn/wiki/mix03.png
 
