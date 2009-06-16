@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary How to mix GWT widgets (panels) with GWT Mosaic Widgets.
 
 = Introduction =
 
