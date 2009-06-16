@@ -37,7 +37,7 @@ Adding a GWT panel, like HorizontalSplitPanel, into a Viewport is trivial.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
 
-Note: hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. But, FillLayout can be forced to respect the widget's size by providing alignemnt hints.
+*Note:* hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. But, FillLayout can be forced to respect the widget's size by providing alignemnt hints.
 
 By replacing the following line:
 
@@ -215,7 +215,7 @@ Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adaptor c
 
 === Example 3 ===
 
-This example adds a DateComboBox to RootPanel (AbsolutePanel). It demonstrates various ways to initialize the widget's size.
+This example adds a DateComboBox to RootPanel, it demonstrates also various ways to initialize the widget's size.
 
 {{{
   public void onModuleLoad() {
@@ -262,3 +262,46 @@ This example adds a DateComboBox to RootPanel (AbsolutePanel). It demonstrates v
 }}}
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix06.png
+
+*Note:* The glue code that makes adding GWT Mosaic widgets to GWT widgets trivial is in LayoutPanel.onLoad() method:
+
+{{{
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    Widget parent = findParent();
+
+    if (parent instanceof HasLayoutManager || parent instanceof Viewport) {
+      return;
+    }
+
+    GWT.log("====================== Parent of '" + this.getClass().getName()
+        + "' ('" + parent.getClass().getName()
+        + "') is not an instance of HasLayoutManager.", null);
+
+    // Set the initial size & layout
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        layout();
+      }
+    });
+
+    // Add to Resizable Collection
+    ResizableWidgetCollection.get().add(new ResizableWidget() {
+      public Element getElement() {
+        return LayoutPanel.this.getElement();
+      }
+
+      public boolean isAttached() {
+        return LayoutPanel.this.isAttached();
+      }
+
+      public void onResize(int width, int height) {
+        LayoutPanel.this.layout();
+      }
+    });
+  }
+}}}
+
+
