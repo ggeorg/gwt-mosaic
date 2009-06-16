@@ -37,18 +37,20 @@ Puting a GWT panel, like HorizontalSplitPanel, into a Viewport is trivial.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
 
-Note: hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. FillLayout can also be forced to respect the widget's size by providing alignemnt hints. By changing:
+Note: hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. But, FillLayout can be forced to respect the widget's size by providing alignemnt hints.
+
+By replacing the following line:
 
 {{{
     viewport.getLayoutPanel().add(hSplit);
 }}}
-with
+with:
 {{{
     viewport.getLayoutPanel().add(hSplit, new FillLayoutData(FillLayout.ALIGN_CENTER, FillLayout.ALIGN_MIDDLE, true));
 }}}
 
 the HorizontalSplitPanel is positioned in the center of the page and sized to (250px, 200px).
 
-http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
+http://gwt-mosaic.googlecode.com/svn/wiki/mix02.png
 
 
