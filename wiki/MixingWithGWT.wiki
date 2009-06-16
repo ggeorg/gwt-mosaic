@@ -215,6 +215,8 @@ Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adaptor c
 
 === Example 3 ===
 
+This example adds a DateComboBox to RootPanel (AbsolutePanel). It demonstrates various ways to initialize the widget's size.
+
 {{{
   public void onModuleLoad() {
 
