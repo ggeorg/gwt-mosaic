@@ -2,8 +2,9 @@
 
 = Introduction =
 
-GWT Mosaic is using a layout system based on absolute positioning. Like Java Swing GWT Mosaic is using Layout Managers to layout widgets in a container widget called LayoutPanel. Such a layout system relays on a cascading layout process. This is a very important concept for building complex application layouts, it allows nested layout structures, as you can layout a top level container, and the child containers will have a chance to adjust their layouts as well.
+GWT Mosaic is using a layout system based on absolute positioning. Like Java Swing, GWT Mosaic is using Layout Managers to layout widgets in a container widget called LayoutPanel. Such a layout system relays on a cascading layout process. This is a very important concept for building complex application layouts, it allows nested layout structures, as you can layout a top level container, and the child containers will have a chance to adjust their layouts as well.
 
+GWT Panels are not designed to be part of a layout cascading process. This makes mixing of GWT widgets and GWT Mosaic widgets a not very trivial job. GWT Mosaic provides an interface (HasLayoutManager) that panels have to implement so that they can be part of the layout cascade process. This interace can be used to build widgets that can act as adaptors between GWT widgets and GWT Mosaic widgets. Such an adaptor widget is the Viewport widget.
 
 = Details =
 
