@@ -36,7 +36,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   private String onLoadHeight = null;
 
-  private String onLoaddWidth = null;
+  private String onLoadWidth = null;
 
   /**
    * Creates an empty decorated popup panel. A child widget must be added to it
@@ -169,10 +169,11 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setHeight(String height) {
-    onLoadHeight = height;
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
       setContentSize(-1, DOM.toPixelSize(height) - decoratorBorder[1]);
+    } else {
+      onLoadHeight = height;
     }
   }
 
@@ -185,10 +186,11 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   public void setWidth(String width) {
-    onLoaddWidth = width;
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
       setContentSize(DOM.toPixelSize(width) - decoratorBorder[0], -1);
+    } else {
+      onLoadWidth = width;
     }
   }
 
@@ -206,12 +208,12 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
 
   @Override
   protected void onLoad() {
-    if (onLoaddWidth != null && onLoadHeight != null) {
-      setSize(onLoaddWidth, onLoadHeight);
-      onLoaddWidth = onLoadHeight = null;
-    } else if (onLoaddWidth != null) {
-      setWidth(onLoaddWidth);
-      onLoaddWidth = null;
+    if (onLoadWidth != null && onLoadHeight != null) {
+      setSize(onLoadWidth, onLoadHeight);
+      onLoadWidth = onLoadHeight = null;
+    } else if (onLoadWidth != null) {
+      setWidth(onLoadWidth);
+      onLoadWidth = null;
     } else if (onLoadHeight != null) {
       setHeight(onLoadHeight);
       onLoadHeight = null;

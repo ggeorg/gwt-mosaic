@@ -33,9 +33,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
 
-  private String desiredHeight = null;
+  private String onLoadHeight = null;
 
-  private String desiredWidth = null;
+  private String onLoadWidth = null;
 
   /**
    * Creates an empty popup panel. A child widget must be added to it before it
@@ -138,10 +138,11 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
 
   @Override
   public void setHeight(String height) {
-    desiredHeight = height;
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
       setContentSize(-1, DOM.toPixelSize(height) - decoratorBorder[1]);
+    } else {
+      onLoadHeight = height;
     }
   }
 
@@ -154,10 +155,11 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
 
   @Override
   public void setWidth(String width) {
-    desiredWidth = width;
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
       setContentSize(DOM.toPixelSize(width) - decoratorBorder[0], -1);
+    } else {
+      onLoadWidth = width;
     }
   }
 
@@ -175,12 +177,15 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
 
   @Override
   protected void onLoad() {
-    if (desiredWidth != null && desiredHeight != null) {
-      setSize(desiredWidth, desiredHeight);
-    } else if (desiredWidth != null) {
-      setWidth(desiredWidth);
-    } else if (desiredHeight != null) {
-      setHeight(desiredHeight);
+    if (onLoadWidth != null && onLoadHeight != null) {
+      setSize(onLoadWidth, onLoadHeight);
+      onLoadWidth = onLoadHeight = null;
+    } else if (onLoadWidth != null) {
+      setWidth(onLoadWidth);
+      onLoadWidth = null;
+    } else if (onLoadHeight != null) {
+      setHeight(onLoadHeight);
+      onLoadHeight = null;
     }
 
     DeferredCommand.addCommand(new Command() {
