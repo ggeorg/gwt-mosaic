@@ -54,21 +54,6 @@ public class DesktopPanel extends Composite implements
     CloseHandler<PopupPanel>, SelectionHandler<WindowPanel>,
     WindowStateListener, HasLayoutManager {
 
-  /**
-   * WindowPanel direction constant, used in {@link ResizeDragController}.
-   */
-  static final class DirectionConstant {
-
-    final int directionBits;
-
-    final String directionLetters;
-
-    private DirectionConstant(int directionBits, String directionLetters) {
-      this.directionBits = directionBits;
-      this.directionLetters = directionLetters;
-    }
-  }
-
   private class MoveDragController extends AbstractDragController {
 
     private int boundaryOffsetX;
@@ -117,18 +102,17 @@ public class DesktopPanel extends Composite implements
       if (!w.isActive()) {
         w.toFront();
       }
-      
+
       if (!w.isCollapsed()) {
         w.hideContent(w.isHideContentOnMove());
       }
-      
+
       if (!w.isModal()) {
         if (w.glassPanel == null) {
           w.glassPanel = new GlassPanel(false);
         }
 
-        // w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-        w.glassPanel.addStyleName("mosaic-GlassPanel-standard");
+        w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
         DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
             DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
 
@@ -152,17 +136,35 @@ public class DesktopPanel extends Composite implements
           + DOMUtil.getClientHeight(context.boundaryPanel.getElement())
           - context.draggable.getOffsetHeight();
     }
+
+    @Override
+    public void makeDraggable(Widget draggable) {
+      try {
+        super.makeDraggable(draggable);
+      } catch (Exception ex) {
+        // Ignore!
+      }
+    }
+
+    @Override
+    public void makeNotDraggable(Widget draggable) {
+      try {
+        super.makeNotDraggable(draggable);
+      } catch (Exception ex) {
+        // Ignore!
+      }
+    }
   }
 
   private class ResizeDragController extends AbstractDragController {
 
     private static final int MIN_WIDGET_SIZE = 96;
 
-    private Map<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
-
     private int boundaryOffsetX;
 
     private int boundaryOffsetY;
+
+    private Map<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
 
     private int dropTargetClientHeight;
 
@@ -249,7 +251,7 @@ public class DesktopPanel extends Composite implements
     @Override
     public void dragStart() {
       final WindowPanel w = (WindowPanel) context.draggable.getParent();
-      
+
       if (!w.isActive()) {
         w.toFront();
       }
@@ -260,8 +262,7 @@ public class DesktopPanel extends Composite implements
           w.glassPanel = new GlassPanel(false);
         }
 
-        // w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-        w.glassPanel.addStyleName("mosaic-GlassPanel-standard");
+        w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
         DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
             DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
 
@@ -286,13 +287,31 @@ public class DesktopPanel extends Composite implements
           - context.draggable.getOffsetHeight();
     }
 
-    private DirectionConstant getDirection(Widget draggable) {
-      return directionMap.get(draggable);
+    @Override
+    public void makeDraggable(Widget draggable) {
+      try {
+        super.makeDraggable(draggable);
+      } catch (Exception ex) {
+        // Ignore!
+      }
     }
 
     public void makeDraggable(Widget widget, DirectionConstant direction) {
       super.makeDraggable(widget);
       directionMap.put(widget, direction);
+    }
+
+    @Override
+    public void makeNotDraggable(Widget draggable) {
+      try {
+        super.makeNotDraggable(draggable);
+      } catch (Exception ex) {
+        // Ignore!
+      }
+    }
+
+    private DirectionConstant getDirection(Widget draggable) {
+      return directionMap.get(draggable);
     }
 
     protected BoundaryDropController newBoundaryDropController(
@@ -303,6 +322,21 @@ public class DesktopPanel extends Composite implements
       return new BoundaryDropController(boundaryPanel, false);
     }
 
+  }
+
+  /**
+   * WindowPanel direction constant, used in {@link ResizeDragController}.
+   */
+  static final class DirectionConstant {
+
+    final int directionBits;
+
+    final String directionLetters;
+
+    private DirectionConstant(int directionBits, String directionLetters) {
+      this.directionBits = directionBits;
+      this.directionLetters = directionLetters;
+    }
   }
 
   private static final Map<Element, DesktopPanel> map = new HashMap<Element, DesktopPanel>();
@@ -386,11 +420,11 @@ public class DesktopPanel extends Composite implements
 
   private DesktopManager desktopManager;
 
-  private Vector<WindowPanel> windowPanels;
-
   private MoveDragController moveDragController;
 
   private ResizeDragController resizeDragController;
+
+  private Vector<WindowPanel> windowPanels;
 
   /**
    * Creates a new {@code DesktopPane}.
@@ -425,10 +459,6 @@ public class DesktopPanel extends Composite implements
     }
   }
 
-  protected DesktopManager createDefaultDesktopManager() {
-    return new DefaultDesktopManager();
-  }
-
   /**
    * Returns the {@code DesktopManger} that handles desktop-specific UI actions.
    * 
@@ -443,6 +473,17 @@ public class DesktopPanel extends Composite implements
 
   public AbstractDragController getMoveDragController() {
     return moveDragController;
+  }
+
+  public Point getPopupPosition(WindowPanel windowPanel) {
+    final int[] borders = DOM.getBorderSizes(getElement());
+    return new Point(windowPanel.getAbsoluteLeft()
+        - (getAbsoluteLeft() + borders[3]), windowPanel.getAbsoluteTop()
+        - (getAbsoluteTop() + borders[0]));
+  }
+
+  public Dimension getPreferredSize() {
+    return DOM.getClientSize(getElement());
   }
 
   public AbstractDragController getResizeDragController() {
@@ -461,22 +502,11 @@ public class DesktopPanel extends Composite implements
     return (windowPanels == null) ? -1 : windowPanels.indexOf(child);
   }
 
-  @Override
-  protected void initWidget(Widget widget) {
-    super.initWidget(widget);
-
-    map.put(widget.getElement(), this);
-
-    moveDragController = new MoveDragController((AbsolutePanel) widget);
-    moveDragController.setBehaviorConstrainedToBoundaryPanel(true);
-    // moveDragController.setBehaviorDragProxy(true);
-    moveDragController.setBehaviorMultipleSelection(false);
-    moveDragController.setBehaviorDragStartSensitivity(3);
-
-    resizeDragController = new ResizeDragController((AbsolutePanel) widget);
-    resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
-    resizeDragController.setBehaviorMultipleSelection(false);
-    resizeDragController.setBehaviorDragStartSensitivity(3);
+  public void invalidate() {
+    final HasLayoutManager parent = WidgetHelper.getParent(this);
+    if (parent != null) {
+      parent.invalidate();
+    }
   }
 
   /**
@@ -491,14 +521,33 @@ public class DesktopPanel extends Composite implements
     return windowPanels.indexOf(windowPanel) == windowPanels.size() - 1;
   }
 
-  public void makeDraggable(WindowPanel w) {
-    moveDragController.makeDraggable(w, w.getHeader());
+  public void layout() {
+    if (windowPanels == null) {
+      return;
+    }
+    final Dimension box = DOM.getClientSize(getElement());
+    for (int i = 0, n = windowPanels.size(); i < n; i++) {
+      final WindowPanel w = windowPanels.get(i);
+      final Dimension d = WidgetHelper.getOffsetSize(w);
+
+      final Point p = getPopupPosition(w);
+
+      p.x -= Math.max(0, (p.x + w.getOffsetWidth()) - box.width);
+      p.y -= Math.max(0, (p.y + w.getOffsetHeight()) - box.height);
+
+      w.setPopupPosition(Math.max(0, p.x), Math.max(0, p.y));
+
+      d.width = d.width > box.width ? box.width : -1;
+      d.height = d.height > box.height ? box.height : -1;
+
+      WidgetHelper.setSize(w, d);
+
+      w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
+    }
   }
 
-  private void makeElementDradHandleDraggable(ElementDragHandle widget,
-      DirectionConstant direction) {
-    resizeDragController.makeDraggable(widget, direction);
-    widget.addStyleName("Resize-" + direction.directionLetters);
+  public void makeDraggable(WindowPanel w) {
+    moveDragController.makeDraggable(w, w.getHeader());
   }
 
   public void makeNotDraggable(WindowPanel w) {
@@ -608,6 +657,14 @@ public class DesktopPanel extends Composite implements
     this.desktopManager = desktopManager;
   }
 
+  public void setPopupPosition(WindowPanel windowPanel, int left, int top) {
+    windowPanel.setPopupPosition(left, top);
+  }
+
+  public void setPopupPosition(WindowPanel windowPanel, Point position) {
+    setPopupPosition(windowPanel, position.x, position.y);
+  }
+
   /**
    * Moves the {@code WindowPanel} to the bottom of the {@code WindowPanel}s in
    * this {@code DesktopPanel} (position 0).
@@ -650,58 +707,35 @@ public class DesktopPanel extends Composite implements
     }
   }
 
+  private void makeElementDradHandleDraggable(ElementDragHandle widget,
+      DirectionConstant direction) {
+    resizeDragController.makeDraggable(widget, direction);
+    widget.addStyleName("Resize-" + direction.directionLetters);
+  }
+
+  protected DesktopManager createDefaultDesktopManager() {
+    return new DefaultDesktopManager();
+  }
+
+  @Override
+  protected void initWidget(Widget widget) {
+    super.initWidget(widget);
+
+    map.put(widget.getElement(), this);
+
+    moveDragController = new MoveDragController((AbsolutePanel) widget);
+    moveDragController.setBehaviorConstrainedToBoundaryPanel(true);
+    // moveDragController.setBehaviorDragProxy(true);
+    moveDragController.setBehaviorMultipleSelection(false);
+    moveDragController.setBehaviorDragStartSensitivity(3);
+
+    resizeDragController = new ResizeDragController((AbsolutePanel) widget);
+    resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
+    resizeDragController.setBehaviorMultipleSelection(false);
+    resizeDragController.setBehaviorDragStartSensitivity(3);
+  }
+
   void add(GlassPanel glassPanel) {
     ((AbsolutePanel) getWidget()).add(glassPanel, 0, 0);
-  }
-
-  public Dimension getPreferredSize() {
-    return DOM.getClientSize(getElement());
-  }
-
-  public void invalidate() {
-    final HasLayoutManager parent = WidgetHelper.getParent(this);
-    if (parent != null) {
-      parent.invalidate();
-    }
-  }
-
-  public void layout() {
-    if (windowPanels == null) {
-      return;
-    }
-    final Dimension box = DOM.getClientSize(getElement());
-    for (int i = 0, n = windowPanels.size(); i < n; i++) {
-      final WindowPanel w = windowPanels.get(i);
-      final Dimension d = WidgetHelper.getOffsetSize(w);
-
-      final Point p = getPopupPosition(w);
-
-      p.x -= Math.max(0, (p.x + w.getOffsetWidth()) - box.width);
-      p.y -= Math.max(0, (p.y + w.getOffsetHeight()) - box.height);
-
-      w.setPopupPosition(Math.max(0, p.x), Math.max(0, p.y));
-
-      d.width = d.width > box.width ? box.width : -1;
-      d.height = d.height > box.height ? box.height : -1;
-
-      WidgetHelper.setSize(w, d);
-
-      w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
-    }
-  }
-
-  public void setPopupPosition(WindowPanel windowPanel, Point position) {
-    setPopupPosition(windowPanel, position.x, position.y);
-  }
-
-  public void setPopupPosition(WindowPanel windowPanel, int left, int top) {
-    windowPanel.setPopupPosition(left, top);
-  }
-
-  public Point getPopupPosition(WindowPanel windowPanel) {
-    final int[] borders = DOM.getBorderSizes(getElement());
-    return new Point(windowPanel.getAbsoluteLeft()
-        - (getAbsoluteLeft() + borders[3]), windowPanel.getAbsoluteTop()
-        - (getAbsoluteTop() + borders[0]));
   }
 }
