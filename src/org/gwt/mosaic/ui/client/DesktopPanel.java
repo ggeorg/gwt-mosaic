@@ -117,18 +117,24 @@ public class DesktopPanel extends Composite implements
       if (!w.isActive()) {
         w.toFront();
       }
+      
       if (!w.isCollapsed()) {
         w.hideContent(w.isHideContentOnMove());
       }
+      
       if (!w.isModal()) {
         if (w.glassPanel == null) {
           w.glassPanel = new GlassPanel(false);
-          w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-          DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
-              DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
         }
+
+        // w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+        w.glassPanel.addStyleName("mosaic-GlassPanel-standard");
+        DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
+            DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
+
         add(w.glassPanel);
       }
+
       super.dragStart();
 
       // one time calculation of boundary panel location for efficiency during
@@ -243,18 +249,25 @@ public class DesktopPanel extends Composite implements
     @Override
     public void dragStart() {
       final WindowPanel w = (WindowPanel) context.draggable.getParent();
+      
+      if (!w.isActive()) {
+        w.toFront();
+      }
 
       w.hideContent(true);
       if (!w.isModal()) {
         if (w.glassPanel == null) {
           w.glassPanel = new GlassPanel(false);
-          w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-          final int zIndex = DOM.getIntStyleAttribute(w.getElement(), "zIndex");
-          DOM.setIntStyleAttribute(w.glassPanel.getElement(), "zIndex",
-              zIndex - 1);
         }
+
+        // w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+        w.glassPanel.addStyleName("mosaic-GlassPanel-standard");
+        DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
+            DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
+
         getBoundaryPanel().add(w.glassPanel, 0, 0);
       }
+
       super.dragStart();
 
       // one time calculations of boundary panel location for efficiency during
@@ -662,12 +675,12 @@ public class DesktopPanel extends Composite implements
       final Dimension d = WidgetHelper.getOffsetSize(w);
 
       final Point p = getPopupPosition(w);
-      
+
       p.x -= Math.max(0, (p.x + w.getOffsetWidth()) - box.width);
       p.y -= Math.max(0, (p.y + w.getOffsetHeight()) - box.height);
 
       w.setPopupPosition(Math.max(0, p.x), Math.max(0, p.y));
-      
+
       d.width = d.width > box.width ? box.width : -1;
       d.height = d.height > box.height ? box.height : -1;
 
@@ -676,7 +689,7 @@ public class DesktopPanel extends Composite implements
       w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
     }
   }
-  
+
   public void setPopupPosition(WindowPanel windowPanel, Point position) {
     setPopupPosition(windowPanel, position.x, position.y);
   }

@@ -35,6 +35,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -68,7 +69,6 @@ import com.google.gwt.user.client.AbstractWindowClosingEvent;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
@@ -147,10 +147,16 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  final class ElementDragHandle extends Widget implements HasAllMouseHandlers {
+  final class ElementDragHandle extends Widget implements HasAllMouseHandlers,
+      HasClickHandlers {
 
     public ElementDragHandle(Element elem) {
       setElement(elem);
+      onAttach();
+    }
+
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+      return addDomHandler(handler, ClickEvent.getType());
     }
 
     public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
@@ -176,28 +182,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
       return addDomHandler(handler, MouseWheelEvent.getType());
     }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-      super.onBrowserEvent(event);
-
-      switch (DOM.eventGetType(event)) {
-        case Event.ONMOUSEDOWN:
-          if (!isActive()) {
-            toFront();
-          }
-      }
-    }
-
-    @Override
-    protected void onAttach() {
-      super.onAttach();
-    }
-
-    @Override
-    protected void onDetach() {
-      super.onDetach();
-    }
   }
 
   /**
@@ -212,6 +196,16 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private static final int Z_INDEX_MODAL_OFFSET = 1000;
 
+  private Point beforeHidePopupPosition;
+
+  private ClickHandler bringToFontClickHandler = new ClickHandler() {
+    public void onClick(ClickEvent event) {
+      if (isShowing() && !isActive()) {
+        toFront();
+      }
+    }
+  };
+
   /**
    * Double click caption action.
    */
@@ -221,9 +215,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private int contentWidth, contentHeight;
 
-  private boolean fireWindowCloseEvents = true;
+  private DesktopPanel desktopPanel;
 
-  GlassPanel glassPanel;
+  private boolean fireWindowCloseEvents = true;
 
   private WindowHandlers handlers;
 
@@ -264,6 +258,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private List<WindowStateListener> windowStateListeners;
 
+  GlassPanel glassPanel;
+
   ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
 
   ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
@@ -276,31 +272,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public WindowPanel() {
     this(null);
   }
-
-  /**
-   * Creates a new empty window with the specified caption and default layout.
-   * 
-   * @param caption the caption of the window
-   */
-  public WindowPanel(String caption) {
-    this(caption, true, false);
-  }
-
-  /**
-   * Creates a new empty window with default layout.
-   * 
-   * @param boundaryPanel
-   * @param caption the caption of the window
-   * @param resizable
-   * @param autoHide
-   */
-  protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
-      boolean resizable, boolean autoHide) {
-    this(DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
-        : boundaryPanel), caption, resizable, autoHide);
-  }
-
-  private DesktopPanel desktopPanel;
 
   public WindowPanel(DesktopPanel desktopPanel, String caption,
       boolean resizable, boolean autoHide) {
@@ -342,17 +313,34 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     });
 
-    panel.getHeader().addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
-        if (isShowing() && !isActive()) {
-          toFront();
-        }
-      }
-    });
+    panel.getHeader().addClickHandler(bringToFontClickHandler);
 
     super.setWidget(panel);
 
     addStyleName(DEFAULT_STYLENAME);
+  }
+
+  /**
+   * Creates a new empty window with the specified caption and default layout.
+   * 
+   * @param caption the caption of the window
+   */
+  public WindowPanel(String caption) {
+    this(caption, true, false);
+  }
+
+  /**
+   * Creates a new empty window with default layout.
+   * 
+   * @param boundaryPanel
+   * @param caption the caption of the window
+   * @param resizable
+   * @param autoHide
+   */
+  protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
+      boolean resizable, boolean autoHide) {
+    this(DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
+        : boundaryPanel), caption, resizable, autoHide);
   }
 
   /**
@@ -544,6 +532,36 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return normalWindowState;
   }
 
+  /**
+   * Gets the popup's left position relative to the browser's client area.
+   * 
+   * @return the popup's left position
+   */
+  @Override
+  public int getPopupLeft() {
+    final DesktopPanel boundaryPanel = getDesktopPanel();
+    if (boundaryPanel == null) {
+      return DOM.getAbsoluteLeft(getElement());
+    } else {
+      return boundaryPanel.getPopupPosition(this).x;
+    }
+  }
+
+  /**
+   * Gets the popup's top position relative to the browser's client area.
+   * 
+   * @return the popup's top position
+   */
+  @Override
+  public int getPopupTop() {
+    final DesktopPanel boundaryPanel = getDesktopPanel();
+    if (boundaryPanel == null) {
+      return DOM.getAbsoluteTop(getElement());
+    } else {
+      return boundaryPanel.getPopupPosition(this).y;
+    }
+  }
+
   @Override
   public Widget getWidget() {
     if (panel.getWidgetCount() > 0) {
@@ -601,8 +619,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       modal = false;
     }
   }
-
-  private Point beforeHidePopupPosition;
 
   /**
    * Returns whether the {@code WindowPanel} is the currently "selected" or
@@ -754,8 +770,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   @Override
   public void setContentSize(Dimension d) {
     if (isResizable()) {
-      contentWidth = d.width;
-      contentHeight = d.height;
+      if (d.width >= 0) {
+        contentWidth = d.width;
+      }
+      if (d.height >= 0) {
+        contentHeight = d.height;
+      }
     }
     super.setContentSize(d);
   }
@@ -789,36 +809,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   public void setNormalWindowState(WindowState windowState) {
     normalWindowState = windowState;
-  }
-
-  /**
-   * Gets the popup's left position relative to the browser's client area.
-   * 
-   * @return the popup's left position
-   */
-  @Override
-  public int getPopupLeft() {
-    final DesktopPanel boundaryPanel = getDesktopPanel();
-    if (boundaryPanel == null) {
-      return DOM.getAbsoluteLeft(getElement());
-    } else {
-      return boundaryPanel.getPopupPosition(this).x;
-    }
-  }
-
-  /**
-   * Gets the popup's top position relative to the browser's client area.
-   * 
-   * @return the popup's top position
-   */
-  @Override
-  public int getPopupTop() {
-    final DesktopPanel boundaryPanel = getDesktopPanel();
-    if (boundaryPanel == null) {
-      return DOM.getAbsoluteTop(getElement());
-    } else {
-      return boundaryPanel.getPopupPosition(this).y;
-    }
   }
 
   @Override
@@ -1071,87 +1061,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return handlers;
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * @see com.google.gwt.user.client.ui.DecoratedPopupPanel#doAttachChildren()
-   */
-  @Override
-  protected void doAttachChildren() {
-    super.doAttachChildren();
-
-    // See comment in doDetachChildren for an explanation of this call
-    if (isResizable()) {
-      nResizeHandle.onAttach();
-      sResizeHandle.onAttach();
-      wResizeHandle.onAttach();
-      eResizeHandle.onAttach();
-      nwResizeHandle.onAttach();
-      neResizeHandle.onAttach();
-      swResizeHandle.onAttach();
-      seResizeHandle.onAttach();
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @see com.google.gwt.user.client.ui.DecoratedPopupPanel#doDetachChildren()
-   */
-  @Override
-  protected void doDetachChildren() {
-    super.doDetachChildren();
-
-    if (nResizeHandle != null) {
-      if (nResizeHandle.isAttached()) {
-        nResizeHandle.onDetach();
-      }
-      nResizeHandle = null;
-    }
-    if (sResizeHandle != null) {
-      if (seResizeHandle.isAttached()) {
-        sResizeHandle.onDetach();
-      }
-      sResizeHandle = null;
-    }
-    if (wResizeHandle != null) {
-      if (wResizeHandle.isAttached()) {
-        wResizeHandle.onDetach();
-      }
-      wResizeHandle = null;
-    }
-    if (eResizeHandle != null) {
-      if (eResizeHandle.isAttached()) {
-        eResizeHandle.onDetach();
-      }
-      eResizeHandle = null;
-    }
-    if (nwResizeHandle != null) {
-      if (nwResizeHandle.isAttached()) {
-        nwResizeHandle.onDetach();
-      }
-      nwResizeHandle = null;
-    }
-    if (neResizeHandle != null) {
-      if (neResizeHandle.isAttached()) {
-        neResizeHandle.onDetach();
-      }
-      neResizeHandle = null;
-    }
-    if (swResizeHandle != null) {
-      if (swResizeHandle.isAttached()) {
-        swResizeHandle.onDetach();
-      }
-      swResizeHandle = null;
-    }
-    if (seResizeHandle != null) {
-      if (seResizeHandle.isAttached()) {
-        seResizeHandle.onDetach();
-      }
-      seResizeHandle = null;
-    }
-  }
-
   @Override
   protected void onLoad() {
     super.onLoad();
@@ -1175,7 +1084,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       DirectionConstant direction) {
     final Element td = getCellElement(row, col).getParentElement().cast();
     final ElementDragHandle widget = new ElementDragHandle(td);
+
     adopt(widget);
+
+    widget.addClickHandler(bringToFontClickHandler);
+
     return widget;
   }
 
