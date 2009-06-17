@@ -41,7 +41,6 @@ import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.gen2.table.override.client.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
