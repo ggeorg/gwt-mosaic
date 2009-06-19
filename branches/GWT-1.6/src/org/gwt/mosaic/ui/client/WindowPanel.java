@@ -50,12 +50,12 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
-import com.google.gwt.event.logical.shared.HasCloseHandlers;
+import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.HasResizeHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -103,7 +103,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
 @SuppressWarnings("deprecation")
 public class WindowPanel extends DecoratedLayoutPopupPanel implements
     HasBeforeSelectionHandlers<WindowPanel>, HasSelectionHandlers<WindowPanel>,
-    HasCaption, CoreConstants {
+    HasOpenHandlers<WindowPanel>, HasCaption, CoreConstants {
 
   /**
    * Double click caption action.
@@ -128,14 +128,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   }
 
   private class WindowHandlers extends HandlerManager implements
-      HasCloseHandlers<WindowPanel>, HasResizeHandlers, HasHandlers {
+      HasResizeHandlers, HasHandlers {
 
     public WindowHandlers() {
       super(null);
-    }
-
-    public HandlerRegistration addCloseHandler(CloseHandler<WindowPanel> handler) {
-      return addHandler(CloseEvent.getType(), handler);
     }
 
     public HandlerRegistration addResizeHandler(ResizeHandler handler) {
@@ -216,6 +212,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   private int contentWidth, contentHeight;
 
   private DesktopPanel desktopPanel;
+
+  private HandlerRegistration desktopPanelCloseHandler;
+
+  private HandlerRegistration desktopPanelOpenHandler;
+
+  private HandlerRegistration desktopPanelSelectionHandler;
 
   private boolean fireWindowCloseEvents = true;
 
@@ -368,22 +370,15 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return addHandler(handler, BeforeSelectionEvent.getType());
   }
 
-  /**
-   * Adds a {@code CloseHandler} handler.
-   * 
-   * @param handler the handler
-   * @return the handler registration
-   */
-  @Override
-  public HandlerRegistration addCloseHandler(CloseHandler<PopupPanel> handler) {
-    return addHandler(handler, CloseEvent.getType());
-  }
-
   public void addCollapsedListener(CollapsedListener listener) {
     if (collapsedListeners == null) {
       collapsedListeners = new CollapsedListenerCollection();
     }
     collapsedListeners.add(listener);
+  }
+
+  public HandlerRegistration addOpenHandler(OpenHandler<WindowPanel> handler) {
+    return addHandler(handler, OpenEvent.getType());
   }
 
   /**
@@ -511,8 +506,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @return the the {@link DesktopPanel} this {@code WindowPanel} belongs to
    */
   public DesktopPanel getDesktopPanel() {
-    // return DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
-    // : boundaryPanel);
     return desktopPanel;
   }
 
@@ -609,14 +602,15 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     // restore popup position
     beforeHidePopupPosition = getDesktopPanel().getPopupPosition(this);
 
-    super.hide(autoHide);
-
-    if (modal && glassPanel != null) {
-      glassPanel.removeFromParent();
-    }
-    fireClosedImpl();
-    if (modal) {
-      modal = false;
+    try {
+      super.hide(autoHide);
+    } finally {
+      if (modal && glassPanel != null) {
+        glassPanel.removeFromParent();
+      }
+      if (modal) {
+        modal = false;
+      }
     }
   }
 
@@ -898,7 +892,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       return;
     }
 
-    getDesktopPanel().add(this);
+    OpenEvent.fire(this, this);
+
     // the previous call will make the WindowPanel active, so we have to reset
     // the internal state
     isActive = false;
@@ -941,6 +936,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public void showModal() {
     showModal(true);
   }
+
+  // private void fireClosedImpl() {
+  // if (closeHandlerInitialized) {
+  // CloseEvent.fire(getHandlers(), null);
+  // }
+  // }
 
   /**
    * Centers the {@code WindowPanel} in the browser window and shows it modal
@@ -1020,12 +1021,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return getHandlers().addHandler(type, handler);
   }
 
-  private void fireClosedImpl() {
-    // if (closeHandlerInitialized) {
-    CloseEvent.fire(getHandlers(), null);
-    // }
-  }
-
   private String fireClosingImpl() {
     // if (closeHandlerInitialized) {
     ClosingEvent event = new ClosingEvent();
@@ -1075,7 +1070,12 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     });
   }
-
+  void addDesktopPanelHandlers() {
+    desktopPanelOpenHandler = addOpenHandler(desktopPanel);
+    desktopPanelCloseHandler = addCloseHandler(desktopPanel);
+    desktopPanelSelectionHandler = addSelectionHandler(desktopPanel);
+    addWindowStateListener(desktopPanel);
+  }
   void hideContent(boolean hideContent) {
     panel.hideContent(hideContent);
   }
@@ -1090,6 +1090,13 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     widget.addClickHandler(bringToFontClickHandler);
 
     return widget;
+  }
+
+  void removeDesktopPanelHandlers() {
+    desktopPanelOpenHandler.removeHandler();
+    desktopPanelCloseHandler.removeHandler();
+    desktopPanelSelectionHandler.removeHandler();
+    removeWindowStateListener(desktopPanel);
   }
 
   void setZIndex(int zIndexOffset) {

@@ -36,6 +36,8 @@ import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Element;
@@ -51,8 +53,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * 
  */
 public class DesktopPanel extends Composite implements
-    CloseHandler<PopupPanel>, SelectionHandler<WindowPanel>,
-    WindowStateListener, HasLayoutManager {
+    OpenHandler<WindowPanel>, CloseHandler<PopupPanel>,
+    SelectionHandler<WindowPanel>, WindowStateListener, HasLayoutManager {
 
   private class MoveDragController extends AbstractDragController {
 
@@ -453,9 +455,7 @@ public class DesktopPanel extends Composite implements
     }
     if (windowPanels.indexOf(windowPanel) == -1) {
       windowPanels.add(windowPanel);
-      windowPanel.addCloseHandler(this);
-      windowPanel.addSelectionHandler(this);
-      windowPanel.addWindowStateListener(this);
+      windowPanel.addDesktopPanelHandlers();
     }
   }
 
@@ -628,6 +628,10 @@ public class DesktopPanel extends Composite implements
     getDesktopManager().onClose(event);
   }
 
+  public void onOpen(OpenEvent<WindowPanel> event) {
+    getDesktopManager().onOpen(event);
+  }
+
   public void onSelection(SelectionEvent<WindowPanel> event) {
     getDesktopManager().onSelection(event);
   }
@@ -643,8 +647,15 @@ public class DesktopPanel extends Composite implements
     }
   }
 
-  public boolean remove(int index) {
-    return (windowPanels == null) ? false : windowPanels.remove(index) != null;
+  public void remove(int index) {
+    if (windowPanels == null) {
+      return;
+    }
+    WindowPanel windowPanel = windowPanels.get(index);
+    if (windowPanel != null) {
+      windowPanels.remove(index);
+      windowPanel.removeDesktopPanelHandlers();
+    }
   }
 
   /**
@@ -738,4 +749,5 @@ public class DesktopPanel extends Composite implements
   void add(GlassPanel glassPanel) {
     ((AbsolutePanel) getWidget()).add(glassPanel, 0, 0);
   }
+
 }

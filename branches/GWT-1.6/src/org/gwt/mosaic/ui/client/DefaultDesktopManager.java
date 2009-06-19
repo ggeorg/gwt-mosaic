@@ -23,6 +23,7 @@ import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -40,30 +41,20 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * 
  */
 public class DefaultDesktopManager implements DesktopManager {
+  
+  public void beginDragging(WindowPanel w) {
+    // TODO Auto-generated method stub
 
-  /**
-   * Removes the {@link WindowPanel} from its {@link DesktopPanel}.
-   * 
-   * @param the {@code CloseEvent}
-   */
-  public void onClose(CloseEvent<PopupPanel> event) {
-    WindowPanel w = (WindowPanel) event.getTarget();
-    DesktopPanel d = w.getDesktopPanel();
-    d.remove(d.getWindowPanelIndex(w));
-    int size = d.getWindowPanelCount();
-    if (size > 0) {
-      d.getWindowPanel(size - 1).toFront();
-    }
   }
 
-  /**
-   * This will activate the selected {@link WindowPanel} moving it to the front.
-   * 
-   * @param the {@code SelectionEvent}
-   */
-  public void onSelection(SelectionEvent<WindowPanel> event) {
-    final DesktopPanel d = event.getSelectedItem().getDesktopPanel();
-    d.toFront(event.getSelectedItem());
+  public void dragMove(WindowPanel w, int newX, int newY) {
+    // TODO Auto-generated method stub
+
+  }
+
+  public void endDragging(WindowPanel w) {
+    // TODO Auto-generated method stub
+
   }
 
   /**
@@ -125,6 +116,40 @@ public class DefaultDesktopManager implements DesktopManager {
   }
 
   /**
+   * Removes the {@link WindowPanel} from its {@link DesktopPanel}.
+   * 
+   * @param the {@code CloseEvent}
+   */
+  public void onClose(CloseEvent<PopupPanel> event) {
+    WindowPanel w = (WindowPanel) event.getTarget();
+    DesktopPanel d = w.getDesktopPanel();
+    d.remove(d.getWindowPanelIndex(w));
+    int size = d.getWindowPanelCount();
+    if (size > 0) {
+      d.getWindowPanel(size - 1).toFront();
+    }
+  }
+
+  /**
+   * Adds the {@link WindowPanel} to its {@link DesktopPanel}.
+   */
+  public void onOpen(OpenEvent<WindowPanel> event) {
+    WindowPanel w = (WindowPanel) event.getTarget();
+    DesktopPanel d = w.getDesktopPanel();
+    d.add(w);
+  }
+
+  /**
+   * This will activate the selected {@link WindowPanel} moving it to the front.
+   * 
+   * @param the {@code SelectionEvent}
+   */
+  public void onSelection(SelectionEvent<WindowPanel> event) {
+    final DesktopPanel d = event.getSelectedItem().getDesktopPanel();
+    d.toFront(event.getSelectedItem());
+  }
+
+  /**
    * Restores the {@link WindowPanel}.
    * 
    * @param w the {@link WindowPanel} to be restored
@@ -149,21 +174,6 @@ public class DefaultDesktopManager implements DesktopManager {
         // TODO windowResizeHandler.onResize(null);
       }
     }
-  }
-
-  public void beginDragging(WindowPanel w) {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void dragMove(WindowPanel w, int newX, int newY) {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void endDragging(WindowPanel w) {
-    // TODO Auto-generated method stub
-
   }
 
 }
