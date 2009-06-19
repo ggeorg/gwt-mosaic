@@ -605,6 +605,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     try {
       super.hide(autoHide);
     } finally {
+      removeDesktopPanelHandlers();
       if (modal && glassPanel != null) {
         glassPanel.removeFromParent();
       }
@@ -891,6 +892,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     if (isAttached()) {
       return;
     }
+
+    addDesktopPanelHandlers();
 
     OpenEvent.fire(this, this);
 
