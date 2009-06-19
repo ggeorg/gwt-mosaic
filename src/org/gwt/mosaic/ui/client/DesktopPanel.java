@@ -455,7 +455,6 @@ public class DesktopPanel extends Composite implements
     }
     if (windowPanels.indexOf(windowPanel) == -1) {
       windowPanels.add(windowPanel);
-      windowPanel.addDesktopPanelHandlers();
     }
   }
 
@@ -654,7 +653,6 @@ public class DesktopPanel extends Composite implements
     WindowPanel windowPanel = windowPanels.get(index);
     if (windowPanel != null) {
       windowPanels.remove(index);
-      windowPanel.removeDesktopPanelHandlers();
     }
   }
 
