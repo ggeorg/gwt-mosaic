@@ -3,9 +3,9 @@
 
 = Introduction =
 
-GWT Mosaic is using a layout system based on absolute positioning. Like Java Swing, GWT Mosaic is using Layout Managers to layout widgets in a container widget called LayoutPanel. Such a layout system relays on a cascading layout process. This is a very important concept for building complex application layouts, it allows nested layout structures, as you can layout a top level container, and the child containers will have a chance to adjust their layouts as well.
+GWT Mosaic is using a layout system based on absolute positioning. Like Java Swing, GWT Mosaic uses Layout Managers to layout widgets in a container widget called LayoutPanel. Such a layout system relays on a cascading layout process. This is a very important concept for building complex application layouts, it allows nested layout structures, as you can layout a top level container, and the child containers will have a chance to adjust their layouts as well.
 
-GWT Panels are not designed to be part of a layout cascading process. This makes mixing of GWT widgets and GWT Mosaic widgets a not very trivial job. GWT Mosaic provides an interface (HasLayoutManager) that panels have to implement so that they can be part of the layout cascade process. This interface can be used to build widgets that can act as adaptors between GWT widgets and GWT Mosaic widgets. Such an adaptor widget is the Viewport widget.
+GWT Panels are not designed to be part of a layout cascading process. This makes mixing of GWT widgets and GWT Mosaic widgets a complicated task. GWT Mosaic provides an interface (HasLayoutManager) that panels have to implement so that they can be part of the layout cascade process. This interface can be used to build widgets that can act as adapters between GWT widgets and GWT Mosaic widgets. For example a Viewport widget is an adapter widget.
 
 = Details =
 
@@ -38,7 +38,7 @@ Adding a GWT panel, like HorizontalSplitPanel, into a Viewport is trivial.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix01.png
 
-*Note:* hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. But, FillLayout can be forced to respect the widget's size by providing alignemnt hints.
+*Note:* hSplit.setSize("250px", "200px") is ignored by Viewport since the default layout manager is FillLayout. But, FillLayout can be forced to respect the widget's size by providing alignment hints.
 
 By replacing the following line:
 
@@ -130,7 +130,7 @@ the UI is missaligned:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/mix04.png
 
-One possible workaround to fix this issue would be to extend DisclosurePanel and override the setWidth()/setHeight() methods. Unformatelly, DisclosurePanel is declared final, in that case a monitor could be used to periodically check the outer dimensions of a widget and redraws it as necessary.
+One possible workaround to fix this issue would be to extend DisclosurePanel and override the setWidth()/setHeight() methods. Unfortunately, DisclosurePanel is declared final, in which case a monitor could be used to periodically check the outer dimensions of a widget and redraws it as necessary.
 
 {{{
   public void onModuleLoad() {
@@ -212,11 +212,11 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix05.png
 
 Like panels all GWT Mosaic widgets are based on LayoutPanel. Most GWT Mosaic widgets extend LayoutComposite (a Composite widget initialized with a LayoutPanel).
 
-Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adaptor classes. Such an adaptor class is Viewport. Viewport is designed to be a top level widget. Viewport is attached to RootPanel, is a listener of window resize events, extends LayoutComposite and is resposible to trigger the layout cascade.
+Adding GWT Mosaic widgets to GWT widgets needs some extra glue code or adapter classes. Such an adapter class is Viewport. Viewport is designed to be a top level widget. Viewport is attached to RootPanel, is a listens to window resize events, extends LayoutComposite and is responsible to trigger the layout cascade.
 
 === Example 3 ===
 
-This example adds a DateComboBox to RootPanel, it demonstrates also various ways to initialize the widget's size.
+This example adds a DateComboBox to RootPanel, it also demonstrates various ways to initialize the widget's size.
 
 {{{
   public void onModuleLoad() {
