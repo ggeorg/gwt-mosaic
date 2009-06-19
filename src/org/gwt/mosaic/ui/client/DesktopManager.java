@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
 
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -35,12 +36,12 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * 
  */
 public interface DesktopManager extends CloseHandler<PopupPanel>,
-    SelectionHandler<WindowPanel> {
-  
+    OpenHandler<WindowPanel>, SelectionHandler<WindowPanel> {
+
   void beginDragging(WindowPanel w);
-  
+
   void dragMove(WindowPanel w, int newX, int newY);
-  
+
   void endDragging(WindowPanel w);
 
   void maximize(WindowPanel w, WindowState oldWindowState);
