@@ -225,8 +225,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private boolean hideContentsOnMove = true;
 
-  private boolean isActive = false;
-
   private final Timer layoutTimer = new Timer() {
     public void run() {
       layout();
@@ -625,7 +623,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @see #toBack()
    */
   public boolean isActive() {
-    return isActive = (isActive && getDesktopPanel().isActive(this));
+    return getDesktopPanel().isActive(this);
   }
 
   public boolean isCollapsed() {
@@ -897,10 +895,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     OpenEvent.fire(this, this);
 
-    // the previous call will make the WindowPanel active, so we have to reset
-    // the internal state
-    isActive = false;
-
     if (isResizable()) {
       getDesktopPanel().makeResizable(this);
     }
@@ -939,12 +933,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public void showModal() {
     showModal(true);
   }
-
-  // private void fireClosedImpl() {
-  // if (closeHandlerInitialized) {
-  // CloseEvent.fire(getHandlers(), null);
-  // }
-  // }
 
   /**
    * Centers the {@code WindowPanel} in the browser window and shows it modal
@@ -1007,7 +995,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       return;
     }
 
-    isActive = true;
     SelectionEvent.fire(this, this);
   }
 
