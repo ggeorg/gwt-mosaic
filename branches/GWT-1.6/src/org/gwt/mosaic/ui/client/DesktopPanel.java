@@ -420,6 +420,8 @@ public class DesktopPanel extends Composite implements
     return desktopPanel;
   }
 
+  private WindowPanel active;
+
   private DesktopManager desktopManager;
 
   private MoveDragController moveDragController;
@@ -456,6 +458,10 @@ public class DesktopPanel extends Composite implements
     if (windowPanels.indexOf(windowPanel) == -1) {
       windowPanels.add(windowPanel);
     }
+  }
+
+  public WindowPanel getActive() {
+    return active;
   }
 
   /**
@@ -517,7 +523,8 @@ public class DesktopPanel extends Composite implements
    *         (active)
    */
   public boolean isActive(WindowPanel windowPanel) {
-    return windowPanels.indexOf(windowPanel) == windowPanels.size() - 1;
+    assert (windowPanel != null);
+    return windowPanel == active;
   }
 
   public void layout() {
@@ -540,6 +547,10 @@ public class DesktopPanel extends Composite implements
       d.height = d.height > box.height ? box.height : -1;
 
       WidgetHelper.setSize(w, d);
+
+      if (w.getWindowState() == WindowState.MAXIMIZED) {
+        WidgetHelper.setSize(w, new Dimension(DOM.getClientSize(getElement())));
+      }
 
       w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
     }
@@ -686,13 +697,16 @@ public class DesktopPanel extends Composite implements
     if (size <= 1) {
       return;
     }
-    windowPanels.get(size - 2).toFront();
+    if (isActive(windowPanel)) {
+      active = null;
+    }
     int curIndex = windowPanels.indexOf(windowPanel);
     windowPanels.remove(windowPanel);
     windowPanels.add(0, windowPanel);
     for (; curIndex >= 0; curIndex--) {
       windowPanels.get(curIndex).setZIndex(curIndex);
     }
+    windowPanels.get(size - 1).toFront();
   }
 
   /**
@@ -703,6 +717,8 @@ public class DesktopPanel extends Composite implements
    * @see #toBack(WindowPanel)
    */
   public void toFront(WindowPanel windowPanel) {
+    this.active = windowPanel;
+    // bring to front
     int size = windowPanels.size();
     int curIndex = windowPanels.indexOf(windowPanel);
     if (curIndex + 1 < size) {
