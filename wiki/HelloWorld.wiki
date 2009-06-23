@@ -153,7 +153,7 @@ The GWT Module XML should contain:
 	<inherits name='org.gwt.mosaic.theme.aegean.Aegean' />
 
 	<!-- Other module inherits                                      -->
-	<inherits name='org.gwt.mosaic.application.Application' />
+	<inherits name='...' />
 
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='...' />
