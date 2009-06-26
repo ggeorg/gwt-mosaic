@@ -429,12 +429,12 @@ public class GridLayout extends BaseLayout implements HasAlignment {
               runTwiceFlag = true;
             } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
               posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
-                  - WidgetHelper.getPreferredSize(widget).height / 2;
+                  - prefSize.height / 2;
               widgetHeight = -1;
               runTwiceFlag = true;
             } else {
               posTop = top + (spacing + rowHeight) * r + cellHeight
-                  - WidgetHelper.getPreferredSize(widget).height;
+                  - prefSize.height;
               widgetHeight = -1;
               runTwiceFlag = true;
             }

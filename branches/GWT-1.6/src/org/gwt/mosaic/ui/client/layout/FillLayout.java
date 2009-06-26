@@ -214,22 +214,29 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
       runTwiceFlag = false;
 
+      Dimension prefSize = null;
+
       if (hAlignment == null) {
         posLeft = left;
         widgetWidth = width;
-      } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
-        posLeft = left;
-        widgetWidth = -1;
-        runTwiceFlag = true;
-      } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
-        posLeft = left + (width / 2)
-            - WidgetHelper.getPreferredSize(child).width / 2;
-        widgetWidth = -1;
-        runTwiceFlag = true;
       } else {
-        posLeft = left + width - WidgetHelper.getPreferredSize(child).width;
-        widgetWidth = -1;
-        runTwiceFlag = true;
+        // (ggeorg) this call to WidgetHelper.getPreferredSize() is
+        // required even for ALIGN_LEFT
+        prefSize = WidgetHelper.getPreferredSize(child);
+
+        if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
+          posLeft = left;
+          widgetWidth = -1;
+          runTwiceFlag = true;
+        } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
+          posLeft = left + (width / 2) - prefSize.width / 2;
+          widgetWidth = -1;
+          runTwiceFlag = true;
+        } else {
+          posLeft = left + width - prefSize.width;
+          widgetWidth = -1;
+          runTwiceFlag = true;
+        }
       }
 
       VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
@@ -243,19 +250,25 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       if (vAlignment == null) {
         posTop = top;
         widgetHeight = height;
-      } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
-        posTop = top;
-        widgetHeight = -1;
-        runTwiceFlag = true;
-      } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
-        posTop = top + (height / 2)
-            - WidgetHelper.getPreferredSize(child).height / 2;
-        widgetHeight = -1;
-        runTwiceFlag = true;
       } else {
-        posTop = top + height - WidgetHelper.getPreferredSize(child).height;
-        widgetHeight = -1;
-        runTwiceFlag = true;
+        if (prefSize == null) {
+          // (ggeorg) this call to WidgetHelper.getPreferredSize() is
+          // required even for ALIGN_TOP
+          prefSize = WidgetHelper.getPreferredSize(child);
+        }
+        if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
+          posTop = top;
+          widgetHeight = -1;
+          runTwiceFlag = true;
+        } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
+          posTop = top + (height / 2) - prefSize.height / 2;
+          widgetHeight = -1;
+          runTwiceFlag = true;
+        } else {
+          posTop = top + height - prefSize.height;
+          widgetHeight = -1;
+          runTwiceFlag = true;
+        }
       }
 
       WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop, widgetWidth,
