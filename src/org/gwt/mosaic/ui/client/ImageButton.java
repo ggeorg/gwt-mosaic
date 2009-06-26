@@ -15,7 +15,6 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -63,14 +62,6 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   @Deprecated
   public void addClickListener(ClickListener listener) {
     ListenerWrapper.WrappedClickListener.add(this, listener);
-  }
-
-  /**
-   * Programmatic equivalent of the user clicking the button.
-   */
-  public void click() {
-    ButtonElement buttonElement = getElement().cast();
-    buttonElement.click();
   }
 
   public Image getImage() {
