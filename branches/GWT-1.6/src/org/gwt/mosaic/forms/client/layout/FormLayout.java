@@ -1866,8 +1866,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
             widget.getElement(), "minWidth");
         final String minHeight = DOM.getComputedStyleAttribute(
             widget.getElement(), "minHeight");
-        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth),
-            minHeight == null ? 1 : DOM.toPixelSize(minHeight));
+        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth,
+            true), minHeight == null ? 1 : DOM.toPixelSize(minHeight, false));
         minimumSizes.put(widget, size);
       }
       return size;

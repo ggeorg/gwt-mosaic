@@ -171,7 +171,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   public void setHeight(String height) {
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
-      setContentSize(-1, DOM.toPixelSize(height) - decoratorBorder[1]);
+      setContentSize(-1, DOM.toPixelSize(height, false) - decoratorBorder[1]);
     } else {
       onLoadHeight = height;
     }
@@ -188,7 +188,7 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
   public void setWidth(String width) {
     if (isAttached()) {
       final int[] decoratorBorder = getDecoratorBorder();
-      setContentSize(DOM.toPixelSize(width) - decoratorBorder[0], -1);
+      setContentSize(DOM.toPixelSize(width, true) - decoratorBorder[0], -1);
     } else {
       onLoadWidth = width;
     }
