@@ -56,6 +56,8 @@ import com.google.gwt.widgetideas.table.client.ScrollTable.ScrollTableImages;
  * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @deprecated replaced by PagingScrollTable2
  */
 public class ScrollTable extends ColumnWidget {
 
