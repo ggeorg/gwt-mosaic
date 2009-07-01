@@ -73,6 +73,8 @@ import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
  * 
  * @author GWT Incubator project
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @deprecated
  */
 public abstract class ColumnWidget extends LayoutComposite {
 

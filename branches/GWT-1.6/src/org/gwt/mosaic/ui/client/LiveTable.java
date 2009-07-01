@@ -19,26 +19,19 @@ import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.table.DataTable;
-import org.gwt.mosaic.ui.client.table.PagingScrollTable2;
 
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.client.AbstractScrollTable;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.HasTableDefinition;
+import com.google.gwt.gen2.table.client.LiveScrollTable;
 import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ScrollTableImages;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
-import com.google.gwt.gen2.table.event.client.HasPageCountChangeHandlers;
-import com.google.gwt.gen2.table.event.client.HasPageLoadHandlers;
-import com.google.gwt.gen2.table.event.client.HasPagingFailureHandlers;
-import com.google.gwt.gen2.table.event.client.PageChangeHandler;
-import com.google.gwt.gen2.table.event.client.PageCountChangeHandler;
-import com.google.gwt.gen2.table.event.client.PageLoadHandler;
-import com.google.gwt.gen2.table.event.client.PagingFailureHandler;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -49,34 +42,73 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 /**
  * 
- * @author ggeorg
- *
- * @param <RowType>
+ * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @param RowType
  */
-public class Table<RowType> extends LayoutComposite implements Focusable,
-    HasTableDefinition<RowType>, HasPageCountChangeHandlers,
-    HasPageLoadHandlers, HasPagingFailureHandlers {
+public class LiveTable<RowType> extends LayoutComposite implements Focusable, HasTableDefinition<RowType> {
 
   private static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
-  private final PagingScrollTable2<RowType> pagingScrollTable;
+  private final LiveScrollTable<RowType> liveScrollTable;
 
-  public Table(TableModel<RowType> tableModel,
-      TableDefinition<RowType> tableDefinition) {
+  public LiveTable(TableModel<RowType> tableModel,
+      TableDefinition<RowType> tableDefinistion) {
     super(impl.createFocusable());
 
-    pagingScrollTable = new PagingScrollTable2<RowType>(tableModel,
-        new DataTable(), new FixedWidthFlexTable(), tableDefinition);
-    pagingScrollTable.setHeaderGenerated(true);
-    pagingScrollTable.setFooterGenerated(true);
-    pagingScrollTable.setPageSize(100);
-    pagingScrollTable.setEmptyTableWidget(new HTML(
-        "There is no data to display"));
+    liveScrollTable = new LiveScrollTable<RowType>(tableModel, new DataTable(),
+        new FixedWidthFlexTable(), tableDefinistion);
+    liveScrollTable.setHeaderGenerated(true);
+    liveScrollTable.setFooterGenerated(true);
 
-    getLayoutPanel().add(pagingScrollTable);
+    init();
+  }
 
+  public LiveTable(TableModel<RowType> tableModel,
+      TableDefinition<RowType> tableDefinistion, ScrollTableImages images) {
+    super(impl.createFocusable());
+
+    liveScrollTable = new LiveScrollTable<RowType>(tableModel, new DataTable(),
+        new FixedWidthFlexTable(), tableDefinistion, images);
+    liveScrollTable.setHeaderGenerated(true);
+    liveScrollTable.setFooterGenerated(true);
+
+    init();
+  }
+
+  public LiveTable(TableModel<RowType> tableModel,
+      FixedWidthFlexTable headerTable, TableDefinition<RowType> tableDefinition) {
+    super(impl.createFocusable());
+
+    liveScrollTable = new LiveScrollTable<RowType>(tableModel, new DataTable(),
+        headerTable, tableDefinition);
+    liveScrollTable.setHeaderGenerated(false);
+    liveScrollTable.setFooterGenerated(true);
+
+    init();
+  }
+
+  public LiveTable(TableModel<RowType> tableModel,
+      FixedWidthFlexTable headerTable,
+      TableDefinition<RowType> tableDefinition, ScrollTableImages images) {
+    super(impl.createFocusable());
+
+    liveScrollTable = new LiveScrollTable<RowType>(tableModel, new DataTable(),
+        headerTable, tableDefinition, images);
+    liveScrollTable.setHeaderGenerated(false);
+    liveScrollTable.setFooterGenerated(true);
+
+    init();
+  }
+
+  protected void init() {
+    liveScrollTable.setPageSize(50); // TODO
+    liveScrollTable.setEmptyTableWidget(new HTML("There is no data to display"));
+    
+    getLayoutPanel().add(liveScrollTable);
+    
     setStyleName("mosaic-Table");
-
+    
     // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
     // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
     sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
@@ -88,41 +120,21 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
     // Hide focus outline in IE 6/7
     DOM.setElementAttribute(getElement(), "hideFocus", "true");
   }
-
+  
   public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
-    return ((DataTable) pagingScrollTable.getDataTable()).addDoubleClickHandler(handler);
+    return ((DataTable) liveScrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
-
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPageChangeHandler(
-      PageChangeHandler handler) {
-    return pagingScrollTable.addPageChangeHandler(handler);
-  }
-
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPageCountChangeHandler(
-      PageCountChangeHandler handler) {
-    return pagingScrollTable.addPageCountChangeHandler(handler);
-  }
-
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPageLoadHandler(
-      PageLoadHandler handler) {
-    return pagingScrollTable.addPageLoadHandler(handler);
-  }
-
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPagingFailureHandler(
-      PagingFailureHandler handler) {
-    return pagingScrollTable.addPagingFailureHandler(handler);
-  }
-
+  
   public com.google.gwt.gen2.event.shared.HandlerRegistration addRowSelectionHandler(
       RowSelectionHandler handler) {
-    return pagingScrollTable.getDataTable().addRowSelectionHandler(handler);
+    return liveScrollTable.getDataTable().addRowSelectionHandler(handler);
   }
-
+  
   private void eatEvent(Event event) {
     DOM.eventCancelBubble(event, true);
     DOM.eventPreventDefault(event);
   }
-
+  
   /**
    * Adjust all column widths so they take up the maximum amount of space
    * without needing a horizontal scroll bar. The distribution will be
@@ -132,30 +144,16 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * to work.
    */
   public void fillWidth() {
-    pagingScrollTable.fillWidth();
+    liveScrollTable.fillWidth();
   }
-
-  /**
-   * @return the absolute index of the first visible row
-   */
-  public int getAbsoluteFirstRowIndex() {
-    return pagingScrollTable.getAbsoluteFirstRowIndex();
-  }
-
-  /**
-   * @return the absolute index of the last visible row
-   */
-  public int getAbsoluteLastRowIndex() {
-    return pagingScrollTable.getAbsoluteLastRowIndex();
-  }
-
+  
   /**
    * @return the column resize policy
    */
   public ColumnResizePolicy getColumnResizePolicy() {
-    return pagingScrollTable.getColumnResizePolicy();
+    return liveScrollTable.getColumnResizePolicy();
   }
-
+  
   /**
    * Return the column width for a given column index.
    * 
@@ -163,23 +161,16 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return the column width in pixels
    */
   public int getColumnWidth(int column) {
-    return pagingScrollTable.getColumnWidth(column);
+    return liveScrollTable.getColumnWidth(column);
   }
-
-  /**
-   * @return the current page
-   */
-  public int getCurrentPage() {
-    return pagingScrollTable.getCurrentPage();
-  }
-
+  
   /**
    * @return the widget displayed when the data table is empty
    */
   public Widget getEmptyTableWidget() {
-    return pagingScrollTable.getEmptyTableWidget();
+    return liveScrollTable.getEmptyTableWidget();
   }
-
+  
   /**
    * Get the absolute maximum width of a column.
    * 
@@ -187,9 +178,9 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return the maximum allowable width of the column
    */
   public int getMaximumColumnWidth(int column) {
-    return pagingScrollTable.getMaximumColumnWidth(column);
+    return liveScrollTable.getMaximumColumnWidth(column);
   }
-
+  
   /**
    * Get the absolute minimum width of a column.
    * 
@@ -197,23 +188,9 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return the minimum allowable width of the column
    */
   public int getMinimumColumnWidth(int column) {
-    return pagingScrollTable.getMinimumColumnWidth(column);
+    return liveScrollTable.getMinimumColumnWidth(column);
   }
-
-  /**
-   * @return the number of pages, or -1 if not known
-   */
-  public int getPageCount() {
-    return pagingScrollTable.getPageCount();
-  }
-
-  /**
-   * @return the number of rows per page
-   */
-  public int getPageSize() {
-    return pagingScrollTable.getPageSize();
-  }
-
+  
   /**
    * Get the preferred width of a column.
    * 
@@ -221,16 +198,16 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return the preferred width of the column
    */
   public int getPreferredColumnWidth(int column) {
-    return pagingScrollTable.getPreferredColumnWidth(column);
+    return liveScrollTable.getPreferredColumnWidth(column);
   }
-
+  
   /**
    * @return the resize policy
    */
   public ResizePolicy getResizePolicy() {
-    return pagingScrollTable.getResizePolicy();
+    return liveScrollTable.getResizePolicy();
   }
-
+  
   /**
    * Get the value associated with a row.
    * 
@@ -238,9 +215,9 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return the value associated with the row
    */
   public RowType getRowValue(int row) {
-    return pagingScrollTable.getRowValue(row);
+    return liveScrollTable.getRowValue(row);
   }
-
+  
   /**
    * Gets the currently selected item. If multiple items are selected, this
    * method will return the first selected item ({@link #isItemSelected(int)}
@@ -251,82 +228,35 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @see #addChangeListener(ChangeListener)
    */
   public int getSelectedIndex() {
-    Set<Integer> selection = pagingScrollTable.getDataTable().getSelectedRows();
+    Set<Integer> selection = liveScrollTable.getDataTable().getSelectedRows();
     if (selection != null && selection.size() > 0) {
       return selection.iterator().next();
     }
     return -1;
   }
-
+  
   /**
    * @return the set of selected row indexes
    */
   public Set<Integer> getSelectedIndices() {
-    return pagingScrollTable.getDataTable().getSelectedRows();
+    return liveScrollTable.getDataTable().getSelectedRows();
   }
-
+  
   /**
    * @return the current sort policy
    */
   public SortPolicy getSortPolicy() {
-    return pagingScrollTable.getSortPolicy();
+    return liveScrollTable.getSortPolicy();
   }
 
   public int getTabIndex() {
     return impl.getTabIndex(getElement());
   }
-
+  
   public TableDefinition<RowType> getTableDefinition() {
-    return pagingScrollTable.getTableDefinition();
+    return liveScrollTable.getTableDefinition();
   }
-
-  /**
-   * @return the table model
-   */
-  public TableModel<RowType> getTableModel() {
-    return pagingScrollTable.getTableModel();
-  }
-
-  /**
-   * Go to the first page.
-   */
-  public void gotoFirstPage() {
-    pagingScrollTable.gotoFirstPage();
-  }
-
-  /**
-   * Go to the last page. If the number of pages is not known, this method is
-   * ignored.
-   */
-  public void gotoLastPage() {
-    pagingScrollTable.gotoLastPage();
-  }
-
-  /**
-   * Go to the next page.
-   */
-  public void gotoNextPage() {
-    pagingScrollTable.gotoNextPage();
-  }
-
-  /**
-   * Set the current page. If the page is out of bounds, it will be
-   * automatically set to zero or the last page without throwing any errors.
-   * 
-   * @param page the page
-   * @param forced reload the page even if it is already loaded
-   */
-  public void gotoPage(int page, boolean forced) {
-    pagingScrollTable.gotoPage(page, forced);
-  }
-
-  /**
-   * Go to the previous page.
-   */
-  public void gotoPreviousPage() {
-    pagingScrollTable.gotoPreviousPage();
-  }
-
+  
   /**
    * Returns true if the specified column is sortable.
    * 
@@ -334,16 +264,16 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return true if the column is sortable, false if it is not sortable
    */
   public boolean isColumnSortable(int column) {
-    return pagingScrollTable.isColumnSortable(column);
+    return liveScrollTable.isColumnSortable(column);
   }
-
+  
   /**
-   * @return true if a page load is pending
+   * @return the table model
    */
-  public boolean isPageLoading() {
-    return pagingScrollTable.isPageLoading();
+  public TableModel<RowType> getTableModel() {
+    return liveScrollTable.getTableModel();
   }
-
+  
   private void moveDown() {
     if (selectFirstItemIfNodeSelected()) {
       return;
@@ -394,30 +324,23 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
   protected void onLoad() {
     super.onLoad();
 
-    pagingScrollTable.gotoFirstPage();
+    liveScrollTable.gotoPage(0, false);
   }
-
+  
   /**
    * Redraw the table.
    */
   public void redraw() {
-    pagingScrollTable.redraw();
+    liveScrollTable.redraw();
   }
-
-  /**
-   * Reload the current page.
-   */
-  public void reloadPage() {
-    pagingScrollTable.reloadPage();
-  }
-
+  
   /**
    * Reset the widths of all columns to their preferred sizes.
    */
   public void resetColumnWidths() {
-    pagingScrollTable.resetColumnWidths();
+    liveScrollTable.resetColumnWidths();
   }
-
+  
   /**
    * Selects the first item in the list if no items are currently selected. This
    * method assumes that the list has at least 1 item.
@@ -432,21 +355,21 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
     }
     return false;
   }
-
+  
   private void selectNextItem() {
     int index = getSelectedIndex();
     if (index == -1) {
       return;
     }
 
-    if (index < pagingScrollTable.getDataTable().getRowCount() - 1) {
+    if (index < liveScrollTable.getDataTable().getRowCount() - 1) {
       setSelectedIndex(++index);
 
-      DOM.scrollIntoView((Element) pagingScrollTable.getDataTable().getRowFormatter().getElement(
+      DOM.scrollIntoView((Element) liveScrollTable.getDataTable().getRowFormatter().getElement(
           getSelectedIndex()).getFirstChild());
     }
   }
-
+  
   private void selectPrevItem() {
     int index = getSelectedIndex();
     if (index == -1) {
@@ -456,24 +379,24 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
     if (index > 0) {
       setSelectedIndex(--index);
 
-      DOM.scrollIntoView((Element) pagingScrollTable.getDataTable().getRowFormatter().getElement(
+      DOM.scrollIntoView((Element) liveScrollTable.getDataTable().getRowFormatter().getElement(
           getSelectedIndex()).getFirstChild());
     }
   }
-
+  
   public void setAccessKey(char key) {
     impl.setAccessKey(getElement(), key);
   }
-
+  
   /**
    * Set the resize policy applied to user actions that resize columns.
    * 
    * @param columnResizePolicy the resize policy
    */
   public void setColumnResizePolicy(ColumnResizePolicy columnResizePolicy) {
-    pagingScrollTable.setColumnResizePolicy(columnResizePolicy);
+    liveScrollTable.setColumnResizePolicy(columnResizePolicy);
   }
-
+  
   /**
    * Set the width of a column.
    * 
@@ -482,9 +405,9 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @return the new column width
    */
   public int setColumnWidth(int column, int width) {
-    return pagingScrollTable.setColumnWidth(column, width);
+    return liveScrollTable.setColumnWidth(column, width);
   }
-
+  
   /**
    * Set the {@link Widget} that will be displayed in place of the data table
    * when the data table has no data to display.
@@ -492,7 +415,7 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @param emptyTableWidget the widget to display when the data table is empty
    */
   public void setEmptyTableWidget(Widget emptyTableWidget) {
-    pagingScrollTable.setEmptyTableWidget(emptyTableWidget);
+    liveScrollTable.setEmptyTableWidget(emptyTableWidget);
   }
 
   public void setFocus(boolean focused) {
@@ -502,28 +425,16 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
       impl.blur(getElement());
     }
   }
-
-  /**
-   * Set the number of rows per page.
-   * 
-   * By default, the page size is zero, which indicates that all rows should be
-   * shown on the page.
-   * 
-   * @param pageSize the number of rows per page
-   */
-  public void setPageSize(int pageSize) {
-    pagingScrollTable.setPageSize(pageSize);
-  }
-
+  
   /**
    * Set the resize policy of the table.
    * 
    * @param resizePolicy the resize policy
    */
   public void setResizePolicy(ResizePolicy resizePolicy) {
-    pagingScrollTable.setResizePolicy(resizePolicy);
+    liveScrollTable.setResizePolicy(resizePolicy);
   }
-
+  
   /**
    * Associate a row in the table with a value.
    * 
@@ -531,9 +442,9 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @param value the value to associate
    */
   public void setRowValue(int row, RowType value) {
-    pagingScrollTable.setRowValue(row, value);
+    liveScrollTable.setRowValue(row, value);
   }
-
+  
   /**
    * Sets the currently selected index.
    * <p>
@@ -550,7 +461,7 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @see #getSelectedIndex()
    */
   public void setSelectedIndex(int row) {
-    pagingScrollTable.getDataTable().selectRow(row, true);
+    liveScrollTable.getDataTable().selectRow(row, true);
   }
 
   /**
@@ -559,7 +470,7 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @param sortPolicy the {@link SortPolicy}
    */
   public void setSortPolicy(SortPolicy sortPolicy) {
-    pagingScrollTable.setSortPolicy(sortPolicy);
+    liveScrollTable.setSortPolicy(sortPolicy);
   }
 
   public void setTabIndex(int index) {
@@ -572,7 +483,6 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
    * @param tableDefinition the new table definition.
    */
   public void setTableDefinition(TableDefinition<RowType> tableDefinition) {
-    pagingScrollTable.setTableDefinition(tableDefinition);
+    liveScrollTable.setTableDefinition(tableDefinition);
   }
-
 }

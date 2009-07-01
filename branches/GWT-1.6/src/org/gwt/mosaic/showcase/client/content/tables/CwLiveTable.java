@@ -21,10 +21,9 @@ import java.util.List;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.showcase.client.content.tables.shared.Person;
 import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.LiveTable;
 import org.gwt.mosaic.ui.client.PopupMenu;
-import org.gwt.mosaic.ui.client.Table;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -37,8 +36,13 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.IterableTableModel;
 import com.google.gwt.gen2.table.client.TableDefinition;
+import com.google.gwt.gen2.table.client.TableModel;
+import com.google.gwt.gen2.table.client.TableModelHelper.Request;
+import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -47,25 +51,42 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
-public class CwSimpleTable extends ContentWidget {
+public class CwLiveTable extends ContentWidget {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwSimpleTable(CwConstants constants) {
+  public CwLiveTable(CwConstants constants) {
     super(constants);
   }
 
   @Override
   public String getDescription() {
-    return "Simple Table description.";
+    return "Live Table description.";
   }
 
   @Override
   public String getName() {
-    return "Simple Table";
+    return "Live Table";
+  }
+
+  /**
+   * User object.
+   */
+  @ShowcaseSource
+  class Foo implements IsSerializable {
+    private static final long serialVersionUID = 1120309810337478764L;
+
+    int[] values = new int[5];
+
+    public Foo(int row) {
+      values[0] = row;
+      for (int i = 1; i < values.length; i++) {
+        values[i] = Random.nextInt();
+      }
+    }
   }
 
   /**
@@ -79,16 +100,32 @@ public class CwSimpleTable extends ContentWidget {
     vBox.setPadding(0);
     // vBox.setWidgetSpacing(0);
 
-    List<Person> data = new ArrayList<Person>();
+    final List<Foo> data = new ArrayList<Foo>();
 
-    data.add(new Person("Rainer Zufall", "male", true));
-    data.add(new Person("Marie Darms", "female", false));
-    data.add(new Person("Holger Adams", "male", true));
-    data.add(new Person("Juliane Adams", "female", true));
+    for (int i = 0; i < 1000; i++) {
+      data.add(new Foo(i));
+    }
 
-    final Table<Person> table = new Table<Person>(
-        new IterableTableModel<Person>(data), createTableDefinition());
-    table.setPageSize(2);
+    TableModel<Foo> tableModel = new IterableTableModel<Foo>(data) {
+      @Override
+      public int getRowCount() {
+        return data.size();
+      }
+
+      @Override
+      public void requestRows(Request request, Callback<Foo> callback) {
+        int numRows = request.getNumRows();
+        List<Foo> list = new ArrayList<Foo>();
+        for (int i = 0, n = numRows; i < n; i++) {
+          list.add(data.get(request.getStartRow() + i));
+        }
+        SerializableResponse<Foo> response = new SerializableResponse<Foo>(list);
+        callback.onRowsReady(request, response);
+      }
+    };
+
+    final LiveTable<Foo> table = new LiveTable<Foo>(tableModel,
+        createTableDefinition());
     // table.setContextMenu(createContextMenu());
     table.addDoubleClickHandler(new DoubleClickHandler() {
       public void onDoubleClick(DoubleClickEvent event) {
@@ -96,12 +133,7 @@ public class CwSimpleTable extends ContentWidget {
       }
     });
 
-    // Create an options panel
-    // PagingOptions pagingOptions = new PagingOptions(table);
-
-    // vBox.add(toolBar, new BoxLayoutData(FillStyle.HORIZONTAL));
     vBox.add(table, new BoxLayoutData(FillStyle.BOTH));
-    // vBox.add(pagingOptions);
 
     return vBox;
   }
@@ -111,28 +143,55 @@ public class CwSimpleTable extends ContentWidget {
    * @return
    */
   @ShowcaseSource
-  private TableDefinition<Person> createTableDefinition() {
-    DefaultTableDefinition<Person> tableDef = new DefaultTableDefinition<Person>();
+  private TableDefinition<Foo> createTableDefinition() {
+    DefaultTableDefinition<Foo> tableDef = new DefaultTableDefinition<Foo>();
     // tableDef.setRowRenderer(new DefaultRowRenderer<Person>(new String[] {
     // "#f00", "#00f" }));
 
-    DefaultColumnDefinition<Person, String> nameColDef = new DefaultColumnDefinition<Person, String>(
-        "Name") {
+    DefaultColumnDefinition<Foo, Integer> colDef0 = new DefaultColumnDefinition<Foo, Integer>(
+        "#") {
       @Override
-      public String getCellValue(Person rowValue) {
-        return rowValue.getName();
+      public Integer getCellValue(Foo rowValue) {
+        return rowValue.values[0];
       }
     };
-    tableDef.addColumnDefinition(nameColDef);
+    tableDef.addColumnDefinition(colDef0);
 
-    DefaultColumnDefinition<Person, String> genderColDef = new DefaultColumnDefinition<Person, String>(
-        "Gender") {
+    DefaultColumnDefinition<Foo, Integer> colDef1 = new DefaultColumnDefinition<Foo, Integer>(
+        "Col 1") {
       @Override
-      public String getCellValue(Person rowValue) {
-        return rowValue.getGender();
+      public Integer getCellValue(Foo rowValue) {
+        return rowValue.values[1];
       }
     };
-    tableDef.addColumnDefinition(genderColDef);
+    tableDef.addColumnDefinition(colDef1);
+
+    DefaultColumnDefinition<Foo, Integer> colDef2 = new DefaultColumnDefinition<Foo, Integer>(
+        "Col 2") {
+      @Override
+      public Integer getCellValue(Foo rowValue) {
+        return rowValue.values[1];
+      }
+    };
+    tableDef.addColumnDefinition(colDef2);
+
+    DefaultColumnDefinition<Foo, Integer> colDef3 = new DefaultColumnDefinition<Foo, Integer>(
+        "Col 3") {
+      @Override
+      public Integer getCellValue(Foo rowValue) {
+        return rowValue.values[2];
+      }
+    };
+    tableDef.addColumnDefinition(colDef3);
+
+    DefaultColumnDefinition<Foo, Integer> colDef4 = new DefaultColumnDefinition<Foo, Integer>(
+        "Col 4") {
+      @Override
+      public Integer getCellValue(Foo rowValue) {
+        return rowValue.values[2];
+      }
+    };
+    tableDef.addColumnDefinition(colDef4);
 
     return tableDef;
   }

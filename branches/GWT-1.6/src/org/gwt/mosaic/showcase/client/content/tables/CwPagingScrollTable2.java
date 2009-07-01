@@ -34,7 +34,6 @@ import org.gwt.mosaic.ui.client.table.PagingScrollTable2;
 import com.google.gwt.gen2.table.client.CachedTableModel;
 import com.google.gwt.gen2.table.client.CellRenderer;
 import com.google.gwt.gen2.table.client.ColumnDefinition;
-import com.google.gwt.gen2.table.client.DefaultRowRenderer;
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.FixedWidthGridBulkRenderer;
 import com.google.gwt.gen2.table.client.ListCellEditor;
@@ -82,7 +81,7 @@ public class CwPagingScrollTable2 extends ContentWidget {
   private CachedTableModel<Student> cachedTableModel = null;
 
   /**
-   * The {@link PagingScrollTable}.
+   * The {@link PagingScrollTable2}.
    */
   private PagingScrollTable2<Student> pagingScrollTable = null;
 

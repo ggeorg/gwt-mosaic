@@ -18,6 +18,7 @@ package org.gwt.mosaic.showcase.client.content.tables;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.showcase.client.content.tables.shared.Person;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.ListBox;
@@ -329,52 +330,6 @@ public class CwListBox extends ContentWidget {
     vBox.add(listBox, new BoxLayoutData(FillStyle.BOTH));
 
     return vBox;
-  }
-
-  /**
-   * 
-   * @return
-   */
-  @ShowcaseSource
-  class Person {
-    private String name;
-    private String gender;
-    private Boolean isMarried = false;
-
-    public Person(String name, String gender, boolean isMarried) {
-      this.name = name;
-      this.gender = gender;
-      this.isMarried = isMarried;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getGender() {
-      return gender;
-    }
-
-    public void setGender(String gender) {
-      this.gender = gender;
-    }
-
-    public boolean isMarried() {
-      return isMarried;
-    }
-
-    public void setIsMarried(boolean isMarried) {
-      this.isMarried = isMarried;
-    }
-
-    @Override
-    public String toString() {
-      return getName() + " " + getGender() + " " + String.valueOf(isMarried());
-    }
   }
 
 }
