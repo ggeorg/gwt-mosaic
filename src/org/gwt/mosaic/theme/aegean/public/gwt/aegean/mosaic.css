@@ -430,6 +430,7 @@ a:active {
 
 /*** GlassPanel ***/
 
+.mosaic-GlassPanel-default,
 .mosaic-GlassPanel-loading,
 .gwt-GlassPanel {
 	/* Override glass panel color to be `green` */
@@ -448,7 +449,6 @@ a:active {
       'width/height: 100%' or similar constructs.
 	*/
 }
-.mosaic-GlassPanel-default,
 .mosaic-GlassPanel-invisible {
 	/* Override glass panel color to be `green` */
 	background-color: #000 !important;
