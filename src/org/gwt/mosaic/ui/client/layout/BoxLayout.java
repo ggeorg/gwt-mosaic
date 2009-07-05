@@ -737,16 +737,6 @@ public class BoxLayout extends BaseLayout {
    * Sets the orientation of the child widgets.
    * 
    * @param orient the orientation of the child widgets.
-   * @deprecated Replaced by {@link #setOrientation(Orientation)}.
-   */
-  public void setOrient(Orientation orient) {
-    this.orientation = orient;
-  }
-
-  /**
-   * Sets the orientation of the child widgets.
-   * 
-   * @param orient the orientation of the child widgets.
    */
   public void setOrientation(Orientation orient) {
     this.orientation = orient;
