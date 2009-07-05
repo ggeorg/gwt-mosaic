@@ -210,6 +210,13 @@ public abstract class ActionBindings<T> {
   private final BindingGroup bindingGroup = new BindingGroup();
 
   public ActionBindings(Action source, T target) {
+    if (source == null) {
+      throw new IllegalArgumentException("null source");
+    }
+    if (source == null) {
+      throw new IllegalArgumentException("null target");
+    }
+    assert(target != null);
     this.source = source;
     this.target = target;
   }
