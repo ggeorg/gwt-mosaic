@@ -112,7 +112,7 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
 
     // DeferredCommand.addCommand(new Command() {
     // public void execute() {
-    // System.out.println(getOffsetWidth() + "x" + getOffsetHeight());
+    // System.out.println(getOffsetWidth() + "X" + getOffsetHeight());
     // }
     // });
   }
@@ -132,7 +132,6 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     } else {
       // setSize("auto", "auto");
       setContentSize(getLayoutPanel().getPreferredSize());
-      layout();
     }
   }
 
@@ -195,7 +194,7 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
     });
   }
 
-  protected void setContentSize(Dimension d) {
+  protected void setContentSize(final Dimension d) {
     WidgetHelper.setSize(getLayoutPanel(), d);
   }
 

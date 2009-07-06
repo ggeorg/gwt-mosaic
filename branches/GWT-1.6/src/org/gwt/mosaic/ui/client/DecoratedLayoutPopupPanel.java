@@ -163,7 +163,6 @@ public class DecoratedLayoutPopupPanel extends AbstractDecoratedPopupPanel
     } else {
       // setSize("auto", "auto");
       setContentSize(getLayoutPanel().getPreferredSize());
-      layout();
     }
   }
 

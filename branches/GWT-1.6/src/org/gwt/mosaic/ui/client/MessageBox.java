@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client;
 import java.util.Date;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.datepicker.DatePicker;
 import org.gwt.mosaic.ui.client.datepicker.DateTimePicker;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -76,7 +77,7 @@ public abstract class MessageBox extends WindowPanel {
         hide();
       }
     };
-    alert.setAnimationEnabled(false);
+    alert.setAnimationEnabled(true);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     alert.setWidth(preferredWidth + "px");
@@ -117,7 +118,7 @@ public abstract class MessageBox extends WindowPanel {
         callback.onResult(result);
       }
     };
-    confirm.setAnimationEnabled(false);
+    confirm.setAnimationEnabled(true);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     confirm.setWidth(preferredWidth + "px");
@@ -179,7 +180,7 @@ public abstract class MessageBox extends WindowPanel {
         }
       }
     };
-    prompt.setAnimationEnabled(false);
+    prompt.setAnimationEnabled(true);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
@@ -203,7 +204,7 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(dateTimePicker, 0);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -226,7 +227,7 @@ public abstract class MessageBox extends WindowPanel {
         }
       }
     };
-    prompt.setAnimationEnabled(false);
+    prompt.setAnimationEnabled(true);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
@@ -250,7 +251,7 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(datePicker, 0);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -273,7 +274,7 @@ public abstract class MessageBox extends WindowPanel {
         }
       }
     };
-    prompt.setAnimationEnabled(false);
+    prompt.setAnimationEnabled(true);
     int preferredWidth = Window.getClientWidth();
     preferredWidth = Math.max(preferredWidth / 3, 256);
     prompt.setWidth(preferredWidth + "px");
@@ -303,7 +304,7 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(panel);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -342,9 +343,11 @@ public abstract class MessageBox extends WindowPanel {
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
     super.setWidget(layoutPanel);
     layoutPanel.setWidgetSpacing(10);
-    // if (UserAgent.isGecko()) {
-    DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
-    // }
+
+    // (ggeorg) this is a workaround for the infamous Firefox cursor bug
+    if (UserAgent.isGecko()) {
+      DOM.setStyleAttribute(getLayoutPanel().getElement(), "overflow", "auto");
+    }
 
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);

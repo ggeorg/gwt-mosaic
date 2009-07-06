@@ -87,9 +87,9 @@ public class WidgetHelper {
   public static Dimension getPreferredSize(Widget widget) {
     // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
     if (widget instanceof FormPanel) {
-      final Widget _widget = ((FormPanel) widget).getWidget();
-      if (_widget != null && (_widget instanceof HasLayoutManager)) {
-        widget = _widget;
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && (child instanceof HasLayoutManager)) {
+        widget = child;
       }
     }
     if (widget instanceof HasLayoutManager) {
@@ -165,6 +165,30 @@ public class WidgetHelper {
    */
   public static void setBounds(final LayoutPanel layoutPanel,
       final Widget widget, final int x, final int y, int width, int height) {
+    setXY(layoutPanel, widget, x, y);
+
+    if (widget instanceof FormPanel) {
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && child instanceof HasLayoutManager) {
+        int[] margins = DOM.getMarginSizes(child.getElement());
+        if (width != -1) {
+          width -= (margins[1] + margins[3]);
+        }
+        if (height != -1) {
+          height -= (margins[0] + margins[2]);
+        }
+        setSize(child, width, height);
+
+        // (ggeorg) needs:
+        // border: none;
+        // padding: 0px;
+        // margin: 0px
+        setSize(widget, WidgetHelper.getPreferredSize(child));
+
+        return;
+      }
+    }
+
     int[] margins = DOM.getMarginSizes(widget.getElement());
     if (width != -1) {
       width -= (margins[1] + margins[3]);
@@ -172,15 +196,7 @@ public class WidgetHelper {
     if (height != -1) {
       height -= (margins[0] + margins[2]);
     }
-    setXY(layoutPanel, widget, x, y);
     setSize(widget, width, height);
-
-    if (widget instanceof FormPanel) {
-      final Widget child = ((FormPanel) widget).getWidget();
-      if (child != null && (child instanceof HasLayoutManager)) {
-        setSize(child, width, height);
-      }
-    }
   }
 
   /**
