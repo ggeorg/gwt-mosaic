@@ -26,9 +26,11 @@ import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
+import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
 import org.gwt.mosaic.ui.client.MessageBox.MessageBoxType;
 import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -165,6 +167,30 @@ public class CwMessageBox extends ContentWidget {
 
     HorizontalPanel hpanel1 = new HorizontalPanel();
     hpanel1.add(alertBtn);
+    hpanel1.add(new Button("xxx", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        final LayoutPanel layoutPanel = new LayoutPanel();
+        //DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
+        
+        WindowPanel w = new WindowPanel("Long text info");
+        
+        layoutPanel.add(new Button(
+            "language."));
+        
+        w.setAnimationEnabled(true);
+        w.setWidget(layoutPanel);
+        
+//        int preferredWidth = Window.getCliecvcvntWidth();
+//        preferredWidth = Math.max(preferredWidth / 3, 256);
+//        w.setWidth(preferredWidth + "px");
+        w.showModal();
+        
+//        if (w.getOffsetWidth() < preferredWidth) {
+//          w.setWidth(preferredWidth + "px");
+//          //w.center();
+//        }
+      }
+    }));
     hpanel1.add(new HTML("&nbsp;"));
     hpanel1.add(errorBtn);
     hpanel1.add(new HTML("&nbsp;"));
@@ -333,6 +359,7 @@ public class CwMessageBox extends ContentWidget {
 
     // Create a method=POST FormPanel and point it at a service
     final FormPanel form = new FormPanel();
+    
     form.setAction("/myLoginFormHandler");
     form.setMethod(FormPanel.METHOD_POST);
 
@@ -376,7 +403,7 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(form);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -445,7 +472,7 @@ public class CwMessageBox extends ContentWidget {
 
     prompt.setWidget(panel, 0);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -457,5 +484,5 @@ public class CwMessageBox extends ContentWidget {
       }
     });
   }
-  
+
 }

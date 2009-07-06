@@ -141,6 +141,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       throw new IllegalArgumentException(
           "Adding a DecoratorPanel is not allowed!");
     }
+    if (widget instanceof FormPanel) {
+      // (ggeorg) see WidgetHelper.setBounds() why
+      DOM.setStyleAttribute(widget.getElement(), "border", "none");
+      DOM.setStyleAttribute(widget.getElement(), "padding", "0px");
+      DOM.setStyleAttribute(widget.getElement(), "margin", "0px");
+    }
     BaseLayout.setLayoutData(widget, layoutData);
     if (layoutData.hasDecoratorPanel()) {
       final DecoratorPanel decPanel = layoutData.decoratorPanel;
