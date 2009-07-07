@@ -19,6 +19,7 @@ package org.gwt.mosaic.ui.client;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.i18n.client.BidiUtils;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.client.Event;
@@ -116,16 +117,13 @@ public class Label extends Widget implements SourcesClickEvents,
 
   /**
    * This constructor may be used by subclasses to explicitly use an existing
-   * element. This element must be either a &lt;label&gt; or a &lt;div&gt; or
-   * &lt;span&gt; element.
+   * element. This element must be a &lt;label&gt; element.
    * 
    * @param element the element to be used
    */
   protected Label(Element element) {
     setElement(element);
-    assert element.getTagName().equalsIgnoreCase("label")
-        || element.getTagName().equalsIgnoreCase("div")
-        || element.getTagName().equalsIgnoreCase("span");
+    assert element.getTagName().equalsIgnoreCase("label");
   }
 
   public void addClickListener(ClickListener listener) {
@@ -225,6 +223,31 @@ public class Label extends Widget implements SourcesClickEvents,
   public void setText(String text) {
     getElement().setInnerText(text);
   }
+
+  /**
+   * Link this label with another form control by id attribute.
+   * 
+   * @param htmlFor the id attribute of the other form control
+   * 
+   * @see <a
+   *      href="http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#adef-for">W3C
+   *      HTML Specification</a>
+   */
+  public void setLabelFor(String htmlFor) {
+    final LabelElement labelElem = getElement().cast();
+    labelElem.setHtmlFor(htmlFor);
+  }
+
+  /**
+   * This attribute links this label with another form control by id attribute.
+   * 
+   * @see <a
+   *      href="http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#adef-for">W3C
+   *      HTML Specification</a>
+   */
+  public String getLabelFor() {
+    return ((LabelElement) getElement().cast()).getHtmlFor();
+  };
 
   public void setWordWrap(boolean wrap) {
     getElement().getStyle().setProperty("whiteSpace",
