@@ -33,6 +33,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
@@ -41,7 +42,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -413,7 +413,7 @@ public abstract class MessageBox extends WindowPanel {
   @Override
   public boolean onKeyDownPreview(char key, int modifiers) {
     switch (key) {
-      case KeyboardListener.KEY_ESCAPE:
+      case KeyCodes.KEY_ESCAPE:
         onClose(false);
         break;
     }
