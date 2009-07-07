@@ -50,8 +50,9 @@ import org.gwt.mosaic.forms.client.layout.ConstantSize;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.forms.client.layout.RowSpec;
 import org.gwt.mosaic.ui.client.Label;
-import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -266,7 +267,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param layout the <code>FormLayout</code> to be used
    */
   public DefaultFormBuilder(FormLayout layout) {
-    this(layout, new ScrollLayoutPanel());
+    this(layout, new LayoutPanel(new BoxLayout(Orientation.VERTICAL)));
   }
 
   /**
@@ -511,7 +512,12 @@ public final class DefaultFormBuilder extends PanelBuilder {
    */
   public Label append(String textWithMnemonic, Widget c, int columnSpan) {
     Label label = append(textWithMnemonic);
-    // XXX label.setLabelFor(c);
+    String refId = c.getElement().getId();
+    if (refId == null || refId.length() == 0) {
+      refId = DOM.createUniqueId();
+      c.getElement().setId(refId);
+    }
+    label.setLabelFor(refId);
     append(c, columnSpan);
     return label;
   }

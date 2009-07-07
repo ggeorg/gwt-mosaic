@@ -1370,7 +1370,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
     maxWidth += borders[1] + borders[3];
     maxHeight += borders[0] + borders[2];
 
-    return new Dimension(maxWidth, maxHeight);
+    return new Dimension(maxWidth+10, maxHeight+10);
   }
 
   /**
