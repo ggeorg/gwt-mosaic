@@ -49,9 +49,10 @@ import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.ui.client.Label;
-import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.Separator;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
@@ -125,7 +126,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * @param layout the FormLayout to use
    */
   public PanelBuilder(FormLayout layout) {
-    this(layout, new ScrollLayoutPanel());
+    this(layout, new LayoutPanel(new BoxLayout(Orientation.VERTICAL)));
   }
 
   /**
