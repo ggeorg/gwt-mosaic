@@ -39,6 +39,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
@@ -90,7 +91,8 @@ public abstract class MessageBox extends WindowPanel {
     });
     alert.getButtonPanel().add(buttonOK);
 
-    alert.setWidget(new HTML(message));
+    alert.setWidget(new WidgetWrapper(new HTML(message),
+        HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP));
     alert.showModal();
 
     if (alert.getOffsetWidth() < preferredWidth) {
@@ -140,7 +142,8 @@ public abstract class MessageBox extends WindowPanel {
     confirm.getButtonPanel().add(buttonOK);
     confirm.getButtonPanel().add(buttonCancel);
 
-    confirm.setWidget(new HTML(message));
+    confirm.setWidget(new WidgetWrapper(new HTML(message),
+        HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP));
     confirm.showModal();
 
     if (confirm.getOffsetWidth() < preferredWidth) {
