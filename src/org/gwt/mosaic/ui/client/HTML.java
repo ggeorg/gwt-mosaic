@@ -100,7 +100,7 @@ public class HTML extends Label implements HasHTML {
 
   /**
    * This constructor may be used by subclasses to explicitly use an existing
-   * element. This element must be either a &lt;div&gt; or &lt;span&gt; element.
+   * element. This element must be a &lt;label&gt; element.
    * 
    * @param element the element to be used
    */
