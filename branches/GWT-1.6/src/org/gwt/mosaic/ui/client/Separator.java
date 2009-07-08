@@ -22,14 +22,15 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Alignment;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class Separator extends LayoutComposite implements HasHorizontalAlignment {
+public class Separator extends LayoutComposite implements
+    HasHorizontalAlignment {
 
   private static final String DEFAULT_STYLENAME = "mosaic-FormSeparator";
 
@@ -45,12 +46,12 @@ public class Separator extends LayoutComposite implements HasHorizontalAlignment
     layoutPanel.setLayout(new BoxLayout(Alignment.CENTER));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(8);
-    
+
     final Label l = new Label(text);
     l.setWordWrap(false);
-    
-    final SimplePanel hr = new SimplePanel();
-    
+
+    final Widget hr = new HTML("<hr width='100%'></hr>");
+
     if (this.align == Separator.ALIGN_LEFT) {
       layoutPanel.add(l);
       layoutPanel.add(hr, new BoxLayoutData(FillStyle.HORIZONTAL));
