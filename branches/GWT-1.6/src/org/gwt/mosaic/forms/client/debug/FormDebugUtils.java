@@ -48,7 +48,7 @@ import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.ColumnSpec;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.forms.client.layout.RowSpec;
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -209,8 +209,8 @@ public final class FormDebugUtils {
       System.out.print("; ");
       String childType = child.getClass().getName();
       System.out.print(childType);
-      if (child instanceof Label) {
-        Label label = (Label) child;
+      if (child instanceof TextLabel) {
+        TextLabel label = (TextLabel) child;
         System.out.print("      \"" + label.getText() + "\"");
       }
       if (child.getElement().getTagName() != null) {

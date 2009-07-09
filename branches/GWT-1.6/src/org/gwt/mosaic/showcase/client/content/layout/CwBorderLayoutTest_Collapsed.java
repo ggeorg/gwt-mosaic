@@ -25,7 +25,7 @@ import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -87,7 +87,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn1 = new ImageButton(
         Caption.IMAGES.toolCollapseUp());
     northPanel.getHeader().add(collapseBtn1, CaptionRegion.RIGHT);
-    northPanel.add(new Label("Height: 20%"));
+    northPanel.add(new TextLabel("Height: 20%"));
 
     collapseBtn1.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
@@ -109,7 +109,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn2 = new ImageButton(
         Caption.IMAGES.toolCollapseDown());
     southPanel.getHeader().add(collapseBtn2, CaptionRegion.RIGHT);
-    southPanel.add(new Label("Height: 20%"));
+    southPanel.add(new TextLabel("Height: 20%"));
 
     collapseBtn2.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
@@ -131,7 +131,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn3 = new ImageButton(
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn3, CaptionRegion.RIGHT);
-    westPanel.add(new Label("Width: 20%"));
+    westPanel.add(new TextLabel("Width: 20%"));
 
     collapseBtn3.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
@@ -152,7 +152,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn4 = new ImageButton(
         Caption.IMAGES.toolCollapseRight());
     eastPanel.getHeader().add(collapseBtn4, CaptionRegion.RIGHT);
-    eastPanel.add(new Label("Width: 20%"));
+    eastPanel.add(new TextLabel("Width: 20%"));
 
     collapseBtn4.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {

@@ -71,7 +71,7 @@ public class Caption extends LayoutComposite implements HasHTML,
    */
   public static final CaptionImages IMAGES = (CaptionImages) GWT.create(CaptionImages.class);
 
-  private final HTML caption = new HTML();
+  private final HTMLLabel caption = new HTMLLabel();
 
   private HorizontalPanel leftIconBox, rightIconBox;
 

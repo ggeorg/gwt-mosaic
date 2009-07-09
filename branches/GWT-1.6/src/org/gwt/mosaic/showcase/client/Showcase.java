@@ -76,17 +76,16 @@ import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwDynamicTabLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwFormDialog;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
-import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopupPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopups;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
 import org.gwt.mosaic.showcase.client.content.tables.CwFilterListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwLiveTable;
-import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwRichListBox;
-import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwSimpleTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
@@ -405,11 +404,13 @@ public class Showcase implements EntryPoint {
     TreeItem catPopups = mainMenu.addItem("Popups");
     setupMainMenuOption(catPopups, new CwInfoPanel(constants),
         IMAGES.catPopups());
-    setupMainMenuOption(catPopups, new CwLayoutPopupPanel(constants),
+    setupMainMenuOption(catPopups, new CwMessageBox(constants),
         IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwWindowPanel(constants),
         IMAGES.catPopups());
-    setupMainMenuOption(catPopups, new CwMessageBox(constants),
+    setupMainMenuOption(catPopups, new CwLayoutPopups(constants),
+        IMAGES.catPopups());
+    setupMainMenuOption(catPopups, new CwFormDialog(constants),
         IMAGES.catPopups());
 
     // Panels

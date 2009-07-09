@@ -50,7 +50,7 @@ import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -171,7 +171,7 @@ public class CwGroupingExample extends ContentWidget {
    */
   @ShowcaseSource
   private Widget newLabel(String string) {
-    final Label label = new Label(string);
+    final TextLabel label = new TextLabel(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }

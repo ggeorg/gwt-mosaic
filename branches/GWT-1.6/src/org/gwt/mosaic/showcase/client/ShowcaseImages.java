@@ -60,7 +60,5 @@ public interface ShowcaseImages extends ImageBundle {
   
   AbstractImagePrototype showcaseDemos();
   
-  AbstractImagePrototype window();
-  
   AbstractImagePrototype person();
 }

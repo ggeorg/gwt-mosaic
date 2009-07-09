@@ -72,4 +72,7 @@ public interface CaptionImages extends ImageBundle {
   
   @Resource("window-button-restore.png")
   AbstractImagePrototype windowRestore();
+  
+  @Resource("application.png")
+  AbstractImagePrototype window();
 }
