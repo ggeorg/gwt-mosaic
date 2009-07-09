@@ -54,7 +54,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class Label extends Widget implements SourcesClickEvents,
+public class TextLabel extends Widget implements SourcesClickEvents,
     SourcesMouseEvents, SourcesMouseWheelEvents, HasHorizontalAlignment,
     HasText, HasWordWrap, HasDirection {
 
@@ -68,11 +68,11 @@ public class Label extends Widget implements SourcesClickEvents,
    * 
    * @param element the element to be wrapped
    */
-  public static Label wrap(Element element) {
+  public static TextLabel wrap(Element element) {
     // Assert that the element is attached.
     assert Document.get().getBody().isOrHasChild(element);
 
-    Label label = new Label(element);
+    TextLabel label = new TextLabel(element);
 
     // Mark it attached and remember it for cleanup.
     label.onAttach();
@@ -89,7 +89,7 @@ public class Label extends Widget implements SourcesClickEvents,
   /**
    * Creates an empty label.
    */
-  public Label() {
+  public TextLabel() {
     setElement(Document.get().createLabelElement());
     setStyleName("mosaic-Label");
   }
@@ -99,9 +99,9 @@ public class Label extends Widget implements SourcesClickEvents,
    * 
    * @param text the new label's text
    */
-  public Label(String text) {
-    this();
-    setText(text);
+  public TextLabel(String text) {
+    this(text, false);
+
   }
 
   /**
@@ -110,8 +110,9 @@ public class Label extends Widget implements SourcesClickEvents,
    * @param text the new label's text
    * @param wordWrap <code>false</code> to disable word wrapping
    */
-  public Label(String text, boolean wordWrap) {
-    this(text);
+  public TextLabel(String text, boolean wordWrap) {
+    this();
+    setText(text);
     setWordWrap(wordWrap);
   }
 
@@ -121,7 +122,7 @@ public class Label extends Widget implements SourcesClickEvents,
    * 
    * @param element the element to be used
    */
-  protected Label(Element element) {
+  protected TextLabel(Element element) {
     setElement(element);
     assert element.getTagName().equalsIgnoreCase("label");
   }

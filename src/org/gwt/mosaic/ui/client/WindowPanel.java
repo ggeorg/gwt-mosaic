@@ -272,6 +272,50 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public WindowPanel() {
     this(null);
   }
+  
+  /**
+   * Creates a new empty window with the specified caption and default layout.
+   * 
+   * @param caption the caption of the window
+   */
+  public WindowPanel(String caption) {
+    this(caption, true, false);
+  }
+  
+  /**
+   * Creates a new empty window with the specified caption and default layout.
+   *  
+   * @param caption the caption of the window
+   * @param resizable
+   */
+  public WindowPanel(String caption, boolean resizable) {
+    this(caption, resizable, false);
+  }
+  
+  /**
+   * Creates a new empty window with default layout.
+   * 
+   * @param caption the caption of the window
+   * @param resizable
+   * @param autoHide
+   */
+  protected WindowPanel(String caption, boolean resizable, boolean autoHide) {
+    this(RootPanel.get(), caption, resizable, autoHide);
+  }
+
+  /**
+   * Creates a new empty window with default layout.
+   * 
+   * @param boundaryPanel
+   * @param caption the caption of the window
+   * @param resizable
+   * @param autoHide
+   */
+  protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
+      boolean resizable, boolean autoHide) {
+    this(DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
+        : boundaryPanel), caption, resizable, autoHide);
+  }
 
   public WindowPanel(DesktopPanel desktopPanel, String caption,
       boolean resizable, boolean autoHide) {
@@ -318,40 +362,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     super.setWidget(panel);
 
     addStyleName(DEFAULT_STYLENAME);
-  }
-
-  /**
-   * Creates a new empty window with the specified caption and default layout.
-   * 
-   * @param caption the caption of the window
-   */
-  public WindowPanel(String caption) {
-    this(caption, true, false);
-  }
-
-  /**
-   * Creates a new empty window with default layout.
-   * 
-   * @param boundaryPanel
-   * @param caption the caption of the window
-   * @param resizable
-   * @param autoHide
-   */
-  protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
-      boolean resizable, boolean autoHide) {
-    this(DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
-        : boundaryPanel), caption, resizable, autoHide);
-  }
-
-  /**
-   * Creates a new empty window with default layout.
-   * 
-   * @param caption the caption of the window
-   * @param resizable
-   * @param autoHide
-   */
-  protected WindowPanel(String caption, boolean resizable, boolean autoHide) {
-    this(RootPanel.get(), caption, resizable, autoHide);
   }
 
   /**

@@ -33,7 +33,6 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,14 +46,14 @@ import com.google.gwt.user.client.ui.Widget;
     ".mosaic-Caption", ".mosaic-TitledLayoutPanel", ".mosaic-WindowPanel",
     ".dragdrop-positioner", ".dragdrop-draggable", ".dragdrop-handle",
     ".dragdrop-movable-panel"})
-public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
+public class CwLayoutPopups extends ContentWidget implements ClickHandler {
 
   /**
    * Constructor.
    * 
    * @param constants the constants
    */
-  public CwLayoutPopupPanel(CwConstants constants) {
+  public CwLayoutPopups(CwConstants constants) {
     super(constants);
   }
 
@@ -65,7 +64,7 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
 
   @Override
   public String getName() {
-    return "Layout PopupPanel";
+    return "Layout Popups";
   }
 
   /**
@@ -97,7 +96,6 @@ public class CwLayoutPopupPanel extends ContentWidget implements ClickHandler {
         popup.setAnimationEnabled(true);
         popup.add(createContent1());
         popup.pack();
-        System.out.println(Window.getClientWidth()+"   "+popup.getOffsetWidth());
         popup.center();
       }
     }));

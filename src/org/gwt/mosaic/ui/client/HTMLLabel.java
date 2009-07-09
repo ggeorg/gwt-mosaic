@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
  * <p>
  * This widget uses a &lt;label&gt; element.
  * <p>
- * If you only need a simple label (text, but not HTML), then the {@link Label}
+ * If you only need a simple label (text, but not HTML), then the {@link TextLabel}
  * widget is more appropriate, as it disallows the use of HTML, which can lead
  * to potential security issues if not used properly.
  * 
@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class HTML extends Label implements HasHTML {
+public class HTMLLabel extends TextLabel implements HasHTML {
 
   /**
    * Creates an HTML widget that wraps an existing &lt;div&gt; or &lt;span&gt;
@@ -55,11 +55,11 @@ public class HTML extends Label implements HasHTML {
    * 
    * @param element the element to be wrapped
    */
-  public static HTML wrap(Element element) {
+  public static HTMLLabel wrap(Element element) {
     // Assert that the element is attached.
     assert Document.get().getBody().isOrHasChild(element);
 
-    HTML html = new HTML(element);
+    HTMLLabel html = new HTMLLabel(element);
 
     // Mark it attached and remember it for cleanup.
     html.onAttach();
@@ -71,7 +71,7 @@ public class HTML extends Label implements HasHTML {
   /**
    * Creates an empty HTML widget.
    */
-  public HTML() {
+  public HTMLLabel() {
     super();
     setStyleName("mosaic-HTML");
   }
@@ -81,7 +81,7 @@ public class HTML extends Label implements HasHTML {
    * 
    * @param html the new widget's HTML contents
    */
-  public HTML(String html) {
+  public HTMLLabel(String html) {
     this();
     setHTML(html);
   }
@@ -93,7 +93,7 @@ public class HTML extends Label implements HasHTML {
    * @param html the widget's contents
    * @param wordWrap <code>false</code> to disable word wrapping
    */
-  public HTML(String html, boolean wordWrap) {
+  public HTMLLabel(String html, boolean wordWrap) {
     this(html);
     setWordWrap(wordWrap);
   }
@@ -104,7 +104,7 @@ public class HTML extends Label implements HasHTML {
    * 
    * @param element the element to be used
    */
-  protected HTML(Element element) {
+  protected HTMLLabel(Element element) {
     super(element);
   }
 

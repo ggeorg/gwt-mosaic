@@ -20,7 +20,7 @@ package org.gwt.mosaic.showcase.client.content.widgets;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.HTML;
+import org.gwt.mosaic.ui.client.HTMLLabel;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
@@ -92,7 +92,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     // Push buttons
     //
 
-    layoutPanel.add(new HTML("Push button widgets"));
+    layoutPanel.add(new HTMLLabel("Push button widgets"));
 
     final LayoutPanel hBox1 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -103,7 +103,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     // Push buttons with image
     //
 
-    layoutPanel.add(new HTML("Push button widgets with image"));
+    layoutPanel.add(new HTMLLabel("Push button widgets with image"));
 
     final LayoutPanel hBox2 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -114,7 +114,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     // Menu & Split buttons
     //
 
-    layoutPanel.add(new HTML("Menu & Split button widgets"));
+    layoutPanel.add(new HTMLLabel("Menu & Split button widgets"));
 
     final LayoutPanel hBox3 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -125,7 +125,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     // Checkbox & Radio buttons
     //
 
-    layoutPanel.add(new HTML("Checkbox & Radio button widgets"));
+    layoutPanel.add(new HTMLLabel("Checkbox & Radio button widgets"));
 
     final LayoutPanel hBox4 = new LayoutPanel(new BoxLayout());
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
@@ -233,7 +233,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     layoutPanel.add(disabledMenuButton);
 
     // Add a spacer
-    layoutPanel.add(new HTML("&nbsp;"));
+    layoutPanel.add(new HTMLLabel("&nbsp;"));
 
     // Add a menu button
     ToolButton splitButton = new ToolButton("Split Button", this);
@@ -288,7 +288,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     layoutPanel.add(checkButton2);
 
     // Add a spacer
-    layoutPanel.add(new HTML("&nbsp;"));
+    layoutPanel.add(new HTMLLabel("&nbsp;"));
 
     // Add a radio button
     ToolButton radioButton1 = new ToolButton("Radio #1", this);

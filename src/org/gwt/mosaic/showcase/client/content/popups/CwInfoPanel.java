@@ -55,12 +55,13 @@ public class CwInfoPanel extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return "InfoPanel description";
+    return "The InfoPanel widget is used for notifications and can be used to indicate non-critical events "
+        + "while interrupting the user as little as possible.";
   }
 
   @Override
   public String getName() {
-    return "InfoPanel";
+    return "Info Panel";
   }
 
   /**
@@ -73,92 +74,42 @@ public class CwInfoPanel extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
 
-    final TextBox caption1 = new TextBox();
-    caption1.setText("Caption");
+    final TextBox captionInput = new TextBox();
+    captionInput.setText("Caption");
 
-    final TextBox description1 = new TextBox();
-    description1.setText("Description");
+    final TextBox descriptionInput = new TextBox();
+    descriptionInput.setText("Description");
 
-    final CheckBox type1 = new CheckBox("Humanized message");
+    final CheckBox typeInput = new CheckBox("Humanized message");
 
-    FlexTable layout1 = new FlexTable();
-    layout1.getColumnFormatter().setWidth(0, "30%");
-    layout1.getColumnFormatter().setWidth(1, "70%");
-    layout1.setText(0, 0, "Caption:");
-    layout1.setWidget(0, 1, caption1);
-    layout1.setText(1, 0, "Description:");
-    layout1.setWidget(1, 1, description1);
+    final FlexTable table = new FlexTable();
+    table.getColumnFormatter().setWidth(0, "30%");
+    table.getColumnFormatter().setWidth(1, "70%");
+    table.setText(0, 0, "Caption:");
+    table.setWidget(0, 1, captionInput);
+    table.setText(1, 0, "Description:");
+    table.setWidget(1, 1, descriptionInput);
 
-    Button btn1 = new Button("Show InfoPanel");
-    btn1.addClickHandler(new ClickHandler() {
+    final Button btn = new Button("Show InfoPanel", new ClickHandler() {
       public void onClick(ClickEvent event) {
-        if (type1.getValue()) {
-          InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption1.getText(),
-              description1.getText());
+        if (typeInput.getValue()) {
+          InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE,
+              captionInput.getText(), descriptionInput.getText());
         } else {
-          InfoPanel.show(caption1.getText(), description1.getText());
+          InfoPanel.show(captionInput.getText(), descriptionInput.getText());
         }
       }
     });
 
-    HorizontalPanel hpanel1 = new HorizontalPanel();
-    hpanel1.add(btn1);
-    hpanel1.add(new HTML("&nbsp;"));
-    hpanel1.add(type1);
+    final HorizontalPanel hpanel = new HorizontalPanel();
+    hpanel.add(btn);
+    hpanel.add(new HTML("&nbsp;"));
+    hpanel.add(typeInput);
 
-    layoutPanel.add(layout1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    layoutPanel.add(hpanel1);
-
-    // ---
-
-    layoutPanel.add(new HTML("&nbsp;"));
-
-    // ---
-
-    final TextBox name = new TextBox();
-    name.setText("Maria");
-
-    final TextBox message = new TextBox();
-    message.setText("I love you");
-
-    final String caption2 = "Formated Text";
-    final String description2 = "Hello {0}! {1}.";
-
-    final CheckBox type2 = new CheckBox("Humanized message");
-
-    FlexTable layout2 = new FlexTable();
-    layout2.getColumnFormatter().setWidth(0, "30%");
-    layout2.getColumnFormatter().setWidth(1, "70%");
-    layout2.setText(0, 0, "Caption:");
-    layout2.setHTML(0, 1, "<em>" + caption2 + "</em>");
-    layout2.setText(1, 0, "Description:");
-    layout2.setHTML(1, 1, "<em>" + description2 + "</em>");
-    layout2.setHTML(2, 0, "1<sup>st</sup> parameter:");
-    layout2.setWidget(2, 1, name);
-    layout2.setHTML(3, 0, "2<sup>nd</sup> parameter:");
-    layout2.setWidget(3, 1, message);
-
-    Button btn2 = new Button("Show InfoPanel");
-    btn2.addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
-        if (type2.getValue()) {
-          InfoPanel.show(InfoPanelType.HUMANIZED_MESSAGE, caption2,
-              description2);
-        } else {
-          InfoPanel.show(caption2, description2);
-        }
-      }
-    });
-
-    HorizontalPanel hpanel2 = new HorizontalPanel();
-    hpanel2.add(btn2);
-    hpanel2.add(new HTML("&nbsp;"));
-    hpanel2.add(type2);
-
-    layoutPanel.add(layout2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    layoutPanel.add(hpanel2);
+    layoutPanel.add(table, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    layoutPanel.add(hpanel);
 
     return layoutPanel;
   }
-  
+
 }

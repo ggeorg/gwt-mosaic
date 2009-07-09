@@ -47,10 +47,10 @@ public class Separator extends LayoutComposite implements
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(8);
 
-    final Label l = new Label(text);
+    final TextLabel l = new TextLabel(text);
     l.setWordWrap(false);
 
-    final Widget hr = new HTML("<hr width='100%'></hr>");
+    final Widget hr = new HTMLLabel("<hr width='100%'></hr>");
 
     if (this.align == Separator.ALIGN_LEFT) {
       layoutPanel.add(l);

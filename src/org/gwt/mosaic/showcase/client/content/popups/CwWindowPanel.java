@@ -19,7 +19,6 @@ import java.util.Date;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
-import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.Caption;
@@ -154,7 +153,7 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     basic.setAnimationEnabled(true);
     basic.setWidget(new HTML("Hello World!"));
 
-    basic.getHeader().add(Showcase.IMAGES.window().createImage());
+    basic.getHeader().add(Caption.IMAGES.window().createImage());
 
     addMaximizeButton(basic, CaptionRegion.RIGHT);
     addMinimizeButton(basic, CaptionRegion.RIGHT);
@@ -192,7 +191,7 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
       }
     });
 
-    fixed.getHeader().add(Showcase.IMAGES.window().createImage());
+    fixed.getHeader().add(Caption.IMAGES.window().createImage());
 
     addMinimizeButton(fixed, CaptionRegion.RIGHT);
 
@@ -235,7 +234,7 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     layout.setWidget(panel);
     createLayoutContent(panel);
 
-    layout.getHeader().add(Showcase.IMAGES.window().createImage());
+    layout.getHeader().add(Caption.IMAGES.window().createImage());
 
     addMaximizeButton(layout, CaptionRegion.RIGHT);
     addMinimizeButton(layout, CaptionRegion.RIGHT);
@@ -259,7 +258,7 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     modal.setWidget(upload);
     createUploadFileContent(upload);
 
-    modal.getHeader().add(Showcase.IMAGES.window().createImage());
+    modal.getHeader().add(Caption.IMAGES.window().createImage());
 
     modal.addCloseHandler(new CloseHandler<PopupPanel>() {
       public void onClose(CloseEvent<PopupPanel> event) {
@@ -280,7 +279,7 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     DOM.setStyleAttribute(frame.getElement(), "border", "none");
     sized.setWidget(frame);
 
-    sized.getHeader().add(Showcase.IMAGES.window().createImage());
+    sized.getHeader().add(Caption.IMAGES.window().createImage());
 
     addMaximizeButton(sized, CaptionRegion.RIGHT);
     addMinimizeButton(sized, CaptionRegion.RIGHT);
@@ -405,7 +404,7 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
     zIndex.setWidget(zIndexContent);
     createZIndexTestContent(zIndexContent);
 
-    zIndex.getHeader().add(Showcase.IMAGES.window().createImage());
+    zIndex.getHeader().add(Caption.IMAGES.window().createImage());
 
     addMinimizeButton(zIndex, CaptionRegion.RIGHT);
 
@@ -418,12 +417,12 @@ public class CwWindowPanel extends ContentWidget implements ClickHandler {
 
   @Override
   public String getDescription() {
-    return "WindowPanel description";
+    return "WindowPanel is a draggable decorated popup-panel with a customizable caption.";
   }
 
   @Override
   public String getName() {
-    return "WindowPanel";
+    return "Window Panel";
   }
 
   /**

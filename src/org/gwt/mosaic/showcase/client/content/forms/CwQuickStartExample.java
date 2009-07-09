@@ -99,6 +99,7 @@ public class CwQuickStartExample extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new ScrollLayoutPanel();
+    layoutPanel.setPadding(5);
 
     // Create a FormLayout instance on the given column and row specs.
     // For almost all forms you specify the columns; sometimes rows are
