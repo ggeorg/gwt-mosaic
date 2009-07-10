@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.showcase.client.content.popups;
 
-import org.gwt.mosaic.core.client.DOM;
-import org.gwt.mosaic.forms.client.builder.PanelBuilder;
 import org.gwt.mosaic.forms.client.factories.ButtonBarFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
@@ -31,6 +29,7 @@ import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -78,11 +77,14 @@ public class CwFormDialog extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
 
+    final HTMLLabel title = new HTMLLabel(
+        "<b>GWT Mosaic basic form dialog.</b>");
+
     final WindowPanel windowPanel = new WindowPanel("Form Dialog", false);
     windowPanel.setAnimationEnabled(true);
     windowPanel.getHeader().add(Caption.IMAGES.window().createImage());
 
-    final LayoutPanel windowContent = new LayoutPanel(new FormLayout("pref",
+    final LayoutPanel windowContent = new LayoutPanel(new FormLayout("pref:grow",
         "pref, 6dlu, pref"));
     windowPanel.setWidget(windowContent);
 
@@ -98,14 +100,12 @@ public class CwFormDialog extends ContentWidget {
       }
     });
     tabPanel.selectTab(0);
-    
+
     windowPanel.setFooter(buildButtonBarPanel());
 
     layoutPanel.add(new Button("Click me!", new ClickHandler() {
       public void onClick(ClickEvent event) {
-        windowContent.add(
-            new HTMLLabel("<b>GWT Mosaic basic form dialog.</b>"),
-            CellConstraints.xy(1, 1));
+        windowContent.add(title, CellConstraints.xy(1, 1));
         windowContent.add(tabPanel, CellConstraints.xy(1, 3));
         windowPanel.showModal();
       }
@@ -119,7 +119,7 @@ public class CwFormDialog extends ContentWidget {
    */
   @ShowcaseSource
   private Widget newColumnSpan() {
-    FormLayout layout = new FormLayout("pref, 8px, 100px, 4px, 200px:grow",
+    FormLayout layout = new FormLayout("pref, 8px, 100px, 4px, 200px",
         "pref, 6px, pref, 6px, pref, 6px, pref, 6px, pref");
 
     LayoutPanel panel = new LayoutPanel(layout);

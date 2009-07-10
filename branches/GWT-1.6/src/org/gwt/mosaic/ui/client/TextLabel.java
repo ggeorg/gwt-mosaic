@@ -17,6 +17,10 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LabelElement;
@@ -56,7 +60,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class TextLabel extends Widget implements SourcesClickEvents,
     SourcesMouseEvents, SourcesMouseWheelEvents, HasHorizontalAlignment,
-    HasText, HasWordWrap, HasDirection {
+    HasText, HasWordWrap, HasDirection, HasLayoutManager {
 
   /**
    * Creates a Label widget that wraps an existing &lt;div&gt; or &lt;span&gt;
@@ -253,5 +257,18 @@ public class TextLabel extends Widget implements SourcesClickEvents,
   public void setWordWrap(boolean wrap) {
     getElement().getStyle().setProperty("whiteSpace",
         wrap ? "normal" : "nowrap");
+  }
+
+  public Dimension getPreferredSize() {
+    setSize("auto", "auto");
+    return new Dimension(getOffsetWidth(), getOffsetHeight());
+  }
+
+  public void invalidate() {
+    // Nothing to do here!
+  }
+
+  public void layout() {
+    // Nothing to do here!
   }
 }
