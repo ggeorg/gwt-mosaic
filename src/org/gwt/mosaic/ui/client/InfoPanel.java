@@ -125,7 +125,6 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
 
     InfoPanel infoPanel = new InfoPanel(caption, text);
     infoPanel.addCloseHandler(new CloseHandler<PopupPanel>() {
-      @Override
       public void onClose(CloseEvent<PopupPanel> event) {
         SLOTS.set(avail, null);
       }
@@ -211,7 +210,6 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     this.description.setText(text);
   }
 
-  @Override
   public void onResize(ResizeEvent event) {
     new DelayedRunnable() {
       public void run() {
@@ -222,7 +220,6 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     };
   }
 
-  @Override
   public void onClose(CloseEvent<PopupPanel> event) {
     if (resizeHandlerRegistration != null) {
       resizeHandlerRegistration.removeHandler();
