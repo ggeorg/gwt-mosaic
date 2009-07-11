@@ -106,6 +106,7 @@ public class CwSimpleTable extends ContentWidget {
         return rowValue.getName();
       }
     };
+    nameColDef.setColumnSortable(false);
     tableDef.addColumnDefinition(nameColDef);
 
     DefaultColumnDefinition<Person, String> genderColDef = new DefaultColumnDefinition<Person, String>(
@@ -115,6 +116,7 @@ public class CwSimpleTable extends ContentWidget {
         return rowValue.getGender();
       }
     };
+    genderColDef.setColumnSortable(false);
     tableDef.addColumnDefinition(genderColDef);
 
     return tableDef;

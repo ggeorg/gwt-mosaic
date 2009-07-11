@@ -72,6 +72,9 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
     pagingScrollTable.setPageSize(100);
     pagingScrollTable.setEmptyTableWidget(new HTML(
         "There is no data to display"));
+    
+    pagingScrollTable.setCellPadding(3);
+    pagingScrollTable.setCellSpacing(0);
 
     getLayoutPanel().add(pagingScrollTable);
 
