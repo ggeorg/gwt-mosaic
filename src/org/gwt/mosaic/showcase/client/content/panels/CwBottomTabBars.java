@@ -58,9 +58,6 @@ public class CwBottomTabBars extends AbstractLayoutPage {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     final TabLayoutPanel tabPanel = new DecoratedTabLayoutPanel(
         TabBarPosition.BOTTOM);
     tabPanel.setPadding(5);
@@ -82,9 +79,7 @@ public class CwBottomTabBars extends AbstractLayoutPage {
     tabPanel.add(panel3, "Nested BorderLayout");
     tabPanel.add(panel4, "Mixed Layout");
 
-    layoutPanel.add(tabPanel);
-
-    return layoutPanel;
+    return tabPanel;
   }
   
 }

@@ -63,8 +63,7 @@ public class CwBoxLayoutTest_Horizontal extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new ScrollLayoutPanel(new BoxLayout());
-    ((BoxLayout)layoutPanel.getLayout()).setAlignment(Alignment.CENTER);
+    final LayoutPanel layoutPanel = new ScrollLayoutPanel(new BoxLayout(Alignment.CENTER));
 
     final Button b1 = new Button("Width: float<br>Height: float");
     final Button b2 = new Button("Width: float<br>Height: 25%");

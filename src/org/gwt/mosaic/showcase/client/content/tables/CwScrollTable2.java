@@ -21,7 +21,6 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.table.ScrollTable2;
 
 import com.google.gwt.gen2.table.client.AbstractScrollTable;
@@ -304,9 +303,6 @@ public class CwScrollTable2 extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     // Create the tables
     scrollTable = createScrollTable();
 
@@ -316,9 +312,7 @@ public class CwScrollTable2 extends ContentWidget {
       insertDataRow(i);
     }
 
-    layoutPanel.add(scrollTable);
-
-    return layoutPanel;
+    return scrollTable;
   }
   
 }

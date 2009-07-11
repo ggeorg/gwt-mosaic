@@ -18,8 +18,10 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.HTMLLabel;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
@@ -29,7 +31,6 @@ import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
@@ -87,15 +88,16 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final ScrollLayoutPanel layoutPanel = new ScrollLayoutPanel();
+    layoutPanel.setPadding(0);
 
     //
     // Push buttons
     //
 
-    layoutPanel.add(new HTMLLabel("Push button widgets"));
-
-    final LayoutPanel hBox1 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox1 = new CaptionLayoutPanel("Push button widgets");
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    hBox1.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox1.setLayout(new BoxLayout());
 
     addPushButtons(hBox1);
 
@@ -103,21 +105,21 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     // Push buttons with image
     //
 
-    layoutPanel.add(new HTMLLabel("Push button widgets with image"));
-
-    final LayoutPanel hBox2 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox2 = new CaptionLayoutPanel("Push button widgets with image");
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-
+    hBox2.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox2.setLayout(new BoxLayout());
+    
     addImageButtons(hBox2);
 
     //
     // Menu & Split buttons
     //
 
-    layoutPanel.add(new HTMLLabel("Menu & Split button widgets"));
-
-    final LayoutPanel hBox3 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox3 = new CaptionLayoutPanel("Menu & Split button widgets");
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    hBox3.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox3.setLayout(new BoxLayout());
 
     addMenuAndSplitButtons(hBox3);
 
@@ -125,10 +127,10 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
     // Checkbox & Radio buttons
     //
 
-    layoutPanel.add(new HTMLLabel("Checkbox & Radio button widgets"));
-
-    final LayoutPanel hBox4 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox4 = new CaptionLayoutPanel("Checkbox & Radio button widgets");
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    hBox4.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox4.setLayout(new BoxLayout());
 
     addCheckboxAndRadioButtons(hBox4);
 
@@ -141,15 +143,15 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addPushButtons(LayoutPanel layoutPanel) {
+  private void addPushButtons(CaptionLayoutPanel layoutPanel) {
     // Add a push button
-    ToolButton pushButton1 = new ToolButton("Push Button", this);
+    final ToolButton pushButton1 = new ToolButton("Push Button", this);
     pushButton1.ensureDebugId("mosaicPushButton-normal");
 
     layoutPanel.add(pushButton1);
 
     // Add a disabled push button
-    ToolButton disabledPushButton = new ToolButton("Disabled");
+    final ToolButton disabledPushButton = new ToolButton("Disabled");
     disabledPushButton.setEnabled(false);
     disabledPushButton.ensureDebugId("mosaicPushButton-disabled");
 
@@ -162,7 +164,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addImageButtons(LayoutPanel layoutPanel) {
+  private void addImageButtons(CaptionLayoutPanel layoutPanel) {
     // Add a push button with image
     ToolButton pushButton1 = new ToolButton(ButtonHelper.createButtonLabel(
         MessageBox.MESSAGEBOX_IMAGES.dialogInformation(), "Image Button",
@@ -203,7 +205,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addMenuAndSplitButtons(LayoutPanel layoutPanel) {
+  private void addMenuAndSplitButtons(CaptionLayoutPanel layoutPanel) {
     // Add a menu button
     ToolButton menuButton = new ToolButton("Menu Button", this);
     menuButton.setStyle(ToolButtonStyle.MENU);
@@ -270,7 +272,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addCheckboxAndRadioButtons(LayoutPanel layoutPanel) {
+  private void addCheckboxAndRadioButtons(CaptionLayoutPanel layoutPanel) {
     // Add a checkbox button
     ToolButton checkButton1 = new ToolButton("Checkbox");
     checkButton1.setStyle(ToolButtonStyle.CHECKBOX);

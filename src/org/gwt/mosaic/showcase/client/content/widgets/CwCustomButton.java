@@ -118,8 +118,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
-//    layoutPanel.setPadding(0);
-//    layoutPanel.setWidgetSpacing(20);
+    layoutPanel.setPadding(0);
 
     //
     // push buttons

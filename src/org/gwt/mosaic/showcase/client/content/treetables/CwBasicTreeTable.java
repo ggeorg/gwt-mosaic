@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc. 
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,18 +42,18 @@ import com.google.gwt.widgetideas.table.client.overrides.FlexTable.FlexCellForma
  */
 @ShowcaseStyle( {".gwt-FastTreeTable"})
 public class CwBasicTreeTable extends ContentWidget {
-  
+
   /**
    * The constants used in this <code>ContentWidget</code>.
    */
   @ShowcaseSource
   public static interface CwConstants extends Constants,
-  ContentWidget.CwConstants {
+      ContentWidget.CwConstants {
     String mosaicBasicTreeTableDescription();
 
     String mosaicBasicTreeTableName();
   }
-  
+
   /**
    * An instance of the constants.
    */
@@ -92,8 +92,8 @@ public class CwBasicTreeTable extends ContentWidget {
   public CwBasicTreeTable(CwConstants constants) {
     super(constants);
     this.constants = constants;
-    
-    //FastTreeTable.addDefaultCSS();
+
+    // FastTreeTable.addDefaultCSS();
   }
 
   /**
@@ -162,9 +162,6 @@ public class CwBasicTreeTable extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     // Create the inner tables
     getHeaderTable();
     getFooterTable();
@@ -226,9 +223,7 @@ public class CwBasicTreeTable extends ContentWidget {
       footerTable.setText(0, i, "Col " + i);
     }
 
-    layoutPanel.add(scrollTreeTable);
-
-    return layoutPanel;
+    return scrollTreeTable;
   }
 
   /**
@@ -268,5 +263,5 @@ public class CwBasicTreeTable extends ContentWidget {
       headerTable.setHTML(2, cell, "Header " + cell);
     }
   }
-  
+
 }

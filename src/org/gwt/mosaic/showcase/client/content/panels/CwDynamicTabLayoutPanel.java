@@ -100,6 +100,7 @@ public class CwDynamicTabLayoutPanel extends AbstractLayoutPage {
   private Widget createButtonBar() {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
+    layoutPanel.setPadding(0);
 
     layoutPanel.add(new Button("Add", new ClickHandler() {
       public void onClick(ClickEvent event) {

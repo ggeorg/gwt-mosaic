@@ -63,6 +63,7 @@ public class CwMixedLayout extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
+    layoutPanel.setPadding(0);
 
     final Button b1 = new Button("Button 1");
     final Button b2 = new Button("Button 2");

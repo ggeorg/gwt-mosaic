@@ -213,6 +213,7 @@ public class CwRichListBox extends ContentWidget {
   protected Widget onInitialize() {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
+    layoutPanel.setPadding(0);
 
     textBox = new TextBox();
     textBox.addKeyPressHandler(new KeyPressHandler() {

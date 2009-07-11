@@ -85,9 +85,10 @@ public class CwLayoutPopups extends ContentWidget implements ClickHandler {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    ScrollLayoutPanel vBox = new ScrollLayoutPanel();
+    final LayoutPanel vBox = new ScrollLayoutPanel();
+    vBox.setPadding(0);
 
-    LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout());
+    final LayoutPanel layoutPanel1 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel1);
 
     layoutPanel1.add(new Button("Plain", new ClickHandler() {
@@ -134,7 +135,7 @@ public class CwLayoutPopups extends ContentWidget implements ClickHandler {
 
     // --------------
 
-    LayoutPanel layoutPanel2 = new LayoutPanel(new BoxLayout());
+    final LayoutPanel layoutPanel2 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel2);
 
     layoutPanel2.add(new Button("Decorated", new ClickHandler() {
@@ -182,7 +183,7 @@ public class CwLayoutPopups extends ContentWidget implements ClickHandler {
 
     // --------------
 
-    LayoutPanel layoutPanel3 = new LayoutPanel(new BoxLayout());
+    final LayoutPanel layoutPanel3 = new LayoutPanel(new BoxLayout());
     vBox.add(layoutPanel3);
 
     layoutPanel3.add(new Button("WindowPanel", new ClickHandler() {

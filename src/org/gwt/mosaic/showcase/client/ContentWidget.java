@@ -204,7 +204,7 @@ public abstract class ContentWidget extends LayoutPanel implements
     final LayoutPanel vPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     vPanel.setPadding(0);
-    vPanel.setWidgetSpacing(0);
+    vPanel.setWidgetSpacing(5);
     tabPanel.add(vPanel, createTabBarCaption(Showcase.IMAGES.mediaPlayGreen(),
         constants.contentWidgetExample()), true);
 

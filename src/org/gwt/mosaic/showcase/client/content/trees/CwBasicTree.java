@@ -20,7 +20,6 @@ package org.gwt.mosaic.showcase.client.content.trees;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.gen2.complexpanel.client.FastTree;
 import com.google.gwt.gen2.complexpanel.client.FastTreeItem;
@@ -64,10 +63,7 @@ public class CwBasicTree extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
-    FastTree t = new FastTree();
+    final FastTree t = new FastTree();
     FastTreeItem a = t.addItem("A root tree item");
     a.addItem("A child with different style");
     a.addItem("regular style");
@@ -86,11 +82,9 @@ public class CwBasicTree extends ContentWidget {
     widgetBranch.addItem("A ListBox parent").addItem(lb);
 
     final ScrollPanel panel = new ScrollPanel();
-    layoutPanel.add(panel);
-    layoutPanel.setPadding(0);
     panel.add(t);
 
-    return layoutPanel;
+    return panel;
   }
 
 }

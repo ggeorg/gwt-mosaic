@@ -103,7 +103,7 @@ public class CwGrowingExample extends ContentWidget {
     tabPanel.add(newPercent2Growing(), "Percent 2");
     tabPanel.add(newVertical1Growing(), "Vertical 1");
     tabPanel.add(newVertical2Growing(), "Vertical 2");
-
+    
     return tabPanel;
   }
 
@@ -257,5 +257,5 @@ public class CwGrowingExample extends ContentWidget {
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }
-  
+
 }

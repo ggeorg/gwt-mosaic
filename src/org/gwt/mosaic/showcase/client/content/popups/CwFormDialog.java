@@ -29,7 +29,6 @@ import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -101,9 +100,12 @@ public class CwFormDialog extends ContentWidget {
     });
     tabPanel.selectTab(0);
 
-    windowPanel.setFooter(buildButtonBarPanel());
+    final LayoutPanel buttonBar = ButtonBarFactory.buildHelpOKCancelBar(new Button("Help"),
+        new Button("OK"), new Button("Cancel"));
+    buttonBar.setPadding(5);
+    windowPanel.setFooter(buttonBar);
 
-    layoutPanel.add(new Button("Click me!", new ClickHandler() {
+    layoutPanel.add(new Button("Open basic form dialog...", new ClickHandler() {
       public void onClick(ClickEvent event) {
         windowContent.add(title, CellConstraints.xy(1, 1));
         windowContent.add(tabPanel, CellConstraints.xy(1, 3));
@@ -164,15 +166,5 @@ public class CwFormDialog extends ContentWidget {
 
     return panel;
   }
-
-  /**
-   * 
-   */
-  @ShowcaseSource
-  private Widget buildButtonBarPanel() {
-    LayoutPanel p = ButtonBarFactory.buildHelpOKCancelBar(new Button("Help"),
-        new Button("OK"), new Button("Cancel"));
-    p.setPadding(5);
-    return p;
-  }
+  
 }

@@ -105,6 +105,9 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
     liveScrollTable.setPageSize(50); // TODO
     liveScrollTable.setEmptyTableWidget(new HTML("There is no data to display"));
     
+    liveScrollTable.setCellPadding(3);
+    liveScrollTable.setCellSpacing(0);
+    
     getLayoutPanel().add(liveScrollTable);
     
     setStyleName("mosaic-Table");
