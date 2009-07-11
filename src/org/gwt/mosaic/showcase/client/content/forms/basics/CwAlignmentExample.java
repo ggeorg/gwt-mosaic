@@ -44,14 +44,13 @@
  */
 package org.gwt.mosaic.showcase.client.content.forms.basics;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.Label;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
@@ -97,9 +96,6 @@ public class CwAlignmentExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(buildHorizontalButtons(), "Horizontal");
     tabPanel.add(buildVerticalButtons(), "Vertical");
@@ -118,35 +114,36 @@ public class CwAlignmentExample extends ContentWidget {
     LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     // Add components to the panel.
-    panel.add(newLabel("Left"), CellConstraints.xy(1, 1));
+    panel.add(new TextLabel("Left"), CellConstraints.xy(1, 1));
     panel.add(new Button("Name"), CellConstraints.xy(1, 3));
     panel.add(new Button("Phone"), CellConstraints.xy(1, 5));
     panel.add(new Button("Fax"), CellConstraints.xy(1, 7));
     panel.add(new Button("Email"), CellConstraints.xy(1, 9));
     panel.add(new Button("Address"), CellConstraints.xy(1, 11));
 
-    panel.add(newLabel("Center"), CellConstraints.xy(3, 1));
+    panel.add(new TextLabel("Center"), CellConstraints.xy(3, 1));
     panel.add(new Button("Name"), CellConstraints.xy(3, 3));
     panel.add(new Button("Phone"), CellConstraints.xy(3, 5));
     panel.add(new Button("Fax"), CellConstraints.xy(3, 7));
     panel.add(new Button("Email"), CellConstraints.xy(3, 9));
     panel.add(new Button("Address"), CellConstraints.xy(3, 11));
 
-    panel.add(newLabel("Right"), CellConstraints.xy(5, 1));
+    panel.add(new TextLabel("Right"), CellConstraints.xy(5, 1));
     panel.add(new Button("Name"), CellConstraints.xy(5, 3));
     panel.add(new Button("Phone"), CellConstraints.xy(5, 5));
     panel.add(new Button("Fax"), CellConstraints.xy(5, 7));
     panel.add(new Button("Email"), CellConstraints.xy(5, 9));
     panel.add(new Button("Address"), CellConstraints.xy(5, 11));
 
-    panel.add(newLabel("Fill"), CellConstraints.xy(7, 1, "center, center"));
+    panel.add(new TextLabel("Fill"), CellConstraints.xy(7, 1, "center, center"));
     panel.add(new Button("Name"), CellConstraints.xy(7, 3));
     panel.add(new Button("Phone"), CellConstraints.xy(7, 5));
     panel.add(new Button("Fax"), CellConstraints.xy(7, 7));
     panel.add(new Button("Email"), CellConstraints.xy(7, 9));
     panel.add(new Button("Address"), CellConstraints.xy(7, 11));
 
-    panel.add(newLabel("Default"), CellConstraints.xy(9, 1, "center, center"));
+    panel.add(new TextLabel("Default"), CellConstraints.xy(9, 1,
+        "center, center"));
     panel.add(new Button("Name"), CellConstraints.xy(9, 3));
     panel.add(new Button("Phone"), CellConstraints.xy(9, 5));
     panel.add(new Button("Fax"), CellConstraints.xy(9, 7));
@@ -168,37 +165,27 @@ public class CwAlignmentExample extends ContentWidget {
     LayoutPanel panel = new ScrollLayoutPanel(layout);
 
     // Add components to the panel.
-    panel.add(newLabel("Top"), CellConstraints.xy(1, 1));
+    panel.add(new TextLabel("Top"), CellConstraints.xy(1, 1));
     panel.add(createSmallButton(), CellConstraints.xy(3, 1));
     panel.add(createMediumButton(), CellConstraints.xy(5, 1));
 
-    panel.add(newLabel("Center"), CellConstraints.xy(1, 3));
+    panel.add(new TextLabel("Center"), CellConstraints.xy(1, 3));
     panel.add(createSmallButton(), CellConstraints.xy(3, 3));
     panel.add(createMediumButton(), CellConstraints.xy(5, 3));
 
-    panel.add(newLabel("Bottom"), CellConstraints.xy(1, 5));
+    panel.add(new TextLabel("Bottom"), CellConstraints.xy(1, 5));
     panel.add(createSmallButton(), CellConstraints.xy(3, 5));
     panel.add(createMediumButton(), CellConstraints.xy(5, 5));
 
-    panel.add(newLabel("Fill"), CellConstraints.xy(1, 7));
+    panel.add(new TextLabel("Fill"), CellConstraints.xy(1, 7));
     panel.add(createSmallButton(), CellConstraints.xy(3, 7));
     panel.add(createMediumButton(), CellConstraints.xy(5, 7));
 
-    panel.add(newLabel("Default"), CellConstraints.xy(1, 9));
+    panel.add(new TextLabel("Default"), CellConstraints.xy(1, 9));
     panel.add(createSmallButton(), CellConstraints.xy(3, 9));
     panel.add(createMediumButton(), CellConstraints.xy(5, 9));
 
     return panel;
-  }
-
-  /**
-   * 
-   */
-  @ShowcaseSource
-  private Widget newLabel(String string) {
-    final Label label = new Label(string);
-    DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
-    return label;
   }
 
   /**

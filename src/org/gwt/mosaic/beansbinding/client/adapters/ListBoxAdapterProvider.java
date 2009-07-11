@@ -9,8 +9,9 @@ import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase;
 import org.gwt.mosaic.ui.client.ListBox;
 
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.gen2.event.shared.HandlerRegistration;
+import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
+import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 
 public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
@@ -44,18 +45,20 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
       handler = new Handler();
       cachedElementOrElements = isPlural() ? getSelectedElements()
           : getSelectedElement();
-      listBox.addChangeListener(handler);
+      handlerRegistration = listBox.addRowSelectionHandler(handler);
     }
+    
+    private HandlerRegistration handlerRegistration = null;
 
     @Override
     protected void listeningStopped() {
-      listBox.removeChangeListener(handler);
+      handlerRegistration.removeHandler();
       cachedElementOrElements = null;
       handler = null;
     }
 
-    private class Handler implements ChangeListener {
-      public void onChange(Widget sender) {
+    private class Handler implements RowSelectionHandler {
+      public void onRowSelection(RowSelectionEvent event) {
         Object oldElementOrElements = cachedElementOrElements;
         cachedElementOrElements = isPlural() ? getSelectedElements()
             : getSelectedElement();
@@ -84,11 +87,11 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     Set<Integer> selection = listBox.getSelectedIndices();
 
-    if (selection == null || selection.size() > 0) {
+    if (selection == null || selection.size() == 0) {
       return elements;
     }
 
-    for (int i = 0, n = selection.size(); i < n; ++i) {
+    for (Integer i : selection) {
       elements.add(listBox.getItem(i));
     }
 

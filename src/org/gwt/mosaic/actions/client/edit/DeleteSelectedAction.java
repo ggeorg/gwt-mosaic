@@ -44,7 +44,7 @@ public final class DeleteSelectedAction extends CommandAction {
     super(ACTION_CONSTANTS.deleteSelectedName(), ACTION_IMAGES.delete_action(),
         command);
     putValue(Action.SHORT_DESCRIPTION,
-        ACTION_CONSTANTS.deleteSelectedDescription());
+        ACTION_CONSTANTS.deleteSelectedShortDescription());
   }
 
 }

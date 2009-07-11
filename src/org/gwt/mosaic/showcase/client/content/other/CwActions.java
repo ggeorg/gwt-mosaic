@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -16,12 +18,12 @@ package org.gwt.mosaic.showcase.client.content.other;
 import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ButtonBindings;
 import org.gwt.mosaic.actions.client.CheckBoxBindings;
+import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
 import org.gwt.mosaic.actions.client.CommandAction;
 import org.gwt.mosaic.actions.client.MenuItemBindings;
 import org.gwt.mosaic.actions.client.PushButtonBindings;
 import org.gwt.mosaic.actions.client.RadioButtonBindings;
 import org.gwt.mosaic.actions.client.ToggleButtonBindings;
-import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
 import org.gwt.mosaic.actions.client.ToolButtonBindings;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
@@ -555,5 +557,4 @@ public class CwActions extends ContentWidget {
 
     panel.add(menu, new BoxLayoutData(FillStyle.HORIZONTAL));
   }
-
 }

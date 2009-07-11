@@ -24,8 +24,9 @@ import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -471,8 +472,8 @@ public class BorderLayout extends BaseLayout {
             northCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseDown());
             northCollapsedImageButton.addStyleName("NorthCollapsedImageButton");
-            northCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            northCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(northCollapsed, false);
                 layoutPanel.removeImpl(northCollapsedImageButton);
                 northCollapsedImageButton = null;
@@ -555,8 +556,8 @@ public class BorderLayout extends BaseLayout {
             southCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseUp());
             southCollapsedImageButton.addStyleName("SouthCollapsedImageButton");
-            southCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            southCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(southCollapsed, false);
                 layoutPanel.removeImpl(southCollapsedImageButton);
                 southCollapsedImageButton = null;
@@ -643,8 +644,8 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseRight());
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
-            westCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            westCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(westCollapsed, false);
                 layoutPanel.removeImpl(westCollapsedImageButton);
                 westCollapsedImageButton = null;
@@ -727,8 +728,8 @@ public class BorderLayout extends BaseLayout {
             eastCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseLeft());
             eastCollapsedImageButton.addStyleName("EastCollapsedImageButton");
-            eastCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
+            eastCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
                 layoutPanel.setCollapsed(eastCollapsed, false);
                 layoutPanel.removeImpl(eastCollapsedImageButton);
                 eastCollapsedImageButton = null;

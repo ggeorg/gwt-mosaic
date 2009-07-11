@@ -150,7 +150,9 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
+   * .user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget child) {
     return body.getWidgetIndex(child);
@@ -160,10 +162,10 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.getWidgetSpacing();
   }
 
-  void hideContents(boolean flag) {
-    body.setVisible(!flag);
+  void hideContent(boolean hideContent) {
+    body.setVisible(!hideContent);
     if (footer != null) {
-      footer.setVisible(!flag);
+      footer.setVisible(!hideContent);
     }
     invalidate();
   }
@@ -181,11 +183,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.iterator();
   }
 
-  @Override
-  public void layout() {
-    getLayoutPanel().layout();
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -198,7 +195,9 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   * @see
+   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
+   * .ui.Widget)
    */
   public boolean remove(Widget w) {
     return body.remove(w);
@@ -212,7 +211,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    hideContents(collapsed);
+    hideContent(collapsed);
     fireCollapsedChange(this);
   }
 

@@ -195,14 +195,9 @@ public class CwLazyTreeTable extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     // Add the scroll tree table to the page
     scrollTreeTable = new ScrollTreeTable(getDataTable(), getHeaderTable());
     scrollTreeTable.setFooterTable(getFooterTable());
-
-    layoutPanel.add(scrollTreeTable);
 
     // Setup the header
     setupScrollTreeTable();
@@ -212,7 +207,7 @@ public class CwLazyTreeTable extends ContentWidget {
     dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
     lazyCreateChild(dataTable, 0, 50);
 
-    return layoutPanel;
+    return scrollTreeTable;
   }
 
   /**
@@ -257,5 +252,5 @@ public class CwLazyTreeTable extends ContentWidget {
       }
     });
   }
-
+  
 }

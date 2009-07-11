@@ -252,7 +252,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @return the screen resolution, in dots-per-inch
    */
   public static int getScreenResolution() {
-    return toPixelSize("1in");
+    return toPixelSize("1in", true);
   }
 
   public static Dimension getStringBoxSize(Element span, final String str) {
@@ -365,7 +365,8 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
   }
 
-  public static int toPixelSize(final String width) {
+  public static int toPixelSize(final String value,
+      final boolean useWidthAttribute) {
     if (toPixelSizeTestElem == null) {
       toPixelSizeTestElem = DOM.createSpan();
       setStyleAttribute(toPixelSizeTestElem, "left", "");
@@ -374,8 +375,13 @@ public class DOM extends com.google.gwt.user.client.DOM {
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    setStyleAttribute(toPixelSizeTestElem, "width", width);
-    return getBoxSize(toPixelSizeTestElem).width;
+    if (useWidthAttribute) {
+      setStyleAttribute(toPixelSizeTestElem, "width", value);
+      return getBoxSize(toPixelSizeTestElem).width;
+    } else {
+      setStyleAttribute(toPixelSizeTestElem, "height", value);
+      return getBoxSize(toPixelSizeTestElem).height;
+    }
   }
 
 }

@@ -18,6 +18,7 @@ package org.gwt.mosaic.ui.client;
 import java.util.Date;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.datepicker.DatePicker;
 import org.gwt.mosaic.ui.client.datepicker.DateTimePicker;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -30,16 +31,18 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -81,14 +84,15 @@ public abstract class MessageBox extends WindowPanel {
     alert.setWidth(preferredWidth + "px");
 
     final Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         alert.hide();
       }
     });
     alert.getButtonPanel().add(buttonOK);
 
-    alert.setWidget(new HTML(message));
+    alert.setWidget(new WidgetWrapper(new HTML(message),
+        HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP));
     alert.showModal();
 
     if (alert.getOffsetWidth() < preferredWidth) {
@@ -122,15 +126,15 @@ public abstract class MessageBox extends WindowPanel {
     confirm.setWidth(preferredWidth + "px");
 
     final Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         confirm.onClose(true);
       }
     });
 
     final Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         confirm.onClose(false);
       }
     });
@@ -138,7 +142,8 @@ public abstract class MessageBox extends WindowPanel {
     confirm.getButtonPanel().add(buttonOK);
     confirm.getButtonPanel().add(buttonCancel);
 
-    confirm.setWidget(new HTML(message));
+    confirm.setWidget(new WidgetWrapper(new HTML(message),
+        HasAlignment.ALIGN_LEFT, HasAlignment.ALIGN_TOP));
     confirm.showModal();
 
     if (confirm.getOffsetWidth() < preferredWidth) {
@@ -184,15 +189,15 @@ public abstract class MessageBox extends WindowPanel {
     prompt.setWidth(preferredWidth + "px");
 
     Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(true);
       }
     });
 
     Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(false);
       }
     });
@@ -202,7 +207,7 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(dateTimePicker, 0);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -231,15 +236,15 @@ public abstract class MessageBox extends WindowPanel {
     prompt.setWidth(preferredWidth + "px");
 
     Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(true);
       }
     });
 
     Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(false);
       }
     });
@@ -249,7 +254,7 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(datePicker, 0);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -284,15 +289,15 @@ public abstract class MessageBox extends WindowPanel {
     panel.add(input, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button buttonOK = new Button("OK");
-    buttonOK.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonOK.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(true);
       }
     });
 
     Button buttonCancel = new Button("Cancel");
-    buttonCancel.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    buttonCancel.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         prompt.onClose(false);
       }
     });
@@ -302,7 +307,7 @@ public abstract class MessageBox extends WindowPanel {
 
     prompt.setWidget(panel);
     prompt.showModal();
-    
+
     if (prompt.getOffsetWidth() < preferredWidth) {
       prompt.setWidth(preferredWidth + "px");
       prompt.center();
@@ -341,9 +346,11 @@ public abstract class MessageBox extends WindowPanel {
     final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
     super.setWidget(layoutPanel);
     layoutPanel.setWidgetSpacing(10);
-    // if (UserAgent.isGecko()) {
-    DOM.setStyleAttribute(layoutPanel.getElement(), "overflow", "auto");
-    // }
+
+    // (ggeorg) this is a workaround for the infamous Firefox cursor bug
+    if (UserAgent.isGecko()) {
+      DOM.setStyleAttribute(getLayoutPanel().getElement(), "overflow", "auto");
+    }
 
     final BoxLayout buttonPanelLayout = new BoxLayout(Orientation.HORIZONTAL);
     buttonPanelLayout.setLeftToRight(false);
@@ -409,7 +416,7 @@ public abstract class MessageBox extends WindowPanel {
   @Override
   public boolean onKeyDownPreview(char key, int modifiers) {
     switch (key) {
-      case KeyboardListener.KEY_ESCAPE:
+      case KeyCodes.KEY_ESCAPE:
         onClose(false);
         break;
     }
