@@ -1,3 +1,43 @@
+Change log for v0.2.2
+================================
+
+ - (Update) Label & HTML renamed to TextLabel & HTMLLabel
+ - (Added) new Showcase demo for WindowPanel & FormLayout
+ 	http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwFormDialog
+ - (Bug Fix) Separator on IE6 fix and all FormLayout alignment problems
+ - (Update) DefaultFormBuilder & PanelBuilder use LayoutPanel and not ScrollLayoutPanel as default panel
+ - (Added) set/getLabelFor() added to TextLabel & HTMLLabel widgets (used by the FormLayout builders)
+ - (Bug Fix) Temporary fix for Issue 59 (Window panel going to left-top a moment, when dragging)
+ - (Bug Fix) MessageBox text rendering fix
+ - (Update) KeyboardListener.KEY_ESCAPE replaced by KeyCodes.KEY_ESCAPE
+ - (Bug Fix) MessageBox flashing fix (this is more a workaround since a PopupPanel with a scrollbar is 
+    flashing in FireFox). To see the effect just comapre "Login Form" and "RichTextArea Prompt" in
+    http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwMessageBox
+    ("RichTextArea Prompt" has a overflow=auto attribute).
+ - (Update) Glasspanel used by showModal() has now "opacity: 0.1"
+ - (Update) null parameters in ActionBindings throw IllegalArgumentException
+ - (Update) BoxLayout.setOrient() @deprecated method removed
+ - (Added) Table & LiveTable widgets + demos
+ 	http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwSimpleTable
+    http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwLiveTable
+ - (Update) DOM.toPixelSize(finalString width) changed to DOM.toPixelSize(final String value, final boolean useWidthAttribute)
+ - (Upgrade) gwt-incubator (trunk) r1673->r1684
+ - (Update) gwt-dnd 2.6.2 patch removed
+ - (Upgrade) gwt-beans-binding 0.2.3 -> 0.2.4
+ - (Bug Fix) GridLayout & FillLayout for GridLayoutData(GridLayoutData.ALIGN_LEFT, GridLayoutData.ALIGN_TOP)) e.g. layoutPanel.add([a LayoutPanel based widget], new
+FillLayoutData(FillLayoutData.ALIGN_LEFT, FillLayoutData.ALIGN_TOP));
+ - (Update) (Update) ImageButton.click() removed (public void click() works only for ButtonElements)
+ - (Update) WindowPanel class splitted into: WindowPanel, DesktopPanel & DesktopManager (the last two are similar to swing's JDesktopPane &
+DesktopManager).
+ - (Update) Making ResizableWidget optional (LayoutPanel)
+ - (Update) StackLayoutPanel.getCaption() added & ClickListener replaced by ClickHandler
+ - (Update) WidgetHelper API changes:
+ 	http://code.google.com/p/gwt-mosaic/source/detail?r=900
+ - (Update) WindowPanel CloseHandler & WindowClosingHandler update
+ - (Bug Fix) endless loop in TabLayoutPanel.iterator()
+ - (Bug Fix) Issue 51: WindowPanel leaks (partial fix)
+ - (Bug Fix) ImageButton leaks memory
+
 Change log for v0.2.1
 ================================
 
