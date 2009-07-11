@@ -33,7 +33,6 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.gen2.table.client.CachedTableModel;
 import com.google.gwt.gen2.table.client.CellRenderer;
 import com.google.gwt.gen2.table.client.ColumnDefinition;
-import com.google.gwt.gen2.table.client.DefaultRowRenderer;
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.FixedWidthGridBulkRenderer;
 import com.google.gwt.gen2.table.client.ListCellEditor;

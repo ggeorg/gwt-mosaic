@@ -60,6 +60,7 @@ public class CwGridLayout extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(3, 3));
+    layoutPanel.setPadding(0);
 
     final Button b11 = new Button("Button 1-1");
     final Button b12 = new Button("Button 1-2");

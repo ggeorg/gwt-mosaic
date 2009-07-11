@@ -86,7 +86,7 @@ public class CwGroupingExample extends ContentWidget {
   public String getName() {
     return "Grouping";
   }
-  
+
   @Override
   public boolean hasStyle() {
     return false;
@@ -103,7 +103,7 @@ public class CwGroupingExample extends ContentWidget {
     tabPanel.add(buildWizardBar(true), "Grouped Bar");
     tabPanel.add(buildEditorPanel(false), "Ungrouped Rows");
     tabPanel.add(buildEditorPanel(true), "Grouped Rows");
-    
+
     return tabPanel;
   }
 
@@ -175,5 +175,5 @@ public class CwGroupingExample extends ContentWidget {
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }
-  
+
 }

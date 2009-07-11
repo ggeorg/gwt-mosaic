@@ -98,9 +98,6 @@ public class CwBasicSizesExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(buildHorizontalSizesPanel(), "Horizontal");
     tabPanel.add(buildVerticalSizesPanel(), "Vertical");

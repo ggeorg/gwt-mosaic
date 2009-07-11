@@ -96,9 +96,6 @@ public class CwAlignmentExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(buildHorizontalButtons(), "Horizontal");
     tabPanel.add(buildVerticalButtons(), "Vertical");

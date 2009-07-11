@@ -19,7 +19,6 @@ package org.gwt.mosaic.showcase.client.content.trees;
 
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.gen2.commonevent.shared.BeforeOpenEvent;
 import com.google.gwt.gen2.commonevent.shared.BeforeOpenHandler;
@@ -62,9 +61,6 @@ public class CwLazyTree extends CwBasicTree {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     final FastTree t = new FastTree();
     lazyCreateChild(t.getTreeRoot(), 0, 50);
 
@@ -97,10 +93,9 @@ public class CwLazyTree extends CwBasicTree {
     });
 
     final ScrollPanel panel = new ScrollPanel();
-    layoutPanel.add(panel);
     panel.add(t);
 
-    return layoutPanel;
+    return panel;
   }
 
   /**

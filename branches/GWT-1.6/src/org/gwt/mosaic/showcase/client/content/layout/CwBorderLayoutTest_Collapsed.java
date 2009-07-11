@@ -170,7 +170,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     // center panel
 
     final CaptionLayoutPanel centerPanel = new CaptionLayoutPanel("Center");
-    centerPanel.getHeader().add(Showcase.IMAGES.gwtLogoThumb().createImage());
+    centerPanel.getHeader().add(Showcase.IMAGES.catPanels().createImage());
     centerPanel.add(new WidgetWrapper(new HTML("<h1>GWT Mosaic</h1>")));
 
     layoutPanel.add(centerPanel, new BorderLayoutData(true));

@@ -20,7 +20,6 @@ package org.gwt.mosaic.showcase.client.content.trees;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -69,9 +68,6 @@ public class CwVerboseTree extends CwBasicTree {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     FastTree tree = new FastTree();
     verboseTreeItem(tree.getTreeRoot(), 10);
 
@@ -106,10 +102,9 @@ public class CwVerboseTree extends CwBasicTree {
     });
 
     final ScrollPanel panel = new ScrollPanel();
-    layoutPanel.add(panel);
     panel.add(tree);
 
-    return layoutPanel;
+    return panel;
   }
 
   private void verboseTreeItem(FastTreeItem parent, int children) {

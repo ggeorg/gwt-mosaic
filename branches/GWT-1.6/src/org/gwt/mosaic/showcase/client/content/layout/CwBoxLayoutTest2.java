@@ -63,7 +63,7 @@ public class CwBoxLayoutTest2 extends ContentWidget {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
-    
+    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
     final Button b11 = new Button("Button 11");
@@ -71,7 +71,7 @@ public class CwBoxLayoutTest2 extends ContentWidget {
     final Button b13 = new Button("Button 13");
     final Button b14 = new Button("Button 14");
 
-    BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
+    final BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
     final LayoutPanel layoutPanel1 = new LayoutPanel(boxLayout1);
 
     layoutPanel1.add(b11);
@@ -84,7 +84,7 @@ public class CwBoxLayoutTest2 extends ContentWidget {
     final Button b23 = new Button("Button 23");
     final Button b24 = new Button("Button 24");
 
-    BoxLayout boxLayout2 = new BoxLayout(); // default is horizontal
+    final BoxLayout boxLayout2 = new BoxLayout(); // default is horizontal
     boxLayout2.setLeftToRight(false);
     final LayoutPanel layoutPanel2 = new LayoutPanel(boxLayout2);
 

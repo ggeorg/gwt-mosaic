@@ -24,11 +24,6 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.LiveTable;
 import org.gwt.mosaic.ui.client.PopupMenu;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.table.DefaultColumnDefinition;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -95,11 +90,6 @@ public class CwLiveTable extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    final LayoutPanel vBox = new LayoutPanel(
-        new BoxLayout(Orientation.VERTICAL));
-    vBox.setPadding(0);
-    // vBox.setWidgetSpacing(0);
-
     final List<Foo> data = new ArrayList<Foo>();
 
     for (int i = 0; i < 1000; i++) {
@@ -133,9 +123,7 @@ public class CwLiveTable extends ContentWidget {
       }
     });
 
-    vBox.add(table, new BoxLayoutData(FillStyle.BOTH));
-
-    return vBox;
+    return table;
   }
 
   /**

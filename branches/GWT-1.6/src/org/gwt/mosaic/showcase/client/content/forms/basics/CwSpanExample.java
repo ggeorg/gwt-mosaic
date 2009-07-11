@@ -86,7 +86,7 @@ public class CwSpanExample extends ContentWidget {
   public String getName() {
     return "Span";
   }
-  
+
   @Override
   public boolean hasStyle() {
     return false;
@@ -98,14 +98,9 @@ public class CwSpanExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(newColumnSpan(), "Column Span");
     tabPanel.add(newRowSpan(), "Row Span");
-    
-    tabPanel.selectTab(0);
 
     return tabPanel;
   }
@@ -170,5 +165,5 @@ public class CwSpanExample extends ContentWidget {
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }
-  
+
 }

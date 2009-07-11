@@ -64,6 +64,7 @@ public class CwDeckLayoutPanel extends AbstractLayoutPage {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
+    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
     // Create a DeckLayoutPanel

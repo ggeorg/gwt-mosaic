@@ -62,6 +62,7 @@ public class CwBoxLayout extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     
+    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
     final Button b1 = new Button("Button 1");

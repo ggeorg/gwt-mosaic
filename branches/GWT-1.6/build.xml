@@ -50,6 +50,7 @@
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
 			<jvmarg value="-Xmx512M" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+			<arg line="-style PRETTY" />
 			<arg value="org.gwt.mosaic.showcase.Showcase" />
 		</java>
 	</target>

@@ -19,7 +19,6 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -260,12 +259,12 @@ public class TextLabel extends Widget implements SourcesClickEvents,
   }
 
   public Dimension getPreferredSize() {
-    setSize("auto", "auto");
+    invalidate();
     return new Dimension(getOffsetWidth(), getOffsetHeight());
   }
 
   public void invalidate() {
-    // Nothing to do here!
+    setSize("auto", "auto");
   }
 
   public void layout() {
