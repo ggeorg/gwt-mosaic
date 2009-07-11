@@ -143,6 +143,7 @@ public class CwLiveTable extends ContentWidget {
         return rowValue.values[0];
       }
     };
+    colDef0.setColumnSortable(false);
     tableDef.addColumnDefinition(colDef0);
 
     DefaultColumnDefinition<Foo, Integer> colDef1 = new DefaultColumnDefinition<Foo, Integer>(
@@ -152,6 +153,7 @@ public class CwLiveTable extends ContentWidget {
         return rowValue.values[1];
       }
     };
+    colDef1.setColumnSortable(false);
     tableDef.addColumnDefinition(colDef1);
 
     DefaultColumnDefinition<Foo, Integer> colDef2 = new DefaultColumnDefinition<Foo, Integer>(
@@ -161,6 +163,7 @@ public class CwLiveTable extends ContentWidget {
         return rowValue.values[1];
       }
     };
+    colDef2.setColumnSortable(false);
     tableDef.addColumnDefinition(colDef2);
 
     DefaultColumnDefinition<Foo, Integer> colDef3 = new DefaultColumnDefinition<Foo, Integer>(
@@ -170,6 +173,7 @@ public class CwLiveTable extends ContentWidget {
         return rowValue.values[2];
       }
     };
+    colDef3.setColumnSortable(false);
     tableDef.addColumnDefinition(colDef3);
 
     DefaultColumnDefinition<Foo, Integer> colDef4 = new DefaultColumnDefinition<Foo, Integer>(
@@ -179,6 +183,7 @@ public class CwLiveTable extends ContentWidget {
         return rowValue.values[2];
       }
     };
+    colDef4.setColumnSortable(false);
     tableDef.addColumnDefinition(colDef4);
 
     return tableDef;
