@@ -92,7 +92,7 @@ public class CwLiveTable extends ContentWidget {
   protected Widget onInitialize() {
     final List<Foo> data = new ArrayList<Foo>();
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 160; i++) {
       data.add(new Foo(i));
     }
 
@@ -104,7 +104,8 @@ public class CwLiveTable extends ContentWidget {
 
       @Override
       public void requestRows(Request request, Callback<Foo> callback) {
-        int numRows = request.getNumRows();
+        int numRows = Math.min(request.getNumRows(), data.size()
+            - request.getStartRow());
         List<Foo> list = new ArrayList<Foo>();
         for (int i = 0, n = numRows; i < n; i++) {
           list.add(data.get(request.getStartRow() + i));
