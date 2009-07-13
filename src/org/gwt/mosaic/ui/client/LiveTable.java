@@ -330,6 +330,10 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
     liveScrollTable.gotoPage(0, false);
   }
   
+  public void reload() {
+    liveScrollTable.reloadPage();
+  }
+  
   /**
    * Redraw the table.
    */
