@@ -1,7 +1,7 @@
 #summary A Hello World demo.
 #labels Featured
 
-<wiki:gadget url="http://69.20.122.77/gwt-mosaic-current/gwt-mosaic-wiki.xml?v=1" height="95" width="728" border="0"/>
+<wiki:gadget url="http://69.20.122.77/gwt-mosaic-current/gwt-mosaic-wiki.xml?v=2" height="95" width="728" border="0"/>
 
 = Introduction =
 
