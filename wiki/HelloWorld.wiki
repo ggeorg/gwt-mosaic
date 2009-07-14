@@ -1,8 +1,6 @@
 #summary A Hello World demo.
 #labels Featured
 
-<wiki:gadget url="http://69.20.122.77/gwt-mosaic-current/gwt-mosaic-baner.xml?v=1" height="70" width="468" border="0"/>
-
 = Introduction =
 
 Demonstration of `Viewport` & `LayoutPanel`.
@@ -161,3 +159,6 @@ The GWT Module XML should contain:
 	<entry-point class='...' />
 </module>
 }}}
+
+
+<wiki:gadget url="http://69.20.122.77/gwt-mosaic-current/gwt-mosaic-baner.xml?v=1" height="70" width="468" border="0"/>
