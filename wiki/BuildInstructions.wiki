@@ -37,7 +37,13 @@ from the lib directory and you have to add:
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
 
-	<stylesheet src="gwt/standard/Mosaic.css" />
+        <!-- Inherit the default GWT Mosaic style sheet. You can change -->
+        <!-- the theme of your GWT Mosaic application by uncommenting   -->
+        <!-- any one of the following lines.                            -->
+        <!-- <inherits name='org.gwt.mosaic.theme.standard.Standard' /> -->
+        <!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
+        <!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
+        <inherits name='org.gwt.mosaic.theme.aegean.Aegean' />
 }}}
 in your module gwt.xml file.
 
