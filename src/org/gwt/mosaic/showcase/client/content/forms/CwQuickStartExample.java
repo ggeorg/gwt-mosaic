@@ -99,11 +99,12 @@ public class CwQuickStartExample extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new ScrollLayoutPanel();
+    //layoutPanel.setPadding(5);
 
     // Create a FormLayout instance on the given column and row specs.
     // For almost all forms you specify the columns; sometimes rows are
     // created dynamically. In this case the labels are right aligned.
-    FormLayout layout = new FormLayout(
+    final FormLayout layout = new FormLayout(
         "right:pref, 3dlu, pref, 7dlu, right:pref, 3dlu, pref", // cols
         "p, 3dlu, p, 3dlu, p, 9dlu, p, 3dlu, p, 3dlu, p"); // rows
 
@@ -112,7 +113,7 @@ public class CwQuickStartExample extends ContentWidget {
 
     // Create a builder that assists in adding components to the container.
     // Wrap the panel with a standardized border.
-    PanelBuilder builder = new PanelBuilder(layout);
+    final PanelBuilder builder = new PanelBuilder(layout);
     // builder.setDefaultDialogBorder();
 
     // Fill the grid with components; the builder offers to create

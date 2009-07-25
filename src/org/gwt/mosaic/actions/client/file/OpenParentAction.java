@@ -44,7 +44,7 @@ public final class OpenParentAction extends CommandAction {
     super(ACTION_CONSTANTS.openParentFolderName(),
         ACTION_IMAGES.open_parent_folder_action(), command);
     putValue(Action.SHORT_DESCRIPTION,
-        ACTION_CONSTANTS.openParentFolderDescription());
+        ACTION_CONSTANTS.openParentFolderShortDescription());
   }
 
 }

@@ -15,80 +15,66 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
-
-import com.google.gwt.user.client.Event;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ListenerWrapper;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * A simple push button with image.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ImageButton extends Widget implements SourcesClickEvents {
-  
+@SuppressWarnings("deprecation")
+public class ImageButton extends Composite implements SourcesClickEvents,
+    HasClickHandlers {
+
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
-  private ClickListenerCollection clickListeners;
-
-  private Image image;
-
   public ImageButton() {
-    setElement(DOM.createDiv());
-    sinkEvents(Event.MOUSEEVENTS);
+    initWidget(new SimplePanel());
     setStyleName(DEFAULT_STYLENAME);
+  }
+
+  public ImageButton(AbstractImagePrototype image) {
+    this(image.createImage());
   }
 
   public ImageButton(Image image) {
     this();
     setImage(image);
   }
-  
-  public ImageButton(AbstractImagePrototype image) {
-    this();
-    setImage(image.createImage());
+
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return addDomHandler(handler, ClickEvent.getType());
+  }
+
+  @Deprecated
+  public void addClickListener(ClickListener listener) {
+    ListenerWrapper.WrappedClickListener.add(this, listener);
   }
 
   public Image getImage() {
-    return image;
+    return (Image) ((SimplePanel) getWidget()).getWidget();
+  }
+
+  @Deprecated
+  public void removeClickListener(ClickListener listener) {
+    ListenerWrapper.WrappedClickListener.remove(this, listener);
   }
 
   public void setImage(Image image) {
-    this.image = image;
-    DOM.setEventListener(image.getElement(), this);
-    getElement().setInnerHTML(image.getElement().getString());
-  }
-
-  public void addClickListener(ClickListener listener) {
-    if (clickListeners == null) {
-      clickListeners = new ClickListenerCollection();
-      sinkEvents(Event.ONCLICK);
-    }
-    clickListeners.add(listener);
-  }
-
-  @Override
-  public void onBrowserEvent(Event event) {
-    DOM.eventPreventDefault(event);
-    if (DOM.eventGetType(event) == Event.ONCLICK) {
-      if (clickListeners != null) {
-        clickListeners.fireClick(this);
-      }
-    }
-    event.cancelBubble(true);
-  }
-
-  public void removeClickListener(ClickListener listener) {
-    if (clickListeners != null) {
-      clickListeners.remove(listener);
-    }
+    ((SimplePanel) getWidget()).setWidget(image);
   }
 
 }

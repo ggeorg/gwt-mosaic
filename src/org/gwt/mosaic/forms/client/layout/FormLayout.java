@@ -56,7 +56,6 @@ import java.util.Set;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -1250,7 +1249,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
     // }
 
   }
-  
+
   // Layout Algorithm *****************************************************
 
   /**
@@ -1367,6 +1366,9 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     maxWidth += paddings[1] + paddings[3];
     maxHeight += paddings[0] + paddings[2];
+
+    maxWidth += borders[1] + borders[3];
+    maxHeight += borders[0] + borders[2];
 
     return new Dimension(maxWidth, maxHeight);
   }
@@ -1864,8 +1866,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
             widget.getElement(), "minWidth");
         final String minHeight = DOM.getComputedStyleAttribute(
             widget.getElement(), "minHeight");
-        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth),
-            minHeight == null ? 1 : DOM.toPixelSize(minHeight));
+        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth,
+            true), minHeight == null ? 1 : DOM.toPixelSize(minHeight, false));
         minimumSizes.put(widget, size);
       }
       return size;
@@ -2011,15 +2013,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   // GWT Mosaic (NEW CODE) ************************************************
 
-  private boolean runTwiceFlag;
-
-  private boolean initialized = false;
-
   // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
   // Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
 
   @Override
   public void flushCache() {
@@ -2033,8 +2028,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    super.init(layoutPanel);
 
     constraintMap.clear();
 
@@ -2050,6 +2044,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   @Override
   public boolean runTwice() {
-    return runTwiceFlag;
+    return true; // Safari
   }
 }

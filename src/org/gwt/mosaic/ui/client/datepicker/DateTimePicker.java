@@ -26,9 +26,11 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.gen2.picker.client.TimePicker;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
-import com.google.gwt.widgetideas.datepicker.client.TimePicker;
 
 public class DateTimePicker extends LayoutComposite {
   
@@ -46,9 +48,9 @@ public class DateTimePicker extends LayoutComposite {
     }
   };
 
-  private final ChangeHandler<Date> timePickerChangeHandler = new ChangeHandler<Date>() {
-    public void onChange(ChangeEvent<Date> event) {
-      datePicker.setSelectedDate(event.getNewValue(), false);
+  private final ValueChangeHandler<Date> timePickerChangeHandler = new ValueChangeHandler<Date>() {
+    public void onValueChange(ValueChangeEvent<Date> event) {
+      datePicker.setSelectedDate(event.getValue(), false);
     }
   };
 
@@ -86,7 +88,7 @@ public class DateTimePicker extends LayoutComposite {
     layoutPanel.add(datePicker, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel.add(new WidgetWrapper(timePicker), new BoxLayoutData(FillStyle.HORIZONTAL));
     
-    timePicker.addChangeHandler(timePickerChangeHandler);
+    timePicker.addValueChangeHandler(timePickerChangeHandler);
     datePicker.addChangeHandler(datePickerChangeHandler);
     
     setStyleName(DEFAULT_STYLENAME);

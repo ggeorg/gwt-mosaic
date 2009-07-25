@@ -33,8 +33,11 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
@@ -135,8 +138,8 @@ public class CwDatePicker extends ContentWidget {
     vPanel2.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
     vPanel2.add(dateTimePicker, new BoxLayoutData(FillStyle.BOTH));
 
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         vPanel2.setCollapsed(!vPanel2.isCollapsed());
         final Image image = vPanel2.isCollapsed()
             ? Caption.IMAGES.toolPlus().createImage()
@@ -153,8 +156,15 @@ public class CwDatePicker extends ContentWidget {
         vPanel2.layout();
       }
     };
+    final ValueChangeHandler<Date> _changeHandler2 = new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        vPanel2.getHeader().setText(dateTimePicker.getDate().toString());
+        vPanel2.layout();
+      }
+    };
+
     dateTimePicker.getDatePicker().addChangeHandler(changeHandler2);
-    dateTimePicker.getTimePicker().addChangeHandler(changeHandler2);
+    dateTimePicker.getTimePicker().addValueChangeHandler(_changeHandler2);
 
     return layoutPanel;
   }
