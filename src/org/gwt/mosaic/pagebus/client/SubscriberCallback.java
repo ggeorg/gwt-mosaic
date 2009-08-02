@@ -42,5 +42,5 @@ public interface SubscriberCallback {
    * @param subscriberData reference to the subscriberData parameter that was
    *          specified by the subscriber in {@code PageBus#subscribe}
    */
-  void execute(String subject, Object message, Object subscriberData);
+  void onMessage(String subject, Object message, Object subscriberData);
 }
