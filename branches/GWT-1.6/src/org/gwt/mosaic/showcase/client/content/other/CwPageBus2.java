@@ -32,8 +32,6 @@ import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.FillLayoutData;
-import org.gwt.mosaic.ui.client.layout.GridLayout;
-import org.gwt.mosaic.ui.client.layout.GridLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
@@ -44,7 +42,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -251,6 +248,8 @@ public class CwPageBus2 extends ContentWidget {
         flowPanel.add(new HTML("<b>Subject:</b> " + subject, false));
         flowPanel.add(new HTML("<b>Message:</b> " + message, false));
         flowPanel.add(new HTML("<br>"));
+
+        scrollPanel.scrollToBottom();
       }
     });
 

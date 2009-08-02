@@ -194,6 +194,8 @@ public class CwPageBus1 extends ContentWidget {
         flowPanel.add(new HTML("<b>Subject:</b> " + subject, false));
         flowPanel.add(new HTML("<b>Message:</b> " + message, false));
         flowPanel.add(new HTML("<br>"));
+        
+        scrollPanel.scrollToBottom();
       }
     });
 
