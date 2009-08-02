@@ -16,7 +16,6 @@
 package org.gwt.mosaic.pagebus.client;
 
 import com.google.gwt.core.client.JavaScriptException;
-import com.google.gwt.user.client.Window;
 
 /**
  * A <a href="http://developer.tibco.com/pagebus/" target="_blank">TIBCO PageBus
@@ -265,7 +264,7 @@ public class PageBus {
         scope, 
       
         function(subject, message, subscriberData) {
-          subscriberCallback.@org.gwt.mosaic.pagebus.client.SubscriberCallback::execute(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,message,subscriberData);
+          subscriberCallback.@org.gwt.mosaic.pagebus.client.SubscriberCallback::onMessage(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,message,subscriberData);
         },
       
         subscriberData,
@@ -284,7 +283,7 @@ public class PageBus {
   	    scope, 
   	  
   	    function(subject, message, subscriberData) {
-  	      subscriberCallback.@org.gwt.mosaic.pagebus.client.SubscriberCallback::execute(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,message,subscriberData);
+  	      subscriberCallback.@org.gwt.mosaic.pagebus.client.SubscriberCallback::onMessage(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,message,subscriberData);
   	    },
   	  
   	    subscriberData

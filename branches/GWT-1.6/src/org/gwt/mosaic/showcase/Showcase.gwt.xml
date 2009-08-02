@@ -22,6 +22,7 @@
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
 	<inherits name='org.gwt.mosaic.forms.Forms' />
+	<inherits name='org.gwt.mosaic.pagebus.PageBus' />
 	
 	<!-- Inherit the complex panel code for FastTree                -->
 	<inherits name='com.google.gwt.gen2.complexpanel.ComplexPanel' />
