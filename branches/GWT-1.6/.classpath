@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-incubator-trunk-r1684.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/gwt-dnd-2.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-dnd-2.6.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
