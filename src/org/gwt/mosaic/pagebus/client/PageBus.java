@@ -524,7 +524,7 @@ public class PageBus {
   }
 
   public static native void queryImpl(final String subject, final Object scope,
-      QueryCallback queryCallback, Object userData, final Filter queryFilter)
+      QueryCallback queryCallback, Object userData, final Filter filter)
   /*-{
     if (filter) {
     
@@ -534,14 +534,14 @@ public class PageBus {
         
         scope, 
       
-        function(subject, value, data) {
-          return queryCallback.@org.gwt.mosaic.pagebus.client.QueryCallback::onResult(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,value,data);
+        function(subject,value,userData) {
+          return queryCallback.@org.gwt.mosaic.pagebus.client.QueryCallback::onResult(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,value,userData);
         },
       
-        data,
+        userData,
         
-        function(subject,value,data) {
-          return filter.@org.gwt.mosaic.pagebus.client.Filter::execute(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,value,data);
+        function(subject,value,userData) {
+          return filter.@org.gwt.mosaic.pagebus.client.Filter::execute(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,value,userData);
         }
 
       )    
@@ -553,11 +553,11 @@ public class PageBus {
         
         scope, 
       
-        function(subject, value, data) {
-          return queryCallback.@org.gwt.mosaic.pagebus.client.QueryCallback::onResult(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,value,data);
+        function(subject, value, userData) {
+          return queryCallback.@org.gwt.mosaic.pagebus.client.QueryCallback::onResult(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)(subject,value,userData);
         },
       
-        data
+        userData
 
       );
 

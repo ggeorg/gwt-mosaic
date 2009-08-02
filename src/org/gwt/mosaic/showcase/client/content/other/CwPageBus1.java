@@ -75,7 +75,7 @@ public class CwPageBus1 extends ContentWidget {
 
   @Override
   public String getName() {
-    return "PageBus I";
+    return "Publish/Subscribe";
   }
 
   @Override
@@ -87,13 +87,7 @@ public class CwPageBus1 extends ContentWidget {
    * 
    */
   @ShowcaseData
-  private Map<String, Double> countryMobilePhonesInfo = new HashMap<String, Double>();
-
-  /**
-   * 
-   */
-  @ShowcaseData
-  private Map<String, Double> countryInternetInfo = new HashMap<String, Double>();
+  private Map<String, Country> countries = new HashMap<String, Country>();
 
   /**
    * Initialize this example.
@@ -104,32 +98,31 @@ public class CwPageBus1 extends ContentWidget {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(2, 2));
     layoutPanel.setPadding(0);
+    
+    Country country = new Country("BRZ", "Brazil", 0.13, 0.45);
+    countries.put(country.getCode(), country);
+    country = new Country("CHN", "China", 0.09, 0.33);
+    countries.put(country.getCode(), country);
+    country = new Country("FRA", "France", 0.47, 0.78);
+    countries.put(country.getCode(), country);
+    country = new Country("GER", "Germany", 0.61, 0.96);
+    countries.put(country.getCode(), country);
+    country = new Country("IND", "India", 0.05, 0.06);
+    countries.put(country.getCode(), country);
+    country = new Country("ITL", "Italy", 0.50, 1.24);
+    countries.put(country.getCode(), country);
+    country = new Country("JAP", "Japan", 0.68, 0.74);
+    countries.put(country.getCode(), country);
+    country = new Country("RUS", "Russia", 0.17, 0.85);
+    countries.put(country.getCode(), country);
+    country = new Country("GBR", "United Kingdom", 0.61, 1.0);
+    countries.put(country.getCode(), country);
+    country = new Country("USA", "United States", 0.68, 0.96);
+    countries.put(country.getCode(), country);
 
     layoutPanel.add(newHighGDPCountries(), new GridLayoutData(true));
     layoutPanel.add(newMonitorMessages(), new GridLayoutData(1, 2, true));
     layoutPanel.add(newStatisticsByCountry(), new GridLayoutData(true));
-
-    countryInternetInfo.put("BRZ", 0.13);
-    countryInternetInfo.put("CHN", 0.09);
-    countryInternetInfo.put("FRA", 0.47);
-    countryInternetInfo.put("GER", 0.61);
-    countryInternetInfo.put("IND", 0.05);
-    countryInternetInfo.put("ITL", 0.50);
-    countryInternetInfo.put("JAP", 0.68);
-    countryInternetInfo.put("RUS", 0.17);
-    countryInternetInfo.put("GBR", 0.61);
-    countryInternetInfo.put("USA", 0.68);
-
-    countryMobilePhonesInfo.put("BRZ", 0.45);
-    countryMobilePhonesInfo.put("CHN", 0.33);
-    countryMobilePhonesInfo.put("FRA", 0.78);
-    countryMobilePhonesInfo.put("GER", 0.96);
-    countryMobilePhonesInfo.put("IND", 0.06);
-    countryMobilePhonesInfo.put("ITL", 1.24);
-    countryMobilePhonesInfo.put("JAP", 0.74);
-    countryMobilePhonesInfo.put("RUS", 0.85);
-    countryMobilePhonesInfo.put("GBR", 1.0);
-    countryMobilePhonesInfo.put("USA", 0.96);
 
     return layoutPanel;
   }
@@ -147,16 +140,9 @@ public class CwPageBus1 extends ContentWidget {
 
     final ListBox listBox = new ListBox();
     listBox.setVisibleItemCount(10);
-    listBox.addItem("Brazil", "BRZ");
-    listBox.addItem("China", "CHN");
-    listBox.addItem("France", "FRA");
-    listBox.addItem("Germany", "GER");
-    listBox.addItem("India", "IND");
-    listBox.addItem("Italy", "ITL");
-    listBox.addItem("Japan", "JAP");
-    listBox.addItem("Russia", "RUS");
-    listBox.addItem("United Kingdom", "GBR");
-    listBox.addItem("United States", "USA");
+    for (Country country : countries.values()) {
+      listBox.addItem(country.getName(), country.getCode());
+    }
 
     layoutPanel.add(listBox, new BoxLayoutData(FillStyle.BOTH, true));
 
@@ -167,7 +153,7 @@ public class CwPageBus1 extends ContentWidget {
           return;
         }
         PageBus.publish("org.gwt.mosaic.pagebus.ex.country.select",
-            new Country(listBox.getValue(index), listBox.getItemText(index)));
+            countries.get(listBox.getValue(index)));
       }
     });
 
@@ -250,7 +236,7 @@ public class CwPageBus1 extends ContentWidget {
           public void onMessage(String subject, Object message,
               Object subscriberData) {
             final Country country = (Country) message;
-            final double mobilePhonesUsers = countryMobilePhonesInfo.get(country.getCode());
+            final double mobilePhonesUsers = country.getMobilePhones();
             String bgColor;
             if (mobilePhonesUsers < 0.3) {
               bgColor = "red";
@@ -273,7 +259,7 @@ public class CwPageBus1 extends ContentWidget {
           public void onMessage(String subject, Object message,
               Object subscriberData) {
             final Country country = (Country) message;
-            final double internetUsers = countryInternetInfo.get(country.getCode());
+            final double internetUsers = country.getInternet();
             String bgColor;
             if (internetUsers < 0.3) {
               bgColor = "red";
@@ -299,11 +285,16 @@ public class CwPageBus1 extends ContentWidget {
   class Country {
     private String code;
     private String name;
+    private double internet;
+    private double mobilePhones;
 
-    public Country(String code, String name) {
+    public Country(String code, String name, double internet,
+        double mobilePhones) {
       super();
       this.code = code;
       this.name = name;
+      this.internet = internet;
+      this.mobilePhones = mobilePhones;
     }
 
     /**
@@ -332,6 +323,34 @@ public class CwPageBus1 extends ContentWidget {
      */
     public void setName(String name) {
       this.name = name;
+    }
+
+    /**
+     * @return the internet
+     */
+    public double getInternet() {
+      return internet;
+    }
+
+    /**
+     * @param internet the internet to set
+     */
+    public void setInternet(double internet) {
+      this.internet = internet;
+    }
+
+    /**
+     * @return the mobilePhones
+     */
+    public double getMobilePhones() {
+      return mobilePhones;
+    }
+
+    /**
+     * @param mobilePhones the mobilePhones to set
+     */
+    public void setMobilePhones(double mobilePhones) {
+      this.mobilePhones = mobilePhones;
     }
 
     /**

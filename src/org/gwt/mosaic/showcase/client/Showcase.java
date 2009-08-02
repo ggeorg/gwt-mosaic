@@ -71,6 +71,7 @@ import org.gwt.mosaic.showcase.client.content.other.CwActions;
 import org.gwt.mosaic.showcase.client.content.other.CwDefaultActions;
 import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
 import org.gwt.mosaic.showcase.client.content.other.CwPageBus1;
+import org.gwt.mosaic.showcase.client.content.other.CwPageBus2;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
@@ -579,17 +580,20 @@ public class Showcase implements EntryPoint {
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
-    setupMainMenuOption(catOther, new CwListBoxBinding(constants),
+    TreeItem catBindings = catOther.addItem("Beans Binding");
+    setupMainMenuOption(catBindings, new CwListBoxBinding(constants),
         IMAGES.catOther());
-    // setupMainMenuOption(catOther, new CwActions(constants),
-    // IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwRadioButtonActions(constants),
+    
+    TreeItem catActions = catOther.addItem("Actions");
+    setupMainMenuOption(catActions, new CwActions(constants), IMAGES.catOther());
+    setupMainMenuOption(catActions, new CwRadioButtonActions(constants),
         IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwDefaultActions(constants),
+    setupMainMenuOption(catActions, new CwDefaultActions(constants),
         IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwPageBus1(constants), IMAGES.catOther());
-
+    
+    TreeItem catPageBus = catOther.addItem("PageBus");
+    setupMainMenuOption(catPageBus, new CwPageBus1(constants), IMAGES.catOther());
+    setupMainMenuOption(catPageBus, new CwPageBus2(constants), IMAGES.catOther());
   }
 
   /**
