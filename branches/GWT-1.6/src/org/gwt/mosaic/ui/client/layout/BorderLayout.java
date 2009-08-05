@@ -26,10 +26,15 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * A border layout lays out a {@link LayoutPanel}, arranging and resizing its
@@ -206,10 +211,21 @@ public class BorderLayout extends BaseLayout {
 
   private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
 
+  abstract class MyTimer extends Timer {
+    protected LayoutPanel layoutPanel;
+
+    public void schedule(LayoutPanel layoutPanel, int delayMillis) {
+      this.layoutPanel = layoutPanel;
+      super.schedule(delayMillis);
+    }
+  };
+
   private ImageButton northCollapsedImageButton;
   private ImageButton southCollapsedImageButton;
   private ImageButton westCollapsedImageButton;
   private ImageButton eastCollapsedImageButton;
+
+  private GlassPanel westGlassPanel;
 
   private Widget placeHolder;
 
@@ -247,7 +263,7 @@ public class BorderLayout extends BaseLayout {
    * .client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
-    final Dimension result = new Dimension();
+    final Dimension result = new Dimension(0, 0);
 
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
@@ -471,6 +487,7 @@ public class BorderLayout extends BaseLayout {
           if (northCollapsedImageButton == null) {
             northCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseDown());
+            northCollapsedImageButton.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
             northCollapsedImageButton.addStyleName("NorthCollapsedImageButton");
             northCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
@@ -555,6 +572,7 @@ public class BorderLayout extends BaseLayout {
           if (southCollapsedImageButton == null) {
             southCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseUp());
+            southCollapsedImageButton.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
             southCollapsedImageButton.addStyleName("SouthCollapsedImageButton");
             southCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
@@ -644,26 +662,63 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseRight());
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
+            westCollapsedImageButton.setVerticalAlignment(HasAlignment.ALIGN_TOP);
             westCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
-                layoutPanel.setCollapsed(westCollapsed, false);
-                layoutPanel.removeImpl(westCollapsedImageButton);
-                westCollapsedImageButton = null;
-                if (layoutData.hasDecoratorPanel()) {
-                  layoutData.decoratorPanel.setVisible(true);
+                if (!Element.is(event.getNativeEvent().getEventTarget())) {
+                  return;
                 }
-                westCollapsed.setVisible(true);
-                layoutPanel.layout();
-                return;
+                final Element elem = event.getNativeEvent().getEventTarget().cast();
+                if ("TD".equalsIgnoreCase(elem.getTagName())) {
+                  final Element collapsedElem;
+                  if (layoutData.hasDecoratorPanel()) {
+                    collapsedElem = layoutData.decoratorPanel.getElement();
+                  } else {
+                    collapsedElem = westCollapsed.getElement();
+                  }
+
+                  // layoutData.floatting = true;
+                  if (westGlassPanel == null) {
+                    westGlassPanel = createGlassPanelForACollapsedElement(
+                        layoutPanel, collapsedElem);
+                  }
+                  RootPanel.get().add(westGlassPanel, 0, 0);
+
+                  DOM.setStyleAttribute(collapsedElem, "zIndex", ""
+                      + Integer.MAX_VALUE);
+
+                  layoutPanel.setCollapsed(westCollapsed, false);
+                  // layoutPanel.removeImpl(westCollapsedImageButton);
+                  // westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  westCollapsed.setVisible(true);
+
+                  layoutPanel.layout();
+
+                } else {
+                  layoutPanel.setCollapsed(westCollapsed, false);
+                  layoutPanel.removeImpl(westCollapsedImageButton);
+                  westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  westCollapsed.setVisible(true);
+                  layoutPanel.layout();
+                  return;
+                }
               }
             });
             layoutPanel.addImpl(westCollapsedImageButton);
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.decoratorPanel.setVisible(false);
-            }
-            westCollapsed = west;
-            west.setVisible(false);
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            layoutData.decoratorPanel.setVisible(false);
+          }
+          westCollapsed = west;
+          west.setVisible(false);
+
           w = WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
           WidgetHelper.setBounds(layoutPanel, westCollapsedImageButton, left,
               top, w, Math.max(0, bottom - top));
@@ -695,11 +750,15 @@ public class BorderLayout extends BaseLayout {
           }
 
           WidgetHelper.setBounds(layoutPanel, west, left, top, _width, _height);
-
-          // split bar
-          if (layoutData.resizable && westSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
-                spacing, Math.max(0, bottom - top));
+          if (westGlassPanel == null || !westGlassPanel.isAttached()) {
+            // split bar
+            if (layoutData.resizable && westSplitBar.isAttached()) {
+              WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
+                  spacing, Math.max(0, bottom - top));
+            }
+          } else {
+            return;
+            //w = WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
           }
         }
         left += (w + spacing);
@@ -727,6 +786,7 @@ public class BorderLayout extends BaseLayout {
           if (eastCollapsedImageButton == null) {
             eastCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseLeft());
+            eastCollapsedImageButton.setVerticalAlignment(HasAlignment.ALIGN_TOP);
             eastCollapsedImageButton.addStyleName("EastCollapsedImageButton");
             eastCollapsedImageButton.addClickHandler(new ClickHandler() {
               public void onClick(ClickEvent event) {
@@ -811,6 +871,21 @@ public class BorderLayout extends BaseLayout {
     }
   }
 
+  private GlassPanel createGlassPanelForACollapsedElement(
+      final LayoutPanel layoutPanel, final Element elem) {
+    GlassPanel glassPanel = new GlassPanel(true) {
+      @Override
+      protected void onUnload() {
+        DOM.setStyleAttribute(elem, "zIndex", "");
+        layoutPanel.setCollapsed(westCollapsed, true);
+        layoutPanel.layout();
+        super.onUnload();
+      }
+    };
+    glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+    return glassPanel;
+  }
+
   @Override
   public boolean runTwice() {
     return runTwiceFlag;
@@ -889,6 +964,9 @@ public class BorderLayout extends BaseLayout {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
           layoutData.collapse = collapse;
           layoutData.fireCollapsedChange(widget);
+        }
+        if (collapse && westGlassPanel != null && westGlassPanel.isAttached()) {
+          westGlassPanel.removeFromParent();
         }
       };
     } catch (Exception e) {
