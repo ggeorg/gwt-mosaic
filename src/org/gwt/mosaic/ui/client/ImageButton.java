@@ -22,9 +22,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListenerWrapper;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
 
 /**
@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.SourcesClickEvents;
  */
 @SuppressWarnings("deprecation")
 public class ImageButton extends Composite implements SourcesClickEvents,
-    HasClickHandlers {
+    HasClickHandlers, HasAlignment {
 
   /**
    * The default style name.
@@ -42,8 +42,7 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   private static final String DEFAULT_STYLENAME = "mosaic-ImageButton";
 
   public ImageButton() {
-    initWidget(new SimplePanel());
-    setStyleName(DEFAULT_STYLENAME);
+    this(new Image());
   }
 
   public ImageButton(AbstractImagePrototype image) {
@@ -51,8 +50,8 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   }
 
   public ImageButton(Image image) {
-    this();
-    setImage(image);
+    initWidget(new WidgetWrapper(image));
+    setStyleName(DEFAULT_STYLENAME);
   }
 
   public HandlerRegistration addClickHandler(ClickHandler handler) {
@@ -65,7 +64,7 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   }
 
   public Image getImage() {
-    return (Image) ((SimplePanel) getWidget()).getWidget();
+    return (Image) ((WidgetWrapper) getWidget()).getWidget().getWidget(0, 0);
   }
 
   @Deprecated
@@ -74,7 +73,23 @@ public class ImageButton extends Composite implements SourcesClickEvents,
   }
 
   public void setImage(Image image) {
-    ((SimplePanel) getWidget()).setWidget(image);
+    ((WidgetWrapper) getWidget()).getWidget().setWidget(0, 0, image);
+  }
+
+  public HorizontalAlignmentConstant getHorizontalAlignment() {
+    return ((WidgetWrapper) getWidget()).getHorizontalAlignment();
+  }
+
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    ((WidgetWrapper) getWidget()).setHorizontalAlignment(align);
+  }
+
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return ((WidgetWrapper) getWidget()).getVerticalAlignment();
+  }
+
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    ((WidgetWrapper) getWidget()).setVerticalAlignment(align);
   }
 
 }
