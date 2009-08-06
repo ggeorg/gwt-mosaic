@@ -1003,9 +1003,11 @@ public class BorderLayout extends BaseLayout {
     GlassPanel glassPanel = new GlassPanel(true) {
       @Override
       protected void onUnload() {
-        DOM.setStyleAttribute(elem, "zIndex", "");
-        layoutPanel.setCollapsed(widget, true);
-        layoutPanel.layout();
+        if (widget.isAttached()) {
+          DOM.setStyleAttribute(elem, "zIndex", "");
+          layoutPanel.setCollapsed(widget, true);
+          layoutPanel.layout();
+        }
         super.onUnload();
       }
     };
