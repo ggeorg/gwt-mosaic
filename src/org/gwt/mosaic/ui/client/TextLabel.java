@@ -19,6 +19,7 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -95,6 +96,7 @@ public class TextLabel extends Widget implements SourcesClickEvents,
   public TextLabel() {
     setElement(Document.get().createLabelElement());
     setStyleName("mosaic-Label");
+    setWordWrap(false);
   }
 
   /**
@@ -104,7 +106,6 @@ public class TextLabel extends Widget implements SourcesClickEvents,
    */
   public TextLabel(String text) {
     this(text, false);
-
   }
 
   /**
@@ -265,6 +266,9 @@ public class TextLabel extends Widget implements SourcesClickEvents,
 
   public void invalidate() {
     setSize("auto", "auto");
+    if (isAttached()) {
+      WidgetHelper.invalidate(getParent());
+    }
   }
 
   public void layout() {
