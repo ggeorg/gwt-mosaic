@@ -123,7 +123,6 @@ public class TrayInfoPanelNotifier implements InfoPanelNotifier, CloseHandler<Po
     }
   }
 
-  @Override
   public void onClose(CloseEvent<PopupPanel> event) {
     visibleInfoPanel.remove(event.getSource());
     currentLevel--;
