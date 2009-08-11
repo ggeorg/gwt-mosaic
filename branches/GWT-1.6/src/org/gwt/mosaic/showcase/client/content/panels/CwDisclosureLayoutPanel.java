@@ -73,7 +73,7 @@ public class CwDisclosureLayoutPanel extends AbstractLayoutPage {
 
     layoutPanel.add(createForm1(), new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel.add(panel, new BoxLayoutData(FillStyle.HORIZONTAL));
-    layoutPanel.add(new Button("Save"));
+    layoutPanel.add(new Button("Save Contact..."));
     
     return layoutPanel;
   }
@@ -84,12 +84,12 @@ public class CwDisclosureLayoutPanel extends AbstractLayoutPage {
   @ShowcaseSource
   private LayoutPanel createForm1() {
     final LayoutPanel layoutPpanel = new LayoutPanel(new FormLayout(
-        "pref, 8px, 100px, 4px, 200px", "pref, 3dlu, pref"));
+        "[150px,pref], 8px, 100px, 4px, 200px", "pref, 3dlu, pref"));
 
-    layoutPpanel.add(new TextLabel("Firstname:"), CellConstraints.xy(1, 1));
+    layoutPpanel.add(new TextLabel("First Name:"), CellConstraints.xy(1, 1));
     layoutPpanel.add(new TextBox(), CellConstraints.xyw(3, 1, 3));
     
-    layoutPpanel.add(new TextLabel("Lastname:"), CellConstraints.xy(1, 3));
+    layoutPpanel.add(new TextLabel("Last Name:"), CellConstraints.xy(1, 3));
     layoutPpanel.add(new TextBox(), CellConstraints.xyw(3, 3, 3));
 
     return layoutPpanel;
@@ -101,8 +101,8 @@ public class CwDisclosureLayoutPanel extends AbstractLayoutPage {
   @ShowcaseSource
   private LayoutPanel createForm2() {
     final LayoutPanel layoutPpanel = new LayoutPanel(new FormLayout(
-        "pref, 8px, 100px, 4px, 200px",
-        "pref, 3dlu, pref, 3dlu, pref, 3dlu, pref"));
+        "[133px,pref], 8px, 100px, 4px, 200px",
+        "pref, 3dlu, pref, 3dlu, pref"));
 
     layoutPpanel.add(new TextLabel("Address:"), CellConstraints.xy(1, 1));
     layoutPpanel.add(new TextBox(), CellConstraints.xyw(3, 1, 3));
