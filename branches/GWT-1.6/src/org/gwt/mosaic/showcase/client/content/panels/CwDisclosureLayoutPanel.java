@@ -84,7 +84,7 @@ public class CwDisclosureLayoutPanel extends AbstractLayoutPage {
   @ShowcaseSource
   private LayoutPanel createForm1() {
     final LayoutPanel layoutPpanel = new LayoutPanel(new FormLayout(
-        "[150px,pref], 8px, 100px, 4px, 200px", "pref, 3dlu, pref"));
+        "[100px,pref], 3dlu, 100px, 3dlu, 200px", "pref, 3dlu, pref"));
 
     layoutPpanel.add(new TextLabel("First Name:"), CellConstraints.xy(1, 1));
     layoutPpanel.add(new TextBox(), CellConstraints.xyw(3, 1, 3));
@@ -101,7 +101,7 @@ public class CwDisclosureLayoutPanel extends AbstractLayoutPage {
   @ShowcaseSource
   private LayoutPanel createForm2() {
     final LayoutPanel layoutPpanel = new LayoutPanel(new FormLayout(
-        "[133px,pref], 8px, 100px, 4px, 200px",
+        "[83px,pref], 3dlu, 100px, 3dlu, 200px",
         "pref, 3dlu, pref, 3dlu, pref"));
 
     layoutPpanel.add(new TextLabel("Address:"), CellConstraints.xy(1, 1));
