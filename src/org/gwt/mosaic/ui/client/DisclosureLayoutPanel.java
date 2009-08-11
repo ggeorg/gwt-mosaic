@@ -1,13 +1,11 @@
-package com.google.gwt.user.client.ui;
+package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.DisclosurePanelImages;
 import com.google.gwt.user.client.ui.Image;
 
@@ -17,6 +15,9 @@ public class DisclosureLayoutPanel extends CaptionLayoutPanel {
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-DisclosureLayoutPanel";
+  
+  private static final String STYLENAME_SUFFIX_OPEN = "open";
+  private static final String STYLENAME_SUFFIX_CLOSED = "closed";
 
   private static DisclosurePanelImages createDefaultImages() {
     // if (LocaleInfo.getCurrentLocale().isRTL()) {
@@ -45,7 +46,7 @@ public class DisclosureLayoutPanel extends CaptionLayoutPanel {
    */
   public DisclosureLayoutPanel(final DisclosurePanelImages images,
       final String headerText, final boolean isOpen) {
-    super(headerText);
+    super("<a href=\"javascript:void(0);\">"+headerText+"</a>", true);
     setCollapsed(!isOpen);
     getHeader().add(image);
 
@@ -60,8 +61,6 @@ public class DisclosureLayoutPanel extends CaptionLayoutPanel {
         setCollapsed(!isCollapsed(), images);
       }
     });
-    
-    DOM.setStyleAttribute(getHeader().getElement(), "cursor", "pointer");
 
     setStyleName(DEFAULT_STYLENAME);
   }
@@ -100,5 +99,17 @@ public class DisclosureLayoutPanel extends CaptionLayoutPanel {
    */
   public DisclosureLayoutPanel(String headerText, boolean isOpen) {
     this(createDefaultImages(), headerText, isOpen);
+  }
+  
+  @Override
+  public void setCollapsed(boolean collapsed) {
+    super.setCollapsed(collapsed);
+    if (collapsed) {
+      removeStyleDependentName(STYLENAME_SUFFIX_CLOSED);
+      addStyleDependentName(STYLENAME_SUFFIX_OPEN);
+    } else {
+      removeStyleDependentName(STYLENAME_SUFFIX_OPEN);
+      addStyleDependentName(STYLENAME_SUFFIX_CLOSED);
+    }
   }
 }
