@@ -623,6 +623,31 @@ a:active {
 	/*border: 1px dotted #0f0;*/
 }
 
+/** DisclosureLayoutPanel */
+
+.mosaic-DisclosureLayoutPanel {
+}
+.mosaic-DisclosureLayoutPanel-open {
+}
+.mosaic-DisclosureLayoutPanel-close {
+}
+.mosaic-DisclosureLayoutPanel .mosaic-Caption {
+  background: none;
+  border: none;
+}
+.mosaic-DisclosureLayoutPanel .mosaic-Caption-text a {
+  text-decoration: none;  /* Remove underline from header */
+  color: black; 
+  cursor: pointer;
+  cursor: hand;
+  padding: 1px;
+}
+.mosaic-DisclosureLayoutPanel .Body {
+  border-left: 3px solid #e8eef7;
+  padding: 4px 0px 4px 8px;
+  margin-left: 6px;
+}
+
 /*** LayoutPanel ***/
 
 .mosaic-LayoutPanel {
