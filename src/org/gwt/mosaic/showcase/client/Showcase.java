@@ -75,6 +75,7 @@ import org.gwt.mosaic.showcase.client.content.other.CwPageBus2;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwDisclosureLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwDynamicTabLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
@@ -469,6 +470,8 @@ public class Showcase implements EntryPoint {
     TreeItem catLayoutPanels = catPanels.addItem("Panels");
     setupMainMenuOption(catLayoutPanels, new CwDeckLayoutPanel(constants),
         IMAGES.catPanels());
+    setupMainMenuOption(catLayoutPanels,
+        new CwDisclosureLayoutPanel(constants), IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwStackLayoutPanel(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants),
@@ -583,17 +586,19 @@ public class Showcase implements EntryPoint {
     TreeItem catBindings = catOther.addItem("Beans Binding");
     setupMainMenuOption(catBindings, new CwListBoxBinding(constants),
         IMAGES.catOther());
-    
+
     TreeItem catActions = catOther.addItem("Actions");
     setupMainMenuOption(catActions, new CwActions(constants), IMAGES.catOther());
     setupMainMenuOption(catActions, new CwRadioButtonActions(constants),
         IMAGES.catOther());
     setupMainMenuOption(catActions, new CwDefaultActions(constants),
         IMAGES.catOther());
-    
+
     TreeItem catPageBus = catOther.addItem("PageBus");
-    setupMainMenuOption(catPageBus, new CwPageBus1(constants), IMAGES.catOther());
-    setupMainMenuOption(catPageBus, new CwPageBus2(constants), IMAGES.catOther());
+    setupMainMenuOption(catPageBus, new CwPageBus1(constants),
+        IMAGES.catOther());
+    setupMainMenuOption(catPageBus, new CwPageBus2(constants),
+        IMAGES.catOther());
   }
 
   /**
