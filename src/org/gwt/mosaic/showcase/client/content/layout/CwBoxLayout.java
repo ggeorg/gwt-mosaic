@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -62,6 +62,7 @@ public class CwBoxLayout extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     
+    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
     final Button b1 = new Button("Button 1");
@@ -92,5 +93,4 @@ public class CwBoxLayout extends ContentWidget {
     
     return layoutPanel;
   }
-
 }

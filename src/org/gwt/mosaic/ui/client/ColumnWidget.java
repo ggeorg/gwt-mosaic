@@ -73,6 +73,8 @@ import com.google.gwt.widgetideas.table.client.overrides.OverrideDOM;
  * 
  * @author GWT Incubator project
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @deprecated
  */
 public abstract class ColumnWidget extends LayoutComposite {
 
@@ -1368,9 +1370,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    * @param padding the cell padding, in pixels
    */
   public void setCellPadding(int padding) {
-    if (headerTable != null) {
-      headerTable.setCellPadding(padding);
-    }
+    headerTable.setCellPadding(padding);
     dataTable.setCellPadding(padding);
     if (footerTable != null) {
       footerTable.setCellPadding(padding);
@@ -1383,9 +1383,7 @@ public abstract class ColumnWidget extends LayoutComposite {
    * @param spacing the cell spacing, in pixels
    */
   public void setCellSpacing(int spacing) {
-    if (headerTable != null) {
-      headerTable.setCellSpacing(spacing);
-    }
+    headerTable.setCellSpacing(spacing);
     dataTable.setCellSpacing(spacing);
     if (footerTable != null) {
       footerTable.setCellSpacing(spacing);

@@ -124,7 +124,7 @@ public abstract class ActionBindings<T> {
 
     public void setAccessKey(Character key) {
       if (target instanceof FocusWidget) {
-        String accessKey = DOM.getStyleAttribute(
+        String accessKey = DOM.getComputedStyleAttribute(
             ((FocusWidget) target).getElement(), "accessKey");
         Character oldValue = Character.valueOf(accessKey != null
             && accessKey.length() > 0 ? accessKey.charAt(0) : '\0');
@@ -210,6 +210,13 @@ public abstract class ActionBindings<T> {
   private final BindingGroup bindingGroup = new BindingGroup();
 
   public ActionBindings(Action source, T target) {
+    if (source == null) {
+      throw new IllegalArgumentException("null source");
+    }
+    if (source == null) {
+      throw new IllegalArgumentException("null target");
+    }
+    assert(target != null);
     this.source = source;
     this.target = target;
   }

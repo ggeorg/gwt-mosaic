@@ -70,20 +70,33 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   private boolean invalid = true;
 
   /**
-   * Creates a new <code>LayoutPanel</code> with <code>FillLayout</code>.
+   * Creates a new {@code LayoutPanel} with {@link FillLayout}.
    */
   public LayoutPanel() {
     this(new FillLayout());
   }
 
   /**
-   * Creates a LayoutPanel with the given element. This is protected so that it
-   * can be used by a subclass that wants to substitute another element. The
-   * element is presumed to be a &lt;div&gt;.
+   * Creates a {@code LayoutPanel} with {@link FillLayout} and with the given
+   * element. This is protected so that it can be used by a subclass that wants
+   * to substitute another element. The element is presumed to be a &lt;div&gt;.
    * 
    * @param elem the element to be used for this panel.
    */
   protected LayoutPanel(Element elem) {
+    this(elem, new FillLayout());
+  }
+
+  /**
+   * Creates a {@code LayoutPanel} with the specified layout manager and with
+   * the given element. This is protected so that it can be used by a subclass
+   * that wants to substitute another element. The element is presumed to be a
+   * &lt;div&gt;.
+   * 
+   * @param elem the element to be used for this panel.
+   * @param layout the {@link LayoutManager} to use
+   */
+  protected LayoutPanel(Element elem, LayoutManager layout) {
     super(elem);
 
     // Setting the panel's position style to 'relative' causes it to be treated
@@ -92,13 +105,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     DOM.setStyleAttribute(getElement(), "overflow", "hidden");
 
     setStyleName(DEFAULT_STYLENAME);
-    setLayout(new FillLayout());
+    setLayout(layout);
   }
 
   /**
-   * Creates a new <code>LayoutPanel</code> with the specified layout manager.
+   * Creates a new {@code LayoutPanel} with the specified layout manager.
    * 
-   * @param layout the <code>LayoutManager</code> to use
+   * @param layout the {@code LayoutManager} to use
    */
   public LayoutPanel(LayoutManager layout) {
     super();
@@ -117,10 +130,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     invalidate();
   }
 
-  void addImpl(Widget w) {
-    super.add(w);
-  }
-
   /**
    * Appends the specified widget to the end of this container.
    * 
@@ -131,6 +140,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (widget instanceof DecoratorPanel) {
       throw new IllegalArgumentException(
           "Adding a DecoratorPanel is not allowed!");
+    }
+    if (widget instanceof FormPanel) {
+      // (ggeorg) see WidgetHelper.setBounds() why
+      DOM.setStyleAttribute(widget.getElement(), "border", "none");
+      DOM.setStyleAttribute(widget.getElement(), "padding", "0px");
+      DOM.setStyleAttribute(widget.getElement(), "margin", "0px");
     }
     BaseLayout.setLayoutData(widget, layoutData);
     if (layoutData.hasDecoratorPanel()) {
@@ -148,6 +163,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
       layoutData.addCollapsedListener(listener);
     }
+  }
+
+  void addImpl(Widget w) {
+    super.add(w);
   }
 
   private void clearPreferredSizeCache() {
@@ -280,6 +299,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return super.getWidgetTop(getDecoratorWidget(w));
   }
 
+  @Override
+  protected void insert(Widget child, Element container, int beforeIndex,
+      boolean domInsert) {
+    super.insert(child, container, beforeIndex, domInsert);
+    invalidate();
+  }
+
   /**
    * @param w
    * @param layoutData
@@ -297,13 +323,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     } else {
       insert(w, getElement(), beforeIndex, true);
     }
-  }
-
-  @Override
-  protected void insert(Widget child, Element container, int beforeIndex,
-      boolean domInsert) {
-    super.insert(child, container, beforeIndex, domInsert);
-    invalidate();
   }
 
   /**
@@ -368,11 +387,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     };
   }
 
-  protected void onLayout() {
-    getElement().setScrollTop(0);
-    getElement().setScrollLeft(0);
-  }
-
   public void layout() {
     // if (invalid) { TODO: after we cache width & size for each child widget
     if (isAttached() && isVisible()) {
@@ -403,6 +417,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
+  protected void onLayout() {
+    getElement().setScrollTop(0);
+    getElement().setScrollLeft(0);
+  }
+
   @Override
   protected void onLoad() {
     super.onLoad();
@@ -430,7 +449,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       ResizableWidgetCollection.get().add(resizableWidget);
     }
   }
-
+  
   /**
    * Set the {@code ResizableWidget} to add to a {@code
    * ResizableWidgetCollection} that periodically checks the outer dimensions of
@@ -459,7 +478,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public ResizableWidget getResizableWidget() {
     return resizableWidget;
   }
-
+  
   private ResizableWidget resizableWidget = new ResizableWidget() {
     public Element getElement() {
       return LayoutPanel.this.getElement();
@@ -471,7 +490,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
     public void onResize(int width, int height) {
       LayoutPanel.this.layout();
-    }
+    }    
   };
 
   /**
@@ -494,15 +513,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
-  boolean removeImpl(Widget w) {
-    return super.remove(w);
-  }
-
   public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
     if (getLayout() instanceof BorderLayout) {
       final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
       layoutData.removeCollapsedListener(listener);
     }
+  }
+
+  boolean removeImpl(Widget w) {
+    return super.remove(w);
   }
 
   public void setCollapsed(Widget widget, boolean collapse) {

@@ -430,6 +430,7 @@ a:active {
 
 /*** GlassPanel ***/
 
+.mosaic-GlassPanel-default,
 .mosaic-GlassPanel-loading,
 .gwt-GlassPanel {
 	/* Override glass panel color to be `green` */
@@ -448,7 +449,6 @@ a:active {
       'width/height: 100%' or similar constructs.
 	*/
 }
-.mosaic-GlassPanel-default,
 .mosaic-GlassPanel-invisible {
 	/* Override glass panel color to be `green` */
 	background-color: #000 !important;
@@ -762,6 +762,31 @@ a:active {
 	/*border: 1px dotted #0f0;*/
 }
 
+/** DisclosureLayoutPanel */
+
+.mosaic-DisclosureLayoutPanel {
+}
+.mosaic-DisclosureLayoutPanel-open {
+}
+.mosaic-DisclosureLayoutPanel-close {
+}
+.mosaic-DisclosureLayoutPanel .mosaic-Caption {
+  background: none;
+  border: none;
+}
+.mosaic-DisclosureLayoutPanel .mosaic-Caption-text a {
+  text-decoration: none;  /* Remove underline from header */
+  color: black; 
+  cursor: pointer;
+  cursor: hand;
+  padding: 1px;
+}
+.mosaic-DisclosureLayoutPanel .Body {
+  border-left: 3px solid #8db2e3;
+  padding: 4px 0px 4px 8px;
+  margin-left: 6px;
+}
+
 /*** LayoutPanel ***/
 
 .mosaic-LayoutPanel {
@@ -831,8 +856,7 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
+	/*background: #fff;*/
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar:hover {
@@ -840,13 +864,11 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .NorthSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
 	cursor: n-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
+	/*background: #fff;*/
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar:hover {
@@ -854,13 +876,11 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .SouthSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
 	cursor: s-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
+	/*background: #fff;*/
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar:hover {
@@ -868,22 +888,18 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 }
 .mosaic-LayoutPanel-BorderLayout .WestSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
 	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
 	overflow: hidden; /* required by IE6 */
-	-background: #fff;
-	-filter: alpha(opacity = 0) !important;
-	cursor: e-resize;
+	/*background: #fff;*/
+	cursor: w-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar:hover {
 	/*border-right: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
 	background: #000;
-	-filter: alpha(opacity = 100) !important;
-	cursor: e-resize;
 }
 
 /*** WidgetWrapper ***/
@@ -1292,7 +1308,6 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 
 .mosaic-FormSeparator div {
 	border: 1px solid #4d4d4d;
-	height: 0px !important;
 }
 
 /*** GWT Incubator SliderBar ***/

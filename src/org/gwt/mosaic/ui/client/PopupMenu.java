@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel.AnimationType;
 
 /**
  * 
@@ -37,7 +38,7 @@ public class PopupMenu extends AbstractDecoratedPopupPanel implements
   private final MenuBar menu;
 
   public PopupMenu() {
-    super(true, false, "menuPopup");
+    super(true, false, "menuPopup", AnimationType.ONE_WAY_CORNER);
     menu = new MenuBar(true) {
       @Override
       public void onPopupClosed(PopupPanel sender, boolean autoClosed) {

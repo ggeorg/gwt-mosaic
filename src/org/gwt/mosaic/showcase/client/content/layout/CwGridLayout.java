@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -60,6 +60,7 @@ public class CwGridLayout extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(3, 3));
+    layoutPanel.setPadding(0);
 
     final Button b11 = new Button("Button 1-1");
     final Button b12 = new Button("Button 1-2");
@@ -79,5 +80,4 @@ public class CwGridLayout extends ContentWidget {
 
     return layoutPanel;
   }
-
 }

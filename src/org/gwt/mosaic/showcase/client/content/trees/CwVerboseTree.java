@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -18,15 +20,20 @@ package org.gwt.mosaic.showcase.client.content.trees;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.gen2.commonevent.shared.BeforeCloseEvent;
+import com.google.gwt.gen2.commonevent.shared.BeforeCloseHandler;
+import com.google.gwt.gen2.commonevent.shared.BeforeOpenEvent;
+import com.google.gwt.gen2.commonevent.shared.BeforeOpenHandler;
+import com.google.gwt.gen2.complexpanel.client.FastTree;
+import com.google.gwt.gen2.complexpanel.client.FastTreeItem;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.FastTree;
-import com.google.gwt.widgetideas.client.FastTreeItem;
-import com.google.gwt.widgetideas.client.HasFastTreeItems;
-import com.google.gwt.widgetideas.client.ListeningFastTreeItem;
 
 /**
  * Example file.
@@ -61,67 +68,51 @@ public class CwVerboseTree extends CwBasicTree {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel();
-
     FastTree tree = new FastTree();
-    verboseTreeItem(tree, 10);
+    verboseTreeItem(tree.getTreeRoot(), 10);
+
+    tree.addOpenHandler(new OpenHandler<FastTreeItem>() {
+      public void onOpen(OpenEvent<FastTreeItem> event) {
+        InfoPanel.show(event.getTarget().getHTML(), "Item "
+            + event.getTarget().getHTML() + " is open");
+      }
+    });
+
+    tree.addCloseHandler(new CloseHandler<FastTreeItem>() {
+      public void onClose(CloseEvent<FastTreeItem> event) {
+        InfoPanel.show(event.getTarget().getHTML(), "Item"
+            + event.getTarget().getHTML() + " is closed");
+      }
+    });
+
+    tree.addBeforeOpenHandler(new BeforeOpenHandler<FastTreeItem>() {
+      public void onBeforeOpen(BeforeOpenEvent<FastTreeItem> event) {
+        if (Window.confirm("Would you like to change the name of the item before opening it?")) {
+          event.getTarget().setHTML("Name changed before open.");
+        }
+      }
+    });
+
+    tree.addBeforeCloseHandler(new BeforeCloseHandler<FastTreeItem>() {
+      public void onBeforeClose(BeforeCloseEvent<FastTreeItem> event) {
+        if (Window.confirm("Would you like to change the name of the item before closing it?")) {
+          event.getTarget().setHTML("Name changed before close.");
+        }
+      }
+    });
 
     final ScrollPanel panel = new ScrollPanel();
-    layoutPanel.add(panel);
     panel.add(tree);
 
-    return layoutPanel;
+    return panel;
   }
 
-  private void verboseTreeItem(HasFastTreeItems parent, int children) {
+  private void verboseTreeItem(FastTreeItem parent, int children) {
     for (int i = 0; i < children; i++) {
       final int index = i;
 
-      FastTreeItem item = new ListeningFastTreeItem("child " + i) {
-        @Override
-        public void afterClose() {
-          InfoPanel.show(this.getText(), "Item" + index
-              + " is closed");
-        }
-
-        @Override
-        public void afterOpen() {
-          InfoPanel.show(this.getText(), "Item " + index
-              + " is open");
-        }
-
-        @Override
-        public void beforeClose() {
-          InfoPanel.show(this.getText(), "Close item"
-              + index);
-        }
-
-        @Override
-        public void beforeOpen() {
-          InfoPanel.show(this.getText(), "Open item "
-              + index);
-        }
-
-        @Override
-        protected boolean beforeSelectionLost() {
-          return Window.confirm(this.getText()
-              + ": Are you sure you want to leave me?");
-        }
-
-        @Override
-        protected void ensureChildren() {
-          InfoPanel.show(this.getText(),
-              "You are about to open my children for the first time");
-        }
-
-        @Override
-        protected void onSelected() {
-          InfoPanel.show(this.getText(),
-              "You selected item " + index);
-        }
-      };
-
+      FastTreeItem item = new FastTreeItem();
+      item.setText("item " + index);
       parent.addItem(item);
       verboseTreeItem(item, children - (i + 1));
     }

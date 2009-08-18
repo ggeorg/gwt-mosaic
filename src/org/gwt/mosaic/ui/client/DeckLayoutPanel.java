@@ -55,7 +55,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
    */
   public void add(Widget w) {
     w.setVisible(false);
-    super.getLayoutPanel().add(w);
+    getLayoutPanel().add(w);
   }
 
   /*
@@ -64,7 +64,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
    * @see com.google.gwt.user.client.ui.HasWidgets#clear()
    */
   public void clear() {
-    super.getLayoutPanel().clear();
+    getLayoutPanel().clear();
   }
 
   /*
@@ -73,7 +73,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
    * @see org.gwt.mosaic.ui.layout.LayoutPanel#getPadding()
    */
   public int getPadding() {
-    return super.getLayoutPanel().getPadding();
+    return getLayoutPanel().getPadding();
   }
 
   /**
@@ -134,7 +134,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
    * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
    */
   public Iterator<Widget> iterator() {
-    return super.getLayoutPanel().iterator();
+    return getLayoutPanel().iterator();
   }
 
   /*
@@ -154,7 +154,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
    * .ui.Widget)
    */
   public boolean remove(Widget w) {
-    return super.getLayoutPanel().remove(w);
+    return getLayoutPanel().remove(w);
   }
 
   /*
@@ -180,7 +180,7 @@ public class DeckLayoutPanel extends LayoutComposite implements HasWidgets,
       if (oldWidget != null) {
         oldWidget.setVisible(false);
       }
-      getLayoutPanel().invalidate();
+      invalidate();
     }
   }
 

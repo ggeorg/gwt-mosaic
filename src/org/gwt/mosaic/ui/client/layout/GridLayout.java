@@ -379,23 +379,31 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           int posLeft;
           int widgetWidth;
 
+          Dimension prefSize = null;
+
           if (hAlignment == null) {
             posLeft = left + (spacing + colWidth) * c;
             widgetWidth = cellWidth;
-          } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
-            posLeft = left + (spacing + colWidth) * c;
-            widgetWidth = -1;
-            runTwiceFlag = true;
-          } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
-            posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
-                - WidgetHelper.getPreferredSize(widget).width / 2;
-            widgetWidth = -1;
-            runTwiceFlag = true;
           } else {
-            posLeft = left + (spacing + colWidth) * c + cellWidth
-                - WidgetHelper.getPreferredSize(widget).width;
-            widgetWidth = -1;
-            runTwiceFlag = true;
+            // (ggeorg) this call to WidgetHelper.getPreferredSize() is
+            // required even for ALIGN_LEFT
+            prefSize = WidgetHelper.getPreferredSize(widget);
+
+            if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
+              posLeft = left + (spacing + colWidth) * c;
+              widgetWidth = -1;
+              runTwiceFlag = true;
+            } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
+              posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
+                  - prefSize.width / 2;
+              widgetWidth = -1;
+              runTwiceFlag = true;
+            } else {
+              posLeft = left + (spacing + colWidth) * c + cellWidth
+                  - prefSize.width;
+              widgetWidth = -1;
+              runTwiceFlag = true;
+            }
           }
 
           VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
@@ -409,20 +417,27 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           if (vAlignment == null) {
             posTop = top + (spacing + rowHeight) * r;
             widgetHeight = cellHeight;
-          } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
-            posTop = top + (spacing + rowHeight) * r;
-            widgetHeight = -1;
-            runTwiceFlag = true;
-          } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
-            posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
-                - WidgetHelper.getPreferredSize(widget).height / 2;
-            widgetHeight = -1;
-            runTwiceFlag = true;
           } else {
-            posTop = top + (spacing + rowHeight) * r + cellHeight
-                - WidgetHelper.getPreferredSize(widget).height;
-            widgetHeight = -1;
-            runTwiceFlag = true;
+            if (prefSize == null) {
+              // (ggeorg) this call to WidgetHelper.getPreferredSize() is
+              // required even for ALIGN_TOP
+              prefSize = WidgetHelper.getPreferredSize(widget);
+            }
+            if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
+              posTop = top + (spacing + rowHeight) * r;
+              widgetHeight = -1;
+              runTwiceFlag = true;
+            } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
+              posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
+                  - prefSize.height / 2;
+              widgetHeight = -1;
+              runTwiceFlag = true;
+            } else {
+              posTop = top + (spacing + rowHeight) * r + cellHeight
+                  - prefSize.height;
+              widgetHeight = -1;
+              runTwiceFlag = true;
+            }
           }
 
           WidgetHelper.setBounds(layoutPanel, widget, posLeft, posTop,

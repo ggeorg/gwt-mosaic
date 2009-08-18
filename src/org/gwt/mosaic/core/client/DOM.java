@@ -141,23 +141,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
-   * Returns the inner height of an element in pixels, including padding but not
-   * the horizontal scrollbar height, border, or margin.
-   * <p>
-   * <code>clientHeight</code> can be calculated as CSS height + CSS padding -
-   * height of horizontal scrollbar (if present).
-   * <p>
-   * NOTE: Not part of any W3C specification.
-   * 
-   * @param elem the element to get the <code>clientHeight</code> of
-   * @return the <code>clientHeight</code> of the given element
-   */
-  private native static int getClientHeight(Element elem)
-  /*-{
-    return elem.clientHeight;
-  }-*/;
-
-  /**
    * Get's the elements {@code clientHeight} and {@code clientWidth}.
    * <p>
    * Both {@code clientHeight} and {@code clientWidth} are a non-standard,
@@ -172,25 +155,8 @@ public class DOM extends com.google.gwt.user.client.DOM {
     if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
-    return new Dimension(getClientWidth(elem), getClientHeight(elem));
+    return new Dimension(elem.getClientWidth(), elem.getClientHeight());
   }
-
-  /**
-   * Returns the inner width of an element in pixels, including padding but not
-   * the horizontal scrollbar width, border, or margin.
-   * <p>
-   * {@code clientWidth} can be calculated as CSS width + CSS padding - width of
-   * vertical scrollbar (if present).
-   * <p>
-   * NOTE: Not part of any W3C specification.
-   * 
-   * @param elem the element to get the {@code clientWidth} of
-   * @return the {@code clientWidth} of the given element
-   */
-  private native static int getClientWidth(Element elem)
-  /*-{
-    return elem.clientWidth;
-  }-*/;
 
   /**
    * Gets an attribute of the given element's computed style.
@@ -252,7 +218,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @return the screen resolution, in dots-per-inch
    */
   public static int getScreenResolution() {
-    return toPixelSize("1in");
+    return toPixelSize("1in", true);
   }
 
   public static Dimension getStringBoxSize(Element span, final String str) {
@@ -365,7 +331,8 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
   }
 
-  public static int toPixelSize(final String width) {
+  public static int toPixelSize(final String value,
+      final boolean useWidthAttribute) {
     if (toPixelSizeTestElem == null) {
       toPixelSizeTestElem = DOM.createSpan();
       setStyleAttribute(toPixelSizeTestElem, "left", "");
@@ -374,8 +341,13 @@ public class DOM extends com.google.gwt.user.client.DOM {
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    setStyleAttribute(toPixelSizeTestElem, "width", width);
-    return getBoxSize(toPixelSizeTestElem).width;
+    if (useWidthAttribute) {
+      setStyleAttribute(toPixelSizeTestElem, "width", value);
+      return getBoxSize(toPixelSizeTestElem).width;
+    } else {
+      setStyleAttribute(toPixelSizeTestElem, "height", value);
+      return getBoxSize(toPixelSizeTestElem).height;
+    }
   }
 
 }

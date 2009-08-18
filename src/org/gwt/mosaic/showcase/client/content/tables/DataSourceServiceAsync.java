@@ -15,16 +15,16 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import java.io.Serializable;
+import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 
+import com.google.gwt.gen2.table.client.TableModelHelper.Request;
+import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
-import com.google.gwt.widgetideas.table.client.TableModelHelper.SerializableResponse;
 
 /**
  * Asynchronous version of {@link DataSourceService}.
  */
 public interface DataSourceServiceAsync {
   void requestRows(Request request,
-      AsyncCallback<SerializableResponse<Serializable>> callback);
+      AsyncCallback<SerializableResponse<Student>> callback);
 }

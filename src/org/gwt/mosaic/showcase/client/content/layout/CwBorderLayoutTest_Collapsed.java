@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
@@ -32,7 +33,8 @@ import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -85,10 +87,10 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn1 = new ImageButton(
         Caption.IMAGES.toolCollapseUp());
     northPanel.getHeader().add(collapseBtn1, CaptionRegion.RIGHT);
-    northPanel.add(new WidgetWrapper(new HTML("Height: 20%")));
+    northPanel.add(new TextLabel("Height: 20%"));
 
-    collapseBtn1.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn1.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         layoutPanel.setCollapsed(northPanel,
             !layoutPanel.isCollapsed(northPanel));
         layoutPanel.layout();
@@ -107,10 +109,10 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn2 = new ImageButton(
         Caption.IMAGES.toolCollapseDown());
     southPanel.getHeader().add(collapseBtn2, CaptionRegion.RIGHT);
-    southPanel.add(new WidgetWrapper(new HTML("Height: 20%")));
+    southPanel.add(new TextLabel("Height: 20%"));
 
-    collapseBtn2.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn2.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         layoutPanel.setCollapsed(southPanel,
             !layoutPanel.isCollapsed(southPanel));
         layoutPanel.layout();
@@ -129,10 +131,10 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn3 = new ImageButton(
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn3, CaptionRegion.RIGHT);
-    westPanel.add(new WidgetWrapper(new HTML("Width: 20%")));
+    westPanel.add(new TextLabel("Width: 20%"));
 
-    collapseBtn3.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn3.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         layoutPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
         layoutPanel.layout();
       }
@@ -150,10 +152,10 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     final ImageButton collapseBtn4 = new ImageButton(
         Caption.IMAGES.toolCollapseRight());
     eastPanel.getHeader().add(collapseBtn4, CaptionRegion.RIGHT);
-    eastPanel.add(new WidgetWrapper(new HTML("Width: 20%")));
+    eastPanel.add(new TextLabel("Width: 20%"));
 
-    collapseBtn4.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn4.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         layoutPanel.setCollapsed(eastPanel, !layoutPanel.isCollapsed(eastPanel));
         layoutPanel.layout();
       }
@@ -168,7 +170,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     // center panel
 
     final CaptionLayoutPanel centerPanel = new CaptionLayoutPanel("Center");
-    centerPanel.getHeader().add(Showcase.IMAGES.gwtLogoThumb().createImage());
+    centerPanel.getHeader().add(Showcase.IMAGES.catPanels().createImage());
     centerPanel.add(new WidgetWrapper(new HTML("<h1>GWT Mosaic</h1>")));
 
     layoutPanel.add(centerPanel, new BorderLayoutData(true));

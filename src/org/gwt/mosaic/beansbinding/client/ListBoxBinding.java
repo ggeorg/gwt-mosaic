@@ -389,8 +389,6 @@ public final class ListBoxBinding<E, SS, TS> extends
      * @see org.gwt.mosaic.ui.client.list.ListModel#getElementAt(int)
      */
     public Object getElementAt(int index) {
-      System.out.println(valueAt(index, 0));
-      System.out.println(getElement(index));
       return getElement(index);
     }
 
