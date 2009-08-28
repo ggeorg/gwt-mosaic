@@ -217,14 +217,14 @@ public abstract class MessageBox extends WindowPanel {
   public static void prompt(String caption, Date defaultValue,
       final PromptCallback<Date> callback) {
     final DatePicker datePicker = new DatePicker();
-    datePicker.setSelectedDate(defaultValue);
+    datePicker.setValue(defaultValue);
 
     final MessageBox prompt = new MessageBox(caption) {
       @Override
       public void onClose(boolean result) {
         hide();
         if (result) {
-          callback.onResult(datePicker.getSelectedDate());
+          callback.onResult(datePicker.getValue());
         } else {
           callback.onResult(null);
         }
