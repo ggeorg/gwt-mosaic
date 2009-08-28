@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -61,8 +62,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
-    implements HasFocus, HasDirection, HasName, HasText, SourcesClickEvents,
-    SourcesChangeEvents, SourcesFocusEvents, SourcesKeyboardEvents {
+    implements HasFocus, HasChangeHandlers, HasDirection, HasName, HasText,
+    SourcesClickEvents, SourcesChangeEvents, SourcesFocusEvents,
+    SourcesKeyboardEvents {
 
   private static final String DEFAULT_STYLENAME = "mosaic-ComboBox";
 
