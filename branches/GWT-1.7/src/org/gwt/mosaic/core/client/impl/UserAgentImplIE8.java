@@ -18,30 +18,17 @@ package org.gwt.mosaic.core.client.impl;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
-public class UserAgentImpl {
+public class UserAgentImplIE8 extends UserAgentImpl {
 
-	public boolean isGecko() {
-		return false;
-	}
-
-	public boolean isGecko18() {
-		return false;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.gwt.mosaic.core.client.impl.UserAgentImpl#isIE8()
+	 */
+	@Override
 	public boolean isIE8() {
-		return false;
-	}
-
-	public boolean isIE6() {
-		return false;
-	}
-
-	public boolean isSafari() {
-		return false;
-	}
-
-	public boolean isOpera() {
-		return false;
+		return true;
 	}
 }
