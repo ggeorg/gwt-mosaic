@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.datepicker;
 
-import java.util.Date;
-
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
@@ -25,24 +23,21 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * Date picker.
  */
 public class DatePicker extends
-    com.google.gwt.widgetideas.datepicker.client.DatePicker implements
+com.google.gwt.user.datepicker.client.DatePicker implements
     HasLayoutManager {
 
-  /**
-   * The default style name.
-   */
-  private static final String DEFAULT_STYLENAME = "mosaic-DatePicker";
-
+  public DatePicker() {
+    super();
+  }
   /**
    * Sets up the date picker.
    */
   protected void setup() {
+    
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
@@ -50,10 +45,8 @@ public class DatePicker extends
 
     layoutPanel.add(this.getMonthSelector(), new BoxLayoutData(
         FillStyle.HORIZONTAL));
-    showDate(new Date());
-    layoutPanel.add(this.getCalendarView(), new BoxLayoutData(FillStyle.BOTH));
-
-    setStyleName(DEFAULT_STYLENAME);
+    
+    layoutPanel.add(this.getView(), new BoxLayoutData(FillStyle.BOTH));
   }
 
   /*

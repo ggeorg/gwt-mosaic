@@ -19,9 +19,9 @@ import java.util.Date;
 
 import org.gwt.mosaic.ui.client.ComboBoxBase;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.widgetideas.client.event.ChangeEvent;
-import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
 /**
  * 
@@ -47,9 +47,9 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
 
     this.datePicker = datePicker;
 
-    datePicker.addChangeHandler(new ChangeHandler<Date>() {
-      public void onChange(ChangeEvent<Date> event) {
-        setText(event.getNewValue());
+    datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        setText(event.getValue());
         hidePopup();
       }
     });
@@ -96,7 +96,7 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
     if (current == null) {
       current = new Date();
     }
-    datePicker.showDate(current);
+    datePicker.setValue(current);
 
     return datePicker;
   }
@@ -113,7 +113,7 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
       String current = super.getText();
       if (current != null && current.length() != 0) {
         try {
-          super.setText(this.formatter.format(datePicker.getSelectedDate()));
+          super.setText(this.formatter.format(datePicker.getValue()));
         } catch (IllegalArgumentException e) {
           super.setText(""); // TODO use EMPTY_STRING
         }
@@ -131,8 +131,8 @@ public class DateComboBox extends ComboBoxBase<DatePicker> {
    * @param date picker
    */
   public void showDate(Date date) {
-    datePicker.setSelectedDate(date, false);
-    datePicker.showDate(date);
+    //datePicker.setSelectedDate(date, false);
+    datePicker.setValue(date,false);
     setText(date);
   }
 

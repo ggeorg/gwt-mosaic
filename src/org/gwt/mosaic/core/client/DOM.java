@@ -33,14 +33,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   private static final DOMImpl impl = GWT.create(DOMImpl.class);
 
-  public static final int OTHER_KEY_UP = 63232;
-
-  public static final int OTHER_KEY_DOWN = 63233;
-
-  public static final int OTHER_KEY_LEFT = 63234;
-
-  public static final int OTHER_KEY_RIGHT = 63235;
-
   private static Element toPixelSizeTestElem = null;
 
   /**
