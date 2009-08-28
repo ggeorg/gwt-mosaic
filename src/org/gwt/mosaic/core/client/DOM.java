@@ -78,7 +78,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
       i1 = 1;
       i2 = 3;
     }
-    if (UserAgent.isIE6() && !CompatMode.isStandardsMode()) {
+    if (UserAgent.isIE() && !CompatMode.isStandardsMode()) {
       // Internet Explorer - Quirks Mode
       int[] b = getBorderSizes(elem);
       int[] bp = getBorderSizes((Element) elem.getParentElement());
@@ -104,7 +104,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBorderSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -152,7 +152,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @return an array of width and height
    */
   public static Dimension getClientSize(Element elem) {
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
     return new Dimension(elem.getClientWidth(), elem.getClientHeight());
@@ -181,7 +181,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getMarginSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
@@ -198,7 +198,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getPaddingSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
