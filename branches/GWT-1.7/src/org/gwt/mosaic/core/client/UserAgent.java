@@ -37,7 +37,7 @@ public final class UserAgent {
 	}
 
 	public static final boolean isIE8() {
-		return impl.isIE6();
+		return impl.isIE8();
 	}
 
 	public static final boolean xisIE6() {
