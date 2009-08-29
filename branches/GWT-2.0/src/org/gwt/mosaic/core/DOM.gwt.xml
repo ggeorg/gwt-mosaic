@@ -19,6 +19,11 @@
 	<!-- Inherit the core Web Toolkit stuff.                        -->
 	<inherits name='com.google.gwt.user.User' />
 	
+	<replace-with class="org.gwt.mosaic.core.client.impl.DOMImplIE8">
+		<when-type-is class="org.gwt.mosaic.core.client.impl.DOMImpl" />
+		<when-property-is name="user.agent" value="ie8" />
+	</replace-with>
+	
 	<replace-with class="org.gwt.mosaic.core.client.impl.DOMImplIE6">
 		<when-type-is class="org.gwt.mosaic.core.client.impl.DOMImpl" />
 		<when-property-is name="user.agent" value="ie6" />
