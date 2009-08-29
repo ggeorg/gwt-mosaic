@@ -18,30 +18,8 @@ package org.gwt.mosaic.core.client.impl;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ *
  */
-public class UserAgentImpl {
+public class DOMImplIE8 extends DOMImplIE6 {
 
-	public boolean isGecko() {
-		return false;
-	}
-
-	public boolean isGecko18() {
-		return false;
-	}
-
-	public boolean isIE8() {
-		return false;
-	}
-
-	public boolean isIE6() {
-		return false;
-	}
-
-	public boolean isSafari() {
-		return false;
-	}
-
-	public boolean isOpera() {
-		return false;
-	}
 }
