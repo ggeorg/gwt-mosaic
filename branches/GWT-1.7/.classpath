@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="lib/derby.jar"/>
 	<classpathentry kind="lib" path="lib/toplink-essentials.jar"/>
 	<classpathentry kind="lib" path="lib/toplink-essentials-agent.jar"/>
-	<classpathentry kind="lib" path="lib/gwtx-1.5-20081912.jar"/>
 	<classpathentry kind="var" path="GWT17_HOME/gwt-user.jar"/>
 	<classpathentry kind="var" path="GWT17_HOME/gwt-dev-linux.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
@@ -13,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/gwt-incubator-trunk-r1684.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/gwt-dnd-2.6.5.jar"/>
+	<classpathentry kind="lib" path="lib/gwtx-1.5.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
