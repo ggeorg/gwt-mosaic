@@ -22,6 +22,8 @@ import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -79,11 +81,7 @@ public class WidgetHelper {
     }
   }
 
-  /**
-   * 
-   * @param widget
-   * @return
-   */
+  @Deprecated
   public static Dimension getPreferredSize(Widget widget) {
     // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
     if (widget instanceof FormPanel) {
@@ -96,7 +94,24 @@ public class WidgetHelper {
       final HasLayoutManager lp = (HasLayoutManager) widget;
       return lp.getPreferredSize();
     } else {
-      return getOffsetSize(widget);
+      final Element clonedElem = widget.getElement().cloneNode(true).cast();
+      final Element parentElem;
+      if (widget.getParent() instanceof DecoratorPanel) {
+        parentElem = widget.getParent().getParent().getElement();
+      } else {
+        parentElem = widget.getParent().getElement();
+      }
+      final Style style = clonedElem.getStyle();
+      style.setPosition(Position.STATIC);
+      style.setProperty("width", "auto");
+      style.setProperty("height", "auto");
+      style.setProperty("visibility", "hidden");
+      parentElem.appendChild(clonedElem);
+      final Dimension d = new Dimension(clonedElem.getOffsetWidth(),
+          clonedElem.getOffsetHeight());
+      parentElem.removeChild(clonedElem);
+      return d;
+      // return getOffsetSize(widget);
     }
   }
 

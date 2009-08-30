@@ -2041,9 +2041,4 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     return initialized = true;
   }
-
-  @Override
-  public boolean runTwice() {
-    return true; // Safari
-  }
 }
