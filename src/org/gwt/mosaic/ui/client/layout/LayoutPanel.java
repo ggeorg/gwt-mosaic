@@ -46,7 +46,8 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class LayoutPanel extends AbsolutePanel implements HasLayoutManager, HasAnimation {
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
+    HasAnimation {
 
   /**
    * The default style name.
@@ -609,21 +610,20 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager, HasA
   int toPixelSize(final String value, final boolean useWidthAttribute) {
     if (toPixelSizeTestElem == null) {
       toPixelSizeTestElem = DOM.createSpan();
-      DOM.setStyleAttribute(toPixelSizeTestElem, "left", "0px");
-      DOM.setStyleAttribute(toPixelSizeTestElem, "top", "0px");
       DOM.setStyleAttribute(toPixelSizeTestElem, "position", "absolute"); // Safari
       DOM.setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "left", "0px");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "top", "0px");
       getElement().appendChild(toPixelSizeTestElem);
     }
-    if (useWidthAttribute) {
-      DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
-      return DOM.getBoxSize(toPixelSizeTestElem).width;
-    } else {
-      DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
-      return DOM.getBoxSize(toPixelSizeTestElem).height;
-    }
+    DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
+    DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
+
+    Dimension size = DOM.getBoxSize(toPixelSizeTestElem);
+
+    return (useWidthAttribute) ? size.width : size.height;
   }
-  
+
   private boolean animationEnabled;
 
   public boolean isAnimationEnabled() {
