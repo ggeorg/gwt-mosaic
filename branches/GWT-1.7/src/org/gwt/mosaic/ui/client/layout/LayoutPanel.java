@@ -15,17 +15,7 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.ResizableWidget;
-import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
+import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
@@ -36,7 +26,18 @@ import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
-import java.util.Iterator;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasAnimation;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.ResizableWidget;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * An {@code AbsolutePanel}
@@ -45,7 +46,7 @@ import java.util.Iterator;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager, HasAnimation {
 
   /**
    * The default style name.
@@ -151,7 +152,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (layoutData.hasDecoratorPanel()) {
       final DecoratorPanel decPanel = layoutData.decoratorPanel;
       decPanel.setWidget(widget);
-      decPanel.setVisible(widget.isVisible());
+      // decPanel.setVisible(widget.isVisible());
       add(decPanel);
     } else {
       add(widget);
@@ -206,6 +207,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return parent;
   }
 
+  /**
+   * @return the widget's DecoratorPanel if any, else widget.
+   */
   private Widget getDecoratorWidget(Widget widget) {
     LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
     if (layoutData != null && layoutData.hasDecoratorPanel()) {
@@ -243,7 +247,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (preferredSizeCache.width == -1 && preferredSizeCache.height == -1) {
       preferredSizeCache = layout.getPreferredSize(this);
       WidgetHelper.setSize(this, preferredSizeCache);
-      // layout.flushCache();
       layout.layoutPanel(this);
       preferredSizeCache = layout.getPreferredSize(this);
     }
@@ -392,9 +395,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (isAttached() && isVisible()) {
       onLayout();
       layout.layoutPanel(this);
-      if (layout.runTwice()) {
-        layout.layoutPanel(this);
-      }
       layoutChildren();
     }
     invalid = false;
@@ -449,7 +449,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       ResizableWidgetCollection.get().add(resizableWidget);
     }
   }
-  
+
   /**
    * Set the {@code ResizableWidget} to add to a {@code
    * ResizableWidgetCollection} that periodically checks the outer dimensions of
@@ -478,7 +478,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
   public ResizableWidget getResizableWidget() {
     return resizableWidget;
   }
-  
+
   private ResizableWidget resizableWidget = new ResizableWidget() {
     public Element getElement() {
       return LayoutPanel.this.getElement();
@@ -490,7 +490,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
     public void onResize(int width, int height) {
       LayoutPanel.this.layout();
-    }    
+    }
   };
 
   /**
@@ -596,4 +596,42 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     super.setWidth(width);
     // }
   }
+
+  public LayoutData getLayoutData(Widget widget) {
+    if (getDecoratorWidget(widget).getParent() == this) {
+      return (LayoutData) BaseLayout.getLayoutData(widget);
+    }
+    return null;
+  }
+
+  private static Element toPixelSizeTestElem = null;
+
+  int toPixelSize(final String value, final boolean useWidthAttribute) {
+    if (toPixelSizeTestElem == null) {
+      toPixelSizeTestElem = DOM.createSpan();
+      DOM.setStyleAttribute(toPixelSizeTestElem, "left", "0px");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "top", "0px");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "position", "absolute"); // Safari
+      DOM.setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
+      getElement().appendChild(toPixelSizeTestElem);
+    }
+    if (useWidthAttribute) {
+      DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
+      return DOM.getBoxSize(toPixelSizeTestElem).width;
+    } else {
+      DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
+      return DOM.getBoxSize(toPixelSizeTestElem).height;
+    }
+  }
+  
+  private boolean animationEnabled;
+
+  public boolean isAnimationEnabled() {
+    return animationEnabled;
+  }
+
+  public void setAnimationEnabled(boolean enable) {
+    this.animationEnabled = enable;
+  }
+
 }
