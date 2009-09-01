@@ -67,21 +67,21 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
 
       final Dimension result = new Dimension();
 
-      //final Element parentElem = layoutPanel.getElement();
-      final Element clonedElem = widget.getElement();//.cloneNode(true).cast();
-      
+      // final Element parentElem = layoutPanel.getElement();
+      final Element clonedElem = widget.getElement();// .cloneNode(true).cast();
+
       final Style style = clonedElem.getStyle();
       style.setProperty("position", "static");
-      //style.setProperty("visibility", "hidden");
-      style.setProperty("width", "auto");
-      style.setProperty("height", "auto");
-      
-      //parentElem.appendChild(clonedElem);
+      // style.setProperty("visibility", "hidden");
+      // style.setProperty("width", "auto");
+      // style.setProperty("height", "auto");
+
+      // parentElem.appendChild(clonedElem);
 
       if (layoutData.preferredWidth != null) {
         result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
       } else {
-        //style.setProperty("width", "auto");
+        style.setProperty("width", "auto");
         result.width = clonedElem.getOffsetWidth();
       }
 
@@ -89,14 +89,14 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
         result.height = layoutPanel.toPixelSize(layoutData.preferredHeight,
             false);
       } else {
-        //style.setProperty("height", "auto");
+        style.setProperty("height", "auto");
         result.height = clonedElem.getOffsetHeight();
       }
-      
-      //parentElem.removeChild(clonedElem);
+
+      // parentElem.removeChild(clonedElem);
       style.setProperty("position", "absolute");
-      
-      Window.setTitle(""+result);
+
+      Window.setTitle("" + result);
 
       return result;
     }
