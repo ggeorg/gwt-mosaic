@@ -19,10 +19,9 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Insets;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
@@ -60,30 +59,44 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       return lp.getPreferredSize();
     } else {
 
+      if (layoutData.preferredWidth != null
+          && layoutData.preferredHeight != null) {
+        return new Dimension(layoutPanel.toPixelSize(layoutData.preferredWidth,
+            true), layoutPanel.toPixelSize(layoutData.preferredHeight, false));
+      }
+
       final Dimension result = new Dimension();
 
-      if (layoutData.preferredWidth == null
-          || layoutData.preferredHeight == null) {
-        final Element parentElem = layoutPanel.getElement();
-        final Element clonedElem = widget.getElement().cloneNode(true).cast();
-        final Style style = clonedElem.getStyle();
-        style.setPosition(Position.STATIC);
-        style.setProperty("width", "auto");
-        style.setProperty("height", "auto");
-        style.setProperty("visibility", "hidden");
-        parentElem.appendChild(clonedElem);
-        result.width = clonedElem.getOffsetWidth();
-        result.height = clonedElem.getOffsetHeight();
-        parentElem.removeChild(clonedElem);
-      }
+      // final Element parentElem = layoutPanel.getElement();
+      final Element clonedElem = widget.getElement();// .cloneNode(true).cast();
+
+      final Style style = clonedElem.getStyle();
+      style.setProperty("position", "static");
+      // style.setProperty("visibility", "hidden");
+      // style.setProperty("width", "auto");
+      // style.setProperty("height", "auto");
+
+      // parentElem.appendChild(clonedElem);
 
       if (layoutData.preferredWidth != null) {
         result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
+      } else {
+        style.setProperty("width", "auto");
+        result.width = clonedElem.getOffsetWidth();
       }
 
       if (layoutData.preferredHeight != null) {
-        result.height = layoutPanel.toPixelSize(layoutData.preferredHeight, false);
+        result.height = layoutPanel.toPixelSize(layoutData.preferredHeight,
+            false);
+      } else {
+        style.setProperty("height", "auto");
+        result.height = clonedElem.getOffsetHeight();
       }
+
+      // parentElem.removeChild(clonedElem);
+      style.setProperty("position", "absolute");
+
+      Window.setTitle("" + result);
 
       return result;
     }

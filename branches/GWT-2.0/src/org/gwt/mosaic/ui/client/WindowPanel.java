@@ -915,9 +915,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       if (glassPanel == null) {
         glassPanel = new GlassPanel(false);
         glassPanel.addStyleName("mosaic-GlassPanel-default");
-        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-            DOM.getComputedStyleAttribute(WindowPanel.this.getElement(),
-                "zIndex"));
+        String zIndex = DOM.getComputedStyleAttribute(
+            WindowPanel.this.getElement(), "zIndex");
+        if (zIndex != null) {
+          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", zIndex);
+        }
       }
       getDesktopPanel().add(glassPanel);
 
