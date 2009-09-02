@@ -272,7 +272,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public WindowPanel() {
     this(null);
   }
-  
+
   /**
    * Creates a new empty window with the specified caption and default layout.
    * 
@@ -281,17 +281,17 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public WindowPanel(String caption) {
     this(caption, true, false);
   }
-  
+
   /**
    * Creates a new empty window with the specified caption and default layout.
-   *  
+   * 
    * @param caption the caption of the window
    * @param resizable
    */
   public WindowPanel(String caption, boolean resizable) {
     this(caption, resizable, false);
   }
-  
+
   /**
    * Creates a new empty window with default layout.
    * 
@@ -915,9 +915,11 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       if (glassPanel == null) {
         glassPanel = new GlassPanel(false);
         glassPanel.addStyleName("mosaic-GlassPanel-default");
-        DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-            DOM.getComputedStyleAttribute(WindowPanel.this.getElement(),
-                "zIndex"));
+        String zIndex = DOM.getComputedStyleAttribute(
+            WindowPanel.this.getElement(), "zIndex");
+        if (zIndex != null) {
+          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", zIndex);
+        }
       }
       getDesktopPanel().add(glassPanel);
 
@@ -1070,12 +1072,14 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     });
   }
+
   void addDesktopPanelHandlers() {
     desktopPanelOpenHandler = addOpenHandler(desktopPanel);
     desktopPanelCloseHandler = addCloseHandler(desktopPanel);
     desktopPanelSelectionHandler = addSelectionHandler(desktopPanel);
     addWindowStateListener(desktopPanel);
   }
+
   void hideContent(boolean hideContent) {
     panel.hideContent(hideContent);
   }
