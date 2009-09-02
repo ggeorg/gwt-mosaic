@@ -77,8 +77,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
    */
   protected Widget[][] widgetMatrix;
 
-  private boolean runTwiceFlag;
-
   private HorizontalAlignmentConstant horizontalAlignment;
 
   private VerticalAlignmentConstant verticalAlignment;
@@ -392,17 +390,14 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
               posLeft = left + (spacing + colWidth) * c;
               widgetWidth = -1;
-              runTwiceFlag = true;
             } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
               posLeft = left + (spacing + colWidth) * c + (cellWidth / 2)
                   - prefSize.width / 2;
               widgetWidth = -1;
-              runTwiceFlag = true;
             } else {
               posLeft = left + (spacing + colWidth) * c + cellWidth
                   - prefSize.width;
               widgetWidth = -1;
-              runTwiceFlag = true;
             }
           }
 
@@ -426,17 +421,14 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
               posTop = top + (spacing + rowHeight) * r;
               widgetHeight = -1;
-              runTwiceFlag = true;
             } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
               posTop = top + (spacing + rowHeight) * r + (cellHeight / 2)
                   - prefSize.height / 2;
               widgetHeight = -1;
-              runTwiceFlag = true;
             } else {
               posTop = top + (spacing + rowHeight) * r + cellHeight
                   - prefSize.height;
               widgetHeight = -1;
-              runTwiceFlag = true;
             }
           }
 
@@ -452,11 +444,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           + e.getLocalizedMessage());
     }
 
-  }
-
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
   }
 
   /**

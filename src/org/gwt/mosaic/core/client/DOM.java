@@ -333,13 +333,12 @@ public class DOM extends com.google.gwt.user.client.DOM {
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    if (useWidthAttribute) {
-      setStyleAttribute(toPixelSizeTestElem, "width", value);
-      return getBoxSize(toPixelSizeTestElem).width;
-    } else {
-      setStyleAttribute(toPixelSizeTestElem, "height", value);
-      return getBoxSize(toPixelSizeTestElem).height;
-    }
+    DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
+    DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
+
+    Dimension size = DOM.getBoxSize(toPixelSizeTestElem);
+
+    return (useWidthAttribute) ? size.width : size.height;
   }
 
 }
