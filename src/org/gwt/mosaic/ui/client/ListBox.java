@@ -37,6 +37,7 @@ import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.gen2.table.event.client.RowHighlightHandler;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.gen2.table.override.client.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.Element;
@@ -144,6 +145,11 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
       RowSelectionHandler handler) {
     return scrollTable.getDataTable().addRowSelectionHandler(handler);
   }
+  
+  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowHighlightHandler(RowHighlightHandler handler) {
+    return scrollTable.getDataTable().addRowHighlightHandler(handler);
+  }
+  
 
   private void checkIndex(int index) {
     if (index < 0 || index >= getItemCount()) {
