@@ -232,8 +232,6 @@ public class BorderLayout extends BaseLayout {
 
   private Widget placeHolder;
 
-  private boolean runTwiceFlag;
-
   // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
   // Dimension>();
 
@@ -466,8 +464,6 @@ public class BorderLayout extends BaseLayout {
       int top = paddings[0];
       int bottom = top + height;
 
-      runTwiceFlag = false;
-
       if (north != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
@@ -555,7 +551,6 @@ public class BorderLayout extends BaseLayout {
 
           if (layoutData.preferredSize == -1.0) {
             h = WidgetHelper.getPreferredSize(north).height;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             h = (int) (height * layoutData.preferredSize);
@@ -680,7 +675,6 @@ public class BorderLayout extends BaseLayout {
         } else {
           if (layoutData.preferredSize == -1.0) {
             h = WidgetHelper.getPreferredSize(south).height;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             h = (int) (height * layoutData.preferredSize);
@@ -810,7 +804,6 @@ public class BorderLayout extends BaseLayout {
         } else {
           if (layoutData.preferredSize == -1.0) {
             w = WidgetHelper.getPreferredSize(west).width;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             w = (int) (width * layoutData.preferredSize);
@@ -936,7 +929,6 @@ public class BorderLayout extends BaseLayout {
         } else {
           if (layoutData.preferredSize == -1.0) {
             w = WidgetHelper.getPreferredSize(east).width;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             w = (int) (width * layoutData.preferredSize);
@@ -1013,11 +1005,6 @@ public class BorderLayout extends BaseLayout {
     };
     glassPanel.addStyleName("mosaic-GlassPanel-invisible");
     return glassPanel;
-  }
-
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
   }
 
   private void scanForPanels(LayoutPanel layoutPanel) {
