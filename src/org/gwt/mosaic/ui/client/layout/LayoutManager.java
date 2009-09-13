@@ -52,17 +52,6 @@ public interface LayoutManager {
   void layoutPanel(LayoutPanel layoutPanel);
 
   /**
-   * Indicates whether {@link #layoutPanel(LayoutPanel)} has to run twice. This
-   * method is called by a {@link LayoutPanel#layout()} internally to check if
-   * {@link #layoutPanel(LayoutPanel)} should be run twice because e.g.: text
-   * line wrapping.
-   * 
-   * @return {@code true} if {@link #layoutPanel(LayoutPanel)} has to run twice,
-   *         {@code false} otherwise.
-   */
-  boolean runTwice();
-
-  /**
    * Instructs the layout to flush any cached values.
    */
   void flushCache();

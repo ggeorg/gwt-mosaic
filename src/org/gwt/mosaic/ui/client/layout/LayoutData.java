@@ -54,4 +54,54 @@ public class LayoutData {
     return decoratorPanel != null;
   }
 
+  // ----
+
+  protected String preferredWidth;
+
+  protected String preferredHeight;
+
+  /**
+   * @return the preferredWidth
+   */
+  public String xgetPreferredWidth() {
+    return preferredWidth;
+  }
+
+  /**
+   * @param preferredWidth the preferredWidth to set
+   */
+  public void xsetPreferredWidth(String preferredWidth) {
+    this.preferredWidth = preferredWidth;
+  }
+
+  /**
+   * @return the preferredHeight
+   */
+  public String xgetPreferredHeight() {
+    return preferredHeight;
+  }
+
+  /**
+   * @param preferredHeight the preferredHeight to set
+   */
+  public void xsetPreferredHeight(String preferredHeight) {
+    this.preferredHeight = preferredHeight;
+  }
+
+  // ----
+
+  public void setPreferredSize(String preferredWidth, String preferredHeight) {
+    this.preferredWidth = preferredWidth;
+    this.preferredHeight = preferredHeight;
+  }
+
+  // ----
+
+  protected boolean setTargetLeft, setTargetTop, setTargetRigth,
+      setTargetBottom, setTargetWidth, setTargetHeight;
+
+  protected int left, top, right, bottom, width, height;
+  protected int sourceLeft, sourceTop, sourceRight, sourceBottom, sourceWidth,
+      sourceHeight;
+
 }

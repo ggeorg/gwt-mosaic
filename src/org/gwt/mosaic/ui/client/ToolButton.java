@@ -19,6 +19,26 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasAllFocusHandlers;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -29,9 +49,13 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.ListenerWrapper;
+import com.google.gwt.user.client.ui.MouseListener;
+import com.google.gwt.user.client.ui.MouseWheelListener;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.SourcesFocusEvents;
 import com.google.gwt.user.client.ui.SourcesKeyboardEvents;
+import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -39,11 +63,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class ToolButton extends LayoutComposite implements HasHTML, HasName,
-    SourcesClickEvents, SourcesFocusEvents, HasFocus, SourcesKeyboardEvents {
-
-  public enum ToolButtonStyle {
-    PUSH, MENU, SPLIT, RADIO, CHECKBOX
-  }
+    SourcesClickEvents, HasClickHandlers, HasFocus, HasAllFocusHandlers,
+    HasAllKeyHandlers, HasAllMouseHandlers, SourcesMouseEvents {
 
   class ButtonWidget extends Button implements HasName {
 
@@ -58,7 +79,11 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
      */
     public ButtonWidget() {
       super();
-      init();
+
+      // ggeorg: for Event.ONCLICK see issue 39
+      sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
+
+      addStyleName(DEFAULT_STYLE_NAME);
     }
 
     private void addNewStyleName(String styleName) {
@@ -83,12 +108,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
 
     public ToolButtonStyle getStyle() {
       return style;
-    }
-
-    protected void init() {
-      // ggeorg: for Event.ONCLICK see issue 39
-      sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
-      addStyleName(DEFAULT_STYLE_NAME);
     }
 
     /**
@@ -295,12 +314,27 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     }
   }
 
+  public enum ToolButtonStyle {
+    PUSH, MENU, SPLIT, RADIO, CHECKBOX
+  }
+
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ToolButton";
 
   private final ButtonWidget button = new ButtonWidget();
+  
+  @Override
+  public Dimension getPreferredSize() {
+    return getLayoutPanel().getPreferredSize();
+  }
+  
+  @Override
+  public void invalidate() {
+    super.invalidate();
+    button.setSize("auto", "auto");
+  }
 
   /**
    * Creates a tool button with no caption.
@@ -312,7 +346,18 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
   }
 
   /**
-   * Creates a button with the given HTML caption.
+   * This constructor may be used by subclasses to explicitly use an existing
+   * element. This element must be a &lt;button&gt; element.
+   * 
+   * @param element the element to be used
+   */
+  protected ToolButton(Element element) {
+    // TODO
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Creates a tool button with the given HTML caption.
    * 
    * @param html the HTML caption
    */
@@ -322,14 +367,213 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
   }
 
   /**
+   * Creates a tool button with the given HTML caption and click handler.
+   * 
+   * @param html the HTML caption
+   * @param handler the click handler
+   */
+  public ToolButton(String html, ClickHandler handler) {
+    this(html);
+    addClickHandler(handler);
+  }
+
+  /**
    * Creates a tool button with the given HTML caption and click listener.
    * 
    * @param html the HTML caption
    * @param listener the click listener
+   * @deprecated use {@link ToolButton#ToolButton(String, ClickHandler)} instead
    */
+  @Deprecated
   public ToolButton(String html, ClickListener listener) {
     this(html);
     addClickListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasBlurHandlers#addBlurHandler(com.google
+   * .gwt.event.dom.client.BlurHandler)
+   */
+  public HandlerRegistration addBlurHandler(BlurHandler handler) {
+    return button.addBlurHandler(handler);
+  }
+
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return button.addClickHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.SourcesClickEvents#addClickListener(com.google
+   * .gwt.user.client.ui.ClickListener)
+   */
+  @Deprecated
+  public void addClickListener(ClickListener listener) {
+    button.addClickListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasFocusHandlers#addFocusHandler(com.google
+   * .gwt.event.dom.client.FocusHandler)
+   */
+  public HandlerRegistration addFocusHandler(FocusHandler handler) {
+    return button.addFocusHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.SourcesFocusEvents#addFocusListener(com.google
+   * .gwt.user.client.ui.FocusListener)
+   */
+  @Deprecated
+  public void addFocusListener(FocusListener listener) {
+    button.addFocusListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.SourcesKeyboardEvents#addKeyboardListener
+   * (com.google.gwt.user.client.ui.KeyboardListener)
+   */
+  @Deprecated
+  public void addKeyboardListener(KeyboardListener listener) {
+    button.addKeyboardListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasKeyDownHandlers#addKeyDownHandler(com
+   * .google.gwt.event.dom.client.KeyDownHandler)
+   */
+  public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+    return button.addKeyDownHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasKeyPressHandlers#addKeyPressHandler(
+   * com.google.gwt.event.dom.client.KeyPressHandler)
+   */
+  public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+    return button.addKeyPressHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasKeyUpHandlers#addKeyUpHandler(com.google
+   * .gwt.event.dom.client.KeyUpHandler)
+   */
+  public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+    return button.addKeyUpHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasMouseDownHandlers#addMouseDownHandler
+   * (com.google.gwt.event.dom.client.MouseDownHandler)
+   */
+  public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+    return button.addMouseDownHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.SourcesMouseEvents#addMouseListener(com.google
+   * .gwt.user.client.ui.MouseListener)
+   */
+  @Deprecated
+  public void addMouseListener(MouseListener listener) {
+    button.addMouseListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasMouseMoveHandlers#addMouseMoveHandler
+   * (com.google.gwt.event.dom.client.MouseMoveHandler)
+   */
+  public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+    return button.addMouseMoveHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(
+   * com.google.gwt.event.dom.client.MouseOutHandler)
+   */
+  public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+    return button.addMouseOutHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler
+   * (com.google.gwt.event.dom.client.MouseOverHandler)
+   */
+  public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+    return button.addMouseOverHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasMouseUpHandlers#addMouseUpHandler(com
+   * .google.gwt.event.dom.client.MouseUpHandler)
+   */
+  public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+    return button.addMouseUpHandler(handler);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.event.dom.client.HasMouseWheelHandlers#addMouseWheelHandler
+   * (com.google.gwt.event.dom.client.MouseWheelHandler)
+   */
+  public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
+    return button.addMouseWheelHandler(handler);
+  }
+
+  @Deprecated
+  public void addMouseWheelListener(MouseWheelListener listener) {
+    button.addMouseWheelListener(listener);
+  }
+
+  /**
+   * Programmatic equivalent of the user clicking the button.
+   */
+  public void click() {
+    ButtonElement elem = button.getElement().cast();
+    elem.click();
   }
 
   /*
@@ -341,33 +585,8 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     return button.getHTML();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String)
-   */
-  public void setHTML(String html) {
-    button.setHTML(html);
-    invalidate();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasText#getText()
-   */
-  public String getText() {
-    return button.getText();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
-   */
-  public void setText(String text) {
-    button.setText(text);
-    invalidate();
+  public PopupMenu getMenu() {
+    return button.getMenu();
   }
 
   /*
@@ -379,77 +598,21 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     return button.getName();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String)
-   */
-  public void setName(String name) {
-    button.setName(name);
-  }
-
-  public void addClickListener(ClickListener listener) {
-    button.addClickListener(listener);
-  }
-
-  public void removeClickListener(ClickListener listener) {
-    button.removeClickListener(listener);
-  }
-
-  public void addFocusListener(FocusListener listener) {
-    button.addFocusListener(listener);
-  }
-
-  public void removeFocusListener(FocusListener listener) {
-    button.removeFocusListener(listener);
+  public ToolButtonStyle getStyle() {
+    return button.getStyle();
   }
 
   public int getTabIndex() {
     return button.getTabIndex();
   }
 
-  public void setAccessKey(char key) {
-    button.setAccessKey(key);
-  }
-
-  public void setFocus(boolean focused) {
-    button.setFocus(focused);
-  }
-
-  public void setTabIndex(int index) {
-    button.setTabIndex(index);
-  }
-
-  public void addKeyboardListener(KeyboardListener listener) {
-    button.addKeyboardListener(listener);
-  }
-
-  public void removeKeyboardListener(KeyboardListener listener) {
-    button.removeKeyboardListener(listener);
-  }
-
-  public void setEnabled(boolean enabled) {
-    button.setEnabled(enabled);
-  }
-
-  public boolean isEnabled() {
-    return button.isEnabled();
-  }
-
-  public ToolButtonStyle getStyle() {
-    return button.getStyle();
-  }
-
-  public void setStyle(ToolButtonStyle style) {
-    button.setStyle(style);
-  }
-
-  public PopupMenu getMenu() {
-    return button.getMenu();
-  }
-
-  public void setMenu(PopupMenu menu) {
-    button.setMenu(menu);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasText#getText()
+   */
+  public String getText() {
+    return button.getText();
   }
 
   /**
@@ -459,6 +622,47 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
    */
   public boolean isChecked() {
     return button.isChecked();
+  }
+
+  public boolean isEnabled() {
+    return button.isEnabled();
+  }
+
+  public void removeClickListener(ClickListener listener) {
+    button.removeClickListener(listener);
+  }
+
+  @Deprecated
+  public void removeFocusListener(FocusListener listener) {
+    button.removeFocusListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.SourcesKeyboardEvents#removeKeyboardListener
+   * (com.google.gwt.user.client.ui.KeyboardListener)
+   */
+  @Deprecated
+  public void removeKeyboardListener(KeyboardListener listener) {
+    button.removeKeyboardListener(listener);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.google.gwt.user.client.ui.SourcesMouseEvents#removeMouseListener(com
+   * .google.gwt.user.client.ui.MouseListener)
+   */
+  @Deprecated
+  public void removeMouseListener(MouseListener listener) {
+    button.removeMouseListener(listener);
+  }
+
+  public void setAccessKey(char key) {
+    button.setAccessKey(key);
   }
 
   /**
@@ -471,6 +675,65 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
         || button.getStyle() == ToolButtonStyle.RADIO) {
       button.setChecked(checked);
     }
+  }
+
+  public void setEnabled(boolean enabled) {
+    button.setEnabled(enabled);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.Focusable#setFocus(boolean)
+   */
+  public void setFocus(boolean focused) {
+    button.setFocus(focused);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String)
+   */
+  public void setHTML(String html) {
+    button.setHTML(html);
+    invalidate();
+  }
+
+  public void setMenu(PopupMenu menu) {
+    button.setMenu(menu);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String)
+   */
+  public void setName(String name) {
+    button.setName(name);
+  }
+
+  public void setStyle(ToolButtonStyle style) {
+    button.setStyle(style);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.Focusable#setTabIndex(int)
+   */
+  public void setTabIndex(int index) {
+    button.setTabIndex(index);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
+   */
+  public void setText(String text) {
+    button.setText(text);
+    invalidate();
   }
 
 }

@@ -24,11 +24,17 @@ import org.gwt.mosaic.ui.client.WidgetWrapper;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * A border layout lays out a {@link LayoutPanel}, arranging and resizing its
@@ -205,14 +211,26 @@ public class BorderLayout extends BaseLayout {
 
   private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
 
+  abstract class MyTimer extends Timer {
+    protected LayoutPanel layoutPanel;
+
+    public void schedule(LayoutPanel layoutPanel, int delayMillis) {
+      this.layoutPanel = layoutPanel;
+      super.schedule(delayMillis);
+    }
+  };
+
   private ImageButton northCollapsedImageButton;
   private ImageButton southCollapsedImageButton;
   private ImageButton westCollapsedImageButton;
   private ImageButton eastCollapsedImageButton;
 
-  private Widget placeHolder;
+  private GlassPanel northGlassPanel;
+  private GlassPanel southGlassPanel;
+  private GlassPanel westGlassPanel;
+  private GlassPanel eastGlassPanel;
 
-  private boolean runTwiceFlag;
+  private Widget placeHolder;
 
   // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
   // Dimension>();
@@ -246,7 +264,7 @@ public class BorderLayout extends BaseLayout {
    * .client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
-    final Dimension result = new Dimension();
+    final Dimension result = new Dimension(0, 0);
 
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
@@ -446,8 +464,6 @@ public class BorderLayout extends BaseLayout {
       int top = paddings[0];
       int bottom = top + height;
 
-      runTwiceFlag = false;
-
       if (north != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
@@ -470,27 +486,64 @@ public class BorderLayout extends BaseLayout {
           if (northCollapsedImageButton == null) {
             northCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseDown());
+            northCollapsedImageButton.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
             northCollapsedImageButton.addStyleName("NorthCollapsedImageButton");
-            northCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(northCollapsed, false);
-                layoutPanel.removeImpl(northCollapsedImageButton);
-                northCollapsedImageButton = null;
-                if (layoutData.hasDecoratorPanel()) {
-                  layoutData.decoratorPanel.setVisible(true);
+            northCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
+                if (!Element.is(event.getNativeEvent().getEventTarget())) {
+                  return;
                 }
-                northCollapsed.setVisible(true);
-                layoutPanel.layout();
-                return;
+                final Element elem = event.getNativeEvent().getEventTarget().cast();
+                if ("TD".equalsIgnoreCase(elem.getTagName())) {
+                  final Element collapsedElem;
+                  if (layoutData.hasDecoratorPanel()) {
+                    collapsedElem = layoutData.decoratorPanel.getElement();
+                  } else {
+                    collapsedElem = northCollapsed.getElement();
+                  }
+
+                  // layoutData.floatting = true;
+                  if (northGlassPanel == null) {
+                    northGlassPanel = createGlassPanelForACollapsedElement(
+                        layoutPanel, northCollapsed, collapsedElem);
+                  }
+                  RootPanel.get().add(northGlassPanel, 0, 0);
+
+                  DOM.setStyleAttribute(collapsedElem, "zIndex", ""
+                      + Integer.MAX_VALUE);
+
+                  layoutPanel.setCollapsed(northCollapsed, false);
+                  // layoutPanel.removeImpl(westCollapsedImageButton);
+                  // westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  northCollapsed.setVisible(true);
+
+                  layoutPanel.layout();
+
+                } else {
+                  layoutPanel.setCollapsed(northCollapsed, false);
+                  layoutPanel.removeImpl(northCollapsedImageButton);
+                  northCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  northCollapsed.setVisible(true);
+                  layoutPanel.layout();
+                  return;
+                }
               }
             });
             layoutPanel.addImpl(northCollapsedImageButton);
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.decoratorPanel.setVisible(false);
-            }
-            northCollapsed = north;
-            north.setVisible(false);
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            layoutData.decoratorPanel.setVisible(false);
+          }
+          northCollapsed = north;
+          north.setVisible(false);
+
           h = WidgetHelper.getPreferredSize(northCollapsedImageButton).height;
           WidgetHelper.setBounds(layoutPanel, northCollapsedImageButton, left,
               top, Math.max(0, right - left), h);
@@ -498,7 +551,6 @@ public class BorderLayout extends BaseLayout {
 
           if (layoutData.preferredSize == -1.0) {
             h = WidgetHelper.getPreferredSize(north).height;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             h = (int) (height * layoutData.preferredSize);
@@ -522,11 +574,16 @@ public class BorderLayout extends BaseLayout {
             h += decPanelBorderSize.height;
           }
           WidgetHelper.setBounds(layoutPanel, north, left, top, _width, _height);
-
-          // split bar
-          if (layoutData.resizable && northSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, northSplitBar, left, top + h,
-                Math.max(0, right - left), spacing);
+          if (northGlassPanel == null || !northGlassPanel.isAttached()) {
+            // split bar
+            if (layoutData.resizable && northSplitBar.isAttached()) {
+              WidgetHelper.setBounds(layoutPanel, northSplitBar, left, top + h,
+                  Math.max(0, right - left), spacing);
+            }
+          } else {
+            return;
+            // h =
+            // WidgetHelper.getPreferredSize(northCollapsedImageButton).height;
           }
         }
         top += (h + spacing);
@@ -555,33 +612,69 @@ public class BorderLayout extends BaseLayout {
             southCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseUp());
             southCollapsedImageButton.addStyleName("SouthCollapsedImageButton");
-            southCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(southCollapsed, false);
-                layoutPanel.removeImpl(southCollapsedImageButton);
-                southCollapsedImageButton = null;
-                if (layoutData.hasDecoratorPanel()) {
-                  layoutData.decoratorPanel.setVisible(true);
+            southCollapsedImageButton.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
+            southCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
+                if (!Element.is(event.getNativeEvent().getEventTarget())) {
+                  return;
                 }
-                southCollapsed.setVisible(true);
-                layoutPanel.layout();
-                return;
+                final Element elem = event.getNativeEvent().getEventTarget().cast();
+                if ("TD".equalsIgnoreCase(elem.getTagName())) {
+                  final Element collapsedElem;
+                  if (layoutData.hasDecoratorPanel()) {
+                    collapsedElem = layoutData.decoratorPanel.getElement();
+                  } else {
+                    collapsedElem = southCollapsed.getElement();
+                  }
+
+                  // layoutData.floatting = true;
+                  if (southGlassPanel == null) {
+                    southGlassPanel = createGlassPanelForACollapsedElement(
+                        layoutPanel, southCollapsed, collapsedElem);
+                  }
+                  RootPanel.get().add(southGlassPanel, 0, 0);
+
+                  DOM.setStyleAttribute(collapsedElem, "zIndex", ""
+                      + Integer.MAX_VALUE);
+
+                  layoutPanel.setCollapsed(southCollapsed, false);
+                  // layoutPanel.removeImpl(westCollapsedImageButton);
+                  // westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  southCollapsed.setVisible(true);
+
+                  layoutPanel.layout();
+
+                } else {
+                  layoutPanel.setCollapsed(southCollapsed, false);
+                  layoutPanel.removeImpl(southCollapsedImageButton);
+                  southCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  southCollapsed.setVisible(true);
+                  layoutPanel.layout();
+                  return;
+                }
               }
             });
             layoutPanel.addImpl(southCollapsedImageButton);
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.decoratorPanel.setVisible(false);
-            }
-            southCollapsed = south;
-            south.setVisible(false);
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            layoutData.decoratorPanel.setVisible(false);
+          }
+          southCollapsed = south;
+          south.setVisible(false);
+
           h = WidgetHelper.getPreferredSize(southCollapsedImageButton).height;
           WidgetHelper.setBounds(layoutPanel, southCollapsedImageButton, left,
               Math.max(0, bottom - h), Math.max(0, right - left), h);
         } else {
           if (layoutData.preferredSize == -1.0) {
             h = WidgetHelper.getPreferredSize(south).height;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             h = (int) (height * layoutData.preferredSize);
@@ -609,12 +702,17 @@ public class BorderLayout extends BaseLayout {
 
           WidgetHelper.setBounds(layoutPanel, south, left, _top, _width,
               _height);
-
-          // split bar
-          if (layoutData.resizable && southSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, southSplitBar, left, Math.max(
-                0, bottom - h)
-                - spacing, Math.max(0, right - left), spacing);
+          if (southGlassPanel == null || !southGlassPanel.isAttached()) {
+            // split bar
+            if (layoutData.resizable && southSplitBar.isAttached()) {
+              WidgetHelper.setBounds(layoutPanel, southSplitBar, left,
+                  Math.max(0, bottom - h) - spacing, Math.max(0, right - left),
+                  spacing);
+            }
+          } else {
+            return;
+            // h =
+            // WidgetHelper.getPreferredSize(southCollapsedImageButton).height;
           }
         }
         bottom -= (h + spacing);
@@ -643,33 +741,69 @@ public class BorderLayout extends BaseLayout {
             westCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseRight());
             westCollapsedImageButton.addStyleName("WestCollapsedImageButton");
-            westCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(westCollapsed, false);
-                layoutPanel.removeImpl(westCollapsedImageButton);
-                westCollapsedImageButton = null;
-                if (layoutData.hasDecoratorPanel()) {
-                  layoutData.decoratorPanel.setVisible(true);
+            westCollapsedImageButton.setVerticalAlignment(HasAlignment.ALIGN_TOP);
+            westCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
+                if (!Element.is(event.getNativeEvent().getEventTarget())) {
+                  return;
                 }
-                westCollapsed.setVisible(true);
-                layoutPanel.layout();
-                return;
+                final Element elem = event.getNativeEvent().getEventTarget().cast();
+                if ("TD".equalsIgnoreCase(elem.getTagName())) {
+                  final Element collapsedElem;
+                  if (layoutData.hasDecoratorPanel()) {
+                    collapsedElem = layoutData.decoratorPanel.getElement();
+                  } else {
+                    collapsedElem = westCollapsed.getElement();
+                  }
+
+                  // layoutData.floatting = true;
+                  if (westGlassPanel == null) {
+                    westGlassPanel = createGlassPanelForACollapsedElement(
+                        layoutPanel, westCollapsed, collapsedElem);
+                  }
+                  RootPanel.get().add(westGlassPanel, 0, 0);
+
+                  DOM.setStyleAttribute(collapsedElem, "zIndex", ""
+                      + Integer.MAX_VALUE);
+
+                  layoutPanel.setCollapsed(westCollapsed, false);
+                  // layoutPanel.removeImpl(westCollapsedImageButton);
+                  // westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  westCollapsed.setVisible(true);
+
+                  layoutPanel.layout();
+
+                } else {
+                  layoutPanel.setCollapsed(westCollapsed, false);
+                  layoutPanel.removeImpl(westCollapsedImageButton);
+                  westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  westCollapsed.setVisible(true);
+                  layoutPanel.layout();
+                  return;
+                }
               }
             });
             layoutPanel.addImpl(westCollapsedImageButton);
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.decoratorPanel.setVisible(false);
-            }
-            westCollapsed = west;
-            west.setVisible(false);
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            layoutData.decoratorPanel.setVisible(false);
+          }
+          westCollapsed = west;
+          west.setVisible(false);
+
           w = WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
           WidgetHelper.setBounds(layoutPanel, westCollapsedImageButton, left,
               top, w, Math.max(0, bottom - top));
         } else {
           if (layoutData.preferredSize == -1.0) {
             w = WidgetHelper.getPreferredSize(west).width;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             w = (int) (width * layoutData.preferredSize);
@@ -694,11 +828,16 @@ public class BorderLayout extends BaseLayout {
           }
 
           WidgetHelper.setBounds(layoutPanel, west, left, top, _width, _height);
-
-          // split bar
-          if (layoutData.resizable && westSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
-                spacing, Math.max(0, bottom - top));
+          if (westGlassPanel == null || !westGlassPanel.isAttached()) {
+            // split bar
+            if (layoutData.resizable && westSplitBar.isAttached()) {
+              WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
+                  spacing, Math.max(0, bottom - top));
+            }
+          } else {
+            return;
+            // w =
+            // WidgetHelper.getPreferredSize(westCollapsedImageButton).width;
           }
         }
         left += (w + spacing);
@@ -727,33 +866,69 @@ public class BorderLayout extends BaseLayout {
             eastCollapsedImageButton = new ImageButton(
                 Caption.IMAGES.toolCollapseLeft());
             eastCollapsedImageButton.addStyleName("EastCollapsedImageButton");
-            eastCollapsedImageButton.addClickListener(new ClickListener() {
-              public void onClick(Widget sender) {
-                layoutPanel.setCollapsed(eastCollapsed, false);
-                layoutPanel.removeImpl(eastCollapsedImageButton);
-                eastCollapsedImageButton = null;
-                if (layoutData.hasDecoratorPanel()) {
-                  layoutData.decoratorPanel.setVisible(true);
+            eastCollapsedImageButton.setVerticalAlignment(HasAlignment.ALIGN_TOP);
+            eastCollapsedImageButton.addClickHandler(new ClickHandler() {
+              public void onClick(ClickEvent event) {
+                if (!Element.is(event.getNativeEvent().getEventTarget())) {
+                  return;
                 }
-                eastCollapsed.setVisible(true);
-                layoutPanel.layout();
-                return;
+                final Element elem = event.getNativeEvent().getEventTarget().cast();
+                if ("TD".equalsIgnoreCase(elem.getTagName())) {
+                  final Element collapsedElem;
+                  if (layoutData.hasDecoratorPanel()) {
+                    collapsedElem = layoutData.decoratorPanel.getElement();
+                  } else {
+                    collapsedElem = eastCollapsed.getElement();
+                  }
+
+                  // layoutData.floatting = true;
+                  if (eastGlassPanel == null) {
+                    eastGlassPanel = createGlassPanelForACollapsedElement(
+                        layoutPanel, eastCollapsed, collapsedElem);
+                  }
+                  RootPanel.get().add(eastGlassPanel, 0, 0);
+
+                  DOM.setStyleAttribute(collapsedElem, "zIndex", ""
+                      + Integer.MAX_VALUE);
+
+                  layoutPanel.setCollapsed(eastCollapsed, false);
+                  // layoutPanel.removeImpl(eastCollapsedImageButton);
+                  // westCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  eastCollapsed.setVisible(true);
+
+                  layoutPanel.layout();
+
+                } else {
+                  layoutPanel.setCollapsed(eastCollapsed, false);
+                  layoutPanel.removeImpl(eastCollapsedImageButton);
+                  eastCollapsedImageButton = null;
+                  if (layoutData.hasDecoratorPanel()) {
+                    layoutData.decoratorPanel.setVisible(true);
+                  }
+                  eastCollapsed.setVisible(true);
+                  layoutPanel.layout();
+                  return;
+                }
               }
             });
             layoutPanel.addImpl(eastCollapsedImageButton);
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.decoratorPanel.setVisible(false);
-            }
-            eastCollapsed = east;
-            east.setVisible(false);
           }
+
+          if (layoutData.hasDecoratorPanel()) {
+            layoutData.decoratorPanel.setVisible(false);
+          }
+          eastCollapsed = east;
+          east.setVisible(false);
+
           w = WidgetHelper.getPreferredSize(eastCollapsedImageButton).width;
           WidgetHelper.setBounds(layoutPanel, eastCollapsedImageButton,
               Math.max(0, right - w), top, w, Math.max(0, bottom - top));
         } else {
           if (layoutData.preferredSize == -1.0) {
             w = WidgetHelper.getPreferredSize(east).width;
-            runTwiceFlag = true;
           } else if (layoutData.preferredSize > 0.0
               && layoutData.preferredSize <= 1.0) {
             w = (int) (width * layoutData.preferredSize);
@@ -779,12 +954,17 @@ public class BorderLayout extends BaseLayout {
             w += decPanelBorderSize.width;
           }
           WidgetHelper.setBounds(layoutPanel, east, _left, top, _width, _height);
-
-          // split bar
-          if (layoutData.resizable && eastSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, eastSplitBar, Math.max(0, right
-                - w)
-                - spacing, top, spacing, Math.max(0, bottom - top));
+          if (eastGlassPanel == null || !eastGlassPanel.isAttached()) {
+            // split bar
+            if (layoutData.resizable && eastSplitBar.isAttached()) {
+              WidgetHelper.setBounds(layoutPanel, eastSplitBar, Math.max(0,
+                  right - w)
+                  - spacing, top, spacing, Math.max(0, bottom - top));
+            }
+          } else {
+            return;
+            // w =
+            // WidgetHelper.getPreferredSize(eastCollapsedImageButton).width;
           }
         }
         right -= (w + spacing);
@@ -810,9 +990,21 @@ public class BorderLayout extends BaseLayout {
     }
   }
 
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
+  private GlassPanel createGlassPanelForACollapsedElement(
+      final LayoutPanel layoutPanel, final Widget widget, final Element elem) {
+    GlassPanel glassPanel = new GlassPanel(true) {
+      @Override
+      protected void onUnload() {
+        if (widget.isAttached()) {
+          DOM.setStyleAttribute(elem, "zIndex", "");
+          layoutPanel.setCollapsed(widget, true);
+          layoutPanel.layout();
+        }
+        super.onUnload();
+      }
+    };
+    glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+    return glassPanel;
   }
 
   private void scanForPanels(LayoutPanel layoutPanel) {
@@ -888,6 +1080,20 @@ public class BorderLayout extends BaseLayout {
           final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
           layoutData.collapse = collapse;
           layoutData.fireCollapsedChange(widget);
+        }
+        if (collapse) {
+          if (northGlassPanel != null && northGlassPanel.isAttached()) {
+            northGlassPanel.removeFromParent();
+          }
+          if (southGlassPanel != null && southGlassPanel.isAttached()) {
+            southGlassPanel.removeFromParent();
+          }
+          if (westGlassPanel != null && westGlassPanel.isAttached()) {
+            westGlassPanel.removeFromParent();
+          }
+          if (eastGlassPanel != null && eastGlassPanel.isAttached()) {
+            eastGlassPanel.removeFromParent();
+          }
         }
       };
     } catch (Exception e) {

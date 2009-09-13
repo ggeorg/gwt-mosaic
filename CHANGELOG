@@ -1,8 +1,130 @@
-Change log for v0.1.10
+Change log for v0.2.3
 ================================
 
- - Layout performance improvements (see: 0.20)
- - Aegean theme (see: 0.20)
+ - (Added) ApplicationResources
+ - (Bug Fix) ChangeEvent is fired on each call to ComboBoxBase.updateInput()
+ - (Update) z-index for PopupPanel/DecoratedPopupPanel set to Integer.MAX_VALUE
+ - (Bug Fix) zIndex NULL value fix (WindowPanel bug)
+ - (Update) Transition animation for FillLayout and Showcase demo
+ - (Added) RowHighlightHandler to ListBox
+ - (Upgrade) gwtx-1.5-20081919 to gwtx-1.5.2.jar
+ - (Added) ie8 support
+ - (Added) Application Framework & PageBus classes
+ - (Update) Replacement of gwt-incubator DatePicker to the GWT DatePicker. Removing gwt-incubator styles from mosaic themes removing deprecated API.
+ - (Added) DisclosureLayoutPanel
+ - (Upgrade) gwt-dnd 2.6.2 to 2.6.5
+ - (Upgrade) removing deprecated GWT API call (PopupListener)
+ - (Added) BorderLayout: collapsed panels can expand to fixed & float modes.
+ - (Update) aligment support for ImageButton
+ - (Added) TIBCO PageBus 1.2.0 new Store/Query demo
+ - (Added) LiveTable.reload() method
+ - (Bug Fix) java.lang.IndexOutOfBoundsException in LiveTable demo
+ 
+Change log for v0.2.2
+================================
+
+ - (Update) Label & HTML renamed to TextLabel & HTMLLabel
+ - (Added) new Showcase demo for WindowPanel & FormLayout
+ 	http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwFormDialog
+ - (Bug Fix) Separator on IE6 fix and all FormLayout alignment problems
+ - (Update) DefaultFormBuilder & PanelBuilder use LayoutPanel and not ScrollLayoutPanel as default panel
+ - (Added) set/getLabelFor() added to TextLabel & HTMLLabel widgets (used by the FormLayout builders)
+ - (Bug Fix) Temporary fix for Issue 59 (Window panel going to left-top a moment, when dragging)
+ - (Bug Fix) MessageBox text rendering fix
+ - (Update) KeyboardListener.KEY_ESCAPE replaced by KeyCodes.KEY_ESCAPE
+ - (Bug Fix) MessageBox flashing fix (this is more a workaround since a PopupPanel with a scrollbar is 
+    flashing in FireFox). To see the effect just comapre "Login Form" and "RichTextArea Prompt" in
+    http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwMessageBox
+    ("RichTextArea Prompt" has a overflow=auto attribute).
+ - (Update) Glasspanel used by showModal() has now "opacity: 0.1"
+ - (Update) null parameters in ActionBindings throw IllegalArgumentException
+ - (Update) BoxLayout.setOrient() @deprecated method removed
+ - (Added) Table & LiveTable widgets + demos
+ 	http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwSimpleTable
+    http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwLiveTable
+ - (Update) DOM.toPixelSize(finalString width) changed to DOM.toPixelSize(final String value, final boolean useWidthAttribute)
+ - (Upgrade) gwt-incubator (trunk) r1673->r1684
+ - (Update) gwt-dnd 2.6.2 patch removed
+ - (Upgrade) gwt-beans-binding 0.2.3 -> 0.2.4
+ - (Bug Fix) GridLayout & FillLayout for GridLayoutData(GridLayoutData.ALIGN_LEFT, GridLayoutData.ALIGN_TOP)) e.g. layoutPanel.add([a LayoutPanel based widget], new
+FillLayoutData(FillLayoutData.ALIGN_LEFT, FillLayoutData.ALIGN_TOP));
+ - (Update) (Update) ImageButton.click() removed (public void click() works only for ButtonElements)
+ - (Update) WindowPanel class splitted into: WindowPanel, DesktopPanel & DesktopManager (the last two are similar to swing's JDesktopPane &
+DesktopManager).
+ - (Update) Making ResizableWidget optional (LayoutPanel)
+ - (Update) StackLayoutPanel.getCaption() added & ClickListener replaced by ClickHandler
+ - (Update) WidgetHelper API changes:
+ 	http://code.google.com/p/gwt-mosaic/source/detail?r=900
+ - (Update) WindowPanel CloseHandler & WindowClosingHandler update
+ - (Bug Fix) endless loop in TabLayoutPanel.iterator()
+ - (Bug Fix) Issue 51: WindowPanel leaks (partial fix)
+ - (Bug Fix) ImageButton leaks memory
+
+Change log for v0.2.1
+================================
+
+ - (Bug Fix) Issue 51: WindowPanel leaks
+ - (Bug Fix) GWT Incubator IE column width bug in ScrollTable if colum count=1
+ 	patch: 
+ - (Upgrade) GWT Incubator r1670->r1673
+ - (Update) ListBox API update
+ - (Added) New ListBox demo (Rich ListBox)
+ 	demo: http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwRichListBox
+ - (Update) gwt-dnd-2.6.2 patched because of Issue 51
+ 	patch: 
+ - (Added) FilterProxyListModel & demo
+ 	demo: http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwFilterListBox
+ - (Update) New DefaultListModel implementation based on org.gwt.beansbinding.observablecollections.client.ObservableList
+ - (Update) New GWT Mosaic logo in Showcase
+ - (Update) more constructors for Viewport, LayoutComposite & LayoutPanel
+ - (Update) Hash code calculation changed for Dimension & Insets class & javadoc
+ - (Update) New TabLayoutPanel demo
+ 	demo: http://69.20.122.77/gwt-mosaic-current/Showcase.html#CwDynamicTabLayoutPanel
+ - (Update) IE8 set to IE7 mode
+ 	diff: http://code.google.com/p/gwt-mosaic/source/diff?spec=svn860&r=860&format=side&path=/branches/GWT-1.6/war/Showcase.html
+ - (Bug Fix) TabLayoutPanel with no tabs
+ - (Update) ListBox styles
+ - (Update) Removed styles for even & odd rows in the PagingScrollTable demos
+ - (Update) Aegean theme update with Cameron's ScrollTable styles
+ - (Update) Aegean theme ported to IE6
+ - (Bug Fix) Issue 50: DefaultComboBoxModel setSelectedItem throws IndexOutOfBoundException
+
+Change log for v0.2.0
+================================
+
+ - (Update) Layout management updates (layout management is even faster than 0.2.0-rc3)
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=831
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=827
+ - (Update) WindowPanel.showModal() without a DeferredCommand for WindowPanel.center()
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=824
+ - (Bug Fix) http://code.google.com/p/gwt-mosaic/source/detail?r=823
+ - (Update) Animation type for WindowPanel is set to CENTER
+	http://code.google.com/p/gwt-mosaic/source/detail?r=822
+ - (Bug Fix)  Issue 48 : persistence.xml in mosaic.jar leads to deployment errors on
+EE5 servers
+ - gwt-incubator upgrade (r1624 -> r1650)
+ - (Update) DOMImplIE6 update and DOM.getStyleAttribute renamed to DOM.getComputedStyleAttribute
+
+Change log for v0.2.0-rc3
+================================
+
+ - More FillLayout demos
+ - Layout management update
+ - Separator CSS changes
+ - gwt-dnd 2.6.0->2.6.2
+ - Vitali Lovich <vlovich@gmail.com>'s patch (part I) for LayoutPanel
+ - GWT Incubator gen2 TimePicker
+ - port to GWT 1.6 (part III)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part II)
+
+Change log for v0.2.0-rc1
+================================
+
+ - port to GWT 1.6 (part I)
 
 Change log for v0.1.9
 ================================
@@ -44,36 +166,6 @@ Change log for v0.1.9
 binding/source/detail?r=43
  - Fix for: Issue 35: Cannot use getWidgetIndex or  remove(Widget widget) in TabLayoutPanel
  - Actions API update because of layout changes  & Core modele cleanup
-
-Change log for v0.1.8
-================================
-
- - Actions API: Missing onUnBind() call in ActionBindings.unbind() added (bug fix) &
- 	more new CommandActions.
- - Fix for: http://groups.google.com/group/gwt-mosaic/browse_thread/thread/70739de5684bad14
- - AbsoluteLayout: new layout manager, thanks to Johan Rydberg 
- - Alignment support for FillLayout, BoxLayout and GridLayout.
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwBoxLayoutTest_Horizontal
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwBoxLayoutTest_Vertical
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwBoxLayoutTest_Histogram
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwGridLayout
- - Fix for: Issue 34 : Unable to get index position of tabs in TabLayoutPanel.
- - Fix for: Issue 11 : Content of MessageBox doesn't fit into the MessageBox in 
- 	IE6, Safari and Opera.
- - ListBox: intervalRemoved() bug fixed & changeListener improvements
- - DefaultListModel improvements
- - New widget: LoadingPanel
- 	http://groups.google.com/group/gwt-mosaic/browse_thread/thread/cdb4cdb0376031f9
- - Fix for: Issue 39 : [Patch] ToolButton as checkbox or radio not working
- - gwt-beans-binding-0.2.3 upgrade from 0.2.2 (this upgrade will fix 
- 	issue 36, GWT Mosaic can be compiled now with GWT 1.6)
- - FormLayout very powerful layout manager port (optional module)
- 	23 Showcase demos are ported, see Forms section:
- 	http://69.20.122.77/gwt-mosaic/Showcase.html#CwQuickStartExample
- 	The old forms API is moved to org.gwt.mosaic.ui.client.layouts.builder package.
- - New Contrib module with two contributions:
- 	1. MessageTextBox, thanks to Daniele Renda
- 	2. PopupMenu with addDisabledItem(), thanks to Alejandro D. Garin
 
 Change log for v0.1.7
 ================================

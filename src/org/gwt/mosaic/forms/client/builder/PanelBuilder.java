@@ -44,17 +44,16 @@
  */
 package org.gwt.mosaic.forms.client.builder;
 
-import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.forms.client.factories.DefaultWidgetFactory;
 import org.gwt.mosaic.forms.client.factories.WidgetFactory;
 import org.gwt.mosaic.forms.client.layout.CellConstraints;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
-import org.gwt.mosaic.ui.client.Label;
-import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.Separator;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 
-import com.google.gwt.dev.jjs.ast.JLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
@@ -127,7 +126,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * @param layout the FormLayout to use
    */
   public PanelBuilder(FormLayout layout) {
-    this(layout, new ScrollLayoutPanel());
+    this(layout, new LayoutPanel(new BoxLayout(Orientation.VERTICAL)));
   }
 
   /**
@@ -237,10 +236,10 @@ public class PanelBuilder extends AbstractFormBuilder {
    * 
    * @see WidgetFactory
    */
-  public final Label addLabel(String textWithMnemonic,
+  public final TextLabel addLabel(String textWithMnemonic,
       CellConstraints constraints) {
-    Label label = getComponentFactory().createLabel(textWithMnemonic);
-    DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
+    TextLabel label = getComponentFactory().createLabel(textWithMnemonic);
+    // XXX DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     add(label, constraints);
     return label;
   }
@@ -324,7 +323,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * @see JLabel#setLabelFor(java.awt.Component)
    * @see DefaultFormBuilder
    */
-  public final Label add(Label label, CellConstraints labelConstraints,
+  public final TextLabel add(TextLabel label, CellConstraints labelConstraints,
       Widget component, CellConstraints componentConstraints) {
     if (labelConstraints == componentConstraints)
       throw new IllegalArgumentException(
@@ -395,7 +394,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * @see WidgetFactory
    * @see DefaultFormBuilder
    */
-  public final Label addLabel(String textWithMnemonic,
+  public final TextLabel addLabel(String textWithMnemonic,
       CellConstraints labelConstraints, Widget component,
       CellConstraints componentConstraints) {
 
@@ -405,7 +404,7 @@ public class PanelBuilder extends AbstractFormBuilder {
               + "one for the label and one for the component.\n"
               + "Consider using #clone(). See the JavaDocs for details.");
 
-    Label label = addLabel(textWithMnemonic, labelConstraints);
+    TextLabel label = addLabel(textWithMnemonic, labelConstraints);
     add(component, componentConstraints);
     // XXX label.setLabelFor(component);
     return label;
@@ -430,7 +429,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * 
    * @see WidgetFactory
    */
-  public final Label addTitle(String textWithMnemonic) {
+  public final TextLabel addTitle(String textWithMnemonic) {
     return addTitle(textWithMnemonic, cellConstraints());
   }
 
@@ -452,9 +451,9 @@ public class PanelBuilder extends AbstractFormBuilder {
    * 
    * @see WidgetFactory
    */
-  public final Label addTitle(String textWithMnemonic,
+  public final TextLabel addTitle(String textWithMnemonic,
       CellConstraints constraints) {
-    Label titleLabel = null;// XXX
+    TextLabel titleLabel = null;// XXX
     // getComponentFactory().createTitle(textWithMnemonic);
     add(titleLabel, constraints);
     return titleLabel;
@@ -478,7 +477,7 @@ public class PanelBuilder extends AbstractFormBuilder {
    * 
    * @see WidgetFactory
    */
-  public final Label addTitle(String textWithMnemonic, String encodedConstraints) {
+  public final TextLabel addTitle(String textWithMnemonic, String encodedConstraints) {
     return addTitle(textWithMnemonic, new CellConstraints(encodedConstraints));
   }
 

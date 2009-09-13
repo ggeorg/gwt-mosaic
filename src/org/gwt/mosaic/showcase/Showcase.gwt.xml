@@ -16,14 +16,18 @@
 <!-- limitations under the License.                                         -->
 <!--                                                                        -->
 
-<module>
+<module rename-to="showcase">
 
 	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
 	<inherits name='org.gwt.mosaic.forms.Forms' />
-
-	<!-- Includes the public resources used by the GWT Mosaic       -->
+	<inherits name='org.gwt.mosaic.pagebus.PageBus' />
+	
+	<!-- Inherit the complex panel code for FastTree                -->
+	<inherits name='com.google.gwt.gen2.complexpanel.ComplexPanel' />
+	
+	<!-- Includes the public resources used by the GWT Mosaic       --> 
 	<!-- themes. Those files do not inject a style sheet into the   -->
 	<!-- application.                                               -->
 	<inherits name='org.gwt.mosaic.theme.standard.StandardResources' />
@@ -44,7 +48,8 @@
 	<set-property name="gwt.enableDebugId" value="true" />
 
 	<!-- Use a generator to create the source code                  -->
-	<generate-with class="org.gwt.mosaic.showcase.generator.ShowcaseGenerator">
+	<generate-with
+		class="org.gwt.mosaic.showcase.generator.ShowcaseGenerator">
 		<when-type-assignable
 			class="org.gwt.mosaic.showcase.client.Showcase.GeneratorInfo" />
 	</generate-with>
@@ -52,18 +57,12 @@
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='org.gwt.mosaic.showcase.client.Showcase' />
 
-	<!-- Define the RPC service -->
-	<servlet path="/datasource"
-		class="org.gwt.mosaic.showcase.server.DataSourceServiceImpl" />
-	<servlet path="/customerService"
-		class="org.gwt.mosaic.showcase.server.CustomerServiceImpl" />
-
 	<!-- Internationalization support. -->
 	<extend-property name="locale" values="en" />
+	<!-- 
 	<extend-property name="locale" values="ar" />
 	<extend-property name="locale" values="el" />
 	<extend-property name="locale" values="fr" />
 	<extend-property name="locale" values="zh" />
-	<extend-property name="locale" values="pt_BR" />
-
+	 -->
 </module>

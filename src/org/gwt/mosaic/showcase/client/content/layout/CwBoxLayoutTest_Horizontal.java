@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -63,8 +63,7 @@ public class CwBoxLayoutTest_Horizontal extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new ScrollLayoutPanel(new BoxLayout());
-    ((BoxLayout)layoutPanel.getLayout()).setAlignment(Alignment.CENTER);
+    final LayoutPanel layoutPanel = new ScrollLayoutPanel(new BoxLayout(Alignment.CENTER));
 
     final Button b1 = new Button("Width: float<br>Height: float");
     final Button b2 = new Button("Width: float<br>Height: 25%");

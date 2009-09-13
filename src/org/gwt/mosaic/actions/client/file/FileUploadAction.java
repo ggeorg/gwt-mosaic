@@ -42,7 +42,7 @@ public final class FileUploadAction extends CommandAction {
   public FileUploadAction(FileUploadCommand command) {
     super(ACTION_CONSTANTS.fileUploadName(),
         ACTION_IMAGES.file_upload_action(), command);
-    putValue(Action.SHORT_DESCRIPTION, ACTION_CONSTANTS.fileUploadDescription());
+    putValue(Action.SHORT_DESCRIPTION, ACTION_CONSTANTS.fileUploadShortDescription());
   }
 
 }

@@ -49,6 +49,7 @@ import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
@@ -92,9 +93,10 @@ public class CwButtonOrderExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    FormLayout layout = new FormLayout("right:pref:grow, 4dlu, pref");
-    DefaultFormBuilder rowBuilder = new DefaultFormBuilder(layout);
+    final FormLayout layout = new FormLayout("right:pref:grow, 4dlu, pref");
+    DefaultFormBuilder rowBuilder = new DefaultFormBuilder(layout, new ScrollLayoutPanel());
     // rowBuilder.setDefaultDialogBorder();
+    rowBuilder.getPanel().setPadding(5);
 
     rowBuilder.appendSeparator("Left to Right");
     rowBuilder.append("Ordered:",
