@@ -93,22 +93,23 @@ public abstract class Application extends AbstractBean {
    * @see #shutdown()
    */
   public static synchronized <T extends Application> void launch(
-      final T application, ApplicationConstants constants,
-      ApplicationImageBundle imageBundle) {
-    
+      final T application, ApplicationResources resources) {
+
     Application.application = application;
     ApplicationContext context = application.getContext();
-    
-    if (constants == null) {
-      constants = (ApplicationConstants) GWT.create(ApplicationConstants.class);
+
+    if (resources.getApplicationConstants() == null) {
+      context.setConstants((ApplicationConstants) GWT.create(ApplicationConstants.class));
+    } else {
+      context.setConstants(resources.getApplicationConstants());
     }
-    context.setConstants(constants);
-    
-    if (imageBundle == null) {
-      imageBundle = (ApplicationImageBundle) GWT.create(ApplicationImageBundle.class);
+
+    if (resources.getApplicationImageBundle() == null) {
+      context.setImageBundle((ApplicationImageBundle) GWT.create(ApplicationImageBundle.class));
+    } else {
+      context.setImageBundle(resources.getApplicationImageBundle());
     }
-    context.setImageBundle(imageBundle);
-    
+
     ApplicationFramework applicationFramework = GWT.create(ApplicationFramework.class);
     applicationFramework.setupActions();
 
@@ -129,7 +130,15 @@ public abstract class Application extends AbstractBean {
 
   public static synchronized <T extends Application> void launch(
       final T application) {
-    launch(application, null, null);
+    launch(application, new ApplicationResources() {
+      public ApplicationConstants getApplicationConstants() {
+        return (ApplicationConstants) GWT.create(ApplicationConstants.class);
+      }
+
+      public ApplicationImageBundle getApplicationImageBundle() {
+        return (ApplicationImageBundle) GWT.create(ApplicationImageBundle.class);
+      }
+    });
   }
 
   private final ApplicationContext context;
@@ -142,7 +151,7 @@ public abstract class Application extends AbstractBean {
    * public API, should be done in the {@link #startup()} method.
    */
   protected Application() {
-    context = new ApplicationContext();
+    context = GWT.create(ApplicationContext.class);
 
     /*
      * Initialize the ApplicationContext and application properties.
