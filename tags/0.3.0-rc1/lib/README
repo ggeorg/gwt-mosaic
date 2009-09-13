@@ -1,0 +1,5 @@
+Optional JARs (used by Showcase):
+=================================
+derby.jar
+toplink-essentials.jar
+toplink-essentials-agent.jar
