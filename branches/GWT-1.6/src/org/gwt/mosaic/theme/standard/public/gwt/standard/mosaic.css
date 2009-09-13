@@ -1073,6 +1073,12 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	z-index: 2147483647; /* Integer.MAX_VALUE */
 }
 
+/*** gwt-PopupPanel **/
+.gwt-PopupPanel,
+.gwt-DecoratedPopupPanel {
+	z-index: 2147483647; /* Integer.MAX_VALUE */
+}
+
 /*** mosaic-FormSeparator **/
 
 .mosaic-FormSeparator {
