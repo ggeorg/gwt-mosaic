@@ -4,10 +4,12 @@ import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.actions.client.ActionMap;
 import org.gwt.mosaic.actions.client.ButtonBindings;
 import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
+import org.gwt.mosaic.actions.client.ImageButtonBindings;
 import org.gwt.mosaic.actions.client.MenuItemBindings;
 import org.gwt.mosaic.actions.client.RadioButtonMenuItemBindings;
 import org.gwt.mosaic.actions.client.ToolButtonBindings;
 import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
@@ -36,6 +38,15 @@ public class ApplicationFramework {
       actionMap = Application.getInstance().getContext().getActionMap();
     }
     return actionMap;
+  }
+  
+  // ---
+  
+  public static ImageButton newImageButton(final String action) {
+    final ImageButtonBindings bindings = new ImageButtonBindings(getActionMap().get(action));
+    final ImageButton imageButton = (ImageButton) bindings.getTarget();
+    bindings.bind();
+    return imageButton;
   }
 
   // ---
@@ -108,4 +119,5 @@ public class ApplicationFramework {
     bindings.bind();
     return menuItem;
   }
+
 }

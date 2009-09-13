@@ -96,8 +96,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       // parentElem.removeChild(clonedElem);
       style.setProperty("position", "absolute");
 
-      Window.setTitle("" + result);
-
       return result;
     }
   }
