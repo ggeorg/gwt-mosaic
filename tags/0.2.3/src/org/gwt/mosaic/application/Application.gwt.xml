@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.4/distro-source/core/src/gwt-module.dtd">
+<module>
+	<inherits name='org.gwt.mosaic.Mosaic' />
+	<inherits name='org.gwt.mosaic.actions.Actions' />
+
+	<!-- Use a generator to handle @Action annotations. -->
+	<generate-with class="org.gwt.mosaic.application.rebind.ApplicationFrameworkGenerator">
+		<when-type-assignable
+			class="org.gwt.mosaic.application.client.util.ApplicationFramework" />
+	</generate-with>
+</module>
