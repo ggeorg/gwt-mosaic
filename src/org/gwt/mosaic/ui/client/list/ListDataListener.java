@@ -40,7 +40,7 @@ public interface ListDataListener extends EventListener {
    * The {@code event} argument can supply the indices for the range of items
    * added.
    * 
-   * @param event the event.
+   * @param event the event
    */
   void intervalAdded(ListDataEvent event);
 

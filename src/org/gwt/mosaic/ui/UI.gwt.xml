@@ -16,6 +16,9 @@
 
 <module>
 
+	<inherits
+		name='org.gwt.beansbinding.observablecollections.ObservableCollections' />
+
 	<!-- Opera has a different MouseWorker implementation -->
 	<replace-with
 		class="org.mosaic.ui.client.ColumnWidget.MouseResizeWorkerOpera">

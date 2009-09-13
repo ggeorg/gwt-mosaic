@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (C) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -30,10 +32,12 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -143,8 +147,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
     final TextBox rows = new TextBox();
     panel.add(rows, new BoxLayoutData(FillStyle.HORIZONTAL));
     rows.setText(numRows + "");
-    rows.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
+    rows.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
         numRows = Integer.parseInt(rows.getText().trim());
       }
     });
@@ -153,25 +157,24 @@ public class CwTableLoadingBenchmark extends ContentWidget {
         FillStyle.HORIZONTAL));
     final TextBox columns = new TextBox();
     panel.add(columns, new BoxLayoutData(FillStyle.HORIZONTAL));
-    columns.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
+    columns.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
         numColumns = Integer.parseInt(columns.getText());
       }
     });
     columns.setText(numColumns + "");
 
-    Button clearBtn = new Button("Clear Table now", new ClickListener() {
-      public void onClick(Widget sender) {
-        clearTable();
-      }
+    Button clearBtn = new Button("Clear Table now", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        clearTable();      }
     });
     panel.add(clearBtn, new BoxLayoutData(FillStyle.HORIZONTAL));
     panel.add(new HTML(
         "<em><small>Clearing will also happen if the buttons are clicked below</small></em><hr>"));
 
     Button flexTableAPI = new Button("Use the traditional FlexTable API",
-        new ClickListener() {
-          public void onClick(Widget sender) {
+        new ClickHandler() {
+          public void onClick(ClickEvent event) {
             clearTable();
             long milli = System.currentTimeMillis();
             FlexTable newTable = new FlexTable();
@@ -182,8 +185,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
     panel.add(flexTableAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button gridAPI = new Button("Use the traditional Grid API",
-        new ClickListener() {
-          public void onClick(Widget sender) {
+        new ClickHandler() {
+          public void onClick(ClickEvent event) {
             clearTable();
             long milli = System.currentTimeMillis();
             Grid newTable = new Grid();
@@ -195,20 +198,19 @@ public class CwTableLoadingBenchmark extends ContentWidget {
     panel.add(gridAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button detachedGridAPI = new Button("Use the attached Grid API",
-        new ClickListener() {
-          public void onClick(Widget sender) {
+        new ClickHandler() {
+          public void onClick(ClickEvent event) {
             clearTable();
             long milli = System.currentTimeMillis();
             Grid table = new Grid();
             usingGridAPI(table);
-            finishTable("Attached Grid API", table, milli);
-          }
+            finishTable("Attached Grid API", table, milli);          }
         });
     panel.add(detachedGridAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button asyncAPI = new Button("Use Async BulkLoadedTable API",
-        new ClickListener() {
-          public void onClick(Widget sender) {
+        new ClickHandler() {
+          public void onClick(ClickEvent event) {
             clearTable();
             long milli = System.currentTimeMillis();
             FlexTable table = new FlexTable();
@@ -218,8 +220,8 @@ public class CwTableLoadingBenchmark extends ContentWidget {
     panel.add(asyncAPI, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     Button pendingAPI = new Button("Using the preloadedTable  API",
-        new ClickListener() {
-          public void onClick(Widget sender) {
+        new ClickHandler() {
+          public void onClick(ClickEvent event) {
             clearTable();
             long milli = System.currentTimeMillis();
             PreloadedTable table = new PreloadedTable();
@@ -294,5 +296,5 @@ public class CwTableLoadingBenchmark extends ContentWidget {
       }
     }
   }
-
+  
 }

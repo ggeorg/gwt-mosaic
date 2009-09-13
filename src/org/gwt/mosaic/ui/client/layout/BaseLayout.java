@@ -17,8 +17,13 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.Insets;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -31,17 +36,83 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
 
-  protected int[] margins = {0, 0};
-  protected int[] paddings = {0, 0};
-  protected int[] borders = {0, 0};
-
   protected boolean initialized = false;
+
+  @Deprecated
+  protected int[] margins = {0, 0};
+  @Deprecated
+  protected int[] borders = {0, 0};
+  @Deprecated
+  protected int[] paddings = {0, 0};
+
+  protected static Dimension getPreferredSize(LayoutPanel layoutPanel,
+      Widget widget, LayoutData layoutData) {
+    // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
+    if (widget instanceof FormPanel) {
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && (child instanceof HasLayoutManager)) {
+        widget = child;
+      }
+    }
+    if (widget instanceof HasLayoutManager) {
+      final HasLayoutManager lp = (HasLayoutManager) widget;
+      return lp.getPreferredSize();
+    } else {
+
+      if (layoutData.preferredWidth != null
+          && layoutData.preferredHeight != null) {
+        return new Dimension(layoutPanel.toPixelSize(layoutData.preferredWidth,
+            true), layoutPanel.toPixelSize(layoutData.preferredHeight, false));
+      }
+
+      final Dimension result = new Dimension();
+
+      // final Element parentElem = layoutPanel.getElement();
+      final Element clonedElem = widget.getElement();// .cloneNode(true).cast();
+
+      final Style style = clonedElem.getStyle();
+      style.setProperty("position", "static");
+      // style.setProperty("visibility", "hidden");
+      // style.setProperty("width", "auto");
+      // style.setProperty("height", "auto");
+
+      // parentElem.appendChild(clonedElem);
+
+      if (layoutData.preferredWidth != null) {
+        result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
+      } else {
+        style.setProperty("width", "auto");
+        result.width = clonedElem.getOffsetWidth();
+      }
+
+      if (layoutData.preferredHeight != null) {
+        result.height = layoutPanel.toPixelSize(layoutData.preferredHeight,
+            false);
+      } else {
+        style.setProperty("height", "auto");
+        result.height = clonedElem.getOffsetHeight();
+      }
+
+      // parentElem.removeChild(clonedElem);
+      style.setProperty("position", "absolute");
+
+      return result;
+    }
+  }
+
+  protected void syncDecoratorVisibility(Widget child) {
+    LayoutData layoutData = (LayoutData) getLayoutData(child);
+    if (layoutData != null && layoutData.hasDecoratorPanel()) {
+      layoutData.decoratorPanel.setVisible(DOM.isVisible(child.getElement()));
+    }
+  }
 
   protected int getDecoratorFrameWidth(DecoratorPanel decPanel, Widget child) {
     return decPanel.getOffsetWidth() - child.getOffsetWidth();
   }
 
-  protected Dimension getDecoratorFrameSize(DecoratorPanel decPanel, Widget child) {
+  protected Dimension getDecoratorFrameSize(DecoratorPanel decPanel,
+      Widget child) {
     return new Dimension(decPanel.getOffsetWidth() - child.getOffsetWidth(),
         decPanel.getOffsetHeight() - child.getOffsetHeight());
   }
@@ -50,14 +121,22 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     return decPanel.getOffsetHeight() - child.getOffsetHeight();
   }
 
+  protected Insets insets = new Insets(0, 0, 0, 0);
+
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
-    borders = DOM.getBorderSizes(layoutPanel.getElement());
+    final Element layoutPanelElem = layoutPanel.getElement();
+    margins = DOM.getMarginSizes(layoutPanelElem);
+    borders = DOM.getBorderSizes(layoutPanelElem);
+    paddings = DOM.getPaddingSizes(layoutPanelElem);
+
+    insets.top = margins[0] + borders[0] + paddings[0];
+    insets.right = margins[1] + borders[1] + paddings[1];
+    insets.bottom = margins[2] + borders[2] + paddings[2];
+    insets.left = margins[3] + borders[3] + paddings[3];
 
     return true;
   }
@@ -87,21 +166,11 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
 
   /**
    * {@inheritDoc}
-   * <p>
-   * The default implementation returns {@code false}.
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#runTwice()
-   */
-  public boolean runTwice() {
-    return false;
-  }
-
-  /*
-   * (non-Javadoc)
    * 
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#flushCache()
    */
   public void flushCache() {
-    // Nothing to do here!
+    initialized = false;
   }
+
 }

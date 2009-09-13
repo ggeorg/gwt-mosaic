@@ -22,6 +22,7 @@ import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -79,24 +80,37 @@ public class WidgetHelper {
     }
   }
 
-  /**
-   * 
-   * @param widget
-   * @return
-   */
+  @Deprecated
   public static Dimension getPreferredSize(Widget widget) {
     // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
     if (widget instanceof FormPanel) {
-      final Widget _widget = ((FormPanel) widget).getWidget();
-      if (_widget != null && (_widget instanceof HasLayoutManager)) {
-        widget = _widget;
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && (child instanceof HasLayoutManager)) {
+        widget = child;
       }
     }
     if (widget instanceof HasLayoutManager) {
       final HasLayoutManager lp = (HasLayoutManager) widget;
       return lp.getPreferredSize();
     } else {
-      return getOffsetSize(widget);
+      final Element clonedElem = widget.getElement().cloneNode(true).cast();
+      final Element parentElem;
+      if (widget.getParent() instanceof DecoratorPanel) {
+        parentElem = widget.getParent().getParent().getElement();
+      } else {
+        parentElem = widget.getParent().getElement();
+      }
+      final Style style = clonedElem.getStyle();
+      style.setProperty("postion", "static");
+      style.setProperty("width", "auto");
+      style.setProperty("height", "auto");
+      style.setProperty("visibility", "hidden");
+      parentElem.appendChild(clonedElem);
+      final Dimension d = new Dimension(clonedElem.getOffsetWidth(),
+          clonedElem.getOffsetHeight());
+      parentElem.removeChild(clonedElem);
+      return d;
+      // return getOffsetSize(widget);
     }
   }
 
@@ -162,13 +176,33 @@ public class WidgetHelper {
    * @param y the new <i>y</i>-coordinate
    * @param width the new width
    * @param height the new height
-   * 
-   * @deprecated replaced by {@code WidgetHelper#setBounds(LayoutPanel, Widget,
-   *             Rectangle)}
    */
-  @Deprecated
   public static void setBounds(final LayoutPanel layoutPanel,
       final Widget widget, final int x, final int y, int width, int height) {
+    setXY(layoutPanel, widget, x, y);
+
+    if (widget instanceof FormPanel) {
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && child instanceof HasLayoutManager) {
+        int[] margins = DOM.getMarginSizes(child.getElement());
+        if (width != -1) {
+          width -= (margins[1] + margins[3]);
+        }
+        if (height != -1) {
+          height -= (margins[0] + margins[2]);
+        }
+        setSize(child, width, height);
+
+        // (ggeorg) needs:
+        // border: none;
+        // padding: 0px;
+        // margin: 0px
+        setSize(widget, WidgetHelper.getPreferredSize(child));
+
+        return;
+      }
+    }
+
     int[] margins = DOM.getMarginSizes(widget.getElement());
     if (width != -1) {
       width -= (margins[1] + margins[3]);
@@ -176,15 +210,7 @@ public class WidgetHelper {
     if (height != -1) {
       height -= (margins[0] + margins[2]);
     }
-    setXY(layoutPanel, widget, x, y);
     setSize(widget, width, height);
-
-    if (widget instanceof FormPanel) {
-      final Widget child = ((FormPanel) widget).getWidget();
-      if (child != null && (child instanceof HasLayoutManager)) {
-        setSize(child, width, height);
-      }
-    }
   }
 
   /**
@@ -208,12 +234,15 @@ public class WidgetHelper {
     setMaxWidth(widget, width);
     setMaxHeight(widget, height);
   }
+
   public static void setMaxWidth(final Widget w, final String width) {
     DOM.setStyleAttribute(w.getElement(), MAX_WIDTH, width);
   }
+
   public static void setMinHeight(final Widget w, final String height) {
     DOM.setStyleAttribute(w.getElement(), MIN_HEIGHT, height);
   }
+
   public static void setMinSize(Widget widget, String width, String height) {
     setMinWidth(widget, width);
     setMinHeight(widget, height);
@@ -239,9 +268,7 @@ public class WidgetHelper {
    * @param widget the given {@code Widget}
    * @param width the new width in pixels
    * @param height the new height in pixels
-   * @deprecated replaced by {@link #setSize(Widget, Dimension)}
    */
-  @Deprecated
   public static void setSize(final Widget widget, final int width,
       final int height) {
     final Element elem = widget.getElement();

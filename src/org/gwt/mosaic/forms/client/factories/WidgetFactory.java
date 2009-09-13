@@ -44,7 +44,7 @@
  */
 package org.gwt.mosaic.forms.client.factories;
 
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
@@ -87,7 +87,7 @@ public interface WidgetFactory {
    *          <tt>&amp;</tt>) to mark a mnemonic
    * @return an label with optional mnemonic
    */
-  Label createLabel(String textWithMnemonic);
+  TextLabel createLabel(String textWithMnemonic);
 
   /**
    * Creates and returns a title label that uses the foreground color and font

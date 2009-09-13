@@ -44,7 +44,7 @@
  */
 package org.gwt.mosaic.forms.client.factories;
 
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.Separator;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -107,8 +107,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
    *          <tt>&amp;</tt>) to mark a mnemonic
    * @return an label with optional mnemonic
    */
-  public Label createLabel(String textWithMnemonic) {
-    Label label = new Label(textWithMnemonic);
+  public TextLabel createLabel(String textWithMnemonic) {
+    TextLabel label = new TextLabel(textWithMnemonic);
     // setTextAndMnemonic(label, textWithMnemonic);
     return label;
   }

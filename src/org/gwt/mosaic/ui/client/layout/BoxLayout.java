@@ -184,8 +184,6 @@ public class BoxLayout extends BaseLayout {
 
   boolean leftToRight = true;
 
-  private boolean runTwiceFlag;
-
   private int visibleWidgetCount = 0;
 
   // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
@@ -471,8 +469,6 @@ public class BoxLayout extends BaseLayout {
       int fillingWidth = 0;
       int fillingHeight = 0;
 
-      runTwiceFlag = false;
-
       final List<Widget> visibleChildList = new ArrayList<Widget>();
 
       Dimension decPanelFrameSize = null;
@@ -527,8 +523,6 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcHeight = WidgetHelper.getPreferredSize(child).height;
 
-            runTwiceFlag = true;
-
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
@@ -547,8 +541,6 @@ public class BoxLayout extends BaseLayout {
           } else {
             layoutData.calcHeight = WidgetHelper.getPreferredSize(child).height;
 
-            runTwiceFlag = true;
-
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
@@ -565,8 +557,6 @@ public class BoxLayout extends BaseLayout {
             }
           } else {
             layoutData.calcWidth = WidgetHelper.getPreferredSize(child).width;
-
-            runTwiceFlag = true;
 
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcWidth += decPanelFrameSize.width;
@@ -712,11 +702,6 @@ public class BoxLayout extends BaseLayout {
 
   }
 
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
-  }
-
   public void setAlignment(Alignment align) {
     this.alignment = align;
   }
@@ -731,16 +716,6 @@ public class BoxLayout extends BaseLayout {
    */
   public void setLeftToRight(boolean leftToRight) {
     this.leftToRight = leftToRight;
-  }
-
-  /**
-   * Sets the orientation of the child widgets.
-   * 
-   * @param orient the orientation of the child widgets.
-   * @deprecated Replaced by {@link #setOrientation(Orientation)}.
-   */
-  public void setOrient(Orientation orient) {
-    this.orientation = orient;
   }
 
   /**

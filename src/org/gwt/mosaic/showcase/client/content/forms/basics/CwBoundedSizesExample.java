@@ -51,6 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
+import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -95,9 +96,6 @@ public class CwBoundedSizesExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(buildJumping1Panel(), "Jumping 1");
     tabPanel.add(buildJumping2Panel(), "Jumping 2");
@@ -166,7 +164,7 @@ public class CwBoundedSizesExample extends ContentWidget {
   @ShowcaseSource
   private Widget buildEditorGeneralPanel(FormLayout layout) {
     layout.setColumnGroups(new int[][] {{3, 5, 7, 9}});
-    PanelBuilder builder = new PanelBuilder(layout);
+    final PanelBuilder builder = new PanelBuilder(layout, new ScrollLayoutPanel());
 
     //builder.setDefaultDialogBorder();
 
@@ -191,7 +189,7 @@ public class CwBoundedSizesExample extends ContentWidget {
   @ShowcaseSource
   private Widget buildEditorTransportPanel(FormLayout layout) {
     layout.setColumnGroups(new int[][] {{3, 5, 7, 9}});
-    PanelBuilder builder = new PanelBuilder(layout);
+    final PanelBuilder builder = new PanelBuilder(layout, new ScrollLayoutPanel());
 
     // builder.setDefaultDialogBorder();
 
