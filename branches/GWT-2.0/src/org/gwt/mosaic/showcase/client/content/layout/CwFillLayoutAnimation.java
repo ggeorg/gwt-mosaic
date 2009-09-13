@@ -97,8 +97,6 @@ public class CwFillLayoutAnimation extends ContentWidget {
 
     btn.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        FillLayoutData layoutData = (FillLayoutData) layoutPanel.getLayoutData(btn);
-
         layoutData.setHorizontalAlignment(halign[(int) Math.round(Math.random() * 3)]);
         layoutData.setVerticalAlignment(valign[(int) Math.round(Math.random() * 3)]);
 
