@@ -48,6 +48,7 @@ import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SourcesChangeEvents;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
@@ -387,7 +388,8 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   protected void updateInput() {
     input.setFocus(true);
     input.selectAll();
-    input.fireEvent(new ChangeEvent(){});
+    input.fireEvent(new ChangeEvent() {
+    });
   }
 
 }
