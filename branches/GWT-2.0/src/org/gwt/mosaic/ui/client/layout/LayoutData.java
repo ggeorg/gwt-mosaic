@@ -63,28 +63,28 @@ public class LayoutData {
   /**
    * @return the preferredWidth
    */
-  public String xgetPreferredWidth() {
+  public String getPreferredWidth() {
     return preferredWidth;
   }
 
   /**
    * @param preferredWidth the preferredWidth to set
    */
-  public void xsetPreferredWidth(String preferredWidth) {
+  public void setPreferredWidth(String preferredWidth) {
     this.preferredWidth = preferredWidth;
   }
 
   /**
    * @return the preferredHeight
    */
-  public String xgetPreferredHeight() {
+  public String getPreferredHeight() {
     return preferredHeight;
   }
 
   /**
    * @param preferredHeight the preferredHeight to set
    */
-  public void xsetPreferredHeight(String preferredHeight) {
+  public void setPreferredHeight(String preferredHeight) {
     this.preferredHeight = preferredHeight;
   }
 
@@ -97,11 +97,9 @@ public class LayoutData {
 
   // ----
 
-  protected boolean setTargetLeft, setTargetTop, setTargetRigth,
-      setTargetBottom, setTargetWidth, setTargetHeight;
+  protected int targetLeft, targetTop, targetWidth, targetHeight;
 
-  protected int left, top, right, bottom, width, height;
-  protected int sourceLeft, sourceTop, sourceRight, sourceBottom, sourceWidth,
-      sourceHeight;
+  protected int left, top, width, height;
+  protected int sourceLeft, sourceTop, sourceWidth, sourceHeight;
 
 }

@@ -15,12 +15,12 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import java.util.Iterator;
+
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Viewport;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
-import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -77,9 +77,9 @@ import com.google.gwt.user.client.ui.Widget;
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
  *   
- *   viewport.add(new Button("Button 1"));
+ *   viewport.getLayoutPanel().add(new Button("Button 1"));
  *   
- *   RootPanel.get().add(viewport);
+ *   viewport.attach();
  * }
  * </pre>
  * 
@@ -87,6 +87,35 @@ import com.google.gwt.user.client.ui.Widget;
  * </tr>
  * </table>
  * 
+ * <p>
+ * In the next example a {@code Button} placed inside a {@link Viewport} is
+ * using size and alignment hints:
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="0" src="FillLayout3.png"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   FillLayoutData layoutData = new FillLayoutData();
+ *   layoutData.setHorizontalAlignment(FillLayoutData.ALIGN_RIGHT);
+ *   layoutData.setVerticalAlignment(FillLayoutData.ALIGN_TOP);
+ *   layoutData.xsetPreferredWidth("10em");
+ *   layoutData.xsetPreferredHeight("50%");
+ *
+ *   LayoutPanel layoutPanel = viewport.getLayoutPanel();
+ *   layoutPanel.add(new Button("Button 1"), layoutData);
+ *   
+ *   viewport.attach();
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * @see FillLayoutData
@@ -147,8 +176,8 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
     child = null;
 
-    for (int i = 0, size = layoutPanel.getWidgetCount(); i < size; i++) {
-      final Widget widget = layoutPanel.getWidget(i);
+    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+      Widget widget = iter.next();
 
       syncDecoratorVisibility(widget);
 
@@ -157,6 +186,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       } else if (child == null) {
         child = widget;
         layoutData = getFillLayoutData(child);
+        visibleChildList.add(child);
       }
     }
 
@@ -179,6 +209,10 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         return;
       }
 
+      if (!child.isVisible()) {
+        return;
+      }
+
       final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
       final int left = paddings[3];
@@ -198,32 +232,24 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         hAlignment = getHorizontalAlignment();
       }
 
-      final int posLeft;
-      final int widgetWidth;
-
       Dimension prefSize = null;
 
       if (hAlignment == null) {
-        posLeft = left;
-        widgetWidth = width;
-        layoutData.setTargetLeft = layoutData.setTargetWidth = true;
+        layoutData.targetLeft = left;
+        layoutData.targetWidth = width;
       } else {
         // (ggeorg) this call to WidgetHelper.getPreferredSize() is
         // required even for ALIGN_LEFT
         prefSize = getPreferredSize(layoutPanel, child, layoutData);
 
         if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
-          posLeft = left;
-          widgetWidth = prefSize.width;// -1;
+          layoutData.targetLeft = left;
         } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
-          posLeft = left + (width - prefSize.width) / 2;
-          widgetWidth = prefSize.width;// -1;
+          layoutData.targetLeft = left + (width - prefSize.width) / 2;
         } else {
-          posLeft = left + width - prefSize.width;
-          widgetWidth = prefSize.width;// -1;
+          layoutData.targetLeft = left + width - prefSize.width;
         }
-
-        layoutData.setTargetLeft = true;
+        layoutData.targetWidth = prefSize.width;
       }
 
       VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
@@ -231,13 +257,9 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         vAlignment = getVerticalAlignment();
       }
 
-      final int posTop;
-      final int widgetHeight;
-
       if (vAlignment == null) {
-        posTop = top;
-        widgetHeight = height;
-        layoutData.setTargetTop = layoutData.setTargetHeight = true;
+        layoutData.targetTop = top;
+        layoutData.targetHeight = height;
       } else {
         if (prefSize == null) {
           // (ggeorg) this call to WidgetHelper.getPreferredSize() is
@@ -246,80 +268,23 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         }
 
         if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
-          posTop = top;
-          widgetHeight = prefSize.height;// -1;
+          layoutData.targetTop = top;
         } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
-          posTop = top + (height - prefSize.height) / 2;
-          widgetHeight = prefSize.height;// -1;
+          layoutData.targetTop = top + (height - prefSize.height) / 2;
         } else {
-          posTop = top + height - prefSize.height;
-          widgetHeight = prefSize.height;// -1;
+          layoutData.targetTop = top + height - prefSize.height;
         }
-
-        layoutData.setTargetTop = true;
+        layoutData.targetHeight = prefSize.height;
       }
 
-      if (layoutPanel.isAnimationEnabled()) {
+      layoutData.sourceLeft = child.getAbsoluteLeft()
+          - layoutPanel.getAbsoluteLeft();
+      layoutData.sourceTop = child.getAbsoluteTop()
+          - layoutPanel.getAbsoluteTop();
+      layoutData.sourceWidth = child.getOffsetWidth();
+      layoutData.sourceHeight = child.getOffsetHeight();
 
-        if (animation != null) {
-          animation.cancel();
-        }
-
-        animation = new Animation() {
-
-          @Override
-          protected void onStart() {
-            layoutData.sourceLeft = child.getAbsoluteLeft()
-                - layoutPanel.getAbsoluteLeft();
-            layoutData.sourceTop = child.getAbsoluteTop()
-                - layoutPanel.getAbsoluteTop();
-            layoutData.sourceWidth = child.getOffsetWidth();
-            layoutData.sourceHeight = child.getOffsetHeight();
-            super.onStart();
-          }
-
-          @Override
-          protected void onCancel() {
-            onComplete();
-          }
-
-          @Override
-          protected void onComplete() {
-            WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop,
-                widgetWidth, widgetHeight);
-
-            // if (callback != null) {
-            // callback.onAnimationComplete();
-            // }
-            animation = null;
-            // layoutData.setTargetLeft = layoutData.setTargetWidth =
-            // layoutData.setTargetTop = layoutData.setTargetHeight = false;
-          }
-
-          @Override
-          protected void onUpdate(double progress) {
-            layoutData.left = (int) (layoutData.sourceLeft + (posLeft - layoutData.sourceLeft)
-                * progress);
-            layoutData.top = (int) (layoutData.sourceTop + (posTop - layoutData.sourceTop)
-                * progress);
-            layoutData.width = (int) (layoutData.sourceWidth + (widgetWidth - layoutData.sourceWidth)
-                * progress);
-            layoutData.height = (int) (layoutData.sourceHeight + (widgetHeight - layoutData.sourceHeight)
-                * progress);
-
-            WidgetHelper.setBounds(layoutPanel, child, layoutData.left,
-                layoutData.top, layoutData.width, layoutData.height);
-          }
-        };
-
-        animation.run(333);
-
-      } else {
-
-        WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop,
-            widgetWidth, widgetHeight);
-
-      }
+      super.layoutPanel(layoutPanel);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
@@ -329,8 +294,6 @@ public class FillLayout extends BaseLayout implements HasAlignment {
     }
 
   }
-
-  private Animation animation = null;
 
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     this.horizontalAlignment = align;
