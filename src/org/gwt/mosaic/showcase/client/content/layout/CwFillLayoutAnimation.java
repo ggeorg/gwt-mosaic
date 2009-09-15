@@ -92,7 +92,7 @@ public class CwFillLayoutAnimation extends ContentWidget {
 
     final FillLayoutData layoutData = new FillLayoutData(false);
     //layoutData.setPreferredSize("50%", "50%");
-    layoutData.xsetPreferredHeight("50%"); // TODO remove x
+    layoutData.setPreferredHeight("50%"); // TODO remove x
     layoutPanel.add(btn, layoutData);
 
     btn.addClickHandler(new ClickHandler() {

@@ -15,13 +15,19 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Insets;
+import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.LayoutManagerHelper;
@@ -35,6 +41,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
+  
+  protected final List<Widget> visibleChildList = new ArrayList<Widget>();
 
   protected boolean initialized = false;
 
@@ -67,16 +75,16 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
 
       final Dimension result = new Dimension();
 
-      // final Element parentElem = layoutPanel.getElement();
-      final Element clonedElem = widget.getElement();// .cloneNode(true).cast();
+      final Element parentElem = layoutPanel.getElement();
+      final Element clonedElem = widget.getElement().cloneNode(true).cast();
 
       final Style style = clonedElem.getStyle();
       style.setProperty("position", "static");
-      // style.setProperty("visibility", "hidden");
+      style.setProperty("visibility", "hidden");
       // style.setProperty("width", "auto");
       // style.setProperty("height", "auto");
 
-      // parentElem.appendChild(clonedElem);
+      parentElem.appendChild(clonedElem);
 
       if (layoutData.preferredWidth != null) {
         result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
@@ -93,8 +101,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
         result.height = clonedElem.getOffsetHeight();
       }
 
-      // parentElem.removeChild(clonedElem);
-      style.setProperty("position", "absolute");
+      parentElem.removeChild(clonedElem);
 
       return result;
     }
@@ -137,6 +144,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     insets.right = margins[1] + borders[1] + paddings[1];
     insets.bottom = margins[2] + borders[2] + paddings[2];
     insets.left = margins[3] + borders[3] + paddings[3];
+    
+    visibleChildList.clear();
 
     return true;
   }
@@ -172,5 +181,94 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   public void flushCache() {
     initialized = false;
   }
+  
+  private void layoutPanelImpl(LayoutPanel layoutPanel) {
+    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+      Widget child = iter.next();
+      if (child instanceof DecoratorPanel) {
+        child = ((DecoratorPanel) child).getWidget();
+      }
+
+      if (!DOM.isVisible(child.getElement())) {
+        continue;
+      }
+
+      final LayoutData layoutData = (LayoutData) getLayoutData(child);
+
+      WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
+          layoutData.targetTop, layoutData.targetWidth,
+          layoutData.targetHeight);
+    }
+  }
+
+  public void layoutPanel(final LayoutPanel layoutPanel) {
+    if (!layoutPanel.isAnimationEnabled()) {
+      for (Widget child : visibleChildList) {
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
+
+        final LayoutData layoutData = (LayoutData) getLayoutData(child);
+
+        WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
+            layoutData.targetTop, layoutData.targetWidth,
+            layoutData.targetHeight);
+      }
+      return;
+    }
+
+    if (animation != null) {
+      animation.cancel();
+    }
+
+    animation = new Animation() {
+
+      @Override
+      protected void onCancel() {
+        onComplete();
+      }
+
+      @Override
+      protected void onComplete() {
+        layoutPanelImpl(layoutPanel);
+        // if (callback != null) {
+        // callback.onAnimationComplete();
+        // }
+        animation = null;
+      }
+
+      @Override
+      protected void onUpdate(double progress) {
+        for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+          Widget child = iter.next();
+          if (child instanceof DecoratorPanel) {
+            child = ((DecoratorPanel) child).getWidget();
+          }
+
+          if (!DOM.isVisible(child.getElement())) {
+            continue;
+          }
+
+          final LayoutData layoutData = (LayoutData) getLayoutData(child);
+
+          layoutData.left = (int) (layoutData.sourceLeft + (layoutData.targetLeft - layoutData.sourceLeft)
+              * progress);
+          layoutData.top = (int) (layoutData.sourceTop + (layoutData.targetTop - layoutData.sourceTop)
+              * progress);
+          layoutData.width = (int) (layoutData.sourceWidth + (layoutData.targetWidth - layoutData.sourceWidth)
+              * progress);
+          layoutData.height = (int) (layoutData.sourceHeight + (layoutData.targetHeight - layoutData.sourceHeight)
+              * progress);
+
+          WidgetHelper.setBounds(layoutPanel, child, layoutData.left,
+              layoutData.top, layoutData.width, layoutData.height);
+        }
+      }
+    };
+
+    animation.run(CoreConstants.DEFAULT_DELAY_MILLIS);
+  }
+
+  private Animation animation = null;
 
 }

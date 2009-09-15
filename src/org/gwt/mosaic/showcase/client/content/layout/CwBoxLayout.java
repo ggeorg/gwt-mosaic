@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Example file.
  */
-@ShowcaseStyle({".mosaic-LayoutPanel"})
+@ShowcaseStyle( {".mosaic-LayoutPanel"})
 public class CwBoxLayout extends ContentWidget {
 
   /**
@@ -41,7 +41,7 @@ public class CwBoxLayout extends ContentWidget {
   public CwBoxLayout(CwConstants constants) {
     super(constants);
   }
-  
+
   @Override
   public String getDescription() {
     return "BoxLayout description";
@@ -61,7 +61,7 @@ public class CwBoxLayout extends ContentWidget {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
-    
+
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
@@ -79,7 +79,7 @@ public class CwBoxLayout extends ContentWidget {
     final Button b14 = new Button("Button 14");
 
     final BoxLayoutData blData = new BoxLayoutData(FillStyle.VERTICAL);
-    blData.setPreferredWidth(100);
+    blData.setPreferredWidth(100 + "px");
     layoutPanel1.add(b11, blData);
     layoutPanel1.add(b12, new BoxLayoutData(FillStyle.VERTICAL));
     layoutPanel1.add(b13);
@@ -90,7 +90,7 @@ public class CwBoxLayout extends ContentWidget {
     layoutPanel.add(b2, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel.add(b3);
     layoutPanel.add(b4, new BoxLayoutData(FillStyle.HORIZONTAL));
-    
+
     return layoutPanel;
   }
 }
