@@ -65,9 +65,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   private Dimension preferredSizeCache = new Dimension(-1, -1);
 
-  // private String height;
-  //
-  // private String width;
+  private String onLoadHeight;
+
+  private String onLoadWidth;
 
   private boolean invalid = true;
 
@@ -433,11 +433,28 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       return;
     }
 
-    GWT.log("====================== Parent of '" + this.getClass().getName()
-        + "' ('" + parent.getClass().getName()
-        + "') is not an instance of HasLayoutManager.", null);
+    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+        + parent.getClass().getName()
+        + "') is not an instance of HasLayoutManager!!!", null);
 
     // Set the initial size & layout
+
+    if (onLoadWidth != null && onLoadHeight != null) {
+      setSize(onLoadWidth, onLoadHeight);
+      onLoadWidth = onLoadHeight = null;
+    } else {
+      Dimension d = getPreferredSize();
+      if (onLoadWidth != null) {
+        setSize(onLoadWidth, d.height + "px");
+        onLoadWidth = null;
+      } else if (onLoadHeight != null) {
+        setSize(d.width + "px", onLoadHeight);
+        onLoadHeight = null;
+      } else {
+        setSize(d.width + "px", d.height + "px");
+      }
+    }
+
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         layout();
@@ -537,11 +554,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   @Override
   public void setHeight(String height) {
-    // if (!isAttached()) {
-    // this.height = height;
-    // } else {
-    super.setHeight(height);
-    // }
+    if (!isAttached()) {
+      this.onLoadHeight = height;
+    } else {
+      super.setHeight(height);
+    }
   }
 
   /**
@@ -581,6 +598,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
    * @param left the widget's left position
    * @param top the widget's top position
    */
+  @Override
   public void setWidgetPosition(Widget w, int left, int top) {
     super.setWidgetPosition(getDecoratorWidget(w), left, top);
   }
@@ -591,11 +609,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   @Override
   public void setWidth(String width) {
-    // if (!isAttached()) {
-    // this.width = width;
-    // } else {
-    super.setWidth(width);
-    // }
+    if (!isAttached()) {
+      this.onLoadWidth = width;
+    } else {
+      super.setWidth(width);
+    }
   }
 
   public LayoutData getLayoutData(Widget widget) {
@@ -605,7 +623,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     return null;
   }
 
-  private static Element toPixelSizeTestElem = null;
+  private Element toPixelSizeTestElem = null;
 
   int toPixelSize(final String value, final boolean useWidthAttribute) {
     if (toPixelSizeTestElem == null) {
