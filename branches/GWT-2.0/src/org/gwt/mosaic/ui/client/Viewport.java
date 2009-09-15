@@ -15,12 +15,9 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import java.util.Iterator;
-
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.FillLayout;
-import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
@@ -34,7 +31,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A top level panel that accepts browser window resize events.
@@ -84,26 +80,6 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
     Window.enableScrolling(false);    
   }
 
-  @Deprecated
-  public void add(Widget w) {
-    add(w, false);
-  }
-
-  @Deprecated
-  public void add(Widget w, boolean decorate) {
-    final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.clear();
-    if (!(layoutPanel.getLayout() instanceof FillLayout)) {
-      layoutPanel.setLayout(new FillLayout());
-    }
-    layoutPanel.add(w, new FillLayoutData(decorate));
-  }
-
-  @Deprecated
-  public void clear() {
-    getLayoutPanel().clear();
-  }
-
   /**
    * Returns the internal {@link LayoutPanel} for this {@code Viewport}.
    * 
@@ -112,11 +88,6 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
   @Override
   public LayoutPanel getLayoutPanel() {
     return super.getLayoutPanel();
-  }
-
-  @Deprecated
-  public Iterator<Widget> iterator() {
-    return getLayoutPanel().iterator();
   }
 
   @Override
@@ -138,11 +109,6 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
     if (isAttached()) {
       resizeTimer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
     }
-  }
-
-  @Deprecated
-  public boolean remove(Widget w) {
-    return getLayoutPanel().remove(w);
   }
 
   private void setBounds(final int x, final int y, int width, int height) {
