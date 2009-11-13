@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class BaseLayout extends LayoutManagerHelper implements
     LayoutManager {
-  
+
   protected final List<Widget> visibleChildList = new ArrayList<Widget>();
 
   protected boolean initialized = false;
@@ -144,7 +144,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     insets.right = margins[1] + borders[1] + paddings[1];
     insets.bottom = margins[2] + borders[2] + paddings[2];
     insets.left = margins[3] + borders[3] + paddings[3];
-    
+
     visibleChildList.clear();
 
     return true;
@@ -181,35 +181,26 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   public void flushCache() {
     initialized = false;
   }
-  
+
   private void layoutPanelImpl(LayoutPanel layoutPanel) {
-    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-      Widget child = iter.next();
+    for (Widget child : visibleChildList) {
       if (child instanceof DecoratorPanel) {
         child = ((DecoratorPanel) child).getWidget();
-      }
-
-      if (!DOM.isVisible(child.getElement())) {
-        continue;
       }
 
       final LayoutData layoutData = (LayoutData) getLayoutData(child);
 
       WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
-          layoutData.targetTop, layoutData.targetWidth,
-          layoutData.targetHeight);
+          layoutData.targetTop, layoutData.targetWidth, layoutData.targetHeight);
     }
+
+    layoutPanel.layoutChildren();
   }
 
   public void layoutPanel(final LayoutPanel layoutPanel) {
     if (!layoutPanel.isAnimationEnabled()) {
       for (Widget child : visibleChildList) {
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
-        }
-
-        final LayoutData layoutData = (LayoutData) getLayoutData(child);
-
+        LayoutData layoutData = (LayoutData) getLayoutData(child);
         WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
             layoutData.targetTop, layoutData.targetWidth,
             layoutData.targetHeight);
@@ -255,6 +246,7 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
               * progress);
           layoutData.top = (int) (layoutData.sourceTop + (layoutData.targetTop - layoutData.sourceTop)
               * progress);
+
           layoutData.width = (int) (layoutData.sourceWidth + (layoutData.targetWidth - layoutData.sourceWidth)
               * progress);
           layoutData.height = (int) (layoutData.sourceHeight + (layoutData.targetHeight - layoutData.sourceHeight)

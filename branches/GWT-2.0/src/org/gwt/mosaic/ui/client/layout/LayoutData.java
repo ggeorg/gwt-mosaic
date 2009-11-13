@@ -15,6 +15,9 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import org.gwt.mosaic.core.client.Dimension;
+
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
 /**
@@ -93,6 +96,11 @@ public class LayoutData {
   public void setPreferredSize(String preferredWidth, String preferredHeight) {
     this.preferredWidth = preferredWidth;
     this.preferredHeight = preferredHeight;
+  }
+
+  protected void setPreferredSize(Dimension preferredSize) {
+    this.preferredWidth = preferredSize.getWidth() + Style.Unit.PX.getType();
+    this.preferredHeight = preferredSize.getHeight() + Style.Unit.PX.getType();
   }
 
   // ----

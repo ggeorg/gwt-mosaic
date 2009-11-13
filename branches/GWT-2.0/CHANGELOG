@@ -1,3 +1,28 @@
+Change log for v0.4.0-rc1
+================================
+
+Change log for v0.3.0-rc1
+================================
+
+ - (Added) ApplicationResources
+ - (Bug Fix) ChangeEvent is fired on each call to ComboBoxBase.updateInput()
+ - (Update) z-index for PopupPanel/DecoratedPopupPanel set to Integer.MAX_VALUE
+ - (Bug Fix) zIndex NULL value fix (WindowPanel bug)
+ - (Update) Transition animation for FillLayout and Showcase demo
+ - (Added) RowHighlightHandler to ListBox
+ - (Upgrade) gwtx-1.5-20081919 to gwtx-1.5.2.jar
+ - (Added) ie8 support
+ - (Added) Application Framework & PageBus classes
+ - (Update) Replacement of gwt-incubator DatePicker to the GWT DatePicker. Removing gwt-incubator styles from mosaic themes removing deprecated API.
+ - (Added) DisclosureLayoutPanel
+ - (Upgrade) gwt-dnd 2.6.2 to 2.6.5
+ - (Upgrade) removing deprecated GWT API call (PopupListener)
+ - (Added) BorderLayout: collapsed panels can expand to fixed & float modes.
+ - (Update) aligment support for ImageButton
+ - (Added) TIBCO PageBus 1.2.0 new Store/Query demo
+ - (Added) LiveTable.reload() method
+ - (Bug Fix) java.lang.IndexOutOfBoundsException in LiveTable demo
+
 Change log for v0.2.2
 ================================
 
