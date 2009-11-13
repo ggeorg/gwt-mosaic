@@ -120,8 +120,15 @@ a:active {
 /*** ComboBox ***/
 
 .mosaic-ComboBox {
-	border: 1px inset #ccc;
-	background: url("images/hborder.png") repeat-x 0px -27px;
+  border: 1px inset #ccc;
+  background: url("images/hborder.png") repeat-x 0px -27px;
+	
+  /* display: inline-block section
+   * http://foohack.com/2007/11/cross-browser-support-for-inline-block-styling/ */
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  -display: inline;
 }
 
 .mosaic-ComboBox input {
@@ -147,6 +154,13 @@ a:active {
   /*background: url("images/hborder.png") repeat-x 0px -27px;*/
   background: #e3e3e3 url("images/button.png") repeat-x;
   -background: #e3e3e3 url("images/button_ie6.png") repeat-x;
+
+  /* display: inline-block section
+   * http://foohack.com/2007/11/cross-browser-support-for-inline-block-styling/ */
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  -display: inline;
 }
 .mosaic-ToolButton .mosaic-Button {
   background: none;
@@ -899,6 +913,26 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 	/*border-right: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
+	background: #000;
+}
+
+.mosaic-LayoutPanel-ColumnLayout {
+}
+
+.mosaic-LayoutPanel-ColumnLayout .SplitBar:hover {
+	border: 1px dashed #888;
+}
+.mosaic-LayoutPanel-ColumnLayout .SplitBar-Movable {
+	background: #000;
+}
+
+.mosaic-LayoutPanel-RowLayout {
+}
+
+.mosaic-LayoutPanel-RowLayout .SplitBar:hover {
+	border: 1px dashed #888;
+}
+.mosaic-LayoutPanel-RowLayout .SplitBar-Movable {
 	background: #000;
 }
 

@@ -293,7 +293,7 @@ public class BoxLayout extends BaseLayout {
         }
 
         if (orientation == Orientation.HORIZONTAL) {
-          
+
           width += getPreferredSize(layoutPanel, child, layoutData).width;
           if (layoutData.hasDecoratorPanel()) {
             width += decPanelFrameSize.width;
@@ -659,9 +659,17 @@ public class BoxLayout extends BaseLayout {
             - layoutPanel.getAbsoluteTop();
         layoutData.sourceWidth = child.getOffsetWidth();
         layoutData.sourceHeight = child.getOffsetHeight();
+
+//        if (!layoutPanel.isAnimationEnabled()) {
+//          WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
+//              layoutData.targetTop, layoutData.targetWidth,
+//              layoutData.targetHeight);
+//        }
       }
 
-      super.layoutPanel(layoutPanel);
+//      if (layoutPanel.isAnimationEnabled()) {
+        super.layoutPanel(layoutPanel);
+//      }
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);

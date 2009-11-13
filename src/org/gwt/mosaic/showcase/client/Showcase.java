@@ -52,6 +52,7 @@ import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Frames;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutAnimation;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest2;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Histogram;
@@ -470,6 +471,8 @@ public class Showcase implements EntryPoint {
 
     TreeItem catLayoutAnimations = catPanels.addItem("Animations");
     setupMainMenuOption(catLayoutAnimations, new CwFillLayoutAnimation(
+        constants), IMAGES.catPanels());
+    setupMainMenuOption(catLayoutAnimations, new CwBoxLayoutAnimation(
         constants), IMAGES.catPanels());
 
     TreeItem catLayoutPanels = catPanels.addItem("Panels");

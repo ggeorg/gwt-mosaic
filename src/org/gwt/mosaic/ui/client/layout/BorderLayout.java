@@ -27,7 +27,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -210,15 +209,6 @@ public class BorderLayout extends BaseLayout {
   private Widget northCollapsed, eastCollapsed, southCollapsed, westCollapsed;
 
   private SplitBar northSplitBar, southSplitBar, westSplitBar, eastSplitBar;
-
-  abstract class MyTimer extends Timer {
-    protected LayoutPanel layoutPanel;
-
-    public void schedule(LayoutPanel layoutPanel, int delayMillis) {
-      this.layoutPanel = layoutPanel;
-      super.schedule(delayMillis);
-    }
-  };
 
   private ImageButton northCollapsedImageButton;
   private ImageButton southCollapsedImageButton;
