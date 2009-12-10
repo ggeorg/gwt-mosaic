@@ -35,6 +35,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -125,7 +126,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     //
 
     final CaptionLayoutPanel pushBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonPush());
-    pushBtnPanel.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    pushBtnPanel.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     pushBtnPanel.setLayout(new BoxLayout());
     pushBtnPanel.setPadding(15);
 
@@ -153,7 +154,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     //
     
     final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonToggle());
-    toggleBtnPanel.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    toggleBtnPanel.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     toggleBtnPanel.setLayout(new BoxLayout());
     toggleBtnPanel.setPadding(15);
 

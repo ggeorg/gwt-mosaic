@@ -64,7 +64,6 @@ import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutCentered;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutHAlignment;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutSizeConstraints;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutStretchedImage;
-import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutVAlignment;
 import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
@@ -124,6 +123,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -132,6 +132,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -432,8 +433,6 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catFillLayout, new CwFillLayoutCentered(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catFillLayout, new CwFillLayoutTest1(constants),
-        IMAGES.catPanels());
 
     TreeItem catBoxLayout = catPanels.addItem("BoxLayout");
     setupMainMenuOption(catBoxLayout, new CwBoxLayout(constants),
@@ -472,8 +471,8 @@ public class Showcase implements EntryPoint {
     TreeItem catLayoutAnimations = catPanels.addItem("Animations");
     setupMainMenuOption(catLayoutAnimations, new CwFillLayoutAnimation(
         constants), IMAGES.catPanels());
-    setupMainMenuOption(catLayoutAnimations, new CwBoxLayoutAnimation(
-        constants), IMAGES.catPanels());
+    setupMainMenuOption(catLayoutAnimations,
+        new CwBoxLayoutAnimation(constants), IMAGES.catPanels());
 
     TreeItem catLayoutPanels = catPanels.addItem("Panels");
     setupMainMenuOption(catLayoutPanels, new CwDeckLayoutPanel(constants),
@@ -617,9 +616,10 @@ public class Showcase implements EntryPoint {
    * @param image the icon to display next to the {@link TreeItem}
    */
   private void setupMainMenuOption(TreeItem parent, ContentWidget content,
-      AbstractImagePrototype image) {
+      ImageResource image) {
     // Create the TreeItem
-    TreeItem option = parent.addItem(image.getHTML() + " " + content.getName());
+    TreeItem option = parent.addItem(AbstractImagePrototype.create(image).getHTML()
+        + " " + content.getName());
 
     // Map the item to its history token and content widget
     itemWidgets.put(option, content);
@@ -663,7 +663,7 @@ public class Showcase implements EntryPoint {
       }
     });
     HorizontalPanel localeWrapper = new HorizontalPanel();
-    localeWrapper.add(IMAGES.locale().createImage());
+    localeWrapper.add(new Image(IMAGES.locale()));
     localeWrapper.add(localeBox);
     vPanel.add(localeWrapper);
 
@@ -703,7 +703,7 @@ public class Showcase implements EntryPoint {
     // Add the title and some images to the title bar
     HorizontalPanel titlePanel = new HorizontalPanel();
     titlePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-    titlePanel.add(IMAGES.gwtLogo().createImage());
+    titlePanel.add(new Image(IMAGES.gwtLogo()));
     titlePanel.add(new HTML(pageTitle));
     app.setTitleWidget(titlePanel);
   }
@@ -748,11 +748,11 @@ public class Showcase implements EntryPoint {
 
     // Return if we already have the correct style sheets
     if (styleSheetsFound && toRemove.size() == 0) {
-      return;
+      // return;
     }
 
     // Detach the app while we manipulate the styles to avoid rendering issues
-    app.removeFromParent();
+    RootPanel.get().remove(app);
 
     // Remove the old style sheets
     for (Element elem : toRemove) {

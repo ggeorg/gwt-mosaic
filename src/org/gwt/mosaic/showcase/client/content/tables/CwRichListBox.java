@@ -36,6 +36,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
@@ -141,7 +142,7 @@ public class CwRichListBox extends ContentWidget {
     table.setCellSpacing(0);
     table.setStyleName("RichListBoxCell");
     
-    table.setWidget(0, 0, Showcase.IMAGES.person().createImage());
+    table.setWidget(0, 0, new Image(Showcase.IMAGES.person()));
     cellFormatter.setRowSpan(0, 0, 3);
     cellFormatter.setWidth(0, 0, "32px");
     

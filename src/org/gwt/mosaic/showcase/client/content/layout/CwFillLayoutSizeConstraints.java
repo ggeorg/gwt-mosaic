@@ -61,6 +61,7 @@ public class CwFillLayoutSizeConstraints extends ContentWidget {
   protected Widget onInitialize() {
     // Create a scroll layout panel to align the widgets, default is BoxLayout
     final ScrollLayoutPanel layoutPanel = new ScrollLayoutPanel(new FillLayout());
+    layoutPanel.setAnimationEnabled(true);
 
     final Image img = new Image("MeteoraGreece.JPG");
     final Element elem = img.getElement();

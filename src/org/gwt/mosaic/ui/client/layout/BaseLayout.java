@@ -16,7 +16,6 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.gwt.mosaic.core.client.CoreConstants;
@@ -53,8 +52,8 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   @Deprecated
   protected int[] paddings = {0, 0};
 
-  protected static Dimension getPreferredSize(LayoutPanel layoutPanel,
-      Widget widget, LayoutData layoutData) {
+  protected Dimension getPreferredSize(LayoutPanel layoutPanel, Widget widget,
+      LayoutData layoutData) {
     // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
     if (widget instanceof FormPanel) {
       final Widget child = ((FormPanel) widget).getWidget();
@@ -226,30 +225,35 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
         // callback.onAnimationComplete();
         // }
         animation = null;
-      }
 
-      @Override
-      protected void onUpdate(double progress) {
-        for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-          Widget child = iter.next();
+        for (Widget child : visibleChildList) {
           if (child instanceof DecoratorPanel) {
             child = ((DecoratorPanel) child).getWidget();
           }
 
-          if (!DOM.isVisible(child.getElement())) {
-            continue;
+          final LayoutData layoutData = (LayoutData) getLayoutData(child);
+
+          layoutData.clearSource();
+        }
+      }
+
+      @Override
+      protected void onUpdate(double progress) {
+        for (Widget child : visibleChildList) {
+          if (child instanceof DecoratorPanel) {
+            child = ((DecoratorPanel) child).getWidget();
           }
 
           final LayoutData layoutData = (LayoutData) getLayoutData(child);
 
-          layoutData.left = (int) (layoutData.sourceLeft + (layoutData.targetLeft - layoutData.sourceLeft)
+          layoutData.left = (int) (layoutData.getSourceLeft() + (layoutData.targetLeft - layoutData.getSourceLeft())
               * progress);
-          layoutData.top = (int) (layoutData.sourceTop + (layoutData.targetTop - layoutData.sourceTop)
+          layoutData.top = (int) (layoutData.getSourceTop() + (layoutData.targetTop - layoutData.getSourceTop())
               * progress);
 
-          layoutData.width = (int) (layoutData.sourceWidth + (layoutData.targetWidth - layoutData.sourceWidth)
+          layoutData.width = (int) (layoutData.getSourceWidth() + (layoutData.targetWidth - layoutData.getSourceWidth())
               * progress);
-          layoutData.height = (int) (layoutData.sourceHeight + (layoutData.targetHeight - layoutData.sourceHeight)
+          layoutData.height = (int) (layoutData.getSourceHeight() + (layoutData.targetHeight - layoutData.getSourceHeight())
               * progress);
 
           WidgetHelper.setBounds(layoutPanel, child, layoutData.left,

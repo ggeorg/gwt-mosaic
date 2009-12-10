@@ -39,6 +39,7 @@ import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -109,7 +110,7 @@ public class CwToolBar extends ContentWidget implements ClickHandler {
     toolBox.setPadding(0);
     toolBox.setWidgetSpacing(0);
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
-    toolBox.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    toolBox.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     toolBox.add(createToolBar1(), new BoxLayoutData(FillStyle.HORIZONTAL));
     toolBox.add(createToolBar2(), new BoxLayoutData(FillStyle.HORIZONTAL));
 

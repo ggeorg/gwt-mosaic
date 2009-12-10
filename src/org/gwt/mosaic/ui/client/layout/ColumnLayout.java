@@ -118,12 +118,12 @@ public class ColumnLayout extends BaseLayout {
 
         left += (w + spacing);
 
-        layoutData.sourceLeft = child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft();
-        layoutData.sourceTop = child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop();
-        layoutData.sourceWidth = child.getOffsetWidth();
-        layoutData.sourceHeight = child.getOffsetHeight();
+        layoutData.setSourceLeft(child.getAbsoluteLeft()
+            - layoutPanel.getAbsoluteLeft());
+        layoutData.setSourceTop(child.getAbsoluteTop()
+            - layoutPanel.getAbsoluteTop());
+        layoutData.setSourceWidth(child.getOffsetWidth());
+        layoutData.setSourceHeight(child.getOffsetHeight());
       }
 
       super.layoutPanel(layoutPanel);

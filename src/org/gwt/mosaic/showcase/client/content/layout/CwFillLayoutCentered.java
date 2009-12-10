@@ -61,6 +61,7 @@ public class CwFillLayoutCentered extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets, default is FillLayout
     final LayoutPanel layoutPanel = new LayoutPanel();
+    layoutPanel.setAnimationEnabled(true);
 
     final Image img = new Image("MeteoraGreece.JPG");
     layoutPanel.add(img);

@@ -108,6 +108,74 @@ public class LayoutData {
   protected int targetLeft, targetTop, targetWidth, targetHeight;
 
   protected int left, top, width, height;
-  protected int sourceLeft, sourceTop, sourceWidth, sourceHeight;
+  private int sourceLeft, sourceTop, sourceWidth, sourceHeight;
+
+  /**
+   * @return the sourceLeft
+   */
+  public int getSourceLeft() {
+    return sourceLeft;
+  }
+
+  /**
+   * @param sourceLeft the sourceLeft to set
+   */
+  public void setSourceLeft(int sourceLeft) {
+    if (this.sourceLeft == -1) {
+      this.sourceLeft = sourceLeft;
+    }
+  }
+
+  /**
+   * @return the sourceTop
+   */
+  public int getSourceTop() {
+    return sourceTop;
+  }
+
+  /**
+   * @param sourceTop the sourceTop to set
+   */
+  public void setSourceTop(int sourceTop) {
+    if (this.sourceTop == -1) {
+      this.sourceTop = sourceTop;
+    }
+  }
+
+  /**
+   * @return the sourceWidth
+   */
+  public int getSourceWidth() {
+    return sourceWidth;
+  }
+
+  /**
+   * @param sourceWidth the sourceWidth to set
+   */
+  public void setSourceWidth(int sourceWidth) {
+    if (this.sourceWidth == -1) {
+      this.sourceWidth = sourceWidth;
+    }
+  }
+
+  /**
+   * @return the sourceHeight
+   */
+  public int getSourceHeight() {
+    return sourceHeight;
+  }
+
+  /**
+   * @param sourceHeight the sourceHeight to set
+   */
+  public void setSourceHeight(int sourceHeight) {
+    if (this.sourceHeight == -1) {
+      this.sourceHeight = sourceHeight;
+    }
+  }
+
+  public void clearSource() {
+    sourceLeft = sourceTop = sourceWidth = sourceHeight = -1;
+  }
 
 }

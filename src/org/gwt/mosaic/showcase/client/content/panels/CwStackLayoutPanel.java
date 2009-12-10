@@ -66,6 +66,7 @@ public class CwStackLayoutPanel extends AbstractLayoutPage {
 
     // Create a StackLayoutPanel
     final StackLayoutPanel stack = new StackLayoutPanel();
+    stack.setAnimationEnabled(true);
 
     final LayoutPanel panel1 = new LayoutPanel();
     populate1(panel1);

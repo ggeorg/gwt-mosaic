@@ -276,8 +276,8 @@ a:active {
   position: absolute;
   width: 1px;
 	
-  padding: 0px;
-  margin: 5px 3px;
+  padding: none;
+  margin: 5px 3px 5px 3px;
 }
 
 /*** Caption ***/

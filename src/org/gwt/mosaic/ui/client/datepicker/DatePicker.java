@@ -27,17 +27,17 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
  * Date picker.
  */
 public class DatePicker extends
-com.google.gwt.user.datepicker.client.DatePicker implements
+    com.google.gwt.user.datepicker.client.DatePicker implements
     HasLayoutManager {
 
   public DatePicker() {
     super();
   }
+
   /**
    * Sets up the date picker.
    */
   protected void setup() {
-    
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
@@ -45,7 +45,7 @@ com.google.gwt.user.datepicker.client.DatePicker implements
 
     layoutPanel.add(this.getMonthSelector(), new BoxLayoutData(
         FillStyle.HORIZONTAL));
-    
+
     layoutPanel.add(this.getView(), new BoxLayoutData(FillStyle.BOTH));
   }
 

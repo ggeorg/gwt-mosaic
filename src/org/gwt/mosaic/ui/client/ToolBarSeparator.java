@@ -30,7 +30,7 @@ public class ToolBarSeparator extends Widget {
   private static final String DEFAULT_STYLENAME = "mosaic-ToolBarSeparator";
   
   public ToolBarSeparator() {
-    setElement(DOM.createDiv());
+    setElement(DOM.createSpan());
     setStyleName(DEFAULT_STYLENAME);
   }
 

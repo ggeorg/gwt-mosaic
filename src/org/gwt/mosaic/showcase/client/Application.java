@@ -37,15 +37,15 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeImages;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
@@ -77,14 +77,14 @@ public class Application extends Viewport implements
   /**
    * Images used in the {@link Application}.
    */
-  public interface ApplicationImages extends TreeImages {
+  public interface ApplicationImages extends Tree.Resources {
     /**
      * An image indicating a leaf.
      * 
      * @return a prototype of this image
      */
-    @Resource("noimage.png")
-    AbstractImagePrototype treeLeaf();
+    @Source("noimage.png")
+    ImageResource treeLeaf();
   }
 
   /**
@@ -116,43 +116,44 @@ public class Application extends Viewport implements
    * Constructor.
    */
   public Application() {
-    super();
+    super(new BoxLayout(Orientation.VERTICAL));
 
     // Setup the main layout widget
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    layoutPanel.setAnimationEnabled(true);
 
     // Setup the top panel with the title and links
     createTopPanel();
     layoutPanel.add(topPanel, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    final LayoutPanel bottomPanel = new LayoutPanel(new BorderLayout());
-    layoutPanel.add(bottomPanel, new BoxLayoutData(FillStyle.BOTH));
+    final LayoutPanel mainPanel = new LayoutPanel(new BorderLayout());
+    layoutPanel.add(mainPanel, new BoxLayoutData(FillStyle.BOTH));
+    // mainPanel.setAnimationEnabled(true);
 
     // Add the main menu
     createMainMenu();
 
     final CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
     westPanel.add(new ScrollPanel(mainMenu));
-    westPanel.getHeader().add(Showcase.IMAGES.showcaseDemos().createImage());
+    westPanel.getHeader().add(new Image(Showcase.IMAGES.showcaseDemos()));
     final ImageButton collapseBtn = new ImageButton(
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
 
     collapseBtn.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        bottomPanel.setCollapsed(westPanel, true);
-        bottomPanel.layout();
+        mainPanel.setCollapsed(westPanel, true);
+        mainPanel.layout();
       }
     });
 
-    bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST, 200, 100, 350,
-        true));
+    mainPanel.add(westPanel, new BorderLayoutData(Region.WEST, "25em", "3em",
+        "35%", true));
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());
     contentWrapper.addStyleName(DEFAULT_STYLE_NAME + "-content-wrapper");
-    bottomPanel.add(contentWrapper);
+    mainPanel.add(contentWrapper);
     setContent(null);
   }
 
