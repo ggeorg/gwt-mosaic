@@ -72,12 +72,10 @@ public class StyleSheetLoader {
       if (refWidget.getOffsetWidth() > 0) {
         RootPanel.get().remove(refWidget);
 
-        if (callback != null) {
-          // Fire the callback in a DeferredCommand to ensure the browser has
-          // enough time to parse the styles. Otherwise, we'll get weird styling
-          // issues.
-          DeferredCommand.addCommand(callback);
-        }
+        // Fire the callback in a DeferredCommand to ensure the browser has
+        // enough time to parse the styles. Otherwise, we'll get weird styling
+        // issues.
+        DeferredCommand.addCommand(callback);
       } else {
         schedule(10);
       }
@@ -116,7 +114,8 @@ public class StyleSheetLoader {
    * @param refStyleName the style name of the reference element
    * @param callback the callback executed when the style sheet has loaded
    */
-  public static void loadStyleSheet(String href, String refStyleName, Command callback) {
+  public static void loadStyleSheet(String href, String refStyleName,
+      Command callback) {
     loadStyleSheet(href);
     waitForStyleSheet(refStyleName, callback);
   }

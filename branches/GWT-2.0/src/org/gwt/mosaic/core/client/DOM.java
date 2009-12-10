@@ -341,4 +341,33 @@ public class DOM extends com.google.gwt.user.client.DOM {
     return (useWidthAttribute) ? size.width : size.height;
   }
 
+  private static Dimension detectedScrollbarSize = null;
+
+  public static int getNativeScrollbarSize(final boolean useWidthAttribute) {
+    if (detectedScrollbarSize == null) {
+      Element scroller = DOM.createDiv();
+      setStyleAttribute(scroller, "width", "50px");
+      setStyleAttribute(scroller, "height", "50px");
+      setStyleAttribute(scroller, "overflow", "scroll");
+      setStyleAttribute(scroller, "position", "scroll");
+      setStyleAttribute(scroller, "marginLeft", "-5000px");
+      Document.get().getBody().appendChild(scroller);
+      detectedScrollbarSize = new Dimension(scroller.getOffsetWidth()
+          - scroller.getPropertyInt("clientWidth"), scroller.getOffsetHeight()
+          - scroller.getPropertyInt("clientHeight"));
+
+      // Asserting the detected value causes a problem
+      // at least in Hosted Mode Browser/Linux/GWT-1.5.3, so
+      // use a default if detection fails.
+      if (detectedScrollbarSize.width == 0) {
+        detectedScrollbarSize.width = detectedScrollbarSize.height = 20;
+      }
+
+      Document.get().getBody().removeChild(scroller);
+    }
+
+    return (useWidthAttribute) ? detectedScrollbarSize.width
+        : detectedScrollbarSize.height;
+  }
+
 }

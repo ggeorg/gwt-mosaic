@@ -40,6 +40,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTML;
@@ -140,11 +141,11 @@ public abstract class ContentWidget extends LayoutPanel implements
     setStyleName(DEFAULT_STYLE_NAME);
   }
 
-  private String createTabBarCaption(AbstractImagePrototype image, String text) {
+  private String createTabBarCaption(ImageResource image, String text) {
     StringBuffer sb = new StringBuffer();
     sb.append("<table cellspacing='0px' cellpadding='0px' border='0px'><thead><tr>");
     sb.append("<td valign='middle'>");
-    sb.append(image.getHTML());
+    sb.append(AbstractImagePrototype.create(image).getHTML());
     sb.append("</td><td valign='middle' style='white-space: nowrap;'>&nbsp;");
     sb.append(text);
     sb.append("</td></tr></thead></table>");

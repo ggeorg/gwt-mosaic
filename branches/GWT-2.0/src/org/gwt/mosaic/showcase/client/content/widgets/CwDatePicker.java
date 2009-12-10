@@ -106,7 +106,7 @@ public class CwDatePicker extends ContentWidget {
     final CaptionLayoutPanel vPanel1 = new CaptionLayoutPanel(
         datePicker.getValue().toString());
     layoutPanel.add(vPanel1, new BoxLayoutData(FillStyle.BOTH, true));
-    vPanel1.getHeader().add(Showcase.IMAGES.calendar().createImage());
+    vPanel1.getHeader().add(new Image(Showcase.IMAGES.calendar()));
     vPanel1.add(datePicker, new BoxLayoutData(FillStyle.BOTH));
 
     // Log select events.
@@ -131,7 +131,7 @@ public class CwDatePicker extends ContentWidget {
         dateTimePicker.getDate().toString());
     layoutPanel.add(vPanel2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
     final ImageButton collapseBtn = new ImageButton(Caption.IMAGES.toolMinus());
-    vPanel2.getHeader().add(Showcase.IMAGES.calendar().createImage());
+    vPanel2.getHeader().add(new Image(Showcase.IMAGES.calendar()));
     vPanel2.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
     vPanel2.add(dateTimePicker, new BoxLayoutData(FillStyle.BOTH));
 

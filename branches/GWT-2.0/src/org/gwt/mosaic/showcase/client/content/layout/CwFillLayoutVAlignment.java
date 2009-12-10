@@ -60,6 +60,7 @@ public class CwFillLayoutVAlignment extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets, default is FillLayout
     final LayoutPanel layoutPanel = new LayoutPanel();
+    layoutPanel.setAnimationEnabled(true);
     
     FillLayout layout = (FillLayout) layoutPanel.getLayout();
     layout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);

@@ -32,6 +32,7 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,7 +112,7 @@ public class CwMenuBar extends ContentWidget {
     final CaptionLayoutPanel toolBox = new CaptionLayoutPanel(Window.getTitle());
     toolBox.setPadding(0);
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
-    toolBox.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    toolBox.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     toolBox.add(createMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     layoutPanel.add(toolBox, new FillLayoutData(true));

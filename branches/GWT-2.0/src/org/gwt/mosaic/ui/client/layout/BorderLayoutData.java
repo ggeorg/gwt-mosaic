@@ -19,6 +19,7 @@ import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.CollapsedListenerCollection;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -32,13 +33,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class BorderLayoutData extends LayoutData {
 
-  double preferredSize = -1.0;
-
   Region region;
 
   boolean resizable, collapse;
 
-  int minSize = 0, maxSize = -1;
+  String minSize = null, maxSize = null;
 
   private CollapsedListenerCollection collapsedListeners;
 
@@ -129,7 +128,12 @@ public class BorderLayoutData extends LayoutData {
    * @param preferredSize the preferred size or -1 indicating that the widget's
    *          calculated preferred size should be used instead of this value.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize) {
+    this(region, preferredSize, false);
+  }
+
+  public BorderLayoutData(Region region, String preferredSize) {
     this(region, preferredSize, false);
   }
 
@@ -158,10 +162,38 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, boolean decorate) {
     super(decorate);
     this.region = region;
-    this.preferredSize = preferredSize;
+
+    if (region == Region.NORTH || region == Region.SOUTH) {
+      if (preferredSize > 1.0) {
+        setPreferredHeight(((int) preferredSize) + "px");
+      } else if (preferredSize > 0.0) {
+        setPreferredHeight(((int) (preferredSize * 100.0)) + "%");
+      } else {
+        setPreferredHeight(null);
+      }
+    } else if (region == Region.WEST || region == Region.EAST) {
+      if (preferredSize > 1.0) {
+        setPreferredWidth(((int) preferredSize) + "px");
+      } else if (preferredSize > 0.0) {
+        setPreferredWidth(((int) (preferredSize * 100.0)) + "%");
+      } else {
+        setPreferredWidth(null);
+      }
+    }
+  }
+
+  public BorderLayoutData(Region region, String preferredSize, boolean decorate) {
+    super(decorate);
+    setRegion(region);
+    if (region == Region.NORTH || region == Region.SOUTH) {
+      setPreferredHeight(preferredSize);
+    } else if (region == Region.WEST || region == Region.EAST) {
+      setPreferredWidth(preferredSize);
+    }
   }
 
   /**
@@ -195,8 +227,14 @@ public class BorderLayoutData extends LayoutData {
    * @param maxSize the maximum widget size, either width or height, that the
    *          widget can be resized to by the user, by dragging a split bar.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, int minSize,
       int maxSize) {
+    this(region, preferredSize, minSize, maxSize, false);
+  }
+
+  public BorderLayoutData(Region region, String preferredSize, String minSize,
+      String maxSize) {
     this(region, preferredSize, minSize, maxSize, false);
   }
 
@@ -234,19 +272,49 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
+  @Deprecated
   public BorderLayoutData(Region region, double preferredSize, int minSize,
       int maxSize, boolean decorate) {
     super(decorate);
     this.region = region;
-    this.preferredSize = preferredSize;
-    this.minSize = Math.max(0, minSize);
-    this.maxSize = Math.max(0, maxSize);
+
+    if (region == Region.NORTH || region == Region.SOUTH) {
+      if (preferredSize > 1.0) {
+        setPreferredHeight(((int) preferredSize) + "px");
+      } else if (preferredSize > 0.0) {
+        setPreferredHeight(((int) (preferredSize * 100.0)) + "%");
+      } else {
+        setPreferredHeight(null);
+      }
+    } else if (region == Region.WEST || region == Region.EAST) {
+      if (preferredSize > 1.0) {
+        setPreferredWidth(((int) preferredSize) + "px");
+      } else if (preferredSize > 0.0) {
+        setPreferredWidth(((int) (preferredSize * 100.0)) + "%");
+      } else {
+        setPreferredWidth(null);
+      }
+    }
+
+    this.minSize = Math.max(0, minSize) + Unit.PX.getType();
+    this.maxSize = Math.max(0, maxSize) + Unit.PX.getType();
     this.resizable = minSize < maxSize;
-    // TODO
-    // if (this.resizable) {
-    // this.preferredSize = (this.preferredSize > this.minSize) ? Math.min(
-    // this.preferredSize, this.maxSize) : this.minSize;
-    // }
+  }
+
+  public BorderLayoutData(Region region, String preferredSize, String minSize,
+      String maxSize, boolean decorate) {
+    super(decorate);
+    setRegion(region);
+    if (region == Region.NORTH || region == Region.SOUTH) {
+      setPreferredHeight(preferredSize);
+    } else if (region == Region.WEST || region == Region.EAST) {
+      setPreferredWidth(preferredSize);
+    }
+    setMinSize(minSize);
+    setMaxSize(maxSize);
+    if (minSize != null && maxSize != null) {
+      setResizable(true);
+    }
   }
 
   /**
@@ -278,8 +346,13 @@ public class BorderLayoutData extends LayoutData {
    * @param maxSize the maximum widget size, either width or height, that the
    *          widget can be resized to by the user, by dragging a split bar.
    */
+  @Deprecated
   public BorderLayoutData(Region region, int minSize, int maxSize) {
     this(region, -1.0, minSize, maxSize, false);
+  }
+
+  public BorderLayoutData(Region region, String minSize, String maxSize) {
+    this(region, null, minSize, maxSize, false);
   }
 
   /**
@@ -314,9 +387,71 @@ public class BorderLayoutData extends LayoutData {
    * @param decorate decorate specifies whether the associated widget will be
    *          decorated or not.
    */
+  @Deprecated
   public BorderLayoutData(Region region, int minSize, int maxSize,
       boolean decorate) {
     this(region, -1.0, minSize, maxSize, decorate);
+  }
+
+  public BorderLayoutData(Region region, String minSize, String maxSize,
+      boolean decorate) {
+    this(region, null, minSize, maxSize, decorate);
+  }
+
+  /**
+   * @return the region
+   */
+  public Region getRegion() {
+    return region;
+  }
+
+  /**
+   * @param region the region to set
+   */
+  public void setRegion(Region region) {
+    this.region = region;
+  }
+
+  /**
+   * @return the minSize
+   */
+  public String getMinSize() {
+    return minSize;
+  }
+
+  /**
+   * @param minSize the minSize to set
+   */
+  public void setMinSize(String minSize) {
+    this.minSize = minSize;
+  }
+
+  /**
+   * @return the maxSize
+   */
+  public String getMaxSize() {
+    return maxSize;
+  }
+
+  /**
+   * @param maxSize the maxSize to set
+   */
+  public void setMaxSize(String maxSize) {
+    this.maxSize = maxSize;
+  }
+
+  /**
+   * @return the resizable
+   */
+  public boolean isResizable() {
+    return resizable;
+  }
+
+  /**
+   * @param resizable the resizable to set
+   */
+  public void setResizable(boolean resizable) {
+    this.resizable = resizable;
   }
 
   protected void addCollapsedListener(CollapsedListener listener) {
@@ -326,95 +461,15 @@ public class BorderLayoutData extends LayoutData {
     collapsedListeners.add(listener);
   }
 
-  protected void fireCollapsedChange(Widget sender) {
-    if (collapsedListeners != null) {
-      collapsedListeners.fireCollapsedChange(sender);
-    }
-  }
-
-  /**
-   * Gets the maximum widget size, either height for widgets placed on
-   * {@link Region#NORTH} and {@link Region#SOUTH} or width for widgets placed
-   * on {@link Region#WEST} and {@link Region#EAST}, that the widget can be
-   * resized by dragging a split bar. Values > 0 and <= 1 are in ratios of the
-   * available client area except paddings, 0 and values > 1 are in pixels, and
-   * -1 means the calculated preferred size.
-   * 
-   * @return the maximum widget size, either width or height, that the widget
-   *         can be resized by dragging a split bar.
-   */
-  public int getMaxSize() {
-    return maxSize;
-  }
-  
-  /**
-   * Gets the minimum widget size, either height for widgets placed on
-   * {@link Region#NORTH} and {@link Region#SOUTH} or width for widgets placed
-   * on {@link Region#WEST} and {@link Region#EAST}, that the widget can be
-   * resized by dragging a split bar. Values > 0 and <= 1 are in ratios of the
-   * available client area except paddings, 0 and values > 1 are in pixels, and
-   * -1 means the calculated preferred size.
-   * 
-   * @return the maximum widget size, either width or height, that the widget
-   *         can be resized by dragging a split bar.
-   */
-  public int getMinSize() {
-    return minSize;
-  }
-
-  /**
-   * Returns the user specified preferred size of a child widget, either width
-   * or height in pixels or ratio depending on the {@link LayoutManager}.
-   * Default is -1 which means that the widget's calculated preferred size
-   * should be used instead. Values > 0 and <= 1 are ratios, 0 and values > 1
-   * are pixels.
-   * 
-   * @return the preferred size or -1 indicating that the widget's calculated
-   *         preferred size should be used instead of this value.
-   * 
-   * @see BaseLayout#getFlowWidth(com.google.gwt.user.client.ui.Widget)
-   * @see BaseLayout#getFlowHeight(com.google.gwt.user.client.ui.Widget)
-   */
-  public double getPreferredSize() {
-    return preferredSize;
-  }
-
-  public Region getRegion() {
-    return region;
-  }
-
-  public boolean isResizable() {
-    return resizable;
-  }
-
   protected void removeCollapsedListener(CollapsedListener listener) {
     if (collapsedListeners != null) {
       collapsedListeners.remove(listener);
     }
   }
 
-  protected void setMaxSize(int maxSize) {
-    this.maxSize = maxSize;
-  }
-
-  protected void setMinSize(int minSize) {
-    this.minSize = minSize;
-  }
-
-  /**
-   * Sets the child widget's preferred size, either width or height in pixels or
-   * ratio depending on the {@link LayoutManager}. Values > 0 and <= 1 are
-   * ratios, 0 and values > 1 are pixels, and -1 means that the widget's
-   * calculated preferred size should be used.
-   * 
-   * @param preferredSize the preferred size or -1 indicating that the widget's
-   *          calculated preferred size should be used instead of this value.
-   */
-  public void setPreferredSize(double preferredSize) {
-    this.preferredSize = preferredSize;
-  }
-
-  public void setResizable(boolean resizable) {
-    this.resizable = resizable;
+  protected void fireCollapsedChange(Widget sender) {
+    if (collapsedListeners != null) {
+      collapsedListeners.fireCollapsedChange(sender);
+    }
   }
 }

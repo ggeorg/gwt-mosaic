@@ -20,12 +20,14 @@ import java.util.Map;
 
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.HasAnimation;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -35,16 +37,17 @@ import com.google.gwt.user.client.ui.Widget;
  * <h3>CSS Style Rules</h3>
  * <ul class='css'>
  * <li>.mosaic-StackLayoutPanel { the panel itself }</li>
- * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem { unselected items }</li>
- * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem-selected {
- * selected items }</li>
+ * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem { unselected items
+ * }</li>
+ * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem-selected { selected
+ * items }</li>
  * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelContent { the wrapper
  * around the contents of the item }</li>
  * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class StackLayoutPanel extends LayoutComposite {
+public class StackLayoutPanel extends LayoutComposite implements HasAnimation {
 
   /**
    * The default style name.
@@ -72,19 +75,19 @@ public class StackLayoutPanel extends LayoutComposite {
       Widget w = (Widget) event.getSource();
       if (w instanceof Caption) {
         showStack(getLayoutPanel().getWidgetIndex(w) >> 1);
+        invalidate();
         layout();
       }
     }
   };
 
   public StackLayoutPanel() {
+    super(new BoxLayout(Orientation.VERTICAL));
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
-
     setStyleName(DEFAULT_STYLENAME);
   }
-  
+
   /**
    * Adds a new child with the given widget and header.
    * 
@@ -109,6 +112,7 @@ public class StackLayoutPanel extends LayoutComposite {
     final LayoutPanel layoutPanel = getLayoutPanel();
     caption.addStyleName(DEFAULT_ITEM_STYLENAME);
     caption.addClickHandler(clickHandler);
+    caption.getElement().getStyle().setZIndex(1);
     content.addStyleName(DEFAULT_CONTENT_STYLENAME);
     content.add(w);
     panels.put(w, content);
@@ -155,16 +159,35 @@ public class StackLayoutPanel extends LayoutComposite {
   }
 
   private void setStackVisible(int index, boolean visible) {
+    final int oldIndex = visibleStack;
+
+    visibleStack = index;
+    
     final Caption caption = (Caption) getLayoutPanel().getWidget(index);
-    final LayoutPanel content = (LayoutPanel) getLayoutPanel().getWidget(++index);
+    final LayoutPanel content = (LayoutPanel) getLayoutPanel().getWidget(
+        index + 1);
+    
     if (visible) {
       caption.addStyleName(DEFAULT_ITEM_STYLENAME + "-selected");
     } else {
       caption.removeStyleName(DEFAULT_ITEM_STYLENAME + "-selected");
     }
+    
     content.setVisible(visible);
+
+    if (visible && oldIndex >= 0) {
+      Object layoutDataObject = content.getLayoutData();
+      if (layoutDataObject instanceof LayoutData) {
+        LayoutData layoutData = (LayoutData) layoutDataObject;
+        if (index > oldIndex) {
+          layoutData.setSourceTop(getOffsetHeight());
+        } else {
+          layoutData.setSourceTop(-getOffsetHeight());
+        }
+      }
+    }
   }
-  
+
   public Caption getCaption(int index) {
     index <<= 1;
     if ((index >= getLayoutPanel().getWidgetCount()) || (index < 0)) {
@@ -184,13 +207,20 @@ public class StackLayoutPanel extends LayoutComposite {
         || (index == visibleStack)) {
       return;
     }
-
+    
     if (visibleStack >= 0) {
       setStackVisible(visibleStack, false);
     }
+    
+    setStackVisible(index, true);
+  }
 
-    visibleStack = index;
-    setStackVisible(visibleStack, true);
+  public boolean isAnimationEnabled() {
+    return getLayoutPanel().isAnimationEnabled();
+  }
+
+  public void setAnimationEnabled(boolean enable) {
+    getLayoutPanel().setAnimationEnabled(enable);
   }
 
 }

@@ -58,6 +58,7 @@ import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
+import org.gwt.mosaic.ui.client.layout.LayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
@@ -1244,10 +1245,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
       throw new RuntimeException(e);
     }
 
-    // if (runTwice()) {
-    // recalculate(componentSizeCache.minimumSizes);
-    // }
-
   }
 
   // Layout Algorithm *****************************************************
@@ -1823,7 +1820,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * A cache for widget minimum and preferred sizes. Used to reduce the requests
    * to determine a widget's size.
    */
-  private static final class ComponentSizeCache implements Serializable {
+  private/* static */final class ComponentSizeCache implements Serializable {
     private static final long serialVersionUID = -209607124276425146L;
 
     /** Maps components to their minimum sizes. */
@@ -1884,7 +1881,19 @@ public final class FormLayout extends BaseLayout implements Serializable {
     Dimension getPreferredSize(Widget widget) {
       Dimension size = preferredSizes.get(widget);
       if (size == null) {
-        size = WidgetHelper.getPreferredSize(widget);// widget.getPreferredSize();
+        Widget parent = widget.getParent();
+        Object layoutDataObject = widget.getLayoutData();
+        if (parent instanceof LayoutPanel
+            && layoutDataObject instanceof LayoutData) {
+          size = FormLayout.this.getPreferredSize((LayoutPanel) parent, widget,
+              (LayoutData) layoutDataObject);
+        } else {
+          GWT.log(
+              "Widget's parent is not a LayoutPanel or LayoutData is not valid, parent: "
+                  + parent.getClass().getName() + ", layoutData:"
+                  + layoutDataObject.getClass().getName(), null);
+          size = WidgetHelper.getPreferredSize(widget);// widget.getPreferredSize();
+        }
         preferredSizes.put(widget, size);
       }
       return size;
@@ -2035,10 +2044,12 @@ public final class FormLayout extends BaseLayout implements Serializable {
     for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
       Widget widget = iter.next();
       addLayoutComponent(widget, getLayoutData(widget));
+      visibleChildList.add(widget);
     }
 
     initializeColAndRowWidgetLists();
 
     return initialized = true;
   }
+
 }

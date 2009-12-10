@@ -653,23 +653,15 @@ public class BoxLayout extends BaseLayout {
           top += (h + spacing);
         }
 
-        layoutData.sourceLeft = child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft();
-        layoutData.sourceTop = child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop();
-        layoutData.sourceWidth = child.getOffsetWidth();
-        layoutData.sourceHeight = child.getOffsetHeight();
-
-//        if (!layoutPanel.isAnimationEnabled()) {
-//          WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
-//              layoutData.targetTop, layoutData.targetWidth,
-//              layoutData.targetHeight);
-//        }
+        layoutData.setSourceLeft(child.getAbsoluteLeft()
+            - layoutPanel.getAbsoluteLeft() - paddings[3]);
+        layoutData.setSourceTop(child.getAbsoluteTop()
+            - layoutPanel.getAbsoluteTop() - paddings[0]);
+        layoutData.setSourceWidth(child.getOffsetWidth());
+        layoutData.setSourceHeight(child.getOffsetHeight());
       }
 
-//      if (layoutPanel.isAnimationEnabled()) {
-        super.layoutPanel(layoutPanel);
-//      }
+      super.layoutPanel(layoutPanel);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);

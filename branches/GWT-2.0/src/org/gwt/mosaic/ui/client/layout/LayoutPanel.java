@@ -30,6 +30,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -245,12 +246,37 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     if (!isAttached()) {
       return new Dimension();
     }
-    if (preferredSizeCache.width == -1 && preferredSizeCache.height == -1) {
-      preferredSizeCache = layout.getPreferredSize(this);
-      WidgetHelper.setSize(this, preferredSizeCache);
-      layout.layoutPanel(this);
-      preferredSizeCache = layout.getPreferredSize(this);
+
+    String prefWidth = null;
+    String prefHeight = null;
+
+    Object layoutDataObj = BaseLayout.getLayoutData(this);
+    if (layoutDataObj != null && layoutDataObj instanceof LayoutData) {
+      LayoutData layoutData = (LayoutData) layoutDataObj;
+      prefWidth = layoutData.getPreferredWidth();
+      prefHeight = layoutData.getPreferredHeight();
     }
+    if (prefWidth != null && prefHeight != null) {
+      preferredSizeCache.width = toPixelSize(prefWidth, true);
+      preferredSizeCache.height = toPixelSize(prefHeight, false);
+    } else {
+      if (preferredSizeCache.width == -1 && preferredSizeCache.height == -1) {
+        preferredSizeCache = layout.getPreferredSize(this);
+
+        // XXX get text line wrapping working...
+        WidgetHelper.setSize(this, preferredSizeCache);
+        layout.layoutPanel(this);
+        preferredSizeCache = layout.getPreferredSize(this);
+      }
+
+      if (prefWidth != null) {
+        preferredSizeCache.width = toPixelSize(prefWidth, true);
+      }
+      if (prefHeight != null) {
+        preferredSizeCache.height = toPixelSize(prefHeight, false);
+      }
+    }
+
     return preferredSizeCache;
   }
 

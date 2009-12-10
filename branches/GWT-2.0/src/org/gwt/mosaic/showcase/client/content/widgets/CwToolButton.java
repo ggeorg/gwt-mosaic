@@ -40,6 +40,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -96,7 +97,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
 
     final CaptionLayoutPanel hBox1 = new CaptionLayoutPanel("Push button widgets");
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    hBox1.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox1.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     hBox1.setLayout(new BoxLayout());
 
     addPushButtons(hBox1);
@@ -107,7 +108,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
 
     final CaptionLayoutPanel hBox2 = new CaptionLayoutPanel("Push button widgets with image");
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    hBox2.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox2.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     hBox2.setLayout(new BoxLayout());
     
     addImageButtons(hBox2);
@@ -118,7 +119,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
 
     final CaptionLayoutPanel hBox3 = new CaptionLayoutPanel("Menu & Split button widgets");
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    hBox3.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox3.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     hBox3.setLayout(new BoxLayout());
 
     addMenuAndSplitButtons(hBox3);
@@ -129,7 +130,7 @@ public class CwToolButton extends ContentWidget implements ClickHandler {
 
     final CaptionLayoutPanel hBox4 = new CaptionLayoutPanel("Checkbox & Radio button widgets");
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-    hBox4.getHeader().add(Showcase.IMAGES.catWidgets().createImage());
+    hBox4.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     hBox4.setLayout(new BoxLayout());
 
     addCheckboxAndRadioButtons(hBox4);

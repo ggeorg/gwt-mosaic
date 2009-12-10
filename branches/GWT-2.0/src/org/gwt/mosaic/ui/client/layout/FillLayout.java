@@ -20,11 +20,9 @@ import java.util.Iterator;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Viewport;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -279,20 +277,14 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         layoutData.targetHeight = prefSize.height;
       }
 
-      layoutData.sourceLeft = child.getAbsoluteLeft()
-          - layoutPanel.getAbsoluteLeft();
-      layoutData.sourceTop = child.getAbsoluteTop()
-          - layoutPanel.getAbsoluteTop();
-      layoutData.sourceWidth = child.getOffsetWidth();
-      layoutData.sourceHeight = child.getOffsetHeight();
+      layoutData.setSourceLeft(child.getAbsoluteLeft()
+          - layoutPanel.getAbsoluteLeft() - paddings[3]);
+      layoutData.setSourceTop(child.getAbsoluteTop()
+          - layoutPanel.getAbsoluteTop() - paddings[0]);
+      layoutData.setSourceWidth(child.getOffsetWidth());
+      layoutData.setSourceHeight(child.getOffsetHeight());
 
-      if (!layoutPanel.isAnimationEnabled()) {
-        WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
-            layoutData.targetTop, layoutData.targetWidth,
-            layoutData.targetHeight);
-      } else {
-        super.layoutPanel(layoutPanel);
-      }
+      super.layoutPanel(layoutPanel);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);

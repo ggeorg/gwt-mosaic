@@ -36,6 +36,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -170,7 +171,7 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     // center panel
 
     final CaptionLayoutPanel centerPanel = new CaptionLayoutPanel("Center");
-    centerPanel.getHeader().add(Showcase.IMAGES.catPanels().createImage());
+    centerPanel.getHeader().add(new Image(Showcase.IMAGES.catPanels()));
     centerPanel.add(new WidgetWrapper(new HTML("<h1>GWT Mosaic</h1>")));
 
     layoutPanel.add(centerPanel, new BorderLayoutData(true));
