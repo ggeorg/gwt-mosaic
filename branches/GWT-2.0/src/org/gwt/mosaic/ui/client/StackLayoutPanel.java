@@ -28,7 +28,6 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.ui.HasAnimation;
 import com.google.gwt.user.client.ui.Widget;
 

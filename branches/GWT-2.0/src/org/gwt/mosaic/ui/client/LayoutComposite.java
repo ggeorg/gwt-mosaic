@@ -146,13 +146,13 @@ public abstract class LayoutComposite extends Composite implements
     getLayoutPanel().setWidth(width);
   }
   
-  @Override
-  public void setLayoutData(Object layoutData) {
-    getLayoutPanel().setLayoutData(layoutData);
-  }
-  
-  @Override
-  public Object getLayoutData() {
-    return getLayoutPanel().getLayoutData();
-  }
+//  @Override
+//  public void setLayoutData(Object layoutData) {
+//    getLayoutPanel().setLayoutData(layoutData);
+//  }
+//  
+//  @Override
+//  public Object getLayoutData() {
+//    return getLayoutPanel().getLayoutData();
+//  }
 }

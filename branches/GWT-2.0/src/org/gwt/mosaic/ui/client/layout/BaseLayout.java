@@ -63,7 +63,26 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     }
     if (widget instanceof HasLayoutManager) {
       final HasLayoutManager lp = (HasLayoutManager) widget;
-      return lp.getPreferredSize();
+      
+      if (layoutData.preferredWidth != null
+          && layoutData.preferredHeight != null) {
+        return new Dimension(layoutPanel.toPixelSize(layoutData.preferredWidth,
+            true), layoutPanel.toPixelSize(layoutData.preferredHeight, false));
+      }
+
+      final Dimension result = lp.getPreferredSize();
+      
+      if (layoutData.preferredWidth != null) {
+        result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
+      }
+      
+      if (layoutData.preferredHeight != null) {
+        result.height = layoutPanel.toPixelSize(layoutData.preferredHeight,
+            false);
+      }
+      
+      return result;
+      
     } else {
 
       if (layoutData.preferredWidth != null

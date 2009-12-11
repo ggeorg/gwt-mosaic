@@ -35,7 +35,12 @@ public class BorderLayoutData extends LayoutData {
 
   Region region;
 
-  boolean resizable, collapse;
+  boolean resizable;
+  
+  @Deprecated
+  boolean collapse;
+  
+  Widget collapsedStateWidget = null;
 
   String minSize = null, maxSize = null;
 
@@ -452,6 +457,20 @@ public class BorderLayoutData extends LayoutData {
    */
   public void setResizable(boolean resizable) {
     this.resizable = resizable;
+  }
+
+  /**
+   * @return the collapsedStateWidget
+   */
+  public Widget getCollapsedStateWidget() {
+    return collapsedStateWidget;
+  }
+
+  /**
+   * @param collapsedStateWidget the collapsedStateWidget to set
+   */
+  public void setCollapsedStateWidget(Widget collapsedStateWidget) {
+    this.collapsedStateWidget = collapsedStateWidget;
   }
 
   protected void addCollapsedListener(CollapsedListener listener) {
