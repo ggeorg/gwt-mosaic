@@ -221,19 +221,17 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       @Override
       protected void onComplete() {
         layoutPanelImpl(layoutPanel);
-        // if (callback != null) {
-        // callback.onAnimationComplete();
-        // }
+        if (layoutPanel.animationCallback != null) {
+          layoutPanel.animationCallback.onAnimationComplete();
+        }
+
         animation = null;
 
         for (Widget child : visibleChildList) {
           if (child instanceof DecoratorPanel) {
             child = ((DecoratorPanel) child).getWidget();
           }
-
-          final LayoutData layoutData = (LayoutData) getLayoutData(child);
-
-          layoutData.clearSource();
+          ((LayoutData) getLayoutData(child)).clearSource();
         }
       }
 
