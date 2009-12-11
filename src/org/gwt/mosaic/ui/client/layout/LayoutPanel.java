@@ -167,7 +167,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
-  void addImpl(Widget w) {
+  protected void addImpl(Widget w) {
     super.add(w);
   }
 
@@ -246,35 +246,12 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       return new Dimension();
     }
 
-    String prefWidth = null;
-    String prefHeight = null;
+    preferredSizeCache = layout.getPreferredSize(this);
 
-    Object layoutDataObj = BaseLayout.getLayoutData(this);
-    if (layoutDataObj != null && layoutDataObj instanceof LayoutData) {
-      LayoutData layoutData = (LayoutData) layoutDataObj;
-      prefWidth = layoutData.getPreferredWidth();
-      prefHeight = layoutData.getPreferredHeight();
-    }
-    if (prefWidth != null && prefHeight != null) {
-      preferredSizeCache.width = toPixelSize(prefWidth, true);
-      preferredSizeCache.height = toPixelSize(prefHeight, false);
-    } else {
-      if (preferredSizeCache.width == -1 && preferredSizeCache.height == -1) {
-        preferredSizeCache = layout.getPreferredSize(this);
-
-        // XXX get text line wrapping working...
-        WidgetHelper.setSize(this, preferredSizeCache);
-        layout.layoutPanel(this);
-        preferredSizeCache = layout.getPreferredSize(this);
-      }
-
-      if (prefWidth != null) {
-        preferredSizeCache.width = toPixelSize(prefWidth, true);
-      }
-      if (prefHeight != null) {
-        preferredSizeCache.height = toPixelSize(prefHeight, false);
-      }
-    }
+    // XXX get text line wrapping working...
+    WidgetHelper.setSize(this, preferredSizeCache);
+    layout.layoutPanel(this);
+    preferredSizeCache = layout.getPreferredSize(this);
 
     return preferredSizeCache;
   }
@@ -563,7 +540,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
-  boolean removeImpl(Widget w) {
+  protected boolean removeImpl(Widget w) {
     return super.remove(w);
   }
 
@@ -658,6 +635,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       DOM.setStyleAttribute(toPixelSizeTestElem, "left", "0px");
       DOM.setStyleAttribute(toPixelSizeTestElem, "top", "0px");
       getElement().appendChild(toPixelSizeTestElem);
+      // DOM.setStyleAttribute(toPixelSizeTestElem, "background", "red");
     }
     DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
     DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
@@ -676,7 +654,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   public void setAnimationEnabled(boolean enable) {
     this.animationEnabled = enable;
   }
-  
+
   AnimationCallback animationCallback;
 
   /**

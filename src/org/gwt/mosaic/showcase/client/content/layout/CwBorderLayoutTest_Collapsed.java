@@ -32,9 +32,12 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
+import org.gwt.mosaic.ui.client.util.ButtonHelper;
+import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -94,12 +97,12 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
       public void onClick(ClickEvent event) {
         layoutPanel.setCollapsed(northPanel,
             !layoutPanel.isCollapsed(northPanel));
+        layoutPanel.invalidate();
         layoutPanel.layout();
       }
     });
 
-    layoutPanel.add(northPanel, new BorderLayoutData(Region.NORTH,
-        0.20, true));
+    layoutPanel.add(northPanel, new BorderLayoutData(Region.NORTH, "20%", true));
     layoutPanel.setCollapsed(northPanel, true);
 
     layoutPanel.addCollapsedListener(northPanel, this);
@@ -114,14 +117,13 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
 
     collapseBtn2.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        layoutPanel.setCollapsed(southPanel,
-            !layoutPanel.isCollapsed(southPanel));
+        layoutPanel.setCollapsed(southPanel, true);
+        layoutPanel.invalidate();
         layoutPanel.layout();
       }
     });
 
-    layoutPanel.add(southPanel, new BorderLayoutData(Region.SOUTH,
-        0.20, true));
+    layoutPanel.add(southPanel, new BorderLayoutData(Region.SOUTH, "20%", true));
     layoutPanel.setCollapsed(southPanel, true);
 
     layoutPanel.addCollapsedListener(southPanel, this);
@@ -136,13 +138,24 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
 
     collapseBtn3.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        layoutPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
+        layoutPanel.setCollapsed(westPanel, true);
+        layoutPanel.invalidate();
         layoutPanel.layout();
       }
     });
 
-    layoutPanel.add(westPanel, new BorderLayoutData(Region.WEST,
-        0.2, true));
+    BorderLayoutData westLayoutData = new BorderLayoutData(Region.WEST, "20%",
+        true);
+    westLayoutData.setResizable(true);
+    westLayoutData.setCollapsedStateWidget(new Button(
+            "C<br/>l<br/>i<br/>c<br/>k<br/><br/>m<br/>e<br/>!", new ClickHandler() {
+          public void onClick(ClickEvent event) {
+            layoutPanel.setCollapsed(westPanel, false);
+            layoutPanel.invalidate();
+            layoutPanel.layout();
+          }
+        }));
+    layoutPanel.add(westPanel, westLayoutData);
     layoutPanel.setCollapsed(westPanel, true);
 
     layoutPanel.addCollapsedListener(westPanel, this);
@@ -158,12 +171,12 @@ public class CwBorderLayoutTest_Collapsed extends ContentWidget implements
     collapseBtn4.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
         layoutPanel.setCollapsed(eastPanel, !layoutPanel.isCollapsed(eastPanel));
+        layoutPanel.invalidate();
         layoutPanel.layout();
       }
     });
 
-    layoutPanel.add(eastPanel, new BorderLayoutData(Region.EAST,
-        0.2, true));
+    layoutPanel.add(eastPanel, new BorderLayoutData(Region.EAST, "20%", true));
     layoutPanel.setCollapsed(eastPanel, true);
 
     layoutPanel.addCollapsedListener(eastPanel, this);
