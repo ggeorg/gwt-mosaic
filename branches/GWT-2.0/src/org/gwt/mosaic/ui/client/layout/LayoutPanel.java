@@ -30,7 +30,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -676,6 +675,22 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   public void setAnimationEnabled(boolean enable) {
     this.animationEnabled = enable;
+  }
+  
+  AnimationCallback animationCallback;
+
+  /**
+   * @return the animationCallback
+   */
+  public AnimationCallback getAnimationCallback() {
+    return animationCallback;
+  }
+
+  /**
+   * @param animationCallback the animationCallback to set
+   */
+  public void setAnimationCallback(AnimationCallback animationCallback) {
+    this.animationCallback = animationCallback;
   }
 
 }
