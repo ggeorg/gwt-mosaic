@@ -28,6 +28,7 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -66,19 +67,21 @@ public abstract class BaseLayout implements LayoutManager {
 
       if (layoutData.getPreferredWidth() != null
           && layoutData.getPreferredHeight() != null) {
-        return new Dimension(layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
-            true), layoutPanel.toPixelSize(layoutData.getPreferredHeight(), false));
+        return new Dimension(layoutPanel.toPixelSize(
+            layoutData.getPreferredWidth(), true), layoutPanel.toPixelSize(
+            layoutData.getPreferredHeight(), false));
       }
 
       final Dimension result = lp.getPreferredSize();
 
       if (layoutData.getPreferredWidth() != null) {
-        result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(), true);
+        result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
+            true);
       }
 
       if (layoutData.getPreferredHeight() != null) {
-        result.height = layoutPanel.toPixelSize(layoutData.getPreferredHeight(),
-            false);
+        result.height = layoutPanel.toPixelSize(
+            layoutData.getPreferredHeight(), false);
       }
 
       return result;
@@ -87,8 +90,9 @@ public abstract class BaseLayout implements LayoutManager {
 
       if (layoutData.getPreferredWidth() != null
           && layoutData.getPreferredHeight() != null) {
-        return new Dimension(layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
-            true), layoutPanel.toPixelSize(layoutData.getPreferredHeight(), false));
+        return new Dimension(layoutPanel.toPixelSize(
+            layoutData.getPreferredWidth(), true), layoutPanel.toPixelSize(
+            layoutData.getPreferredHeight(), false));
       }
 
       final Dimension result = new Dimension();
@@ -106,15 +110,16 @@ public abstract class BaseLayout implements LayoutManager {
       parentElem.appendChild(clonedElem);
 
       if (layoutData.getPreferredWidth() != null) {
-        result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(), true);
+        result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
+            true);
       } else {
         style.setProperty("width", "auto");
         result.width = clonedElem.getOffsetWidth();
       }
 
       if (layoutData.getPreferredHeight() != null) {
-        result.height = layoutPanel.toPixelSize(layoutData.getPreferredHeight(),
-            false);
+        result.height = layoutPanel.toPixelSize(
+            layoutData.getPreferredHeight(), false);
       } else {
         style.setProperty("height", "auto");
         result.height = clonedElem.getOffsetHeight();
@@ -403,10 +408,13 @@ public abstract class BaseLayout implements LayoutManager {
     Dimension getPreferredSize(Widget widget) {
       Dimension size = preferredSizes.get(widget);
       if (size == null) {
+        LayoutData layoutData = (LayoutData) widget.getLayoutData();
         size = BaseLayout.this.getPreferredSize(
-            (LayoutPanel) WidgetHelper.getParent(widget), widget,
-            (LayoutData) widget.getLayoutData());
-        preferredSizes.put(widget, size);
+            (LayoutPanel) WidgetHelper.getParent(widget), widget, layoutData);
+        // don't cache percentage units
+        if (!((layoutData.getPreferredWidth() != null && Unit.PCT == layoutData.getPreferredWidth().getUnit()) || (layoutData.getPreferredHeight() != null && Unit.PCT != layoutData.getPreferredHeight().getUnit()))) {
+          preferredSizes.put(widget, size);
+        }
       }
       return size;
     }
@@ -416,9 +424,9 @@ public abstract class BaseLayout implements LayoutManager {
       preferredSizes.remove(widget);
     }
   }
-  
+
   // LayoutData setter & getter methods ************************************
-  
+
   /**
    * Gets the panel-defined layout data associated with this widget.
    * 

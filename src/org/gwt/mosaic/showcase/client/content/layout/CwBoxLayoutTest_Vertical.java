@@ -74,11 +74,11 @@ public class CwBoxLayoutTest_Vertical extends ContentWidget {
     final Button b7 = new Button("Width: fill<br>Height: float");
 
     layoutPanel.add(b1);
-    layoutPanel.add(b2, new BoxLayoutData(0.25, -1.0));
-    layoutPanel.add(b3, new BoxLayoutData(0.5, -1.0));
-    layoutPanel.add(b4, new BoxLayoutData(0.75, -1.0));
-    layoutPanel.add(b5, new BoxLayoutData(0.5, 0.5));
-    layoutPanel.add(b6, new BoxLayoutData(100.0, 100.0));
+    layoutPanel.add(b2, new BoxLayoutData("25%", null));
+    layoutPanel.add(b3, new BoxLayoutData("50%", null));
+    layoutPanel.add(b4, new BoxLayoutData("75%", null));
+    layoutPanel.add(b5, new BoxLayoutData("50%", "50%"));
+    layoutPanel.add(b6, new BoxLayoutData("100%", "100%"));
     layoutPanel.add(b7, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     return layoutPanel;
