@@ -112,7 +112,7 @@ public abstract class ActionBindings<T> {
       if (target instanceof Widget && !(target instanceof HasLayoutManager)) {
         HasLayoutManager lm = WidgetHelper.getParent((Widget) target);
         if (lm != null) {
-          lm.invalidate();
+          lm.invalidate((Widget) target);
         }
       }
     }
