@@ -24,6 +24,7 @@ import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
@@ -60,10 +61,24 @@ public class PagingScrollTable2<RowType> extends
       height += getFooterTable().getOffsetHeight();
     }
     final int[] m = DOM.getMarginSizes(getElement());
-    return new Dimension(width+m[1] + m[3], height+m[0] + m[2]);
+    return new Dimension(width + m[1] + m[3], height + m[0] + m[2]);
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   */
   public void invalidate() {
+    invalidate(null);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
     WidgetHelper.invalidate(getParent());
   }
 

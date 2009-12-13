@@ -111,7 +111,6 @@ public class WidgetHelper {
           clonedElem.getOffsetHeight());
       parentElem.removeChild(clonedElem);
       return d;
-      // return getOffsetSize(widget);
     }
   }
 
@@ -123,11 +122,11 @@ public class WidgetHelper {
    */
   public static void invalidate(Widget widget) {
     if (widget instanceof HasLayoutManager) {
-      ((HasLayoutManager) widget).invalidate();
+      ((HasLayoutManager) widget).invalidate(null);
     } else {
       HasLayoutManager lm = getParent(widget);
       if (lm != null) {
-        lm.invalidate();
+        lm.invalidate(widget);
       }
     }
   }

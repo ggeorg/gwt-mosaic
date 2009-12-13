@@ -19,6 +19,7 @@ package org.gwt.mosaic.ui.client;
 
 import java.util.Iterator;
 
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
@@ -33,6 +34,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.ListenerWrapper;
@@ -48,10 +50,9 @@ import com.google.gwt.user.client.ui.Widget;
  * <h3>CSS Style Rules</h3>
  * 
  * <ul class='css'>
- * <li>.mosaic-TabLayoutPanel { the
- * tab layout panel itself }</li>
- * <li>.mosaic-TabLayoutPanelBottom { the bottom
- * section of the tab layout panel (the deck containing the widget) }</li>
+ * <li>.mosaic-TabLayoutPanel { the tab layout panel itself }</li>
+ * <li>.mosaic-TabLayoutPanelBottom { the bottom section of the tab layout panel
+ * (the deck containing the widget) }</li>
  * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
@@ -59,10 +60,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class TabLayoutPanel extends LayoutComposite implements TabListener,
     SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel,
     HasBeforeSelectionHandlers<Integer>, HasSelectionHandlers<Integer> {
-
-  public enum CloseBehaviour {
-    SHOW_LEFT_TAB
-  }
 
   public enum TabBarPosition {
     TOP, BOTTOM
@@ -114,7 +111,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
   private static final String DEFAULT_STYLENAME = "mosaic-TabLayoutPanel";
 
   private ScrollTabBar tabBar;
-
   private final DeckLayoutPanel deck = new DeckLayoutPanel();
 
   public TabLayoutPanel() {
@@ -141,15 +137,19 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     layoutPanel.setLayout(new BorderLayout());
     layoutPanel.setWidgetSpacing(0);
 
+    // set up tab bar
     if (decorate) {
       if (region == TabBarPosition.TOP) {
-        tabBar = new ScrollTabBar(this, true, false);
+        tabBar = new ScrollTabBar(true, false);
       } else {
-        tabBar = new ScrollTabBar(this, true, true);
+        tabBar = new ScrollTabBar(true, true);
       }
     } else {
-      tabBar = new ScrollTabBar(this);
+      tabBar = new ScrollTabBar();
     }
+    tabBar.addTabListener(this);
+
+    // set up deck
 
     deck.addStyleName(DEFAULT_STYLENAME + "Bottom");
     if (!decorateBody) {
@@ -163,17 +163,27 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
     layoutPanel.add(deck, new BorderLayoutData(decorateBody));
 
-    tabBar.addTabListener(this);
-
     setStyleName(DEFAULT_STYLENAME);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * @see org.gwt.mosaic.ui.layout.LayoutPanel#getPadding()
+   */
+  public int getPadding() {
+    return deck.getPadding();
+  }
+
+  /**
+   * @see org.gwt.mosaic.ui.layout.LayoutPanel#setPadding(int)
+   */
+  public void setPadding(int padding) {
+    deck.setPadding(padding);
+  }
+
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client
-   * .ui.Widget)
+   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
    */
   public void add(Widget w) {
     throw new UnsupportedOperationException(
@@ -211,30 +221,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     insert(w, tabWidget, getWidgetCount());
   }
 
-  public HandlerRegistration addBeforeSelectionHandler(
-      BeforeSelectionHandler<Integer> handler) {
-    return addHandler(handler, BeforeSelectionEvent.getType());
-  }
-
-  public HandlerRegistration addSelectionHandler(
-      SelectionHandler<Integer> handler) {
-    return addHandler(handler, SelectionEvent.getType());
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.SourcesTabEvents#addTabListener(com.google
-   * .gwt.user.client.ui.TabListener)
-   */
-  @Deprecated
-  public void addTabListener(TabListener listener) {
-    WrappedTabListener.add(this, listener);
-  }
-
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.HasWidgets#clear()
    */
@@ -244,8 +232,44 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     }
   }
 
-  public int getPadding() {
-    return deck.getPadding();
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers#addBeforeSelectionHandler(com.google.gwt.event.logical.shared.BeforeSelectionHandler)
+   */
+  public HandlerRegistration addBeforeSelectionHandler(
+      BeforeSelectionHandler<Integer> handler) {
+    return addHandler(handler, BeforeSelectionEvent.getType());
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.event.logical.shared.HasSelectionHandlers#addSelectionHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+   */
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<Integer> handler) {
+    return addHandler(handler, SelectionEvent.getType());
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.SourcesTabEvents#addTabListener(com.google.gwt.user.client.ui.TabListener)
+   */
+  @Deprecated
+  public void addTabListener(TabListener listener) {
+    WrappedTabListener.add(this, listener);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google.gwt.user.client.ui.TabListener)
+   */
+  @Deprecated
+  public void removeTabListener(TabListener listener) {
+    WrappedTabListener.remove(this, listener);
   }
 
   /**
@@ -267,8 +291,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     return tabBar.getTabHTML(tabIndex);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
    */
@@ -276,8 +300,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     return deck.getWidget(index);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetCount()
    */
@@ -285,15 +309,25 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     return deck.getWidgetCount();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
-   * .user.client.ui.Widget)
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
    */
   public int getWidgetIndex(Widget widget) {
     return deck.getWidgetIndex(widget);
+  }
+
+  /**
+   * Inserts a widget into the tab panel. If the Widget is already attached to
+   * the <code>TabLayoutPanel</code>, it will be moved to the requested index.
+   * 
+   * @param widget the widget to be inserted
+   * @param tabText the text to be shown on its tab
+   * @param beforeIndex the index before which it will be inserted
+   */
+  public void insert(Widget widget, String tabText, int beforeIndex) {
+    insert(widget, tabText, false, beforeIndex);
   }
 
   /**
@@ -307,7 +341,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void insert(Widget widget, String tabText, boolean asHTML,
       int beforeIndex) {
-    assert (widget != null);
+    assert (beforeIndex >= 0) && (beforeIndex <= getWidgetCount()) : "beforeIndex out of bounds";
 
     // Check to see if the tab panel already contains the widget. If so, remove
     // it and see if we need to shift the position to the left.
@@ -321,18 +355,13 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
     tabBar.insertTab(tabText, asHTML, beforeIndex);
     deck.insert(widget, beforeIndex);
-  }
-
-  /**
-   * Inserts a widget into the tab panel. If the Widget is already attached to
-   * the <code>TabLayoutPanel</code>, it will be moved to the requested index.
-   * 
-   * @param widget the widget to be inserted
-   * @param tabText the text to be shown on its tab
-   * @param beforeIndex the index before which it will be inserted
-   */
-  public void insert(Widget widget, String tabText, int beforeIndex) {
-    insert(widget, tabText, false, beforeIndex);
+    
+    int selection = tabBar.getSelectedTab();
+    if (selection == -1 && tabBar.getTabCount() > 0) {
+      selection = 0;
+      selectTab(0);
+      return;
+    }
   }
 
   /**
@@ -358,17 +387,24 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
     tabBar.insertTab(tabWidget, beforeIndex);
     deck.insert(widget, beforeIndex);
+    
+    int selection = tabBar.getSelectedTab();
+    if (selection == -1 && tabBar.getTabCount() > 0) {
+      selection = 0;
+      selectTab(0);
+      return;
+    }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
    */
   public Iterator<Widget> iterator() {
     return new Iterator<Widget>() {
       final Iterator<Widget> iter = deck.iterator();
-      
+
       public boolean hasNext() {
         return iter.hasNext();
       }
@@ -383,47 +419,20 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     };
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#layout()
-   */
-  @Override
-  public void layout() {
-    int selection = tabBar.getSelectedTab();
-    if (selection == -1 && tabBar.getTabCount() > 0) {
-      selection = 0;
-      selectTab(0);
-      return;
-    }
-    super.layout();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google
-   * .gwt.user.client.ui.SourcesTabEvents, int)
+  /**
+   * @see com.google.gwt.user.client.ui.TabListener#onBeforeTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents,
+   *      int)
    */
   @Deprecated
   public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-    // if (tabListeners != null) {
-    // return tabListeners.fireBeforeTabSelected(TabLayoutPanel.this, tabIndex);
-    // }
-    // return true;
-
     BeforeSelectionEvent<Integer> event = BeforeSelectionEvent.fire(this,
         tabIndex);
     return event == null || !event.isCanceled();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.TabListener#onTabSelected(com.google.gwt.
-   * user.client.ui.SourcesTabEvents, int)
+  /**
+   * @see com.google.gwt.user.client.ui.TabListener#onTabSelected(com.google.gwt.user.client.ui.SourcesTabEvents,
+   *      int)
    */
   public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
     deck.showWidget(tabIndex);
@@ -438,8 +447,8 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     SelectionEvent.fire(this, tabIndex);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
    */
@@ -478,18 +487,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     return remove(index, widget);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.SourcesTabEvents#removeTabListener(com.google
-   * .gwt.user.client.ui.TabListener)
-   */
-  @Deprecated
-  public void removeTabListener(TabListener listener) {
-    WrappedTabListener.remove(this, listener);
-  }
-
   /**
    * Programmatically selects the specified tab.
    * 
@@ -497,10 +494,6 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
    */
   public void selectTab(int index) {
     tabBar.selectTab(index);
-  }
-
-  public void setPadding(int padding) {
-    deck.setPadding(padding);
   }
 
 }

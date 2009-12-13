@@ -507,10 +507,24 @@ public class DesktopPanel extends Composite implements
     return (windowPanels == null) ? -1 : windowPanels.indexOf(child);
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   */
   public void invalidate() {
+    invalidate(null);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
     final HasLayoutManager parent = WidgetHelper.getParent(this);
     if (parent != null) {
-      parent.invalidate();
+      parent.invalidate(widget);
     }
   }
 

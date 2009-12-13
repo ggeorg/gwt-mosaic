@@ -243,22 +243,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    */
   private transient List<Widget>[] rowWidgets;
 
-  /**
-   * Caches component minimum and preferred sizes. All requests for component
-   * sizes shall be directed to the cache.
-   */
-  private final WidgetSizeCache componentSizeCache;
-
-  /**
-   * These functional objects are used to measure component sizes. They abstract
-   * from horizontal and vertical orientation and so, allow to implement the
-   * layout algorithm for both orientations with a single set of methods.
-   */
-  private final Measure minimumWidthMeasure;
-  private final Measure minimumHeightMeasure;
-  private final Measure preferredWidthMeasure;
-  private final Measure preferredHeightMeasure;
-
   // Instance Creation ****************************************************
 
   /**
@@ -441,11 +425,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
     rowGroupIndices = new int[][] {};
     int initialCapacity = colSpecs.length * rowSpecs.length / 4;
     constraintMap = new HashMap<Widget, CellConstraints>(initialCapacity);
-    componentSizeCache = new WidgetSizeCache(initialCapacity);
-    minimumWidthMeasure = new MinimumWidthMeasure(componentSizeCache);
-    minimumHeightMeasure = new MinimumHeightMeasure(componentSizeCache);
-    preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
-    preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
   }
 
   // Accessing the Column and Row Specifications **************************
@@ -1109,12 +1088,10 @@ public final class FormLayout extends BaseLayout implements Serializable {
         minimumHeightMeasure);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
-   * mosaic.ui.client.layout.LayoutPanel)
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     try {
@@ -1125,7 +1102,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       }
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
+      Window.alert(getClass().getName() + ".getPreferredSize(): "
           + e.getLocalizedMessage());
     }
     return new Dimension();
@@ -1166,16 +1143,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    */
   public float getLayoutAlignmentY(Widget parent) {
     return 0.5f;
-  }
-
-  /**
-   * Invalidates the layout, indicating that if the layout manager has cached
-   * information it should be discarded.
-   * 
-   * @param target the container that holds the layout to be invalidated
-   */
-  public void invalidateLayout(Widget target) {
-    invalidateCaches();
   }
 
   /**
@@ -1443,13 +1410,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
           minimumWidthMeasure, minimumHeightMeasure, preferredWidthMeasure,
           preferredHeightMeasure);
     }
-  }
-
-  /**
-   * Invalidates the component size caches.
-   */
-  private void invalidateCaches() {
-    componentSizeCache.invalidate();
   }
 
   /**
@@ -1816,16 +1776,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
   }
 
   // GWT Mosaic (NEW CODE) ************************************************
-
-  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
-  // Dimension>();
-
-  @Override
-  public void flushCache() {
-    // widgetSizes.clear();
-    invalidateCaches();
-    initialized = false;
-  }
 
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {

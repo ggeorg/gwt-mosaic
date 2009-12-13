@@ -88,8 +88,8 @@ public class LayoutData {
    */
   public void setPreferredWidth(String preferredWidth) {
     if (preferredWidth != null) {
-    this.preferredWidth = new ParsedSize(FloatParser.parseFloat(preferredWidth,
-        0.0f), UnitParser.parseUnit(preferredWidth, Unit.PX));
+      this.preferredWidth = new ParsedSize(FloatParser.parseFloat(
+          preferredWidth, 0.0f), UnitParser.parseUnit(preferredWidth, Unit.PX));
     } else {
       this.preferredWidth = null;
     }

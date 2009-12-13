@@ -17,6 +17,8 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.Dimension;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Defines the interface for classes that know how to lay out a {@code
  * LayoutPanel}.
@@ -52,8 +54,13 @@ public interface LayoutManager {
   void layoutPanel(LayoutPanel layoutPanel);
 
   /**
-   * Instructs the layout to flush any cached values.
+   * Invalidates the layout, indicating that if the layout manager has cached
+   * information it should be discarded.
+   * 
+   * @param widget the {@link Widget} that if the layout manager has cached
+   *          information that should be discarded, or {@code null} for all
+   *          widgets
    */
-  void flushCache();
+  void invalidateLayout(Widget widget);
 
 }

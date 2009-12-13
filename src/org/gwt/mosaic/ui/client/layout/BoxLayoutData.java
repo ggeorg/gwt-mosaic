@@ -78,7 +78,7 @@ public final class BoxLayoutData extends LayoutData {
   public BoxLayoutData(final double width, final double height) {
     this(width, height, false);
   }
-  
+
   public BoxLayoutData(final String width, final String height) {
     this(width, height, false);
   }
@@ -104,23 +104,24 @@ public final class BoxLayoutData extends LayoutData {
     super(decorate);
 
     if (width > 1.0) {
-      setPreferredWidth(((int)width) + "px");
+      setPreferredWidth(((int) width) + "px");
     } else if (width > 0.0) {
-      setPreferredWidth(((int)(width * 100.0)) + "%");
+      setPreferredWidth(((int) (width * 100.0)) + "%");
     } else {
       setPreferredWidth(null);
     }
 
     if (height > 1.0) {
-      setPreferredHeight(((int)height) + "px");
+      setPreferredHeight(((int) height) + "px");
     } else if (height > 0.0) {
-      setPreferredHeight(((int)(height * 100.0)) + "%");
+      setPreferredHeight(((int) (height * 100.0)) + "%");
     } else {
       setPreferredHeight(null);
     }
   }
-  
-  public BoxLayoutData(final String width, final String height, final boolean decorate) {
+
+  public BoxLayoutData(final String width, final String height,
+      final boolean decorate) {
     super(decorate);
     setPreferredSize(width, height);
   }
@@ -196,7 +197,7 @@ public final class BoxLayoutData extends LayoutData {
   public boolean isFillHeight() {
     return fillHeight;
   }
-  
+
   /**
    * Sets whether the child widget will be stretched vertically or not.
    * 

@@ -166,13 +166,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
-  public void addCollapsedListener(Widget widget, CollapsedListener listener) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-      layoutData.addCollapsedListener(listener);
-    }
-  }
-
   protected void addImpl(Widget w) {
     super.add(w);
   }
@@ -186,28 +179,17 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
     if (parent == getDecoratorWidget(this)) {
       parent = parent.getParent();
-    } else {
-      if (parent instanceof Viewport) {
-        return parent;
-      } else if (parent instanceof LayoutComposite
-          || parent instanceof Composite) {
-        Widget thiz = parent;
-        parent = thiz.getParent();
-        if (parent == getDecoratorWidget(thiz)) {
-          parent = parent.getParent();
-        }
+    } else if (parent instanceof LayoutComposite || parent instanceof Composite) {
+      Widget thiz = parent;
+      parent = thiz.getParent();
+      if (parent == getDecoratorWidget(thiz)) {
+        parent = parent.getParent();
       }
-      if (parent instanceof FormPanel) {
-        Widget thiz = parent;
-        parent = thiz.getParent();
-        if (parent == getDecoratorWidget(thiz)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof DecoratorPanel) {
-        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
-          parent = parent.getParent();
-        }
+    } else if (parent instanceof FormPanel) {
+      Widget thiz = parent;
+      parent = thiz.getParent();
+      if (parent == getDecoratorWidget(thiz)) {
+        parent = parent.getParent();
       }
     }
 
@@ -218,7 +200,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
    * @return the widget's DecoratorPanel if any, else widget.
    */
   private Widget getDecoratorWidget(Widget widget) {
-    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+    LayoutData layoutData = (LayoutData) widget.getLayoutData();
     if (layoutData != null && layoutData.hasDecoratorPanel()) {
       return layoutData.decoratorPanel;
     }
@@ -242,8 +224,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     return DOM.getIntStyleAttribute(getElement(), "padding");
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
    */
@@ -337,47 +319,31 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
-  /**
-   * Lays out this {@code LayoutPanel} and all of its child widgets.
-   * <p>
-   * The {@code #layout(boolean)} method is used to cause a {@code LayoutPanel}
-   * to lay out its child widgets again. It should be invoked when this {@code
-   * LayoutPanel's} child widgets are modified (added to or removed from the
-   * container, or layout-related information changed) after the {@code
-   * LayoutPanel} has been attached.
-   */
   public void invalidate() {
+    invalidate(null);
+  }
+
+  public void invalidate(Widget widget) {
     if (invalid) {
       return;
     }
 
     invalid = true;
 
-    getLayout().flushCache();
+    getLayout().invalidateLayout(widget);
+
     clearPreferredSizeCache();
 
     final Widget parent = findParent();
-
     if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
         && !(parent instanceof DecoratedLayoutPopupPanel)
         && !(parent instanceof LayoutPopupPanel)) {
-      ((HasLayoutManager) parent).invalidate();
+      if (this.getParent() instanceof LayoutComposite) {
+        ((HasLayoutManager) parent).invalidate(this.getParent());
+      } else {
+        ((HasLayoutManager) parent).invalidate(this);
+      }
     }
-    // else {
-    // if (parent instanceof Viewport) {
-    // ((HasLayoutManager) parent).layout();
-    // } else {
-    // layout();
-    // }
-    // }
-  }
-
-  public boolean isCollapsed(Widget widget) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayout borderLayout = (BorderLayout) getLayout();
-      return borderLayout.isCollapsed(this, widget);
-    }
-    return false;
   }
 
   @Override
@@ -539,26 +505,42 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
-  public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-      layoutData.removeCollapsedListener(listener);
-    }
-  }
-
   protected boolean removeImpl(Widget w) {
     return super.remove(w);
   }
 
+  // Helper methods for Collapsible child widgets **************************
+
+  public boolean isCollapsed(Widget widget) {
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      return ((HasCollapsibleWidgets) getLayout()).isCollapsed(this, widget);
+    }
+    return false;
+  }
+
   public void setCollapsed(Widget widget, boolean collapse) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayout borderLayout = (BorderLayout) getLayout();
-      if (collapse != borderLayout.isCollapsed(this, widget)) {
-        borderLayout.setCollapsed(this, widget, collapse);
-        invalidate();
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      if (collapse != isCollapsed(widget)) {
+        ((HasCollapsibleWidgets) getLayout()).setCollapsed(this, widget,
+            collapse);
+        invalidate(widget);
       }
     }
   }
+
+  public void addCollapsedListener(Widget widget, CollapsedListener listener) {
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      ((Collapsible) widget.getLayoutData()).addCollapsedListener(listener);
+    }
+  }
+
+  public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      ((Collapsible) widget.getLayoutData()).removeCollapsedListener(listener);
+    }
+  }
+
+  // -------
 
   @Override
   public void setHeight(String height) {

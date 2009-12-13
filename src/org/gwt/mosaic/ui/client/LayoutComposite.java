@@ -23,6 +23,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidget;
 
 /**
@@ -46,9 +47,9 @@ public abstract class LayoutComposite extends Composite implements
   }
 
   /**
-   * Creates a {@code LayoutComposite} with the given element. This is protected so that
-   * it can be used by a subclass that wants to substitute another element. The
-   * element is presumed to be a &lt;div&gt;.
+   * Creates a {@code LayoutComposite} with the given element. This is protected
+   * so that it can be used by a subclass that wants to substitute another
+   * element. The element is presumed to be a &lt;div&gt;.
    * 
    * @param elem the element to be used for this panel.
    */
@@ -89,8 +90,8 @@ public abstract class LayoutComposite extends Composite implements
     return (LayoutPanel) super.getWidget();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
@@ -98,24 +99,33 @@ public abstract class LayoutComposite extends Composite implements
     return getLayoutPanel().getPreferredSize();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
-    getLayoutPanel().invalidate();
+    invalidate(null);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
+    getLayoutPanel().invalidate(widget);
+  }
+
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
   public void layout() {
     getLayoutPanel().layout();
   }
-  
+
   /**
    * Set the {@code ResizableWidget} to add to a {@code
    * ResizableWidgetCollection} that periodically checks the outer dimensions of
@@ -135,24 +145,24 @@ public abstract class LayoutComposite extends Composite implements
   public ResizableWidget getResizableWidget() {
     return getLayoutPanel().getResizableWidget();
   }
-  
+
   @Override
   public void setHeight(String height) {
     getLayoutPanel().setHeight(height);
   }
-  
+
   @Override
   public void setWidth(String width) {
     getLayoutPanel().setWidth(width);
   }
-  
-//  @Override
-//  public void setLayoutData(Object layoutData) {
-//    getLayoutPanel().setLayoutData(layoutData);
-//  }
-//  
-//  @Override
-//  public Object getLayoutData() {
-//    return getLayoutPanel().getLayoutData();
-//  }
+
+  // @Override
+  // public void setLayoutData(Object layoutData) {
+  // getLayoutPanel().setLayoutData(layoutData);
+  // }
+  //  
+  // @Override
+  // public Object getLayoutData() {
+  // return getLayoutPanel().getLayoutData();
+  // }
 }
