@@ -524,7 +524,7 @@ public class DesktopPanel extends Composite implements
   public void invalidate(Widget widget) {
     final HasLayoutManager parent = WidgetHelper.getParent(this);
     if (parent != null) {
-      parent.invalidate(widget);
+      parent.invalidate(null);
     }
   }
 
