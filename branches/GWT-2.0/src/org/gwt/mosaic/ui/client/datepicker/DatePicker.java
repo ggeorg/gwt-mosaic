@@ -23,6 +23,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Date picker.
  */
@@ -49,8 +51,8 @@ public class DatePicker extends
     layoutPanel.add(this.getView(), new BoxLayoutData(FillStyle.BOTH));
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
@@ -58,8 +60,8 @@ public class DatePicker extends
     return ((LayoutPanel) getWidget()).getPreferredSize();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
@@ -67,13 +69,22 @@ public class DatePicker extends
     ((LayoutPanel) getWidget()).layout();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
-    ((LayoutPanel) getWidget()).invalidate();
+
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
+    ((LayoutPanel) getWidget()).invalidate(widget);
   }
 
 }

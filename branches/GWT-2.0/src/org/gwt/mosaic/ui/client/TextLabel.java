@@ -265,6 +265,10 @@ public class TextLabel extends Widget implements SourcesClickEvents,
   }
 
   public void invalidate() {
+    invalidate(null);
+  }
+
+  public void invalidate(Widget widget) {
     setSize("auto", "auto");
     if (isAttached()) {
       WidgetHelper.invalidate(getParent());

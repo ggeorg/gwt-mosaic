@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
@@ -112,7 +113,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
       // Start the animation
       if (animate) {
-        run(ANIMATION_DURATION);
+        run(CoreConstants.DEFAULT_DELAY_MILLIS);
       } else {
         onInstantaneousRun();
       }
@@ -126,11 +127,6 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ScrollTabBar";
-
-  /**
-   * The duration of the animation.
-   */
-  private static final int ANIMATION_DURATION = 333;
 
   /**
    * The scroll offset.
@@ -178,25 +174,18 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   private boolean isAnimationEnabled = true;
 
-  private TabLayoutPanel tabPanel;
-
-  public ScrollTabBar(TabLayoutPanel tabPanel) {
-    this(tabPanel, false, false);
+  public ScrollTabBar() {
+    this(false, false);
   }
 
-  public ScrollTabBar(TabLayoutPanel tabPanel, boolean decorated) {
-    this(tabPanel, decorated, false);
+  public ScrollTabBar(boolean decorated) {
+    this(decorated, false);
   }
-  
-  public ScrollTabBar(TabLayoutPanel tabPanel, boolean decorated,
-      boolean atBottom) {
-    super();
 
-    assert tabPanel != null;
-    this.tabPanel = tabPanel;
+  public ScrollTabBar(boolean decorated, boolean atBottom) {
+    super(new BoxLayout(atBottom?Alignment.START:Alignment.END));
 
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setLayout(new BoxLayout(Alignment.END));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
 
@@ -274,7 +263,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     scrollLeftBtn.addMouseDownHandler(new MouseDownHandler() {
       public void onMouseDown(MouseDownEvent event) {
         scrollLeftBtnDown = true;
-        scrollLeftBtnTimer.scheduleRepeating(333);
+        scrollLeftBtnTimer.scheduleRepeating(CoreConstants.DEFAULT_DELAY_MILLIS);
       }
     });
     scrollLeftBtn.addMouseUpHandler(new MouseUpHandler() {
@@ -296,7 +285,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     scrollRightBtn.addMouseDownHandler(new MouseDownHandler() {
       public void onMouseDown(MouseDownEvent event) {
         scrollRightBtnDown = true;
-        scrollRightBtnTimer.scheduleRepeating(333);
+        scrollRightBtnTimer.scheduleRepeating(CoreConstants.DEFAULT_DELAY_MILLIS);
       }
     });
     scrollRightBtn.addMouseUpHandler(new MouseUpHandler() {
@@ -367,6 +356,11 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     tabBar.addTabListener(listener);
   }
 
+  @Deprecated
+  public void removeTabListener(TabListener listener) {
+    tabBar.removeTabListener(listener);
+  }
+
   protected void createScrollAnimation() {
     if (scrollAnimation == null) {
       scrollAnimation = new ScrollAnimation();
@@ -397,7 +391,7 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
    * 
    * @return the tab count
    */
-  public  int getTabCount() {
+  public int getTabCount() {
     return tabBar.getTabCount();
   }
 
@@ -418,7 +412,12 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
   public boolean isAnimationEnabled() {
     return isAnimationEnabled;
   }
-
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.LayoutComposite#layout()
+   */
   @Override
   public void layout() {
     super.layout();
@@ -449,14 +448,21 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
     });
   }
 
+  private void toggleNavBarVisibility(boolean visible) {
+    navBar.setVisible(visible);
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        invalidate();
+        WidgetHelper.getParent(ScrollTabBar.this).layout();
+        scrollTabIntoView();
+      }
+    });
+  }
+
   public void removeTab(int index) {
     tabBar.removeTab(index);
     invalidate();
-  }
-
-  @Deprecated
-  public void removeTabListener(TabListener listener) {
-    tabBar.removeTabListener(listener);
   }
 
   private void scrollTabIntoView() {
@@ -473,18 +479,6 @@ public class ScrollTabBar extends LayoutComposite implements HasAnimation {
 
   public void setAnimationEnabled(boolean enable) {
     isAnimationEnabled = enable;
-  }
-
-  private void toggleNavBarVisibility(boolean visible) {
-    navBar.setVisible(visible);
-    invalidate();
-    tabPanel.layout();
-
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        scrollTabIntoView();
-      }
-    });
   }
 
   private void updateNavBarState() {

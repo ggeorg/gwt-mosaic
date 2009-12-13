@@ -22,6 +22,7 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
@@ -73,7 +74,21 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
     return new Dimension(width + m[1] + m[3], height + m[0] + m[2]);
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   */
   public void invalidate() {
+    invalidate(null);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
     WidgetHelper.invalidate(getParent());
   }
 

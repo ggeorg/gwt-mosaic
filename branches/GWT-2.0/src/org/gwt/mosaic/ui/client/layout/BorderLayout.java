@@ -198,7 +198,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  * @see BorderLayoutData
  */
-public class BorderLayout extends BaseLayout {
+public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
 
   public enum Region {
     NORTH, EAST, SOUTH, WEST, CENTER
@@ -210,26 +210,6 @@ public class BorderLayout extends BaseLayout {
       eastSplitBar;
 
   private Widget placeHolder;
-  
-  /**
-   * Caches component minimum and preferred sizes. All requests for component
-   * sizes shall be directed to the cache.
-   */
-  private final WidgetSizeCache componentSizeCache;
-  
-  /**
-   * These functional objects are used to measure component sizes. They abstract
-   * from horizontal and vertical orientation and so, allow to implement the
-   * layout algorithm for both orientations with a single set of methods.
-   */
-  private final Measure preferredWidthMeasure;
-  private final Measure preferredHeightMeasure;
-  
-  public BorderLayout() {
-    this.componentSizeCache = new WidgetSizeCache(0);
-    this.preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
-    this.preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
-  }
 
   private BorderLayoutData getBorderLayoutData(Widget child) {
     Object layoutDataObject = getLayoutData(child);
@@ -319,7 +299,9 @@ public class BorderLayout extends BaseLayout {
         width += spacing;
       }
 
-      Dimension centerSize = new Dimension(preferredWidthMeasure.sizeOf(center), preferredHeightMeasure.sizeOf(center));
+      Dimension centerSize = new Dimension(
+          preferredWidthMeasure.sizeOf(center),
+          preferredHeightMeasure.sizeOf(center));
       width += centerSize.width;
 
       if (west != null && westSize == null) {
@@ -373,19 +355,6 @@ public class BorderLayout extends BaseLayout {
     return initialized = true;
   }
 
-  protected boolean isCollapsed(LayoutPanel layoutPanel, Widget widget) {
-    try {
-      if (layoutPanel != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
-        return layoutData.collapse;
-      }
-    } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
-      GWT.log(e.getMessage(), e);
-    }
-    return false;
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -415,7 +384,7 @@ public class BorderLayout extends BaseLayout {
       if (north != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
-        if (layoutData.resizable && !layoutData.collapse) {
+        if (layoutData.resizable && !layoutData.collapsed) {
           if (northSplitBar == null) {
             northSplitBar = new BorderLayoutSplitBar(layoutPanel, north);
             northSplitBar.setStyleName("NorthSplitBar");
@@ -459,7 +428,7 @@ public class BorderLayout extends BaseLayout {
       if (south != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
 
-        if (layoutData.resizable && !layoutData.collapse) {
+        if (layoutData.resizable && !layoutData.collapsed) {
           if (southSplitBar == null) {
             southSplitBar = new BorderLayoutSplitBar(layoutPanel, south);
             southSplitBar.setStyleName("SouthSplitBar");
@@ -506,7 +475,7 @@ public class BorderLayout extends BaseLayout {
       if (west != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
 
-        if (layoutData.resizable && !layoutData.collapse) {
+        if (layoutData.resizable && !layoutData.collapsed) {
           if (westSplitBar == null) {
             westSplitBar = new BorderLayoutSplitBar(layoutPanel, west);
             westSplitBar.setStyleName("WestSplitBar");
@@ -552,7 +521,7 @@ public class BorderLayout extends BaseLayout {
       if (east != null) {
         final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
 
-        if (layoutData.resizable && !layoutData.collapse) {
+        if (layoutData.resizable && !layoutData.collapsed) {
           if (eastSplitBar == null) {
             eastSplitBar = new BorderLayoutSplitBar(layoutPanel, east);
             eastSplitBar.setStyleName("EastSplitBar");
@@ -691,83 +660,65 @@ public class BorderLayout extends BaseLayout {
     }
   }
 
-  protected void setCollapsed(final LayoutPanel layoutPanel,
-      final Widget widget, boolean collapse) {
-    try {
-      if (layoutPanel != null) {
+  public boolean isCollapsed(LayoutPanel layoutPanel, Widget widget) {
+    return ((BorderLayoutData) widget.getLayoutData()).collapsed;
+  }
 
-        scanForPanels(layoutPanel);
+  public void setCollapsed(final LayoutPanel layoutPanel, final Widget widget,
+      boolean collapse) {
+    scanForPanels(layoutPanel);
 
-        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(widget);
+    final BorderLayoutData layoutData = (BorderLayoutData) widget.getLayoutData();
 
-        if (collapse) {
-          if (widget == west || widget == east || widget == north
-              || widget == south) {
-            layoutData.collapse = collapse;
-            widget.setVisible(false);
-            syncDecoratorVisibility(widget);
-            if (layoutData.collapsedStateWidget == null) {
-              ImageButton imgBtn = null;
-              if (layoutData.region == Region.NORTH) {
-                imgBtn = new ImageButton(Caption.IMAGES.toolCollapseDown());
-                imgBtn.addStyleName("NorthCollapsedImageButton");
-                imgBtn.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
-              } else if (layoutData.region == Region.EAST) {
-                imgBtn = new ImageButton(Caption.IMAGES.toolCollapseLeft());
-                imgBtn.addStyleName("EastCollapsedImageButton");
-                imgBtn.setVerticalAlignment(HasAlignment.ALIGN_TOP);
-              } else if (layoutData.region == Region.SOUTH) {
-                imgBtn = new ImageButton(Caption.IMAGES.toolCollapseUp());
-                imgBtn.addStyleName("SouthCollapsedImageButton");
-                imgBtn.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
-              } else if (layoutData.region == Region.WEST) {
-                imgBtn = new ImageButton(Caption.IMAGES.toolCollapseRight());
-                imgBtn.addStyleName("WestCollapsedImageButton");
-                imgBtn.setVerticalAlignment(HasAlignment.ALIGN_TOP);
-              }
-              imgBtn.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                  layoutPanel.setCollapsed(widget, false);
-                  layoutPanel.invalidate();
-                  layoutPanel.layout();
-                }
-              });
-              layoutData.collapsedStateWidget = imgBtn;
-            } else {
-              layoutData.collapsedStateWidget.setVisible(true);
-            }
-            if (!layoutData.collapsedStateWidget.isAttached()) {
-              layoutPanel.add(layoutData.collapsedStateWidget,
-                  new BorderLayoutData(layoutData.region));
-            }
-            layoutData.fireCollapsedChange(widget);
+    if (collapse) {
+      if (widget == west || widget == east || widget == north
+          || widget == south) {
+        layoutData.collapsed = collapse;
+        widget.setVisible(false);
+        syncDecoratorVisibility(widget);
+        if (layoutData.collapsedStateWidget == null) {
+          ImageButton imgBtn = null;
+          if (layoutData.region == Region.NORTH) {
+            imgBtn = new ImageButton(Caption.IMAGES.toolCollapseDown());
+            imgBtn.addStyleName("NorthCollapsedImageButton");
+            imgBtn.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
+          } else if (layoutData.region == Region.EAST) {
+            imgBtn = new ImageButton(Caption.IMAGES.toolCollapseLeft());
+            imgBtn.addStyleName("EastCollapsedImageButton");
+            imgBtn.setVerticalAlignment(HasAlignment.ALIGN_TOP);
+          } else if (layoutData.region == Region.SOUTH) {
+            imgBtn = new ImageButton(Caption.IMAGES.toolCollapseUp());
+            imgBtn.addStyleName("SouthCollapsedImageButton");
+            imgBtn.setHorizontalAlignment(HasAlignment.ALIGN_RIGHT);
+          } else if (layoutData.region == Region.WEST) {
+            imgBtn = new ImageButton(Caption.IMAGES.toolCollapseRight());
+            imgBtn.addStyleName("WestCollapsedImageButton");
+            imgBtn.setVerticalAlignment(HasAlignment.ALIGN_TOP);
           }
-        } else if (layoutData.collapse) {
-          layoutData.collapse = collapse;
-          layoutData.collapsedStateWidget.setVisible(false);
-          widget.setVisible(true);
-          syncDecoratorVisibility(widget);
-          layoutData.fireCollapsedChange(widget);
+          imgBtn.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+              layoutPanel.setCollapsed(widget, false);
+              layoutPanel.invalidate(widget);
+              layoutPanel.layout();
+            }
+          });
+          layoutData.collapsedStateWidget = imgBtn;
+        } else {
+          layoutData.collapsedStateWidget.setVisible(true);
         }
-      };
-    } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
-      GWT.log(e.getMessage(), e);
+        if (!layoutData.collapsedStateWidget.isAttached()) {
+          layoutPanel.add(layoutData.collapsedStateWidget,
+              new BorderLayoutData(layoutData.region));
+        }
+        layoutData.fireCollapsedChange(widget);
+      }
+    } else if (layoutData.collapsed) {
+      layoutData.collapsed = collapse;
+      layoutData.collapsedStateWidget.setVisible(false);
+      widget.setVisible(true);
+      syncDecoratorVisibility(widget);
+      layoutData.fireCollapsedChange(widget);
     }
-  }
-  
-  /**
-   * Invalidates the component size caches.
-   */
-  private void invalidateCaches() {
-    componentSizeCache.invalidate();
-  }
-  
-  @Override
-  public void flushCache() {
-    // widgetSizes.clear();
-    invalidateCaches();
-    initialized = false;
   }
 
 }

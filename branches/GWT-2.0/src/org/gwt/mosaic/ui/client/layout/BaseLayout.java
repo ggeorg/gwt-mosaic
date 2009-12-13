@@ -53,6 +53,57 @@ public abstract class BaseLayout implements LayoutManager {
   @Deprecated
   protected int[] paddings = {0, 0};
 
+  /**
+   * Caches widget minimum and preferred sizes. All requests for component sizes
+   * shall be directed to the cache.
+   */
+  protected final WidgetSizeCache componentSizeCache;
+
+  /**
+   * These functional objects are used to measure component sizes. They abstract
+   * from horizontal and vertical orientation and so, allow to implement the
+   * layout algorithm for both orientations with a single set of methods.
+   */
+  protected final Measure minimumWidthMeasure;
+  protected final Measure minimumHeightMeasure;
+  protected final Measure preferredWidthMeasure;
+  protected final Measure preferredHeightMeasure;
+
+  public BaseLayout() {
+    componentSizeCache = new WidgetSizeCache();
+    minimumWidthMeasure = new MinimumWidthMeasure(componentSizeCache);
+    minimumHeightMeasure = new MinimumHeightMeasure(componentSizeCache);
+    preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
+    preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
+  }
+
+  /**
+   * Invalidates the component size caches.
+   * 
+   * @param widget the {@link Widget} that if the layout manager has cached
+   *          information that should be discarded, or {@code null} for all
+   *          widgets
+   */
+  protected void invalidateCaches(Widget widget) {
+    if (widget != null) {
+      componentSizeCache.removeEntry(widget);
+    } else {
+      componentSizeCache.invalidate();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#invalidateLayout(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidateLayout(Widget widget) {
+    invalidateCaches(widget);
+    initialized = false;
+  }
+
+  // -----------------
+
   protected Dimension getPreferredSize(LayoutPanel layoutPanel, Widget widget,
       LayoutData layoutData) {
     // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
@@ -104,9 +155,6 @@ public abstract class BaseLayout implements LayoutManager {
       style.setProperty("position", "static");
       style.setProperty("visibility", "hidden");
 
-      // style.setProperty("width", "auto");
-      // style.setProperty("height", "auto");
-
       parentElem.appendChild(clonedElem);
 
       if (layoutData.getPreferredWidth() != null) {
@@ -132,7 +180,7 @@ public abstract class BaseLayout implements LayoutManager {
   }
 
   protected void syncDecoratorVisibility(Widget child) {
-    LayoutData layoutData = (LayoutData) getLayoutData(child);
+    LayoutData layoutData = (LayoutData) child.getLayoutData();
     if (layoutData != null && layoutData.hasDecoratorPanel()) {
       layoutData.decoratorPanel.setVisible(DOM.isVisible(child.getElement()));
     }
@@ -174,15 +222,6 @@ public abstract class BaseLayout implements LayoutManager {
     visibleChildList.clear();
 
     return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#flushCache()
-   */
-  public void flushCache() {
-    initialized = false;
   }
 
   private void layoutPanelImpl(LayoutPanel layoutPanel) {
@@ -362,7 +401,7 @@ public abstract class BaseLayout implements LayoutManager {
     /**
      * Constructs a {@code WidgetSizeCache}.
      */
-    public WidgetSizeCache(int initialCapacity) {
+    public WidgetSizeCache() {
       minimumSizes = new HashMap<Widget, Dimension>();
       preferredSizes = new HashMap<Widget, Dimension>();
     }

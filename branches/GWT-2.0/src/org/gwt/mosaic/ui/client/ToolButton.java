@@ -319,15 +319,15 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
   private static final String DEFAULT_STYLENAME = "mosaic-ToolButton";
 
   private final ButtonWidget button = new ButtonWidget();
-  
+
   @Override
   public Dimension getPreferredSize() {
     return getLayoutPanel().getPreferredSize();
   }
-  
+
   @Override
-  public void invalidate() {
-    super.invalidate();
+  public void invalidate(Widget widget) {
+    super.invalidate(widget);
     button.setSize("auto", "auto");
   }
 
