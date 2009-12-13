@@ -173,23 +173,34 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   private void clearPreferredSizeCache() {
     preferredSizeCache.setSize(-1, -1);
   }
-
+  
   public Widget findParent() {
     Widget parent = getParent();
 
     if (parent == getDecoratorWidget(this)) {
       parent = parent.getParent();
-    } else if (parent instanceof LayoutComposite || parent instanceof Composite) {
-      Widget thiz = parent;
-      parent = thiz.getParent();
-      if (parent == getDecoratorWidget(thiz)) {
-        parent = parent.getParent();
+    } else {
+      if (parent instanceof Viewport) {
+        return parent;
+      } else if (parent instanceof LayoutComposite
+          || parent instanceof Composite) {
+        Widget thiz = parent;
+        parent = thiz.getParent();
+        if (parent == getDecoratorWidget(thiz)) {
+          parent = parent.getParent();
+        }
       }
-    } else if (parent instanceof FormPanel) {
-      Widget thiz = parent;
-      parent = thiz.getParent();
-      if (parent == getDecoratorWidget(thiz)) {
-        parent = parent.getParent();
+      if (parent instanceof FormPanel) {
+        Widget thiz = parent;
+        parent = thiz.getParent();
+        if (parent == getDecoratorWidget(thiz)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof DecoratorPanel) {
+        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
+          parent = parent.getParent();
+        }
       }
     }
 
@@ -338,11 +349,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
         && !(parent instanceof DecoratedLayoutPopupPanel)
         && !(parent instanceof LayoutPopupPanel)) {
-      if (this.getParent() instanceof LayoutComposite) {
         ((HasLayoutManager) parent).invalidate(this.getParent());
-      } else {
         ((HasLayoutManager) parent).invalidate(this);
-      }
     }
   }
 
