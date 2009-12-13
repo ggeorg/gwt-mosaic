@@ -16,6 +16,7 @@
 package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
+import org.gwt.mosaic.core.client.util.IntegerParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
@@ -102,12 +103,12 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getComputedStyleAttribute(elem, "borderTopWidth"), 10, 0);
-    size[1] = parseInt(getComputedStyleAttribute(elem, "borderRightWidth"), 10,
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderTopWidth"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderRightWidth"), 10,
         0);
-    size[2] = parseInt(getComputedStyleAttribute(elem, "borderBottomWidth"),
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderBottomWidth"),
         10, 0);
-    size[3] = parseInt(getComputedStyleAttribute(elem, "borderLeftWidth"), 10,
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderLeftWidth"), 10,
         0);
 
     return size;
@@ -179,10 +180,10 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getComputedStyleAttribute(elem, "marginTop"), 10, 0);
-    size[1] = parseInt(getComputedStyleAttribute(elem, "marginRight"), 10, 0);
-    size[2] = parseInt(getComputedStyleAttribute(elem, "marginBottom"), 10, 0);
-    size[3] = parseInt(getComputedStyleAttribute(elem, "marginLeft"), 10, 0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginTop"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginRight"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginBottom"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginLeft"), 10, 0);
 
     return size;
   }
@@ -196,10 +197,10 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getComputedStyleAttribute(elem, "paddingTop"), 10, 0);
-    size[1] = parseInt(getComputedStyleAttribute(elem, "paddingRight"), 10, 0);
-    size[2] = parseInt(getComputedStyleAttribute(elem, "paddingBottom"), 10, 0);
-    size[3] = parseInt(getComputedStyleAttribute(elem, "paddingLeft"), 10, 0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingTop"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingRight"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingBottom"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingLeft"), 10, 0);
 
     return size;
   }
@@ -242,69 +243,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static boolean isVisible(Element element) {
     return !"none".equalsIgnoreCase(DOM.getComputedStyleAttribute(element,
         "display"));
-  }
-
-  /**
-   * Parses a string and returns an integer.
-   * <p>
-   * NOTE: Only the first number in the string is returned!
-   * <p>
-   * NOTE: Leading and trailing spaces are allowed.
-   * <p>
-   * NOTE: If the first character cannot be converted to a number,
-   * <code>parseInt()</code> returns <code>null</code>.
-   * 
-   * @param str the string to be parsed
-   * @return the parsed value
-   */
-  protected static Integer parseInt(String str) {
-    return parseInt(str, 10);
-  }
-
-  /**
-   * Parses a string and returns an integer.
-   * <p>
-   * NOTE: Only the first number in the string is returned!
-   * <p>
-   * NOTE: Leading and trailing spaces are allowed.
-   * <p>
-   * NOTE: If the first character cannot be converted to a number,
-   * <code>parseInt()</code> returns <code>null</code>.
-   * 
-   * @param str the string to be parsed
-   * @param radix a number (from 2 to 36) that represents the numeric system to
-   *          be used
-   * @return the parsed value
-   */
-  protected native static Integer parseInt(String str, int radix)
-  /*-{
-    var number = parseInt(str, radix);
-    if (isNaN(number))
-      return null;
-    else
-      return @java.lang.Integer::valueOf(I)(number);
-  }-*/;
-
-  /**
-   * Parses a string and returns an integer.
-   * <p>
-   * NOTE: Only the first number in the string is returned!
-   * <p>
-   * NOTE: Leading and trailing spaces are allowed.
-   * <p>
-   * NOTE: If the first character cannot be converted to a number,
-   * <code>parseInt()</code> returns <code>null</code>.
-   * 
-   * @param str the string to be parsed
-   * @param radix a number (from 2 to 36) that represents the numeric system to
-   *          be used
-   * @param defaultValue the value to return if the parsed value was
-   *          <code>null</code>
-   * @return the parsed value
-   */
-  private static int parseInt(String str, int radix, int defaultValue) {
-    final Integer result = parseInt(str, radix);
-    return result == null ? defaultValue : result;
   }
 
   /**

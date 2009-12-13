@@ -15,9 +15,10 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.util.FloatParser;
+import org.gwt.mosaic.core.client.util.UnitParser;
 
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
 /**
@@ -57,50 +58,92 @@ public class LayoutData {
     return decoratorPanel != null;
   }
 
-  // ----
+  // The preferred size hints **********************************************
 
-  protected String preferredWidth;
-
-  protected String preferredHeight;
+  private ParsedSize preferredWidth, preferredHeight;
 
   /**
-   * @return the preferredWidth
+   * @return the preferred width
    */
-  public String getPreferredWidth() {
-    return preferredWidth;
-  }
-
-  /**
-   * @param preferredWidth the preferredWidth to set
-   */
-  public void setPreferredWidth(String preferredWidth) {
-    this.preferredWidth = preferredWidth;
+  public String getPreferredWidthString() {
+    return preferredWidth.getValue();
   }
 
   /**
    * @return the preferredHeight
    */
-  public String getPreferredHeight() {
+  public ParsedSize getPreferredHeight() {
     return preferredHeight;
+  }
+
+  /**
+   * @return the preferredWidth
+   */
+  public ParsedSize getPreferredWidth() {
+    return preferredWidth;
+  }
+
+  /**
+   * @param preferredWidth the preferred width to set
+   */
+  public void setPreferredWidth(String preferredWidth) {
+    if (preferredWidth != null) {
+    this.preferredWidth = new ParsedSize(FloatParser.parseFloat(preferredWidth,
+        0.0f), UnitParser.parseUnit(preferredWidth, Unit.PX));
+    } else {
+      this.preferredWidth = null;
+    }
+  }
+
+  /**
+   * @return the preferred height
+   */
+  public String getPreferredHeightString() {
+    return preferredHeight.getValue();
   }
 
   /**
    * @param preferredHeight the preferredHeight to set
    */
   public void setPreferredHeight(String preferredHeight) {
-    this.preferredHeight = preferredHeight;
+    if (preferredHeight != null) {
+      this.preferredHeight = new ParsedSize(FloatParser.parseFloat(
+          preferredHeight, 0.0f),
+          UnitParser.parseUnit(preferredHeight, Unit.PX));
+    } else {
+      this.preferredHeight = null;
+    }
   }
 
-  // ----
-
+  /**
+   * @param preferredWidth the preferred width to set
+   * @param preferredHeight the preferred height to set
+   */
   public void setPreferredSize(String preferredWidth, String preferredHeight) {
-    this.preferredWidth = preferredWidth;
-    this.preferredHeight = preferredHeight;
+    setPreferredWidth(preferredWidth);
+    setPreferredHeight(preferredHeight);
   }
 
-  protected void setPreferredSize(Dimension preferredSize) {
-    this.preferredWidth = preferredSize.getWidth() + Style.Unit.PX.getType();
-    this.preferredHeight = preferredSize.getHeight() + Style.Unit.PX.getType();
+  class ParsedSize {
+    private double size;
+    private Unit unit;
+
+    private ParsedSize(double size, Unit unit) {
+      this.size = size;
+      this.unit = unit;
+    }
+
+    public double getSize() {
+      return size;
+    }
+
+    public Unit getUnit() {
+      return unit;
+    }
+
+    public String getValue() {
+      return unit != null ? size + unit.getType() : null;
+    }
   }
 
   // ----

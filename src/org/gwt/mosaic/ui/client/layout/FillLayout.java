@@ -129,6 +129,26 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
   private VerticalAlignmentConstant verticalAlignment;
 
+  /**
+   * Caches component minimum and preferred sizes. All requests for component
+   * sizes shall be directed to the cache.
+   */
+  private final WidgetSizeCache componentSizeCache;
+
+  /**
+   * These functional objects are used to measure component sizes. They abstract
+   * from horizontal and vertical orientation and so, allow to implement the
+   * layout algorithm for both orientations with a single set of methods.
+   */
+  private final Measure preferredWidthMeasure;
+  private final Measure preferredHeightMeasure;
+
+  public FillLayout() {
+    this.componentSizeCache = new WidgetSizeCache(0);
+    this.preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
+    this.preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
+  }
+
   public HorizontalAlignmentConstant getHorizontalAlignment() {
     return horizontalAlignment;
   }
@@ -141,7 +161,8 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         return result;
       }
 
-      result.setSize(getPreferredSize(layoutPanel, child, layoutData));
+      result.setSize(preferredWidthMeasure.sizeOf(child),
+          preferredHeightMeasure.sizeOf(child));
 
       if (layoutData.hasDecoratorPanel()) {
         final Dimension d = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -240,7 +261,8 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       } else {
         // (ggeorg) this call to WidgetHelper.getPreferredSize() is
         // required even for ALIGN_LEFT
-        prefSize = getPreferredSize(layoutPanel, child, layoutData);
+        prefSize = new Dimension(preferredWidthMeasure.sizeOf(child),
+            preferredHeightMeasure.sizeOf(child));
 
         if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
           layoutData.targetLeft = left;
@@ -264,7 +286,8 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         if (prefSize == null) {
           // (ggeorg) this call to WidgetHelper.getPreferredSize() is
           // required even for ALIGN_TOP
-          prefSize = getPreferredSize(layoutPanel, child, layoutData);
+          prefSize = new Dimension(preferredWidthMeasure.sizeOf(child),
+              preferredHeightMeasure.sizeOf(child));
         }
 
         if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
@@ -301,6 +324,20 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
   public void setVerticalAlignment(VerticalAlignmentConstant align) {
     this.verticalAlignment = align;
+  }
+  
+  /**
+   * Invalidates the component size caches.
+   */
+  private void invalidateCaches() {
+    componentSizeCache.invalidate();
+  }
+  
+  @Override
+  public void flushCache() {
+    // widgetSizes.clear();
+    invalidateCaches();
+    initialized = false;
   }
 
 }

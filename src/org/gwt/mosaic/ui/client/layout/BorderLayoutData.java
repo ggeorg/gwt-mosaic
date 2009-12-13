@@ -180,6 +180,7 @@ public class BorderLayoutData extends LayoutData {
       } else {
         setPreferredHeight(null);
       }
+      setPreferredWidth("0px");
     } else if (region == Region.WEST || region == Region.EAST) {
       if (preferredSize > 1.0) {
         setPreferredWidth(((int) preferredSize) + "px");
@@ -188,6 +189,7 @@ public class BorderLayoutData extends LayoutData {
       } else {
         setPreferredWidth(null);
       }
+      setPreferredHeight("0px");
     }
   }
 
@@ -196,8 +198,10 @@ public class BorderLayoutData extends LayoutData {
     setRegion(region);
     if (region == Region.NORTH || region == Region.SOUTH) {
       setPreferredHeight(preferredSize);
+      setPreferredWidth("0px");
     } else if (region == Region.WEST || region == Region.EAST) {
       setPreferredWidth(preferredSize);
+      setPreferredHeight("0px");
     }
   }
 
@@ -291,6 +295,7 @@ public class BorderLayoutData extends LayoutData {
       } else {
         setPreferredHeight(null);
       }
+      setPreferredWidth("0px");
     } else if (region == Region.WEST || region == Region.EAST) {
       if (preferredSize > 1.0) {
         setPreferredWidth(((int) preferredSize) + "px");
@@ -299,6 +304,7 @@ public class BorderLayoutData extends LayoutData {
       } else {
         setPreferredWidth(null);
       }
+      setPreferredHeight("0px");
     }
 
     this.minSize = Math.max(0, minSize) + Unit.PX.getType();
@@ -312,8 +318,10 @@ public class BorderLayoutData extends LayoutData {
     setRegion(region);
     if (region == Region.NORTH || region == Region.SOUTH) {
       setPreferredHeight(preferredSize);
+      setPreferredWidth("0px");
     } else if (region == Region.WEST || region == Region.EAST) {
       setPreferredWidth(preferredSize);
+      setPreferredHeight("0px");
     }
     setMinSize(minSize);
     setMaxSize(maxSize);

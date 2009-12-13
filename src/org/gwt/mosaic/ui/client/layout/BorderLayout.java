@@ -28,14 +28,11 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * A border layout lays out a {@link LayoutPanel}, arranging and resizing its
@@ -212,12 +209,27 @@ public class BorderLayout extends BaseLayout {
   private BorderLayoutSplitBar northSplitBar, southSplitBar, westSplitBar,
       eastSplitBar;
 
-  private GlassPanel northGlassPanel;
-  private GlassPanel southGlassPanel;
-  private GlassPanel westGlassPanel;
-  private GlassPanel eastGlassPanel;
-
   private Widget placeHolder;
+  
+  /**
+   * Caches component minimum and preferred sizes. All requests for component
+   * sizes shall be directed to the cache.
+   */
+  private final WidgetSizeCache componentSizeCache;
+  
+  /**
+   * These functional objects are used to measure component sizes. They abstract
+   * from horizontal and vertical orientation and so, allow to implement the
+   * layout algorithm for both orientations with a single set of methods.
+   */
+  private final Measure preferredWidthMeasure;
+  private final Measure preferredHeightMeasure;
+  
+  public BorderLayout() {
+    this.componentSizeCache = new WidgetSizeCache(0);
+    this.preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
+    this.preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
+  }
 
   private BorderLayoutData getBorderLayoutData(Widget child) {
     Object layoutDataObject = getLayoutData(child);
@@ -254,7 +266,7 @@ public class BorderLayout extends BaseLayout {
       if (north != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
 
-        int northHeight = getPreferredSize(layoutPanel, north, layoutData).height;
+        int northHeight = preferredHeightMeasure.sizeOf(north);
 
         height += northHeight;
         if (layoutData.hasDecoratorPanel()) {
@@ -267,7 +279,7 @@ public class BorderLayout extends BaseLayout {
       if (south != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
 
-        int southHeight = getPreferredSize(layoutPanel, south, layoutData).height;
+        int southHeight = preferredHeightMeasure.sizeOf(south);;
 
         height += southHeight;
         if (layoutData.hasDecoratorPanel()) {
@@ -282,7 +294,7 @@ public class BorderLayout extends BaseLayout {
       if (west != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
 
-        int westWidth = getPreferredSize(layoutPanel, west, layoutData).width;
+        int westWidth = preferredWidthMeasure.sizeOf(west);
 
         width += (int) Math.round(westWidth);
         if (layoutData.hasDecoratorPanel()) {
@@ -297,7 +309,7 @@ public class BorderLayout extends BaseLayout {
       if (east != null) {
         BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
 
-        int eastWidth = getPreferredSize(layoutPanel, east, layoutData).width;
+        int eastWidth = preferredWidthMeasure.sizeOf(east);
 
         width += (int) Math.round(eastWidth);
         if (layoutData.hasDecoratorPanel()) {
@@ -307,8 +319,7 @@ public class BorderLayout extends BaseLayout {
         width += spacing;
       }
 
-      Dimension centerSize = getPreferredSize(layoutPanel, center,
-          (LayoutData) center.getLayoutData());
+      Dimension centerSize = new Dimension(preferredWidthMeasure.sizeOf(center), preferredHeightMeasure.sizeOf(center));
       width += centerSize.width;
 
       if (west != null && westSize == null) {
@@ -417,7 +428,7 @@ public class BorderLayout extends BaseLayout {
           }
         }
 
-        int h = getPreferredSize(layoutPanel, north, layoutData).height;
+        int h = preferredHeightMeasure.sizeOf(north);
 
         layoutData.targetLeft = left;
         layoutData.targetTop = top;
@@ -436,14 +447,10 @@ public class BorderLayout extends BaseLayout {
         layoutData.setSourceWidth(north.getOffsetWidth());
         layoutData.setSourceHeight(north.getOffsetHeight());
 
-        if (northGlassPanel == null || !northGlassPanel.isAttached()) {
-          // split bar
-          if (layoutData.resizable && northSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, northSplitBar, left, top + h,
-                Math.max(0, right - left), spacing);
-          }
-        } else {
-          return;
+        // split bar
+        if (layoutData.resizable && northSplitBar.isAttached()) {
+          WidgetHelper.setBounds(layoutPanel, northSplitBar, left, top + h,
+              Math.max(0, right - left), spacing);
         }
 
         top += (h + spacing);
@@ -465,7 +472,7 @@ public class BorderLayout extends BaseLayout {
           }
         }
 
-        int h = getPreferredSize(layoutPanel, south, layoutData).height;
+        int h = preferredHeightMeasure.sizeOf(south);
 
         layoutData.targetLeft = left;
         layoutData.targetTop = Math.max(0, bottom - h);
@@ -486,15 +493,11 @@ public class BorderLayout extends BaseLayout {
         layoutData.setSourceWidth(south.getOffsetWidth());
         layoutData.setSourceHeight(south.getOffsetHeight());
 
-        if (southGlassPanel == null || !southGlassPanel.isAttached()) {
-          // split bar
-          if (layoutData.resizable && southSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, southSplitBar, left, Math.max(
-                0, bottom - h)
-                - spacing, Math.max(0, right - left), spacing);
-          }
-        } else {
-          return;
+        // split bar
+        if (layoutData.resizable && southSplitBar.isAttached()) {
+          WidgetHelper.setBounds(layoutPanel, southSplitBar, left, Math.max(0,
+              bottom - h)
+              - spacing, Math.max(0, right - left), spacing);
         }
 
         bottom -= (h + spacing);
@@ -516,7 +519,7 @@ public class BorderLayout extends BaseLayout {
           }
         }
 
-        int w = getPreferredSize(layoutPanel, west, layoutData).width;
+        int w = preferredWidthMeasure.sizeOf(west);
 
         layoutData.targetLeft = left;
         layoutData.targetTop = top;
@@ -537,14 +540,10 @@ public class BorderLayout extends BaseLayout {
         layoutData.setSourceWidth(west.getOffsetWidth());
         layoutData.setSourceHeight(west.getOffsetHeight());
 
-        if (westGlassPanel == null || !westGlassPanel.isAttached()) {
-          // split bar
-          if (layoutData.resizable && westSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
-                spacing, Math.max(0, bottom - top));
-          }
-        } else {
-          return;
+        // split bar
+        if (layoutData.resizable && westSplitBar.isAttached()) {
+          WidgetHelper.setBounds(layoutPanel, westSplitBar, left + w, top,
+              spacing, Math.max(0, bottom - top));
         }
 
         left += (w + spacing);
@@ -566,7 +565,7 @@ public class BorderLayout extends BaseLayout {
           }
         }
 
-        int w = getPreferredSize(layoutPanel, east, layoutData).width;
+        int w = preferredWidthMeasure.sizeOf(east);
 
         layoutData.targetLeft = Math.max(0, right - w);
         layoutData.targetTop = top;
@@ -588,15 +587,11 @@ public class BorderLayout extends BaseLayout {
         layoutData.setSourceWidth(east.getOffsetWidth());
         layoutData.setSourceHeight(east.getOffsetHeight());
 
-        if (eastGlassPanel == null || !eastGlassPanel.isAttached()) {
-          // split bar
-          if (layoutData.resizable && eastSplitBar.isAttached()) {
-            WidgetHelper.setBounds(layoutPanel, eastSplitBar, Math.max(0, right
-                - w)
-                - spacing, top, spacing, Math.max(0, bottom - top));
-          }
-        } else {
-          return;
+        // split bar
+        if (layoutData.resizable && eastSplitBar.isAttached()) {
+          WidgetHelper.setBounds(layoutPanel, eastSplitBar, Math.max(0, right
+              - w)
+              - spacing, top, spacing, Math.max(0, bottom - top));
         }
 
         right -= (w + spacing);
@@ -759,6 +754,20 @@ public class BorderLayout extends BaseLayout {
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
       GWT.log(e.getMessage(), e);
     }
+  }
+  
+  /**
+   * Invalidates the component size caches.
+   */
+  private void invalidateCaches() {
+    componentSizeCache.invalidate();
+  }
+  
+  @Override
+  public void flushCache() {
+    // widgetSizes.clear();
+    invalidateCaches();
+    initialized = false;
   }
 
 }
