@@ -181,8 +181,20 @@ public class BoxLayout extends BaseLayout {
 
   boolean leftToRight = true;
 
-  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
-  // Dimension>();
+  /**
+   * Caches component minimum and preferred sizes. All requests for component
+   * sizes shall be directed to the cache.
+   */
+  private final WidgetSizeCache componentSizeCache;
+  
+  /**
+   * These functional objects are used to measure component sizes. They abstract
+   * from horizontal and vertical orientation and so, allow to implement the
+   * layout algorithm for both orientations with a single set of methods.
+   */
+  private final Measure preferredWidthMeasure;
+  private final Measure preferredHeightMeasure;
+  
 
   /**
    * Creates a new instance of {@code BoxLayout} with horizontal orientation.
@@ -205,14 +217,11 @@ public class BoxLayout extends BaseLayout {
   }
 
   public BoxLayout(Orientation orientation, Alignment alignment) {
+    this.componentSizeCache = new WidgetSizeCache(0);
+    this.preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
+    this.preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
     this.orientation = orientation;
     this.alignment = alignment;
-  }
-
-  @Override
-  public void flushCache() {
-    // widgetSizes.clear();
-    initialized = false;
   }
 
   public Alignment getAlignment() {
@@ -294,13 +303,14 @@ public class BoxLayout extends BaseLayout {
 
         if (orientation == Orientation.HORIZONTAL) {
 
-          width += getPreferredSize(layoutPanel, child, layoutData).width;
+          width += preferredWidthMeasure.sizeOf(child);
+
           if (layoutData.hasDecoratorPanel()) {
             width += decPanelFrameSize.width;
           }
 
-          layoutData.calcHeight = getPreferredSize(layoutPanel, child,
-              layoutData).height;
+          layoutData.calcHeight = preferredHeightMeasure.sizeOf(child); 
+
           if (layoutData.hasDecoratorPanel()) {
             layoutData.calcHeight += decPanelFrameSize.height;
           }
@@ -309,13 +319,14 @@ public class BoxLayout extends BaseLayout {
 
         } else { // Orientation.VERTICAL
 
-          height += getPreferredSize(layoutPanel, child, layoutData).height;
+          height += preferredHeightMeasure.sizeOf(child); 
+          
           if (layoutData.hasDecoratorPanel()) {
             height += decPanelFrameSize.height;
           }
 
-          layoutData.calcWidth = getPreferredSize(layoutPanel, child,
-              layoutData).width;
+          layoutData.calcWidth = preferredWidthMeasure.sizeOf(child); 
+
           if (layoutData.hasDecoratorPanel()) {
             layoutData.calcWidth += decPanelFrameSize.width;
           }
@@ -438,8 +449,7 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillWidth) {
             fillingWidth++;
           } else {
-            layoutData.calcWidth = getPreferredSize(layoutPanel, child,
-                layoutData).width;
+            layoutData.calcWidth = preferredWidthMeasure.sizeOf(child); 
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcWidth += decPanelFrameSize.width;
             }
@@ -448,9 +458,7 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
           } else {
-            layoutData.calcHeight = getPreferredSize(layoutPanel, child,
-                layoutData).height;
-
+            layoutData.calcHeight = preferredHeightMeasure.sizeOf(child); 
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
@@ -459,9 +467,7 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillHeight) {
             fillingHeight++;
           } else {
-            layoutData.calcHeight = getPreferredSize(layoutPanel, child,
-                layoutData).height;
-
+            layoutData.calcHeight = preferredHeightMeasure.sizeOf(child); 
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
@@ -470,9 +476,7 @@ public class BoxLayout extends BaseLayout {
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
           } else {
-            layoutData.calcWidth = getPreferredSize(layoutPanel, child,
-                layoutData).width;
-
+            layoutData.calcWidth = preferredWidthMeasure.sizeOf(child); 
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcWidth += decPanelFrameSize.width;
             }
@@ -693,6 +697,20 @@ public class BoxLayout extends BaseLayout {
    */
   public void setOrientation(Orientation orient) {
     this.orientation = orient;
+  }
+  
+  /**
+   * Invalidates the component size caches.
+   */
+  private void invalidateCaches() {
+    componentSizeCache.invalidate();
+  }
+  
+  @Override
+  public void flushCache() {
+    // widgetSizes.clear();
+    invalidateCaches();
+    initialized = false;
   }
 
 }

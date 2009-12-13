@@ -19,14 +19,18 @@ import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.util.DefaultUnitConverter;
+import org.gwt.mosaic.core.client.util.UnitConverter;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -70,6 +74,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   private String onLoadWidth;
 
   private boolean invalid = true;
+
+  private UnitConverter unitConverter;
 
   /**
    * Creates a new {@code LayoutPanel} with {@link FillLayout}.
@@ -625,12 +631,47 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     return null;
   }
 
+  public UnitConverter getUnitConverter() {
+    if (unitConverter == null) {
+      DefaultUnitConverter unitConverter = DefaultUnitConverter.getInstance();
+      unitConverter.setFontSize(toPixelSize("1em", true));
+      unitConverter.setXHeight(toPixelSize("1ex", true));
+      this.unitConverter = unitConverter;
+    }
+    return unitConverter;
+  }
+
   private Element toPixelSizeTestElem = null;
 
-  int toPixelSize(final String value, final boolean useWidthAttribute) {
+  int toPixelSize(final ParsedSize parsedSize, final boolean useWidthAttribute) {
+    Unit unit = parsedSize.getUnit();
+    if (unit == Unit.CM) {
+      return getUnitConverter().centimeterAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.EM) {
+      return getUnitConverter().fontSizeAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.EX) {
+      return getUnitConverter().xHeightAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.IN) {
+      return getUnitConverter().inchAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.MM) {
+      return getUnitConverter().millimeterAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.PC) {
+      return getUnitConverter().picaAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.PCT) {
+      return toPixelSize(parsedSize.getValue(), useWidthAttribute);
+    } else if (unit == Unit.PT) {
+      return getUnitConverter().pointAsPixel(
+          (int) Math.round(parsedSize.getSize()));
+    } else if (parsedSize.getUnit() == Unit.PX) {
+      return (int) Math.round(parsedSize.getSize());
+    }
+    throw new IllegalArgumentException("Invalid size: " + parsedSize.getValue());
+  }
+
+  protected int toPixelSize(final String value, final boolean useWidthAttribute) {
     if (toPixelSizeTestElem == null) {
       toPixelSizeTestElem = DOM.createSpan();
-      DOM.setStyleAttribute(toPixelSizeTestElem, "position", "absolute"); // Safari
+      DOM.setStyleAttribute(toPixelSizeTestElem, "position", "absolute");
       DOM.setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       DOM.setStyleAttribute(toPixelSizeTestElem, "left", "0px");
       DOM.setStyleAttribute(toPixelSizeTestElem, "top", "0px");

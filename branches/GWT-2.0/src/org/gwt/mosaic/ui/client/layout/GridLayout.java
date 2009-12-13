@@ -19,6 +19,10 @@ import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.layout.BaseLayout.Measure;
+import org.gwt.mosaic.ui.client.layout.BaseLayout.PreferredHeightMeasure;
+import org.gwt.mosaic.ui.client.layout.BaseLayout.PreferredWidthMeasure;
+import org.gwt.mosaic.ui.client.layout.BaseLayout.WidgetSizeCache;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -81,6 +85,20 @@ public class GridLayout extends BaseLayout implements HasAlignment {
   private HorizontalAlignmentConstant horizontalAlignment;
 
   private VerticalAlignmentConstant verticalAlignment;
+  
+  /**
+   * Caches component minimum and preferred sizes. All requests for component
+   * sizes shall be directed to the cache.
+   */
+  private final WidgetSizeCache componentSizeCache;
+  
+  /**
+   * These functional objects are used to measure component sizes. They abstract
+   * from horizontal and vertical orientation and so, allow to implement the
+   * layout algorithm for both orientations with a single set of methods.
+   */
+  private final Measure preferredWidthMeasure;
+  private final Measure preferredHeightMeasure;
 
   /**
    * Creates a grid layout with a default of one column per component, in a
@@ -112,6 +130,9 @@ public class GridLayout extends BaseLayout implements HasAlignment {
   public GridLayout(int columns, int rows,
       HorizontalAlignmentConstant horizontalAlignment,
       VerticalAlignmentConstant verticalAlignment) {
+    this.componentSizeCache = new WidgetSizeCache(0);
+    this.preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
+    this.preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
     setColumns(columns);
     setRows(rows);
     setHorizontalAlignment(horizontalAlignment);
@@ -242,7 +263,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
           GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
 
-          final Dimension dim = getPreferredSize(layoutPanel, widget, layoutData);
+          final Dimension dim = new Dimension(preferredWidthMeasure.sizeOf(widget), preferredHeightMeasure.sizeOf(widget));
 
           int flowWidth, flowHeight;
 
@@ -380,7 +401,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           } else {
             // (ggeorg) this call to WidgetHelper.getPreferredSize() is
             // required even for ALIGN_LEFT
-            prefSize = getPreferredSize(layoutPanel, widget, layoutData);
+            prefSize = new Dimension(preferredWidthMeasure.sizeOf(widget), preferredHeightMeasure.sizeOf(widget));
 
             if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
               layoutData.targetLeft = left + (spacing + colWidth) * c;
@@ -406,7 +427,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             if (prefSize == null) {
               // (ggeorg) this call to WidgetHelper.getPreferredSize() is
               // required even for ALIGN_TOP
-              prefSize = getPreferredSize(layoutPanel, widget, layoutData);
+              prefSize = new Dimension(preferredWidthMeasure.sizeOf(widget), preferredHeightMeasure.sizeOf(widget));
             }
             if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
               layoutData.targetTop = top + (spacing + rowHeight) * r;

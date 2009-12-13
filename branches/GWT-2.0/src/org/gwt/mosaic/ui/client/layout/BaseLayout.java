@@ -16,7 +16,9 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
@@ -29,7 +31,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.LayoutManagerHelper;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -38,8 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public abstract class BaseLayout extends LayoutManagerHelper implements
-    LayoutManager {
+public abstract class BaseLayout implements LayoutManager {
 
   protected final List<Widget> visibleChildList = new ArrayList<Widget>();
 
@@ -63,32 +63,32 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     }
     if (widget instanceof HasLayoutManager) {
       final HasLayoutManager lp = (HasLayoutManager) widget;
-      
-      if (layoutData.preferredWidth != null
-          && layoutData.preferredHeight != null) {
-        return new Dimension(layoutPanel.toPixelSize(layoutData.preferredWidth,
-            true), layoutPanel.toPixelSize(layoutData.preferredHeight, false));
+
+      if (layoutData.getPreferredWidth() != null
+          && layoutData.getPreferredHeight() != null) {
+        return new Dimension(layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
+            true), layoutPanel.toPixelSize(layoutData.getPreferredHeight(), false));
       }
 
       final Dimension result = lp.getPreferredSize();
-      
-      if (layoutData.preferredWidth != null) {
-        result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
+
+      if (layoutData.getPreferredWidth() != null) {
+        result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(), true);
       }
-      
-      if (layoutData.preferredHeight != null) {
-        result.height = layoutPanel.toPixelSize(layoutData.preferredHeight,
+
+      if (layoutData.getPreferredHeight() != null) {
+        result.height = layoutPanel.toPixelSize(layoutData.getPreferredHeight(),
             false);
       }
-      
+
       return result;
-      
+
     } else {
 
-      if (layoutData.preferredWidth != null
-          && layoutData.preferredHeight != null) {
-        return new Dimension(layoutPanel.toPixelSize(layoutData.preferredWidth,
-            true), layoutPanel.toPixelSize(layoutData.preferredHeight, false));
+      if (layoutData.getPreferredWidth() != null
+          && layoutData.getPreferredHeight() != null) {
+        return new Dimension(layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
+            true), layoutPanel.toPixelSize(layoutData.getPreferredHeight(), false));
       }
 
       final Dimension result = new Dimension();
@@ -99,20 +99,21 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
       final Style style = clonedElem.getStyle();
       style.setProperty("position", "static");
       style.setProperty("visibility", "hidden");
+
       // style.setProperty("width", "auto");
       // style.setProperty("height", "auto");
 
       parentElem.appendChild(clonedElem);
 
-      if (layoutData.preferredWidth != null) {
-        result.width = layoutPanel.toPixelSize(layoutData.preferredWidth, true);
+      if (layoutData.getPreferredWidth() != null) {
+        result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(), true);
       } else {
         style.setProperty("width", "auto");
         result.width = clonedElem.getOffsetWidth();
       }
 
-      if (layoutData.preferredHeight != null) {
-        result.height = layoutPanel.toPixelSize(layoutData.preferredHeight,
+      if (layoutData.getPreferredHeight() != null) {
+        result.height = layoutPanel.toPixelSize(layoutData.getPreferredHeight(),
             false);
       } else {
         style.setProperty("height", "auto");
@@ -132,18 +133,20 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     }
   }
 
+  // DecoratorPanel width calculations *************************************
+
   protected int getDecoratorFrameWidth(DecoratorPanel decPanel, Widget child) {
     return decPanel.getOffsetWidth() - child.getOffsetWidth();
+  }
+
+  protected int getDecoratorFrameHeight(DecoratorPanel decPanel, Widget child) {
+    return decPanel.getOffsetHeight() - child.getOffsetHeight();
   }
 
   protected Dimension getDecoratorFrameSize(DecoratorPanel decPanel,
       Widget child) {
     return new Dimension(decPanel.getOffsetWidth() - child.getOffsetWidth(),
         decPanel.getOffsetHeight() - child.getOffsetHeight());
-  }
-
-  protected int getDecoratorFrameHeight(DecoratorPanel decPanel, Widget child) {
-    return decPanel.getOffsetHeight() - child.getOffsetHeight();
   }
 
   protected Insets insets = new Insets(0, 0, 0, 0);
@@ -169,29 +172,6 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
   }
 
   /**
-   * Gets the panel-defined layout data associated with this widget.
-   * 
-   * @param widget the widget
-   * @return the widget's layout data
-   */
-  protected final static Object getLayoutData(Widget widget) {
-    return LayoutManagerHelper._getLayoutData(widget);
-  }
-
-  /**
-   * Sets the panel-defined layout data associated with this widget. Only the
-   * panel that currently contains a widget should ever set this value. It
-   * serves as a place to store layout bookkeeping data associated with a
-   * widget.
-   * 
-   * @param widget the widget
-   * @param layoutData the widget's layout data
-   */
-  protected final static void setLayoutData(Widget widget, Object layoutData) {
-    LayoutManagerHelper._setLayoutData(widget, layoutData);
-  }
-
-  /**
    * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#flushCache()
@@ -214,6 +194,10 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
 
     layoutPanel.layoutChildren();
   }
+
+  // Layout & Transition animation *****************************************
+
+  private Animation animation = null;
 
   public void layoutPanel(final LayoutPanel layoutPanel) {
     if (!layoutPanel.isAnimationEnabled()) {
@@ -282,6 +266,184 @@ public abstract class BaseLayout extends LayoutManagerHelper implements
     animation.run(CoreConstants.DEFAULT_DELAY_MILLIS);
   }
 
-  private Animation animation = null;
+  // Measuring Widget Sizes ************************************************
+
+  public static interface Measure {
+    /**
+     * Computes and returns the size of the given {@code Widget}.
+     * 
+     * @param widget the widget to measure
+     * @return the widget's size
+     */
+    int sizeOf(Widget widget);
+  }
+
+  private abstract static class CachingMeasure implements Measure {
+
+    /**
+     * Holds previously requested widget sizes. Used to minimize size requests
+     * to sub-widgets.
+     */
+    protected final WidgetSizeCache cache;
+
+    private CachingMeasure(WidgetSizeCache cache) {
+      this.cache = cache;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its minimum width.
+   */
+  public static final class MinimumWidthMeasure extends CachingMeasure {
+    public MinimumWidthMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getMinimumSize(widget).width;
+    }
+  }
+
+  /**
+   * Measures a width by computing its minimum height.
+   */
+  public static final class MinimumHeightMeasure extends CachingMeasure {
+    public MinimumHeightMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getMinimumSize(widget).height;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its preferred width.
+   */
+  public static final class PreferredWidthMeasure extends CachingMeasure {
+    public PreferredWidthMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget c) {
+      return cache.getPreferredSize(c).width;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its preferred height.
+   */
+  public static final class PreferredHeightMeasure extends CachingMeasure {
+
+    public PreferredHeightMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget c) {
+      return cache.getPreferredSize(c).height;
+    }
+  }
+
+  // Caching Component Sizes ***********************************************
+
+  public final class WidgetSizeCache {
+
+    /** Maps components to their minimum sizes. */
+    private final Map<Widget, Dimension> minimumSizes;
+
+    /** Maps components to their preferred sizes. */
+    private final Map<Widget, Dimension> preferredSizes;
+
+    /**
+     * Constructs a {@code WidgetSizeCache}.
+     */
+    public WidgetSizeCache(int initialCapacity) {
+      minimumSizes = new HashMap<Widget, Dimension>();
+      preferredSizes = new HashMap<Widget, Dimension>();
+    }
+
+    /**
+     * Invalidates the cache. Clears all stored size information.
+     */
+    public void invalidate() {
+      minimumSizes.clear();
+      preferredSizes.clear();
+    }
+
+    /**
+     * Returns the minimum size for the given widget. Tries to look up the value
+     * from the cache; lazy creates the value if it has not been requested
+     * before.
+     * 
+     * @param widget the widget to compute the minimum size
+     * @return the widget's minimum size
+     */
+    Dimension getMinimumSize(Widget widget) {
+      Dimension size = minimumSizes.get(widget);
+      if (size == null) {
+        final String minWidth = DOM.getComputedStyleAttribute(
+            widget.getElement(), "minWidth");
+        final String minHeight = DOM.getComputedStyleAttribute(
+            widget.getElement(), "minHeight");
+        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth,
+            true), minHeight == null ? 1 : DOM.toPixelSize(minHeight, false));
+        minimumSizes.put(widget, size);
+      }
+      return size;
+    }
+
+    /**
+     * Returns the preferred size for the given widget. Tries to look up the
+     * value from the cache; lazily creates the value if it has not been
+     * requested before.
+     * 
+     * @param widget the widget to compute the preferred size
+     * @return the widget's preferred size
+     */
+    Dimension getPreferredSize(Widget widget) {
+      Dimension size = preferredSizes.get(widget);
+      if (size == null) {
+        size = BaseLayout.this.getPreferredSize(
+            (LayoutPanel) WidgetHelper.getParent(widget), widget,
+            (LayoutData) widget.getLayoutData());
+        preferredSizes.put(widget, size);
+      }
+      return size;
+    }
+
+    public void removeEntry(Widget widget) {
+      minimumSizes.remove(widget);
+      preferredSizes.remove(widget);
+    }
+  }
+  
+  // LayoutData setter & getter methods ************************************
+  
+  /**
+   * Gets the panel-defined layout data associated with this widget.
+   * 
+   * @param widget the widget
+   * @return the widget's layout data
+   * @deprecated use {@link Widget#getLayoutData()} instead
+   */
+  @Deprecated
+  protected final static Object getLayoutData(Widget widget) {
+    return widget.getLayoutData();
+  }
+
+  /**
+   * Sets the panel-defined layout data associated with this widget. Only the
+   * panel that currently contains a widget should ever set this value. It
+   * serves as a place to store layout bookkeeping data associated with a
+   * widget.
+   * 
+   * @param widget the widget
+   * @param layoutData the widget's layout data
+   * @deprecated use {@link Widget#setLayoutData(Object)} instead
+   */
+  @Deprecated
+  protected final static void setLayoutData(Widget widget, Object layoutData) {
+    widget.setLayoutData(layoutData);
+  }
 
 }
