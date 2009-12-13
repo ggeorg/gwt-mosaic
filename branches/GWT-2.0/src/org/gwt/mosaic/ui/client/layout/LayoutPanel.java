@@ -34,6 +34,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -335,15 +336,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   }
 
   public void invalidate(Widget widget) {
+    getLayout().invalidateLayout(widget);
+
+    clearPreferredSizeCache();
+    
     if (invalid) {
       return;
     }
 
     invalid = true;
-
-    getLayout().invalidateLayout(widget);
-
-    clearPreferredSizeCache();
 
     final Widget parent = findParent();
     if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
