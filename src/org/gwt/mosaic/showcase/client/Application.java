@@ -120,7 +120,7 @@ public class Application extends Viewport implements
 
     // Setup the main layout widget
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setAnimationEnabled(true);
+    //layoutPanel.setAnimationEnabled(true);
 
     // Setup the top panel with the title and links
     createTopPanel();
