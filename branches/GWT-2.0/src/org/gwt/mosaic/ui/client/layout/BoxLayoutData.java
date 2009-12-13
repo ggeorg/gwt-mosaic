@@ -78,6 +78,10 @@ public final class BoxLayoutData extends LayoutData {
   public BoxLayoutData(final double width, final double height) {
     this(width, height, false);
   }
+  
+  public BoxLayoutData(final String width, final String height) {
+    this(width, height, false);
+  }
 
   /**
    * Creates a new instance of {@code BoxLayoutData} by specifying that the
@@ -114,6 +118,11 @@ public final class BoxLayoutData extends LayoutData {
     } else {
       setPreferredHeight(null);
     }
+  }
+  
+  public BoxLayoutData(final String width, final String height, final boolean decorate) {
+    super(decorate);
+    setPreferredSize(width, height);
   }
 
   /**
@@ -177,37 +186,6 @@ public final class BoxLayoutData extends LayoutData {
     }
   }
 
-  // /**
-  // * Returns the user specified preferred height in pixels or ratio of the
-  // * available client area height except paddings. Default is -1 which means
-  // * that the widget's calculated preferred height should be used instead.
-  // * Values > 0 and <= 1 are ratios, 0 and values > 1 are pixels.
-  // *
-  // * @return the preferred height or -1 indicating that the widget's
-  // calculated
-  // * preferred height should be used instead of this value.
-  // * @see BaseLayout#getFlowHeight(com.google.gwt.user.client.ui.Widget)
-  // */
-  // public double getPreferredHeight() {
-  // return preferredHeight;
-  // }
-
-  // /**
-  // * Returns the user specified preferred width in pixels or ratio of the
-  // * available client area width except paddings. Default is -1 which means
-  // that
-  // * the widget's calculated preferred width should be used instead. Values >
-  // 0
-  // * and <= 1 are ratios, 0 and values > 1 are pixels.
-  // *
-  // * @return the preferred width or -1 indicating that the widget's calculated
-  // * preferred width should be used instead of this value.
-  // * @see BaseLayout#getFlowWidth(com.google.gwt.user.client.ui.Widget)
-  // */
-  // public double getPreferredWidth() {
-  // return preferredWidth;
-  // }
-
   /**
    * Returns {@code true} the child widget will be stretched vertically, {@code
    * false} otherwise.
@@ -217,6 +195,16 @@ public final class BoxLayoutData extends LayoutData {
    */
   public boolean isFillHeight() {
     return fillHeight;
+  }
+  
+  /**
+   * Sets whether the child widget will be stretched vertically or not.
+   * 
+   * @param fillHeight {@code true} if the child widget should be stretched
+   *          vertically or {@code false} otherwise.
+   */
+  public void setFillHeight(final boolean fillHeight) {
+    this.fillHeight = fillHeight;
   }
 
   /**
@@ -231,16 +219,6 @@ public final class BoxLayoutData extends LayoutData {
   }
 
   /**
-   * Sets whether the child widget will be stretched vertically or not.
-   * 
-   * @param fillHeight {@code true} if the child widget should be stretched
-   *          vertically or {@code false} otherwise.
-   */
-  public void setFillHeight(final boolean fillHeight) {
-    this.fillHeight = fillHeight;
-  }
-
-  /**
    * Sets whether the child widget will be stretched horizontally or not.
    * 
    * @param fillWidth {@code true} if the child widget should be stretched
@@ -249,33 +227,5 @@ public final class BoxLayoutData extends LayoutData {
   public void setFillWidth(final boolean fillWidth) {
     this.fillWidth = fillWidth;
   }
-
-  // /**
-  // * Sets the child widget's preferred height in pixels or ratio of the
-  // * available client area height except paddings. Values > 0 and <= 1 are
-  // * ratios, 0 and values > 1 are pixels, and -1 means that the widget's
-  // * calculated preferred height should be used.
-  // *
-  // * @param height the preferred height or -1 indicating that the widget's
-  // * calculated preferred height should be used instead of this value.
-  // */
-  // public void setPreferredHeight(final double height) {
-  // this.preferredHeight = height;
-  // }
-
-  // /**
-  // * Sets the child widget's preferred width in pixels or ratio of the
-  // available
-  // * client area width except paddings. Values > 0 and <= 1 are ratios, 0 and
-  // * values > 1 are pixels, and -1 means that the widget's calculated
-  // preferred
-  // * width should be used.
-  // *
-  // * @param width the preferred width or -1 indicating that the widget's
-  // * calculated preferred width should be used instead of this value.
-  // */
-  // public void setPreferredWidth(final double width) {
-  // this.preferredWidth = width;
-  // }
 
 }
