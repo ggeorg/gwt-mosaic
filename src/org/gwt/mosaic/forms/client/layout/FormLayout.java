@@ -413,6 +413,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @throws NullPointerException if colSpecs or rowSpecs is {@code null}
    */
   public FormLayout(ColumnSpec[] colSpecs, RowSpec[] rowSpecs) {
+    super();
+    
     if (colSpecs == null)
       throw new NullPointerException(
           "The column specifications must not be null.");
