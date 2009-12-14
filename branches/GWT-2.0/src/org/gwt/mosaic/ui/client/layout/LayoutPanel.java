@@ -338,13 +338,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   public void invalidate(Widget widget) {
     getLayout().invalidateLayout(widget);
 
-    clearPreferredSizeCache();
-    
     if (invalid) {
       return;
     }
 
     invalid = true;
+    
+    clearPreferredSizeCache();
 
     final Widget parent = findParent();
     if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
