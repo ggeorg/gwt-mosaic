@@ -59,6 +59,7 @@ import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Histogram;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Horizontal;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Vertical;
 import org.gwt.mosaic.showcase.client.content.layout.CwCalculatorLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwColumnRowLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutAnimation;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutCentered;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutHAlignment;
@@ -75,6 +76,7 @@ import org.gwt.mosaic.showcase.client.content.other.CwPageBus1;
 import org.gwt.mosaic.showcase.client.content.other.CwPageBus2;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
+import org.gwt.mosaic.showcase.client.content.panels.CwColumnView;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwDisclosureLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwDynamicTabLayoutPanel;
@@ -463,6 +465,10 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catGridLayout, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
+    
+    TreeItem catColumnRowLayout = catPanels.addItem("Column/RowLayout");
+    setupMainMenuOption(catColumnRowLayout, new CwColumnRowLayout(constants),
+        IMAGES.catPanels());
 
     TreeItem catMixedLayout = catPanels.addItem("Mixed");
     setupMainMenuOption(catMixedLayout, new CwMixedLayout(constants),
@@ -487,6 +493,8 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels,
         new CwDynamicTabLayoutPanel(constants), IMAGES.catPanels());
+    setupMainMenuOption(catLayoutPanels, new CwColumnView(constants),
+        IMAGES.catPanels());
 
     // Forms
     TreeItem catForms = mainMenu.addItem("Forms");

@@ -480,24 +480,13 @@ public class BoxLayout extends BaseLayout {
 
         top = Math.max(0, top);
 
-        int fw = -1;
-        // if (layoutData.fillWidth || layoutData.preferredWidth != -1) {
-        fw = w;
-        // }
-
-        int fh = -1;
-        // if (layoutData.fillHeight || layoutData.preferredHeight != -1) {
-        fh = h;
-        // }
+        int fw = w;
+        int fh = h;
 
         if (layoutData.hasDecoratorPanel()) {
 
-          if (fw != -1) {
-            fw -= decPanelFrameSize.width;
-          }
-          if (fh != -1) {
-            fh -= decPanelFrameSize.height;
-          }
+          fw -= decPanelFrameSize.width;
+          fh -= decPanelFrameSize.height;
 
           if (orientation == Orientation.VERTICAL) {
             if (alignment == Alignment.START) {

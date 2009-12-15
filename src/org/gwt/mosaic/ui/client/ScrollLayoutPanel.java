@@ -124,13 +124,20 @@ public class ScrollLayoutPanel extends LayoutPanel implements
   }
 
   @Override
+  public void layout() {
+    super.layout();
+    super.layout(); // second layout() call will fix any scrollbar appearance
+                    // issue
+  }
+
+  @Override
   protected void onLayout() {
     // XXX don't call super.onLoad()
   }
 
   /**
-   * @deprecated Use the {@link HandlerRegistration#removeHandler}
-   * method on the object returned by {@link addScrollHandler} instead
+   * @deprecated Use the {@link HandlerRegistration#removeHandler} method on the
+   *             object returned by {@link addScrollHandler} instead
    */
   @Deprecated
   public void removeScrollListener(ScrollListener listener) {

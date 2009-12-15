@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
@@ -13,6 +28,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ *
+ */
 public class ColumnLayout extends BaseLayout {
 
   private List<ColumnLayoutSplitBar> splitBars = new ArrayList<ColumnLayoutSplitBar>();
@@ -61,7 +81,7 @@ public class ColumnLayout extends BaseLayout {
         }
 
         width += preferredWidthMeasure.sizeOf(child);
-        int h = preferredWidthMeasure.sizeOf(child);
+        int h = preferredHeightMeasure.sizeOf(child);
 
         if (layoutData.hasDecoratorPanel()) {
           width += decPanelFrameSize.width;
@@ -156,18 +176,21 @@ public class ColumnLayout extends BaseLayout {
         if (layoutData.getPreferredWidth() == null) {
           w = (int) (fillWidth * ((double) layoutData.getFlexibility() / fillingWidth));
         }
+        
+        int fw = w;
+        int fh = h;
 
         if (layoutData.hasDecoratorPanel()) {
-          w -= decPanelFrameSize.width;
-          h -= decPanelFrameSize.height;
+          fw -= decPanelFrameSize.width;
+          fh -= decPanelFrameSize.height;
         }
 
         top = Math.max(0, top);
 
         layoutData.targetLeft = left;
         layoutData.targetTop = top;
-        layoutData.targetWidth = w;
-        layoutData.targetHeight = h;
+        layoutData.targetWidth = fw;
+        layoutData.targetHeight = fh;
 
         if (i < n - 1) {
           ColumnLayoutSplitBar splitBar = splitBars.get(i);
@@ -197,11 +220,11 @@ public class ColumnLayout extends BaseLayout {
   }
 
   private ColumnLayoutData getColumnLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof ColumnLayoutData)) {
       layoutDataObject = new ColumnLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (ColumnLayoutData) layoutDataObject;
   }

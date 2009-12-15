@@ -1,6 +1,19 @@
+/*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwt.mosaic.ui.client.layout;
-
-import java.util.List;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
@@ -26,14 +39,19 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ * 
+ */
 class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
-  // private static GlassPanel glassPanel;
-
+  private static GlassPanel glassPanel;
   private final SplitBarDragController dragController;
 
-  private final List<Widget> visibleWidgets;
   private final Widget widgetT, widgetB;
 
   class SplitBarDragController extends AbstractDragController {
@@ -50,11 +68,11 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
 
     @Override
     public void dragStart() {
-      // if (glassPanel == null) {
-      // glassPanel = new GlassPanel(false);
-      // glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-      // }
-      // RootPanel.get().add(glassPanel, 0, 0);
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+      }
+      RootPanel.get().add(glassPanel, 0, 0);
 
       super.dragStart();
 
@@ -89,8 +107,7 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
 
     @Override
     public void dragEnd() {
-      int delta = context.draggable.getAbsoluteTop()
-          - draggableOldAbsoluteTop;
+      int delta = context.draggable.getAbsoluteTop() - draggableOldAbsoluteTop;
 
       int sizeT = widgetT.getOffsetHeight() + delta;
       if (sizeT < 24) {
@@ -105,21 +122,17 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
         sizeT = widgetT.getOffsetHeight() + delta;
       }
 
-      for (Widget widget : visibleWidgets) {
-        RowLayoutData layoutData = (RowLayoutData) BaseLayout.getLayoutData(widget);
-        layoutData.setFlexibility(widget.getOffsetHeight());
-      }
+      RowLayoutData layoutDataT = (RowLayoutData) widgetT.getLayoutData();
+      RowLayoutData layoutDataB = (RowLayoutData) widgetB.getLayoutData();
 
-      RowLayoutData layoutDataT = (RowLayoutData) BaseLayout.getLayoutData(widgetT);
-      RowLayoutData layoutDataB = (RowLayoutData) BaseLayout.getLayoutData(widgetB);
-
-      layoutDataT.setFlexibility(sizeT);
-      layoutDataB.setFlexibility(sizeB);
+      layoutDataT.setPreferredHeight(sizeT + "px");
+      // layoutDataB.setPreferredHeight(sizeB + "px");
 
       super.dragEnd();
 
-      // glassPanel.removeFromParent();
+      glassPanel.removeFromParent();
 
+      WidgetHelper.invalidate(context.boundaryPanel);
       WidgetHelper.layout(context.boundaryPanel);
 
       movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
@@ -135,15 +148,12 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
 
   }
 
-  public RowLayoutSplitBar(AbsolutePanel boundaryPanel,
-      List<Widget> visibleWidgets, Widget widgetT, Widget widgetB) {
+  public RowLayoutSplitBar(AbsolutePanel boundaryPanel, Widget widgetT,
+      Widget widgetB) {
     setElement(DOM.createSpan());
     setStyleName("SplitBar");
-    this.visibleWidgets = visibleWidgets;
     this.widgetT = widgetT;
     this.widgetB = widgetB;
-
-    // sinkEvents(Event.MOUSEEVENTS);
 
     dragController = new SplitBarDragController(boundaryPanel);
 
