@@ -68,6 +68,15 @@ public class DatePicker extends
   public void layout() {
     ((LayoutPanel) getWidget()).layout();
   }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return ((LayoutPanel) getWidget()).needsLayout();
+  }
 
   /**
    * {@inheritDoc}
@@ -86,5 +95,4 @@ public class DatePicker extends
   public void invalidate(Widget widget) {
     ((LayoutPanel) getWidget()).invalidate(widget);
   }
-
 }

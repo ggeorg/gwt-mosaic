@@ -51,6 +51,8 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * @author georgopoulos.georgios(at)gmail.com
  */
 final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
+  private static GlassPanel glassPanel;
+  private final SplitBarDragController dragController;
 
   final class SplitBarDragController extends AbstractDragController {
 
@@ -71,81 +73,7 @@ final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
       super(boundaryPanel);
       this.widget = widget;
     }
-
-    @Override
-    public void dragEnd() {
-      try {
-        Region region = layoutData.getRegion();
-        if (region == Region.NORTH) {
-          int delta = context.draggable.getAbsoluteTop()
-              - draggableOldAbsoluteTop;
-          int height = widget.getOffsetHeight() + delta;
-          height = Math.min(Math.max(height, minHeight), maxHeight);
-          layoutData.setPreferredHeight(height + "px");
-        } else if (region == Region.SOUTH) {
-          int delta = draggableOldAbsoluteTop
-              - context.draggable.getAbsoluteTop();
-          int height = widget.getOffsetHeight() + delta;
-          height = Math.min(Math.max(height, minHeight), maxHeight);
-          layoutData.setPreferredHeight(height + "px");
-        }
-        if (region == Region.WEST) {
-          int delta = context.draggable.getAbsoluteLeft()
-              - draggableOldAbsoluteLeft;
-          int width = widget.getOffsetWidth() + delta;
-          width = Math.min(Math.max(width, minWidth), maxWidth);
-          layoutData.setPreferredWidth(width + "px");
-        } else if (region == Region.EAST) {
-          int delta = draggableOldAbsoluteLeft
-              - context.draggable.getAbsoluteLeft();
-          int width = widget.getOffsetWidth() + delta;
-          width = Math.min(Math.max(width, minWidth), maxWidth);
-          layoutData.setPreferredWidth(width + "px");
-        }
-
-        super.dragEnd();
-
-        glassPanel.removeFromParent();
-
-        WidgetHelper.invalidate(context.boundaryPanel);
-        WidgetHelper.layout(context.boundaryPanel);
-
-        movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
-      } catch (Exception ex) {
-        Window.alert(ex.toString());
-      }
-    }
-
-    public void dragMove() {
-      Region region = layoutData.getRegion();
-      if (region == Region.NORTH) {
-        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
-        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
-            - context.draggable.getOffsetHeight()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
-            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
-      } else if (region == Region.SOUTH) {
-        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
-        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
-            - context.draggable.getOffsetHeight()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
-            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
-      }
-      if (region == Region.WEST) {
-        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
-        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
-            - context.draggable.getOffsetWidth()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
-            context.draggable.getAbsoluteTop() - boundaryOffsetY);
-      } else if (region == Region.EAST) {
-        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
-        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
-            - context.draggable.getOffsetWidth()));
-        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
-            context.draggable.getAbsoluteTop() - boundaryOffsetY);
-      }
-    }
-
+    
     @Override
     public void dragStart() {
       if (glassPanel == null) {
@@ -169,7 +97,7 @@ final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
       final int[] border = DOM.getBorderSizes(context.boundaryPanel.getElement());
       boundaryOffsetX = widgetLocation.getLeft() + border[3];
       boundaryOffsetY = widgetLocation.getTop() + border[0];
-      final Dimension box = DOM.getClientSize(boundaryPanel.getElement());
+      final Dimension box = DOM.getClientSize(context.boundaryPanel.getElement());
       dropTargetClientWidth = box.width;
       dropTargetClientHeight = box.height;
 
@@ -225,6 +153,80 @@ final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
       draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
       draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
     }
+    
+    public void dragMove() {
+      Region region = layoutData.getRegion();
+      if (region == Region.NORTH) {
+        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
+        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
+            - context.draggable.getOffsetHeight()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
+            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
+      } else if (region == Region.SOUTH) {
+        int desiredTop = context.desiredDraggableY - boundaryOffsetY;
+        desiredTop = Math.max(0, Math.min(desiredTop, dropTargetClientHeight
+            - context.draggable.getOffsetHeight()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(),
+            context.draggable.getAbsoluteLeft() - boundaryOffsetX, desiredTop);
+      }
+      if (region == Region.WEST) {
+        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
+        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
+            - context.draggable.getOffsetWidth()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
+            context.draggable.getAbsoluteTop() - boundaryOffsetY);
+      } else if (region == Region.EAST) {
+        int desiredLeft = context.desiredDraggableX - boundaryOffsetX;
+        desiredLeft = Math.max(0, Math.min(desiredLeft, dropTargetClientWidth
+            - context.draggable.getOffsetWidth()));
+        DOMUtil.fastSetElementPosition(movablePanel.getElement(), desiredLeft,
+            context.draggable.getAbsoluteTop() - boundaryOffsetY);
+      }
+    }
+
+    @Override
+    public void dragEnd() {
+      try {
+        Region region = layoutData.getRegion();
+        if (region == Region.NORTH) {
+          int delta = context.draggable.getAbsoluteTop()
+              - draggableOldAbsoluteTop;
+          int height = widget.getOffsetHeight() + delta;
+          height = Math.min(Math.max(height, minHeight), maxHeight);
+          layoutData.setPreferredHeight(height + "px");
+        } else if (region == Region.SOUTH) {
+          int delta = draggableOldAbsoluteTop
+              - context.draggable.getAbsoluteTop();
+          int height = widget.getOffsetHeight() + delta;
+          height = Math.min(Math.max(height, minHeight), maxHeight);
+          layoutData.setPreferredHeight(height + "px");
+        }
+        if (region == Region.WEST) {
+          int delta = context.draggable.getAbsoluteLeft()
+              - draggableOldAbsoluteLeft;
+          int width = widget.getOffsetWidth() + delta;
+          width = Math.min(Math.max(width, minWidth), maxWidth);
+          layoutData.setPreferredWidth(width + "px");
+        } else if (region == Region.EAST) {
+          int delta = draggableOldAbsoluteLeft
+              - context.draggable.getAbsoluteLeft();
+          int width = widget.getOffsetWidth() + delta;
+          width = Math.min(Math.max(width, minWidth), maxWidth);
+          layoutData.setPreferredWidth(width + "px");
+        }
+
+        super.dragEnd();
+
+        glassPanel.removeFromParent();
+
+        WidgetHelper.invalidate(context.boundaryPanel);
+        WidgetHelper.layout(context.boundaryPanel);
+
+        movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
+      } catch (Exception ex) {
+        Window.alert(ex.toString());
+      }
+    }
 
     public void makeDraggable(Widget widget) {
       super.makeDraggable(widget);
@@ -240,17 +242,9 @@ final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
 
   }
 
-  private static GlassPanel glassPanel;
-
-  private final AbsolutePanel boundaryPanel;
-
-  private final SplitBarDragController dragController;
-
   public BorderLayoutSplitBar(AbsolutePanel boundaryPanel, Widget widget) {
     setElement(DOM.createSpan());
     sinkEvents(Event.MOUSEEVENTS);
-
-    this.boundaryPanel = boundaryPanel;
 
     dragController = new SplitBarDragController(boundaryPanel, widget);
     dragController.setBehaviorConstrainedToBoundaryPanel(true);
@@ -284,7 +278,7 @@ final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
   }
 
   public AbsolutePanel getBoundaryPanel() {
-    return boundaryPanel;
+    return dragController.getBoundaryPanel();
   }
 
   public SplitBarDragController getDragController() {

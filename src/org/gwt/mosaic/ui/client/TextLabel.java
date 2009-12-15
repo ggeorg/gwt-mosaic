@@ -278,4 +278,8 @@ public class TextLabel extends Widget implements SourcesClickEvents,
   public void layout() {
     // Nothing to do here!
   }
+
+  public boolean needsLayout() {
+    return false;
+  }
 }

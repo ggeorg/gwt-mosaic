@@ -63,6 +63,14 @@ public interface HasLayoutManager {
   void invalidate();
 
   /**
+   * Determines whether the receiver is marked as needing to be laid out.
+   * 
+   * @return {@code true} is the receiver is marked as needing to be laid out,
+   *         {@code false} otherwise
+   */
+  boolean needsLayout();
+
+  /**
    * If the receiver has a {@link LayoutManager}, asks the layout to
    * <em>lay out</em> (that is, set the size and location of) the receiver's
    * children. If the receiver does not have a layout, do nothing.

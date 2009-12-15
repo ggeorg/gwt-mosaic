@@ -1,7 +1,5 @@
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.List;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
@@ -26,14 +24,14 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.GlassPanel;
 
 class ColumnLayoutSplitBar extends Widget implements HasAllMouseHandlers {
-  // private static GlassPanel glassPanel;
-
+  private static GlassPanel glassPanel;
   private final SplitBarDragController dragController;
 
-  private final List<Widget> visibleWidgets;
   private final Widget widgetL, widgetR;
 
   class SplitBarDragController extends AbstractDragController {
@@ -50,11 +48,11 @@ class ColumnLayoutSplitBar extends Widget implements HasAllMouseHandlers {
 
     @Override
     public void dragStart() {
-      // if (glassPanel == null) {
-      // glassPanel = new GlassPanel(false);
-      // glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-      // }
-      // RootPanel.get().add(glassPanel, 0, 0);
+      if (glassPanel == null) {
+        glassPanel = new GlassPanel(false);
+        glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+      }
+      RootPanel.get().add(glassPanel, 0, 0);
 
       super.dragStart();
 
@@ -105,21 +103,17 @@ class ColumnLayoutSplitBar extends Widget implements HasAllMouseHandlers {
         sizeL = widgetL.getOffsetWidth() + delta;
       }
 
-      for (Widget widget : visibleWidgets) {
-        ColumnLayoutData layoutData = (ColumnLayoutData) BaseLayout.getLayoutData(widget);
-        layoutData.setFlexibility(widget.getOffsetWidth());
-      }
+      ColumnLayoutData layoutDataL = (ColumnLayoutData) widgetL.getLayoutData();
+      ColumnLayoutData layoutDataR = (ColumnLayoutData) widgetR.getLayoutData();
 
-      ColumnLayoutData layoutDataL = (ColumnLayoutData) BaseLayout.getLayoutData(widgetL);
-      ColumnLayoutData layoutDataR = (ColumnLayoutData) BaseLayout.getLayoutData(widgetR);
-
-      layoutDataL.setFlexibility(sizeL);
-      layoutDataR.setFlexibility(sizeR);
+      layoutDataL.setPreferredWidth(sizeL + "px");
+      // layoutDataR.setPreferredWidth(sizeR + "px");
 
       super.dragEnd();
 
-      // glassPanel.removeFromParent();
+      glassPanel.removeFromParent();
 
+      WidgetHelper.invalidate(context.boundaryPanel);
       WidgetHelper.layout(context.boundaryPanel);
 
       movablePanel.removeStyleName(getStylePrimaryName() + "-Movable");
@@ -135,15 +129,11 @@ class ColumnLayoutSplitBar extends Widget implements HasAllMouseHandlers {
 
   }
 
-  public ColumnLayoutSplitBar(AbsolutePanel boundaryPanel,
-      List<Widget> visibleWidgets, Widget widgetL, Widget widgetR) {
+  public ColumnLayoutSplitBar(AbsolutePanel boundaryPanel, Widget widgetL, Widget widgetR) {
     setElement(DOM.createSpan());
     setStyleName("SplitBar");
-    this.visibleWidgets = visibleWidgets;
     this.widgetL = widgetL;
     this.widgetR = widgetR;
-
-    // sinkEvents(Event.MOUSEEVENTS);
 
     dragController = new SplitBarDragController(boundaryPanel);
 

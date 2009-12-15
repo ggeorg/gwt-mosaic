@@ -127,6 +127,15 @@ public abstract class LayoutComposite extends Composite implements
   }
 
   /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return getLayoutPanel().needsLayout();
+  }
+
+  /**
    * Set the {@code ResizableWidget} to add to a {@code
    * ResizableWidgetCollection} that periodically checks the outer dimensions of
    * a widget and redraws it as necessary.

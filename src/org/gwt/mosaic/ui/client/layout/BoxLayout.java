@@ -232,12 +232,10 @@ public class BoxLayout extends BaseLayout {
     return orientation;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui
-   * .client.layout.LayoutPanel)
+   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     final Dimension result = new Dimension();
@@ -287,14 +285,10 @@ public class BoxLayout extends BaseLayout {
         if (orientation == Orientation.HORIZONTAL) {
 
           width += preferredWidthMeasure.sizeOf(child);
-
-          if (layoutData.hasDecoratorPanel()) {
-            width += decPanelFrameSize.width;
-          }
-
           layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
 
           if (layoutData.hasDecoratorPanel()) {
+            width += decPanelFrameSize.width;
             layoutData.calcHeight += decPanelFrameSize.height;
           }
 
@@ -303,14 +297,10 @@ public class BoxLayout extends BaseLayout {
         } else { // Orientation.VERTICAL
 
           height += preferredHeightMeasure.sizeOf(child);
-
-          if (layoutData.hasDecoratorPanel()) {
-            height += decPanelFrameSize.height;
-          }
-
           layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
 
           if (layoutData.hasDecoratorPanel()) {
+            height += decPanelFrameSize.height;
             layoutData.calcWidth += decPanelFrameSize.width;
           }
 
@@ -329,7 +319,7 @@ public class BoxLayout extends BaseLayout {
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ".getPreferredSize() : "
+      Window.alert(getClass().getName() + ".getPreferredSize() : "
           + e.getMessage());
     }
 
@@ -473,7 +463,7 @@ public class BoxLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        final BoxLayoutData layoutData = (BoxLayoutData) getLayoutData(child);
+        final BoxLayoutData layoutData = (BoxLayoutData) child.getLayoutData();
 
         int w = layoutData.calcWidth;
         int h = layoutData.calcHeight;

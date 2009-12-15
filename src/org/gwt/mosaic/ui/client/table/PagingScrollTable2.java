@@ -53,6 +53,11 @@ public class PagingScrollTable2<RowType> extends
     super(tableModel, tableDefinition);
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
+   */
   public Dimension getPreferredSize() {
     int width = getHeaderTable().getOffsetWidth();
     int height = getHeaderTable().getOffsetHeight()
@@ -82,8 +87,22 @@ public class PagingScrollTable2<RowType> extends
     WidgetHelper.invalidate(getParent());
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout()
+   */
   public void layout() {
     redraw();
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return false;
   }
 
   @Override
