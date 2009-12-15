@@ -1,5 +1,24 @@
 Change log for v0.4.0-rc1
 ================================
+ - (Added) ColumnLayout, RowLayout and ColumnView widget + 2 demos
+ - (Added) HasLayoutManager.needsLayout() & required cahnges
+ - (Update) ColumnLayout functionality completed & BoxLayout code cleanup
+ - (Bug Fix) LazyLayoutPanel layout problems fix
+ - (Bug Fix) ScrollLayoutPanel.ensureVisibleImpl() scrolls also in horizontal direction
+ - (Added) Individual widget invalidation
+ - (Bug Fix) Various TabLayoutPanel bugs fixed
+ - (Buf Fix) Don't cache percentage values in size (new layout system size cache)
+ - (Added) Similar size cache and size calculations with Forms module
+ - (Bug Fix) BorderLayout collapsed status NPE fixed
+ - (Added) BorderLayout support for custom widgets in collapsed status
+ - (Added) AnimationCallback in LayoutPanel & StackLayoutPanel z-index bug fixed.
+ - (Update) Layout management improvements, transition animations for FillLayout, BoxLayout, GridLayout & BorderLayout, Showcase demo application update
+ - (Upgrade) gwt-beans-binding-3.0.0, gwt-dnd-3.0.0, gwt-incubator-trunk-r1738 from gwt-beans-binding-0.2.4, gwt-dnd-2.6.5, gwt-incubator-trunk-r1684
+ - (Added) BoxLayout transition animation and optimizations, cloneNode() is used in getPreferredSize().
+ - (Cleanup) ToolButton
+ - (Update) DecoratedLayoutPanel respects size if added to a normal GWT Panel
+ - (Update) LayoutPanel respects size if added to a normal GWT Panel
+ - (Cleanup) Viewport all @Deprecated methods removed
 
 Change log for v0.3.0-rc1
 ================================
