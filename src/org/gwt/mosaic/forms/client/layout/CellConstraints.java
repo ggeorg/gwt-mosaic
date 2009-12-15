@@ -124,16 +124,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Karsten Lentzsch
  * @author georgopoulos.georgios(at)gmail.com
  */
-public final class CellConstraints extends LayoutData implements Cloneable,
-    Serializable {
-  private static final long serialVersionUID = 2562809368470358621L;
+public final class CellConstraints extends LayoutData implements Cloneable {
 
   // Alignment Constants *************************************************
-
-  /*
-   * Implementation Note: Do not change the order of the following constants.
-   * The serialization of class Alignment is ordinal-based and relies on it.
-   */
 
   /**
    * Use the column's or row's default alignment.
@@ -330,9 +323,9 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * <strong>Examples:</strong>
    * 
    * <pre>
-     * new CellConstraints(1, 3, 2, 1, CellConstraints.LEFT,   CellConstraints.BOTTOM, new Insets(0, 1, 0, 3));
-     * new CellConstraints(1, 3, 7, 3, CellConstraints.CENTER, CellConstraints.FILL,   new Insets(0, 1, 0, 0));
-     * </pre>
+   * new CellConstraints(1, 3, 2, 1, CellConstraints.LEFT,   CellConstraints.BOTTOM, new Insets(0, 1, 0, 3));
+   * new CellConstraints(1, 3, 7, 3, CellConstraints.CENTER, CellConstraints.FILL,   new Insets(0, 1, 0, 0));
+   * </pre>
    * 
    * @param gridX the component's horizontal grid origin
    * @param gridY the component's vertical grid origin
@@ -537,8 +530,8 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @return this
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public static CellConstraints xyw(int col, int row, int colSpan, Alignment colAlign,
-      Alignment rowAlign) {
+  public static CellConstraints xyw(int col, int row, int colSpan,
+      Alignment colAlign, Alignment rowAlign) {
     return xywh(col, row, colSpan, 1, colAlign, rowAlign);
   }
 
@@ -585,8 +578,8 @@ public final class CellConstraints extends LayoutData implements Cloneable,
    * @return this
    * @throws IllegalArgumentException if an alignment orientation is invalid
    */
-  public static CellConstraints xywh(int col, int row, int colSpan, int rowSpan,
-      String encodedAlignments) {
+  public static CellConstraints xywh(int col, int row, int colSpan,
+      int rowSpan, String encodedAlignments) {
     CellConstraints result = xywh(col, row, colSpan, rowSpan);
     result.setAlignments(encodedAlignments, true);
     return result;

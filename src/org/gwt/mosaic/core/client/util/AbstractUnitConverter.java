@@ -121,6 +121,36 @@ public abstract class AbstractUnitConverter implements UnitConverter {
     return dialogUnitYAsPixel(dluY, getDialogBaseUnitsY());
   }
 
+  /**
+   * Converts font size and returns pixels.
+   * 
+   * @param em the font size
+   * @return the given font size as pixels
+   */
+  public int fontSizeAsPixel(double em) {
+    return fontSizeAsPixel(em, getFontSize());
+  }
+
+  /**
+   * Converts the x-height and returns pixels.
+   * 
+   * @param ex the x-height
+   * @return the given x-height as pixels
+   */
+  public int xHeightAsPixel(double ex) {
+    return xHeightAsPixel(ex, getXHeight());
+  }
+
+  /**
+   * Converts the DTP PICA and returns pixels (1pc is the same as 12points)
+   * 
+   * @param pc the DTP PICA
+   * @return the given DTP PICA as pixels
+   */
+  public int picaAsPixel(double pc) {
+    return picaAsPixel(pc, getDefaultScreenResolution());
+  }
+
   // Abstract Behavior *****************************************************
 
   /**
@@ -138,6 +168,22 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the vertical dialog base units
    */
   protected abstract double getDialogBaseUnitsY();
+
+  /**
+   * Gets and returns the font size. Implementations are encouraged to cache
+   * previously font size values.
+   * 
+   * @return the font size
+   */
+  protected abstract int getFontSize();
+
+  /**
+   * Gets and returns the x-height. Implementations are encouraged to cache
+   * previously x-height values.
+   * 
+   * @return the x-height
+   */
+  protected abstract int getXHeight();
 
   // Convenience Methods ***************************************************
 
@@ -205,6 +251,39 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    */
   protected int dialogUnitYAsPixel(int dluY, double dialogBaseUnitsY) {
     return (int) Math.round(dluY * dialogBaseUnitsY / 8);
+  }
+  
+  /**
+   * Converts font size and returns pixels.
+   * 
+   * @param em the font size
+   * @param fontSize the font size
+   * @return the given font size as pixels
+   */
+  protected int fontSizeAsPixel(double em, double fontSize) {
+    return (int) Math.round(em * fontSize);
+  }
+  
+  /**
+   * Converts x-height and returns pixels.
+   * 
+   * @param ex the x-height
+   * @param xHeight the x-height
+   * @return the given x-height as pixels
+   */
+  private int xHeightAsPixel(double ex, double xHeight) {
+    return (int) Math.round(ex * xHeight);
+  }
+  
+  /**
+   * Converts the DTP PICA and returns pixels (1pc is the same as 12points)
+   * 
+   * @param pc the DTP PICA
+   * @param dpi the resolution in dpi
+   * @return the given DTP PICA as pixels
+   */
+  private int picaAsPixel(double pc, int dpi) {
+    return (int) Math.round(pc * 12.0 * pointAsPixel(1, dpi));
   }
 
   // Helper Code ************************************************************

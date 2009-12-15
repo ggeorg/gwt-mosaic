@@ -1,4 +1,8 @@
 /*
+ * Copyright 2008 Google Inc.
+ * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -13,52 +17,52 @@
  */
 package org.gwt.mosaic.showcase.client;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The images used throughout the Showcase.
  * 
  * @author ggeorgopoulos.georgios(at)gmail.com
  */
-public interface ShowcaseImages extends ImageBundle {
+public interface ShowcaseImages extends ClientBundle {
 
-  AbstractImagePrototype calendar();
+  ImageResource calendar();
 
-  AbstractImagePrototype catForms();
+  ImageResource catForms();
   
-  AbstractImagePrototype catI18N();
+  ImageResource catI18N();
 
-  AbstractImagePrototype catLists();
+  ImageResource catLists();
 
-  AbstractImagePrototype catOther();
+  ImageResource catOther();
 
-  AbstractImagePrototype catPanels();
+  ImageResource catPanels();
 
-  AbstractImagePrototype catPopups();
+  ImageResource catPopups();
 
-  AbstractImagePrototype catTables();
+  ImageResource catTables();
 
-  AbstractImagePrototype catTextInput();
+  ImageResource catTextInput();
 
-  AbstractImagePrototype catWidgets();
+  ImageResource catWidgets();
   
-  AbstractImagePrototype css();
+  ImageResource css();
 
-  AbstractImagePrototype cup();
+  ImageResource cup();
   
-  AbstractImagePrototype gwtLogo();
+  ImageResource gwtLogo();
   
-  AbstractImagePrototype gwtLogoThumb();
+  ImageResource gwtLogoThumb();
   
   /**
    * Indicates the locale selection box.
    */
-  AbstractImagePrototype locale();
+  ImageResource locale();
   
-  AbstractImagePrototype mediaPlayGreen();
+  ImageResource mediaPlayGreen();
   
-  AbstractImagePrototype showcaseDemos();
+  ImageResource showcaseDemos();
   
-  AbstractImagePrototype window();
+  ImageResource person();
 }

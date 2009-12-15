@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app >
+
+	<display-name>GWT-MOSAIC</display-name>
+
+	<welcome-file-list>
+		<welcome-file>Showcase.html</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>datasource</servlet-name>
+		<servlet-class>
+			org.gwt.mosaic.showcase.server.DataSourceServiceImpl
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>datasource</servlet-name>
+		<url-pattern>/showcase/datasource</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>customerService</servlet-name>
+		<servlet-class>
+			org.gwt.mosaic.showcase.server.CustomerServiceImpl
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>customerService</servlet-name>
+		<url-pattern>/showcase/customerService</url-pattern>
+	</servlet-mapping>
+
+</web-app>

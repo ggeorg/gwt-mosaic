@@ -106,5 +106,31 @@ public interface UnitConverter {
    * @return the given vertical dialog units as pixels
    */
   int dialogUnitYAsPixel(int dluY);
+  
+  // Additional CSS only units *********************************************
+  
+  /**
+   * Converts font size and returns pixels.
+   * 
+   * @param em the font size
+   * @return the given font size as pixels
+   */
+  int fontSizeAsPixel(double em);
+  
+  /**
+   * Converts the x-height and returns pixels.
+   * 
+   * @param ex the x-height
+   * @return the given x-height as pixels
+   */
+  int xHeightAsPixel(double ex);
+  
+  /**
+   * Converts the DTP PICA and returns pixels (1pc is the same as 12points).
+   * 
+   * @param pc the DTP PICA
+   * @return the given DTP PICA as pixels
+   */
+  int picaAsPixel(double pc);
 
 }

@@ -18,13 +18,17 @@ package org.gwt.mosaic.ui.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.gwt.mosaic.ui.client.layout.AnimationCallback;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.HasAnimation;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -34,16 +38,17 @@ import com.google.gwt.user.client.ui.Widget;
  * <h3>CSS Style Rules</h3>
  * <ul class='css'>
  * <li>.mosaic-StackLayoutPanel { the panel itself }</li>
- * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem { unselected items }</li>
- * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem-selected {
- * selected items }</li>
+ * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem { unselected items
+ * }</li>
+ * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelItem-selected { selected
+ * items }</li>
  * <li>.mosaic-StackLayoutPanel .mosaic-StackLayoutPanelContent { the wrapper
  * around the contents of the item }</li>
  * </ul>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class StackLayoutPanel extends LayoutComposite {
+public class StackLayoutPanel extends LayoutComposite implements HasAnimation {
 
   /**
    * The default style name.
@@ -66,23 +71,33 @@ public class StackLayoutPanel extends LayoutComposite {
 
   private Map<Widget, LayoutPanel> panels = new HashMap<Widget, LayoutPanel>();
 
-  private ClickListener clickListener = new ClickListener() {
-    public void onClick(Widget sender) {
-      if (sender instanceof Caption) {
-        showStack(getLayoutPanel().getWidgetIndex(sender) >> 1);
+  private ClickHandler clickHandler = new ClickHandler() {
+    public void onClick(ClickEvent event) {
+      Widget w = (Widget) event.getSource();
+      if (w instanceof Caption) {
+        showStack(getLayoutPanel().getWidgetIndex(w) >> 1);
+        invalidate();
         layout();
       }
     }
   };
 
   public StackLayoutPanel() {
+    super(new BoxLayout(Orientation.VERTICAL));
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
     layoutPanel.setWidgetSpacing(0);
-
+    layoutPanel.setAnimationCallback(new AnimationCallback() {
+      public void onAnimationComplete() {
+        for (int i = 0, n = getLayoutPanel().getWidgetCount(); i < n; i++) {
+          Widget w = getLayoutPanel().getWidget(i);
+          if (w instanceof Caption)
+            w.getElement().getStyle().setZIndex(0);
+        }
+      }
+    });
     setStyleName(DEFAULT_STYLENAME);
   }
-  
+
   /**
    * Adds a new child with the given widget and header.
    * 
@@ -106,7 +121,7 @@ public class StackLayoutPanel extends LayoutComposite {
     final LayoutPanel content = new LayoutPanel();
     final LayoutPanel layoutPanel = getLayoutPanel();
     caption.addStyleName(DEFAULT_ITEM_STYLENAME);
-    caption.addClickListener(clickListener);
+    caption.addClickHandler(clickHandler);
     content.addStyleName(DEFAULT_CONTENT_STYLENAME);
     content.add(w);
     panels.put(w, content);
@@ -153,14 +168,41 @@ public class StackLayoutPanel extends LayoutComposite {
   }
 
   private void setStackVisible(int index, boolean visible) {
+    final int oldIndex = visibleStack;
+
+    visibleStack = index;
+
     final Caption caption = (Caption) getLayoutPanel().getWidget(index);
-    final LayoutPanel content = (LayoutPanel) getLayoutPanel().getWidget(++index);
+    final LayoutPanel content = (LayoutPanel) getLayoutPanel().getWidget(
+        index + 1);
+
     if (visible) {
       caption.addStyleName(DEFAULT_ITEM_STYLENAME + "-selected");
     } else {
       caption.removeStyleName(DEFAULT_ITEM_STYLENAME + "-selected");
     }
+
     content.setVisible(visible);
+
+    if (visible && oldIndex >= 0) {
+      Object layoutDataObject = content.getLayoutData();
+      if (layoutDataObject instanceof LayoutData) {
+        LayoutData layoutData = (LayoutData) layoutDataObject;
+        if (index > oldIndex) {
+          layoutData.setSourceTop(content.getOffsetHeight());
+        } else {
+          layoutData.setSourceTop(-content.getOffsetHeight());
+        }
+      }
+    }
+  }
+
+  public Caption getCaption(int index) {
+    index <<= 1;
+    if ((index >= getLayoutPanel().getWidgetCount()) || (index < 0)) {
+      return null;
+    }
+    return (Caption) getLayoutPanel().getWidget(index);
   }
 
   /**
@@ -179,8 +221,25 @@ public class StackLayoutPanel extends LayoutComposite {
       setStackVisible(visibleStack, false);
     }
 
-    visibleStack = index;
-    setStackVisible(visibleStack, true);
+    setStackVisible(index, true);
+  }
+
+  public boolean isAnimationEnabled() {
+    return getLayoutPanel().isAnimationEnabled();
+  }
+
+  public void setAnimationEnabled(boolean enable) {
+    getLayoutPanel().setAnimationEnabled(enable);
+  }
+
+  @Override
+  public void layout() {
+    for (int i = 0, n = getLayoutPanel().getWidgetCount(); i < n; i++) {
+      Widget w = getLayoutPanel().getWidget(i);
+      if (w instanceof Caption)
+        w.getElement().getStyle().setZIndex(1);
+    }
+    super.layout();
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -61,10 +61,12 @@ public class CwStackLayoutPanel extends AbstractLayoutPage {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
+    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
-    // Create a DeckLayoutPanel
+    // Create a StackLayoutPanel
     final StackLayoutPanel stack = new StackLayoutPanel();
+    stack.setAnimationEnabled(true);
 
     final LayoutPanel panel1 = new LayoutPanel();
     populate1(panel1);
@@ -88,5 +90,5 @@ public class CwStackLayoutPanel extends AbstractLayoutPage {
     
     return layoutPanel;
   }
-
+  
 }

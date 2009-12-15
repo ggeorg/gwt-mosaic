@@ -50,7 +50,7 @@ import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -86,7 +86,7 @@ public class CwGroupingExample extends ContentWidget {
   public String getName() {
     return "Grouping";
   }
-  
+
   @Override
   public boolean hasStyle() {
     return false;
@@ -103,7 +103,7 @@ public class CwGroupingExample extends ContentWidget {
     tabPanel.add(buildWizardBar(true), "Grouped Bar");
     tabPanel.add(buildEditorPanel(false), "Ungrouped Rows");
     tabPanel.add(buildEditorPanel(true), "Grouped Rows");
-    
+
     return tabPanel;
   }
 
@@ -171,9 +171,9 @@ public class CwGroupingExample extends ContentWidget {
    */
   @ShowcaseSource
   private Widget newLabel(String string) {
-    final Label label = new Label(string);
+    final TextLabel label = new TextLabel(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }
-  
+
 }

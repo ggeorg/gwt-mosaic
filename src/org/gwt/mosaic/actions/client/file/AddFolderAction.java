@@ -41,7 +41,7 @@ public final class AddFolderAction extends CommandAction {
   public AddFolderAction(AddFolderCommand command) {
     super(ACTION_CONSTANTS.addFolderName(), ACTION_IMAGES.add_folder_action(),
         command);
-    putValue(Action.SHORT_DESCRIPTION, ACTION_CONSTANTS.addFolderDescription());
+    putValue(Action.SHORT_DESCRIPTION, ACTION_CONSTANTS.addFolderShortDescription());
   }
 
 }

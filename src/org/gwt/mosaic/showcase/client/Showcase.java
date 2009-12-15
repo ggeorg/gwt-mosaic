@@ -1,14 +1,14 @@
 /*
  * Copyright 2008 Google Inc.
- *
+ * 
  * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,32 +52,47 @@ import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Frames;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutAnimation;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest1;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest2;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Histogram;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Horizontal;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Vertical;
 import org.gwt.mosaic.showcase.client.content.layout.CwCalculatorLayout;
-import org.gwt.mosaic.showcase.client.content.layout.CwFillLayout;
-import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutTest1;
+import org.gwt.mosaic.showcase.client.content.layout.CwColumnRowLayout;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutAnimation;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutCentered;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutHAlignment;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutSizeConstraints;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutStretchedImage;
+import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutVAlignment;
 import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
 import org.gwt.mosaic.showcase.client.content.other.CwActions;
 import org.gwt.mosaic.showcase.client.content.other.CwDefaultActions;
 import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
+import org.gwt.mosaic.showcase.client.content.other.CwPageBus1;
+import org.gwt.mosaic.showcase.client.content.other.CwPageBus2;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
+import org.gwt.mosaic.showcase.client.content.panels.CwColumnView;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwDisclosureLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.panels.CwDynamicTabLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwStackLayoutPanel;
 import org.gwt.mosaic.showcase.client.content.panels.CwTabLayoutPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwFormDialog;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
-import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopupPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopups;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
+import org.gwt.mosaic.showcase.client.content.tables.CwFilterListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
-import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
-import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
+import org.gwt.mosaic.showcase.client.content.tables.CwLiveTable;
+import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable2;
+import org.gwt.mosaic.showcase.client.content.tables.CwRichListBox;
+import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable2;
 import org.gwt.mosaic.showcase.client.content.tables.CwSimpleTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
 import org.gwt.mosaic.showcase.client.content.trees.CwBasicTree;
@@ -90,6 +105,7 @@ import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwDatePicker;
 import org.gwt.mosaic.showcase.client.content.widgets.CwMenuBar;
+import org.gwt.mosaic.showcase.client.content.widgets.CwSliderBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwToolButton;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
@@ -100,37 +116,38 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
- *
+ * Entry point classes define {@code #onModuleLoad()}.
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public class Showcase implements EntryPoint {
-
-  static {
-    GWTBeansBinding.init();
-  }
 
   /**
    * The type passed into the
@@ -139,6 +156,10 @@ public class Showcase implements EntryPoint {
   private static final class GeneratorInfo {
   }
 
+  /**
+   * A special version of the ToggleButton that cannot be clicked if down. If
+   * one theme button is pressed, all of the others are depressed.
+   */
   private static final class ThemeButton extends ToggleButton {
     private static List<ThemeButton> allButtons = null;
 
@@ -188,24 +209,31 @@ public class Showcase implements EntryPoint {
   public static String CUR_THEME = ShowcaseConstants.STYLE_THEMES[0];
 
   /**
+   * Initialize GWT Beans Binding (run property descriptor generator).
+   */
+  static {
+    GWTBeansBinding.init();
+  }
+
+  /**
    * Get the URL of the page, without an hash of query string.
-   *
+   * 
    * @return the location of the page
    */
   private static native String getHostPageLocation()
   /*-{
     var s = $doc.location.href;
-
+  
     // Pull off any hash.
     var i = s.indexOf('#');
     if (i != -1)
       s = s.substring(0, i);
-
+  
     // Pull off any query string.
     i = s.indexOf('?');
     if (i != -1)
       s = s.substring(0, i);
-
+  
     // Ensure a final slash if non-empty.
     return s;
   }-*/;
@@ -227,7 +255,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Set the content to the {@link ContentWidget}.
-   *
+   * 
    * @param content the {@link ContentWidget} to display
    */
   private void displayContentWidget(final ContentWidget content) {
@@ -241,7 +269,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Get the token for a given content widget.
-   *
+   * 
    * @return the content widget token.
    */
   private String getContentWidgetToken(ContentWidget content) {
@@ -253,7 +281,7 @@ public class Showcase implements EntryPoint {
   /**
    * Get the style name of the reference element defined in the current GWT
    * theme style sheet.
-   *
+   * 
    * @param prefix the prefix of the reference style name
    * @return the style name
    */
@@ -284,10 +312,10 @@ public class Showcase implements EntryPoint {
     setupOptionsPanel();
     setupMainMenu(constants);
 
-    // Setup a history listener to reselect the associate menu item
-    final HistoryListener historyListener = new HistoryListener() {
-      public void onHistoryChanged(String historyToken) {
-        TreeItem item = itemTokens.get(historyToken);
+    // Setup a history handler to reselect the associate menu item
+    final ValueChangeHandler<String> historyHandler = new ValueChangeHandler<String>() {
+      public void onValueChange(ValueChangeEvent<String> event) {
+        TreeItem item = itemTokens.get(event.getValue());
         if (item == null) {
           item = app.getMainMenu().getItem(0).getChild(0);
         }
@@ -300,11 +328,12 @@ public class Showcase implements EntryPoint {
         displayContentWidget(itemWidgets.get(item));
       }
     };
-    History.addHistoryListener(historyListener);
+    History.addValueChangeHandler(historyHandler);
 
     // Add an listener that sets the content widget when a menu item is selected
-    app.addTreeListener(new TreeListener() {
-      public void onTreeItemSelected(TreeItem item) {
+    app.addSelectionHandler(new SelectionHandler<TreeItem>() {
+      public void onSelection(SelectionEvent<TreeItem> event) {
+        TreeItem item = event.getSelectedItem();
         ContentWidget content = itemWidgets.get(item);
         if (content != null && !content.equals(app.getContent())) {
           History.newItem(getContentWidgetToken(content));
@@ -312,17 +341,13 @@ public class Showcase implements EntryPoint {
           WidgetHelper.getParent(content).layout();
         }
       }
-
-      public void onTreeItemStateChanged(TreeItem item) {
-        // TODO Auto-generated method stub
-      }
     });
 
     // Show the initial example
-    String initToken = History.getToken();
-    if (initToken.length() > 0) {
-      historyListener.onHistoryChanged(initToken);
-    } else { // Use the first token available
+    if (History.getToken().length() > 0) {
+      History.fireCurrentHistoryState();
+    } else {
+      // Use the first token available
       TreeItem firstItem = app.getMainMenu().getItem(0).getChild(0);
       app.getMainMenu().setSelectedItem(firstItem, false);
       app.getMainMenu().ensureSelectedItemVisible();
@@ -339,7 +364,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Create the main links at the top of the application.
-   *
+   * 
    * @param constants the constants with text
    */
   private void setupMainLinks(ShowcaseConstants constants) {
@@ -358,7 +383,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Setup all of the options in the main menu.
-   *
+   * 
    * @param constants the constant values to use
    */
   private void setupMainMenu(ShowcaseConstants constants) {
@@ -380,72 +405,99 @@ public class Showcase implements EntryPoint {
         IMAGES.catWidgets());
     setupMainMenuOption(catWidgets, new CwMenuBar(constants),
         IMAGES.catWidgets());
+    setupMainMenuOption(catWidgets, new CwSliderBar(constants),
+        IMAGES.catWidgets());
 
     // Popups
     TreeItem catPopups = mainMenu.addItem("Popups");
     setupMainMenuOption(catPopups, new CwInfoPanel(constants),
         IMAGES.catPopups());
-    setupMainMenuOption(catPopups, new CwLayoutPopupPanel(constants),
+    setupMainMenuOption(catPopups, new CwMessageBox(constants),
         IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwWindowPanel(constants),
         IMAGES.catPopups());
-    setupMainMenuOption(catPopups, new CwMessageBox(constants),
+    setupMainMenuOption(catPopups, new CwLayoutPopups(constants),
+        IMAGES.catPopups());
+    setupMainMenuOption(catPopups, new CwFormDialog(constants),
         IMAGES.catPopups());
 
     // Panels
-    TreeItem catPanels = mainMenu.addItem(constants.mainMenuLayoutAndPanels());
-    setupMainMenuOption(catPanels, new CwFillLayout(constants),
+    TreeItem catPanels = mainMenu.addItem("Layout & Panels");
+
+    TreeItem catFillLayout = catPanels.addItem("FillLayout");
+    setupMainMenuOption(catFillLayout,
+        new CwFillLayoutStretchedImage(constants), IMAGES.catPanels());
+    setupMainMenuOption(catFillLayout, new CwFillLayoutSizeConstraints(
+        constants), IMAGES.catPanels());
+    setupMainMenuOption(catFillLayout, new CwFillLayoutHAlignment(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catPanels, new CwBoxLayout(constants),
+    setupMainMenuOption(catFillLayout, new CwFillLayoutVAlignment(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catPanels, new CwBorderLayout(constants),
+    setupMainMenuOption(catFillLayout, new CwFillLayoutCentered(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catPanels, new CwGridLayout(constants),
+
+    TreeItem catBoxLayout = catPanels.addItem("BoxLayout");
+    setupMainMenuOption(catBoxLayout, new CwBoxLayout(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catPanels, new CwNestedBorderLayout(constants),
+    setupMainMenuOption(catBoxLayout, new CwBoxLayoutTest1(constants),
         IMAGES.catPanels());
-    setupMainMenuOption(catPanels, new CwMixedLayout(constants),
+    setupMainMenuOption(catBoxLayout, new CwBoxLayoutTest2(constants),
         IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayout,
+        new CwBoxLayoutTest_Horizontal(constants), IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayout, new CwBoxLayoutTest_Vertical(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catBoxLayout, new CwBoxLayoutTest_Histogram(constants),
+        IMAGES.catPanels());
+
+    TreeItem catBorderLayout = catPanels.addItem("BorderLayout");
+    setupMainMenuOption(catBorderLayout, new CwBorderLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catBorderLayout, new CwNestedBorderLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catBorderLayout, new CwBorderLayoutTest_Collapsed(
+        constants), IMAGES.catPanels());
+    setupMainMenuOption(catBorderLayout, new CwBorderLayoutTest_Frames(
+        constants), IMAGES.catPanels());
+
+    TreeItem catGridLayout = catPanels.addItem("GridLayout");
+    setupMainMenuOption(catGridLayout, new CwGridLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catGridLayout, new CwCalculatorLayout(constants),
+        IMAGES.catPanels());
+    
+    TreeItem catColumnRowLayout = catPanels.addItem("Column/RowLayout");
+    setupMainMenuOption(catColumnRowLayout, new CwColumnRowLayout(constants),
+        IMAGES.catPanels());
+
+    TreeItem catMixedLayout = catPanels.addItem("Mixed");
+    setupMainMenuOption(catMixedLayout, new CwMixedLayout(constants),
+        IMAGES.catPanels());
+
+    TreeItem catLayoutAnimations = catPanels.addItem("Animations");
+    setupMainMenuOption(catLayoutAnimations, new CwFillLayoutAnimation(
+        constants), IMAGES.catPanels());
+    setupMainMenuOption(catLayoutAnimations,
+        new CwBoxLayoutAnimation(constants), IMAGES.catPanels());
 
     TreeItem catLayoutPanels = catPanels.addItem("Panels");
     setupMainMenuOption(catLayoutPanels, new CwDeckLayoutPanel(constants),
         IMAGES.catPanels());
+    setupMainMenuOption(catLayoutPanels,
+        new CwDisclosureLayoutPanel(constants), IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwStackLayoutPanel(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwTabLayoutPanel(constants),
         IMAGES.catPanels());
     setupMainMenuOption(catLayoutPanels, new CwBottomTabBars(constants),
         IMAGES.catPanels());
-
-    TreeItem catLayoutTests = catPanels.addItem("Tests & Demos");
-    TreeItem catFillLayoutTests = catLayoutTests.addItem("FillLayout");
-    setupMainMenuOption(catFillLayoutTests, new CwFillLayoutTest1(constants),
-        IMAGES.catPanels());
-
-    TreeItem catBoxLayoutTests = catLayoutTests.addItem("BoxLayout");
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest1(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest2(constants),
-        IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Horizontal(
-        constants), IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Vertical(
-        constants), IMAGES.catPanels());
-    setupMainMenuOption(catBoxLayoutTests, new CwBoxLayoutTest_Histogram(
-        constants), IMAGES.catPanels());
-
-    TreeItem catBorderLayoutTests = catLayoutTests.addItem("BorderLayout");
-    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Collapsed(
-        constants), IMAGES.catPanels());
-    setupMainMenuOption(catBorderLayoutTests, new CwBorderLayoutTest_Frames(
-        constants), IMAGES.catPanels());
-
-    TreeItem catGridLayoutTests = catLayoutTests.addItem("GridLayout");
-    setupMainMenuOption(catGridLayoutTests, new CwCalculatorLayout(constants),
+    setupMainMenuOption(catLayoutPanels,
+        new CwDynamicTabLayoutPanel(constants), IMAGES.catPanels());
+    setupMainMenuOption(catLayoutPanels, new CwColumnView(constants),
         IMAGES.catPanels());
 
     // Forms
-    TreeItem catForms = mainMenu.addItem(constants.mainMenuForms());
+    TreeItem catForms = mainMenu.addItem("Forms");
     setupMainMenuOption(catForms, new CwQuickStartExample(constants),
         IMAGES.catForms());
 
@@ -507,13 +559,23 @@ public class Showcase implements EntryPoint {
         IMAGES.catLists());
 
     // Tables
-    TreeItem catTables = mainMenu.addItem(constants.mainMenuListsAndTables());
+    TreeItem catTables = mainMenu.addItem("Lists & Tables");
     setupMainMenuOption(catTables, new CwListBox(constants), IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwFilterListBox(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwRichListBox(constants),
+        IMAGES.catTables());
     setupMainMenuOption(catTables, new CwSimpleTable(constants),
         IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwScrollTable(constants),
+    setupMainMenuOption(catTables, new CwLiveTable(constants),
         IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
+    // setupMainMenuOption(catTables, new CwScrollTable(constants),
+    // IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwScrollTable2(constants),
+        IMAGES.catTables());
+    // setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
+    // IMAGES.catTables());
+    setupMainMenuOption(catTables, new CwPagingScrollTable2(constants),
         IMAGES.catTables());
     setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
         IMAGES.catTables());
@@ -527,31 +589,45 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
         IMAGES.catLists());
 
+    // Validation
+    // TreeItem catValidation = mainMenu.addItem("Validation");
+    //
+    // TreeItem catBasicValidation = catValidation.addItem("Basic");
+    // setupMainMenuOption(catBasicValidation,
+    // new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
+
     // Other
-    TreeItem catOther = mainMenu.addItem(constants.mainMenuOtherFeatures());
-    setupMainMenuOption(catOther, new CwListBoxBinding(constants),
-        IMAGES.catOther());
-    // setupMainMenuOption(catOther, new CwActions(constants),
-    // IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwActions(constants), IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwRadioButtonActions(constants),
-        IMAGES.catOther());
-    setupMainMenuOption(catOther, new CwDefaultActions(constants),
+    TreeItem catOther = mainMenu.addItem("Other Features");
+    TreeItem catBindings = catOther.addItem("Beans Binding");
+    setupMainMenuOption(catBindings, new CwListBoxBinding(constants),
         IMAGES.catOther());
 
+    TreeItem catActions = catOther.addItem("Actions");
+    setupMainMenuOption(catActions, new CwActions(constants), IMAGES.catOther());
+    setupMainMenuOption(catActions, new CwRadioButtonActions(constants),
+        IMAGES.catOther());
+    setupMainMenuOption(catActions, new CwDefaultActions(constants),
+        IMAGES.catOther());
+
+    TreeItem catPageBus = catOther.addItem("PageBus");
+    setupMainMenuOption(catPageBus, new CwPageBus1(constants),
+        IMAGES.catOther());
+    setupMainMenuOption(catPageBus, new CwPageBus2(constants),
+        IMAGES.catOther());
   }
 
   /**
    * Add an option to the main menu.
-   *
+   * 
    * @param parent the {@link TreeItem} that is the option
    * @param content the {@link ContentWidget} to display when selected
    * @param image the icon to display next to the {@link TreeItem}
    */
   private void setupMainMenuOption(TreeItem parent, ContentWidget content,
-      AbstractImagePrototype image) {
+      ImageResource image) {
     // Create the TreeItem
-    TreeItem option = parent.addItem(image.getHTML() + " " + content.getName());
+    TreeItem option = parent.addItem(AbstractImagePrototype.create(image).getHTML()
+        + " " + content.getName());
 
     // Map the item to its history token and content widget
     itemWidgets.put(option, content);
@@ -587,15 +663,15 @@ public class Showcase implements EntryPoint {
         }
       }
     }
-    localeBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
+    localeBox.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
         String localeName = localeBox.getValue(localeBox.getSelectedIndex());
         Window.open(getHostPageLocation() + "?locale=" + localeName, "_self",
             "");
       }
     });
     HorizontalPanel localeWrapper = new HorizontalPanel();
-    localeWrapper.add(IMAGES.locale().createImage());
+    localeWrapper.add(new Image(IMAGES.locale()));
     localeWrapper.add(localeBox);
     vPanel.add(localeWrapper);
 
@@ -606,8 +682,8 @@ public class Showcase implements EntryPoint {
       final ThemeButton button = new ThemeButton(
           ShowcaseConstants.STYLE_THEMES[i]);
       styleWrapper.add(button);
-      button.addClickListener(new ClickListener() {
-        public void onClick(Widget sender) {
+      button.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
           // Update the current theme
           CUR_THEME = button.getTheme();
 
@@ -624,7 +700,7 @@ public class Showcase implements EntryPoint {
 
   /**
    * Create the title bar at the top of the Application.
-   *
+   * 
    * @param constants the constant values to use
    */
   private void setupTitlePanel(ShowcaseConstants constants) {
@@ -635,7 +711,7 @@ public class Showcase implements EntryPoint {
     // Add the title and some images to the title bar
     HorizontalPanel titlePanel = new HorizontalPanel();
     titlePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-    titlePanel.add(IMAGES.gwtLogo().createImage());
+    titlePanel.add(new Image(IMAGES.gwtLogo()));
     titlePanel.add(new HTML(pageTitle));
     app.setTitleWidget(titlePanel);
   }
@@ -680,11 +756,11 @@ public class Showcase implements EntryPoint {
 
     // Return if we already have the correct style sheets
     if (styleSheetsFound && toRemove.size() == 0) {
-      return;
+      // return;
     }
 
     // Detach the app while we manipulate the styles to avoid rendering issues
-    app.removeFromParent();
+    RootPanel.get().remove(app);
 
     // Remove the old style sheets
     for (Element elem : toRemove) {

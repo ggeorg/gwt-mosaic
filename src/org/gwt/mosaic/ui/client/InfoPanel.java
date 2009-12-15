@@ -21,14 +21,17 @@ import java.util.List;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.util.DelayedRunnable;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -42,7 +45,7 @@ import com.google.gwt.widgetideas.client.GlassPanel;
  * 
  */
 public class InfoPanel extends DecoratedPopupPanel implements HasText,
-    WindowResizeListener, PopupListener {
+    ResizeHandler, CloseHandler<PopupPanel> {
 
   public enum InfoPanelType {
     HUMANIZED_MESSAGE, TRAY_NOTIFICATION
@@ -93,10 +96,9 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     }
   }
 
-  public static void show(InfoPanelType type, String caption, String text,
-      String... values) {
+  public static void show(InfoPanelType type, String caption, String text) {
     if (type == InfoPanelType.TRAY_NOTIFICATION) {
-      show(caption, text, values);
+      show(caption, text);
     } else {
       // if (text != null && values != null) text = Format.substitute(text,
       // values);
@@ -106,24 +108,24 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
         infoPanel.glassPanel = new GlassPanel(false);
         infoPanel.glassPanel.addStyleName("mosaic-GlassPanel-default");
         DOM.setStyleAttribute(infoPanel.glassPanel.getElement(), "zIndex",
-            DOM.getStyleAttribute(infoPanel.getElement(), "zIndex"));
+            DOM.getComputedStyleAttribute(infoPanel.getElement(), "zIndex"));
       }
       RootPanel.get().add(infoPanel.glassPanel, 0, 0);
       infoPanel.center();
-      infoPanel.addPopupListener(infoPanel);
+      infoPanel.addCloseHandler(infoPanel);
     }
   }
 
   private GlassPanel glassPanel;
 
-  public static void show(String caption, String text, String... values) {
+  public static void show(String caption, String text) {
     final int avail = firstAvail();
     // if (text != null && values != null) text = Format.substitute(text,
     // values);
 
     InfoPanel infoPanel = new InfoPanel(caption, text);
-    infoPanel.addPopupListener(new PopupListener() {
-      public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+    infoPanel.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
         SLOTS.set(avail, null);
       }
     });
@@ -152,6 +154,8 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     this(caption, description, false);
   }
 
+  private HandlerRegistration resizeHandlerRegistration;
+
   protected InfoPanel(String caption, String description, final boolean autoHide) {
     super(autoHide, false); // modal=false
     ensureDebugId("mosaicInfoPanel-simplePopup");
@@ -169,7 +173,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     if (autoHide) {
       final int width = Window.getClientWidth();
       panel.setPixelSize(Math.max(width / 3, WIDTH), HEIGHT);
-      Window.addWindowResizeListener(this);
+      resizeHandlerRegistration = Window.addResizeHandler(this);
     } else {
       panel.setPixelSize(WIDTH, HEIGHT);
     }
@@ -206,7 +210,7 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     this.description.setText(text);
   }
 
-  public void onWindowResized(int width, int height) {
+  public void onResize(ResizeEvent event) {
     new DelayedRunnable() {
       public void run() {
         final int width = Window.getClientWidth();
@@ -216,8 +220,10 @@ public class InfoPanel extends DecoratedPopupPanel implements HasText,
     };
   }
 
-  public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    Window.removeWindowResizeListener(this);
+  public void onClose(CloseEvent<PopupPanel> event) {
+    if (resizeHandlerRegistration != null) {
+      resizeHandlerRegistration.removeHandler();
+    }
     glassPanel.removeFromParent();
   }
 

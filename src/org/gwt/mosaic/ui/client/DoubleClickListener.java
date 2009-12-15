@@ -17,13 +17,15 @@ package org.gwt.mosaic.ui.client;
 
 import com.google.gwt.user.client.ui.Widget;
 
+import java.util.EventListener;
+
 /**
  * Event listener interface for double click events.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public interface DoubleClickListener {
+public interface DoubleClickListener extends EventListener {
 
   /**
    * Fired when the user double clicks on a widget.

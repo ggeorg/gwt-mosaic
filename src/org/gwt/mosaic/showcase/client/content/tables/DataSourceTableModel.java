@@ -15,30 +15,27 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import java.io.Serializable;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.gen2.table.client.MutableTableModel;
+import com.google.gwt.gen2.table.client.TableModelHelper.Request;
+import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
-import com.google.gwt.widgetideas.table.client.ClientTableModel;
-import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
-import com.google.gwt.widgetideas.table.client.TableModelHelper.SerializableResponse;
+
+import java.util.List;
+
+import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
+import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
 
 /**
  * An iterator that serves as the data source for TableOracle requests.
  */
-public class DataSourceTableModel extends ClientTableModel<Serializable> {
-
-  /**
-   * The column count.
-   */
-  public static final int COLUMN_COUNT = 12;
-
+public class DataSourceTableModel extends MutableTableModel<Student> {
   /**
    * The source of the data.
    */
-  private DataSourceData data = new DataSourceData() {
+  private StudentGenerator data = new StudentGenerator() {
     @Override
     public int getRandomInt(int max) {
       return Random.nextInt(max);
@@ -67,23 +64,6 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
   private boolean zeroMode = false;
 
   /**
-   * @see ClientTableModel#getCell(int, int)
-   */
-  @Override
-  public Object getCell(int rowNum, int colNum) {
-    return data.getCell(rowNum, colNum);
-  }
-
-  /**
-   * Check if zero mode is enabled.
-   * 
-   * @return true if enabled
-   */
-  public boolean isZeroModeEnabled() {
-    return zeroMode;
-  }
-
-  /**
    * Check if error mode is enabled.
    * 
    * @return true if enabled
@@ -102,19 +82,27 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
   }
 
   /**
+   * Check if zero mode is enabled.
+   * 
+   * @return true if enabled
+   */
+  public boolean isZeroModeEnabled() {
+    return zeroMode;
+  }
+
+  /**
    * Override that can optionally throw an error.
    */
   @Override
   public void requestRows(final Request request,
-      final Callback<Serializable> callback) {
+      final Callback<Student> callback) {
     if (errorMode) {
       // Return an error
       callback.onFailure(new Exception("An error has occured."));
     } else if (zeroMode) {
       // Return an empty result
-      // List<Serializable> students = data.generateStudents(0);
-      // callback.onRowsReady(request, new
-      // SerializableResponse<Serializable>(students));
+      List<Student> students = data.generateStudents(0);
+      callback.onRowsReady(request, new SerializableResponse<Student>(students));
     } else if (rpcMode) {
       // Create the service if needed
       if (dataService == null) {
@@ -126,18 +114,22 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
 
       // Send RPC request for data
       dataService.requestRows(request,
-          new AsyncCallback<SerializableResponse<Serializable>>() {
+          new AsyncCallback<SerializableResponse<Student>>() {
             public void onFailure(Throwable caught) {
               callback.onFailure(new Exception("RPC Failure"));
             }
 
-            public void onSuccess(SerializableResponse<Serializable> result) {
+            public void onSuccess(SerializableResponse<Student> result) {
               callback.onRowsReady(request, result);
             }
           });
     } else {
       // Generate data locally
-      super.requestRows(request, callback);
+      int numRows = request.getNumRows();
+      List<Student> students = data.generateStudents(numRows);
+      SerializableResponse<Student> response = new SerializableResponse<Student>(
+          students);
+      callback.onRowsReady(request, response);
     }
   }
 
@@ -179,8 +171,7 @@ public class DataSourceTableModel extends ClientTableModel<Serializable> {
   }
 
   @Override
-  protected boolean onSetData(int row, int cell, Object data) {
-    System.out.println("=======================");
-    return false;
+  protected boolean onSetRowValue(int row, Student rowValue) {
+    return true;
   }
 }

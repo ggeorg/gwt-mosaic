@@ -19,9 +19,9 @@ import java.util.Date;
 
 import org.gwt.mosaic.ui.client.ComboBoxBase;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.widgetideas.client.event.ChangeEvent;
-import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
 /**
  * 
@@ -47,13 +47,14 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
 
     this.dateTimePicker = dateTimePicker;
 
-    final ChangeHandler<Date> changeHandler = new ChangeHandler<Date>() {
-      public void onChange(ChangeEvent<Date> event) {
+    final ValueChangeHandler<Date> changeHandler = new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
         setText(dateTimePicker.getDate());
         hidePopup();
       }
-    };
-    dateTimePicker.getDatePicker().addChangeHandler(changeHandler);
+    };    
+    
+    dateTimePicker.getDatePicker().addValueChangeHandler(changeHandler);
     // dateTimePicker.getTimePicker().addChangeHandler(changeHandler);
 
     addStyleName(DEFAULT_STYLENAME);
@@ -134,8 +135,8 @@ public class DateTimeComboBox extends ComboBoxBase<DateTimePicker> {
    * @param date picker
    */
   public void showDate(Date date) {
-    dateTimePicker.getDatePicker().setSelectedDate(date, false);
-    dateTimePicker.getDatePicker().showDate(date);
+    dateTimePicker.getDatePicker().setValue(date, false);
+    //dateTimePicker.getDatePicker().showDate(date);
     dateTimePicker.getTimePicker().setDateTime(date);
     setText(date);
   }

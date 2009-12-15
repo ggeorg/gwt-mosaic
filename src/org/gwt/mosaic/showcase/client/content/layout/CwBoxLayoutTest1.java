@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package org.gwt.mosaic.showcase.client.content.layout;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -61,8 +60,8 @@ public class CwBoxLayoutTest1 extends ContentWidget {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BorderLayout());
-    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(5);
 
     final Button b11 = new Button("Button 11");
@@ -70,7 +69,7 @@ public class CwBoxLayoutTest1 extends ContentWidget {
     final Button b13 = new Button("Button 13");
     final Button b14 = new Button("Button 14");
 
-    BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
+    final BoxLayout boxLayout1 = new BoxLayout(); // default is horizontal
     final LayoutPanel layoutPanel1 = new LayoutPanel(boxLayout1);
 
     layoutPanel1.add(b11, new BoxLayoutData(FillStyle.VERTICAL));
@@ -83,7 +82,7 @@ public class CwBoxLayoutTest1 extends ContentWidget {
     final Button b23 = new Button("Button 23");
     final Button b24 = new Button("Button 24");
 
-    BoxLayout boxLayout2 = new BoxLayout(); // default is horizontal
+    final BoxLayout boxLayout2 = new BoxLayout(); // default is horizontal
     boxLayout2.setLeftToRight(false);
     final LayoutPanel layoutPanel2 = new LayoutPanel(boxLayout2);
 
@@ -97,5 +96,4 @@ public class CwBoxLayoutTest1 extends ContentWidget {
     
     return layoutPanel;
   }
-
 }
