@@ -93,13 +93,16 @@ public class ScrollLayoutPanel extends LayoutPanel implements
       return; 
     
     var item = e;
-    var realOffset = 0;
+    var realOffsetX = 0;
+    var realOffsetY = 0;
     while (item && (item != scroll)) {
-      realOffset += item.offsetTop;
+      realOffsetX += item.offsetLeft;
+      realOffsetY += item.offsetTop;
       item = item.offsetParent;
     }
     
-    scroll.scrollTop = realOffset - scroll.offsetHeight / 2;
+    scroll.scrollLeft = realOffsetX - scroll.offsetWidth / 2;
+    scroll.scrollTop  = realOffsetY - scroll.offsetHeight / 2;
   }-*/;
 
   /**
