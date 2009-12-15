@@ -569,6 +569,15 @@ public class DesktopPanel extends Composite implements
       w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
     }
   }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return false;
+  }
 
   public void makeDraggable(WindowPanel w) {
     moveDragController.makeDraggable(w, w.getHeader());

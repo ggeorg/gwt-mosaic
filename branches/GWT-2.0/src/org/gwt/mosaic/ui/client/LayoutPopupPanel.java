@@ -124,6 +124,15 @@ public class LayoutPopupPanel extends PopupPanel implements HasLayoutManager {
   public void layout() {
     getLayoutPanel().layout();
   }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return getLayoutPanel().needsLayout();
+  }
 
   /**
    * Causes this popup to be sized to fit the preferred size and layouts of its

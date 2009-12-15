@@ -34,7 +34,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -330,6 +329,15 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       insert(w, getElement(), beforeIndex, true);
     }
   }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return invalid;
+  }
 
   public void invalidate() {
     invalidate(null);
@@ -379,9 +387,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     if (isAttached() && isVisible()) {
       onLayout();
       layout.layoutPanel(this);
+      invalid = false;
       layoutChildren();
     }
-    invalid = false;
   }
 
   protected void layoutChildren() {
