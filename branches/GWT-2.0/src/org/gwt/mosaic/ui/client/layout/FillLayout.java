@@ -196,11 +196,11 @@ public class FillLayout extends BaseLayout implements HasAlignment {
   }
 
   private FillLayoutData getFillLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof FillLayoutData)) {
       layoutDataObject = new FillLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (FillLayoutData) layoutDataObject;
   }

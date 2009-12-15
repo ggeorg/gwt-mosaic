@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwt.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
@@ -10,16 +25,23 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ * 
+ */
 public class RowLayout extends BaseLayout {
 
   private List<RowLayoutSplitBar> splitBars = new ArrayList<RowLayoutSplitBar>();
 
-  public RowLayout() {
-    super();
-  }
-
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     final Dimension result = new Dimension();
     try {
@@ -40,18 +62,52 @@ public class RowLayout extends BaseLayout {
       }
 
       final int spacing = layoutPanel.getWidgetSpacing();
+      height += ((size - 1) * spacing);
 
-      result.height += ((size - 1) * spacing);
+      Dimension decPanelFrameSize = null;
+
+      int maxWidth = 0;
+
+      for (Widget child : visibleChildList) {
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
+
+        RowLayoutData layoutData = getRowLayoutData(child);
+
+        if (layoutData.hasDecoratorPanel()) {
+          decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
+              child);
+        }
+
+        int w = preferredWidthMeasure.sizeOf(child);
+        height += preferredHeightMeasure.sizeOf(child);
+
+        if (layoutData.hasDecoratorPanel()) {
+          w += decPanelFrameSize.width;
+          height += decPanelFrameSize.height;
+        }
+
+        maxWidth = Math.max(maxWidth, w);
+      }
+
+      result.width = width + maxWidth;
+      result.height = height;
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ".getPreferredSize() : "
+      Window.alert(getClass().getName() + ".getPreferredSize() : "
           + e.getMessage());
     }
 
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.BaseLayout#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   */
   @Override
   public void layoutPanel(LayoutPanel layoutPanel) {
     try {
@@ -78,50 +134,79 @@ public class RowLayout extends BaseLayout {
 
       int fillingHeight = 0;
 
+      Dimension decPanelFrameSize = null;
+
       // 1st pass
       for (Widget child : visibleChildList) {
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
+
         RowLayoutData layoutData = getRowLayoutData(child);
-        //        
-        // if (child instanceof Collapsible) {
-        // if (((Collapsible)child).isCollapsed()) {
-        // fillWidth -= getPreferredSize(layoutPanel, child, layoutData).width;
-        // } else {
-        // fillingWidth++;
-        // }
-        // } else {
-        fillingHeight += layoutData.getFlexibility();
-        // }
+
+        if (layoutData.hasDecoratorPanel()) {
+          decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
+              child);
+        }
+
+        if (layoutData.getPreferredHeight() == null) {
+          fillingHeight += layoutData.getFlexibility();
+        } else {
+          layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
+          if (layoutData.hasDecoratorPanel()) {
+            layoutData.calcHeight += decPanelFrameSize.height;
+          }
+          fillHeight -= layoutData.calcHeight;
+        }
       }
 
       // 2nd pass
       for (int i = 0, n = visibleChildList.size(); i < n; i++) {
         Widget child = visibleChildList.get(i);
-        RowLayoutData layoutData = getRowLayoutData(child);
 
-        int h = (int) (fillHeight * ((double) layoutData.getFlexibility() / fillingHeight));
+        if (child instanceof DecoratorPanel) {
+          child = ((DecoratorPanel) child).getWidget();
+        }
 
-        left = Math.max(0, left);
+        final RowLayoutData layoutData = (RowLayoutData) child.getLayoutData();
+
+        int w = width;
+        int h = layoutData.calcHeight;
+
+        if (layoutData.getPreferredHeight() == null) {
+          h = (int) (fillHeight * ((double) layoutData.getFlexibility() / fillingHeight));
+        }
+
+        int fw = w;
+        int fh = h;
+
+        if (layoutData.hasDecoratorPanel()) {
+          fw -= decPanelFrameSize.width;
+          fh -= decPanelFrameSize.height;
+        }
+
+        top = Math.max(0, top);
 
         layoutData.targetLeft = left;
         layoutData.targetTop = top;
-        layoutData.targetWidth = width;
-        layoutData.targetHeight = h;
+        layoutData.targetWidth = fw;
+        layoutData.targetHeight = fh;
 
         if (i < n - 1) {
           RowLayoutSplitBar splitBar = splitBars.get(i);
           if (!splitBar.isAttached()) {
             layoutPanel.addImpl(splitBar);
           }
-          WidgetHelper.setBounds(layoutPanel, splitBar, left, top + h,
-              width, spacing);
+          WidgetHelper.setBounds(layoutPanel, splitBar, left, top + h, width,
+              spacing);
         }
 
         top += (h + spacing);
 
         layoutData.setSourceLeft(child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft());
+            - layoutPanel.getAbsoluteLeft() - paddings[3]);
         layoutData.setSourceTop(child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop());
+            - layoutPanel.getAbsoluteTop() - paddings[0]);
         layoutData.setSourceWidth(child.getOffsetWidth());
         layoutData.setSourceHeight(child.getOffsetHeight());
       }
@@ -135,11 +220,11 @@ public class RowLayout extends BaseLayout {
   }
 
   private RowLayoutData getRowLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof RowLayoutData)) {
       layoutDataObject = new RowLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (RowLayoutData) layoutDataObject;
   }
@@ -168,8 +253,8 @@ public class RowLayout extends BaseLayout {
     }
 
     for (int i = 0, n = visibleChildList.size() - 1; i < n; i++) {
-      splitBars.add(new RowLayoutSplitBar(layoutPanel, visibleChildList,
-          visibleChildList.get(i), visibleChildList.get(i + 1)));
+      splitBars.add(new RowLayoutSplitBar(layoutPanel, visibleChildList.get(i),
+          visibleChildList.get(i + 1)));
     }
 
     return initialized = true;
