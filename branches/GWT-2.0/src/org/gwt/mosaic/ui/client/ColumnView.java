@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- *
+ * 
  * @param <T>
  */
 public class ColumnView<T> extends LayoutComposite {
@@ -110,6 +110,20 @@ public class ColumnView<T> extends LayoutComposite {
         scrollPanel.ensureVisible(column);
       }
     });
+  }
+
+  /**
+   * Removes the {@link ColumnViewItem} at the specified position and any
+   * subsequent elements to the right.
+   * 
+   * @param index index at which the {@link ColumnViewItem} is to be removed
+   */
+  public void deleteColumn(int index) {
+    // delete any elements on the left
+    for (int i = columns.size() - 1; i >= index; i--) {
+      columns.remove(i);
+      columnView.remove(i);
+    }
   }
 
   // Query Operations
