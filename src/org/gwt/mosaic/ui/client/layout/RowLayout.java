@@ -15,9 +15,7 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
@@ -34,8 +32,6 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public class RowLayout extends BaseLayout {
-
-  private List<RowLayoutSplitBar> splitBars = new ArrayList<RowLayoutSplitBar>();
 
   /**
    * {@inheritDoc}
@@ -193,12 +189,16 @@ public class RowLayout extends BaseLayout {
         layoutData.targetHeight = fh;
 
         if (i < n - 1) {
-          RowLayoutSplitBar splitBar = splitBars.get(i);
-          if (!splitBar.isAttached()) {
-            layoutPanel.addImpl(splitBar);
+          if (layoutData.splitBar == null) {
+            layoutData.splitBar = new RowLayoutSplitBar(layoutPanel, child,
+                visibleChildList.get(i + 1));
+            layoutPanel.addImpl(layoutData.splitBar);
+          } else if (!layoutData.splitBar.isAttached()) {
+            layoutData.splitBar.widgetB = visibleChildList.get(i + 1);
+            layoutPanel.addImpl(layoutData.splitBar);
           }
-          WidgetHelper.setBounds(layoutPanel, splitBar, left, top + h, width,
-              spacing);
+          WidgetHelper.setBounds(layoutPanel, layoutData.splitBar, left, top
+              + h, width, spacing);
         }
 
         top += (h + spacing);
@@ -237,24 +237,19 @@ public class RowLayout extends BaseLayout {
 
     super.init(layoutPanel);
 
-    for (Widget splitBar : splitBars) {
-      splitBar.removeFromParent();
-    }
-    splitBars.clear();
-
     for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
       Widget widget = iter.next();
+
+      if (widget instanceof RowLayoutSplitBar) {
+        iter.remove();
+        continue;
+      }
 
       if (!DOM.isVisible(widget.getElement())) {
         continue;
       }
 
       visibleChildList.add(widget);
-    }
-
-    for (int i = 0, n = visibleChildList.size() - 1; i < n; i++) {
-      splitBars.add(new RowLayoutSplitBar(layoutPanel, visibleChildList.get(i),
-          visibleChildList.get(i + 1)));
     }
 
     return initialized = true;

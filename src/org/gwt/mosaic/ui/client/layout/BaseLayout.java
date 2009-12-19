@@ -246,7 +246,7 @@ public abstract class BaseLayout implements LayoutManager {
   public void layoutPanel(final LayoutPanel layoutPanel) {
     if (!layoutPanel.isAnimationEnabled()) {
       for (Widget child : visibleChildList) {
-        LayoutData layoutData = (LayoutData) getLayoutData(child);
+        LayoutData layoutData = (LayoutData) child.getLayoutData();
         WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
             layoutData.targetTop, layoutData.targetWidth,
             layoutData.targetHeight);

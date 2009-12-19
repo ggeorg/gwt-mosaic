@@ -52,7 +52,8 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
   private static GlassPanel glassPanel;
   private final SplitBarDragController dragController;
 
-  private final Widget widgetT, widgetB;
+  private final Widget widgetT;
+  Widget widgetB;
 
   class SplitBarDragController extends AbstractDragController {
     private Widget movablePanel;

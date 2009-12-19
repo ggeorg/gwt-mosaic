@@ -24,6 +24,8 @@ public class RowLayoutData extends LayoutData {
   private int flexibility;
   
   int calcHeight;
+  
+  RowLayoutSplitBar splitBar;
 
   public RowLayoutData() {
     this(1, false);

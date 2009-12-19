@@ -15,9 +15,7 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
@@ -31,11 +29,9 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
- *
+ * 
  */
 public class ColumnLayout extends BaseLayout {
-
-  private List<ColumnLayoutSplitBar> splitBars = new ArrayList<ColumnLayoutSplitBar>();
 
   /**
    * {@inheritDoc}
@@ -176,7 +172,7 @@ public class ColumnLayout extends BaseLayout {
         if (layoutData.getPreferredWidth() == null) {
           w = (int) (fillWidth * ((double) layoutData.getFlexibility() / fillingWidth));
         }
-        
+
         int fw = w;
         int fh = h;
 
@@ -193,12 +189,16 @@ public class ColumnLayout extends BaseLayout {
         layoutData.targetHeight = fh;
 
         if (i < n - 1) {
-          ColumnLayoutSplitBar splitBar = splitBars.get(i);
-          if (!splitBar.isAttached()) {
-            layoutPanel.addImpl(splitBar);
+          if (layoutData.splitBar == null) {
+            layoutData.splitBar = new ColumnLayoutSplitBar(layoutPanel, child,
+                visibleChildList.get(i + 1));
+            layoutPanel.addImpl(layoutData.splitBar);
+          } else if (!layoutData.splitBar.isAttached()) {
+            layoutData.splitBar.widgetR = visibleChildList.get(i + 1);
+            layoutPanel.addImpl(layoutData.splitBar);
           }
-          WidgetHelper.setBounds(layoutPanel, splitBar, left + w, top, spacing,
-              height);
+          WidgetHelper.setBounds(layoutPanel, layoutData.splitBar, left + w,
+              top, spacing, height);
         }
 
         left += (w + spacing);
@@ -237,24 +237,19 @@ public class ColumnLayout extends BaseLayout {
 
     super.init(layoutPanel);
 
-    for (Widget splitBar : splitBars) {
-      splitBar.removeFromParent();
-    }
-    splitBars.clear();
-
     for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
       Widget widget = iter.next();
+
+      if (widget instanceof ColumnLayoutSplitBar) {
+        iter.remove();
+        continue;
+      }
 
       if (!DOM.isVisible(widget.getElement())) {
         continue;
       }
 
       visibleChildList.add(widget);
-    }
-
-    for (int i = 0, n = visibleChildList.size() - 1; i < n; i++) {
-      splitBars.add(new ColumnLayoutSplitBar(layoutPanel,
-          visibleChildList.get(i), visibleChildList.get(i + 1)));
     }
 
     return initialized = true;
