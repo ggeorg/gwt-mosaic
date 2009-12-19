@@ -24,6 +24,8 @@ public class ColumnLayoutData extends LayoutData {
   private int flexibility;
   
   int calcWidth;
+  
+  ColumnLayoutSplitBar splitBar;
 
   public ColumnLayoutData() {
     this(1, false);

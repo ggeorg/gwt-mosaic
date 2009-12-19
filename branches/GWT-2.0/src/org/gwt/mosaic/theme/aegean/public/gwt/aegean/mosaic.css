@@ -907,33 +907,45 @@ html>body .mosaic-LayoutPanel-BorderLayout .SouthCollapsedImageButton img {
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar {
 	overflow: hidden; /* required by IE6 */
 	/*background: #fff;*/
-	cursor: w-resize;
+	cursor: e-resize;
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar:hover {
 	/*border-right: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-BorderLayout .EastSplitBar-Movable {
 	background: #000;
+	cursor: e-resize;
 }
 
 .mosaic-LayoutPanel-ColumnLayout {
 }
 
+.mosaic-LayoutPanel-ColumnLayout .SplitBar {
+	overflow: hidden; /* required by IE6 */
+	/*background: #fff;*/
+	cursor: w-resize;
+}
 .mosaic-LayoutPanel-ColumnLayout .SplitBar:hover {
-	border: 1px dashed #888;
+	/*border: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-ColumnLayout .SplitBar-Movable {
 	background: #000;
+	cursor: w-resize;
 }
 
 .mosaic-LayoutPanel-RowLayout {
 }
-
+.mosaic-LayoutPanel-RowLayout .SplitBar {
+	overflow: hidden; /* required by IE6 */
+	/*background: #fff;*/
+	cursor: n-resize;
+}
 .mosaic-LayoutPanel-RowLayout .SplitBar:hover {
-	border: 1px dashed #888;
+	/*border: 1px dashed #888;*/
 }
 .mosaic-LayoutPanel-RowLayout .SplitBar-Movable {
 	background: #000;
+	cursor: n-resize;
 }
 
 /*** WidgetWrapper ***/
