@@ -633,6 +633,11 @@ a:active {
   */
   background: #dfe8f6;
 }
+.gwt-ScrollTable .dataWrapper,
+.mosaic-ColumnWidget .dataWrapper,
+.mosaic-ScrollTreeTable .dataWrapper {
+	background-color: white;
+}
 .gwt-ScrollTable .dataTable,
 .mosaic-ColumnWidget .dataTable,
 .mosaic-ScrollTreeTable .dataTable {
@@ -1247,10 +1252,11 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 
 .mosaic-FormSeparator {
 	font-weight: bold;
+	color: #5a5a5a;
 }
 
-.mosaic-FormSeparator div {
-	border: 1px solid #4d4d4d;
+.mosaic-FormSeparator hr {
+	color: #5a5a5a;
 }
 
 /*** GWT Incubator SliderBar ***/
