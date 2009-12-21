@@ -115,7 +115,7 @@ public class LoadingPanel extends PopupPanel implements ResizeHandler,
     this.targetWidget = (RootPanel.get() != targetWidget) ? targetWidget : null;
     glassPanelParent = (this.targetWidget != null) ? new AbsolutePanel() : null;
 
-    setAnimationEnabled(true);
+    //setAnimationEnabled(true);
 
     resizeHandlerRegistration = Window.addResizeHandler(this);
 
