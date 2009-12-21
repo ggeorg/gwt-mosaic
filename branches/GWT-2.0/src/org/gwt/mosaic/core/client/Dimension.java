@@ -68,17 +68,6 @@ public class Dimension implements Serializable {
     setSize(size[0], size[1]);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-    if (obj instanceof Dimension) {
-      return (((Dimension) obj).width == width && ((Dimension) obj).height == height);
-    }
-    return false;
-  }
-
   /**
    * Return the height of the dimension.
    * 
@@ -100,13 +89,14 @@ public class Dimension implements Serializable {
   public int getWidth() {
     return width;
   }
-
-  @Override
-  public int hashCode() {
-    int hash = 3;
-    hash = 71 * hash + this.width;
-    hash = 71 * hash + this.height;
-    return hash;
+  
+  /**
+   * Set the width of the dimension
+   * 
+   * @param width the dimension width
+   */
+  public void setWidth(int width) {
+    this.width = width;
   }
 
   /**
@@ -127,21 +117,53 @@ public class Dimension implements Serializable {
     this.height = height;
   }
 
-  /**
-   * Set the width of the dimension
-   * 
-   * @param width the dimension width
-   */
-  public void setWidth(int width) {
-    this.width = width;
-  }
-
   public int[] toArray() {
     return new int[] {width, height};
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Dimension other = (Dimension) obj;
+    if (height != other.height)
+      return false;
+    if (width != other.width)
+      return false;
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + height;
+    result = prime * result + width;
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString() {
-    return getClass().getName() + "[width=" + width + ",height=" + height + "]";
+    return "Dimension [height=" + height + ", width=" + width + "]";
   }
+
 }

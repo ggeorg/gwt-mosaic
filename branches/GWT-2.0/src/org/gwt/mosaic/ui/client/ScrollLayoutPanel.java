@@ -18,6 +18,7 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -125,9 +126,21 @@ public class ScrollLayoutPanel extends LayoutPanel implements
 
   @Override
   public void layout() {
+    final Element elem = getElement();
+    
+    final Dimension size1 = new Dimension(elem.getClientWidth(),
+        elem.getClientHeight());
+    
     super.layout();
-    super.layout(); // second layout() call will fix any scrollbar appearance
-                    // issue
+    
+    final Dimension size2 = new Dimension(elem.getClientWidth(),
+        elem.getClientHeight());
+    
+    if (!size1.equals(size2)) {
+      // second layout() call will fix the layout after the
+      // scrollbar appears/dissapears for the first time
+      super.layout();
+    }
   }
 
   @Override
