@@ -39,6 +39,7 @@ public class CwFlowLayout extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new ScrollLayoutPanel(new FlowLayout());
+    layoutPanel.setPadding(0);
 
     layoutPanel.add(createWidget());
     layoutPanel.add(createWidget(), new FlowLayoutData("250px", "100px", true));
