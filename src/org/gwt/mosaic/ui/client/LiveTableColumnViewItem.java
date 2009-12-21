@@ -51,6 +51,13 @@ public abstract class LiveTableColumnViewItem<T> extends ColumnViewItem<T>
   protected abstract TableModel<T> createTableModel(T data);
 
   protected abstract TableDefinition<T> createTableDefinition(T data);
+  
+  /**
+   * @return the columnView
+   */
+  protected ColumnView<T> getColumnView() {
+    return columnView;
+  }
 
   /**
    * @return the table
