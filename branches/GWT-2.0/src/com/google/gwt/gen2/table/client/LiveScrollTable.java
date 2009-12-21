@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 
 import com.google.gwt.core.client.GWT;
@@ -353,9 +354,9 @@ public class LiveScrollTable<RowType> extends AbstractScrollTable implements
         setData(request.getStartRow(), response.getRowValues());
         lastRequest = null;
 
-        DeferredCommand.addCommand(new Command() {
-
-          public void execute() {
+//        DeferredCommand.addCommand(new Command() {
+//
+//          public void execute() {
             double rowHeight = (double) getDataTable().getOffsetHeight()
                 / (double) getDataTable().getRowCount();
 
@@ -387,8 +388,8 @@ public class LiveScrollTable<RowType> extends AbstractScrollTable implements
 
             DOM.setStyleAttribute(div1, "height", div1Height + "px");
             DOM.setStyleAttribute(div2, "height", div2Height + "px");
-          }
-        });
+//          }
+//        });
       }
     }
   };
@@ -398,7 +399,7 @@ public class LiveScrollTable<RowType> extends AbstractScrollTable implements
     super.onBrowserEvent(event);
     switch (DOM.eventGetType(event)) {
       case Event.ONSCROLL:
-        timer.schedule(333);
+        timer.schedule(CoreConstants.DEFAULT_DELAY_MILLIS);
         break;
     }
   }
@@ -423,12 +424,12 @@ public class LiveScrollTable<RowType> extends AbstractScrollTable implements
         div2Height = 0;
       } else {
         div1Height = 0;
-        div2Height = (int) (.5 + rowHeight
+        div2Height = (int) (rowHeight
             * (tableModel.getRowCount() - getDataTable().getRowCount()));
       }
     } else {
       if (getCurrentPage() == getPageCount() - 1) {
-        div1Height = (int) (.5 + rowHeight
+        div1Height = (int) (rowHeight
             * (tableModel.getRowCount() - getDataTable().getRowCount()));
         div2Height = 0;
       } else {
@@ -546,7 +547,7 @@ public class LiveScrollTable<RowType> extends AbstractScrollTable implements
     div1 = DOM.createDiv();
     DOM.setStyleAttribute(div1, "padding", "0px");
     DOM.setStyleAttribute(div1, "marging", "0px");
-    DOM.setStyleAttribute(div1, "border", "0px");
+    DOM.setStyleAttribute(div1, "border", "none");
     DOM.setStyleAttribute(div1, "width", "100%");
     DOM.setStyleAttribute(div1, "height", "0px");
     getDataWrapper().insertBefore(div1, dataTable.getElement());
@@ -572,8 +573,6 @@ public class LiveScrollTable<RowType> extends AbstractScrollTable implements
     // Listen to table model events
     tableModel.addRowCountChangeHandler(new RowCountChangeHandler() {
       public void onRowCountChange(RowCountChangeEvent event) {
-        System.out.println("row count change: " + event.getOldRowCount()
-            + " -> " + event.getNewRowCount());
         int pageCount = getPageCount();
         if (pageCount != oldPageCount) {
           fireEvent(new PageCountChangeEvent(oldPageCount, pageCount));
