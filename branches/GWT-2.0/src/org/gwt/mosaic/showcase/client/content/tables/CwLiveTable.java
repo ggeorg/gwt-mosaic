@@ -92,7 +92,7 @@ public class CwLiveTable extends ContentWidget {
   protected Widget onInitialize() {
     final List<Foo> data = new ArrayList<Foo>();
 
-    for (int i = 0; i < 160; i++) {
+    for (int i = 0; i < 510; i++) {
       data.add(new Foo(i));
     }
 

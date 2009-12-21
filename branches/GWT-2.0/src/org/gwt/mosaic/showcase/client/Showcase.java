@@ -66,6 +66,7 @@ import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutHAlignment;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutSizeConstraints;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutStretchedImage;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutVAlignment;
+import org.gwt.mosaic.showcase.client.content.layout.CwFlowLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwGridLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwMixedLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwNestedBorderLayout;
@@ -468,6 +469,10 @@ public class Showcase implements EntryPoint {
     
     TreeItem catColumnRowLayout = catPanels.addItem("Column/RowLayout");
     setupMainMenuOption(catColumnRowLayout, new CwColumnRowLayout(constants),
+        IMAGES.catPanels());
+    
+    TreeItem catFlowLayout = catPanels.addItem("FlowLayout");
+    setupMainMenuOption(catFlowLayout, new CwFlowLayout(constants),
         IMAGES.catPanels());
 
     TreeItem catMixedLayout = catPanels.addItem("Mixed");
