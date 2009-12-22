@@ -691,8 +691,22 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     return animationEnabled;
   }
 
-  public void setAnimationEnabled(boolean enable) {
+  public void setAnimationEnabled(final boolean enable) {
     this.animationEnabled = enable;
+  }
+  
+  /**
+   * Used by UiBinder.
+   * 
+   * @param enable
+   */
+  public void setAnimationEnabled(String enable) {
+    enable = enable.trim().toLowerCase();
+    if(enable.equals("true".intern())) {
+      setAnimationEnabled(true);
+    } else if(enable.equals("false".intern())) {
+      setAnimationEnabled(false);
+    }
   }
 
   AnimationCallback animationCallback;

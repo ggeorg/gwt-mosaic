@@ -432,6 +432,26 @@ public class BorderLayoutData extends LayoutData implements Collapsible {
   }
 
   /**
+   * Used by UiBinder.
+   * 
+   * @param region the region to set
+   */
+  public void setRegion(String region) {
+    region = region.trim().toLowerCase();
+    if (region.equals("north")) {
+      setRegion(Region.NORTH);
+    } else if (region.equals("south")) {
+      setRegion(Region.SOUTH);
+    } else if (region.equals("west")) {
+      setRegion(Region.WEST);
+    } else if (region.equals("east")) {
+      setRegion(Region.EAST);
+    } else if (region.equals("center")) {
+      setRegion(Region.CENTER);
+    }
+  }
+
+  /**
    * @return the minSize
    */
   public String getMinSize() {
@@ -469,21 +489,35 @@ public class BorderLayoutData extends LayoutData implements Collapsible {
   /**
    * @param resizable the resizable to set
    */
-  public void setResizable(boolean resizable) {
+  public void setResizable(final boolean resizable) {
     this.resizable = resizable;
+  }
+
+  /**
+   * Used by UiBinder.
+   * 
+   * @param resizable the resizable to set
+   */
+  public void setResizable(String resizable) {
+    resizable = resizable.trim().toLowerCase();
+    if (resizable.equals("true".intern())) {
+      setResizable(true);
+    } else if (resizable.equals("false".intern())) {
+      setResizable(false);
+    }
   }
 
   /**
    * @return the collapsed
    */
-  public boolean isCollapsed() {
+  boolean isCollapsed() {
     return collapsed;
   }
 
   /**
    * @param collapsed the collapsed to set
    */
-  public void setCollapsed(boolean collapsed) {
+  void setCollapsed(final boolean collapsed) {
     this.collapsed = collapsed;
   }
 

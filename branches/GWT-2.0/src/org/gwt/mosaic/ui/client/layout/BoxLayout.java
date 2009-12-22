@@ -207,19 +207,35 @@ public class BoxLayout extends BaseLayout {
     this.alignment = alignment;
   }
 
+  /**
+   * 
+   * @return
+   */
   public Alignment getAlignment() {
     return alignment;
   }
 
   /**
-   * Gets the orientation of the child widgets. The default value is
-   * {@link Orientation#HORIZONTAL}.
    * 
-   * @return the orientation of the child widgets.
-   * @deprecated Replaced by {@link #getOrientation()}.
+   * @param align
    */
-  public Orientation getOrient() {
-    return orientation;
+  public void setAlignment(Alignment align) {
+    this.alignment = align;
+  }
+
+  /**
+   * 
+   * @param align
+   */
+  public void setAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("start".intern())) {
+      setAlignment(Alignment.START);
+    } else if (align.equals("center".intern())) {
+      setAlignment(Alignment.CENTER);
+    } else if (align.equals("end".intern())) {
+      setAlignment(Alignment.END);
+    }
   }
 
   /**
@@ -230,6 +246,30 @@ public class BoxLayout extends BaseLayout {
    */
   public Orientation getOrientation() {
     return orientation;
+  }
+
+  /**
+   * Sets the orientation of the child widgets.
+   * 
+   * @param orient the orientation of the child widgets.
+   */
+  public void setOrientation(Orientation orient) {
+    this.orientation = orient;
+  }
+
+  /**
+   * Sets the orientation of child widgets used by UiBinder.
+   * 
+   * @param orient the orientation of child widgets, can be {@code horizontal}
+   *          or {@code vertical}
+   */
+  public void setOrientation(String orient) {
+    orient = orient.trim().toLowerCase();
+    if (orient.equals("horizontal".intern())) {
+      setOrientation(Orientation.HORIZONTAL);
+    } else if (orient.equals("vertical".intern())) {
+      setOrientation(Orientation.VERTICAL);
+    }
   }
 
   /**
@@ -358,6 +398,35 @@ public class BoxLayout extends BaseLayout {
    */
   public boolean isLeftToRight() {
     return leftToRight;
+  }
+  
+  /**
+   * If orientation is {@link Orientation#HORIZONTAL} this method defines
+   * whether the child widgets are positioned from left to right, or from right
+   * to left.
+   * 
+   * @param leftToRight {@code true} if the child widgets are positioned from
+   *          left to right, {@code false} otherwise.
+   */
+  public void setLeftToRight(final boolean leftToRight) {
+    this.leftToRight = leftToRight;
+  }
+  
+  /**
+   * If orientation is {@link Orientation#HORIZONTAL} this method defines
+   * whether the child widgets are positioned from left to right, or from right
+   * to left, used by UiBinder .
+   * 
+   * @param leftToRight {@code true} if the child widgets are positioned from
+   *          left to right, {@code false} otherwise.
+   */
+  public void setLeftToRight(String leftToRight) {
+    leftToRight = leftToRight.trim().toLowerCase();
+    if (leftToRight.equals("true".intern())) {
+      setLeftToRight(true);
+    } else if (leftToRight.equals("false".intern())) {
+      setLeftToRight(false);
+    }
   }
 
   private BoxLayoutData getBoxLayoutData(Widget child) {
@@ -634,31 +703,6 @@ public class BoxLayout extends BaseLayout {
       Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
     }
 
-  }
-
-  public void setAlignment(Alignment align) {
-    this.alignment = align;
-  }
-
-  /**
-   * If orientation is {@link Orientation#HORIZONTAL} this method defines
-   * whether the child widgets are positioned from left to right, or from right
-   * to left.
-   * 
-   * @param leftToRight {@code true} if the child widgets are positioned from
-   *          left to right, {@code false} otherwise.
-   */
-  public void setLeftToRight(boolean leftToRight) {
-    this.leftToRight = leftToRight;
-  }
-
-  /**
-   * Sets the orientation of the child widgets.
-   * 
-   * @param orient the orientation of the child widgets.
-   */
-  public void setOrientation(Orientation orient) {
-    this.orientation = orient;
   }
 
 }

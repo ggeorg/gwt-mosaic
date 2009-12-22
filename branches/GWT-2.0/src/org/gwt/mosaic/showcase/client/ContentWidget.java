@@ -122,6 +122,11 @@ public abstract class ContentWidget extends LayoutPanel implements
   private HTML sourceWidget = null;
 
   /**
+   * The widget used to display UiBinder source code.
+   */
+  private HTML uiBinderSourceWidget = null;
+
+  /**
    * A mapping of themes to style definitions.
    */
   private Map<String, String> styleDefs = null;
@@ -182,6 +187,15 @@ public abstract class ContentWidget extends LayoutPanel implements
    */
   public boolean hasStyle() {
     return true;
+  }
+
+  /**
+   * Returns true if this widget has a UiBinder source section.
+   * 
+   * @return true if UiBinder source tab available
+   */
+  public boolean hasUiBinderSource() {
+    return false;
   }
 
   /**
@@ -258,6 +272,16 @@ public abstract class ContentWidget extends LayoutPanel implements
           constants.contentWidgetStyle()), true);
     }
 
+    // Add UiBinder source code tab
+    if (hasUiBinderSource()) {
+      // final LayoutPanel panel4 = new LayoutPanel();
+      uiBinderSourceWidget = new HTML();
+      uiBinderSourceWidget.setStyleName(DEFAULT_STYLE_NAME + "-source");
+      // panel4.add(styleWidget);
+      tabPanel.add(uiBinderSourceWidget, createTabBarCaption(
+          Showcase.IMAGES.catForms(), "UiBinder"), true);
+    }
+
     // Initialize the widget and add it to the page
     final Widget widget = onInitialize();
     if (widget != null) {
@@ -332,6 +356,14 @@ public abstract class ContentWidget extends LayoutPanel implements
         requestSourceContents(srcPath + "/" + className + ".html", styleWidget,
             callback);
       }
+    }
+
+    // Load the source code
+    if (hasUiBinderSource() && tabHTML.contains("UiBinder")) {
+      String className = this.getClass().getName();
+      className = className.substring(className.lastIndexOf(".") + 1);
+      requestSourceContents(ShowcaseConstants.DST_SOURCE_EXAMPLE + className
+          + ".ui.html", uiBinderSourceWidget, null);
     }
   }
 

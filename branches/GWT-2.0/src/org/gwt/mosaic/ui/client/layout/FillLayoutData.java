@@ -69,6 +69,19 @@ public class FillLayoutData extends LayoutData implements HasAlignment {
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     this.horizontalAlignment = align;
   }
+  
+  public void setHorizontalAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("left".intern())) {
+      setHorizontalAlignment(ALIGN_LEFT);
+    } else if (align.equals("center".intern())) {
+      setHorizontalAlignment(ALIGN_CENTER);
+    } else if (align.equals("right".intern())) {
+      setHorizontalAlignment(ALIGN_RIGHT);
+    } else if (align.equals("default".intern())) {
+      setHorizontalAlignment(ALIGN_DEFAULT);
+    }
+  }
 
   public VerticalAlignmentConstant getVerticalAlignment() {
     return verticalAlignment;
@@ -76,6 +89,17 @@ public class FillLayoutData extends LayoutData implements HasAlignment {
 
   public void setVerticalAlignment(VerticalAlignmentConstant align) {
     this.verticalAlignment = align;
+  }
+  
+  public void setVerticalAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("top".intern())) {
+      setVerticalAlignment(ALIGN_TOP);
+    } else if (align.equals("middle".intern())) {
+      setVerticalAlignment(ALIGN_MIDDLE);
+    } else if (align.equals("bottom".intern())) {
+      setVerticalAlignment(ALIGN_BOTTOM);
+    }
   }
 
 }
