@@ -32,8 +32,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle({".mosaic-LayoutPanel"})
-public class CwUiBinderFillLayout extends ContentWidget {
-  interface Binder extends UiBinder<Widget, CwUiBinderFillLayout>{}
+public class CwUiBinderColumnLayout extends ContentWidget {
+  interface Binder extends UiBinder<Widget, CwUiBinderColumnLayout>{}
   private static final Binder binder = GWT.create(Binder.class);
 
   /**
@@ -41,18 +41,18 @@ public class CwUiBinderFillLayout extends ContentWidget {
    * 
    * @param constants the constants
    */
-  public CwUiBinderFillLayout(CwConstants constants) {
+  public CwUiBinderColumnLayout(CwConstants constants) {
     super(constants);
   }
   
   @Override
   public String getDescription() {
-    return "UiBinder FillLayout description";
+    return "UiBinder ColumnLayout description";
   }
 
   @Override
   public String getName() {
-    return "FillLayout";
+    return "ColumnLayout";
   }
   
   @Override

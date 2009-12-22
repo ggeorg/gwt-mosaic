@@ -16,6 +16,8 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 /**
  * {@code GridLayoutData} is the layout data object associated with
@@ -65,12 +67,6 @@ public class GridLayoutData extends LayoutData implements HasAlignment {
     setRowspan(rowSpan);
   }
 
-  /**
-   * 
-   * @param colSpan
-   * @param rowSpan
-   * @param decorate
-   */
   public GridLayoutData(int colSpan, int rowSpan, boolean decorate) {
     super(decorate);
     setColspan(colSpan);
@@ -97,65 +93,81 @@ public class GridLayoutData extends LayoutData implements HasAlignment {
     setVerticalAlignment(verticalAlignment);
   }
 
-  protected int getColspan() {
-    return colspan;
-  }
-
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * com.google.gwt.user.client.ui.HasHorizontalAlignment#getHorizontalAlignment
-   * ()
+   * @see com.google.gwt.user.client.ui.HasHorizontalAlignment#getHorizontalAlignment()
    */
   public HorizontalAlignmentConstant getHorizontalAlignment() {
     return horizontalAlignment;
   }
 
-  protected int getRowspan() {
-    return rowspan;
-  }
-
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * com.google.gwt.user.client.ui.HasVerticalAlignment#getVerticalAlignment()
-   */
-  public VerticalAlignmentConstant getVerticalAlignment() {
-    return verticalAlignment;
-  }
-
-  protected void setColspan(int colspan) {
-    this.colspan = Math.max(1, colspan);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.HasHorizontalAlignment#setHorizontalAlignment
-   * (com.google.gwt.user.client.ui.HasHorizontalAlignment.
-   * HorizontalAlignmentConstant)
+   * @see com.google.gwt.user.client.ui.HasHorizontalAlignment#setHorizontalAlignment(com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant)
    */
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     this.horizontalAlignment = align;
   }
-
-  protected void setRowspan(int rowspan) {
-    this.rowspan = Math.max(1, rowspan);
+  
+  /**
+   * Used by UiBinder parser.
+   * 
+   * @param align
+   */
+  public void setHorizontalAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("left".intern())) {
+      setHorizontalAlignment(ALIGN_LEFT);
+    } else if (align.equals("center".intern())) {
+      setHorizontalAlignment(ALIGN_CENTER);
+    } else if (align.equals("right".intern())) {
+      setHorizontalAlignment(ALIGN_RIGHT);
+    } else if (align.equals("default".intern())) {
+      setHorizontalAlignment(ALIGN_DEFAULT);
+    }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * com.google.gwt.user.client.ui.HasVerticalAlignment#setVerticalAlignment
-   * (com.
-   * google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+   * @see com.google.gwt.user.client.ui.HasVerticalAlignment#getVerticalAlignment()
+   */
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasVerticalAlignment#setVerticalAlignment(com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
    */
   public void setVerticalAlignment(VerticalAlignmentConstant align) {
     this.verticalAlignment = align;
   }
 
+  public int getColspan() {
+    return colspan;
+  }
+  
+  public void setColspan(int colspan) {
+    this.colspan = Math.max(1, colspan);
+  }
+  
+  public void setColspan(String colspan) {
+    setColspan(Integer.parseInt(colspan));
+  }
+
+  public int getRowspan() {
+    return rowspan;
+  }
+
+  public void setRowspan(int rowspan) {
+    this.rowspan = Math.max(1, rowspan);
+  }
+
+  public void setRowspan(String rowspan) {
+    setRowspan(Integer.parseInt(rowspan));
+  }
 }

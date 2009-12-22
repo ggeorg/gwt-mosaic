@@ -71,5 +71,14 @@ public class ColumnLayoutData extends LayoutData {
     }
     this.flexibility = flexibility;
   }
+  
+  /**
+   * Used by UiBinder parser.
+   * 
+   * @param flexibility the flexibility to set
+   */
+  public void setFlexibility(String flexibility) {
+    setFlexibility(Integer.parseInt(flexibility));
+  }
 
 }

@@ -31,9 +31,11 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle({".mosaic-LayoutPanel"})
-public class CwUiBinderFillLayout extends ContentWidget {
-  interface Binder extends UiBinder<Widget, CwUiBinderFillLayout>{}
+@ShowcaseStyle( {".mosaic-LayoutPanel"})
+public class CwUiBinderFlowLayout extends ContentWidget {
+  interface Binder extends UiBinder<Widget, CwUiBinderFlowLayout> {
+  }
+
   private static final Binder binder = GWT.create(Binder.class);
 
   /**
@@ -41,31 +43,32 @@ public class CwUiBinderFillLayout extends ContentWidget {
    * 
    * @param constants the constants
    */
-  public CwUiBinderFillLayout(CwConstants constants) {
+  public CwUiBinderFlowLayout(CwConstants constants) {
     super(constants);
   }
-  
+
   @Override
   public String getDescription() {
-    return "UiBinder FillLayout description";
+    return "UiBinder FlowLayout description";
   }
 
   @Override
   public String getName() {
-    return "FillLayout";
+    return "FlowLayout";
   }
-  
+
   @Override
   public boolean hasUiBinderSource() {
     return true;
   }
-  
+
   /**
    * Initialized by UiBinder.
    */
   @ShowcaseData
   @UiField
-  LayoutPanel layoutPanel;
+  LayoutPanel layoutPanel, layoutPanel1, layoutPanel2, layoutPanel3,
+      layoutPanel4, layoutPanel5, layoutPanel6, layoutPanel7;
 
   /**
    * Initialize this example.
@@ -77,5 +80,5 @@ public class CwUiBinderFillLayout extends ContentWidget {
     layoutPanel.setPadding(0);
     return layoutPanel;
   }
-  
+
 }

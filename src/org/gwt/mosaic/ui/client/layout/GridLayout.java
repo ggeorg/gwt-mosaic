@@ -172,11 +172,11 @@ public class GridLayout extends BaseLayout implements HasAlignment {
   }
 
   private GridLayoutData getGridLayoutData(Widget widget) {
-    Object layoutDataObject = getLayoutData(widget);
+    Object layoutDataObject = widget.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof GridLayoutData)) {
       layoutDataObject = new GridLayoutData();
-      setLayoutData(widget, layoutDataObject);
+      widget.setLayoutData(layoutDataObject);
     }
     return (GridLayoutData) layoutDataObject;
   }
@@ -189,16 +189,104 @@ public class GridLayout extends BaseLayout implements HasAlignment {
   public final int getColumns() {
     return cols;
   }
-
-  /*
-   * (non-Javadoc)
+  
+  /**
+   * Sets the number of columns in the grid.
    * 
-   * @see
-   * com.google.gwt.user.client.ui.HasHorizontalAlignment#getHorizontalAlignment
-   * ()
+   * @param columns the new number of columns in the grid
+   */
+  public void setColumns(int columns) {
+    this.cols = Math.max(1, columns);
+  }
+  
+  /**
+   * Sets the number of columns in the grid, used by UiBinder parser.
+   * 
+   * @param columns the new number of columns in the grid
+   */
+  public void setColumns(String columns) {
+    setColumns(Integer.parseInt(columns));
+  }
+
+  /**
+   * Get the number of rows in the grid.
+   * 
+   * @return the number of rows in the grid
+   */
+  public final int getRows() {
+    return rows;
+  }
+  
+  /**
+   * Sets the number of rows in the grid.
+   * 
+   * @param rows the new number of rows in the grid
+   */
+  public void setRows(int rows) {
+    this.rows = Math.max(1, rows);
+  }
+  
+  /**
+   * Sets the number of rows in the grid, used by UiBinder parser.
+   * 
+   * @param rows the new number of rows in the grid
+   */
+  public void setRows(String rows) {
+    setRows(Integer.parseInt(rows));
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasHorizontalAlignment#getHorizontalAlignment()
    */
   public HorizontalAlignmentConstant getHorizontalAlignment() {
     return horizontalAlignment;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasHorizontalAlignment#setHorizontalAlignment(com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant)
+   */
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    this.horizontalAlignment = align;
+  }
+  
+  /**
+   * Used by UiBinder parser.
+   * 
+   * @param align
+   */
+  public void setHorizontalAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("left".intern())) {
+      setHorizontalAlignment(ALIGN_LEFT);
+    } else if (align.equals("center".intern())) {
+      setHorizontalAlignment(ALIGN_CENTER);
+    } else if (align.equals("right".intern())) {
+      setHorizontalAlignment(ALIGN_RIGHT);
+    } else if (align.equals("default".intern())) {
+      setHorizontalAlignment(ALIGN_DEFAULT);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasVerticalAlignment#getVerticalAlignment()
+   */
+  public VerticalAlignmentConstant getVerticalAlignment() {
+    return verticalAlignment;
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasVerticalAlignment#setVerticalAlignment(com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+   */
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    this.verticalAlignment = align;
   }
 
   /**
@@ -276,20 +364,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
     return result;
   }
-
-  /**
-   * Get the number of rows in the grid.
-   * 
-   * @return the number of rows in the grid
-   */
-  public final int getRows() {
-    return rows;
-  }
-
-  public VerticalAlignmentConstant getVerticalAlignment() {
-    return verticalAlignment;
-  }
-
+  
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
@@ -437,48 +512,6 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           + e.getLocalizedMessage());
     }
 
-  }
-
-  /**
-   * Sets the number of columns in the grid.
-   * 
-   * @param columns the new number of columns in the grid
-   */
-  public void setColumns(int columns) {
-    this.cols = Math.max(1, columns);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.HasHorizontalAlignment#setHorizontalAlignment
-   * (com.google.gwt.user.client.ui.HasHorizontalAlignment.
-   * HorizontalAlignmentConstant)
-   */
-  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-    this.horizontalAlignment = align;
-  }
-
-  /**
-   * Sets the number of rows in the grid.
-   * 
-   * @param rows the new number of rows in the grid
-   */
-  public void setRows(int rows) {
-    this.rows = Math.max(1, rows);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.HasVerticalAlignment#setVerticalAlignment
-   * (com.
-   * google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
-   */
-  public void setVerticalAlignment(VerticalAlignmentConstant align) {
-    this.verticalAlignment = align;
   }
 
 }
