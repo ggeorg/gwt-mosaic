@@ -103,7 +103,11 @@ import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBorderLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBoxLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderColumnLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderFillLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderFlowLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderGridLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderRowLayout;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -607,13 +611,21 @@ public class Showcase implements EntryPoint {
     // UiBinder
     TreeItem catUiBinder = mainMenu.addItem("UiBinder");
 
-    TreeItem catUiBinderLayout = catUiBinder.addItem("Layout");
+    TreeItem catUiBinderLayout = catUiBinder.addItem("LayoutPanel");
     setupMainMenuOption(catUiBinderLayout,
         new CwUiBinderFillLayout(constants), IMAGES.catPanels());
     setupMainMenuOption(catUiBinderLayout,
         new CwUiBinderBoxLayout(constants), IMAGES.catPanels());
     setupMainMenuOption(catUiBinderLayout,
         new CwUiBinderBorderLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderGridLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderColumnLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderRowLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderFlowLayout(constants), IMAGES.catPanels());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
