@@ -101,6 +101,9 @@ import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBorderLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBoxLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderFillLayout;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -466,11 +469,11 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
     setupMainMenuOption(catGridLayout, new CwCalculatorLayout(constants),
         IMAGES.catPanels());
-    
+
     TreeItem catColumnRowLayout = catPanels.addItem("Column/RowLayout");
     setupMainMenuOption(catColumnRowLayout, new CwColumnRowLayout(constants),
         IMAGES.catPanels());
-    
+
     TreeItem catFlowLayout = catPanels.addItem("FlowLayout");
     setupMainMenuOption(catFlowLayout, new CwFlowLayout(constants),
         IMAGES.catPanels());
@@ -600,6 +603,17 @@ public class Showcase implements EntryPoint {
     // TreeItem catBasicValidation = catValidation.addItem("Basic");
     // setupMainMenuOption(catBasicValidation,
     // new CwSimpleDomainValidationExample(constants), IMAGES.catForms());
+
+    // UiBinder
+    TreeItem catUiBinder = mainMenu.addItem("UiBinder");
+
+    TreeItem catUiBinderLayout = catUiBinder.addItem("Layout");
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderFillLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderBoxLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderBorderLayout(constants), IMAGES.catPanels());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");

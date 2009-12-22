@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout' xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
+
+	<l:LayoutPanel ui:field='layoutPanel'>
+		<l:FillLayout  horizontalAlignment="center" verticalAlignment="middle">
+			<l:FillLayoutData preferredWidth="50%" preferredHeight="50%">
+				<m:ToolButton text="ToolButton1"/>
+			</l:FillLayoutData>
+		</l:FillLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>

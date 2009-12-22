@@ -103,7 +103,7 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
   }
 
   public BoxLayout.Orientation getOrient() {
-    return ((BoxLayout) getLayoutPanel().getLayout()).getOrient();
+    return ((BoxLayout) getLayoutPanel().getLayout()).getOrientation();
   }
 
 }

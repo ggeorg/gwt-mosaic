@@ -88,8 +88,8 @@ public class ShowcaseGenerator extends Generator {
   }
 
   @Override
-  public String generate(TreeLogger logger, GeneratorContext context, String typeName)
-      throws UnableToCompleteException {
+  public String generate(TreeLogger logger, GeneratorContext context,
+      String typeName) throws UnableToCompleteException {
     this.logger = logger;
     this.context = context;
     this.classLoader = getClass().getClassLoader();
@@ -127,7 +127,42 @@ public class ShowcaseGenerator extends Generator {
       }
     }
 
+    // Generate the UiBinder source files
+    for (JClassType type : types) {
+      generateUiBinderFiles(type);
+    }
+
     return null;
+  }
+
+  /**
+   * Generate the UiBinder files used by a {@link ContentWidget}.
+   * 
+   * @param type the {@link ContentWidget} subclass
+   */
+  private void generateUiBinderFiles(JClassType type)
+      throws UnableToCompleteException {
+    // Get the UiBinder file contents
+    try {
+      String filename = type.getQualifiedSourceName().replace('.', '/')
+          + ".ui.xml";
+
+      String fileContents = getResourceContents(filename);
+
+      // Make the source pretty
+      fileContents = fileContents.replace("<", "&lt;");
+      fileContents = fileContents.replace(">", "&gt;");
+      fileContents = fileContents.replace("* \n   */\n", "*/\n");
+      fileContents = "<pre class=\"java\" name=\"code\">" + fileContents
+          + "</pre>";
+
+      // Save the source code to a file
+      String dstPath = ShowcaseConstants.DST_SOURCE_EXAMPLE
+          + type.getSimpleSourceName() + ".ui.html";
+      createPublicResource(dstPath, fileContents);
+    } catch (Exception ex) {
+      return;
+    }
   }
 
   /**
@@ -135,7 +170,8 @@ public class ShowcaseGenerator extends Generator {
    * 
    * @param type the {@link ContentWidget} subclass
    */
-  private void generateRawFiles(JClassType type) throws UnableToCompleteException {
+  private void generateRawFiles(JClassType type)
+      throws UnableToCompleteException {
     // Look for annotation
     if (!type.isAnnotationPresent(ShowcaseRaw.class)) {
       return;
@@ -168,10 +204,12 @@ public class ShowcaseGenerator extends Generator {
    * 
    * @param type the {@link ContentWidget} subclass
    */
-  private void generateSourceFiles(JClassType type) throws UnableToCompleteException {
+  private void generateSourceFiles(JClassType type)
+      throws UnableToCompleteException {
     try {
       // Get the file contents
-      String filename = type.getQualifiedSourceName().replace('.', '/') + ".java";
+      String filename = type.getQualifiedSourceName().replace('.', '/')
+          + ".java";
       String fileContents = getResourceContents(filename);
 
       // System.out.println("generateSourceFiles() : " + filename);
@@ -183,7 +221,8 @@ public class ShowcaseGenerator extends Generator {
       int dataTagIndex = fileContents.indexOf(dataTag);
       int srcTagIndex = fileContents.indexOf(sourceTag);
       while (dataTagIndex >= 0 || srcTagIndex >= 0) {
-        if (dataTagIndex >= 0 && (dataTagIndex < srcTagIndex || srcTagIndex < 0)) {
+        if (dataTagIndex >= 0
+            && (dataTagIndex < srcTagIndex || srcTagIndex < 0)) {
           // Get the boundaries of a DATA tag
           int beginIndex = fileContents.lastIndexOf("  /*", dataTagIndex);
           int beginTagIndex = fileContents.lastIndexOf("\n", dataTagIndex) + 1;
@@ -218,11 +257,12 @@ public class ShowcaseGenerator extends Generator {
       formattedSource = formattedSource.replace("<", "&lt;");
       formattedSource = formattedSource.replace(">", "&gt;");
       formattedSource = formattedSource.replace("* \n   */\n", "*/\n");
-      formattedSource = "<pre class=\"java\" name=\"code\">" + formattedSource + "</pre>";
+      formattedSource = "<pre class=\"java\" name=\"code\">" + formattedSource
+          + "</pre>";
 
       // Save the source code to a file
-      String dstPath = ShowcaseConstants.DST_SOURCE_EXAMPLE + type.getSimpleSourceName()
-          + ".html";
+      String dstPath = ShowcaseConstants.DST_SOURCE_EXAMPLE
+          + type.getSimpleSourceName() + ".html";
       createPublicResource(dstPath, formattedSource);
     } catch (Exception e) {
       e.printStackTrace();
@@ -236,7 +276,8 @@ public class ShowcaseGenerator extends Generator {
    * @param styleDefs the concatenated style definitions
    * @param outDir the output directory
    */
-  private void generateStyleFiles(JClassType type, String styleDefs, String outDir) {
+  private void generateStyleFiles(JClassType type, String styleDefs,
+      String outDir) {
     // Look for annotation
     if (!type.isAnnotationPresent(ShowcaseStyle.class)) {
       return;
@@ -292,7 +333,8 @@ public class ShowcaseGenerator extends Generator {
    * @param path the path to the resource
    * @return the contents of the resource
    */
-  private String getResourceContents(String path) throws UnableToCompleteException {
+  private String getResourceContents(String path)
+      throws UnableToCompleteException {
     InputStream in = classLoader.getResourceAsStream(path);
     if (in == null) {
       logger.log(TreeLogger.ERROR, "Resource not found: " + path);
@@ -348,8 +390,8 @@ public class ShowcaseGenerator extends Generator {
    * Ensure that we only generate files once by creating a placeholder file,
    * then looking for it on subsequent generates.
    * 
-   * @return <code>true</code> if this is the first pass, <code>false</code>
-   *         if not
+   * @return <code>true</code> if this is the first pass, <code>false</code> if
+   *         not
    */
   private boolean isFirstPass() {
     String placeholder = ShowcaseConstants.DST_SOURCE + "generated";

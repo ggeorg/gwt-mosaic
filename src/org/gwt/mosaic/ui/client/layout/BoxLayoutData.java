@@ -209,6 +209,22 @@ public final class BoxLayoutData extends LayoutData {
   }
 
   /**
+   * Sets whether the child widget will be stretched vertically or not, used by
+   * UiBinder.
+   * 
+   * @param fillHeight {@code true} if the child widget should be stretched
+   *          vertically or {@code false} otherwise.
+   */
+  public void setFillHeight(String fillHeight) {
+    fillHeight = fillHeight.trim().toLowerCase();
+    if (fillHeight.equals("true".intern())) {
+      setFillHeight(true);
+    } else if (fillHeight.equals("false".intern())) {
+      setFillHeight(false);
+    }
+  }
+
+  /**
    * Returns {@code true} the child widget will be stretched horizontally,
    * {@code false} otherwise.
    * 
@@ -227,6 +243,22 @@ public final class BoxLayoutData extends LayoutData {
    */
   public void setFillWidth(final boolean fillWidth) {
     this.fillWidth = fillWidth;
+  }
+
+  /**
+   * Sets whether the child widget will be stretched horizontally or not used by
+   * UiBinder.
+   * 
+   * @param fillWidth {@code true} if the child widget should be stretched
+   *          horizontally or {@code false} otherwise.
+   */
+  public void setFillWidth(String fillWidth) {
+    fillWidth = fillWidth.trim().toLowerCase();
+    if (fillWidth.equals("true".intern())) {
+      setFillWidth(true);
+    } else if (fillWidth.equals("false".intern())) {
+      setFillWidth(false);
+    }
   }
 
 }
