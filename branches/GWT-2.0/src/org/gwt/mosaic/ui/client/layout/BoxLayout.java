@@ -399,7 +399,7 @@ public class BoxLayout extends BaseLayout {
   public boolean isLeftToRight() {
     return leftToRight;
   }
-  
+
   /**
    * If orientation is {@link Orientation#HORIZONTAL} this method defines
    * whether the child widgets are positioned from left to right, or from right
@@ -411,7 +411,7 @@ public class BoxLayout extends BaseLayout {
   public void setLeftToRight(final boolean leftToRight) {
     this.leftToRight = leftToRight;
   }
-  
+
   /**
    * If orientation is {@link Orientation#HORIZONTAL} this method defines
    * whether the child widgets are positioned from left to right, or from right
@@ -553,139 +553,74 @@ public class BoxLayout extends BaseLayout {
         int fh = h;
 
         if (layoutData.hasDecoratorPanel()) {
-
           fw -= decPanelFrameSize.width;
           fh -= decPanelFrameSize.height;
-
-          if (orientation == Orientation.VERTICAL) {
-            if (alignment == Alignment.START) {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else if (alignment == Alignment.CENTER) {
-              layoutData.targetLeft = ((width - decPanelFrameSize.width) / 2)
-                  - (w / 2) + left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else {
-              layoutData.targetLeft = (width - decPanelFrameSize.width) - w
-                  + left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            }
-          } else if (isLeftToRight()) {
-            if (alignment == Alignment.START) {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else if (alignment == Alignment.CENTER) {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = ((height - decPanelFrameSize.height) / 2)
-                  - (h / 2) + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = (height - decPanelFrameSize.height) - h
-                  + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            }
-          } else { // !isLeftToRight()
-            if (alignment == Alignment.START) {
-              layoutData.targetLeft = box.width
-                  - decPanelFrameSize.width
-                  - (left + (w != -1 ? w
-                      : layoutData.decoratorPanel.getOffsetWidth()));
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else if (alignment == Alignment.CENTER) {
-              layoutData.targetLeft = box.width
-                  - decPanelFrameSize.width
-                  - (left + (w != -1 ? w
-                      : layoutData.decoratorPanel.getOffsetWidth()));
-              layoutData.targetTop = ((height - decPanelFrameSize.height) / 2)
-                  - (h / 2) + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else {
-              layoutData.targetLeft = box.width
-                  - decPanelFrameSize.width
-                  - (left + (w != -1 ? w
-                      : layoutData.decoratorPanel.getOffsetWidth()));
-              layoutData.targetTop = (height - decPanelFrameSize.height) - h
-                  + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            }
-          }
-        } else {
-          if (orientation == Orientation.VERTICAL) {
-            if (alignment == Alignment.START) {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else if (alignment == Alignment.CENTER) {
-              layoutData.targetLeft = (width / 2) - (w / 2) + left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else {
-              layoutData.targetLeft = width - w + left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            }
-          } else if (isLeftToRight()) {
-            if (alignment == Alignment.START) {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else if (alignment == Alignment.CENTER) {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = (height / 2) - (h / 2) + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else {
-              layoutData.targetLeft = left;
-              layoutData.targetTop = height - h + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            }
-          } else { // !isLeftToRight()
-            if (alignment == Alignment.START) {
-              layoutData.targetLeft = box.width
-                  - (left + (w != -1 ? w : child.getOffsetWidth()));
-              layoutData.targetTop = top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else if (alignment == Alignment.CENTER) {
-              layoutData.targetLeft = box.width
-                  - (left + (w != -1 ? w : child.getOffsetWidth()));
-              layoutData.targetTop = (height / 2) - (h / 2) + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            } else {
-              layoutData.targetLeft = box.width
-                  - (left + (w != -1 ? w : child.getOffsetWidth()));
-              layoutData.targetTop = height - h + top;
-              layoutData.targetWidth = fw;
-              layoutData.targetHeight = fh;
-            }
-          }
         }
 
-        if (orientation == Orientation.HORIZONTAL) {
-          left += (w + spacing);
-        } else { // Orientation.VERTICAL
+        // Orientation.VERTICAL
+
+        if (orientation == Orientation.VERTICAL) {
+          if (alignment == Alignment.START) {
+            layoutData.targetLeft = left;
+            layoutData.targetTop = top;
+            layoutData.targetWidth = fw;
+            layoutData.targetHeight = fh;
+          } else if (alignment == Alignment.CENTER) {
+            layoutData.targetLeft = left + (width / 2) - (w / 2);
+            layoutData.targetTop = top;
+            layoutData.targetWidth = fw;
+            layoutData.targetHeight = fh;
+          } else {
+            layoutData.targetLeft = left + width - w;
+            layoutData.targetTop = top;
+            layoutData.targetWidth = fw;
+            layoutData.targetHeight = fh;
+          }
+
           top += (h + spacing);
+        }
+
+        // Orientation.HORIZONTAL
+
+        else {
+
+          if (isLeftToRight()) { // Left to Right
+            if (alignment == Alignment.START) {
+              layoutData.targetLeft = left;
+              layoutData.targetTop = top;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else if (alignment == Alignment.CENTER) {
+              layoutData.targetLeft = left;
+              layoutData.targetTop = top + (height / 2) - (h / 2);
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else {
+              layoutData.targetLeft = left;
+              layoutData.targetTop = top + height - h;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            }
+          } else { // Right to Left
+            if (alignment == Alignment.START) {
+              layoutData.targetLeft = box.width - (left + w);
+              layoutData.targetTop = top;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else if (alignment == Alignment.CENTER) {
+              layoutData.targetLeft = box.width - (left + w);
+              layoutData.targetTop = top + (height / 2) - (h / 2);
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else {
+              layoutData.targetLeft = box.width - (left + w);
+              layoutData.targetTop = top + height - h;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            }
+          }
+
+          left += (w + spacing);
         }
 
         layoutData.setSourceLeft(child.getAbsoluteLeft()
