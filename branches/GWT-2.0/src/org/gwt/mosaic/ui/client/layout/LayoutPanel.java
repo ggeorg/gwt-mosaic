@@ -35,6 +35,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.AttachDetachException;
+import com.google.gwt.user.client.ui.AttachDetachHelper;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -155,7 +157,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       DOM.setStyleAttribute(widget.getElement(), "padding", "0px");
       DOM.setStyleAttribute(widget.getElement(), "margin", "0px");
     }
-    BaseLayout.setLayoutData(widget, layoutData);
+    widget.setLayoutData(layoutData);
     if (layoutData.hasDecoratorPanel()) {
       final DecoratorPanel decPanel = layoutData.decoratorPanel;
       decPanel.setWidget(widget);
@@ -173,7 +175,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   private void clearPreferredSizeCache() {
     preferredSizeCache.setSize(-1, -1);
   }
-  
+
   public Widget findParent() {
     Widget parent = getParent();
 
@@ -257,11 +259,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   private Widget getUnDecoratedWidget(Widget widget) {
     if (widget instanceof DecoratorPanel) {
-      widget = ((DecoratorPanel) widget).getWidget();
-      LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
-      if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        return layoutData.decoratorPanel.getWidget();
-      }
+      return ((DecoratorPanel) widget).getWidget();
     }
     return widget;
   }
@@ -329,7 +327,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       insert(w, getElement(), beforeIndex, true);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -351,16 +349,34 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
 
     invalid = true;
-    
+
     clearPreferredSizeCache();
 
     final Widget parent = findParent();
     if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
         && !(parent instanceof DecoratedLayoutPopupPanel)
         && !(parent instanceof LayoutPopupPanel)) {
-        ((HasLayoutManager) parent).invalidate(this.getParent());
-        ((HasLayoutManager) parent).invalidate(this);
+      ((HasLayoutManager) parent).invalidate(this.getParent());
+      ((HasLayoutManager) parent).invalidate(this);
     }
+  }
+
+  @Override
+  protected void doAttachChildren() {
+    AttachDetachException.tryCommand(this, new AttachDetachException.Command() {
+      public void execute(Widget w) {
+        AttachDetachHelper.onAttach(getDecoratorWidget(w));
+      }
+    });
+  }
+
+  @Override
+  protected void doDetachChildren() {
+    AttachDetachException.tryCommand(this, new AttachDetachException.Command() {
+      public void execute(Widget w) {
+        AttachDetachHelper.onDetach(getDecoratorWidget(w));
+      }
+    });
   }
 
   @Override
@@ -509,13 +525,18 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
    */
   @Override
   public boolean remove(Widget w) {
+    // XXX workaround for: iter.remove();
+    if (w instanceof DecoratorPanel) {
+      w = getUnDecoratedWidget(w);
+    }
+
     final Widget widget = getDecoratorWidget(w);
-    if (w != widget) {
+    if (widget instanceof DecoratorPanel) {
       ((DecoratorPanel) widget).remove(w);
     }
-    final Widget parent = widget.getParent();
+
     if (removeImpl(widget)) {
-      WidgetHelper.invalidate(parent);
+      invalidate();
       return true;
     } else {
       return false;
@@ -694,7 +715,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   public void setAnimationEnabled(final boolean enable) {
     this.animationEnabled = enable;
   }
-  
+
   /**
    * Used by UiBinder.
    * 
@@ -702,9 +723,9 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
    */
   public void setAnimationEnabled(String enable) {
     enable = enable.trim().toLowerCase();
-    if(enable.equals("true".intern())) {
+    if (enable.equals("true".intern())) {
       setAnimationEnabled(true);
-    } else if(enable.equals("false".intern())) {
+    } else if (enable.equals("false".intern())) {
       setAnimationEnabled(false);
     }
   }
