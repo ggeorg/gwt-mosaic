@@ -267,6 +267,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
     return (FillLayoutData) layoutDataObject;
   }
 
+  @Override
   public void layoutPanel(final LayoutPanel layoutPanel) {
     try {
       if (layoutPanel == null || !init(layoutPanel)) {

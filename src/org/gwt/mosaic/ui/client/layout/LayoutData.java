@@ -124,11 +124,11 @@ public class LayoutData {
     setPreferredHeight(preferredHeight);
   }
 
-  class ParsedSize {
+  static class ParsedSize {
     private double size;
     private Unit unit;
 
-    private ParsedSize(double size, Unit unit) {
+    ParsedSize(double size, Unit unit) {
       this.size = size;
       this.unit = unit;
     }

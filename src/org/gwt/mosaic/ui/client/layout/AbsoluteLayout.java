@@ -18,9 +18,13 @@ package org.gwt.mosaic.ui.client.layout;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Point;
+import org.gwt.mosaic.core.client.util.FloatParser;
+import org.gwt.mosaic.core.client.util.UnitParser;
+import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -58,30 +62,22 @@ public class AbsoluteLayout extends BaseLayout {
    * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE(false, false, false, false), 
-    BOTTOM(false, false, false, true), 
-    TOP(false, false, true, false),
+    NONE(false, false, false, false), BOTTOM(false, false, false, true), TOP(
+        false, false, true, false),
 
-    VCENTER(false, false, true, true), 
-    TOP_BOTTOM(false, false, true, true),
+    VCENTER(false, false, true, true), TOP_BOTTOM(false, false, true, true),
 
-    RIGHT(false, true, false, false),
-    RIGHT_BOTTOM(false, true, false, true),
-    RIGHT_TOP(false, true, true, false),
-    RIGHT_TOP_BOTTOM(false, true, true, true),
+    RIGHT(false, true, false, false), RIGHT_BOTTOM(false, true, false, true), RIGHT_TOP(
+        false, true, true, false), RIGHT_TOP_BOTTOM(false, true, true, true),
 
-    LEFT(true, false, false, false),
-    LEFT_BOTTOM(true, false, false, true),
-    LEFT_TOP(true, false, true, false),
-    LEFT_TOP_BOTTOM(true, false, true, true),
+    LEFT(true, false, false, false), LEFT_BOTTOM(true, false, false, true), LEFT_TOP(
+        true, false, true, false), LEFT_TOP_BOTTOM(true, false, true, true),
 
-    HCENTER(true, true, false, false),
-    LEFT_RIGHT(true, true, false, false),
+    HCENTER(true, true, false, false), LEFT_RIGHT(true, true, false, false),
 
     LEFT_RIGHT_BOTTOM(true, true, false, true),
 
-    CENTER(true, true, true, true),
-    ALL(true, true, true, true);
+    CENTER(true, true, true, true), ALL(true, true, true, true);
 
     final boolean left, right, top, bottom;
 
@@ -98,10 +94,8 @@ public class AbsoluteLayout extends BaseLayout {
    * should be redimensioned when the layout panel is resized.
    */
   public enum DimensionPolicy {
-    NONE(false, false), 
-    WIDTH(true, false), 
-    HEIGHT(false, true), 
-    BOTH(true, true);
+    NONE(false, false), WIDTH(true, false), HEIGHT(false, true), BOTH(true,
+        true);
 
     final boolean width, height;
 
@@ -114,7 +108,7 @@ public class AbsoluteLayout extends BaseLayout {
   /**
    * Dimensions of the panel.
    */
-  private int panelWidth, panelHeight;
+  private ParsedSize panelWidth, panelHeight;
 
   /**
    * Constructor for absolute layout with the specified dimensions.
@@ -123,21 +117,42 @@ public class AbsoluteLayout extends BaseLayout {
    * @param height initial height of the panel
    */
   public AbsoluteLayout(int width, int height) {
-    panelWidth = width;
-    panelHeight = height;
+    this(width + "px", height + "px");
   }
 
+  /**
+   * Constructor for absolute layout with the specified dimensions.
+   * 
+   * @param width initial width of the panel
+   * @param height initial height of the panel
+   */
+  public AbsoluteLayout(String width, String height) {
+    super();
+    setPanelWidth(width);
+    setPanelHeight(height);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     final Dimension result = new Dimension();
 
     try {
-      if (layoutPanel == null) {
+      if (layoutPanel == null || !init(layoutPanel)) {
         return result;
       }
-      result.width = panelWidth;
-      result.height = panelHeight;
+
+      result.width = layoutPanel.toPixelSize(panelWidth, true);
+      result.height = layoutPanel.toPixelSize(panelHeight, false);
+
     } catch (Exception e) {
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      GWT.log(e.getMessage(), e);
+
+      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
+          + e.toString());
     }
 
     return result;
@@ -157,11 +172,14 @@ public class AbsoluteLayout extends BaseLayout {
 
       final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
-      int totalWidth = box.width;
-      int totalHeight = box.height;
+      final int totalWidth = box.width;
+      final int totalHeight = box.height;
 
-      // final double deltaX = (double) totalWidth / (double) panelWidth;
-      // final double deltaY = (double) totalHeight / (double) panelHeight;
+      final int panelWidth = layoutPanel.toPixelSize(this.panelWidth, true);
+      final int panelHeight = layoutPanel.toPixelSize(this.panelHeight, false);
+
+      final double deltaX = totalWidth - panelWidth;
+      final double deltaY = totalHeight - panelHeight;
 
       final int size = layoutPanel.getWidgetCount();
 
@@ -177,12 +195,13 @@ public class AbsoluteLayout extends BaseLayout {
 
         AbsoluteLayoutData layoutData = (AbsoluteLayoutData) child.getLayoutData();
         if (layoutData == null) {
-          layoutData = new AbsoluteLayoutData(0, 0);
+          layoutData = new AbsoluteLayoutData();
           child.setLayoutData(layoutData);
         }
 
-        Dimension clientSize = new Dimension(layoutData.widgetWidth,
-            layoutData.widgetHeight);
+        Dimension clientSize = new Dimension(
+            preferredWidthMeasure.sizeOf(child),
+            preferredHeightMeasure.sizeOf(child));
 
         if (clientSize.width == -1) {
           clientSize.width = getPreferredSize(layoutPanel, child, layoutData).width;
@@ -192,24 +211,25 @@ public class AbsoluteLayout extends BaseLayout {
           clientSize.height = getPreferredSize(layoutPanel, child, layoutData).height;
         }
 
-        Point point = new Point(layoutData.posLeft, layoutData.posTop);
+        Point point = new Point(layoutPanel.toPixelSize(layoutData.posLeft,
+            true), layoutPanel.toPixelSize(layoutData.posTop, false));
 
         if (layoutData.marginPolicy.left && layoutData.marginPolicy.right) {
-          point.x += (totalWidth - panelWidth) / 2;
+          point.x += deltaX / 2;
         } else if (layoutData.marginPolicy.left) {
-          point.x += (totalWidth - panelWidth);
+          point.x += deltaX;
         }
 
         if (layoutData.marginPolicy.top && layoutData.marginPolicy.bottom) {
-          point.y += (totalHeight - panelHeight) / 2;
+          point.y += deltaY / 2;
         } else if (layoutData.marginPolicy.top) {
-          point.y += (totalHeight - panelHeight);
+          point.y += deltaY;
         }
 
         if (layoutData.dimensionPolicy.width)
-          clientSize.width += (totalWidth - panelWidth);
+          clientSize.width += deltaX;
         if (layoutData.dimensionPolicy.height)
-          clientSize.height += (totalHeight - panelHeight);
+          clientSize.height += deltaY;
 
         WidgetHelper.setBounds(layoutPanel, child, point.x, point.y,
             clientSize.width, clientSize.height);
@@ -220,5 +240,36 @@ public class AbsoluteLayout extends BaseLayout {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
+  }
+
+  /**
+   * @return the panelWidth
+   */
+  public ParsedSize getPanelWidth() {
+    return panelWidth;
+  }
+
+  /**
+   * @param panelWidth the panelWidth to set
+   */
+  public void setPanelWidth(String panelWidth) {
+    this.panelWidth = new ParsedSize(FloatParser.parseFloat(panelWidth, 0.0f),
+        UnitParser.parseUnit(panelWidth, Unit.PX));
+  }
+
+  /**
+   * @return the panelHeight
+   */
+  public ParsedSize getPanelHeight() {
+    return panelHeight;
+  }
+
+  /**
+   * @param panelHeight the panelHeight to set
+   */
+  public void setPanelHeight(String panelHeight) {
+    this.panelHeight = new ParsedSize(
+        FloatParser.parseFloat(panelHeight, 0.0f), UnitParser.parseUnit(
+            panelHeight, Unit.PX));
   }
 }
