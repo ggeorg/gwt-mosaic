@@ -28,9 +28,9 @@ import org.gwt.mosaic.ui.client.ListBox;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class MosaicBindings {
+public class GWTMosaicBindings {
 
-  private MosaicBindings() {
+  private GWTMosaicBindings() {
     // Nothing to do here!
   }
 
