@@ -8,21 +8,21 @@
 				preferredHeight="5em">
 				<m:ToolButton text="ToolButton1" />
 			</l:BoxLayoutData>
-			<l:BoxLayoutData fillWidth="true">
+			<l:BoxLayoutData fillWidth="true" decorated="true">
 				<g:Button text="Button1" />
 			</l:BoxLayoutData>
 			<m:ToolButton text="ToolButton2" />
 			<l:BoxLayoutData fillWidth="true" fillHeight="true"
 				decorated="true">
 				<l:LayoutPanel>
-					<l:BoxLayout leftToRight="false">
+					<l:BoxLayout leftToRight="false" alignment="center">
 						<l:BoxLayoutData fillHeight="true">
 							<g:Button text="Button1" />
 						</l:BoxLayoutData>
-						<l:BoxLayoutData fillHeight="true">
+						<l:BoxLayoutData fillWidth="true" decorated="true">
 							<g:Button text="Button2" />
 						</l:BoxLayoutData>
-						<l:BoxLayoutData fillHeight="true">
+						<l:BoxLayoutData fillHeight="true" fillWidth="true">
 							<g:Button text="Button3" />
 						</l:BoxLayoutData>
 					</l:BoxLayout>
