@@ -15,13 +15,14 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import java.util.Iterator;
+
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Point;
 import org.gwt.mosaic.core.client.util.FloatParser;
 import org.gwt.mosaic.core.client.util.UnitParser;
 import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -148,6 +149,11 @@ public class AbsoluteLayout extends BaseLayout {
       result.width = layoutPanel.toPixelSize(panelWidth, true);
       result.height = layoutPanel.toPixelSize(panelHeight, false);
 
+      result.width += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
+          + (borders[1] + borders[3]);
+      result.height += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
+          + (borders[0] + borders[2]);
+
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
 
@@ -156,6 +162,29 @@ public class AbsoluteLayout extends BaseLayout {
     }
 
     return result;
+  }
+
+  @Override
+  protected boolean init(LayoutPanel layoutPanel) {
+    if (initialized) {
+      return true;
+    }
+
+    super.init(layoutPanel);
+
+    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+      Widget widget = iter.next();
+
+      syncDecoratorVisibility(widget);
+
+      if (!DOM.isVisible(widget.getElement())) {
+        continue;
+      }
+
+      visibleChildList.add(widget);
+    }
+
+    return initialized = true;
   }
 
   /**
@@ -181,10 +210,9 @@ public class AbsoluteLayout extends BaseLayout {
       final double deltaX = totalWidth - panelWidth;
       final double deltaY = totalHeight - panelHeight;
 
-      final int size = layoutPanel.getWidgetCount();
+      Dimension decPanelFrameSize = null;
 
-      for (int i = 0; i < size; i++) {
-        Widget child = layoutPanel.getWidget(i);
+      for (Widget child : visibleChildList) {
         if (child instanceof DecoratorPanel) {
           child = ((DecoratorPanel) child).getWidget();
         }
@@ -193,10 +221,11 @@ public class AbsoluteLayout extends BaseLayout {
           continue;
         }
 
-        AbsoluteLayoutData layoutData = (AbsoluteLayoutData) child.getLayoutData();
-        if (layoutData == null) {
-          layoutData = new AbsoluteLayoutData();
-          child.setLayoutData(layoutData);
+        AbsoluteLayoutData layoutData = getAbsoluteLayoutData(child);
+
+        if (layoutData.hasDecoratorPanel()) {
+          decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
+              child);
         }
 
         Dimension clientSize = new Dimension(
@@ -214,6 +243,14 @@ public class AbsoluteLayout extends BaseLayout {
         Point point = new Point(layoutPanel.toPixelSize(layoutData.posLeft,
             true), layoutPanel.toPixelSize(layoutData.posTop, false));
 
+        int fw = clientSize.width;
+        int fh = clientSize.height;
+
+        if (layoutData.hasDecoratorPanel()) {
+          fw -= decPanelFrameSize.width;
+          fh -= decPanelFrameSize.height;
+        }
+
         if (layoutData.marginPolicy.left && layoutData.marginPolicy.right) {
           point.x += deltaX / 2;
         } else if (layoutData.marginPolicy.left) {
@@ -227,19 +264,39 @@ public class AbsoluteLayout extends BaseLayout {
         }
 
         if (layoutData.dimensionPolicy.width)
-          clientSize.width += deltaX;
+          fw += deltaX;
         if (layoutData.dimensionPolicy.height)
-          clientSize.height += deltaY;
+          fh += deltaY;
 
-        WidgetHelper.setBounds(layoutPanel, child, point.x, point.y,
-            clientSize.width, clientSize.height);
+        layoutData.targetLeft = point.x;
+        layoutData.targetTop = point.y;
+        layoutData.targetWidth = fw;
+        layoutData.targetHeight = fh;
 
+        layoutData.setSourceLeft(child.getAbsoluteLeft()
+            - layoutPanel.getAbsoluteLeft() - paddings[3]);
+        layoutData.setSourceTop(child.getAbsoluteTop()
+            - layoutPanel.getAbsoluteTop() - paddings[0]);
+        layoutData.setSourceWidth(child.getOffsetWidth());
+        layoutData.setSourceHeight(child.getOffsetHeight());
       }
+      
+      super.layoutPanel(layoutPanel);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
       Window.alert(this.getClass().getName() + ": " + e.getMessage());
     }
+  }
+
+  private AbsoluteLayoutData getAbsoluteLayoutData(Widget child) {
+    Object layoutDataObject = child.getLayoutData();
+    if (layoutDataObject == null
+        || !(layoutDataObject instanceof AbsoluteLayoutData)) {
+      layoutDataObject = new AbsoluteLayoutData();
+      child.setLayoutData(layoutDataObject);
+    }
+    return (AbsoluteLayoutData) layoutDataObject;
   }
 
   /**

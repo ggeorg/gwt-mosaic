@@ -430,11 +430,11 @@ public class BoxLayout extends BaseLayout {
   }
 
   private BoxLayoutData getBoxLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof BoxLayoutData)) {
       layoutDataObject = new BoxLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (BoxLayoutData) layoutDataObject;
   }
