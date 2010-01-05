@@ -58,22 +58,30 @@ public class AbsoluteLayout extends BaseLayout {
    * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE(false, false, false, false), BOTTOM(false, false, false, true), TOP(
-        false, false, true, false),
+    NONE(false, false, false, false), 
+    BOTTOM(false, false, false, true), 
+    TOP(false, false, true, false),
 
-    VCENTER(false, false, true, true), TOP_BOTTOM(false, false, true, true),
+    VCENTER(false, false, true, true), 
+    TOP_BOTTOM(false, false, true, true),
 
-    RIGHT(false, true, false, false), RIGHT_BOTTOM(false, true, false, true), RIGHT_TOP(
-        false, true, true, false), RIGHT_TOP_BOTTOM(false, true, true, true),
+    RIGHT(false, true, false, false),
+    RIGHT_BOTTOM(false, true, false, true),
+    RIGHT_TOP(false, true, true, false),
+    RIGHT_TOP_BOTTOM(false, true, true, true),
 
-    LEFT(true, false, false, false), LEFT_BOTTOM(true, false, false, true), LEFT_TOP(
-        true, false, true, false), LEFT_TOP_BOTTOM(true, false, true, true),
+    LEFT(true, false, false, false),
+    LEFT_BOTTOM(true, false, false, true),
+    LEFT_TOP(true, false, true, false),
+    LEFT_TOP_BOTTOM(true, false, true, true),
 
-    HCENTER(true, true, false, false), LEFT_RIGHT(true, true, false, false),
+    HCENTER(true, true, false, false),
+    LEFT_RIGHT(true, true, false, false),
 
     LEFT_RIGHT_BOTTOM(true, true, false, true),
 
-    CENTER(true, true, true, true), ALL(true, true, true, true);
+    CENTER(true, true, true, true),
+    ALL(true, true, true, true);
 
     final boolean left, right, top, bottom;
 
@@ -90,8 +98,10 @@ public class AbsoluteLayout extends BaseLayout {
    * should be redimensioned when the layout panel is resized.
    */
   public enum DimensionPolicy {
-    NONE(false, false), WIDTH(true, false), HEIGHT(false, true), BOTH(true,
-        true);
+    NONE(false, false), 
+    WIDTH(true, false), 
+    HEIGHT(false, true), 
+    BOTH(true, true);
 
     final boolean width, height;
 
