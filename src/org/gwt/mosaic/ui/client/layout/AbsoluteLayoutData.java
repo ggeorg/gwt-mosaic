@@ -120,4 +120,5 @@ public final class AbsoluteLayoutData extends LayoutData {
     this(posLeft, posTop, widgetWidth, widgetHeight, margin, 
         AbsoluteLayout.DimensionPolicy.NONE);
   }
+
 }
