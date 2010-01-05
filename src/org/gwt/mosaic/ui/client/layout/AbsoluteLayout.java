@@ -58,30 +58,22 @@ public class AbsoluteLayout extends BaseLayout {
    * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE(false, false, false, false),
-    BOTTOM(false, false, false, true),
-    TOP(false, false, true, false),
+    NONE(false, false, false, false), BOTTOM(false, false, false, true), TOP(
+        false, false, true, false),
 
-    VCENTER(false, false, true, true),
-    TOP_BOTTOM(false, false, true, true),
-    
-    RIGHT(false, true, false, false), 
-    RIGHT_BOTTOM(false, true, false, true), 
-    RIGHT_TOP(false, true, true, false),
-    RIGHT_TOP_BOTTOM(false, true, true, true),
+    VCENTER(false, false, true, true), TOP_BOTTOM(false, false, true, true),
 
-    LEFT(true, false, false, false), 
-    LEFT_BOTTOM(true, false, false, true), 
-    LEFT_TOP(true, false, true, false),
-    LEFT_TOP_BOTTOM(true, false, true, true),
+    RIGHT(false, true, false, false), RIGHT_BOTTOM(false, true, false, true), RIGHT_TOP(
+        false, true, true, false), RIGHT_TOP_BOTTOM(false, true, true, true),
 
-    HCENTER(true, true, false, false),
-    LEFT_RIGHT(true, true, false, false),
+    LEFT(true, false, false, false), LEFT_BOTTOM(true, false, false, true), LEFT_TOP(
+        true, false, true, false), LEFT_TOP_BOTTOM(true, false, true, true),
+
+    HCENTER(true, true, false, false), LEFT_RIGHT(true, true, false, false),
 
     LEFT_RIGHT_BOTTOM(true, true, false, true),
 
-    CENTER(true, true, true, true), 
-    ALL(true, true, true, true);
+    CENTER(true, true, true, true), ALL(true, true, true, true);
 
     final boolean left, right, top, bottom;
 
@@ -158,8 +150,8 @@ public class AbsoluteLayout extends BaseLayout {
       int totalWidth = box.width;
       int totalHeight = box.height;
 
-//      final double deltaX = (double) totalWidth / (double) panelWidth;
-//      final double deltaY = (double) totalHeight / (double) panelHeight;
+      // final double deltaX = (double) totalWidth / (double) panelWidth;
+      // final double deltaY = (double) totalHeight / (double) panelHeight;
 
       final int size = layoutPanel.getWidgetCount();
 
@@ -192,11 +184,18 @@ public class AbsoluteLayout extends BaseLayout {
 
         Point point = new Point(layoutData.posLeft, layoutData.posTop);
 
-        if (layoutData.marginPolicy.left)
+        if (layoutData.marginPolicy.left && layoutData.marginPolicy.right) {
           point.x += (totalWidth - panelWidth) / 2;
-        if (layoutData.marginPolicy.top)
+        } else if (layoutData.marginPolicy.left) {
+          point.x += (totalWidth - panelWidth);
+        }
+
+        if (layoutData.marginPolicy.top && layoutData.marginPolicy.bottom) {
           point.y += (totalHeight - panelHeight) / 2;
-        
+        } else if (layoutData.marginPolicy.top) {
+          point.y += (totalHeight - panelHeight);
+        }
+
         if (layoutData.dimensionPolicy.width)
           clientSize.width += (totalWidth - panelWidth);
         if (layoutData.dimensionPolicy.height)
