@@ -158,8 +158,8 @@ public class AbsoluteLayout extends BaseLayout {
       int totalWidth = box.width;
       int totalHeight = box.height;
 
-      final double deltaX = (double) totalWidth / (double) panelWidth;
-      final double deltaY = (double) totalHeight / (double) panelHeight;
+//      final double deltaX = (double) totalWidth / (double) panelWidth;
+//      final double deltaY = (double) totalHeight / (double) panelHeight;
 
       final int size = layoutPanel.getWidgetCount();
 
