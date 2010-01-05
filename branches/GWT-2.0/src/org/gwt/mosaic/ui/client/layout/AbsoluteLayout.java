@@ -17,6 +17,7 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.Point;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
@@ -57,10 +58,30 @@ public class AbsoluteLayout extends BaseLayout {
    * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE(false, false, false, false), LEFT(true, false, false, false), RIGHT(
-        false, true, false, false), TOP(false, false, true, false), BOTTOM(
-        false, false, false, true), VCENTER(false, false, true, true), HCENTER(
-        true, true, false, false), CENTER(true, true, true, true);
+    NONE(false, false, false, false),
+    BOTTOM(false, false, false, true),
+    TOP(false, false, true, false),
+
+    VCENTER(false, false, true, true),
+    TOP_BOTTOM(false, false, true, true),
+    
+    RIGHT(false, true, false, false), 
+    RIGHT_BOTTOM(false, true, false, true), 
+    RIGHT_TOP(false, true, true, false),
+    RIGHT_TOP_BOTTOM(false, true, true, true),
+
+    LEFT(true, false, false, false), 
+    LEFT_BOTTOM(true, false, false, true), 
+    LEFT_TOP(true, false, true, false),
+    LEFT_TOP_BOTTOM(true, false, true, true),
+
+    HCENTER(true, true, false, false),
+    LEFT_RIGHT(true, true, false, false),
+
+    LEFT_RIGHT_BOTTOM(true, true, false, true),
+
+    CENTER(true, true, true, true), 
+    ALL(true, true, true, true);
 
     final boolean left, right, top, bottom;
 
@@ -128,16 +149,17 @@ public class AbsoluteLayout extends BaseLayout {
    */
   public void layoutPanel(LayoutPanel layoutPanel) {
     try {
-      if (layoutPanel == null) {
+      if (layoutPanel == null || !init(layoutPanel)) {
         return;
       }
 
       final Dimension box = DOM.getClientSize(layoutPanel.getElement());
+
       int totalWidth = box.width;
       int totalHeight = box.height;
 
-      final int deltaX = totalWidth - panelWidth;
-      final int deltaY = totalHeight - panelHeight;
+      final double deltaX = (double) totalWidth / (double) panelWidth;
+      final double deltaY = (double) totalHeight / (double) panelHeight;
 
       final int size = layoutPanel.getWidgetCount();
 
@@ -151,63 +173,39 @@ public class AbsoluteLayout extends BaseLayout {
           continue;
         }
 
-        AbsoluteLayoutData layoutData = (AbsoluteLayoutData) getLayoutData(child);
+        AbsoluteLayoutData layoutData = (AbsoluteLayoutData) child.getLayoutData();
         if (layoutData == null) {
           layoutData = new AbsoluteLayoutData(0, 0);
-          setLayoutData(child, layoutData);
+          child.setLayoutData(layoutData);
         }
+
+        Dimension clientSize = new Dimension(layoutData.widgetWidth,
+            layoutData.widgetHeight);
+
+        if (clientSize.width == -1) {
+          clientSize.width = getPreferredSize(layoutPanel, child, layoutData).width;
+        }
+
+        if (clientSize.height == -1) {
+          clientSize.height = getPreferredSize(layoutPanel, child, layoutData).height;
+        }
+
+        Point point = new Point(layoutData.posLeft, layoutData.posTop);
+
+        if (layoutData.marginPolicy.left)
+          point.x += (totalWidth - panelWidth) / 2;
+        if (layoutData.marginPolicy.top)
+          point.y += (totalHeight - panelHeight) / 2;
         
-        Dimension clientSize = null;
-
-        if (layoutData.widgetWidth == -1) {
-          if (clientSize == null) {
-            clientSize = WidgetHelper.getPreferredSize(child);
-          }
-          int flowWidth = clientSize.width;
-          layoutData.widgetWidth = flowWidth;
-        }
-
-        if (layoutData.widgetHeight == -1) {
-          if (clientSize == null) {
-            clientSize = WidgetHelper.getPreferredSize(child);
-          }
-          int flowHeight = clientSize.height;
-          layoutData.widgetHeight = flowHeight;
-        }
-
-        int dw = 0;
-        if (layoutData.marginPolicy.left)
-          dw++;
-        if (layoutData.marginPolicy.right)
-          dw++;
         if (layoutData.dimensionPolicy.width)
-          dw++;
-
-        int dh = 0;
-        if (layoutData.marginPolicy.top)
-          dh++;
-        if (layoutData.marginPolicy.bottom)
-          dh++;
+          clientSize.width += (totalWidth - panelWidth);
         if (layoutData.dimensionPolicy.height)
-          dh++;
+          clientSize.height += (totalHeight - panelHeight);
 
-        if (layoutData.marginPolicy.left)
-          layoutData.posLeft += (deltaX / dw);
-        if (layoutData.dimensionPolicy.width)
-          layoutData.widgetWidth += (deltaX / dw);
-
-        if (layoutData.marginPolicy.top)
-          layoutData.posTop += (deltaY / dh);
-        if (layoutData.dimensionPolicy.height)
-          layoutData.widgetHeight += (deltaY / dh);
-
-        WidgetHelper.setBounds(layoutPanel, child, layoutData.posLeft, layoutData.posTop,
-            layoutData.widgetWidth, layoutData.widgetHeight);
+        WidgetHelper.setBounds(layoutPanel, child, point.x, point.y,
+            clientSize.width, clientSize.height);
 
       }
-
-      panelWidth = totalWidth;
-      panelHeight = totalHeight;
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
