@@ -13,7 +13,7 @@
 			<l:BorderLayoutData region="east">
 				<m:ToolButton text="EAST"/>
 			</l:BorderLayoutData>
-			<l:BorderLayoutData region="west"  resizable="true" preferredWidth="25%">
+			<l:BorderLayoutData region="west" resizable="true" preferredWidth="25%">
 				<m:ToolButton text="WEST"/>
 			</l:BorderLayoutData>
 			<l:BorderLayoutData decorated="true">

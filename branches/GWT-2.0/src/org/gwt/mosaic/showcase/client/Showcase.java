@@ -48,6 +48,7 @@ import org.gwt.mosaic.showcase.client.content.forms.building.CwPlainExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwRowCounterExample;
 import org.gwt.mosaic.showcase.client.content.forms.building.CwWidgetOrientationExample;
 import org.gwt.mosaic.showcase.client.content.forms.factories.CwButtonBarFactoryExample;
+import org.gwt.mosaic.showcase.client.content.layout.CwAbsoluteLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Collapsed;
 import org.gwt.mosaic.showcase.client.content.layout.CwBorderLayoutTest_Frames;
@@ -101,6 +102,7 @@ import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
 import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
 import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
+import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderAbsoluteLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBorderLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBoxLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderColumnLayout;
@@ -481,6 +483,10 @@ public class Showcase implements EntryPoint {
     TreeItem catFlowLayout = catPanels.addItem("FlowLayout");
     setupMainMenuOption(catFlowLayout, new CwFlowLayout(constants),
         IMAGES.catPanels());
+    
+    TreeItem catAbsoluteLayout = catPanels.addItem("AbsoluteLayout");
+    setupMainMenuOption(catAbsoluteLayout, new CwAbsoluteLayout(constants),
+        IMAGES.catPanels());
 
     TreeItem catMixedLayout = catPanels.addItem("Mixed");
     setupMainMenuOption(catMixedLayout, new CwMixedLayout(constants),
@@ -626,6 +632,8 @@ public class Showcase implements EntryPoint {
         new CwUiBinderRowLayout(constants), IMAGES.catPanels());
     setupMainMenuOption(catUiBinderLayout,
         new CwUiBinderFlowLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout,
+        new CwUiBinderAbsoluteLayout(constants), IMAGES.catPanels());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
