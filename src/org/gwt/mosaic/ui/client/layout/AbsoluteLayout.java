@@ -63,22 +63,31 @@ public class AbsoluteLayout extends BaseLayout {
    * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE(false, false, false, false), BOTTOM(false, false, false, true), TOP(
-        false, false, true, false),
+    NONE(false, false, false, false), 
+    BOTTOM(false, false, false, true), 
+    TOP(false, false, true, false),
 
-    VCENTER(false, false, true, true), TOP_BOTTOM(false, false, true, true),
+    VCENTER(false, false, true, true),
+    TOP_BOTTOM(false, false, true, true),
 
-    RIGHT(false, true, false, false), RIGHT_BOTTOM(false, true, false, true), RIGHT_TOP(
-        false, true, true, false), RIGHT_TOP_BOTTOM(false, true, true, true),
+    RIGHT(false, true, false, false),
+    RIGHT_BOTTOM(false, true, false, true),
+    RIGHT_TOP(false, true, true, false),
+    RIGHT_TOP_BOTTOM(false, true, true, true),
 
-    LEFT(true, false, false, false), LEFT_BOTTOM(true, false, false, true), LEFT_TOP(
-        true, false, true, false), LEFT_TOP_BOTTOM(true, false, true, true),
+    LEFT(true, false, false, false),
+    LEFT_BOTTOM(true, false, false, true),
+    LEFT_TOP(true, false, true, false),
+    LEFT_TOP_BOTTOM(true, false, true, true),
 
-    HCENTER(true, true, false, false), LEFT_RIGHT(true, true, false, false),
+    HCENTER(true, true, false, false),
+    LEFT_RIGHT(true, true, false, false),
 
     LEFT_RIGHT_BOTTOM(true, true, false, true),
+    LEFT_TOP_RIGHT(true, true, true, false),
 
-    CENTER(true, true, true, true), ALL(true, true, true, true);
+    CENTER(true, true, true, true),
+    ALL(true, true, true, true);
 
     final boolean left, right, top, bottom;
 
@@ -109,7 +118,14 @@ public class AbsoluteLayout extends BaseLayout {
   /**
    * Dimensions of the panel.
    */
-  private ParsedSize panelWidth, panelHeight;
+  private ParsedSize width, height;
+  
+  /**
+   * Constructor for absolute layout (width=32em, height=24em). 
+   */
+  public AbsoluteLayout() {
+    this("32em", "24em");
+  }
 
   /**
    * Constructor for absolute layout with the specified dimensions.
@@ -130,7 +146,7 @@ public class AbsoluteLayout extends BaseLayout {
   public AbsoluteLayout(String width, String height) {
     super();
     setPanelWidth(width);
-    setPanelHeight(height);
+    setHeight(height);
   }
 
   /**
@@ -146,8 +162,8 @@ public class AbsoluteLayout extends BaseLayout {
         return result;
       }
 
-      result.width = layoutPanel.toPixelSize(panelWidth, true);
-      result.height = layoutPanel.toPixelSize(panelHeight, false);
+      result.width = layoutPanel.toPixelSize(width, true);
+      result.height = layoutPanel.toPixelSize(height, false);
 
       result.width += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
           + (borders[1] + borders[3]);
@@ -204,8 +220,8 @@ public class AbsoluteLayout extends BaseLayout {
       final int totalWidth = box.width;
       final int totalHeight = box.height;
 
-      final int panelWidth = layoutPanel.toPixelSize(this.panelWidth, true);
-      final int panelHeight = layoutPanel.toPixelSize(this.panelHeight, false);
+      final int panelWidth = layoutPanel.toPixelSize(this.width, true);
+      final int panelHeight = layoutPanel.toPixelSize(this.height, false);
 
       final double deltaX = totalWidth - panelWidth;
       final double deltaY = totalHeight - panelHeight;
@@ -240,8 +256,8 @@ public class AbsoluteLayout extends BaseLayout {
           clientSize.height = getPreferredSize(layoutPanel, child, layoutData).height;
         }
 
-        Point point = new Point(layoutPanel.toPixelSize(layoutData.posLeft,
-            true), layoutPanel.toPixelSize(layoutData.posTop, false));
+        Point point = new Point(layoutPanel.toPixelSize(layoutData.left,
+            true), layoutPanel.toPixelSize(layoutData.top, false));
 
         int fw = clientSize.width;
         int fh = clientSize.height;
@@ -300,33 +316,47 @@ public class AbsoluteLayout extends BaseLayout {
   }
 
   /**
-   * @return the panelWidth
+   * @return the initial panel width
    */
-  public ParsedSize getPanelWidth() {
-    return panelWidth;
+  public ParsedSize getWidth() {
+    return width;
+  }
+  
+  /**
+   * @return the initial panel width
+   */
+  public String getWidthString() {
+    return width.getValue();
   }
 
   /**
-   * @param panelWidth the panelWidth to set
+   * @param width the initial panel width to set
    */
-  public void setPanelWidth(String panelWidth) {
-    this.panelWidth = new ParsedSize(FloatParser.parseFloat(panelWidth, 0.0f),
-        UnitParser.parseUnit(panelWidth, Unit.PX));
+  public void setPanelWidth(String width) {
+    this.width = new ParsedSize(FloatParser.parseFloat(width, 0.0f),
+        UnitParser.parseUnit(width, Unit.PX));
   }
 
   /**
-   * @return the panelHeight
+   * @return the height
    */
-  public ParsedSize getPanelHeight() {
-    return panelHeight;
+  public ParsedSize getHeight() {
+    return height;
   }
 
   /**
-   * @param panelHeight the panelHeight to set
+   * @param height the height to set
    */
-  public void setPanelHeight(String panelHeight) {
-    this.panelHeight = new ParsedSize(
-        FloatParser.parseFloat(panelHeight, 0.0f), UnitParser.parseUnit(
-            panelHeight, Unit.PX));
+  public void setHeight(String height) {
+    this.height = new ParsedSize(
+        FloatParser.parseFloat(height, 0.0f), UnitParser.parseUnit(
+            height, Unit.PX));
+  }
+  
+  /**
+   * @return the height
+   */
+  public String getHeightString() {
+    return height.getValue();
   }
 }
