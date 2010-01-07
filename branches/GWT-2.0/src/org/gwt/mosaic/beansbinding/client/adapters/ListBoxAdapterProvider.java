@@ -13,15 +13,18 @@ import com.google.gwt.gen2.event.shared.HandlerRegistration;
 import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 
+@SuppressWarnings("deprecation")
 public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
-  private static final String SELECTED_ELEMENT_P = "selectedElement";
-  private static final String SELECTED_ELEMENTS_P = "selectedElements";
+  private static final String SELECTED_ELEMENT_P = "selectedElement".intern();
+  private static final String SELECTED_ELEMENTS_P = "selectedElements".intern();
 
-  public final class Adapter extends BeanAdapterBase {
+  public final class Adapter extends BeanAdapterBase implements
+      RowSelectionHandler {
     private ListBox<?> listBox;
-    private Handler handler;
     private Object cachedElementOrElements;
+
+    private HandlerRegistration handlerRegistration = null;
 
     private Adapter(ListBox<?> listBox, String property) {
       super(property);
@@ -42,28 +45,25 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     @Override
     protected void listeningStarted() {
-      handler = new Handler();
       cachedElementOrElements = isPlural() ? getSelectedElements()
           : getSelectedElement();
-      handlerRegistration = listBox.addRowSelectionHandler(handler);
+      handlerRegistration = listBox.addRowSelectionHandler(this);
     }
-    
-    private HandlerRegistration handlerRegistration = null;
 
     @Override
     protected void listeningStopped() {
-      handlerRegistration.removeHandler();
+      if (handlerRegistration != null) {
+        handlerRegistration.removeHandler();
+        handlerRegistration = null;
+      }
       cachedElementOrElements = null;
-      handler = null;
     }
 
-    private class Handler implements RowSelectionHandler {
-      public void onRowSelection(RowSelectionEvent event) {
-        Object oldElementOrElements = cachedElementOrElements;
-        cachedElementOrElements = isPlural() ? getSelectedElements()
-            : getSelectedElement();
-        firePropertyChange(oldElementOrElements, cachedElementOrElements);
-      }
+    public void onRowSelection(RowSelectionEvent event) {
+      Object oldValue = cachedElementOrElements;
+      cachedElementOrElements = isPlural() ? getSelectedElements()
+          : getSelectedElement();
+      firePropertyChange(oldValue, cachedElementOrElements);
     }
 
   }
@@ -98,11 +98,10 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
     return elements;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#createAdapter(java.lang.Object,
-   *      java.lang.String)
+   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#createAdapter(java.lang.Object, java.lang.String)
    */
   public BeanAdapter createAdapter(Object source, String property) {
     if (!providesAdapter(source.getClass(), property)) {
@@ -111,8 +110,9 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
     return new Adapter((ListBox<?>) source, property);
   }
 
-  /*
-   * (non-Javadoc)
+
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#getAdapterClass(java.lang.Class)
    */
@@ -121,11 +121,10 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
         : null;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#providesAdapter(java.lang.Class,
-   *      java.lang.String)
+   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#providesAdapter(java.lang.Class, java.lang.String)
    */
   public boolean providesAdapter(Class<?> type, String property) {
     if (type != ListBox.class) {

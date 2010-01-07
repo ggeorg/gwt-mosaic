@@ -15,28 +15,36 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.list.DefaultListModel;
 import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
+import org.gwt.mosaic.ui.client.list.ListHeader;
 import org.gwt.mosaic.ui.client.list.ListModel;
 import org.gwt.mosaic.ui.client.table.DataTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable2;
 
+import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
+import com.google.gwt.gen2.table.client.SortableGrid;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.gen2.table.client.SortableGrid.ColumnSorter;
+import com.google.gwt.gen2.table.client.SortableGrid.ColumnSorterCallback;
+import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
 import com.google.gwt.gen2.table.event.client.RowHighlightHandler;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.gen2.table.override.client.HTMLTable.CellFormatter;
@@ -74,12 +82,20 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     void renderCell(ListBox<T> listBox, int row, int column, T item);
   }
 
+  /**
+   * @param <T>
+   */
+  public interface ColumnComparator<T> {
+    int compare(T t1, T t2, int column);
+  }
+
   private static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
   private static final int INSERT_AT_END = -1;
 
   private final ScrollTable2 scrollTable;
   private final DataTable dataTable = new DataTable();
+  private final FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
 
   /**
    * The cell renderer used on the data table.
@@ -95,11 +111,18 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   };
 
   /**
-   * The values associated with each row.
+   * The column comparator used by the column sorter.
    */
-  private Map<Element, T> rowItems = new HashMap<Element, T>();
+  private ColumnComparator<T> columnComparator;;
+
+  /**
+   * The table rows in model order.
+   */
+  private List<Element> rowsInModelOrder = new ArrayList<Element>();
 
   private ListModel<T> dataModel;
+
+  private ListHeader listHeader;
 
   /**
    * Creates an empty list box in single selection mode.
@@ -111,8 +134,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public ListBox(String[] columns) {
     super(impl.createFocusable());
 
-    final FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
-    createHeaderTable(headerTable, columns);
+    setHeader(new ListHeader(columns));
 
     scrollTable = new ScrollTable2(dataTable, headerTable);
     scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
@@ -137,6 +159,92 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     DOM.setElementAttribute(getElement(), "hideFocus", "true");
   }
 
+  public ColumnComparator<T> getColumnComparator() {
+    return columnComparator;
+  }
+
+  public void setColumnComparator(ColumnComparator<T> columnComparator) {
+    this.columnComparator = columnComparator;
+
+    if (columnComparator == null) {
+      dataTable.setColumnSorter(null);
+    } else {
+      dataTable.setColumnSorter(new ColumnSorter() {
+        @Override
+        public void onSortColumn(SortableGrid grid, ColumnSortList sortList,
+            ColumnSorterCallback callback) {
+          // Get the primary column and sort order
+          final int column = sortList.getPrimaryColumn();
+          final boolean ascending = sortList.isPrimaryAscending();
+
+          // Get all of the cell elements
+          int rowCount = grid.getRowCount();
+          List<Element> trList = new ArrayList<Element>(rowCount);
+          for (int i = 0; i < rowCount; i++) {
+            trList.add(grid.getRowFormatter().getElement(i));
+          }
+
+          // Sort the row elements
+          if (ascending) {
+            Collections.sort(trList, new Comparator<Element>() {
+              @SuppressWarnings("unchecked")
+              public int compare(Element o1, Element o2) {
+                T t1 = (T) o1.getPropertyObject("data");
+                T t2 = (T) o2.getPropertyObject("data");
+                return ListBox.this.columnComparator.compare(t1, t2, column);
+              }
+            });
+          } else {
+            Collections.sort(trList, new Comparator<Element>() {
+              @SuppressWarnings("unchecked")
+              public int compare(Element o1, Element o2) {
+                T t1 = (T) o1.getPropertyObject("data");
+                T t2 = (T) o2.getPropertyObject("data");
+                return ListBox.this.columnComparator.compare(t2, t1, column);
+              }
+            });
+          }
+
+          // Convert tdElems to trElems, reversing if needed
+          Element[] trElems = new Element[rowCount];
+          trList.toArray(trElems);
+
+          // Use the callback to complete the sorting
+          callback.onSortingComplete(trElems);
+        }
+      });
+    }
+  }
+
+  public void setHeader(ListHeader listHeader) {
+    this.listHeader = listHeader;
+
+    while (headerTable.getRowCount() > 0) {
+      headerTable.removeRow(headerTable.getRowCount() - 1);
+    }
+
+    if (listHeader.size() > 0) {
+      for (int column = 0, size = listHeader.size(); column < size; ++column) {
+        headerTable.setHTML(0, column, listHeader.get(column).getName());
+      }
+      headerTable.setVisible(true);
+      dataTable.resizeColumns(listHeader.size());
+    } else {
+      headerTable.setText(0, 0, null);
+      headerTable.setVisible(false);
+      dataTable.resizeColumns(1);
+    }
+
+    ListDataEvent event = new ListDataEvent(getModel(),
+        ListDataEvent.Type.CONTENTS_CHANGED, 0, getModel().getSize());
+
+    contentsChanged(event);
+  }
+
+  public ListHeader getHeader() {
+    return listHeader;
+  }
+
   public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
     return ((DataTable) scrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
@@ -145,15 +253,49 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
       RowSelectionHandler handler) {
     return scrollTable.getDataTable().addRowSelectionHandler(handler);
   }
-  
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowHighlightHandler(RowHighlightHandler handler) {
+
+  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowHighlightHandler(
+      RowHighlightHandler handler) {
     return scrollTable.getDataTable().addRowHighlightHandler(handler);
   }
-  
 
   private void checkIndex(int index) {
     if (index < 0 || index >= getItemCount()) {
       throw new IndexOutOfBoundsException();
+    }
+  }
+
+  /**
+   * One or more items have been added to the list. The {@code event} argument
+   * can supply the indices for the range of items added.
+   * 
+   * @param event the event
+   * @see org.gwt.mosaic.ui.client.list.ListDataListener#intervalAdded(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   */
+  public void intervalAdded(ListDataEvent event) {
+    if (dataModel == event.getSource()) {
+      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n && i >= 0; ++i) {
+        if (i < getItemCount()) {
+          renderItemOnInsert(dataModel.getElementAt(i), i);
+        } else {
+          renderItemOnInsert(dataModel.getElementAt(i), INSERT_AT_END);
+        }
+      }
+    }
+  }
+
+  /**
+   * One or more items have been removed from the list. The {@code event}
+   * argument can supply the indicies for range of items removed.
+   * 
+   * @param event the event
+   * @see org.gwt.mosaic.ui.client.list.ListDataListener#intervalRemoved(org.gwt.mosaic.ui.client.list.ListDataEvent)
+   */
+  public void intervalRemoved(ListDataEvent event) {
+    if (dataModel == event.getSource()) {
+      for (int i = event.getIndex1(), n = event.getIndex0(); i >= n && i >= 0; --i) {
+        renderOnRemove(i);
+      }
     }
   }
 
@@ -164,28 +306,21 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    * {@link #intervalRemoved(ListDataEvent)} methods.
    * 
    * @param event the event
+   * @see org.gwt.mosaic.ui.client.list.ListDataListener#contentsChanged(org.gwt.mosaic.ui.client.list.ListDataEvent)
    */
   public void contentsChanged(ListDataEvent event) {
     if (dataModel == event.getSource()) {
-      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n; ++i) {
-        if (i >= 0 && i < getItemCount()) {
-          renderItemOnUpdate(i, dataModel.getElementAt(i));
+      int index0 = event.getIndex0(), index1 = event.getIndex1();
+      if (index1 < getItemCount() && index0 == index1) {
+        ++index1;
+      }
+      for (; index0 < index1; ++index0) {
+        if (index0 < getItemCount()) {
+          renderItemOnUpdate(index0, dataModel.getElementAt(index0));
+        } else {
+          renderItemOnInsert(dataModel.getElementAt(index0), INSERT_AT_END);
         }
       }
-    }
-  }
-
-  protected void createHeaderTable(FixedWidthFlexTable headerTable,
-      String[] columns) {
-    if (columns != null && columns.length > 0) {
-      for (int column = 0; column < columns.length; ++column) {
-        headerTable.setHTML(0, column, columns[column]);
-      }
-      setColumnsCount(columns.length);
-    } else {
-      headerTable.setText(0, 0, null);
-      headerTable.setVisible(false);
-      setColumnsCount(1);
     }
   }
 
@@ -243,9 +378,10 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    * @return the item
    * @throws IndexOutOfBoundsException if the index is out of range
    */
+  @SuppressWarnings("unchecked")
   public T getItem(int index) {
     checkIndex(index);
-    return rowItems.get(dataTable.getRowFormatter().getElement(index));
+    return (T) dataTable.getRowFormatter().getElement(index).getPropertyObject("data");
   }
 
   /**
@@ -335,38 +471,6 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
 
   public int getTabIndex() {
     return impl.getTabIndex(getElement());
-  }
-
-  /**
-   * One or more items have been added to the list. The {@code event} argument
-   * can supply the indices for the range of items added.
-   * 
-   * @param event the event
-   */
-  public void intervalAdded(ListDataEvent event) {
-    if (dataModel == event.getSource()) {
-      for (int i = event.getIndex0(), n = event.getIndex1(); i <= n && i >= 0; ++i) {
-        if (i < getItemCount()) {
-          renderItemOnInsert(dataModel.getElementAt(i), i);
-        } else {
-          renderItemOnInsert(dataModel.getElementAt(i), INSERT_AT_END);
-        }
-      }
-    }
-  }
-
-  /**
-   * One or more items have been removed from the list. The {@code event}
-   * argument can supply the indicies for range of items removed.
-   * 
-   * @param event the event
-   */
-  public void intervalRemoved(ListDataEvent event) {
-    if (dataModel == event.getSource()) {
-      for (int i = event.getIndex1(), n = event.getIndex0(); i >= n && i >= 0; --i) {
-        renderOnRemove(i);
-      }
-    }
   }
 
   /**
@@ -488,13 +592,15 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
 
     dataTable.insertRow(index);
 
+    // Map item with <tr>
+    Element trElem = dataTable.getRowFormatter().getElement(index);
+    trElem.setPropertyObject("data", item);
+    rowsInModelOrder.add(index, trElem);
+    
     // Set the data in the new row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
       cellRenderer.renderCell(this, index, cellIndex, item);
     }
-
-    // Map item with <tr>
-    rowItems.put(dataTable.getRowFormatter().getElement(index), item);
   }
 
   /**
@@ -510,22 +616,27 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     if (item == null) {
       throw new NullPointerException("Cannot set an item to null");
     }
-
+    
+    // Map item with <tr>
+    Element trElem = dataTable.getRowFormatter().getElement(index);
+    trElem.setPropertyObject("data", item);
+    
     // Set the data in the row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
       cellRenderer.renderCell(this, index, cellIndex, item);
     }
-
-    // Map the new item with <tr>
-    rowItems.put(dataTable.getRowFormatter().getElement(index), item);
   }
 
   /**
    * Removes all items from the list box.
    */
   protected void renderOnClear() {
+    for (Element elem : rowsInModelOrder) {
+      elem.setPropertyObject("data", null);
+    }
+
     dataTable.resizeRows(0);
-    rowItems.clear();
+    rowsInModelOrder.clear();
   }
 
   /**
@@ -536,9 +647,12 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   protected void renderOnRemove(int index) {
     checkIndex(index);
-    Element tr = dataTable.getRowFormatter().getElement(index);
+    
+    final Element tr = dataTable.getRowFormatter().getElement(index);
+    tr.setPropertyObject("data", null);
+    
     dataTable.removeRow(index);
-    rowItems.remove(tr);
+    rowsInModelOrder.remove(index);
   }
 
   /**
@@ -610,16 +724,6 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   public void setColumnResizePolicy(ColumnResizePolicy columnResizePolicy) {
     scrollTable.setColumnResizePolicy(columnResizePolicy);
-  }
-
-  /**
-   * Resizes the {@code ListBox} to be the specified number of columns.
-   * 
-   * @param columns the number of columns
-   * @throws IndexOutOfBoundsException
-   */
-  public void setColumnsCount(int columns) {
-    dataTable.resizeColumns(columns);
   }
 
   /**
@@ -807,11 +911,20 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   }
 
   public void setText(int row, int column, String text) {
-    dataTable.setText(row, column, text);
+    dataTable.setText(modelToView(row), column, text);
+  }
+  
+  public void setHTML(int row, int column, String html) {
+    dataTable.setHTML(modelToView(row), column, html);
   }
 
   public void setWidget(int row, int column, Widget widget) {
-    dataTable.setWidget(row, column, widget);
+    dataTable.setWidget(modelToView(row), column, widget);
+  }
+  
+  protected int modelToView(int index) {
+    TableRowElement trElem = rowsInModelOrder.get(index).cast();
+    return trElem.getSectionRowIndex() - 1;
   }
 
 }
