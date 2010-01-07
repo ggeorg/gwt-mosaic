@@ -1,7 +1,9 @@
 package org.gwt.mosaic.application.client;
 
+import org.gwt.beansbinding.core.client.util.AbstractBean;
 import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 
@@ -18,6 +20,7 @@ public abstract class View extends AbstractBean {
 
   private Application application;
 
+  private Widget widget = null;
   private Widget toolBox = null;
   private Widget statusBar = null;
   private Widget sideBar = null;
@@ -65,6 +68,40 @@ public abstract class View extends AbstractBean {
    */
   public abstract LayoutPanel getLayoutPanel();
 
+  /**
+   * The main {@code Widget} for this {@code View}.
+   * 
+   * @return the {@code Widget} for this {@code View}
+   */
+  public Widget getWidget() {
+    return widget;
+  }
+
+  private void replaceLayoutPanelChild(Widget oldChild, Widget newChild,
+      LayoutData layoutData) {
+    LayoutPanel layoutPanel = getLayoutPanel();
+    if (oldChild != null) {
+      layoutPanel.remove(oldChild);
+    }
+    if (newChild != null) {
+      layoutPanel.add(newChild, layoutData);
+    }
+    layoutPanel.invalidate(newChild);
+    layoutPanel.layout();
+  }
+
+  public void setWidget(Widget widget) {
+    setWidget(widget, false);
+  }
+
+  public void setWidget(Widget widget, boolean decorate) {
+    Widget oldValue = this.widget;
+    this.widget = widget;
+    replaceLayoutPanelChild(oldValue, this.widget, new BorderLayoutData(
+        decorate));
+    firePropertyChange("widget", oldValue, this.widget);
+  }
+
   public Widget getToolBox() {
     return toolBox;
   }
@@ -72,11 +109,9 @@ public abstract class View extends AbstractBean {
   public void setToolBox(Widget toolBox) {
     assert (toolBox != null);
     Widget oldValue = this.toolBox;
-    if (oldValue != null) {
-      getLayoutPanel().remove(oldValue);
-    }
     this.toolBox = toolBox;
-    getLayoutPanel().add(toolBox, new BorderLayoutData(Region.NORTH));
+    replaceLayoutPanelChild(oldValue, this.toolBox, new BorderLayoutData(
+        Region.NORTH));
     firePropertyChange("toolBox", oldValue, this.toolBox);
   }
 
@@ -87,26 +122,30 @@ public abstract class View extends AbstractBean {
   public void setStatusBar(Widget statusBar) {
     assert (statusBar != null);
     Widget oldValue = this.statusBar;
-    if (oldValue != null) {
-      getLayoutPanel().remove(oldValue);
-    }
     this.statusBar = statusBar;
-    getLayoutPanel().add(statusBar, new BorderLayoutData(Region.SOUTH));
+    replaceLayoutPanelChild(oldValue, this.statusBar, new BorderLayoutData(
+        Region.SOUTH));
     firePropertyChange("statusBar", oldValue, this.statusBar);
   }
-  
+
   public Widget getSideBar() {
     return sideBar;
   }
-  
+
   public void setSideBar(Widget sideBar) {
+    setSideBar(sideBar, "20em", false);
+  }
+
+  public void setSideBar(Widget sideBar, boolean decorate) {
+    setSideBar(sideBar, "20em", decorate);
+  }
+
+  public void setSideBar(Widget sideBar, String preferredSize, boolean decorate) {
     assert (sideBar != null);
     Widget oldValue = this.sideBar;
-    if (oldValue != null) {
-      getLayoutPanel().remove(oldValue);
-    }
     this.sideBar = sideBar;
-    getLayoutPanel().add(sideBar, new BorderLayoutData(Region.WEST, 200, 10, 250, true));
+    replaceLayoutPanelChild(oldValue, this.sideBar, new BorderLayoutData(
+        Region.WEST, preferredSize, "5em", preferredSize, decorate));
     firePropertyChange("sideBar", oldValue, this.sideBar);
   }
 }

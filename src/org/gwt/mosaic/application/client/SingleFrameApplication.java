@@ -1,7 +1,13 @@
 package org.gwt.mosaic.application.client;
 
+import org.gwt.mosaic.actions.client.Action;
+import org.gwt.mosaic.actions.client.ActionEvent;
+import org.gwt.mosaic.actions.client.ActionMap;
 import org.gwt.mosaic.ui.client.Viewport;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -33,35 +39,21 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public abstract class SingleFrameApplication extends Application {
-  // TODO Logger
+  public static final String SHOW_HISTORY = "history.token";
 
-  /**
-   * Return the {@link Viewport} used to show this application.
-   * <p>
-   * This method may be called at any time.
-   * 
-   * @return this application's {@link Viewport}
-   */
-  public final Viewport getViewport() {
-    return getMainView().getViewport();
-  }
+  public SingleFrameApplication() {
+    super();
 
-  /**
-   * Sets the {@link Viewport} used to show this application.
-   * <p>
-   * This method should be called from the startup method by a subclass that
-   * wants to construct and initialize the {@link Viewport} itself.
-   * <p>
-   * If the main frame property was already initialized, either implicitly
-   * through a call to {@code #getViewport()} or by explicitly calling this
-   * method, an {@code IllegalStateException} is thrown. If {@link Viewport} is
-   * {@code null}, an {@code IllegalArgumentException} is thrown.
-   * 
-   * @param viewport the new value of the viewport property
-   * @see #getViewport()
-   */
-  protected final void setViewport(Viewport viewport) {
-    getMainView().setViewport(viewport);
+    History.addValueChangeHandler(new ValueChangeHandler<String>() {
+      public void onValueChange(ValueChangeEvent<String> event) {
+        final ActionMap actionMap = getContext().getActionMap();
+        final Action action = actionMap.get(event.getValue());
+        if (action != null) {
+          action.actionPerformed(new ActionEvent(action,
+              Application.getInstance()));
+        }
+      }
+    });
   }
 
   /**
@@ -77,22 +69,54 @@ public abstract class SingleFrameApplication extends Application {
    * @throws IllegalStateException if {@code w} is {@code null}
    */
   protected void show(Widget w) {
+    show(w, false);
+  }
+
+  /**
+   * Show the specified widget in the {@link #getViewport() viewport}. Typical
+   * applications will call this method after constructing their main GUI panel
+   * in the {@link #startup()} method.
+   * <p>
+   * Before the viewport is attached, the properties of all the widgets in the
+   * hierarchy are initialized TODO
+   * 
+   * @param w the viewport's child
+   * @param decorate
+   * 
+   * @throws IllegalStateException if {@code w} is {@code null}
+   */
+  protected void show(Widget w, boolean decorate) {
+    showImpl(w, decorate);
+    if (w instanceof HasHistoryToken) {
+      final String token = ((HasHistoryToken) w).getHistoryToken();
+      History.newItem(token);
+    }
+  }
+
+  protected void showImpl(Widget w, boolean decorate) {
     if (w == null) {
       throw new IllegalArgumentException("null Widget");
     }
-    Viewport viewport = getViewport();
-    viewport.getLayoutPanel().add(w);
-    viewport.attach();
+
+    getMainView().setWidget(w, decorate);
   }
 
   /* Prototype support for the View type */
 
-  private ViewportView mainView = null;
+  private RootPanelView mainView = null;
 
-  public ViewportView getMainView() {
+  public RootPanelView getMainView() {
     if (mainView == null) {
-      mainView = new ViewportView(this);
+      mainView = new RootPanelView(this);
     }
     return mainView;
+  }
+
+  public void startup(String historyToken) {
+    if ("".equals(History.getToken())) {
+      History.newItem(historyToken);
+    } else {
+      History.fireCurrentHistoryState();
+    }
   }
 }
