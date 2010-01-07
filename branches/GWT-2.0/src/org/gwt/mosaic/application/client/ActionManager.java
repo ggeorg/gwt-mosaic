@@ -18,6 +18,7 @@
  */
 package org.gwt.mosaic.application.client;
 
+import org.gwt.beansbinding.core.client.util.AbstractBean;
 import org.gwt.mosaic.actions.client.ActionMap;
 
 /**

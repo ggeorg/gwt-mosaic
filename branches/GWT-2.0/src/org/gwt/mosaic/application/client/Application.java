@@ -18,11 +18,13 @@
  */
 package org.gwt.mosaic.application.client;
 
+import org.gwt.beansbinding.core.client.util.AbstractBean;
 import org.gwt.mosaic.application.client.util.ApplicationFramework;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
@@ -161,16 +163,28 @@ public abstract class Application extends AbstractBean {
     /*
      * Setup window closing and close handlers.
      */
-    Window.addWindowClosingHandler(new ClosingHandler() {
-      public void onWindowClosing(ClosingEvent event) {
-        event.setMessage("");
-      }
-    });
+    
+    setupClosingHandler("");
+    
     Window.addCloseHandler(new CloseHandler<Window>() {
       public void onClose(CloseEvent<Window> event) {
         shutdown();
       }
     });
+  }
+  
+  private HandlerRegistration closingHandlerRegistration;
+  
+  public void setupClosingHandler(final String message) {
+    closingHandlerRegistration = Window.addWindowClosingHandler(new ClosingHandler() {
+      public void onWindowClosing(ClosingEvent event) {
+        event.setMessage(message);
+      }
+    });
+  }
+  
+  public void removeClosingHandler() {
+    closingHandlerRegistration.removeHandler();
   }
 
   /**
