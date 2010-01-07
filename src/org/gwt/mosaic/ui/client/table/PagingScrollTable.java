@@ -49,6 +49,8 @@ import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
  * {@link TableModel}.
  * 
  * @param <R> the data type of the row values
+ * 
+ * @deprecated replaced by PagingScrollTable2
  */
 public class PagingScrollTable<R> extends ScrollTable implements
     SourceRowPagingEvents {

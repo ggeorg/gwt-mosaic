@@ -15,14 +15,31 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.util.DelayedRunnable;
+import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.HasDirection;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -46,16 +63,22 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
-    implements HasFocus, HasDirection, HasName, HasText, SourcesClickEvents,
-    SourcesChangeEvents, SourcesFocusEvents, SourcesKeyboardEvents {
+    implements HasFocus, HasChangeHandlers, HasDirection, HasName, HasText,
+    SourcesClickEvents, SourcesChangeEvents, SourcesFocusEvents,
+    SourcesKeyboardEvents {
 
   private static final String DEFAULT_STYLENAME = "mosaic-ComboBox";
+
+  private final Timer showPopupTimer = new Timer() {
+    @Override
+    public void run() {
+      showPopup();
+    }
+  };
 
   private final TextBox input;
   private final Button button;
   private final DropDownPanel popup;
-
-  private boolean cancelNextClick;
 
   public ComboBoxBase() {
     this(DEFAULT_STYLENAME);
@@ -63,61 +86,49 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
 
   protected ComboBoxBase(String styleName) {
     super();
-    final LayoutPanel layoutPanel = super.getLayoutPanel();
+    final LayoutPanel layoutPanel = getLayoutPanel();
     layoutPanel.setLayout(new BoxLayout(Orientation.HORIZONTAL));
     layoutPanel.setPadding(0);
     layoutPanel.setWidgetSpacing(0);
 
+    sinkEvents(Event.KEYEVENTS);
+
     input = new TextBox();
     layoutPanel.add(input, new BoxLayoutData(FillStyle.BOTH));
-    input.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-            hidePopup();
-            break;
-          case KEY_DOWN:
-            if (!popup.isAttached()) {
-              new DelayedRunnable(1) {
-                @Override
-                public void run() {
-                  showPopup();
-                }
-              };
-            }
-            break;
-          default:
+    input.addKeyDownHandler(new KeyDownHandler() {
+      public void onKeyDown(KeyDownEvent event) {
+        if (!isPopupVisible()) {
+          showPopupTimer.schedule(CoreConstants.MIN_DELAY_MILLIS);
         }
       }
-
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
+    });
+    input.addKeyUpHandler(new KeyUpHandler() {
+      public void onKeyUp(KeyUpEvent event) {
+        switch (event.getNativeKeyCode()) {
+          case KeyCodes.KEY_ENTER:
+          case KeyCodes.KEY_TAB:
+            updateInput();
+            hidePopup();
+            break;
+          case KeyCodes.KEY_ESCAPE:
+            hidePopup();
+            break;
+        }
       }
-
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
-      }
-
     });
 
     button = new Button();
-    button.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        if (cancelNextClick) {
-          cancelNextClick = false;
-        } else {
-          showPopup();
-        }
+    button.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        showPopupTimer.schedule(CoreConstants.MIN_DELAY_MILLIS);
       }
     });
     layoutPanel.add(button, new BoxLayoutData(FillStyle.VERTICAL));
 
-    popup = new DropDownPanel(this);
-    popup.addPopupListener(new PopupListener() {
-      public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-        if (!autoClosed) {
+    popup = new DropDownPanel();
+    popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+      public void onClose(CloseEvent<PopupPanel> event) {
+        if (!event.isAutoClosed()) {
           input.setFocus(true);
         }
       }
@@ -126,40 +137,48 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
     setStyleName(styleName);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesChangeEvents#addChangeListener(com.google.gwt.user.client.ui.ChangeListener)
-   */
+  public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+    return input.addChangeHandler(handler);
+  }
+
+  @Deprecated
   public void addChangeListener(ChangeListener listener) {
     input.addChangeListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesClickEvents#addClickListener(com.google.gwt.user.client.ui.ClickListener)
-   */
+  public HandlerRegistration addClickHandler(ClickHandler handler) {
+    return input.addClickHandler(handler);
+  }
+
+  @Deprecated
   public void addClickListener(ClickListener listener) {
     input.addClickListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesFocusEvents#addFocusListener(com.google.gwt.user.client.ui.FocusListener)
-   */
+  public HandlerRegistration addFocusHandler(FocusHandler handler) {
+    return input.addFocusHandler(handler);
+  }
+
+  @Deprecated
   public void addFocusListener(FocusListener listener) {
     input.addFocusListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesKeyboardEvents#addKeyboardListener(com.google.gwt.user.client.ui.KeyboardListener)
-   */
+  @Deprecated
   public void addKeyboardListener(KeyboardListener listener) {
     input.addKeyboardListener(listener);
+  }
+
+  public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+    return input.addKeyDownHandler(handler);
+  }
+
+  public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+    return input.addKeyPressHandler(handler);
+  }
+
+  public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+    return input.addKeyUpHandler(handler);
   }
 
   /*
@@ -224,9 +243,9 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   }
 
   protected boolean isPopupVisible() {
-    return popup.isAttached();
+    return popup.isShowing();
   }
-  
+
   /**
    * Determines whether or not the widget is read-only.
    * 
@@ -247,38 +266,22 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
 
   protected abstract T onShowPopup();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesChangeEvents#removeChangeListener(com.google.gwt.user.client.ui.ChangeListener)
-   */
+  @Deprecated
   public void removeChangeListener(ChangeListener listener) {
     input.removeChangeListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesClickEvents#removeClickListener(com.google.gwt.user.client.ui.ClickListener)
-   */
+  @Deprecated
   public void removeClickListener(ClickListener listener) {
     input.removeClickListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesFocusEvents#removeFocusListener(com.google.gwt.user.client.ui.FocusListener)
-   */
+  @Deprecated
   public void removeFocusListener(FocusListener listener) {
     input.removeFocusListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.SourcesKeyboardEvents#removeKeyboardListener(com.google.gwt.user.client.ui.KeyboardListener)
-   */
+  @Deprecated
   public void removeKeyboardListener(KeyboardListener listener) {
     input.removeKeyboardListener(listener);
   }
@@ -299,7 +302,9 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   /*
    * (non-Javadoc)
    * 
-   * @see com.google.gwt.i18n.client.HasDirection#setDirection(com.google.gwt.i18n.client.HasDirection.Direction)
+   * @see
+   * com.google.gwt.i18n.client.HasDirection#setDirection(com.google.gwt.i18n
+   * .client.HasDirection.Direction)
    */
   public void setDirection(Direction direction) {
     input.setDirection(direction);
@@ -369,17 +374,22 @@ public abstract class ComboBoxBase<T extends Widget> extends LayoutComposite
   }
 
   protected void showPopup() {
-    if (popup.isAttached()) {
-      hidePopup(true);
-    } else {
+    if (!popup.isShowing()) {
       final T w = onShowPopup();
       if (w != null) {
-        if (w != popup.getLayoutPanel()) {
+        if (w != popup.getWidget()) {
           popup.setWidget(w);
         }
-        popup.show();
+        popup.showRelativeTo(this);
       }
     }
+  }
+
+  protected void updateInput() {
+    input.setFocus(true);
+    input.selectAll();
+    input.fireEvent(new ChangeEvent() {
+    });
   }
 
 }

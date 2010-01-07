@@ -18,15 +18,20 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 
+import com.google.gwt.event.dom.client.HasScrollHandlers;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ListenerWrapper;
 import com.google.gwt.user.client.ui.ScrollListener;
-import com.google.gwt.user.client.ui.ScrollListenerCollection;
+import com.google.gwt.user.client.ui.SourcesScrollEvents;
 import com.google.gwt.user.client.ui.UIObject;
 
 /**
@@ -35,9 +40,8 @@ import com.google.gwt.user.client.ui.UIObject;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
-public class ScrollLayoutPanel extends LayoutPanel {
-
-  private ScrollListenerCollection scrollListeners;
+public class ScrollLayoutPanel extends LayoutPanel implements
+    SourcesScrollEvents, HasScrollHandlers {
 
   /**
    * Creates a new <code>ScrollLayoutPanel</code> with a vertical
@@ -56,17 +60,20 @@ public class ScrollLayoutPanel extends LayoutPanel {
   public ScrollLayoutPanel(LayoutManager layout) {
     super(layout);
     setAlwaysShowScrollBars(false);
-    sinkEvents(Event.ONSCROLL);
-
     // Prevent IE standard mode bug when a AbsolutePanel is contained.
     DOM.setStyleAttribute(getElement(), "position", "relative");
   }
 
+  public HandlerRegistration addScrollHandler(ScrollHandler handler) {
+    return addDomHandler(handler, ScrollEvent.getType());
+  }
+
+  /**
+   * @deprecated Use {@link #addScrollHandler} instead
+   */
+  @Deprecated
   public void addScrollListener(ScrollListener listener) {
-    if (scrollListeners == null) {
-      scrollListeners = new ScrollListenerCollection();
-    }
-    scrollListeners.add(listener);
+    ListenerWrapper.WrappedScrollListener.add(this, listener);
   }
 
   /**
@@ -87,13 +94,16 @@ public class ScrollLayoutPanel extends LayoutPanel {
       return; 
     
     var item = e;
-    var realOffset = 0;
+    var realOffsetX = 0;
+    var realOffsetY = 0;
     while (item && (item != scroll)) {
-      realOffset += item.offsetTop;
+      realOffsetX += item.offsetLeft;
+      realOffsetY += item.offsetTop;
       item = item.offsetParent;
     }
     
-    scroll.scrollTop = realOffset - scroll.offsetHeight / 2;
+    scroll.scrollLeft = realOffsetX - scroll.offsetWidth / 2;
+    scroll.scrollTop  = realOffsetY - scroll.offsetHeight / 2;
   }-*/;
 
   /**
@@ -115,19 +125,36 @@ public class ScrollLayoutPanel extends LayoutPanel {
   }
 
   @Override
-  public void onBrowserEvent(Event event) {
-    if (DOM.eventGetType(event) == Event.ONSCROLL) {
-      if (scrollListeners != null) {
-        scrollListeners.fireScroll(this, getHorizontalScrollPosition(),
-            getScrollPosition());
-      }
+  public void layout() {
+    final Element elem = getElement();
+    
+    final Dimension size1 = new Dimension(elem.getClientWidth(),
+        elem.getClientHeight());
+    
+    super.layout();
+    
+    final Dimension size2 = new Dimension(elem.getClientWidth(),
+        elem.getClientHeight());
+    
+    if (!size1.equals(size2)) {
+      // second layout() call will fix the layout after the
+      // scrollbar appears/dissapears for the first time
+      super.layout();
     }
   }
 
+  @Override
+  protected void onLayout() {
+    // XXX don't call super.onLoad()
+  }
+
+  /**
+   * @deprecated Use the {@link HandlerRegistration#removeHandler} method on the
+   *             object returned by {@link addScrollHandler} instead
+   */
+  @Deprecated
   public void removeScrollListener(ScrollListener listener) {
-    if (scrollListeners != null) {
-      scrollListeners.remove(listener);
-    }
+    ListenerWrapper.WrappedScrollListener.remove(this, listener);
   }
 
   /**

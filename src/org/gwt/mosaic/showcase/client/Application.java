@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,6 @@
  */
 package org.gwt.mosaic.showcase.client;
 
-import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.ui.client.Caption;
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.ImageButton;
@@ -32,49 +31,60 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeImages;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 
 /**
- * <p>
  * A generic application that includes a title bar, main menu, content area, and
  * some external links at the top.
- * </p>
- * <h3>CSS Style Rules</h3> <ul class="css"> <li>.Application { Applied to the
- * entire Application }</li> <li>.Application-top { The top portion of the
- * Application }</li> <li>.Application-title { The title widget }</li> <li>
- * .Application-links { The main external links }</li> <li>.Application-options
- * { The options widget }</li> <li>.Application-menu { The main menu }</li> <li>
- * .Application-content-wrapper { The element around the content }</li> </ul>
- *
+ * <p>
+ * 
+ * <h3>CSS Style Rules</h3>
+ * 
+ * <pre>
+ * <ul class="css">
+ * <li>.Application { Applied to the entire Application }</li>
+ * <li>.Application-top { The top portion of the Application }</li>
+ * <li>.Application-title { The title widget }</li>
+ * <li>.Application-links { The main external links }</li>
+ * <li>.Application-options { The options widget }</li>
+ * <li>.Application-menu { The main menu }</li>
+ * <li>.Application-content-wrapper { The element around the content }</li>
+ * </ul>
+ * </pre>
+ * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
-public class Application extends Viewport {
+public class Application extends Viewport implements
+    HasSelectionHandlers<TreeItem> {
   /**
    * Images used in the {@link Application}.
    */
-  public interface ApplicationImages extends TreeImages {
+  public interface ApplicationImages extends Tree.Resources {
     /**
      * An image indicating a leaf.
-     *
+     * 
      * @return a prototype of this image
      */
-    @Resource("noimage.png")
-    AbstractImagePrototype treeLeaf();
+    @Source("noimage.png")
+    ImageResource treeLeaf();
   }
 
   /**
@@ -106,50 +116,50 @@ public class Application extends Viewport {
    * Constructor.
    */
   public Application() {
-    super();
+    super(new BoxLayout(Orientation.VERTICAL));
 
     // Setup the main layout widget
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.setLayout(new BoxLayout(Orientation.VERTICAL));
+    //layoutPanel.setAnimationEnabled(true);
 
     // Setup the top panel with the title and links
     createTopPanel();
     layoutPanel.add(topPanel, new BoxLayoutData(FillStyle.HORIZONTAL));
 
-    final LayoutPanel bottomPanel = new LayoutPanel(new BorderLayout());
-    layoutPanel.add(bottomPanel, new BoxLayoutData(FillStyle.BOTH));
+    final LayoutPanel mainPanel = new LayoutPanel(new BorderLayout());
+    layoutPanel.add(mainPanel, new BoxLayoutData(FillStyle.BOTH));
+    // mainPanel.setAnimationEnabled(true);
 
     // Add the main menu
     createMainMenu();
 
     final CaptionLayoutPanel westPanel = new CaptionLayoutPanel("Select demo");
-//      new CaptionLayoutPanel(constants.mosaicApplicationSelectADemo());
     westPanel.add(new ScrollPanel(mainMenu));
-    westPanel.getHeader().add(Showcase.IMAGES.showcaseDemos().createImage());
+    westPanel.getHeader().add(new Image(Showcase.IMAGES.showcaseDemos()));
     final ImageButton collapseBtn = new ImageButton(
         Caption.IMAGES.toolCollapseLeft());
     westPanel.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
 
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        bottomPanel.setCollapsed(westPanel, !layoutPanel.isCollapsed(westPanel));
-        bottomPanel.layout();
+    collapseBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        mainPanel.setCollapsed(westPanel, true);
+        mainPanel.layout();
       }
     });
 
-    bottomPanel.add(westPanel, new BorderLayoutData(Region.WEST, 200, 100, 350,
-        true));
+    mainPanel.add(westPanel, new BorderLayoutData(Region.WEST, "25em", "3em",
+        "35%", true));
 
     // Add the content wrapper
     contentWrapper = new LayoutPanel(new FillLayout());
     contentWrapper.addStyleName(DEFAULT_STYLE_NAME + "-content-wrapper");
-    bottomPanel.add(contentWrapper);
+    mainPanel.add(contentWrapper);
     setContent(null);
   }
 
   /**
    * Add a link to the top of the page.
-   *
+   * 
    * @param link the widget to add to the mainLinks
    */
   public void addLink(Widget link) {
@@ -158,15 +168,12 @@ public class Application extends Viewport {
     }
     linksPanel.add(link);
   }
-  
-  public void addTreeListener(TreeListener listener) {
-    mainMenu.addTreeListener(listener);
+
+  public HandlerRegistration addSelectionHandler(
+      SelectionHandler<TreeItem> handler) {
+    return mainMenu.addSelectionHandler(handler);
   }
-  
-  public void removeTreeListener(TreeListener listener) {
-    mainMenu.removeTreeListener(listener);
-  }
-  
+
   /**
    * Create the main menu.
    */
@@ -177,7 +184,7 @@ public class Application extends Viewport {
     mainMenu.setAnimationEnabled(true);
     mainMenu.addStyleName(DEFAULT_STYLE_NAME + "-menu");
   }
-  
+
   /**
    * Create the panel at the top of the page that contains the title and links.
    */
@@ -243,7 +250,7 @@ public class Application extends Viewport {
 
   /**
    * Set the {@link Widget} to display in the content area.
-   *
+   * 
    * @param content the content widget
    */
   public void setContent(Widget content) {
@@ -258,7 +265,7 @@ public class Application extends Viewport {
   /**
    * Set the {@link Widget} to use as options, which appear to the right of the
    * title bar.
-   *
+   * 
    * @param options the options widget
    */
   public void setOptionsWidget(Widget options) {
@@ -267,7 +274,7 @@ public class Application extends Viewport {
 
   /**
    * Set the {@link Widget} to use as the title bar.
-   *
+   * 
    * @param title the title widget
    */
   public void setTitleWidget(Widget title) {

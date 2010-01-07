@@ -28,17 +28,22 @@
 		<when-type-is class="org.gwt.mosaic.core.client.impl.UserAgentImpl" />
 		<when-property-is name="user.agent" value="gecko1_8" />
 	</replace-with>
-	
+
+	<replace-with class="org.gwt.mosaic.core.client.impl.UserAgentImplIE6">
+		<when-type-is class="org.gwt.mosaic.core.client.impl.UserAgentImpl" />
+		<when-property-is name="user.agent" value="ie8" />
+	</replace-with>
+
 	<replace-with class="org.gwt.mosaic.core.client.impl.UserAgentImplIE6">
 		<when-type-is class="org.gwt.mosaic.core.client.impl.UserAgentImpl" />
 		<when-property-is name="user.agent" value="ie6" />
 	</replace-with>
-	
+
 	<replace-with class="org.gwt.mosaic.core.client.impl.UserAgentImplOpera">
 		<when-type-is class="org.gwt.mosaic.core.client.impl.UserAgentImpl" />
 		<when-property-is name="user.agent" value="opera" />
 	</replace-with>
-	
+
 	<replace-with class="org.gwt.mosaic.core.client.impl.UserAgentImplSafari">
 		<when-type-is class="org.gwt.mosaic.core.client.impl.UserAgentImpl" />
 		<when-property-is name="user.agent" value="safari" />

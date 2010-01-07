@@ -17,16 +17,17 @@ package org.gwt.mosaic.actions.client;
 
 import org.gwt.beansbinding.core.client.BeanProperty;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ButtonBase;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 public abstract class ButtonBaseBindings extends ActionBindings<ButtonBase>
-    implements ClickListener {
+    implements ClickHandler {
 
   public class ButtonBaseBean extends TargetBean {
     public ButtonBaseBean(ButtonBase target) {
@@ -62,17 +63,21 @@ public abstract class ButtonBaseBindings extends ActionBindings<ButtonBase>
         BeanProperty.<ButtonBaseBean, String> create("visible"));
   }
 
+  private HandlerRegistration handlerReg = null;
+
   @Override
   protected void onBind() {
-    getTarget().addClickListener(this);
-  }
-
-  public void onClick(Widget sender) {
-    getSource().actionPerformed(new ActionEvent(getSource(), sender));
+    handlerReg = getTarget().addClickHandler(this);
   }
 
   @Override
   public void onUnBind() {
-    getTarget().removeClickListener(this);
+    if (handlerReg != null) {
+      handlerReg.removeHandler();
+    }
+  }
+
+  public void onClick(ClickEvent event) {
+    getSource().actionPerformed(new ActionEvent(getSource(), event.getSource()));
   }
 }

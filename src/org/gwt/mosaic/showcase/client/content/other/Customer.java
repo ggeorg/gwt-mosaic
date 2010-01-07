@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.gwt.mosaic.showcase.client.content.other;
 
 import java.beans.PropertyChangeListener;

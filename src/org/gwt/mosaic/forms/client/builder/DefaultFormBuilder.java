@@ -49,9 +49,10 @@ import org.gwt.mosaic.forms.client.factories.FormFactory;
 import org.gwt.mosaic.forms.client.layout.ConstantSize;
 import org.gwt.mosaic.forms.client.layout.FormLayout;
 import org.gwt.mosaic.forms.client.layout.RowSpec;
-import org.gwt.mosaic.ui.client.Label;
-import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
+import org.gwt.mosaic.ui.client.TextLabel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -266,7 +267,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param layout the <code>FormLayout</code> to be used
    */
   public DefaultFormBuilder(FormLayout layout) {
-    this(layout, new ScrollLayoutPanel());
+    this(layout, new LayoutPanel(new BoxLayout(Orientation.VERTICAL)));
   }
 
   /**
@@ -449,8 +450,8 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param textWithMnemonic the label's text - may mark a mnemonic
    * @return the added label
    */
-  public Label append(String textWithMnemonic) {
-    Label label = getComponentFactory().createLabel(textWithMnemonic);
+  public TextLabel append(String textWithMnemonic) {
+    TextLabel label = getComponentFactory().createLabel(textWithMnemonic);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     append(label);
     return label;
@@ -468,7 +469,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param component the component to add
    * @return the added label
    */
-  public Label append(String textWithMnemonic, Widget component) {
+  public TextLabel append(String textWithMnemonic, Widget component) {
     return append(textWithMnemonic, component, 1);
   }
 
@@ -487,8 +488,8 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @return the added label
    * @see JLabel#setLabelFor(java.awt.Component)
    */
-  public Label append(String textWithMnemonic, Widget c, boolean nextLine) {
-    Label label = append(textWithMnemonic, c);
+  public TextLabel append(String textWithMnemonic, Widget c, boolean nextLine) {
+    TextLabel label = append(textWithMnemonic, c);
     if (nextLine) {
       nextLine();
     }
@@ -507,11 +508,16 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param c the component to add
    * @param columnSpan number of columns the component shall span
    * @return the added label
-   * @see Label#setLabelFor(java.awt.Component)
+   * @see TextLabel#setLabelFor(java.awt.Component)
    */
-  public Label append(String textWithMnemonic, Widget c, int columnSpan) {
-    Label label = append(textWithMnemonic);
-    // XXX label.setLabelFor(c);
+  public TextLabel append(String textWithMnemonic, Widget c, int columnSpan) {
+    TextLabel label = append(textWithMnemonic);
+    String refId = c.getElement().getId();
+    if (refId == null || refId.length() == 0) {
+      refId = DOM.createUniqueId();
+      c.getElement().setId(refId);
+    }
+    label.setLabelFor(refId);
     append(c, columnSpan);
     return label;
   }
@@ -529,8 +535,8 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param c2 the second component to add
    * @return the added label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2) {
-    Label label = append(textWithMnemonic, c1);
+  public TextLabel append(String textWithMnemonic, Widget c1, Widget c2) {
+    TextLabel label = append(textWithMnemonic, c1);
     append(c2);
     return label;
   }
@@ -549,8 +555,8 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param colSpan the column span for the second component
    * @return the created label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2, int colSpan) {
-    Label label = append(textWithMnemonic, c1);
+  public TextLabel append(String textWithMnemonic, Widget c1, Widget c2, int colSpan) {
+    TextLabel label = append(textWithMnemonic, c1);
     append(c2, colSpan);
     return label;
   }
@@ -569,8 +575,8 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param c3 the third component to add
    * @return the added label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2, Widget c3) {
-    Label label = append(textWithMnemonic, c1, c2);
+  public TextLabel append(String textWithMnemonic, Widget c1, Widget c2, Widget c3) {
+    TextLabel label = append(textWithMnemonic, c1, c2);
     append(c3);
     return label;
   }
@@ -590,9 +596,9 @@ public final class DefaultFormBuilder extends PanelBuilder {
    * @param c4 the fourth component to add
    * @return the added label
    */
-  public Label append(String textWithMnemonic, Widget c1, Widget c2, Widget c3,
+  public TextLabel append(String textWithMnemonic, Widget c1, Widget c2, Widget c3,
       Widget c4) {
-    Label label = append(textWithMnemonic, c1, c2, c3);
+    TextLabel label = append(textWithMnemonic, c1, c2, c3);
     append(c4);
     return label;
   }

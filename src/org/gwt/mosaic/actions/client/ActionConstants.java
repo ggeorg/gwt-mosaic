@@ -24,11 +24,11 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface ActionConstants extends Constants {
 
-  @DefaultStringValue("Add an empty folder")
-  String addFolderDescription();
-
   @DefaultStringValue("Add Folder")
   String addFolderName();
+
+  @DefaultStringValue("Add an empty folder")
+  String addFolderShortDescription();
 
   @DefaultStringValue("Close All")
   String closeAllName();
@@ -48,11 +48,11 @@ public interface ActionConstants extends Constants {
   @DefaultStringValue("Cut the selection")
   String cutShortDescription();
 
-  @DefaultStringValue("Delete the selected objects permanently")
-  String deleteSelectedDescription();
-  
   @DefaultStringValue("Delete Selected")
   String deleteSelectedName();
+
+  @DefaultStringValue("Delete the selected objects permanently")
+  String deleteSelectedShortDescription();
 
   @DefaultStringValue("Deselect All")
   String deselectAllName();
@@ -63,11 +63,11 @@ public interface ActionConstants extends Constants {
   @DefaultStringValue("Exit application")
   String exitShortDescription();
 
-  @DefaultStringValue("Browse your computer to select a file to upload")
-  String fileUploadDescription();
-
   @DefaultStringValue("File Upload...")
   String fileUploadName();
+
+  @DefaultStringValue("Browse your computer to select a file to upload")
+  String fileUploadShortDescription();
 
   @DefaultStringValue("Add")
   String formAddName();
@@ -81,11 +81,11 @@ public interface ActionConstants extends Constants {
   @DefaultStringValue("Open...")
   String openName();
 
-  @DefaultStringValue("Open the parent folder")
-  String openParentFolderDescription();
-
   @DefaultStringValue("Open Parent")
   String openParentFolderName();
+
+  @DefaultStringValue("Open the parent folder")
+  String openParentFolderShortDescription();
 
   @DefaultStringValue("Paste")
   String pasteName();

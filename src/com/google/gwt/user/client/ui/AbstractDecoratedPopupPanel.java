@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2008-2010 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,34 @@ package com.google.gwt.user.client.ui;
 public abstract class AbstractDecoratedPopupPanel extends DecoratedPopupPanel {
 
   /**
+   * The type of animation to use when opening the popup.
+   * 
+   * <ul>
+   * <li>CENTER - Expand from the center of the popup</li>
+   * <li>ONE_WAY_CORNER - Expand from the top left corner, do not animate hiding
+   * </li>
+   * <li>ROLL_DOWN - ?</li>
+   * </ul>
+   */
+  public static enum AnimationType {
+    CENTER(PopupPanel.AnimationType.CENTER),
+
+    ONE_WAY_CORNER(PopupPanel.AnimationType.ONE_WAY_CORNER),
+
+    ROLL_DOWN(PopupPanel.AnimationType.ROLL_DOWN);
+
+    private PopupPanel.AnimationType type;
+
+    AnimationType(PopupPanel.AnimationType type) {
+      this.type = type;
+    }
+
+    public PopupPanel.AnimationType getType() {
+      return type;
+    }
+  }
+
+  /**
    * Creates an empty decorated popup panel using the specified style names.
    * 
    * @param autoHide <code>true</code> if the popup should be automatically
@@ -29,10 +57,11 @@ public abstract class AbstractDecoratedPopupPanel extends DecoratedPopupPanel {
    * @param modal <code>true</code> if keyboard or mouse events that do not
    *          target the PopupPanel or its children should be ignored
    * @param prefix the prefix applied to child style names
+   * @param type the type of animation to use
    */
   protected AbstractDecoratedPopupPanel(boolean autoHide, boolean modal,
-      String prefix) {
+      String prefix, AnimationType type) {
     super(autoHide, modal, prefix);
-    setAnimationType(AnimationType.ONE_WAY_CORNER);
+    setAnimationType(type.getType());
   }
 }

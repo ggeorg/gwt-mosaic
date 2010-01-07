@@ -51,7 +51,7 @@ import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.DecoratedTabLayoutPanel;
-import org.gwt.mosaic.ui.client.Label;
+import org.gwt.mosaic.ui.client.TextLabel;
 import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
@@ -86,7 +86,7 @@ public class CwSpanExample extends ContentWidget {
   public String getName() {
     return "Span";
   }
-  
+
   @Override
   public boolean hasStyle() {
     return false;
@@ -98,14 +98,9 @@ public class CwSpanExample extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    // Create a layout panel to align the widgets
-    // final LayoutPanel layoutPanel = new LayoutPanel();
-
     final DecoratedTabLayoutPanel tabPanel = new DecoratedTabLayoutPanel();
     tabPanel.add(newColumnSpan(), "Column Span");
     tabPanel.add(newRowSpan(), "Row Span");
-    
-    tabPanel.selectTab(0);
 
     return tabPanel;
   }
@@ -166,9 +161,9 @@ public class CwSpanExample extends ContentWidget {
    */
   @ShowcaseSource
   private Widget newLabel(String string) {
-    final Label label = new Label(string);
+    final TextLabel label = new TextLabel(string);
     DOM.setStyleAttribute(label.getElement(), "overflow", "hidden");
     return label;
   }
-  
+
 }

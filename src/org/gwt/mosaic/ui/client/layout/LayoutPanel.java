@@ -15,28 +15,35 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.ResizableWidget;
-import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
+import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.core.client.util.DefaultUnitConverter;
+import org.gwt.mosaic.core.client.util.UnitConverter;
 import org.gwt.mosaic.ui.client.CollapsedListener;
 import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
 import org.gwt.mosaic.ui.client.LayoutComposite;
 import org.gwt.mosaic.ui.client.LayoutPopupPanel;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
-import java.util.Iterator;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.AttachDetachException;
+import com.google.gwt.user.client.ui.AttachDetachHelper;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasAnimation;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.ResizableWidget;
+import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
  * An {@code AbsolutePanel}
@@ -45,7 +52,8 @@ import java.util.Iterator;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
+public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
+    HasAnimation {
 
   /**
    * The default style name.
@@ -63,27 +71,42 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   private Dimension preferredSizeCache = new Dimension(-1, -1);
 
-  // private String height;
-  //
-  // private String width;
+  private String onLoadHeight;
+
+  private String onLoadWidth;
 
   private boolean invalid = true;
 
+  private UnitConverter unitConverter;
+
   /**
-   * Creates a new <code>LayoutPanel</code> with <code>FillLayout</code>.
+   * Creates a new {@code LayoutPanel} with {@link FillLayout}.
    */
   public LayoutPanel() {
     this(new FillLayout());
   }
 
   /**
-   * Creates a LayoutPanel with the given element. This is protected so that it
-   * can be used by a subclass that wants to substitute another element. The
-   * element is presumed to be a &lt;div&gt;.
+   * Creates a {@code LayoutPanel} with {@link FillLayout} and with the given
+   * element. This is protected so that it can be used by a subclass that wants
+   * to substitute another element. The element is presumed to be a &lt;div&gt;.
    * 
    * @param elem the element to be used for this panel.
    */
   protected LayoutPanel(Element elem) {
+    this(elem, new FillLayout());
+  }
+
+  /**
+   * Creates a {@code LayoutPanel} with the specified layout manager and with
+   * the given element. This is protected so that it can be used by a subclass
+   * that wants to substitute another element. The element is presumed to be a
+   * &lt;div&gt;.
+   * 
+   * @param elem the element to be used for this panel.
+   * @param layout the {@link LayoutManager} to use
+   */
+  protected LayoutPanel(Element elem, LayoutManager layout) {
     super(elem);
 
     // Setting the panel's position style to 'relative' causes it to be treated
@@ -92,13 +115,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     DOM.setStyleAttribute(getElement(), "overflow", "hidden");
 
     setStyleName(DEFAULT_STYLENAME);
-    setLayout(new FillLayout());
+    setLayout(layout);
   }
 
   /**
-   * Creates a new <code>LayoutPanel</code> with the specified layout manager.
+   * Creates a new {@code LayoutPanel} with the specified layout manager.
    * 
-   * @param layout the <code>LayoutManager</code> to use
+   * @param layout the {@code LayoutManager} to use
    */
   public LayoutPanel(LayoutManager layout) {
     super();
@@ -117,10 +140,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     invalidate();
   }
 
-  void addImpl(Widget w) {
-    super.add(w);
-  }
-
   /**
    * Appends the specified widget to the end of this container.
    * 
@@ -132,22 +151,25 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       throw new IllegalArgumentException(
           "Adding a DecoratorPanel is not allowed!");
     }
-    BaseLayout.setLayoutData(widget, layoutData);
+    if (widget instanceof FormPanel) {
+      // (ggeorg) see WidgetHelper.setBounds() why
+      DOM.setStyleAttribute(widget.getElement(), "border", "none");
+      DOM.setStyleAttribute(widget.getElement(), "padding", "0px");
+      DOM.setStyleAttribute(widget.getElement(), "margin", "0px");
+    }
+    widget.setLayoutData(layoutData);
     if (layoutData.hasDecoratorPanel()) {
       final DecoratorPanel decPanel = layoutData.decoratorPanel;
       decPanel.setWidget(widget);
-      decPanel.setVisible(widget.isVisible());
+      // decPanel.setVisible(widget.isVisible());
       add(decPanel);
     } else {
       add(widget);
     }
   }
 
-  public void addCollapsedListener(Widget widget, CollapsedListener listener) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-      layoutData.addCollapsedListener(listener);
-    }
+  protected void addImpl(Widget w) {
+    super.add(w);
   }
 
   private void clearPreferredSizeCache() {
@@ -187,8 +209,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return parent;
   }
 
+  /**
+   * @return the widget's DecoratorPanel if any, else widget.
+   */
   private Widget getDecoratorWidget(Widget widget) {
-    LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
+    LayoutData layoutData = (LayoutData) widget.getLayoutData();
     if (layoutData != null && layoutData.hasDecoratorPanel()) {
       return layoutData.decoratorPanel;
     }
@@ -212,8 +237,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return DOM.getIntStyleAttribute(getElement(), "padding");
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
    */
@@ -221,23 +246,20 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     if (!isAttached()) {
       return new Dimension();
     }
-    if (preferredSizeCache.width == -1 && preferredSizeCache.height == -1) {
-      preferredSizeCache = layout.getPreferredSize(this);
-      WidgetHelper.setSize(this, preferredSizeCache);
-      // layout.flushCache();
-      layout.layoutPanel(this);
-      preferredSizeCache = layout.getPreferredSize(this);
-    }
+
+    preferredSizeCache = layout.getPreferredSize(this);
+
+    // XXX get text line wrapping working...
+    WidgetHelper.setSize(this, preferredSizeCache);
+    layout.layoutPanel(this);
+    preferredSizeCache = layout.getPreferredSize(this);
+
     return preferredSizeCache;
   }
 
   private Widget getUnDecoratedWidget(Widget widget) {
     if (widget instanceof DecoratorPanel) {
-      widget = ((DecoratorPanel) widget).getWidget();
-      LayoutData layoutData = (LayoutData) BaseLayout.getLayoutData(widget);
-      if (layoutData != null && layoutData.hasDecoratorPanel()) {
-        return layoutData.decoratorPanel.getWidget();
-      }
+      return ((DecoratorPanel) widget).getWidget();
     }
     return widget;
   }
@@ -280,6 +302,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     return super.getWidgetTop(getDecoratorWidget(w));
   }
 
+  @Override
+  protected void insert(Widget child, Element container, int beforeIndex,
+      boolean domInsert) {
+    super.insert(child, container, beforeIndex, domInsert);
+    invalidate();
+  }
+
   /**
    * @param w
    * @param layoutData
@@ -299,54 +328,55 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
-  @Override
-  protected void insert(Widget child, Element container, int beforeIndex,
-      boolean domInsert) {
-    super.insert(child, container, beforeIndex, domInsert);
-    invalidate();
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return invalid;
   }
 
-  /**
-   * Lays out this {@code LayoutPanel} and all of its child widgets.
-   * <p>
-   * The {@code #layout(boolean)} method is used to cause a {@code LayoutPanel}
-   * to lay out its child widgets again. It should be invoked when this {@code
-   * LayoutPanel's} child widgets are modified (added to or removed from the
-   * container, or layout-related information changed) after the {@code
-   * LayoutPanel} has been attached.
-   */
   public void invalidate() {
+    invalidate(null);
+  }
+
+  public void invalidate(Widget widget) {
+    getLayout().invalidateLayout(widget);
+
     if (invalid) {
       return;
     }
 
     invalid = true;
 
-    getLayout().flushCache();
     clearPreferredSizeCache();
 
     final Widget parent = findParent();
-
     if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
         && !(parent instanceof DecoratedLayoutPopupPanel)
         && !(parent instanceof LayoutPopupPanel)) {
-      ((HasLayoutManager) parent).invalidate();
+      ((HasLayoutManager) parent).invalidate(this.getParent());
+      ((HasLayoutManager) parent).invalidate(this);
     }
-    // else {
-    // if (parent instanceof Viewport) {
-    // ((HasLayoutManager) parent).layout();
-    // } else {
-    // layout();
-    // }
-    // }
   }
 
-  public boolean isCollapsed(Widget widget) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayout borderLayout = (BorderLayout) getLayout();
-      return borderLayout.isCollapsed(this, widget);
-    }
-    return false;
+  @Override
+  protected void doAttachChildren() {
+    AttachDetachException.tryCommand(this, new AttachDetachException.Command() {
+      public void execute(Widget w) {
+        AttachDetachHelper.onAttach(getDecoratorWidget(w));
+      }
+    });
+  }
+
+  @Override
+  protected void doDetachChildren() {
+    AttachDetachException.tryCommand(this, new AttachDetachException.Command() {
+      public void execute(Widget w) {
+        AttachDetachHelper.onDetach(getDecoratorWidget(w));
+      }
+    });
   }
 
   @Override
@@ -368,22 +398,14 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     };
   }
 
-  protected void onLayout() {
-    getElement().setScrollTop(0);
-    getElement().setScrollLeft(0);
-  }
-
   public void layout() {
     // if (invalid) { TODO: after we cache width & size for each child widget
     if (isAttached() && isVisible()) {
       onLayout();
       layout.layoutPanel(this);
-      if (layout.runTwice()) {
-        layout.layoutPanel(this);
-      }
+      invalid = false;
       layoutChildren();
     }
-    invalid = false;
   }
 
   protected void layoutChildren() {
@@ -403,6 +425,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
     }
   }
 
+  protected void onLayout() {
+    getElement().setScrollTop(0);
+    getElement().setScrollLeft(0);
+  }
+
   @Override
   protected void onLoad() {
     super.onLoad();
@@ -413,11 +440,28 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
       return;
     }
 
-    GWT.log("====================== Parent of '" + this.getClass().getName()
-        + "' ('" + parent.getClass().getName()
-        + "') is not an instance of HasLayoutManager.", null);
+    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
+        + parent.getClass().getName()
+        + "') is not an instance of HasLayoutManager!!!", null);
 
     // Set the initial size & layout
+
+    if (onLoadWidth != null && onLoadHeight != null) {
+      setSize(onLoadWidth, onLoadHeight);
+      onLoadWidth = onLoadHeight = null;
+    } else {
+      Dimension d = getPreferredSize();
+      if (onLoadWidth != null) {
+        setSize(onLoadWidth, d.height + "px");
+        onLoadWidth = null;
+      } else if (onLoadHeight != null) {
+        setSize(d.width + "px", onLoadHeight);
+        onLoadHeight = null;
+      } else {
+        setSize(d.width + "px", d.height + "px");
+      }
+    }
+
     DeferredCommand.addCommand(new Command() {
       public void execute() {
         layout();
@@ -481,47 +525,68 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    */
   @Override
   public boolean remove(Widget w) {
+    // XXX workaround for: iter.remove();
+    if (w instanceof DecoratorPanel) {
+      w = getUnDecoratedWidget(w);
+    }
+
     final Widget widget = getDecoratorWidget(w);
-    if (w != widget) {
+    if (widget instanceof DecoratorPanel) {
       ((DecoratorPanel) widget).remove(w);
     }
-    final Widget parent = widget.getParent();
+
     if (removeImpl(widget)) {
-      WidgetHelper.invalidate(parent);
+      invalidate();
       return true;
     } else {
       return false;
     }
   }
 
-  boolean removeImpl(Widget w) {
+  protected boolean removeImpl(Widget w) {
     return super.remove(w);
   }
 
-  public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayoutData layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
-      layoutData.removeCollapsedListener(listener);
+  // Helper methods for Collapsible child widgets **************************
+
+  public boolean isCollapsed(Widget widget) {
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      return ((HasCollapsibleWidgets) getLayout()).isCollapsed(this, widget);
     }
+    return false;
   }
 
   public void setCollapsed(Widget widget, boolean collapse) {
-    if (getLayout() instanceof BorderLayout) {
-      final BorderLayout borderLayout = (BorderLayout) getLayout();
-      if (collapse != borderLayout.isCollapsed(this, widget)) {
-        borderLayout.setCollapsed(this, widget, collapse);
-        invalidate();
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      if (collapse != isCollapsed(widget)) {
+        ((HasCollapsibleWidgets) getLayout()).setCollapsed(this, widget,
+            collapse);
+        invalidate(widget);
       }
     }
   }
 
+  public void addCollapsedListener(Widget widget, CollapsedListener listener) {
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      ((Collapsible) widget.getLayoutData()).addCollapsedListener(listener);
+    }
+  }
+
+  public void removeCollapsedListener(Widget widget, CollapsedListener listener) {
+    if (getLayout() instanceof HasCollapsibleWidgets) {
+      ((Collapsible) widget.getLayoutData()).removeCollapsedListener(listener);
+    }
+  }
+
+  // -------
+
   @Override
   public void setHeight(String height) {
-    // if (!isAttached()) {
-    // this.height = height;
-    // } else {
-    super.setHeight(height);
-    // }
+    if (!isAttached()) {
+      this.onLoadHeight = height;
+    } else {
+      super.setHeight(height);
+    }
   }
 
   /**
@@ -561,6 +626,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
    * @param left the widget's left position
    * @param top the widget's top position
    */
+  @Override
   public void setWidgetPosition(Widget w, int left, int top) {
     super.setWidgetPosition(getDecoratorWidget(w), left, top);
   }
@@ -571,10 +637,113 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager {
 
   @Override
   public void setWidth(String width) {
-    // if (!isAttached()) {
-    // this.width = width;
-    // } else {
-    super.setWidth(width);
-    // }
+    if (!isAttached()) {
+      this.onLoadWidth = width;
+    } else {
+      super.setWidth(width);
+    }
   }
+
+  public LayoutData getLayoutData(Widget widget) {
+    if (getDecoratorWidget(widget).getParent() == this) {
+      return (LayoutData) BaseLayout.getLayoutData(widget);
+    }
+    return null;
+  }
+
+  public UnitConverter getUnitConverter() {
+    if (unitConverter == null) {
+      DefaultUnitConverter unitConverter = DefaultUnitConverter.getInstance();
+      unitConverter.setFontSize(toPixelSize("1em", true));
+      unitConverter.setXHeight(toPixelSize("1ex", true));
+      this.unitConverter = unitConverter;
+    }
+    return unitConverter;
+  }
+
+  private Element toPixelSizeTestElem = null;
+
+  int toPixelSize(final ParsedSize parsedSize, final boolean useWidthAttribute) {
+    Unit unit = parsedSize.getUnit();
+    if (unit == Unit.CM) {
+      return getUnitConverter().centimeterAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.EM) {
+      return getUnitConverter().fontSizeAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.EX) {
+      return getUnitConverter().xHeightAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.IN) {
+      return getUnitConverter().inchAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.MM) {
+      return getUnitConverter().millimeterAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.PC) {
+      return getUnitConverter().picaAsPixel(parsedSize.getSize());
+    } else if (unit == Unit.PCT) {
+      return toPixelSize(parsedSize.getValue(), useWidthAttribute);
+    } else if (unit == Unit.PT) {
+      return getUnitConverter().pointAsPixel(
+          (int) Math.round(parsedSize.getSize()));
+    } else if (parsedSize.getUnit() == Unit.PX) {
+      return (int) Math.round(parsedSize.getSize());
+    }
+    throw new IllegalArgumentException("Invalid size: " + parsedSize.getValue());
+  }
+
+  protected int toPixelSize(final String value, final boolean useWidthAttribute) {
+    if (toPixelSizeTestElem == null) {
+      toPixelSizeTestElem = DOM.createSpan();
+      DOM.setStyleAttribute(toPixelSizeTestElem, "position", "absolute");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "left", "0px");
+      DOM.setStyleAttribute(toPixelSizeTestElem, "top", "0px");
+      getElement().appendChild(toPixelSizeTestElem);
+      // DOM.setStyleAttribute(toPixelSizeTestElem, "background", "red");
+    }
+    DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
+    DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
+
+    Dimension size = DOM.getBoxSize(toPixelSizeTestElem);
+
+    return (useWidthAttribute) ? size.width : size.height;
+  }
+
+  private boolean animationEnabled;
+
+  public boolean isAnimationEnabled() {
+    return animationEnabled;
+  }
+
+  public void setAnimationEnabled(final boolean enable) {
+    this.animationEnabled = enable;
+  }
+
+  /**
+   * Used by UiBinder.
+   * 
+   * @param enable
+   */
+  public void setAnimationEnabled(String enable) {
+    enable = enable.trim().toLowerCase();
+    if (enable.equals("true".intern())) {
+      setAnimationEnabled(true);
+    } else if (enable.equals("false".intern())) {
+      setAnimationEnabled(false);
+    }
+  }
+
+  AnimationCallback animationCallback;
+
+  /**
+   * @return the animationCallback
+   */
+  public AnimationCallback getAnimationCallback() {
+    return animationCallback;
+  }
+
+  /**
+   * @param animationCallback the animationCallback to set
+   */
+  public void setAnimationCallback(AnimationCallback animationCallback) {
+    this.animationCallback = animationCallback;
+  }
+
 }

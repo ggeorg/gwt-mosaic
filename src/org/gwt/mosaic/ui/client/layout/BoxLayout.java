@@ -15,13 +15,10 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -184,13 +181,6 @@ public class BoxLayout extends BaseLayout {
 
   boolean leftToRight = true;
 
-  private boolean runTwiceFlag;
-
-  private int visibleWidgetCount = 0;
-
-  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
-  // Dimension>();
-
   /**
    * Creates a new instance of {@code BoxLayout} with horizontal orientation.
    */
@@ -212,29 +202,40 @@ public class BoxLayout extends BaseLayout {
   }
 
   public BoxLayout(Orientation orientation, Alignment alignment) {
+    super();
     this.orientation = orientation;
     this.alignment = alignment;
   }
 
-  @Override
-  public void flushCache() {
-    // widgetSizes.clear();
-    initialized = false;
-  }
-
+  /**
+   * 
+   * @return
+   */
   public Alignment getAlignment() {
     return alignment;
   }
 
   /**
-   * Gets the orientation of the child widgets. The default value is
-   * {@link Orientation#HORIZONTAL}.
    * 
-   * @return the orientation of the child widgets.
-   * @deprecated Replaced by {@link #getOrientation()}.
+   * @param align
    */
-  public Orientation getOrient() {
-    return orientation;
+  public void setAlignment(Alignment align) {
+    this.alignment = align;
+  }
+
+  /**
+   * 
+   * @param align
+   */
+  public void setAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("start".intern())) {
+      setAlignment(Alignment.START);
+    } else if (align.equals("center".intern())) {
+      setAlignment(Alignment.CENTER);
+    } else if (align.equals("end".intern())) {
+      setAlignment(Alignment.END);
+    }
   }
 
   /**
@@ -247,16 +248,37 @@ public class BoxLayout extends BaseLayout {
     return orientation;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Sets the orientation of the child widgets.
    * 
-   * @see
-   * org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui
-   * .client.layout.LayoutPanel)
+   * @param orient the orientation of the child widgets.
+   */
+  public void setOrientation(Orientation orient) {
+    this.orientation = orient;
+  }
+
+  /**
+   * Sets the orientation of child widgets used by UiBinder.
+   * 
+   * @param orient the orientation of child widgets, can be {@code horizontal}
+   *          or {@code vertical}
+   */
+  public void setOrientation(String orient) {
+    orient = orient.trim().toLowerCase();
+    if (orient.equals("horizontal".intern())) {
+      setOrientation(Orientation.HORIZONTAL);
+    } else if (orient.equals("vertical".intern())) {
+      setOrientation(Orientation.VERTICAL);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui.client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     final Dimension result = new Dimension();
-
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
         return result;
@@ -267,7 +289,7 @@ public class BoxLayout extends BaseLayout {
       int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2])
           + (borders[0] + borders[2]);
 
-      final int size = visibleWidgetCount;
+      final int size = visibleChildList.size();
       if (size == 0) {
         result.width = width;
         result.height = height;
@@ -288,14 +310,9 @@ public class BoxLayout extends BaseLayout {
 
       Dimension decPanelFrameSize = null;
 
-      for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-        Widget child = iter.next();
+      for (Widget child : visibleChildList) {
         if (child instanceof DecoratorPanel) {
           child = ((DecoratorPanel) child).getWidget();
-        }
-
-        if (!DOM.isVisible(child.getElement())) {
-          continue;
         }
 
         BoxLayoutData layoutData = getBoxLayoutData(child);
@@ -307,64 +324,24 @@ public class BoxLayout extends BaseLayout {
 
         if (orientation == Orientation.HORIZONTAL) {
 
-          if (layoutData.preferredWidth != -1) {
-            if (layoutData.preferredWidth > 0
-                && layoutData.preferredWidth <= 1.0) {
-              // Ignore: width += 0;
-            } else {
-              width += (int) layoutData.preferredWidth;
-            }
-          } else {
-            width += WidgetHelper.getPreferredSize(child).width;
-            if (layoutData.hasDecoratorPanel()) {
-              width += decPanelFrameSize.width;
-            }
-          }
+          width += preferredWidthMeasure.sizeOf(child);
+          layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
 
-          if (layoutData.preferredHeight != -1) {
-            if (layoutData.preferredHeight >= 0
-                && layoutData.preferredHeight <= 1.0) {
-              layoutData.calcHeight = 0;
-            } else {
-              layoutData.calcHeight = (int) layoutData.preferredHeight;
-            }
-          } else {
-            layoutData.calcHeight = WidgetHelper.getPreferredSize(child).height;
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.calcHeight += decPanelFrameSize.height;
-            }
+          if (layoutData.hasDecoratorPanel()) {
+            width += decPanelFrameSize.width;
+            layoutData.calcHeight += decPanelFrameSize.height;
           }
 
           maxHeight = Math.max(maxHeight, layoutData.calcHeight);
 
         } else { // Orientation.VERTICAL
 
-          if (layoutData.preferredHeight != -1) {
-            if (layoutData.preferredHeight > 0
-                && layoutData.preferredHeight <= 1.0) {
-              // Ignore: height += 0;
-            } else {
-              height += (int) layoutData.preferredHeight;
-            }
-          } else {
-            height += WidgetHelper.getPreferredSize(child).height;
-            if (layoutData.hasDecoratorPanel()) {
-              height += decPanelFrameSize.height;
-            }
-          }
+          height += preferredHeightMeasure.sizeOf(child);
+          layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
 
-          if (layoutData.preferredWidth != -1) {
-            if (layoutData.preferredWidth > 0
-                && layoutData.preferredWidth <= 1.0) {
-              layoutData.calcWidth = 0;
-            } else {
-              layoutData.calcWidth = (int) layoutData.preferredWidth;
-            }
-          } else {
-            layoutData.calcWidth = WidgetHelper.getPreferredSize(child).width;
-            if (layoutData.hasDecoratorPanel()) {
-              layoutData.calcWidth += decPanelFrameSize.width;
-            }
+          if (layoutData.hasDecoratorPanel()) {
+            height += decPanelFrameSize.height;
+            layoutData.calcWidth += decPanelFrameSize.width;
           }
 
           maxWidth = Math.max(maxWidth, layoutData.calcWidth);
@@ -382,25 +359,10 @@ public class BoxLayout extends BaseLayout {
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ".getPreferredSize() : "
+      Window.alert(getClass().getName() + ".getPreferredSize() : "
           + e.getMessage());
     }
 
-    return result;
-  }
-
-  private int getVisibleWidgetCount(LayoutPanel layoutPanel) {
-    int result = 0;
-    for (int i = 0, n = layoutPanel.getWidgetCount(); i < n; i++) {
-      Widget child = layoutPanel.getWidget(i);
-      if (child instanceof DecoratorPanel) {
-        child = ((DecoratorPanel) child).getWidget();
-      }
-      if (!DOM.isVisible(child.getElement())) {
-        continue;
-      }
-      ++result;
-    }
     return result;
   }
 
@@ -411,7 +373,17 @@ public class BoxLayout extends BaseLayout {
 
     super.init(layoutPanel);
 
-    visibleWidgetCount = getVisibleWidgetCount(layoutPanel);
+    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+      Widget widget = iter.next();
+
+      syncDecoratorVisibility(widget);
+
+      if (!DOM.isVisible(widget.getElement())) {
+        continue;
+      }
+
+      visibleChildList.add(widget);
+    }
 
     return initialized = true;
   }
@@ -428,12 +400,41 @@ public class BoxLayout extends BaseLayout {
     return leftToRight;
   }
 
+  /**
+   * If orientation is {@link Orientation#HORIZONTAL} this method defines
+   * whether the child widgets are positioned from left to right, or from right
+   * to left.
+   * 
+   * @param leftToRight {@code true} if the child widgets are positioned from
+   *          left to right, {@code false} otherwise.
+   */
+  public void setLeftToRight(final boolean leftToRight) {
+    this.leftToRight = leftToRight;
+  }
+
+  /**
+   * If orientation is {@link Orientation#HORIZONTAL} this method defines
+   * whether the child widgets are positioned from left to right, or from right
+   * to left, used by UiBinder .
+   * 
+   * @param leftToRight {@code true} if the child widgets are positioned from
+   *          left to right, {@code false} otherwise.
+   */
+  public void setLeftToRight(String leftToRight) {
+    leftToRight = leftToRight.trim().toLowerCase();
+    if (leftToRight.equals("true".intern())) {
+      setLeftToRight(true);
+    } else if (leftToRight.equals("false".intern())) {
+      setLeftToRight(false);
+    }
+  }
+
   private BoxLayoutData getBoxLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof BoxLayoutData)) {
       layoutDataObject = new BoxLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (BoxLayoutData) layoutDataObject;
   }
@@ -444,7 +445,7 @@ public class BoxLayout extends BaseLayout {
         return;
       }
 
-      final int size = visibleWidgetCount;
+      final int size = visibleChildList.size();
       if (size == 0) {
         return;
       }
@@ -471,24 +472,13 @@ public class BoxLayout extends BaseLayout {
       int fillingWidth = 0;
       int fillingHeight = 0;
 
-      runTwiceFlag = false;
-
-      final List<Widget> visibleChildList = new ArrayList<Widget>();
-
       Dimension decPanelFrameSize = null;
 
       // 1st pass
-      for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-        Widget child = iter.next();
+      for (Widget child : visibleChildList) {
         if (child instanceof DecoratorPanel) {
           child = ((DecoratorPanel) child).getWidget();
         }
-
-        if (!DOM.isVisible(child.getElement())) {
-          continue;
-        }
-
-        visibleChildList.add(child);
 
         BoxLayoutData layoutData = getBoxLayoutData(child);
 
@@ -500,16 +490,8 @@ public class BoxLayout extends BaseLayout {
         if (orientation == Orientation.HORIZONTAL) {
           if (layoutData.fillWidth) {
             fillingWidth++;
-          } else if (layoutData.preferredWidth != -1) {
-            if (layoutData.preferredWidth > 0
-                && layoutData.preferredWidth <= 1.0) {
-              layoutData.calcWidth = (int) (layoutData.preferredWidth * width);
-            } else {
-              layoutData.calcWidth = (int) layoutData.preferredWidth;
-            }
-            fillWidth -= layoutData.calcWidth;
           } else {
-            layoutData.calcWidth = WidgetHelper.getPreferredSize(child).width;
+            layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcWidth += decPanelFrameSize.width;
             }
@@ -517,18 +499,8 @@ public class BoxLayout extends BaseLayout {
           }
           if (layoutData.fillHeight) {
             layoutData.calcHeight = height;
-          } else if (layoutData.preferredHeight != -1) {
-            if (layoutData.preferredHeight > 0
-                && layoutData.preferredHeight <= 1.0) {
-              layoutData.calcHeight = (int) (layoutData.preferredHeight * height);
-            } else {
-              layoutData.calcHeight = (int) layoutData.preferredHeight;
-            }
           } else {
-            layoutData.calcHeight = WidgetHelper.getPreferredSize(child).height;
-
-            runTwiceFlag = true;
-
+            layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
@@ -536,19 +508,8 @@ public class BoxLayout extends BaseLayout {
         } else { // Orientation.VERTICAL
           if (layoutData.fillHeight) {
             fillingHeight++;
-          } else if (layoutData.preferredHeight != -1) {
-            if (layoutData.preferredHeight > 0
-                && layoutData.preferredHeight <= 1.0) {
-              layoutData.calcHeight = (int) (layoutData.preferredHeight * height);
-            } else {
-              layoutData.calcHeight = (int) layoutData.preferredHeight;
-            }
-            fillHeight -= layoutData.calcHeight;
           } else {
-            layoutData.calcHeight = WidgetHelper.getPreferredSize(child).height;
-
-            runTwiceFlag = true;
-
+            layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
@@ -556,18 +517,8 @@ public class BoxLayout extends BaseLayout {
           }
           if (layoutData.fillWidth) {
             layoutData.calcWidth = width;
-          } else if (layoutData.preferredWidth != -1) {
-            if (layoutData.preferredWidth > 0
-                && layoutData.preferredWidth <= 1.0) {
-              layoutData.calcWidth = (int) (layoutData.preferredWidth * width);
-            } else {
-              layoutData.calcWidth = (int) layoutData.preferredWidth;
-            }
           } else {
-            layoutData.calcWidth = WidgetHelper.getPreferredSize(child).width;
-
-            runTwiceFlag = true;
-
+            layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
             if (layoutData.hasDecoratorPanel()) {
               layoutData.calcWidth += decPanelFrameSize.width;
             }
@@ -581,7 +532,7 @@ public class BoxLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        final BoxLayoutData layoutData = (BoxLayoutData) getLayoutData(child);
+        final BoxLayoutData layoutData = (BoxLayoutData) child.getLayoutData();
 
         int w = layoutData.calcWidth;
         int h = layoutData.calcHeight;
@@ -598,158 +549,95 @@ public class BoxLayout extends BaseLayout {
 
         top = Math.max(0, top);
 
-        int fw = -1;
-        if (layoutData.fillWidth || layoutData.preferredWidth != -1) {
-          fw = w;
-        }
-
-        int fh = -1;
-        if (layoutData.fillHeight || layoutData.preferredHeight != -1) {
-          fh = h;
-        }
+        int fw = w;
+        int fh = h;
 
         if (layoutData.hasDecoratorPanel()) {
-
-          if (fw != -1) {
-            fw -= decPanelFrameSize.width;
-          }
-          if (fh != -1) {
-            fh -= decPanelFrameSize.height;
-          }
-
-          if (orientation == Orientation.VERTICAL) {
-            if (alignment == Alignment.START) {
-              WidgetHelper.setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (alignment == Alignment.CENTER) {
-              WidgetHelper.setBounds(layoutPanel, child,
-                  ((width - decPanelFrameSize.width) / 2) - (w / 2) + left,
-                  top, fw, fh);
-            } else {
-              WidgetHelper.setBounds(layoutPanel, child,
-                  (width - decPanelFrameSize.width) - w + left, top, fw, fh);
-            }
-          } else if (isLeftToRight()) {
-            if (alignment == Alignment.START) {
-              WidgetHelper.setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (alignment == Alignment.CENTER) {
-              WidgetHelper.setBounds(layoutPanel, child, left,
-                  ((height - decPanelFrameSize.height) / 2) - (h / 2) + top,
-                  fw, fh);
-            } else {
-              WidgetHelper.setBounds(layoutPanel, child, left,
-                  (height - decPanelFrameSize.height) - h + top, fw, fh);
-            }
-          } else { // !isLeftToRight()
-            if (alignment == Alignment.START) {
-              WidgetHelper.setBounds(layoutPanel, child, box.width
-                  - decPanelFrameSize.width
-                  - (left + (w != -1 ? w
-                      : layoutData.decoratorPanel.getOffsetWidth())), top, fw,
-                  fh);
-            } else if (alignment == Alignment.CENTER) {
-              WidgetHelper.setBounds(layoutPanel, child, box.width
-                  - decPanelFrameSize.width
-                  - (left + (w != -1 ? w
-                      : layoutData.decoratorPanel.getOffsetWidth())),
-                  ((height - decPanelFrameSize.height) / 2) - (h / 2) + top,
-                  fw, fh);
-            } else {
-              WidgetHelper.setBounds(layoutPanel, child, box.width
-                  - decPanelFrameSize.width
-                  - (left + (w != -1 ? w
-                      : layoutData.decoratorPanel.getOffsetWidth())),
-                  (height - decPanelFrameSize.height) - h + top, fw, fh);
-            }
-          }
-        } else {
-          if (orientation == Orientation.VERTICAL) {
-            if (alignment == Alignment.START) {
-              WidgetHelper.setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (alignment == Alignment.CENTER) {
-              WidgetHelper.setBounds(layoutPanel, child, (width / 2) - (w / 2)
-                  + left, top, fw, fh);
-            } else {
-              WidgetHelper.setBounds(layoutPanel, child, width - w + left, top,
-                  fw, fh);
-            }
-          } else if (isLeftToRight()) {
-            if (alignment == Alignment.START) {
-              WidgetHelper.setBounds(layoutPanel, child, left, top, fw, fh);
-            } else if (alignment == Alignment.CENTER) {
-              WidgetHelper.setBounds(layoutPanel, child, left, (height / 2)
-                  - (h / 2) + top, fw, fh);
-            } else {
-              WidgetHelper.setBounds(layoutPanel, child, left,
-                  height - h + top, fw, fh);
-            }
-          } else { // !isLeftToRight()
-            if (alignment == Alignment.START) {
-              WidgetHelper.setBounds(layoutPanel, child, box.width
-                  - (left + (w != -1 ? w : child.getOffsetWidth())), top, fw,
-                  fh);
-            } else if (alignment == Alignment.CENTER) {
-              WidgetHelper.setBounds(layoutPanel, child, box.width
-                  - (left + (w != -1 ? w : child.getOffsetWidth())),
-                  (height / 2) - (h / 2) + top, fw, fh);
-            } else {
-              WidgetHelper.setBounds(layoutPanel, child, box.width
-                  - (left + (w != -1 ? w : child.getOffsetWidth())), height - h
-                  + top, fw, fh);
-            }
-          }
+          fw -= decPanelFrameSize.width;
+          fh -= decPanelFrameSize.height;
         }
 
-        if (orientation == Orientation.HORIZONTAL) {
-          left += (w + spacing);
-        } else { // Orientation.VERTICAL
+        // Orientation.VERTICAL
+
+        if (orientation == Orientation.VERTICAL) {
+          if (alignment == Alignment.START) {
+            layoutData.targetLeft = left;
+            layoutData.targetTop = top;
+            layoutData.targetWidth = fw;
+            layoutData.targetHeight = fh;
+          } else if (alignment == Alignment.CENTER) {
+            layoutData.targetLeft = left + (width / 2) - (w / 2);
+            layoutData.targetTop = top;
+            layoutData.targetWidth = fw;
+            layoutData.targetHeight = fh;
+          } else {
+            layoutData.targetLeft = left + width - w;
+            layoutData.targetTop = top;
+            layoutData.targetWidth = fw;
+            layoutData.targetHeight = fh;
+          }
+
           top += (h + spacing);
         }
+
+        // Orientation.HORIZONTAL
+
+        else {
+
+          if (isLeftToRight()) { // Left to Right
+            if (alignment == Alignment.START) {
+              layoutData.targetLeft = left;
+              layoutData.targetTop = top;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else if (alignment == Alignment.CENTER) {
+              layoutData.targetLeft = left;
+              layoutData.targetTop = top + (height / 2) - (h / 2);
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else {
+              layoutData.targetLeft = left;
+              layoutData.targetTop = top + height - h;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            }
+          } else { // Right to Left
+            if (alignment == Alignment.START) {
+              layoutData.targetLeft = box.width - (left + w);
+              layoutData.targetTop = top;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else if (alignment == Alignment.CENTER) {
+              layoutData.targetLeft = box.width - (left + w);
+              layoutData.targetTop = top + (height / 2) - (h / 2);
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            } else {
+              layoutData.targetLeft = box.width - (left + w);
+              layoutData.targetTop = top + height - h;
+              layoutData.targetWidth = fw;
+              layoutData.targetHeight = fh;
+            }
+          }
+
+          left += (w + spacing);
+        }
+
+        layoutData.setSourceLeft(child.getAbsoluteLeft()
+            - layoutPanel.getAbsoluteLeft() - paddings[3]);
+        layoutData.setSourceTop(child.getAbsoluteTop()
+            - layoutPanel.getAbsoluteTop() - paddings[0]);
+        layoutData.setSourceWidth(child.getOffsetWidth());
+        layoutData.setSourceHeight(child.getOffsetHeight());
       }
+
+      super.layoutPanel(layoutPanel);
+
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
       Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
     }
 
-  }
-
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
-  }
-
-  public void setAlignment(Alignment align) {
-    this.alignment = align;
-  }
-
-  /**
-   * If orientation is {@link Orientation#HORIZONTAL} this method defines
-   * whether the child widgets are positioned from left to right, or from right
-   * to left.
-   * 
-   * @param leftToRight {@code true} if the child widgets are positioned from
-   *          left to right, {@code false} otherwise.
-   */
-  public void setLeftToRight(boolean leftToRight) {
-    this.leftToRight = leftToRight;
-  }
-
-  /**
-   * Sets the orientation of the child widgets.
-   * 
-   * @param orient the orientation of the child widgets.
-   * @deprecated Replaced by {@link #setOrientation(Orientation)}.
-   */
-  public void setOrient(Orientation orient) {
-    this.orientation = orient;
-  }
-
-  /**
-   * Sets the orientation of the child widgets.
-   * 
-   * @param orient the orientation of the child widgets.
-   */
-  public void setOrientation(Orientation orient) {
-    this.orientation = orient;
   }
 
 }

@@ -16,6 +16,7 @@
 package org.gwt.mosaic.core.client;
 
 import org.gwt.mosaic.core.client.impl.DOMImpl;
+import org.gwt.mosaic.core.client.util.IntegerParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BodyElement;
@@ -32,14 +33,6 @@ import com.google.gwt.user.client.Element;
 public class DOM extends com.google.gwt.user.client.DOM {
 
   private static final DOMImpl impl = GWT.create(DOMImpl.class);
-
-  public static final int OTHER_KEY_UP = 63232;
-
-  public static final int OTHER_KEY_DOWN = 63233;
-
-  public static final int OTHER_KEY_LEFT = 63234;
-
-  public static final int OTHER_KEY_RIGHT = 63235;
 
   private static Element toPixelSizeTestElem = null;
 
@@ -78,7 +71,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
       i1 = 1;
       i2 = 3;
     }
-    if (UserAgent.isIE6() && !CompatMode.isStandardsMode()) {
+    if (UserAgent.isIE() && !CompatMode.isStandardsMode()) {
       // Internet Explorer - Quirks Mode
       int[] b = getBorderSizes(elem);
       int[] bp = getBorderSizes((Element) elem.getParentElement());
@@ -104,18 +97,18 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getBorderSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getComputedStyleAttribute(elem, "borderTopWidth"), 10, 0);
-    size[1] = parseInt(getComputedStyleAttribute(elem, "borderRightWidth"), 10,
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderTopWidth"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderRightWidth"), 10,
         0);
-    size[2] = parseInt(getComputedStyleAttribute(elem, "borderBottomWidth"),
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderBottomWidth"),
         10, 0);
-    size[3] = parseInt(getComputedStyleAttribute(elem, "borderLeftWidth"), 10,
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderLeftWidth"), 10,
         0);
 
     return size;
@@ -141,23 +134,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
-   * Returns the inner height of an element in pixels, including padding but not
-   * the horizontal scrollbar height, border, or margin.
-   * <p>
-   * <code>clientHeight</code> can be calculated as CSS height + CSS padding -
-   * height of horizontal scrollbar (if present).
-   * <p>
-   * NOTE: Not part of any W3C specification.
-   * 
-   * @param elem the element to get the <code>clientHeight</code> of
-   * @return the <code>clientHeight</code> of the given element
-   */
-  private native static int getClientHeight(Element elem)
-  /*-{
-    return elem.clientHeight;
-  }-*/;
-
-  /**
    * Get's the elements {@code clientHeight} and {@code clientWidth}.
    * <p>
    * Both {@code clientHeight} and {@code clientWidth} are a non-standard,
@@ -169,28 +145,11 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @return an array of width and height
    */
   public static Dimension getClientSize(Element elem) {
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
-    return new Dimension(getClientWidth(elem), getClientHeight(elem));
+    return new Dimension(elem.getClientWidth(), elem.getClientHeight());
   }
-
-  /**
-   * Returns the inner width of an element in pixels, including padding but not
-   * the horizontal scrollbar width, border, or margin.
-   * <p>
-   * {@code clientWidth} can be calculated as CSS width + CSS padding - width of
-   * vertical scrollbar (if present).
-   * <p>
-   * NOTE: Not part of any W3C specification.
-   * 
-   * @param elem the element to get the {@code clientWidth} of
-   * @return the {@code clientWidth} of the given element
-   */
-  private native static int getClientWidth(Element elem)
-  /*-{
-    return elem.clientWidth;
-  }-*/;
 
   /**
    * Gets an attribute of the given element's computed style.
@@ -215,16 +174,16 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getMarginSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getComputedStyleAttribute(elem, "marginTop"), 10, 0);
-    size[1] = parseInt(getComputedStyleAttribute(elem, "marginRight"), 10, 0);
-    size[2] = parseInt(getComputedStyleAttribute(elem, "marginBottom"), 10, 0);
-    size[3] = parseInt(getComputedStyleAttribute(elem, "marginLeft"), 10, 0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginTop"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginRight"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginBottom"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginLeft"), 10, 0);
 
     return size;
   }
@@ -232,16 +191,16 @@ public class DOM extends com.google.gwt.user.client.DOM {
   public static int[] getPaddingSizes(Element elem) {
     int[] size = new int[4];
 
-    if (UserAgent.isIE6() /* && !CompatMode.isStandardsMode() */) {
+    if (UserAgent.isIE() /* && !CompatMode.isStandardsMode() */) {
       elem.getStyle().setProperty("zoom", "1");
     }
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = parseInt(getComputedStyleAttribute(elem, "paddingTop"), 10, 0);
-    size[1] = parseInt(getComputedStyleAttribute(elem, "paddingRight"), 10, 0);
-    size[2] = parseInt(getComputedStyleAttribute(elem, "paddingBottom"), 10, 0);
-    size[3] = parseInt(getComputedStyleAttribute(elem, "paddingLeft"), 10, 0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingTop"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingRight"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingBottom"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingLeft"), 10, 0);
 
     return size;
   }
@@ -252,7 +211,7 @@ public class DOM extends com.google.gwt.user.client.DOM {
    * @return the screen resolution, in dots-per-inch
    */
   public static int getScreenResolution() {
-    return toPixelSize("1in");
+    return toPixelSize("1in", true);
   }
 
   public static Dimension getStringBoxSize(Element span, final String str) {
@@ -287,69 +246,6 @@ public class DOM extends com.google.gwt.user.client.DOM {
   }
 
   /**
-   * Parses a string and returns an integer.
-   * <p>
-   * NOTE: Only the first number in the string is returned!
-   * <p>
-   * NOTE: Leading and trailing spaces are allowed.
-   * <p>
-   * NOTE: If the first character cannot be converted to a number,
-   * <code>parseInt()</code> returns <code>null</code>.
-   * 
-   * @param str the string to be parsed
-   * @return the parsed value
-   */
-  protected static Integer parseInt(String str) {
-    return parseInt(str, 10);
-  }
-
-  /**
-   * Parses a string and returns an integer.
-   * <p>
-   * NOTE: Only the first number in the string is returned!
-   * <p>
-   * NOTE: Leading and trailing spaces are allowed.
-   * <p>
-   * NOTE: If the first character cannot be converted to a number,
-   * <code>parseInt()</code> returns <code>null</code>.
-   * 
-   * @param str the string to be parsed
-   * @param radix a number (from 2 to 36) that represents the numeric system to
-   *          be used
-   * @return the parsed value
-   */
-  protected native static Integer parseInt(String str, int radix)
-  /*-{
-    var number = parseInt(str, radix);
-    if (isNaN(number))
-      return null;
-    else
-      return @java.lang.Integer::valueOf(I)(number);
-  }-*/;
-
-  /**
-   * Parses a string and returns an integer.
-   * <p>
-   * NOTE: Only the first number in the string is returned!
-   * <p>
-   * NOTE: Leading and trailing spaces are allowed.
-   * <p>
-   * NOTE: If the first character cannot be converted to a number,
-   * <code>parseInt()</code> returns <code>null</code>.
-   * 
-   * @param str the string to be parsed
-   * @param radix a number (from 2 to 36) that represents the numeric system to
-   *          be used
-   * @param defaultValue the value to return if the parsed value was
-   *          <code>null</code>
-   * @return the parsed value
-   */
-  private static int parseInt(String str, int radix, int defaultValue) {
-    final Integer result = parseInt(str, radix);
-    return result == null ? defaultValue : result;
-  }
-
-  /**
    * Sets an attribute on the given element's style.
    * 
    * @param elem the element whose style attribute is to be set
@@ -365,7 +261,8 @@ public class DOM extends com.google.gwt.user.client.DOM {
     }
   }
 
-  public static int toPixelSize(final String width) {
+  public static int toPixelSize(final String value,
+      final boolean useWidthAttribute) {
     if (toPixelSizeTestElem == null) {
       toPixelSizeTestElem = DOM.createSpan();
       setStyleAttribute(toPixelSizeTestElem, "left", "");
@@ -374,8 +271,41 @@ public class DOM extends com.google.gwt.user.client.DOM {
       setStyleAttribute(toPixelSizeTestElem, "visibility", "hidden");
       Document.get().getBody().appendChild(toPixelSizeTestElem);
     }
-    setStyleAttribute(toPixelSizeTestElem, "width", width);
-    return getBoxSize(toPixelSizeTestElem).width;
+    DOM.setStyleAttribute(toPixelSizeTestElem, "width", value);
+    DOM.setStyleAttribute(toPixelSizeTestElem, "height", value);
+
+    Dimension size = DOM.getBoxSize(toPixelSizeTestElem);
+
+    return (useWidthAttribute) ? size.width : size.height;
+  }
+
+  private static Dimension detectedScrollbarSize = null;
+
+  public static int getNativeScrollbarSize(final boolean useWidthAttribute) {
+    if (detectedScrollbarSize == null) {
+      Element scroller = DOM.createDiv();
+      setStyleAttribute(scroller, "width", "50px");
+      setStyleAttribute(scroller, "height", "50px");
+      setStyleAttribute(scroller, "overflow", "scroll");
+      setStyleAttribute(scroller, "position", "scroll");
+      setStyleAttribute(scroller, "marginLeft", "-5000px");
+      Document.get().getBody().appendChild(scroller);
+      detectedScrollbarSize = new Dimension(scroller.getOffsetWidth()
+          - scroller.getPropertyInt("clientWidth"), scroller.getOffsetHeight()
+          - scroller.getPropertyInt("clientHeight"));
+
+      // Asserting the detected value causes a problem
+      // at least in Hosted Mode Browser/Linux/GWT-1.5.3, so
+      // use a default if detection fails.
+      if (detectedScrollbarSize.width == 0) {
+        detectedScrollbarSize.width = detectedScrollbarSize.height = 20;
+      }
+
+      Document.get().getBody().removeChild(scroller);
+    }
+
+    return (useWidthAttribute) ? detectedScrollbarSize.width
+        : detectedScrollbarSize.height;
   }
 
 }

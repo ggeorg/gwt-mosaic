@@ -15,33 +15,25 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.DoubleClickListener;
+import org.gwt.mosaic.showcase.client.content.tables.shared.Person;
 import org.gwt.mosaic.ui.client.InfoPanel;
-import org.gwt.mosaic.ui.client.ListBox;
-import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.Table;
-import org.gwt.mosaic.ui.client.ToolBar;
-import org.gwt.mosaic.ui.client.ToolButton;
-import org.gwt.mosaic.ui.client.WidgetWrapper;
-import org.gwt.mosaic.ui.client.InfoPanel.InfoPanelType;
-import org.gwt.mosaic.ui.client.MessageBox.ConfirmationCallback;
-import org.gwt.mosaic.ui.client.MessageBox.PromptCallback;
-import org.gwt.mosaic.ui.client.Table.PagingOptions;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
-import org.gwt.mosaic.ui.client.list.DefaultListModel;
-import org.gwt.mosaic.ui.client.table.DefaultTableColumnModel;
+import org.gwt.mosaic.ui.client.table.DefaultColumnDefinition;
 
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.gen2.table.client.DefaultTableDefinition;
+import com.google.gwt.gen2.table.client.IterableTableModel;
+import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -77,36 +69,57 @@ public class CwSimpleTable extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    final LayoutPanel vBox = new LayoutPanel(
-        new BoxLayout(Orientation.VERTICAL));
-    vBox.setPadding(0);
-    //vBox.setWidgetSpacing(0);
+    List<Person> data = new ArrayList<Person>();
 
-    String[] columnNames = {
-        "First Name", "Last name", "Sport", "# of Years", "Vegetarian"};
+    data.add(new Person("Rainer Zufall", "male", true));
+    data.add(new Person("Marie Darms", "female", false));
+    data.add(new Person("Holger Adams", "male", true));
+    data.add(new Person("Juliane Adams", "female", true));
 
-    Object[][] data = {
-        {"Mary", "Campione", "Snowboarding", new Integer(5), new Boolean(false)},
-        {"Alison", "Huml", "Rowing", new Integer(3), new Boolean(true)},
-        {"Kathy", "Walrath", "Knitting", new Integer(2), new Boolean(false)},
-        {
-            "Sharon", "Zakhour", "Speed reading", new Integer(20),
-            new Boolean(true)},
-        {"Philip", "Milne", "Pool", new Integer(10), new Boolean(false)}};
-
-    final Table<String[]> table = new Table<String[]>(data,
-        new DefaultTableColumnModel<String[]>(columnNames));
+    final Table<Person> table = new Table<Person>(
+        new IterableTableModel<Person>(data), createTableDefinition());
     table.setPageSize(2);
     // table.setContextMenu(createContextMenu());
+    table.addDoubleClickHandler(new DoubleClickHandler() {
+      public void onDoubleClick(DoubleClickEvent event) {
+        Window.alert(event.getSource().getClass().getName());
+      }
+    });
 
-    // Create an options panel
-    PagingOptions pagingOptions = new PagingOptions(table);
+    return table;
+  }
 
-    // vBox.add(toolBar, new BoxLayoutData(FillStyle.HORIZONTAL));
-    vBox.add(table, new BoxLayoutData(FillStyle.BOTH));
-    vBox.add(pagingOptions);
+  /**
+   * 
+   * @return
+   */
+  @ShowcaseSource
+  private TableDefinition<Person> createTableDefinition() {
+    DefaultTableDefinition<Person> tableDef = new DefaultTableDefinition<Person>();
+    // tableDef.setRowRenderer(new DefaultRowRenderer<Person>(new String[] {
+    // "#f00", "#00f" }));
 
-    return vBox;
+    DefaultColumnDefinition<Person, String> nameColDef = new DefaultColumnDefinition<Person, String>(
+        "Name") {
+      @Override
+      public String getCellValue(Person rowValue) {
+        return rowValue.getName();
+      }
+    };
+    nameColDef.setColumnSortable(false);
+    tableDef.addColumnDefinition(nameColDef);
+
+    DefaultColumnDefinition<Person, String> genderColDef = new DefaultColumnDefinition<Person, String>(
+        "Gender") {
+      @Override
+      public String getCellValue(Person rowValue) {
+        return rowValue.getGender();
+      }
+    };
+    genderColDef.setColumnSortable(false);
+    tableDef.addColumnDefinition(genderColDef);
+
+    return tableDef;
   }
 
   /**

@@ -17,6 +17,8 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.Dimension;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Defines the interface for classes that use a {@link LayoutManager} to
  * <em>lay out</em> its child widgets.
@@ -45,10 +47,28 @@ public interface HasLayoutManager {
    * Invalidates the receiver. The receiver and all parents above it are marked
    * as needing to be laid out.
    * 
+   * @param widget the {@link Widget} that if the layout manager has cached
+   *          information that should be discarded, or {@code null} for all
+   *          widgets
    * @see #layout()
    * @see #layout(boolean)
    */
+  void invalidate(Widget widget);
+
+  /**
+   * Same as {@link #invalidate(null)}.
+   * 
+   * @see #invalidate(Widget)
+   */
   void invalidate();
+
+  /**
+   * Determines whether the receiver is marked as needing to be laid out.
+   * 
+   * @return {@code true} is the receiver is marked as needing to be laid out,
+   *         {@code false} otherwise
+   */
+  boolean needsLayout();
 
   /**
    * If the receiver has a {@link LayoutManager}, asks the layout to
@@ -65,5 +85,4 @@ public interface HasLayoutManager {
    * @see #invalidate(boolean)
    */
   void layout();
-
 }

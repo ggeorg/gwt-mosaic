@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 Google Inc.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -16,8 +18,11 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
+import org.gwt.mosaic.ui.client.HTMLLabel;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
 import org.gwt.mosaic.ui.client.PopupMenu;
@@ -26,16 +31,16 @@ import org.gwt.mosaic.ui.client.ToolButton;
 import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -46,7 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
 @ShowcaseStyle( {
     ".gwt-Button", ".mosaic-Button", ".mosaic-Menu-Button",
     ".mosaic-Split-Button", ".mosaic-Checkbox-Button", ".mosaic-Radio-Button"})
-public class CwToolButton extends ContentWidget implements ClickListener {
+public class CwToolButton extends ContentWidget implements ClickHandler {
 
   /**
    * The constants used in this Page.
@@ -84,15 +89,16 @@ public class CwToolButton extends ContentWidget implements ClickListener {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final ScrollLayoutPanel layoutPanel = new ScrollLayoutPanel();
+    layoutPanel.setPadding(0);
 
     //
     // Push buttons
     //
 
-    layoutPanel.add(new HTML("Push button widgets"));
-
-    final LayoutPanel hBox1 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox1 = new CaptionLayoutPanel("Push button widgets");
     layoutPanel.add(hBox1, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    hBox1.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
+    hBox1.setLayout(new BoxLayout());
 
     addPushButtons(hBox1);
 
@@ -100,21 +106,21 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Push buttons with image
     //
 
-    layoutPanel.add(new HTML("Push button widgets with image"));
-
-    final LayoutPanel hBox2 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox2 = new CaptionLayoutPanel("Push button widgets with image");
     layoutPanel.add(hBox2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
-
+    hBox2.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
+    hBox2.setLayout(new BoxLayout());
+    
     addImageButtons(hBox2);
 
     //
     // Menu & Split buttons
     //
 
-    layoutPanel.add(new HTML("Menu & Split button widgets"));
-
-    final LayoutPanel hBox3 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox3 = new CaptionLayoutPanel("Menu & Split button widgets");
     layoutPanel.add(hBox3, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    hBox3.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
+    hBox3.setLayout(new BoxLayout());
 
     addMenuAndSplitButtons(hBox3);
 
@@ -122,10 +128,10 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     // Checkbox & Radio buttons
     //
 
-    layoutPanel.add(new HTML("Checkbox & Radio button widgets"));
-
-    final LayoutPanel hBox4 = new LayoutPanel(new BoxLayout());
+    final CaptionLayoutPanel hBox4 = new CaptionLayoutPanel("Checkbox & Radio button widgets");
     layoutPanel.add(hBox4, new BoxLayoutData(FillStyle.HORIZONTAL, true));
+    hBox4.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
+    hBox4.setLayout(new BoxLayout());
 
     addCheckboxAndRadioButtons(hBox4);
 
@@ -138,20 +144,19 @@ public class CwToolButton extends ContentWidget implements ClickListener {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addPushButtons(LayoutPanel layoutPanel) {
+  private void addPushButtons(CaptionLayoutPanel layoutPanel) {
     // Add a push button
-    ToolButton pushButton1 = new ToolButton("Push Button", this);
+    final ToolButton pushButton1 = new ToolButton("Push Button", this);
     pushButton1.ensureDebugId("mosaicPushButton-normal");
 
     layoutPanel.add(pushButton1);
 
     // Add a disabled push button
-    ToolButton disabledPushButton = new ToolButton("Disabled");
+    final ToolButton disabledPushButton = new ToolButton("Disabled");
     disabledPushButton.setEnabled(false);
     disabledPushButton.ensureDebugId("mosaicPushButton-disabled");
 
     layoutPanel.add(disabledPushButton);
-
   }
 
   /**
@@ -160,7 +165,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addImageButtons(LayoutPanel layoutPanel) {
+  private void addImageButtons(CaptionLayoutPanel layoutPanel) {
     // Add a push button with image
     ToolButton pushButton1 = new ToolButton(ButtonHelper.createButtonLabel(
         MessageBox.MESSAGEBOX_IMAGES.dialogInformation(), "Image Button",
@@ -193,7 +198,6 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     pushButton4.ensureDebugId("mosaicPushButton-normal");
 
     layoutPanel.add(pushButton4, new BoxLayoutData(FillStyle.VERTICAL));
-
   }
 
   /**
@@ -202,7 +206,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addMenuAndSplitButtons(LayoutPanel layoutPanel) {
+  private void addMenuAndSplitButtons(CaptionLayoutPanel layoutPanel) {
     // Add a menu button
     ToolButton menuButton = new ToolButton("Menu Button", this);
     menuButton.setStyle(ToolButtonStyle.MENU);
@@ -232,7 +236,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     layoutPanel.add(disabledMenuButton);
 
     // Add a spacer
-    layoutPanel.add(new HTML("&nbsp;"));
+    layoutPanel.add(new HTMLLabel("&nbsp;"));
 
     // Add a menu button
     ToolButton splitButton = new ToolButton("Split Button", this);
@@ -269,9 +273,9 @@ public class CwToolButton extends ContentWidget implements ClickListener {
    * @param layoutPanel
    */
   @ShowcaseSource
-  private void addCheckboxAndRadioButtons(LayoutPanel layoutPanel) {
+  private void addCheckboxAndRadioButtons(CaptionLayoutPanel layoutPanel) {
     // Add a checkbox button
-    ToolButton checkButton1 = new ToolButton("Checkbox", this);
+    ToolButton checkButton1 = new ToolButton("Checkbox");
     checkButton1.setStyle(ToolButtonStyle.CHECKBOX);
     checkButton1.ensureDebugId("mosaicCheckboxButton-normal");
 
@@ -287,7 +291,7 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     layoutPanel.add(checkButton2);
 
     // Add a spacer
-    layoutPanel.add(new HTML("&nbsp;"));
+    layoutPanel.add(new HTMLLabel("&nbsp;"));
 
     // Add a radio button
     ToolButton radioButton1 = new ToolButton("Radio #1", this);
@@ -313,16 +317,16 @@ public class CwToolButton extends ContentWidget implements ClickListener {
     layoutPanel.add(radioButton4);
 
   }
-
+  
   /**
-   * Fired when the user clicks on a button.
+   * Called when a native click event is fired.
    * 
-   * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
+   * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
-    final Button btn = (Button) sender;
+  public void onClick(ClickEvent event) {
+    final Button btn = (Button) event.getSource();
     InfoPanel.show(btn.getText(), "Clicked!");
   }
-
+  
 }
