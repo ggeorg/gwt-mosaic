@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--                                                                        -->
+<!-- Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.           -->
+<!--                                                                        -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you    -->
+<!-- may not use this file except in compliance with the License. You may   -->
+<!-- may obtain a copy of the License at                                    -->
+<!--                                                                        -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0                             -->
+<!--                                                                        -->
+<!-- Unless required by applicable law or agreed to in writing, software    -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,      -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or        -->
+<!-- implied. License for the specific language governing permissions and   -->
+<!-- limitations under the License.                                         -->
+<!--                                                                        -->
+
+<module rename-to="showcase">
+
+	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
+	<inherits name='org.gwt.mosaic.Mosaic' />
+	<inherits name='org.gwt.mosaic.actions.Actions' />
+	<inherits name='org.gwt.mosaic.forms.Forms' />
+	<inherits name='org.gwt.mosaic.pagebus.PageBus' />
+	
+	<!-- Inherit the complex panel code for FastTree                -->
+	<inherits name='com.google.gwt.gen2.complexpanel.ComplexPanel' />
+	
+	<!-- Includes the public resources used by the GWT Mosaic       --> 
+	<!-- themes. Those files do not inject a style sheet into the   -->
+	<!-- application.                                               -->
+	<inherits name='org.gwt.mosaic.theme.standard.StandardResources' />
+	<inherits name="org.gwt.mosaic.theme.chrome.ChromeResources" />
+	<inherits name="org.gwt.mosaic.theme.dark.DarkResources" />
+	<inherits name="org.gwt.mosaic.theme.aegean.AegeanResources" />
+
+	<!-- Inherit the default GWT Mosaic style sheet. You can change -->
+	<!-- the theme of your GWT Mosaic application by uncommenting   -->
+	<!-- any one of the following lines.                            -->
+	<!-- <inherits name='org.gwt.mosaic.theme.standard.Standard' />  -->
+	<!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
+	<!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
+	<inherits name='org.gwt.mosaic.theme.aegean.Aegean' />
+
+	<!-- Enable debug ID.                                           -->
+	<inherits name="com.google.gwt.user.Debug" />
+	<set-property name="gwt.enableDebugId" value="true" />
+
+	<!-- Use a generator to create the source code                  -->
+	<generate-with
+		class="org.gwt.mosaic.showcase.generator.ShowcaseGenerator">
+		<when-type-assignable
+			class="org.gwt.mosaic.showcase.client.Showcase.GeneratorInfo" />
+	</generate-with>
+
+	<!-- Specify the app entry point class.                         -->
+	<entry-point class='org.gwt.mosaic.showcase.client.Showcase' />
+
+	<!-- Internationalization support. -->
+	<extend-property name="locale" values="en" />
+	<!-- 
+	<extend-property name="locale" values="ar" />
+	<extend-property name="locale" values="el" />
+	<extend-property name="locale" values="fr" />
+	<extend-property name="locale" values="zh" />
+	 -->
+	<set-property-fallback name="locale" value="en"/>
+</module>
