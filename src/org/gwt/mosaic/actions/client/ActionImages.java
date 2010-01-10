@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopolos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopolos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,76 +15,76 @@
  */
 package org.gwt.mosaic.actions.client;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Common action images.
  * 
  * @author ggeorgopoulos.georgios(at)gmail.com
  */
-public interface ActionImages extends ImageBundle {
+public interface ActionImages extends ClientBundle {
 
-  @Resource(value = "add_folder_action.png")
-  AbstractImagePrototype add_folder_action();
+  @Source("add_folder_action.png")
+  ImageResource add_folder_action();
 
-  @Resource(value = "award_star_bronze_1.png")
-  AbstractImagePrototype award_star_bronze_1();
+  @Source("award_star_bronze_1.png")
+  ImageResource award_star_bronze_1();
 
-  @Resource(value = "bell.png")
-  AbstractImagePrototype bell();
+  @Source("bell.png")
+  ImageResource bell();
 
-  @Resource(value = "bomb.png")
-  AbstractImagePrototype bomb();
+  @Source("bomb.png")
+  ImageResource bomb();
 
-  @Resource(value = "close_action.png")
-  AbstractImagePrototype close_action();
+  @Source("close_action.png")
+  ImageResource close_action();
 
-  @Resource(value = "copy_action.png")
-  AbstractImagePrototype copy_action();
+  @Source("copy_action.png")
+  ImageResource copy_action();
 
-  @Resource(value = "cut_action.png")
-  AbstractImagePrototype cut_action();
+  @Source("cut_action.png")
+  ImageResource cut_action();
 
-  @Resource(value = "delete_action.png")
-  AbstractImagePrototype delete_action();
+  @Source("delete_action.png")
+  ImageResource delete_action();
 
-  @Resource(value = "exit_action.png")
-  AbstractImagePrototype exit_action();
+  @Source("exit_action.png")
+  ImageResource exit_action();
 
-  @Resource(value = "file_upload_action.png")
-  AbstractImagePrototype file_upload_action();
+  @Source("file_upload_action.png")
+  ImageResource file_upload_action();
 
-  @Resource(value = "form_add_action.png")
-  AbstractImagePrototype form_add_action();
+  @Source("form_add_action.png")
+  ImageResource form_add_action();
 
-  @Resource(value = "form_delete_action.png")
-  AbstractImagePrototype form_delete_action();
+  @Source("form_delete_action.png")
+  ImageResource form_delete_action();
 
-  @Resource(value = "form_edit_action.png")
-  AbstractImagePrototype form_edit_action();
+  @Source("form_edit_action.png")
+  ImageResource form_edit_action();
 
-  @Resource(value = "menuitem_checkbox.png")
-  AbstractImagePrototype menuitem_checkbox();
+  @Source("menuitem_checkbox.png")
+  ImageResource menuitem_checkbox();
 
-  @Resource(value = "menuitem_radiobutton.png")
-  AbstractImagePrototype menuitem_radiobutton();
+  @Source("menuitem_radiobutton.png")
+  ImageResource menuitem_radiobutton();
 
-  @Resource(value = "noimage.png")
-  AbstractImagePrototype noimage();
+  @Source("noimage.png")
+  ImageResource noimage();
 
-  @Resource(value = "open_action.png")
-  AbstractImagePrototype open_action();
+  @Source("open_action.png")
+  ImageResource open_action();
 
-  @Resource(value = "open_parent_folder_action.png")
-  AbstractImagePrototype open_parent_folder_action();
+  @Source("open_parent_folder_action.png")
+  ImageResource open_parent_folder_action();
 
-  @Resource(value = "paste_action.png")
-  AbstractImagePrototype paste_action();
+  @Source("paste_action.png")
+  ImageResource paste_action();
 
-  @Resource(value = "reload_action.png")
-  AbstractImagePrototype reload_action();
+  @Source("reload_action.png")
+  ImageResource reload_action();
 
-  @Resource(value = "reload_db_action.png")
-  AbstractImagePrototype reload_db_action();
+  @Source("reload_db_action.png")
+  ImageResource reload_db_action();
 }

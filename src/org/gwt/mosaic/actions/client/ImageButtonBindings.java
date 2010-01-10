@@ -7,6 +7,7 @@ import org.gwt.mosaic.ui.client.ImageButton;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 public class ImageButtonBindings extends ActionBindings<ImageButton> implements
@@ -16,21 +17,21 @@ public class ImageButtonBindings extends ActionBindings<ImageButton> implements
     public ImageButtonBean(ImageButton target) {
       super(target);
     }
-    
+
     @Override
     public void setEnabled(Boolean enabled) {
       // Do nothing!
     }
-    
+
     @Override
     public Boolean getEnabled() {
       return Boolean.TRUE;
     }
-    
+
     @Override
-    public void setImage(AbstractImagePrototype image) {
+    public void setImage(ImageResource image) {
       super.setImage(image);
-      image.applyTo(getTarget().getImage());
+      AbstractImagePrototype.create(image).applyTo(getTarget().getImage());
     }
   }
 
