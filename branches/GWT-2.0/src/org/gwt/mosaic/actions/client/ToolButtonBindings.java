@@ -27,6 +27,7 @@ import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /**
@@ -44,11 +45,12 @@ public class ToolButtonBindings extends ActionBindings<ToolButton> implements
     }
 
     private String createLabel() {
-      AbstractImagePrototype image = this.getImage();
+      ImageResource image = this.getImage();
       if (image == null) {
         return text;
       } else {
-        return ButtonHelper.createButtonLabel(image, text, labelType);
+        return ButtonHelper.createButtonLabel(
+            AbstractImagePrototype.create(image), text, labelType);
       }
     }
 
@@ -80,7 +82,7 @@ public class ToolButtonBindings extends ActionBindings<ToolButton> implements
     }
 
     @Override
-    public void setImage(AbstractImagePrototype image) {
+    public void setImage(ImageResource image) {
       super.setImage(image);
       target.setHTML(createLabel());
     }

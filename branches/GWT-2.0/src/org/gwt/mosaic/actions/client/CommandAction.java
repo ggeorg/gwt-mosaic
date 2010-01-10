@@ -28,11 +28,11 @@ import org.gwt.beansbinding.observablecollections.client.ObservableMap;
 import org.gwt.beansbinding.observablecollections.client.ObservableMapListener;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /**
- * The base class for the action library. All actions will inherit from this
+ * The base class for the action module. All actions will inherit from this
  * class. The {@code CommandAction} defines a generic implementation of
  * {@link CommandAction#actionPerformed(ActionEvent)}. Here the
  * {@link CommandAction#actionPerformed(ActionEvent)} simply calls the {@code
@@ -148,8 +148,7 @@ public class CommandAction extends AbstractMap<String, Object> implements
    * @param icon the action's icon
    * @param command the command for this action to act upon
    */
-  public CommandAction(final String name, AbstractImagePrototype icon,
-      Command command) {
+  public CommandAction(final String name, ImageResource icon, Command command) {
     super();
     putValue(Action.NAME, name);
     putValue(Action.SMALL_ICON, icon);

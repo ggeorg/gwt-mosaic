@@ -21,6 +21,7 @@ import org.gwt.mosaic.actions.client.ToggleButtonBindings.ToggleButtonBean;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -42,10 +43,11 @@ public class CheckBoxMenuItemBindings extends ActionBindings<MenuItem> {
     }
 
     private String createLabel() {
-      AbstractImagePrototype image = getSelected()
+      ImageResource image = getSelected()
           ? CommandAction.ACTION_IMAGES.menuitem_checkbox()
           : CommandAction.ACTION_IMAGES.noimage();
-      return ButtonHelper.createButtonLabel(image, text,
+      return ButtonHelper.createButtonLabel(
+          AbstractImagePrototype.create(image), text,
           ButtonLabelType.TEXT_ON_RIGHT);
     }
 
