@@ -11,11 +11,9 @@
 					<m:ToolButton text="ToolButton #2" />
 					<m:ToolButton text="ToolButton #3" />
 					<m:ToolBarSpring />
-					<m:ToolButton text="ToolButton #4" />
+					<m:ToolButton text="ToolButton #4" width="50%" />
+					<m:ToolBarSpring />
 					<m:ToolButton text="ToolButton #5" />
-					<m:ToolBarSpring />
-					<m:ToolBarSpring />
-					<m:ToolButton text="ToolButton #6" />
 				</m:ToolBar>
 			</l:BoxLayoutData>
 		</l:BoxLayout>

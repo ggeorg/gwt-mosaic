@@ -110,6 +110,7 @@ import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderFillLayo
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderFlowLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderGridLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderRowLayout;
+import org.gwt.mosaic.showcase.client.content.uibinder.panels.CwUiBinderToolBar;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -483,7 +484,7 @@ public class Showcase implements EntryPoint {
     TreeItem catFlowLayout = catPanels.addItem("FlowLayout");
     setupMainMenuOption(catFlowLayout, new CwFlowLayout(constants),
         IMAGES.catPanels());
-    
+
     TreeItem catAbsoluteLayout = catPanels.addItem("AbsoluteLayout");
     setupMainMenuOption(catAbsoluteLayout, new CwAbsoluteLayout(constants),
         IMAGES.catPanels());
@@ -618,22 +619,26 @@ public class Showcase implements EntryPoint {
     TreeItem catUiBinder = mainMenu.addItem("UiBinder");
 
     TreeItem catUiBinderLayout = catUiBinder.addItem("LayoutPanel");
-    setupMainMenuOption(catUiBinderLayout,
-        new CwUiBinderFillLayout(constants), IMAGES.catPanels());
-    setupMainMenuOption(catUiBinderLayout,
-        new CwUiBinderBoxLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout, new CwUiBinderFillLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout, new CwUiBinderBoxLayout(constants),
+        IMAGES.catPanels());
     setupMainMenuOption(catUiBinderLayout,
         new CwUiBinderBorderLayout(constants), IMAGES.catPanels());
-    setupMainMenuOption(catUiBinderLayout,
-        new CwUiBinderGridLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout, new CwUiBinderGridLayout(constants),
+        IMAGES.catPanels());
     setupMainMenuOption(catUiBinderLayout,
         new CwUiBinderColumnLayout(constants), IMAGES.catPanels());
-    setupMainMenuOption(catUiBinderLayout,
-        new CwUiBinderRowLayout(constants), IMAGES.catPanels());
-    setupMainMenuOption(catUiBinderLayout,
-        new CwUiBinderFlowLayout(constants), IMAGES.catPanels());
-    setupMainMenuOption(catUiBinderLayout,
-        new CwUiBinderAbsoluteLayout(constants), IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout, new CwUiBinderRowLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout, new CwUiBinderFlowLayout(constants),
+        IMAGES.catPanels());
+    setupMainMenuOption(catUiBinderLayout, new CwUiBinderAbsoluteLayout(
+        constants), IMAGES.catPanels());
+
+    TreeItem catUiBinderPanels = catUiBinder.addItem("Panels");
+    setupMainMenuOption(catUiBinderPanels, new CwUiBinderToolBar(constants),
+        IMAGES.catPanels());
 
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
