@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Georgios J. Georgopoulos, All rights reserved.
+ * Copyright (C) 2009-2010 Georgios J. Georgopoulos, All rights reserved.
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -45,7 +45,7 @@ public class ApplicationContext {
   
   private ApplicationConstants constants;
   
-  private ApplicationImageBundle imageBundle;
+  private ApplicationClientBundle clientBundle;
 
   /**
    * Return the {@code Application} singleton, or {@code null} if {@code launch}
@@ -92,12 +92,12 @@ public class ApplicationContext {
     return constants;
   }
   
-  void setImageBundle(ApplicationImageBundle imageBundle) {
-    this.imageBundle = imageBundle;
+  void setClientBundle(ApplicationClientBundle clientBundle) {
+    this.clientBundle = clientBundle;
   }
   
-  public final ApplicationImageBundle getImageBundle() {
-    return imageBundle;
+  public final ApplicationClientBundle getClientBundle() {
+    return clientBundle;
   }
 
 }

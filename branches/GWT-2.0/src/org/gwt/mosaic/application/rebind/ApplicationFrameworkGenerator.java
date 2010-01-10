@@ -159,7 +159,7 @@ public class ApplicationFrameworkGenerator extends Generator {
         if (descriptor.image != null) {
           sourceWriter.println("action.putValue(Action.SMALL_ICON, (("
               + descriptor.classType.getErasedType().getQualifiedSourceName()
-              + "ImageBundle) application.getContext().getImageBundle())."
+              + "ClientBundle) application.getContext().getClientBundle())."
               + descriptor.image + "());");
         }
         if (descriptor.selectedProperty != null) {
