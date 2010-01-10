@@ -38,6 +38,7 @@ import com.google.gwt.uibinder.attributeparsers.AttributeParser;
 import com.google.gwt.uibinder.attributeparsers.AttributeParsers;
 import com.google.gwt.uibinder.attributeparsers.BundleAttributeParser;
 import com.google.gwt.uibinder.attributeparsers.BundleAttributeParsers;
+import com.google.gwt.uibinder.client.ElementParserToUse;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.elementparsers.AttributeMessageParser;
 import com.google.gwt.uibinder.elementparsers.BeanParser;
@@ -946,9 +947,34 @@ public class UiBinderWriter {
     addWidgetParser("StackLayoutPanel");
     addWidgetParser("TabLayoutPanel");
 
-    // GWT Mosaic Parsers
-    addElementParser("org.gwt.mosaic.ui.client.layout.LayoutPanel",
-        "org.gwt.mosaic.ui.elementparsers.LayoutPanelParser");
+    // Register custom widget parsers... (almost automagically)
+
+    Collection<OwnerField> uiFields = ownerClass.getUiFields();
+
+    if (uiFields == null) {
+      return;
+    }
+
+    for (OwnerField uiField : uiFields) {
+      
+      JClassType fieldType = uiField.getType().getRawType().isClass();
+      
+      if (fieldType != null
+          && fieldType.isAnnotationPresent(ElementParserToUse.class)) {
+
+        String uiClassName = fieldType.getQualifiedSourceName();
+
+        if (elementParsers.containsKey(uiClassName)) {
+          continue;
+        }
+
+        String parserClassName = fieldType.getAnnotation(
+            ElementParserToUse.class).className();
+        if (parserClassName != null && parserClassName.length() > 0) {
+          addElementParser(uiClassName, parserClassName);
+        }
+      }
+    }
   }
 
   /**
