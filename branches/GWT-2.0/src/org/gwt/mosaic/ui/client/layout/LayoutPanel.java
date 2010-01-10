@@ -31,6 +31,7 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.uibinder.client.ElementParserToUse;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -52,6 +53,7 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
+@ElementParserToUse(className = "org.gwt.mosaic.ui.elementparsers.LayoutPanelParser")
 public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     HasAnimation {
 
@@ -580,15 +582,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   // -------
 
-  @Override
-  public void setHeight(String height) {
-    if (!isAttached()) {
-      this.onLoadHeight = height;
-    } else {
-      super.setHeight(height);
-    }
-  }
-
   /**
    * Sets the {@link LayoutManager} for this panel.
    * 
@@ -635,20 +628,31 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     this.widgetSpacing = widgetSpacing;
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
+   */
   @Override
   public void setWidth(String width) {
+    super.setWidth(width);
     if (!isAttached()) {
       this.onLoadWidth = width;
-    } else {
-      super.setWidth(width);
     }
   }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
+   */
+  @Override
+  public void setHeight(String height) {
+    super.setHeight(height);
 
-  public LayoutData getLayoutData(Widget widget) {
-    if (getDecoratorWidget(widget).getParent() == this) {
-      return (LayoutData) BaseLayout.getLayoutData(widget);
+    if (!isAttached()) {
+      this.onLoadHeight = height;
     }
-    return null;
   }
 
   public UnitConverter getUnitConverter() {

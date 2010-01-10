@@ -23,6 +23,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -95,10 +96,22 @@ public class ToolBar extends LayoutComposite implements IndexedPanel,
     if (w instanceof ToolBarSpring) {
       layoutPanel.add(w, new BoxLayoutData(FillStyle.BOTH));
     } else if (boxLayoutMgr.getOrientation() == Orientation.HORIZONTAL) {
-      layoutPanel.add(w, new BoxLayoutData(FillStyle.VERTICAL));
+      final String width = getWidgetWidth(w);
+      layoutPanel.add(w, new BoxLayoutData(FillStyle.VERTICAL, width, null));
     } else {
-      getLayoutPanel().add(w, new BoxLayoutData(FillStyle.BOTH));
+      final String height = getWidgetHeight(w);
+      getLayoutPanel().add(w, new BoxLayoutData(FillStyle.BOTH, null, height));
     }
+  }
+
+  private String getWidgetWidth(Widget w) {
+    final String width = w.getElement().getStyle().getWidth();
+    return (width != null && width.length() > 0) ? width : null;
+  }
+
+  private String getWidgetHeight(Widget w) {
+    final String height = w.getElement().getStyle().getHeight();
+    return (height != null && height.length() > 0) ? height : null;
   }
 
   /**

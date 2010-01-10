@@ -154,24 +154,24 @@ public abstract class LayoutComposite extends Composite implements
   public ResizableWidget getResizableWidget() {
     return getLayoutPanel().getResizableWidget();
   }
-
-  @Override
-  public void setHeight(String height) {
-    getLayoutPanel().setHeight(height);
-  }
-
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
+   */
   @Override
   public void setWidth(String width) {
     getLayoutPanel().setWidth(width);
   }
 
-  // @Override
-  // public void setLayoutData(Object layoutData) {
-  // getLayoutPanel().setLayoutData(layoutData);
-  // }
-  //  
-  // @Override
-  // public Object getLayoutData() {
-  // return getLayoutPanel().getLayoutData();
-  // }
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
+   */
+  @Override
+  public void setHeight(String height) {
+    getLayoutPanel().setHeight(height);
+  }
 }
