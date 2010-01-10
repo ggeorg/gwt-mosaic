@@ -115,4 +115,9 @@ public class LayoutPanelParser implements ElementParser {
     return uri != null && uri.startsWith("urn:import:");
   }
 
+  public String getUiType() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

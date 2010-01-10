@@ -187,6 +187,18 @@ public final class BoxLayoutData extends LayoutData {
     }
   }
 
+  public BoxLayoutData(final FillStyle fillStyle, final String width,
+      final String height) {
+    this(fillStyle, false);
+    setPreferredSize(width, height);
+  }
+
+  public BoxLayoutData(final FillStyle fillStyle, final String width,
+      final String height, final boolean decorate) {
+    this(fillStyle, decorate);
+    setPreferredSize(width, height);
+  }
+
   /**
    * Returns {@code true} the child widget will be stretched vertically, {@code
    * false} otherwise.
