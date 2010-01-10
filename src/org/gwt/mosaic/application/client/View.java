@@ -86,8 +86,10 @@ public abstract class View extends AbstractBean {
     if (newChild != null) {
       layoutPanel.add(newChild, layoutData);
     }
-    layoutPanel.invalidate(newChild);
-    layoutPanel.layout();
+    if (layoutPanel.isAttached()) {
+      layoutPanel.invalidate(newChild);
+      // XXX layoutPanel.layout();
+    }
   }
 
   public void setWidget(Widget widget) {
@@ -107,11 +109,15 @@ public abstract class View extends AbstractBean {
   }
 
   public void setToolBox(Widget toolBox) {
+    setToolBox(toolBox, false);
+  }
+
+  public void setToolBox(Widget toolBox, boolean decorate) {
     assert (toolBox != null);
     Widget oldValue = this.toolBox;
     this.toolBox = toolBox;
     replaceLayoutPanelChild(oldValue, this.toolBox, new BorderLayoutData(
-        Region.NORTH));
+        Region.NORTH, decorate));
     firePropertyChange("toolBox", oldValue, this.toolBox);
   }
 

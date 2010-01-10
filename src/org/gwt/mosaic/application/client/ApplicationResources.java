@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Georgios J. Georgopoulos, All rights reserved.
+ * Copyright (C) 2009-2010 Georgios J. Georgopoulos, All rights reserved.
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -24,7 +24,9 @@ package org.gwt.mosaic.application.client;
  * 
  */
 public interface ApplicationResources {
-  ApplicationConstants getApplicationConstants();
+  ApplicationConstants getConstants();
+  
+  // TODO messages
 
-  ApplicationImageBundle getApplicationImageBundle();
+  ApplicationClientBundle getClientBundle();
 }

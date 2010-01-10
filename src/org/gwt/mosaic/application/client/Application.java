@@ -100,16 +100,18 @@ public abstract class Application extends AbstractBean {
     Application.application = application;
     ApplicationContext context = application.getContext();
 
-    if (resources.getApplicationConstants() == null) {
-      context.setConstants((ApplicationConstants) GWT.create(ApplicationConstants.class));
+    if (resources.getConstants() == null) {
+      final ApplicationConstants constants = GWT.create(ApplicationConstants.class);
+      context.setConstants(constants);
     } else {
-      context.setConstants(resources.getApplicationConstants());
+      context.setConstants(resources.getConstants());
     }
 
-    if (resources.getApplicationImageBundle() == null) {
-      context.setImageBundle((ApplicationImageBundle) GWT.create(ApplicationImageBundle.class));
+    if (resources.getClientBundle() == null) {
+      final ApplicationClientBundle clientBundle = GWT.create(ApplicationClientBundle.class);
+      context.setClientBundle(clientBundle);
     } else {
-      context.setImageBundle(resources.getApplicationImageBundle());
+      context.setClientBundle(resources.getClientBundle());
     }
 
     ApplicationFramework applicationFramework = GWT.create(ApplicationFramework.class);
@@ -133,12 +135,15 @@ public abstract class Application extends AbstractBean {
   public static synchronized <T extends Application> void launch(
       final T application) {
     launch(application, new ApplicationResources() {
-      public ApplicationConstants getApplicationConstants() {
-        return (ApplicationConstants) GWT.create(ApplicationConstants.class);
+      private final ApplicationConstants constants = GWT.create(ApplicationConstants.class);
+      private final ApplicationClientBundle clientBundle = GWT.create(ApplicationClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
       }
 
-      public ApplicationImageBundle getApplicationImageBundle() {
-        return (ApplicationImageBundle) GWT.create(ApplicationImageBundle.class);
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
       }
     });
   }
@@ -163,18 +168,18 @@ public abstract class Application extends AbstractBean {
     /*
      * Setup window closing and close handlers.
      */
-    
+
     setupClosingHandler("");
-    
+
     Window.addCloseHandler(new CloseHandler<Window>() {
       public void onClose(CloseEvent<Window> event) {
         shutdown();
       }
     });
   }
-  
+
   private HandlerRegistration closingHandlerRegistration;
-  
+
   public void setupClosingHandler(final String message) {
     closingHandlerRegistration = Window.addWindowClosingHandler(new ClosingHandler() {
       public void onWindowClosing(ClosingEvent event) {
@@ -182,7 +187,7 @@ public abstract class Application extends AbstractBean {
       }
     });
   }
-  
+
   public void removeClosingHandler() {
     closingHandlerRegistration.removeHandler();
   }
