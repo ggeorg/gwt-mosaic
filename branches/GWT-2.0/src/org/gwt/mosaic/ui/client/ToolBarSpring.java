@@ -15,29 +15,23 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import org.gwt.mosaic.core.client.DOM;
-
-import com.google.gwt.user.client.ui.Widget;
-
 /**
- * A separator that can be placed in a {@link ToolBar}.
+ * Flexible space between {@link ToolBar} items.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * @see ToolBar
  */
-public class ToolBarSeparator extends Widget {
-  
+public class ToolBarSpring extends ToolBarSeparator {
+
   /**
    * The default style name.
    */
-  private static final String DEFAULT_STYLENAME = "mosaic-ToolBarSeparator";
-  
+  private static final String DEFAULT_STYLENAME = "mosaic-ToolBarSpring";
+
   /**
-   * Creates a {@code ToolBarSeparator} instance.
+   * Creates a {@code ToolBarSpring} instance.
    */
-  public ToolBarSeparator() {
-    setElement(DOM.createSpan());
+  public ToolBarSpring() {
     setStyleName(DEFAULT_STYLENAME);
   }
-
 }
