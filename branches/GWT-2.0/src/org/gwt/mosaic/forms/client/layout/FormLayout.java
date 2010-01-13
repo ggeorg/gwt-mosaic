@@ -1790,7 +1790,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
       Widget widget = iter.next();
-      addLayoutComponent(widget, getLayoutData(widget));
+      addLayoutComponent(widget, widget.getLayoutData());
       visibleChildList.add(widget);
     }
 

@@ -136,7 +136,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
 
       visibleChildList.add(widget);
 
-      GridLayoutData layoutData = getGridLayoutData(widget);
+      GridLayoutData layoutData = getLayoutData(widget);
 
       while (widgetMatrix[cursorX][cursorY] != null) {
         if (++cursorX >= cols) {
@@ -171,7 +171,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
     }
   }
 
-  private GridLayoutData getGridLayoutData(Widget widget) {
+  private GridLayoutData getLayoutData(Widget widget) {
     Object layoutDataObject = widget.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof GridLayoutData)) {
@@ -324,7 +324,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             widget = ((DecoratorPanel) widget).getWidget();
           }
 
-          GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
+          GridLayoutData layoutData = (GridLayoutData) widget.getLayoutData();
 
           final Dimension dim = new Dimension(
               preferredWidthMeasure.sizeOf(widget),
@@ -425,7 +425,7 @@ public class GridLayout extends BaseLayout implements HasAlignment {
           int cellWidth;
           int cellHeight;
 
-          final GridLayoutData layoutData = (GridLayoutData) getLayoutData(widget);
+          final GridLayoutData layoutData = (GridLayoutData) widget.getLayoutData();
           if (layoutData.hasDecoratorPanel()) {
             final Dimension decPanelFrameSize = getDecoratorFrameSize(
                 layoutData.decoratorPanel, widget);

@@ -249,7 +249,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         continue;
       } else if (child == null) {
         child = widget;
-        layoutData = getFillLayoutData(child);
+        layoutData = getLayoutData(child);
         visibleChildList.add(child);
       }
     }
@@ -257,7 +257,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
     return initialized = child != null;
   }
 
-  private FillLayoutData getFillLayoutData(Widget child) {
+  private FillLayoutData getLayoutData(Widget child) {
     Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof FillLayoutData)) {

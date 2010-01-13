@@ -69,7 +69,7 @@ public class FlowLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        final FlowLayoutData layoutData = getFlowLayoutData(child);
+        final FlowLayoutData layoutData = getLayoutData(child);
         
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -134,7 +134,7 @@ public class FlowLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        final FlowLayoutData layoutData = getFlowLayoutData(child);
+        final FlowLayoutData layoutData = getLayoutData(child);
         
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -183,7 +183,7 @@ public class FlowLayout extends BaseLayout {
     }
   }
   
-  private FlowLayoutData getFlowLayoutData(Widget child) {
+  private FlowLayoutData getLayoutData(Widget child) {
     Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof FlowLayoutData)) {

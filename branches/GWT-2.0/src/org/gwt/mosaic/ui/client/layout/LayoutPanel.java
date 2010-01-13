@@ -29,6 +29,9 @@ import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
+import com.allen_sauer.gwt.dnd.client.DragContext;
+import com.allen_sauer.gwt.dnd.client.VetoDragException;
+import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.ElementParserToUse;
@@ -55,7 +58,7 @@ import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
  */
 @ElementParserToUse(className = "org.gwt.mosaic.ui.elementparsers.LayoutPanelParser")
 public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
-    HasAnimation {
+    HasAnimation, DropController {
 
   /**
    * The default style name.
@@ -139,7 +142,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   @Override
   public void add(Widget w) {
     addImpl(w);
-    invalidate();
+    invalidate(w);
   }
 
   /**
@@ -162,9 +165,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     widget.setLayoutData(layoutData);
     if (layoutData.hasDecoratorPanel()) {
       final DecoratorPanel decPanel = layoutData.decoratorPanel;
-      decPanel.setWidget(widget);
-      // decPanel.setVisible(widget.isVisible());
       add(decPanel);
+      decPanel.setWidget(widget);
     } else {
       add(widget);
     }
@@ -307,8 +309,20 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   @Override
   protected void insert(Widget child, Element container, int beforeIndex,
       boolean domInsert) {
-    super.insert(child, container, beforeIndex, domInsert);
-    invalidate();
+    if (child instanceof DecoratorPanel) {
+      throw new IllegalArgumentException(
+          "Adding a DecoratorPanel is not allowed!");
+    }
+    final Object layoutDataObject = child.getLayoutData();
+    if (layoutDataObject != null && layoutDataObject instanceof LayoutData
+        && ((LayoutData) layoutDataObject).hasDecoratorPanel()) {
+      final DecoratorPanel decPanel = ((LayoutData) layoutDataObject).decoratorPanel;
+      super.insert(decPanel, getElement(), beforeIndex, true);
+      decPanel.setWidget(child);
+    } else {
+      super.insert(child, container, beforeIndex, domInsert);
+    }
+    invalidate(child);
   }
 
   /**
@@ -320,14 +334,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       throw new IllegalArgumentException(
           "Adding a DecoratorPanel is not allowed!");
     }
-    BaseLayout.setLayoutData(w, layoutData);
-    if (layoutData.hasDecoratorPanel()) {
-      final DecoratorPanel decPanel = layoutData.decoratorPanel;
-      decPanel.setWidget(w);
-      insert(decPanel, getElement(), beforeIndex, true);
-    } else {
-      insert(w, getElement(), beforeIndex, true);
-    }
+    w.setLayoutData(layoutData);
+    insert(w, getElement(), beforeIndex, true);
   }
 
   /**
@@ -538,6 +546,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
 
     if (removeImpl(widget)) {
+      //invalidate(w);
       invalidate();
       return true;
     } else {
@@ -640,7 +649,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
       this.onLoadWidth = width;
     }
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -750,4 +759,86 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     this.animationCallback = animationCallback;
   }
 
+  // Drag & Drop support ---------------------------------------------------
+
+  private LayoutPanelDragController dragController;
+
+  public void enableDragAndDrop(boolean allowDroppingOnBoundaryPanel) {
+    if (dragController != null) {
+      dragController.unregisterDropControllers();
+      dragController.clearSelection();
+      dragController.resetCache();
+    }
+    dragController = new LayoutPanelDragController(this,
+        allowDroppingOnBoundaryPanel);
+    dragController.setBehaviorMultipleSelection(false);
+    dragController.setBehaviorDragProxy(true);
+  }
+
+  public boolean isDragAndDropEnabled() {
+    return dragController != null;
+  }
+
+  public void makeDraggable(Widget draggable) {
+    if (isDragAndDropEnabled()) {
+      dragController.makeDraggable(draggable);
+    }
+  }
+
+  public void makeDraggable(Widget draggable, Widget dragHandle) {
+    if (isDragAndDropEnabled()) {
+      dragController.makeDraggable(draggable, dragHandle);
+    }
+  }
+
+  public void makeNotDraggable(Widget draggable) {
+    if (isDragAndDropEnabled()) {
+      dragController.makeNotDraggable(draggable);
+    }
+  }
+
+  public void registerDropController(DropController dropController) {
+    if (isDragAndDropEnabled()) {
+      dragController.registerDropController(dropController);
+    }
+  }
+
+  public void unregisterDropController(DropController dropController) {
+    if (isDragAndDropEnabled()) {
+      dragController.unregisterDropController(dropController);
+    }
+  }
+
+  private final LayoutPanelDropController dropController = new LayoutPanelDropController(
+      this);
+
+  public void unregisterDropControllers() {
+    if (isDragAndDropEnabled()) {
+      dragController.unregisterDropControllers();
+    }
+  }
+
+  public Widget getDropTarget() {
+    return dropController.getDropTarget();
+  }
+
+  public void onDrop(DragContext context) {
+    dropController.onDrop(context);
+  }
+
+  public void onEnter(DragContext context) {
+    dropController.onEnter(context);
+  }
+
+  public void onLeave(DragContext context) {
+    dropController.onLeave(context);
+  }
+
+  public void onMove(DragContext context) {
+    dropController.onMove(context);
+  }
+
+  public void onPreviewDrop(DragContext context) throws VetoDragException {
+    dropController.onPreviewDrop(context);
+  }
 }

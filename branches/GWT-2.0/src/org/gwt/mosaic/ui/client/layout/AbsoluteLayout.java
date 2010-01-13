@@ -63,31 +63,23 @@ public class AbsoluteLayout extends BaseLayout {
    * should be repositioned when the layout panel is resized.
    */
   public enum MarginPolicy {
-    NONE(false, false, false, false), 
-    BOTTOM(false, false, false, true), 
-    TOP(false, false, true, false),
+    NONE(false, false, false, false), BOTTOM(false, false, false, true), TOP(
+        false, false, true, false),
 
-    VCENTER(false, false, true, true),
-    TOP_BOTTOM(false, false, true, true),
+    VCENTER(false, false, true, true), TOP_BOTTOM(false, false, true, true),
 
-    RIGHT(false, true, false, false),
-    RIGHT_BOTTOM(false, true, false, true),
-    RIGHT_TOP(false, true, true, false),
-    RIGHT_TOP_BOTTOM(false, true, true, true),
+    RIGHT(false, true, false, false), RIGHT_BOTTOM(false, true, false, true), RIGHT_TOP(
+        false, true, true, false), RIGHT_TOP_BOTTOM(false, true, true, true),
 
-    LEFT(true, false, false, false),
-    LEFT_BOTTOM(true, false, false, true),
-    LEFT_TOP(true, false, true, false),
-    LEFT_TOP_BOTTOM(true, false, true, true),
+    LEFT(true, false, false, false), LEFT_BOTTOM(true, false, false, true), LEFT_TOP(
+        true, false, true, false), LEFT_TOP_BOTTOM(true, false, true, true),
 
-    HCENTER(true, true, false, false),
-    LEFT_RIGHT(true, true, false, false),
+    HCENTER(true, true, false, false), LEFT_RIGHT(true, true, false, false),
 
-    LEFT_RIGHT_BOTTOM(true, true, false, true),
-    LEFT_TOP_RIGHT(true, true, true, false),
+    LEFT_RIGHT_BOTTOM(true, true, false, true), LEFT_TOP_RIGHT(true, true,
+        true, false),
 
-    CENTER(true, true, true, true),
-    ALL(true, true, true, true);
+    CENTER(true, true, true, true), ALL(true, true, true, true);
 
     final boolean left, right, top, bottom;
 
@@ -119,9 +111,9 @@ public class AbsoluteLayout extends BaseLayout {
    * Dimensions of the panel.
    */
   private ParsedSize width, height;
-  
+
   /**
-   * Constructor for absolute layout (width=32em, height=24em). 
+   * Constructor for absolute layout (width=32em, height=24em).
    */
   public AbsoluteLayout() {
     this("32em", "24em");
@@ -237,7 +229,7 @@ public class AbsoluteLayout extends BaseLayout {
           continue;
         }
 
-        AbsoluteLayoutData layoutData = getAbsoluteLayoutData(child);
+        AbsoluteLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -256,8 +248,8 @@ public class AbsoluteLayout extends BaseLayout {
           clientSize.height = getPreferredSize(layoutPanel, child, layoutData).height;
         }
 
-        Point point = new Point(layoutPanel.toPixelSize(layoutData.left,
-            true), layoutPanel.toPixelSize(layoutData.top, false));
+        Point point = new Point(layoutPanel.toPixelSize(layoutData.left, true),
+            layoutPanel.toPixelSize(layoutData.top, false));
 
         int fw = clientSize.width;
         int fh = clientSize.height;
@@ -296,7 +288,7 @@ public class AbsoluteLayout extends BaseLayout {
         layoutData.setSourceWidth(child.getOffsetWidth());
         layoutData.setSourceHeight(child.getOffsetHeight());
       }
-      
+
       super.layoutPanel(layoutPanel);
 
     } catch (Exception e) {
@@ -305,7 +297,7 @@ public class AbsoluteLayout extends BaseLayout {
     }
   }
 
-  private AbsoluteLayoutData getAbsoluteLayoutData(Widget child) {
+  private AbsoluteLayoutData getLayoutData(Widget child) {
     Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof AbsoluteLayoutData)) {
@@ -321,7 +313,7 @@ public class AbsoluteLayout extends BaseLayout {
   public ParsedSize getWidth() {
     return width;
   }
-  
+
   /**
    * @return the initial panel width
    */
@@ -348,11 +340,10 @@ public class AbsoluteLayout extends BaseLayout {
    * @param height the height to set
    */
   public void setHeight(String height) {
-    this.height = new ParsedSize(
-        FloatParser.parseFloat(height, 0.0f), UnitParser.parseUnit(
-            height, Unit.PX));
+    this.height = new ParsedSize(FloatParser.parseFloat(height, 0.0f),
+        UnitParser.parseUnit(height, Unit.PX));
   }
-  
+
   /**
    * @return the height
    */

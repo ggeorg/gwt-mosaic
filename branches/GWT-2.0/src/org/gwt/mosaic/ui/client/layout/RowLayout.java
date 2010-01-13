@@ -69,7 +69,7 @@ public class RowLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        RowLayoutData layoutData = getRowLayoutData(child);
+        RowLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -106,6 +106,7 @@ public class RowLayout extends BaseLayout {
    */
   @Override
   public void layoutPanel(LayoutPanel layoutPanel) {
+    Widget test = null;
     try {
       if (layoutPanel == null || !init(layoutPanel)) {
         return;
@@ -138,7 +139,7 @@ public class RowLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        RowLayoutData layoutData = getRowLayoutData(child);
+        RowLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -163,6 +164,8 @@ public class RowLayout extends BaseLayout {
         if (child instanceof DecoratorPanel) {
           child = ((DecoratorPanel) child).getWidget();
         }
+
+        test = child;
 
         final RowLayoutData layoutData = (RowLayoutData) child.getLayoutData();
 
@@ -193,7 +196,7 @@ public class RowLayout extends BaseLayout {
             layoutData.splitBar = new RowLayoutSplitBar(layoutPanel, child,
                 visibleChildList.get(i + 1));
             layoutPanel.addImpl(layoutData.splitBar);
-          } else if (!layoutData.splitBar.isAttached()) {
+          } else {
             layoutData.splitBar.widgetB = visibleChildList.get(i + 1);
             layoutPanel.addImpl(layoutData.splitBar);
           }
@@ -215,11 +218,12 @@ public class RowLayout extends BaseLayout {
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage());
+      Window.alert(getClass().getName() + ".layoutPanel() : " + e.getMessage()
+          + "::" + test);
     }
   }
 
-  private RowLayoutData getRowLayoutData(Widget child) {
+  private RowLayoutData getLayoutData(Widget child) {
     Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof RowLayoutData)) {
