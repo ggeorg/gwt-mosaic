@@ -25,6 +25,7 @@ import java.util.Map;
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.util.DelayedRunnable;
+import org.gwt.mosaic.showcase.client.content.draganddrop.CwDNDColumnRowLayout;
 import org.gwt.mosaic.showcase.client.content.forms.CwQuickStartExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwAlignmentExample;
 import org.gwt.mosaic.showcase.client.content.forms.basics.CwBasicSizesExample;
@@ -60,7 +61,6 @@ import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Histogram;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Horizontal;
 import org.gwt.mosaic.showcase.client.content.layout.CwBoxLayoutTest_Vertical;
 import org.gwt.mosaic.showcase.client.content.layout.CwCalculatorLayout;
-import org.gwt.mosaic.showcase.client.content.layout.CwColumnRowLayout;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutAnimation;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutCentered;
 import org.gwt.mosaic.showcase.client.content.layout.CwFillLayoutHAlignment;
@@ -478,8 +478,8 @@ public class Showcase implements EntryPoint {
         IMAGES.catPanels());
 
     TreeItem catColumnRowLayout = catPanels.addItem("Column/RowLayout");
-    setupMainMenuOption(catColumnRowLayout, new CwColumnRowLayout(constants),
-        IMAGES.catPanels());
+    setupMainMenuOption(catColumnRowLayout,
+        new CwDNDColumnRowLayout(constants), IMAGES.catPanels());
 
     TreeItem catFlowLayout = catPanels.addItem("FlowLayout");
     setupMainMenuOption(catFlowLayout, new CwFlowLayout(constants),
@@ -638,6 +638,11 @@ public class Showcase implements EntryPoint {
 
     TreeItem catUiBinderPanels = catUiBinder.addItem("Panels");
     setupMainMenuOption(catUiBinderPanels, new CwUiBinderToolBar(constants),
+        IMAGES.catPanels());
+
+    // DragAndDrop
+    TreeItem catDargAndDrop = mainMenu.addItem("Drag & Drop");
+    setupMainMenuOption(catDargAndDrop, new CwDNDColumnRowLayout(constants),
         IMAGES.catPanels());
 
     // Other

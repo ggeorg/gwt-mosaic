@@ -230,7 +230,7 @@ public abstract class BaseLayout implements LayoutManager {
         child = ((DecoratorPanel) child).getWidget();
       }
 
-      final LayoutData layoutData = (LayoutData) getLayoutData(child);
+      final LayoutData layoutData = (LayoutData) child.getLayoutData();
 
       WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
           layoutData.targetTop, layoutData.targetWidth, layoutData.targetHeight);
@@ -278,7 +278,7 @@ public abstract class BaseLayout implements LayoutManager {
           if (child instanceof DecoratorPanel) {
             child = ((DecoratorPanel) child).getWidget();
           }
-          ((LayoutData) getLayoutData(child)).clearSource();
+          ((LayoutData) child.getLayoutData()).clearSource();
         }
       }
 
@@ -289,7 +289,7 @@ public abstract class BaseLayout implements LayoutManager {
             child = ((DecoratorPanel) child).getWidget();
           }
 
-          final LayoutData layoutData = (LayoutData) getLayoutData(child);
+          final LayoutData layoutData = (LayoutData) child.getLayoutData();
 
           layoutData.left = (int) (layoutData.getSourceLeft() + (layoutData.targetLeft - layoutData.getSourceLeft())
               * progress);
@@ -462,35 +462,6 @@ public abstract class BaseLayout implements LayoutManager {
       minimumSizes.remove(widget);
       preferredSizes.remove(widget);
     }
-  }
-
-  // LayoutData setter & getter methods ************************************
-
-  /**
-   * Gets the panel-defined layout data associated with this widget.
-   * 
-   * @param widget the widget
-   * @return the widget's layout data
-   * @deprecated use {@link Widget#getLayoutData()} instead
-   */
-  @Deprecated
-  protected final static Object getLayoutData(Widget widget) {
-    return widget.getLayoutData();
-  }
-
-  /**
-   * Sets the panel-defined layout data associated with this widget. Only the
-   * panel that currently contains a widget should ever set this value. It
-   * serves as a place to store layout bookkeeping data associated with a
-   * widget.
-   * 
-   * @param widget the widget
-   * @param layoutData the widget's layout data
-   * @deprecated use {@link Widget#setLayoutData(Object)} instead
-   */
-  @Deprecated
-  protected final static void setLayoutData(Widget widget, Object layoutData) {
-    widget.setLayoutData(layoutData);
   }
 
 }

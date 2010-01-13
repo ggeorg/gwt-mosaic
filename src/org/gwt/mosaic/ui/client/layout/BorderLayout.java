@@ -211,12 +211,12 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
 
   private Widget placeHolder;
 
-  private BorderLayoutData getBorderLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+  private BorderLayoutData getLayoutData(Widget child) {
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof BorderLayoutData)) {
       layoutDataObject = new BorderLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (BorderLayoutData) layoutDataObject;
   }
@@ -244,7 +244,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       final int spacing = layoutPanel.getWidgetSpacing();
 
       if (north != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
+        BorderLayoutData layoutData = (BorderLayoutData) north.getLayoutData();
 
         int northHeight = preferredHeightMeasure.sizeOf(north);
 
@@ -257,7 +257,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (south != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
+        BorderLayoutData layoutData = (BorderLayoutData) south.getLayoutData();
 
         int southHeight = preferredHeightMeasure.sizeOf(south);;
 
@@ -272,7 +272,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       Dimension westSize = null;
 
       if (west != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
+        BorderLayoutData layoutData = (BorderLayoutData) west.getLayoutData();
 
         int westWidth = preferredWidthMeasure.sizeOf(west);
 
@@ -287,7 +287,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       Dimension eastSize = null;
 
       if (east != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
+        BorderLayoutData layoutData = (BorderLayoutData) east.getLayoutData();
 
         int eastWidth = preferredWidthMeasure.sizeOf(east);
 
@@ -324,7 +324,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
         height += centerSize.height;
       }
 
-      BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
+      BorderLayoutData layoutData = (BorderLayoutData) center.getLayoutData();
       if (layoutData != null && layoutData.hasDecoratorPanel()) {
         final DecoratorPanel decPanel = layoutData.decoratorPanel;
         width += (decPanel.getOffsetWidth() - center.getOffsetWidth());
@@ -382,7 +382,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       int bottom = top + height;
 
       if (north != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(north);
+        final BorderLayoutData layoutData = (BorderLayoutData) north.getLayoutData();
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (northSplitBar == null) {
@@ -426,7 +426,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (south != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(south);
+        final BorderLayoutData layoutData = (BorderLayoutData) south.getLayoutData();
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (southSplitBar == null) {
@@ -473,7 +473,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (west != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(west);
+        final BorderLayoutData layoutData = (BorderLayoutData) west.getLayoutData();
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (westSplitBar == null) {
@@ -519,7 +519,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (east != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(east);
+        final BorderLayoutData layoutData = (BorderLayoutData) east.getLayoutData();
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (eastSplitBar == null) {
@@ -566,7 +566,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
         right -= (w + spacing);
       }
 
-      BorderLayoutData layoutData = (BorderLayoutData) getLayoutData(center);
+      BorderLayoutData layoutData = (BorderLayoutData) center.getLayoutData();
 
       layoutData.targetLeft = left;
       layoutData.targetTop = top;
@@ -608,7 +608,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
         widget = ((DecoratorPanel) widget).getWidget();
       }
 
-      BorderLayoutData layoutData = getBorderLayoutData(widget);
+      BorderLayoutData layoutData = getLayoutData(widget);
 
       if (!DOM.isVisible(widget.getElement())) {
         continue;

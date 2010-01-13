@@ -69,7 +69,7 @@ public class ColumnLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        ColumnLayoutData layoutData = getColumnLayoutData(child);
+        ColumnLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -138,7 +138,7 @@ public class ColumnLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        ColumnLayoutData layoutData = getColumnLayoutData(child);
+        ColumnLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -193,7 +193,7 @@ public class ColumnLayout extends BaseLayout {
             layoutData.splitBar = new ColumnLayoutSplitBar(layoutPanel, child,
                 visibleChildList.get(i + 1));
             layoutPanel.addImpl(layoutData.splitBar);
-          } else if (!layoutData.splitBar.isAttached()) {
+          } else {
             layoutData.splitBar.widgetR = visibleChildList.get(i + 1);
             layoutPanel.addImpl(layoutData.splitBar);
           }
@@ -219,7 +219,7 @@ public class ColumnLayout extends BaseLayout {
     }
   }
 
-  private ColumnLayoutData getColumnLayoutData(Widget child) {
+  private ColumnLayoutData getLayoutData(Widget child) {
     Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof ColumnLayoutData)) {

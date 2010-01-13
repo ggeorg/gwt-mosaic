@@ -101,7 +101,7 @@ final class BorderLayoutSplitBar extends Widget implements HasAllMouseHandlers {
       dropTargetClientWidth = box.width;
       dropTargetClientHeight = box.height;
 
-      layoutData = (BorderLayoutData) BaseLayout.getLayoutData(widget);
+      layoutData = (BorderLayoutData) widget.getLayoutData();
 
       final LayoutPanel layoutPanel = (LayoutPanel) context.boundaryPanel;
 

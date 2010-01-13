@@ -315,7 +315,7 @@ public class BoxLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        BoxLayoutData layoutData = getBoxLayoutData(child);
+        BoxLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
@@ -429,7 +429,7 @@ public class BoxLayout extends BaseLayout {
     }
   }
 
-  private BoxLayoutData getBoxLayoutData(Widget child) {
+  private BoxLayoutData getLayoutData(Widget child) {
     Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof BoxLayoutData)) {
@@ -480,7 +480,7 @@ public class BoxLayout extends BaseLayout {
           child = ((DecoratorPanel) child).getWidget();
         }
 
-        BoxLayoutData layoutData = getBoxLayoutData(child);
+        BoxLayoutData layoutData = getLayoutData(child);
 
         if (layoutData.hasDecoratorPanel()) {
           decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
