@@ -110,6 +110,15 @@ public class ScrollTable2 extends com.google.gwt.gen2.table.client.ScrollTable
   /**
    * {@inheritDoc}
    * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
    */
   public boolean needsLayout() {

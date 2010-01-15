@@ -32,11 +32,9 @@ import org.gwt.mosaic.ui.client.util.WidgetHelper;
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.VetoDragException;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
-import com.google.gwt.core.client.GWT;
+import com.allen_sauer.gwt.dnd.client.util.LocationWidgetComparator;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.ElementParserToUse;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.AttachDetachException;
@@ -45,12 +43,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasAnimation;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.ResizableWidget;
-import com.google.gwt.widgetideas.client.ResizableWidgetCollection;
 
 /**
- * An {@code AbsolutePanel}
+ * An {@code AbsolutePanel} that lays its children out in by using a
+ * {@link LayoutManager}.
  * 
  * .mosaic-LayoutPanel
  * 
@@ -409,28 +407,52 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   }
 
   public void layout() {
-    // if (invalid) { TODO: after we cache width & size for each child widget
     if (isAttached() && isVisible()) {
-      onLayout();
+
+      onLayout(); // XXX do we need this
+
       layout.layoutPanel(this);
       invalid = false;
       layoutChildren();
     }
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
+  }
+
+  /**
+   * Calls {@link #layout() on widgets that implement {@link HasLayoutManager},
+   * or {@code #onResize()} on widgets that implement {@code RequiresResize}.
+   */
   protected void layoutChildren() {
     final int count = getWidgetCount();
     for (int i = 0; i < count; i++) {
       Widget child = getWidget(i);
+
+      //
+      // Check for two special cases:
+      //
+      // 1. DecoratorPanel
       if (child instanceof DecoratorPanel) {
         child = ((DecoratorPanel) child).getWidget();
       }
+      // 2. FormPanel
       if (child instanceof FormPanel) {
         child = ((FormPanel) child).getWidget();
       }
-      if (child instanceof HasLayoutManager
-          && DOM.isVisible(child.getElement())) {
-        ((HasLayoutManager) child).layout();
+
+      if (child.isVisible()) {
+        if (child instanceof HasLayoutManager) {
+          ((HasLayoutManager) child).layout();
+        } else if (child instanceof RequiresResize) {
+          ((RequiresResize) child).onResize();
+        }
       }
     }
   }
@@ -440,93 +462,52 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     getElement().setScrollLeft(0);
   }
 
+  /**
+   * Specifies if {@link #layout() is called after the widget is attached
+   * (default false).
+   */
+  private boolean autoLayout;
+
+  /**
+   * @return the autoLayout
+   */
+  public boolean isAutoLayout() {
+    return autoLayout;
+  }
+
+  /**
+   * @param autoLayout the autoLayout to set
+   */
+  public void setAutoLayout(boolean autoLayout) {
+    this.autoLayout = autoLayout;
+  }
+
   @Override
   protected void onLoad() {
     super.onLoad();
 
-    Widget parent = findParent();
+    if (isAutoLayout()) {
+      // Set the initial size & layout
 
-    if (parent instanceof HasLayoutManager || parent instanceof Viewport) {
-      return;
-    }
-
-    GWT.log("Parent of '" + this.getClass().getName() + "' ('"
-        + parent.getClass().getName()
-        + "') is not an instance of HasLayoutManager!!!", null);
-
-    // Set the initial size & layout
-
-    if (onLoadWidth != null && onLoadHeight != null) {
-      setSize(onLoadWidth, onLoadHeight);
-      onLoadWidth = onLoadHeight = null;
-    } else {
-      Dimension d = getPreferredSize();
-      if (onLoadWidth != null) {
-        setSize(onLoadWidth, d.height + "px");
-        onLoadWidth = null;
-      } else if (onLoadHeight != null) {
-        setSize(d.width + "px", onLoadHeight);
-        onLoadHeight = null;
+      if (onLoadWidth != null && onLoadHeight != null) {
+        setSize(onLoadWidth, onLoadHeight);
+        onLoadWidth = onLoadHeight = null;
       } else {
-        setSize(d.width + "px", d.height + "px");
+        final Dimension d = getPreferredSize();
+        if (onLoadWidth != null) {
+          setSize(onLoadWidth, d.height + "px");
+          onLoadWidth = null;
+        } else if (onLoadHeight != null) {
+          setSize(d.width + "px", onLoadHeight);
+          onLoadHeight = null;
+        } else {
+          setSize(d.width + "px", d.height + "px");
+        }
       }
-    }
 
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        layout();
-      }
-    });
-
-    // Add to Resizable Collection
-    if (resizableWidget != null) {
-      ResizableWidgetCollection.get().remove(resizableWidget);
-      ResizableWidgetCollection.get().add(resizableWidget);
+      layout();
     }
   }
-
-  /**
-   * Set the {@code ResizableWidget} to add to a {@code
-   * ResizableWidgetCollection} that periodically checks the outer dimensions of
-   * a widget and redraws it as necessary.
-   * 
-   * @param resizableWidget the {@code ResizableWidget}
-   */
-  public void setResizableWidget(ResizableWidget resizableWidget) {
-    ResizableWidget oldResizableWidget = this.resizableWidget;
-    this.resizableWidget = resizableWidget;
-    if (isAttached()) {
-      if (oldResizableWidget != null) {
-        ResizableWidgetCollection.get().remove(resizableWidget);
-      }
-      if (resizableWidget != null) {
-        ResizableWidgetCollection.get().add(resizableWidget);
-      }
-    }
-  }
-
-  /**
-   * Gets the {@code ResizableWidget} used.
-   * 
-   * @return the {@code ResizableWidget}
-   */
-  public ResizableWidget getResizableWidget() {
-    return resizableWidget;
-  }
-
-  private ResizableWidget resizableWidget = new ResizableWidget() {
-    public Element getElement() {
-      return LayoutPanel.this.getElement();
-    }
-
-    public boolean isAttached() {
-      return LayoutPanel.this.isAttached();
-    }
-
-    public void onResize(int width, int height) {
-      LayoutPanel.this.layout();
-    }
-  };
 
   /**
    * Removes a child widget to this panel.
@@ -546,7 +527,7 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
 
     if (removeImpl(widget)) {
-      //invalidate(w);
+      // invalidate(w);
       invalidate();
       return true;
     } else {
@@ -840,5 +821,14 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   public void onPreviewDrop(DragContext context) throws VetoDragException {
     dropController.onPreviewDrop(context);
+  }
+
+  public LocationWidgetComparator getLocationWidgetComparator() {
+    return dropController.getLocationWidgetComparator();
+  }
+
+  public void setLocationWidgetComparator(
+      LocationWidgetComparator locationWidgetComparator) {
+    dropController.setLocationWidgetComparator(locationWidgetComparator);
   }
 }
