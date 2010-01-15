@@ -24,7 +24,6 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.ResizableWidget;
 
 /**
  * A type of widget that can wrap an aggregate of multiple other widgets
@@ -143,25 +142,19 @@ public abstract class LayoutComposite extends Composite implements
   public boolean needsLayout() {
     return getLayoutPanel().needsLayout();
   }
-
+  
   /**
-   * Set the {@code ResizableWidget} to add to a {@code
-   * ResizableWidgetCollection} that periodically checks the outer dimensions of
-   * a widget and redraws it as necessary.
-   * 
-   * @param resizableWidget the {@code ResizableWidget}
+   * @return the autoLayout
    */
-  public void setResizableWidget(ResizableWidget resizableWidget) {
-    getLayoutPanel().setResizableWidget(resizableWidget);
+  public boolean isAutoLayout() {
+    return getLayoutPanel().isAutoLayout();
   }
 
   /**
-   * Gets the {@code ResizableWidget} used.
-   * 
-   * @return the {@code ResizableWidget}
+   * @param autoLayout the autoLayout to set
    */
-  public ResizableWidget getResizableWidget() {
-    return getLayoutPanel().getResizableWidget();
+  public void setAutoLayout(boolean autoLayout) {
+    getLayoutPanel().setAutoLayout(autoLayout);
   }
 
   /**
