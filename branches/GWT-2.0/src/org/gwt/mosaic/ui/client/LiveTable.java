@@ -108,6 +108,8 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
     liveScrollTable.setCellPadding(3);
     liveScrollTable.setCellSpacing(0);
     
+    liveScrollTable.setCrossPageSelectionEnabled(true);
+    
     getLayoutPanel().add(liveScrollTable);
     
     setStyleName("mosaic-Table");
