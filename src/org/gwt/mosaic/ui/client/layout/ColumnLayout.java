@@ -189,14 +189,20 @@ public class ColumnLayout extends BaseLayout {
         layoutData.targetHeight = fh;
 
         if (i < n - 1) {
-          if (layoutData.splitBar == null) {
+          if (layoutData.splitBar == null ||
+              layoutPanel != layoutData.splitBar.getBoundaryPanel()) {
             layoutData.splitBar = new ColumnLayoutSplitBar(layoutPanel, child,
                 visibleChildList.get(i + 1));
             layoutPanel.addImpl(layoutData.splitBar);
-          } else {
-            layoutData.splitBar.widgetR = visibleChildList.get(i + 1);
+          }
+          
+          if (!layoutData.splitBar.isAttached()) {
             layoutPanel.addImpl(layoutData.splitBar);
           }
+          
+          // update the right widget
+          layoutData.splitBar.widgetR = visibleChildList.get(i + 1);
+          
           WidgetHelper.setBounds(layoutPanel, layoutData.splitBar, left + w,
               top, spacing, height);
         }

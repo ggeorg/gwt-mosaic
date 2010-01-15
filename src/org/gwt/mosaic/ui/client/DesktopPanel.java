@@ -541,6 +541,11 @@ public class DesktopPanel extends Composite implements
     return windowPanel == active;
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout()
+   */
   public void layout() {
     if (windowPanels == null) {
       return;
@@ -568,6 +573,15 @@ public class DesktopPanel extends Composite implements
 
       w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
     }
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
   }
   
   /**

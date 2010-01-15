@@ -17,6 +17,8 @@ package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.Dimension;
 
+import com.google.gwt.user.client.ui.ProvidesResize;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -25,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public interface HasLayoutManager {
+public interface HasLayoutManager extends RequiresResize, ProvidesResize {
   /**
    * Returns the preferred size of the receiver.
    * <p>

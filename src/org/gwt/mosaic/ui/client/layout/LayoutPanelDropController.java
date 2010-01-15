@@ -1,5 +1,7 @@
 package org.gwt.mosaic.ui.client.layout;
 
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
+
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.drop.AbstractInsertPanelDropController;
 import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
@@ -20,20 +22,30 @@ public class LayoutPanelDropController extends
   private static final Label DUMMY_LABEL_IE_QUIRKS_MODE_OFFSET_HEIGHT = new Label(
       "x");
 
+  private LocationWidgetComparator locationWidgetComparator = LocationWidgetComparator.BOTTOM_HALF_COMPARATOR;
+
   LayoutPanelDropController(LayoutPanel dropTarget) {
     super(dropTarget);
   }
 
   @Override
   protected LocationWidgetComparator getLocationWidgetComparator() {
-    return LocationWidgetComparator.BOTTOM_HALF_COMPARATOR;
+    return locationWidgetComparator;
   }
+
+  protected void setLocationWidgetComparator(
+      LocationWidgetComparator locationWidgetComparator) {
+    assert locationWidgetComparator != null;
+    this.locationWidgetComparator = locationWidgetComparator;
+  }
+  
+  private SimplePanel outer;
 
   @Override
   protected Widget newPositioner(DragContext context) {
     // Use two widgets so that setPixelSize() consistently affects dimensions
     // excluding positioner border in quirks and strict modes
-    final SimplePanel outer = new SimplePanel();
+    outer = new SimplePanel();
     outer.addStyleName(DragClientBundle.INSTANCE.css().positioner());
 
     // place off screen for border calculation
@@ -61,6 +73,9 @@ public class LayoutPanelDropController extends
 
   @Override
   public void onMove(DragContext context) {
+    
+    outer.setLayoutData(new BorderLayoutData(Region.EAST));
+    
     super.onMove(context);
     timer.schedule(33);
   }

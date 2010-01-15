@@ -275,8 +275,22 @@ public class TextLabel extends Widget implements SourcesClickEvents,
     }
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout()
+   */
   public void layout() {
     // Nothing to do here!
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
   }
 
   public boolean needsLayout() {

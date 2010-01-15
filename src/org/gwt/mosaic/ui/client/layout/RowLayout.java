@@ -192,14 +192,20 @@ public class RowLayout extends BaseLayout {
         layoutData.targetHeight = fh;
 
         if (i < n - 1) {
-          if (layoutData.splitBar == null) {
+          if (layoutData.splitBar == null
+              || layoutPanel != layoutData.splitBar.getBoundaryPanel()) {
             layoutData.splitBar = new RowLayoutSplitBar(layoutPanel, child,
                 visibleChildList.get(i + 1));
             layoutPanel.addImpl(layoutData.splitBar);
-          } else {
-            layoutData.splitBar.widgetB = visibleChildList.get(i + 1);
+          }
+
+          if (!layoutData.splitBar.isAttached()) {
             layoutPanel.addImpl(layoutData.splitBar);
           }
+          
+          // update the bottom widget
+          layoutData.splitBar.widgetB = visibleChildList.get(i + 1);
+
           WidgetHelper.setBounds(layoutPanel, layoutData.splitBar, left, top
               + h, width, spacing);
         }

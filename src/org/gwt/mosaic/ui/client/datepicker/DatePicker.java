@@ -68,7 +68,16 @@ public class DatePicker extends
   public void layout() {
     ((LayoutPanel) getWidget()).layout();
   }
-  
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
+  }
+
   /**
    * {@inheritDoc}
    * 

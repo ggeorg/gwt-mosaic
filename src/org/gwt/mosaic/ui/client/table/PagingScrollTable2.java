@@ -99,6 +99,15 @@ public class PagingScrollTable2<RowType> extends
   /**
    * {@inheritDoc}
    * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
+  }
+  
+  /**
+   * {@inheritDoc}
+   * 
    * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
    */
   public boolean needsLayout() {
