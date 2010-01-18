@@ -19,7 +19,7 @@
 	<!-- Inherit the core Web Toolkit stuff.                                -->
 	<inherits name='com.google.gwt.user.User' />
 
-	<!-- Other module inherits                                      -->
+	<!-- Other module inherits                                              -->
 	<inherits name='org.gwt.mosaic.core.Core' />
 	<inherits name='org.gwt.mosaic.ui.UI'/>
 

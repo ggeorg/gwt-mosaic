@@ -414,7 +414,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
    */
   public FormLayout(ColumnSpec[] colSpecs, RowSpec[] rowSpecs) {
     super();
-    
+
     if (colSpecs == null)
       throw new NullPointerException(
           "The column specifications must not be null.");
@@ -1178,10 +1178,10 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
       final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
-      final int left = paddings[3];
-      final int top = paddings[0];
-      int width = box.width - (paddings[1] + paddings[3]);
-      int height = box.height - (paddings[0] + paddings[2]);
+      final int left = paddingLeftMeasure.sizeOf(layoutPanel);
+      final int top = paddingTopMeasure.sizeOf(layoutPanel);
+      int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
+      int height = box.height - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
       int[] x = computeGridOrigins(layoutPanel, width, left, colSpecs,
           colWidgets, colGroupIndices, minimumWidthMeasure,
@@ -1310,14 +1310,19 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     // XXX Insets insets = layoutPanel.getInsets();
 
-    maxWidth += (margins[1] + margins[3]);
-    maxHeight += (margins[0] + margins[2]);
+    maxWidth += marginLeftMeasure.sizeOf(layoutPanel)
+        + marginRightMeasure.sizeOf(layoutPanel)
+        + borderLeftMeasure.sizeOf(layoutPanel)
+        + borderRightMeasure.sizeOf(layoutPanel)
+        + paddingLeftMeasure.sizeOf(layoutPanel)
+        + paddingRightMeasure.sizeOf(layoutPanel);
 
-    maxWidth += paddings[1] + paddings[3];
-    maxHeight += paddings[0] + paddings[2];
-
-    maxWidth += borders[1] + borders[3];
-    maxHeight += borders[0] + borders[2];
+    maxHeight += marginTopMeasure.sizeOf(layoutPanel)
+        + marginBottomMeasure.sizeOf(layoutPanel)
+        + borderTopMeasure.sizeOf(layoutPanel)
+        + borderBottomMeasure.sizeOf(layoutPanel)
+        + paddingTopMeasure.sizeOf(layoutPanel)
+        + paddingBottomMeasure.sizeOf(layoutPanel);
 
     return new Dimension(maxWidth, maxHeight);
   }
@@ -1779,6 +1784,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   // GWT Mosaic (NEW CODE) ************************************************
 
+  @Override
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
@@ -1788,10 +1794,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     constraintMap.clear();
 
-    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-      Widget widget = iter.next();
+    for (Widget widget : visibleChildList) {
       addLayoutComponent(widget, widget.getLayoutData());
-      visibleChildList.add(widget);
     }
 
     initializeColAndRowWidgetLists();
