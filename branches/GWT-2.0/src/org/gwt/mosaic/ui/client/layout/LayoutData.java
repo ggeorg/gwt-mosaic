@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import org.gwt.mosaic.core.client.util.FloatParser;
 import org.gwt.mosaic.core.client.util.UnitParser;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 
 /**
  * Base class for all layout data objects.
@@ -28,7 +27,7 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
  */
 public class LayoutData {
 
-  final DecoratorPanel decoratorPanel;
+  private final boolean decorate;
 
   /**
    * Creates a new instance of {@code LayoutData} by specifying that the
@@ -38,11 +37,7 @@ public class LayoutData {
    *          or not.
    */
   protected LayoutData(final boolean decorate) {
-    if (decorate) {
-      decoratorPanel = new DecoratorPanel();
-    } else {
-      decoratorPanel = null;
-    }
+    this.decorate = decorate;
   }
 
   /**
@@ -55,7 +50,7 @@ public class LayoutData {
    *         otherwise.
    */
   public final boolean hasDecoratorPanel() {
-    return decoratorPanel != null;
+    return decorate;
   }
 
   // The preferred size hints **********************************************

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,14 +15,11 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.Iterator;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -284,10 +281,19 @@ public class BoxLayout extends BaseLayout {
         return result;
       }
 
-      int width = (margins[1] + margins[3]) + (paddings[1] + paddings[3])
-          + (borders[1] + borders[3]);
-      int height = (margins[0] + margins[2]) + (paddings[0] + paddings[2])
-          + (borders[0] + borders[2]);
+      int width = marginLeftMeasure.sizeOf(layoutPanel)
+          + marginRightMeasure.sizeOf(layoutPanel)
+          + borderLeftMeasure.sizeOf(layoutPanel)
+          + borderRightMeasure.sizeOf(layoutPanel)
+          + paddingLeftMeasure.sizeOf(layoutPanel)
+          + paddingRightMeasure.sizeOf(layoutPanel);
+
+      int height = marginTopMeasure.sizeOf(layoutPanel)
+          + marginBottomMeasure.sizeOf(layoutPanel)
+          + borderTopMeasure.sizeOf(layoutPanel)
+          + borderBottomMeasure.sizeOf(layoutPanel)
+          + paddingTopMeasure.sizeOf(layoutPanel)
+          + paddingBottomMeasure.sizeOf(layoutPanel);
 
       final int size = visibleChildList.size();
       if (size == 0) {
@@ -311,15 +317,18 @@ public class BoxLayout extends BaseLayout {
       Dimension decPanelFrameSize = null;
 
       for (Widget child : visibleChildList) {
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
+        if (child instanceof InternalDecoratorPanel) {
+          child = ((InternalDecoratorPanel) child).getWidget();
         }
 
-        BoxLayoutData layoutData = getLayoutData(child);
+        final BoxLayoutData layoutData = getLayoutData(child);
 
-        if (layoutData.hasDecoratorPanel()) {
-          decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
-              child);
+        final Widget parent = child.getParent();
+        if (parent instanceof InternalDecoratorPanel) {
+          final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+          final int borderSizes[] = decPanel.getBorderSizes();
+          decPanelFrameSize = new Dimension(borderSizes[1] + borderSizes[3],
+              borderSizes[0] + borderSizes[0]);
         }
 
         if (orientation == Orientation.HORIZONTAL) {
@@ -327,7 +336,7 @@ public class BoxLayout extends BaseLayout {
           width += preferredWidthMeasure.sizeOf(child);
           layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
 
-          if (layoutData.hasDecoratorPanel()) {
+          if (parent instanceof InternalDecoratorPanel) {
             width += decPanelFrameSize.width;
             layoutData.calcHeight += decPanelFrameSize.height;
           }
@@ -339,7 +348,7 @@ public class BoxLayout extends BaseLayout {
           height += preferredHeightMeasure.sizeOf(child);
           layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
 
-          if (layoutData.hasDecoratorPanel()) {
+          if (parent instanceof InternalDecoratorPanel) {
             height += decPanelFrameSize.height;
             layoutData.calcWidth += decPanelFrameSize.width;
           }
@@ -364,28 +373,6 @@ public class BoxLayout extends BaseLayout {
     }
 
     return result;
-  }
-
-  protected boolean init(LayoutPanel layoutPanel) {
-    if (initialized) {
-      return true;
-    }
-
-    super.init(layoutPanel);
-
-    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-      Widget widget = iter.next();
-
-      syncDecoratorVisibility(widget);
-
-      if (!DOM.isVisible(widget.getElement())) {
-        continue;
-      }
-
-      visibleChildList.add(widget);
-    }
-
-    return initialized = true;
   }
 
   /**
@@ -454,10 +441,10 @@ public class BoxLayout extends BaseLayout {
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
-      int width = box.width - (paddings[1] + paddings[3]);
-      int height = box.height - (paddings[0] + paddings[2]);
-      int left = paddings[3];
-      int top = paddings[0];
+      int left = paddingLeftMeasure.sizeOf(layoutPanel);
+      int top = paddingTopMeasure.sizeOf(layoutPanel);
+      final int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
+      final int height = box.height - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
       int fillWidth = width;
       int fillHeight = height;
@@ -476,15 +463,18 @@ public class BoxLayout extends BaseLayout {
 
       // 1st pass
       for (Widget child : visibleChildList) {
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
+        if (child instanceof InternalDecoratorPanel) {
+          child = ((InternalDecoratorPanel) child).getWidget();
         }
 
         BoxLayoutData layoutData = getLayoutData(child);
 
-        if (layoutData.hasDecoratorPanel()) {
-          decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
-              child);
+        final Widget parent = child.getParent();
+        if (parent instanceof InternalDecoratorPanel) {
+          final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+          final int borderSizes[] = decPanel.getBorderSizes();
+          decPanelFrameSize = new Dimension(borderSizes[1] + borderSizes[3],
+              borderSizes[0] + borderSizes[0]);
         }
 
         if (orientation == Orientation.HORIZONTAL) {
@@ -492,7 +482,7 @@ public class BoxLayout extends BaseLayout {
             fillingWidth++;
           } else {
             layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
-            if (layoutData.hasDecoratorPanel()) {
+            if (parent instanceof InternalDecoratorPanel) {
               layoutData.calcWidth += decPanelFrameSize.width;
             }
             fillWidth -= layoutData.calcWidth;
@@ -501,7 +491,7 @@ public class BoxLayout extends BaseLayout {
             layoutData.calcHeight = height;
           } else {
             layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
-            if (layoutData.hasDecoratorPanel()) {
+            if (parent instanceof InternalDecoratorPanel) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
           }
@@ -510,7 +500,7 @@ public class BoxLayout extends BaseLayout {
             fillingHeight++;
           } else {
             layoutData.calcHeight = preferredHeightMeasure.sizeOf(child);
-            if (layoutData.hasDecoratorPanel()) {
+            if (parent instanceof InternalDecoratorPanel) {
               layoutData.calcHeight += decPanelFrameSize.height;
             }
             fillHeight -= layoutData.calcHeight;
@@ -519,7 +509,7 @@ public class BoxLayout extends BaseLayout {
             layoutData.calcWidth = width;
           } else {
             layoutData.calcWidth = preferredWidthMeasure.sizeOf(child);
-            if (layoutData.hasDecoratorPanel()) {
+            if (parent instanceof InternalDecoratorPanel) {
               layoutData.calcWidth += decPanelFrameSize.width;
             }
           }
@@ -528,8 +518,8 @@ public class BoxLayout extends BaseLayout {
 
       // 2nd pass
       for (Widget child : visibleChildList) {
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
+        if (child instanceof InternalDecoratorPanel) {
+          child = ((InternalDecoratorPanel) child).getWidget();
         }
 
         final BoxLayoutData layoutData = (BoxLayoutData) child.getLayoutData();
@@ -552,7 +542,8 @@ public class BoxLayout extends BaseLayout {
         int fw = w;
         int fh = h;
 
-        if (layoutData.hasDecoratorPanel()) {
+        final Widget parent = child.getParent();
+        if (parent instanceof InternalDecoratorPanel) {
           fw -= decPanelFrameSize.width;
           fh -= decPanelFrameSize.height;
         }
@@ -624,9 +615,9 @@ public class BoxLayout extends BaseLayout {
         }
 
         layoutData.setSourceLeft(child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft() - paddings[3]);
+            - layoutPanel.getAbsoluteLeft() - paddingLeftMeasure.sizeOf(layoutPanel));
         layoutData.setSourceTop(child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop() - paddings[0]);
+            - layoutPanel.getAbsoluteTop() - paddingTopMeasure.sizeOf(layoutPanel));
         layoutData.setSourceWidth(child.getOffsetWidth());
         layoutData.setSourceHeight(child.getOffsetHeight());
       }

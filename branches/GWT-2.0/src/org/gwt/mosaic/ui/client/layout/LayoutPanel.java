@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,7 +47,7 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * An {@code AbsolutePanel} that lays its children out in by using a
+ * An {@code AbsolutePanel} that lays its children out by using a
  * {@link LayoutManager}.
  * 
  * .mosaic-LayoutPanel
@@ -74,16 +74,28 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
   private Dimension preferredSizeCache = new Dimension(-1, -1);
 
-  private String onLoadHeight;
+  /**
+   * Specifies if {@link #layout() is called after the widget is attached
+   * (default false).
+   */
+  private boolean autoLayout;
 
-  private String onLoadWidth;
+  /**
+   * Hold the panel's initial width and height used in {@link #onLoad()}.
+   */
+  private String onLoadHeight, onLoadWidth;
 
   private boolean invalid = true;
 
+  private boolean animationEnabled;
+  AnimationCallback animationCallback;
+
   private UnitConverter unitConverter;
+  private Element toPixelSizeTestElem = null;
 
   /**
-   * Creates a new {@code LayoutPanel} with {@link FillLayout}.
+   * Creates a new empty {@code LayoutPanel} with {@link FillLayout} as the
+   * default {@link LayoutManager}.
    */
   public LayoutPanel() {
     this(new FillLayout());
@@ -101,10 +113,10 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
   }
 
   /**
-   * Creates a {@code LayoutPanel} with the specified layout manager and with
-   * the given element. This is protected so that it can be used by a subclass
-   * that wants to substitute another element. The element is presumed to be a
-   * &lt;div&gt;.
+   * Creates a {@code LayoutPanel} with the specified {@link LayoutManager} and
+   * with the given element. This is protected so that it can be used by a
+   * subclass that wants to substitute another element. The element is presumed
+   * to be a &lt;div&gt;.
    * 
    * @param elem the element to be used for this panel.
    * @param layout the {@link LayoutManager} to use
@@ -132,243 +144,13 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     setLayout(layout);
   }
 
-  /**
-   * Adds a child widget to this panel.
-   * 
-   * @param w the child widget to be added
-   */
-  @Override
-  public void add(Widget w) {
-    addImpl(w);
-    invalidate(w);
-  }
-
-  /**
-   * Appends the specified widget to the end of this container.
-   * 
-   * @param widget
-   * @param layoutData
-   */
-  public void add(Widget widget, LayoutData layoutData) {
-    if (widget instanceof DecoratorPanel) {
-      throw new IllegalArgumentException(
-          "Adding a DecoratorPanel is not allowed!");
-    }
-    if (widget instanceof FormPanel) {
-      // (ggeorg) see WidgetHelper.setBounds() why
-      DOM.setStyleAttribute(widget.getElement(), "border", "none");
-      DOM.setStyleAttribute(widget.getElement(), "padding", "0px");
-      DOM.setStyleAttribute(widget.getElement(), "margin", "0px");
-    }
-    widget.setLayoutData(layoutData);
-    if (layoutData.hasDecoratorPanel()) {
-      final DecoratorPanel decPanel = layoutData.decoratorPanel;
-      add(decPanel);
-      decPanel.setWidget(widget);
-    } else {
-      add(widget);
-    }
-  }
-
-  protected void addImpl(Widget w) {
-    super.add(w);
-  }
-
-  private void clearPreferredSizeCache() {
-    preferredSizeCache.setSize(-1, -1);
-  }
-
-  public Widget findParent() {
-    Widget parent = getParent();
-
-    if (parent == getDecoratorWidget(this)) {
-      parent = parent.getParent();
-    } else {
-      if (parent instanceof Viewport) {
-        return parent;
-      } else if (parent instanceof LayoutComposite
-          || parent instanceof Composite) {
-        Widget thiz = parent;
-        parent = thiz.getParent();
-        if (parent == getDecoratorWidget(thiz)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof FormPanel) {
-        Widget thiz = parent;
-        parent = thiz.getParent();
-        if (parent == getDecoratorWidget(thiz)) {
-          parent = parent.getParent();
-        }
-      }
-      if (parent instanceof DecoratorPanel) {
-        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
-          parent = parent.getParent();
-        }
-      }
-    }
-
-    return parent;
-  }
-
-  /**
-   * @return the widget's DecoratorPanel if any, else widget.
-   */
-  private Widget getDecoratorWidget(Widget widget) {
-    LayoutData layoutData = (LayoutData) widget.getLayoutData();
-    if (layoutData != null && layoutData.hasDecoratorPanel()) {
-      return layoutData.decoratorPanel;
-    }
-    return widget;
-  }
-
-  /**
-   * Returns the {@link LayoutManager} which is associated with this panel, or
-   * {@link FillLayout} if one has not been set.
-   * 
-   * @return the panel's {@link LayoutManager}
-   * 
-   * @see #layout()
-   * @see #setLayout(LayoutManager)
-   */
-  public LayoutManager getLayout() {
-    return layout;
-  }
-
-  public int getPadding() {
-    return DOM.getIntStyleAttribute(getElement(), "padding");
-  }
+  // Attach/detach methods -------------------------------------------------
 
   /**
    * {@inheritDoc}
    * 
-   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   * @see com.google.gwt.user.client.ui.Panel#doAttachChildren()
    */
-  public Dimension getPreferredSize() {
-    if (!isAttached()) {
-      return new Dimension();
-    }
-
-    preferredSizeCache = layout.getPreferredSize(this);
-
-    // XXX get text line wrapping working...
-    WidgetHelper.setSize(this, preferredSizeCache);
-    layout.layoutPanel(this);
-    preferredSizeCache = layout.getPreferredSize(this);
-
-    return preferredSizeCache;
-  }
-
-  private Widget getUnDecoratedWidget(Widget widget) {
-    if (widget instanceof DecoratorPanel) {
-      return ((DecoratorPanel) widget).getWidget();
-    }
-    return widget;
-  }
-
-  @Override
-  public Widget getWidget(int index) {
-    return getUnDecoratedWidget(super.getWidget(index));
-  }
-
-  @Override
-  public int getWidgetIndex(Widget child) {
-    return super.getWidgetIndex(getDecoratorWidget(child));
-  }
-
-  /**
-   * Gets the position of the left outer border edge of the widget relative to
-   * the left outer border edge of the panel.
-   * 
-   * @param w the widget whose position is to be retrieved
-   * @return the widget's left position
-   */
-  @Override
-  public int getWidgetLeft(Widget w) {
-    return super.getWidgetLeft(getDecoratorWidget(w));
-  }
-
-  public int getWidgetSpacing() {
-    return widgetSpacing;
-  }
-
-  /**
-   * Gets the position of the top outer border edge of the widget relative to
-   * the top outer border edge of the panel.
-   * 
-   * @param w the widget whose position is to be retrieved
-   * @return the widget's top position
-   */
-  @Override
-  public int getWidgetTop(Widget w) {
-    return super.getWidgetTop(getDecoratorWidget(w));
-  }
-
-  @Override
-  protected void insert(Widget child, Element container, int beforeIndex,
-      boolean domInsert) {
-    if (child instanceof DecoratorPanel) {
-      throw new IllegalArgumentException(
-          "Adding a DecoratorPanel is not allowed!");
-    }
-    final Object layoutDataObject = child.getLayoutData();
-    if (layoutDataObject != null && layoutDataObject instanceof LayoutData
-        && ((LayoutData) layoutDataObject).hasDecoratorPanel()) {
-      final DecoratorPanel decPanel = ((LayoutData) layoutDataObject).decoratorPanel;
-      super.insert(decPanel, getElement(), beforeIndex, true);
-      decPanel.setWidget(child);
-    } else {
-      super.insert(child, container, beforeIndex, domInsert);
-    }
-    invalidate(child);
-  }
-
-  /**
-   * @param w
-   * @param layoutData
-   */
-  public void insert(Widget w, LayoutData layoutData, int beforeIndex) {
-    if (w instanceof DecoratorPanel) {
-      throw new IllegalArgumentException(
-          "Adding a DecoratorPanel is not allowed!");
-    }
-    w.setLayoutData(layoutData);
-    insert(w, getElement(), beforeIndex, true);
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
-   */
-  public boolean needsLayout() {
-    return invalid;
-  }
-
-  public void invalidate() {
-    invalidate(null);
-  }
-
-  public void invalidate(Widget widget) {
-    getLayout().invalidateLayout(widget);
-
-    if (invalid) {
-      return;
-    }
-
-    invalid = true;
-
-    clearPreferredSizeCache();
-
-    final Widget parent = findParent();
-    if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
-        && !(parent instanceof DecoratedLayoutPopupPanel)
-        && !(parent instanceof LayoutPopupPanel)) {
-      ((HasLayoutManager) parent).invalidate(this.getParent());
-      ((HasLayoutManager) parent).invalidate(this);
-    }
-  }
-
   @Override
   protected void doAttachChildren() {
     AttachDetachException.tryCommand(this, new AttachDetachException.Command() {
@@ -378,6 +160,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     });
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.Panel#doDetachChildren()
+   */
   @Override
   protected void doDetachChildren() {
     AttachDetachException.tryCommand(this, new AttachDetachException.Command() {
@@ -387,101 +174,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     });
   }
 
-  @Override
-  public Iterator<Widget> iterator() {
-    return new Iterator<Widget>() {
-      final Iterator<Widget> iter = LayoutPanel.super.iterator();
-
-      public boolean hasNext() {
-        return iter.hasNext();
-      }
-
-      public Widget next() {
-        return getUnDecoratedWidget(iter.next());
-      }
-
-      public void remove() {
-        iter.remove();
-      }
-    };
-  }
-
-  public void layout() {
-    if (isAttached() && isVisible()) {
-
-      onLayout(); // XXX do we need this
-
-      layout.layoutPanel(this);
-      invalid = false;
-      layoutChildren();
-    }
-  }
-
   /**
    * {@inheritDoc}
    * 
-   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   * @see com.google.gwt.user.client.ui.Panel#onLoad()
    */
-  public void onResize() {
-    layout();
-  }
-
-  /**
-   * Calls {@link #layout() on widgets that implement {@link HasLayoutManager},
-   * or {@code #onResize()} on widgets that implement {@code RequiresResize}.
-   */
-  protected void layoutChildren() {
-    final int count = getWidgetCount();
-    for (int i = 0; i < count; i++) {
-      Widget child = getWidget(i);
-
-      //
-      // Check for two special cases:
-      //
-      // 1. DecoratorPanel
-      if (child instanceof DecoratorPanel) {
-        child = ((DecoratorPanel) child).getWidget();
-      }
-      // 2. FormPanel
-      if (child instanceof FormPanel) {
-        child = ((FormPanel) child).getWidget();
-      }
-
-      if (child.isVisible()) {
-        if (child instanceof HasLayoutManager) {
-          ((HasLayoutManager) child).layout();
-        } else if (child instanceof RequiresResize) {
-          ((RequiresResize) child).onResize();
-        }
-      }
-    }
-  }
-
-  protected void onLayout() {
-    getElement().setScrollTop(0);
-    getElement().setScrollLeft(0);
-  }
-
-  /**
-   * Specifies if {@link #layout() is called after the widget is attached
-   * (default false).
-   */
-  private boolean autoLayout;
-
-  /**
-   * @return the autoLayout
-   */
-  public boolean isAutoLayout() {
-    return autoLayout;
-  }
-
-  /**
-   * @param autoLayout the autoLayout to set
-   */
-  public void setAutoLayout(boolean autoLayout) {
-    this.autoLayout = autoLayout;
-  }
-
   @Override
   protected void onLoad() {
     super.onLoad();
@@ -509,21 +206,320 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
+  // Getters & Setters -----------------------------------------------------
+
+  public boolean isAnimationEnabled() {
+    return animationEnabled;
+  }
+
+  public void setAnimationEnabled(final boolean enable) {
+    this.animationEnabled = enable;
+  }
+
   /**
-   * Removes a child widget to this panel.
+   * Used by UiBinder.
+   * 
+   * @param enable
+   */
+  public void setAnimationEnabled(String enable) {
+    enable = enable.trim().toLowerCase();
+    if (enable.equals("true".intern())) {
+      setAnimationEnabled(true);
+    } else if (enable.equals("false".intern())) {
+      setAnimationEnabled(false);
+    }
+  }
+
+  /**
+   * @return the animationCallback
+   */
+  public AnimationCallback getAnimationCallback() {
+    return animationCallback;
+  }
+
+  /**
+   * @param animationCallback the animationCallback to set
+   */
+  public void setAnimationCallback(AnimationCallback animationCallback) {
+    this.animationCallback = animationCallback;
+  }
+
+  /**
+   * Returns the {@link LayoutManager} which is associated with this panel, or
+   * {@link FillLayout} if one has not been set.
+   * 
+   * @return the panel's {@link LayoutManager}
+   * 
+   * @see #layout()
+   * @see #setLayout(LayoutManager)
+   */
+  public LayoutManager getLayout() {
+    return layout;
+  }
+
+  /**
+   * Sets the {@link LayoutManager} for this panel.
+   * 
+   * @param layout the specified layout manager
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout
+   *      .LayoutManager)
+   * 
+   * @see #layout()
+   * @see #setLayout(LayoutManager)
+   */
+  public void setLayout(LayoutManager layout) {
+    this.layout = layout;
+    if (layoutClassName != null) {
+      removeStyleName(getStylePrimaryName() + "-" + layoutClassName);
+    }
+    layoutClassName = layout.getClass().getName();
+    final int dotPos = layoutClassName.lastIndexOf('.');
+    layoutClassName = layoutClassName.substring(dotPos + 1,
+        layoutClassName.length());
+    addStyleName(getStylePrimaryName() + "-" + layoutClassName);
+    invalidate();
+  }
+
+  public int getPadding() {
+    return DOM.getIntStyleAttribute(getElement(), "padding");
+  }
+
+  public void setPadding(int padding) {
+    DOM.setStyleAttribute(getElement(), "padding", padding + "px");
+  }
+
+  public int getWidgetSpacing() {
+    return widgetSpacing;
+  }
+
+  public void setWidgetSpacing(int widgetSpacing) {
+    this.widgetSpacing = widgetSpacing;
+  }
+
+  /**
+   * Gets the position of the left outer border edge of the widget relative to
+   * the left outer border edge of the panel.
+   * 
+   * @param w the widget whose position is to be retrieved
+   * @return the widget's left position
+   * @see com.google.gwt.user.client.ui.AbsolutePanel#getWidgetLeft(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public int getWidgetLeft(Widget w) {
+    return super.getWidgetLeft(getDecoratorWidget(w));
+  }
+
+  /**
+   * Gets the position of the top outer border edge of the widget relative to
+   * the top outer border edge of the panel.
+   * 
+   * @param w the widget whose position is to be retrieved
+   * @return the widget's top position
+   * @see com.google.gwt.user.client.ui.AbsolutePanel#getWidgetTop(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public int getWidgetTop(Widget w) {
+    return super.getWidgetTop(getDecoratorWidget(w));
+  }
+
+  /**
+   * Sets the position of the specified child widget. Setting a position of
+   * <code>(-1, -1)</code> will cause the child widget to be positioned
+   * statically.
+   * 
+   * @param w the child widget to be positioned
+   * @param left the widget's left position
+   * @param top the widget's top position
+   */
+  @Override
+  public void setWidgetPosition(Widget w, int left, int top) {
+    super.setWidgetPosition(getDecoratorWidget(w), left, top);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
+   */
+  @Override
+  public void setWidth(String width) {
+    super.setWidth(width);
+    if (!isAttached()) {
+      this.onLoadWidth = width;
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
+   */
+  @Override
+  public void setHeight(String height) {
+    super.setHeight(height);
+
+    if (!isAttached()) {
+      this.onLoadHeight = height;
+    }
+  }
+
+  /**
+   * @return the autoLayout
+   */
+  public boolean isAutoLayout() {
+    return autoLayout;
+  }
+
+  /**
+   * @param autoLayout the autoLayout to set
+   */
+  public void setAutoLayout(boolean autoLayout) {
+    this.autoLayout = autoLayout;
+  }
+
+  // Add & insert methods --------------------------------------------------
+
+  /**
+   * Adds a child widget to this panel.
+   * 
+   * @param w the child widget to be added
+   * @see com.google.gwt.user.client.ui.AbsolutePanel#add(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public void add(Widget w) {
+    insert(w, getWidgetCount());
+  }
+
+  /**
+   * Appends the specified widget to the end of this container.
+   * 
+   * @param widget
+   * @param layoutData
+   */
+  public void add(Widget widget, LayoutData layoutData) {
+    insert(widget, layoutData, getWidgetCount());
+  }
+
+  /**
+   * @param w
+   * @param layoutData
+   * @param beforeIndex
+   */
+  public void insert(Widget w, LayoutData layoutData, int beforeIndex) {
+    w.setLayoutData(layoutData);
+    insert(w, getElement(), beforeIndex, true);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.ComplexPanel#insert(com.google.gwt.user.client.ui.Widget,
+   *      com.google.gwt.user.client.Element, int, boolean)
+   * @see #insert(Widget, int)
+   * @see #insert(Widget, int, int, int)
+   * @see #insert(Widget, LayoutData, int)
+   */
+  @Override
+  protected void insert(Widget child, Element container, int beforeIndex,
+      boolean domInsert) {
+    if (child instanceof DecoratorPanel) {
+      throw new IllegalArgumentException(
+          "Adding a DecoratorPanel is not allowed!");
+    }
+    if (child instanceof FormPanel) {
+      // (ggeorg) see WidgetHelper.setBounds()
+      DOM.setStyleAttribute(child.getElement(), "border", "none");
+      DOM.setStyleAttribute(child.getElement(), "padding", "0px");
+      DOM.setStyleAttribute(child.getElement(), "margin", "0px");
+    }
+    if (hasDecoratorWidget(child)) {
+      final InternalDecoratorPanel decPanel = new InternalDecoratorPanel();
+      super.insert(decPanel, getElement(), beforeIndex, true);
+      decPanel.setWidget(child);
+    } else {
+      super.insert(child, container, beforeIndex, domInsert);
+    }
+    invalidate(child);
+  }
+
+  // Support methods for DecoratorPanel ------------------------------------
+
+  /**
+   * This method is only used once in
+   * {@link #insert(Widget, Element, int, boolean)}.
+   * 
+   * @param child the child we want to add in {@code LayoutPanel}
+   * @return {@code true} if child widget should be decorated, {@code false}
+   *         otherwise
+   */
+  @Deprecated
+  private boolean hasDecoratorWidget(Widget child) {
+    final Object layoutDataObject = child.getLayoutData();
+    if (layoutDataObject != null && layoutDataObject instanceof LayoutData) {
+      return ((LayoutData) layoutDataObject).hasDecoratorPanel();
+    }
+    return false;
+  }
+
+  /**
+   * @return the undecorated widget if any, else widget
+   */
+  private Widget getUnDecoratedWidget(Widget widget) {
+    return (widget instanceof InternalDecoratorPanel)
+        ? ((InternalDecoratorPanel) widget).getWidget() : widget;
+  }
+
+  /**
+   * @return the widget's DecoratorPanel if any, else widget.
+   */
+  private Widget getDecoratorWidget(Widget widget) {
+    final Widget parent = widget.getParent();
+    return (parent instanceof InternalDecoratorPanel) ? parent : widget;
+  }
+
+  // Child management methods ----------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.ComplexPanel#getWidget(int)
+   */
+  @Override
+  public Widget getWidget(int index) {
+    return getUnDecoratedWidget(super.getWidget(index));
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.ComplexPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public int getWidgetIndex(Widget child) {
+    return super.getWidgetIndex(getDecoratorWidget(child));
+  }
+
+  /**
+   * Removes a child widget from this panel.
+   * 
+   * {@inheritDoc}
    * 
    * @param w the child widget to be removed
+   * @return
+   * @see com.google.gwt.user.client.ui.AbsolutePanel#remove(com.google.gwt.user.client.ui.Widget)
    */
   @Override
   public boolean remove(Widget w) {
     // XXX workaround for: iter.remove();
-    if (w instanceof DecoratorPanel) {
+    if (w instanceof InternalDecoratorPanel) {
       w = getUnDecoratedWidget(w);
     }
 
+    // ---------------------------------
     final Widget widget = getDecoratorWidget(w);
-    if (widget instanceof DecoratorPanel) {
-      ((DecoratorPanel) widget).remove(w);
+    if (widget instanceof InternalDecoratorPanel) {
+      ((InternalDecoratorPanel) widget).remove(w);
     }
 
     if (removeImpl(widget)) {
@@ -535,8 +531,205 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
+  /**
+   * Removes a child widget from this panel, without a call to
+   * {@link #invalidate()}.
+   * 
+   * @param w the child widget to be removed
+   * @return
+   * @see #remove(Widget)
+   */
   protected boolean removeImpl(Widget w) {
     return super.remove(w);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.ComplexPanel#iterator()
+   */
+  @Override
+  public Iterator<Widget> iterator() {
+    return new Iterator<Widget>() {
+      final Iterator<Widget> iter = LayoutPanel.super.iterator();
+
+      public boolean hasNext() {
+        return iter.hasNext();
+      }
+
+      public Widget next() {
+        return getUnDecoratedWidget(iter.next());
+      }
+
+      public void remove() {
+        iter.remove();
+      }
+    };
+  }
+
+  // HasLayoutManager implementation ---------------------------------------
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.mosaic.ui.client.layout.HasLayout#getPreferredSize()
+   */
+  public Dimension getPreferredSize() {
+    if (!isAttached()) {
+      return new Dimension();
+    }
+
+    if (preferredSizeCache.width == -1 || preferredSizeCache.height == -1) {
+      preferredSizeCache = layout.getPreferredSize(this);
+
+      // XXX handle text line wrapping.
+      WidgetHelper.setSize(this, preferredSizeCache);
+      layout.layoutPanel(this);
+      preferredSizeCache = layout.getPreferredSize(this);
+    }
+
+    return preferredSizeCache;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   */
+  public void invalidate() {
+    invalidate(null);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
+    getLayout().invalidateLayout(widget);
+
+    if (invalid) {
+      return;
+    }
+
+    invalid = true;
+
+    clearPreferredSizeCache();
+
+    final Widget parent = findParent();
+    if (parent instanceof HasLayoutManager && !(parent instanceof Viewport)
+        && !(parent instanceof DecoratedLayoutPopupPanel)
+        && !(parent instanceof LayoutPopupPanel)) {
+      ((HasLayoutManager) parent).invalidate(this.getParent());
+      ((HasLayoutManager) parent).invalidate(this);
+    }
+  }
+
+  private void clearPreferredSizeCache() {
+    preferredSizeCache.setSize(-1, -1);
+  }
+
+  private Widget findParent() {
+    Widget parent = getParent();
+
+    if (parent == getDecoratorWidget(this)) {
+      parent = parent.getParent();
+    } else {
+      if (parent instanceof Viewport) {
+        return parent;
+      } else if (parent instanceof LayoutComposite
+          || parent instanceof Composite) {
+        Widget thiz = parent;
+        parent = thiz.getParent();
+        if (parent == getDecoratorWidget(thiz)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof FormPanel) {
+        Widget thiz = parent;
+        parent = thiz.getParent();
+        if (parent == getDecoratorWidget(thiz)) {
+          parent = parent.getParent();
+        }
+      }
+      if (parent instanceof InternalDecoratorPanel) {
+        if (parent.getParent() instanceof DecoratedLayoutPopupPanel) {
+          parent = parent.getParent();
+        }
+      }
+    }
+
+    return parent;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return invalid;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#layout()
+   */
+  public void layout() {
+    if (isAttached() && isVisible()) {
+
+      onLayout(); // XXX do we need this
+
+      layout.layoutPanel(this);
+      invalid = false;
+      layoutChildren();
+    }
+  }
+
+  protected void onLayout() {
+    getElement().setScrollTop(0);
+    getElement().setScrollLeft(0);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
+  }
+
+  /**
+   * Calls {@link #layout() on widgets that implement {@link HasLayoutManager},
+   * or {@code #onResize()} on widgets that implement {@code RequiresResize}.
+   */
+  protected void layoutChildren() {
+    final int count = getWidgetCount();
+    for (int i = 0; i < count; i++) {
+      Widget child = getWidget(i);
+
+      //
+      // Check for two special cases:
+      //
+      // 1. DecoratorPanel
+      if (child instanceof InternalDecoratorPanel) {
+        child = ((InternalDecoratorPanel) child).getWidget();
+      }
+      // 2. FormPanel
+      if (child instanceof FormPanel) {
+        child = ((FormPanel) child).getWidget();
+      }
+
+      if (child.isVisible()) {
+        if (child instanceof HasLayoutManager) {
+          ((HasLayoutManager) child).layout();
+        } else if (child instanceof RequiresResize) {
+          ((RequiresResize) child).onResize();
+        }
+      }
+    }
   }
 
   // Helper methods for Collapsible child widgets **************************
@@ -570,84 +763,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     }
   }
 
-  // -------
-
-  /**
-   * Sets the {@link LayoutManager} for this panel.
-   * 
-   * @param layout the specified layout manager
-   * 
-   * @see org.mosaic.ui.client.layout.HasLayout#setLayout(org.mosaic.ui.client.layout
-   *      .LayoutManager)
-   * 
-   * @see #layout()
-   * @see #setLayout(LayoutManager)
-   */
-  public void setLayout(LayoutManager layout) {
-    this.layout = layout;
-    if (layoutClassName != null) {
-      removeStyleName(getStylePrimaryName() + "-" + layoutClassName);
-    }
-    layoutClassName = layout.getClass().getName();
-    final int dotPos = layoutClassName.lastIndexOf('.');
-    layoutClassName = layoutClassName.substring(dotPos + 1,
-        layoutClassName.length());
-    addStyleName(getStylePrimaryName() + "-" + layoutClassName);
-    invalidate();
-  }
-
-  public void setPadding(int padding) {
-    DOM.setStyleAttribute(getElement(), "padding", padding + "px");
-  }
-
-  /**
-   * Sets the position of the specified child widget. Setting a position of
-   * <code>(-1, -1)</code> will cause the child widget to be positioned
-   * statically.
-   * 
-   * @param w the child widget to be positioned
-   * @param left the widget's left position
-   * @param top the widget's top position
-   */
-  @Override
-  public void setWidgetPosition(Widget w, int left, int top) {
-    super.setWidgetPosition(getDecoratorWidget(w), left, top);
-  }
-
-  public void setWidgetSpacing(int widgetSpacing) {
-    this.widgetSpacing = widgetSpacing;
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
-   */
-  @Override
-  public void setWidth(String width) {
-    super.setWidth(width);
-    if (!isAttached()) {
-      this.onLoadWidth = width;
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
-   */
-  @Override
-  public void setHeight(String height) {
-    super.setHeight(height);
-
-    if (!isAttached()) {
-      this.onLoadHeight = height;
-    }
-  }
+  // Unit converter API ----------------------------------------------------
 
   public UnitConverter getUnitConverter() {
     if (unitConverter == null) {
-      DefaultUnitConverter unitConverter = DefaultUnitConverter.getInstance();
+      final DefaultUnitConverter unitConverter = DefaultUnitConverter.getInstance();
       unitConverter.setFontSize(toPixelSize("1em", true));
       unitConverter.setXHeight(toPixelSize("1ex", true));
       this.unitConverter = unitConverter;
@@ -655,10 +775,8 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     return unitConverter;
   }
 
-  private Element toPixelSizeTestElem = null;
-
   int toPixelSize(final ParsedSize parsedSize, final boolean useWidthAttribute) {
-    Unit unit = parsedSize.getUnit();
+    final Unit unit = parsedSize.getUnit();
     if (unit == Unit.CM) {
       return getUnitConverter().centimeterAsPixel(parsedSize.getSize());
     } else if (unit == Unit.EM) {
@@ -698,46 +816,6 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
     Dimension size = DOM.getBoxSize(toPixelSizeTestElem);
 
     return (useWidthAttribute) ? size.width : size.height;
-  }
-
-  private boolean animationEnabled;
-
-  public boolean isAnimationEnabled() {
-    return animationEnabled;
-  }
-
-  public void setAnimationEnabled(final boolean enable) {
-    this.animationEnabled = enable;
-  }
-
-  /**
-   * Used by UiBinder.
-   * 
-   * @param enable
-   */
-  public void setAnimationEnabled(String enable) {
-    enable = enable.trim().toLowerCase();
-    if (enable.equals("true".intern())) {
-      setAnimationEnabled(true);
-    } else if (enable.equals("false".intern())) {
-      setAnimationEnabled(false);
-    }
-  }
-
-  AnimationCallback animationCallback;
-
-  /**
-   * @return the animationCallback
-   */
-  public AnimationCallback getAnimationCallback() {
-    return animationCallback;
-  }
-
-  /**
-   * @param animationCallback the animationCallback to set
-   */
-  public void setAnimationCallback(AnimationCallback animationCallback) {
-    this.animationCallback = animationCallback;
   }
 
   // Drag & Drop support ---------------------------------------------------

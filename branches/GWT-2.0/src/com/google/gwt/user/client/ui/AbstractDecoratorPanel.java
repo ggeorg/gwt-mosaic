@@ -16,10 +16,20 @@
 package com.google.gwt.user.client.ui;
 
 /**
+ * A {@code DecoratorPanel} that exports the package protected constructor
+ * {@link #AbstractDecoratorPanel(String[], int)}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * @see DecoratorPanel
  */
 public abstract class AbstractDecoratorPanel extends DecoratorPanel {
+  
+  /**
+   * Create a new {@link AbstractDecoratorPanel}.
+   */
+  public AbstractDecoratorPanel() {
+    super();
+  }
 
   /**
    * Creates a new panel using the specified style names to apply to each row.

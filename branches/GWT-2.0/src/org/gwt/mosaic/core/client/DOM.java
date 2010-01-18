@@ -59,20 +59,40 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
   /**
    * Fixes the box calculations for IE in QuirksMode.
+   * <p>
+   * Earlier versions of Internet Explorer calculate the {@code width} and
+   * {@code height} CSS properties in a way that does not comply with the CSS1
+   * box model. In CSS1, the {@code width} property is defined as the distance
+   * between the left and right edges of the bounding box that surrounds the
+   * element's content. Likewise, the {@code height} property is defined in CSS1
+   * as the distance between the top and bottom edges of the bounding box. With
+   * earlier versions of Internet Explorer, however, the {@code width} and
+   * {@code height} CSS properties also include the {@code border} and {@code
+   * padding} belts that surround the element's bounding box. The following
+   * graphic illustrates this difference.
+   * <p>
+   * <img border="1" src="BOXMODEL.gif">
+   * <p>
+   * <em>Note: To check the rendering mode in IE, type {@code
+   * javascript:alert(document.compatMode)} in IE's address line.</em>
+   * <p>
+   * For more information, see <a target="_blank"
+   * href="http://msdn.microsoft.com/en-us/library/bb250395%28VS.85%29.aspx">CSS
+   * Enhancements in Internet Explorer 6</a>.
    * 
    * @param elem the element to set the dimension on
    * @param dim the number of the dimension to fix
-   * @param side the dimension ('h' or 'w') to fix (defaults to 'h')
+   * @param useWidthProperty the dimension ('h' or 'w') to fix (defaults to 'h')
    * @return the fixed dimension
    */
-  public static int fixQuirks(Element elem, int dim, char side) {
-    int i1 = 0, i2 = 2;
-    if (side == 'w') {
-      i1 = 1;
-      i2 = 3;
-    }
+  public static int fixQuirks(Element elem, int dim,
+      final boolean useWidthProperty) {
     if (UserAgent.isIE() && !CompatMode.isStandardsMode()) {
-      // Internet Explorer - Quirks Mode
+      int i1 = 0, i2 = 2;
+      if (useWidthProperty) {
+        i1 = 1;
+        i2 = 3;
+      }
       int[] b = getBorderSizes(elem);
       int[] bp = getBorderSizes((Element) elem.getParentElement());
       if ((b[i1] == 0) && (b[i2] == 0)) { // No Borders, check parent
@@ -103,13 +123,14 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderTopWidth"), 10, 0);
-    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderRightWidth"), 10,
-        0);
-    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderBottomWidth"),
-        10, 0);
-    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "borderLeftWidth"), 10,
-        0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "borderTopWidth"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "borderRightWidth"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "borderBottomWidth"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "borderLeftWidth"), 10, 0);
 
     return size;
   }
@@ -180,10 +201,14 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginTop"), 10, 0);
-    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginRight"), 10, 0);
-    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginBottom"), 10, 0);
-    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "marginLeft"), 10, 0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "marginTop"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "marginRight"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "marginBottom"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "marginLeft"), 10, 0);
 
     return size;
   }
@@ -197,10 +222,14 @@ public class DOM extends com.google.gwt.user.client.DOM {
 
     // IE will return NaN on these if they are set to auto, well set them to 0
 
-    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingTop"), 10, 0);
-    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingRight"), 10, 0);
-    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingBottom"), 10, 0);
-    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem, "paddingLeft"), 10, 0);
+    size[0] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "paddingTop"), 10, 0);
+    size[1] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "paddingRight"), 10, 0);
+    size[2] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "paddingBottom"), 10, 0);
+    size[3] = IntegerParser.parseInt(getComputedStyleAttribute(elem,
+        "paddingLeft"), 10, 0);
 
     return size;
   }

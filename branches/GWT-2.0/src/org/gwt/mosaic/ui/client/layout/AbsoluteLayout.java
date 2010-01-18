@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Johan Rydberg.
+ * Copyright (c) 2008-2010 GWT Mosaic Johan Rydberg.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
-import java.util.Iterator;
-
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Point;
@@ -27,7 +25,6 @@ import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -157,10 +154,19 @@ public class AbsoluteLayout extends BaseLayout {
       result.width = layoutPanel.toPixelSize(width, true);
       result.height = layoutPanel.toPixelSize(height, false);
 
-      result.width += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
-          + (borders[1] + borders[3]);
-      result.height += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
-          + (borders[0] + borders[2]);
+      result.width += marginLeftMeasure.sizeOf(layoutPanel)
+          + marginRightMeasure.sizeOf(layoutPanel)
+          + borderLeftMeasure.sizeOf(layoutPanel)
+          + borderRightMeasure.sizeOf(layoutPanel)
+          + paddingLeftMeasure.sizeOf(layoutPanel)
+          + paddingRightMeasure.sizeOf(layoutPanel);
+
+      result.height += marginTopMeasure.sizeOf(layoutPanel)
+          + marginBottomMeasure.sizeOf(layoutPanel)
+          + borderTopMeasure.sizeOf(layoutPanel)
+          + borderBottomMeasure.sizeOf(layoutPanel)
+          + paddingTopMeasure.sizeOf(layoutPanel)
+          + paddingBottomMeasure.sizeOf(layoutPanel);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
@@ -170,29 +176,6 @@ public class AbsoluteLayout extends BaseLayout {
     }
 
     return result;
-  }
-
-  @Override
-  protected boolean init(LayoutPanel layoutPanel) {
-    if (initialized) {
-      return true;
-    }
-
-    super.init(layoutPanel);
-
-    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-      Widget widget = iter.next();
-
-      syncDecoratorVisibility(widget);
-
-      if (!DOM.isVisible(widget.getElement())) {
-        continue;
-      }
-
-      visibleChildList.add(widget);
-    }
-
-    return initialized = true;
   }
 
   /**
@@ -218,11 +201,15 @@ public class AbsoluteLayout extends BaseLayout {
       final double deltaX = totalWidth - panelWidth;
       final double deltaY = totalHeight - panelHeight;
 
+      InternalDecoratorPanel decPanel = null;
       Dimension decPanelFrameSize = null;
 
       for (Widget child : visibleChildList) {
-        if (child instanceof DecoratorPanel) {
-          child = ((DecoratorPanel) child).getWidget();
+        if (child instanceof InternalDecoratorPanel) {
+          decPanel = (InternalDecoratorPanel) child;
+          child = ((InternalDecoratorPanel) child).getWidget();
+        } else {
+          decPanel = null;
         }
 
         if (!DOM.isVisible(child.getElement())) {
@@ -231,9 +218,10 @@ public class AbsoluteLayout extends BaseLayout {
 
         AbsoluteLayoutData layoutData = getLayoutData(child);
 
-        if (layoutData.hasDecoratorPanel()) {
-          decPanelFrameSize = getDecoratorFrameSize(layoutData.decoratorPanel,
-              child);
+        if (decPanel != null) {
+          final int borderSizes[] = decPanel.getBorderSizes();
+          decPanelFrameSize = new Dimension(borderSizes[1] + borderSizes[3],
+              borderSizes[0] + borderSizes[0]);
         }
 
         Dimension clientSize = new Dimension(
@@ -254,7 +242,7 @@ public class AbsoluteLayout extends BaseLayout {
         int fw = clientSize.width;
         int fh = clientSize.height;
 
-        if (layoutData.hasDecoratorPanel()) {
+        if (decPanel != null) {
           fw -= decPanelFrameSize.width;
           fh -= decPanelFrameSize.height;
         }
@@ -282,9 +270,11 @@ public class AbsoluteLayout extends BaseLayout {
         layoutData.targetHeight = fh;
 
         layoutData.setSourceLeft(child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft() - paddings[3]);
+            - layoutPanel.getAbsoluteLeft()
+            - paddingLeftMeasure.sizeOf(layoutPanel));
         layoutData.setSourceTop(child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop() - paddings[0]);
+            - layoutPanel.getAbsoluteTop()
+            - paddingTopMeasure.sizeOf(layoutPanel));
         layoutData.setSourceWidth(child.getOffsetWidth());
         layoutData.setSourceHeight(child.getOffsetHeight());
       }

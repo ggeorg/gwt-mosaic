@@ -34,6 +34,10 @@ public class Insets implements Cloneable, Serializable {
 
   public int right;
 
+  public Insets(int[] insets) {
+    setValues(insets[0], insets[3], insets[2], insets[1]);
+  }
+
   public Insets(int top, int left, int bottom, int right) {
     setValues(top, left, bottom, right);
   }
@@ -66,8 +70,8 @@ public class Insets implements Cloneable, Serializable {
 
   @Override
   public String toString() {
-    return (getClass().getName() + "[left=" + left + ",top=" + top +
-        ",right=" + right + ",bottom=" + bottom + "]");
+    return (getClass().getName() + "[left=" + left + ",top=" + top + ",right="
+        + right + ",bottom=" + bottom + "]");
   }
 
   public void set(int top, int left, int bottom, int right) {

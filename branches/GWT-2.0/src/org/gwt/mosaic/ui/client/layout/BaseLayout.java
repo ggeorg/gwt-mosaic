@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package org.gwt.mosaic.ui.client.layout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +47,6 @@ public abstract class BaseLayout implements LayoutManager {
 
   protected boolean initialized = false;
 
-  @Deprecated
-  protected int[] margins = {0, 0};
-  @Deprecated
-  protected int[] borders = {0, 0};
-  @Deprecated
-  protected int[] paddings = {0, 0};
-
   /**
    * Caches widget minimum and preferred sizes. All requests for component sizes
    * shall be directed to the cache.
@@ -69,12 +63,42 @@ public abstract class BaseLayout implements LayoutManager {
   protected final Measure preferredWidthMeasure;
   protected final Measure preferredHeightMeasure;
 
+  protected final Measure marginTopMeasure;
+  protected final Measure marginRightMeasure;
+  protected final Measure marginBottomMeasure;
+  protected final Measure marginLeftMeasure;
+
+  protected final Measure borderTopMeasure;
+  protected final Measure borderRightMeasure;
+  protected final Measure borderBottomMeasure;
+  protected final Measure borderLeftMeasure;
+
+  protected final Measure paddingTopMeasure;
+  protected final Measure paddingRightMeasure;
+  protected final Measure paddingBottomMeasure;
+  protected final Measure paddingLeftMeasure;
+
   public BaseLayout() {
     componentSizeCache = new WidgetSizeCache();
     minimumWidthMeasure = new MinimumWidthMeasure(componentSizeCache);
     minimumHeightMeasure = new MinimumHeightMeasure(componentSizeCache);
     preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
     preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
+
+    marginTopMeasure = new MarginTopMeasure(componentSizeCache);
+    marginRightMeasure = new MarginRightMeasure(componentSizeCache);
+    marginBottomMeasure = new MarginBottomMeasure(componentSizeCache);
+    marginLeftMeasure = new MarginLeftMeasure(componentSizeCache);
+
+    borderTopMeasure = new BorderTopMeasure(componentSizeCache);
+    borderRightMeasure = new BorderRightMeasure(componentSizeCache);
+    borderBottomMeasure = new BorderBottomMeasure(componentSizeCache);
+    borderLeftMeasure = new BorderLeftMeasure(componentSizeCache);
+
+    paddingTopMeasure = new PaddingTopMeasure(componentSizeCache);
+    paddingRightMeasure = new PaddingTopMeasure(componentSizeCache);
+    paddingBottomMeasure = new PaddingTopMeasure(componentSizeCache);
+    paddingLeftMeasure = new PaddingTopMeasure(componentSizeCache);
   }
 
   /**
@@ -100,6 +124,26 @@ public abstract class BaseLayout implements LayoutManager {
   public void invalidateLayout(Widget widget) {
     invalidateCaches(widget);
     initialized = false;
+  }
+
+  // -----------------
+
+  public int[] getMarginSize(Widget widget) {
+    return new int[] {
+        marginTopMeasure.sizeOf(widget), marginRightMeasure.sizeOf(widget),
+        marginBottomMeasure.sizeOf(widget), marginLeftMeasure.sizeOf(widget)};
+  }
+
+  public int[] getBorderSize(Widget widget) {
+    return new int[] {
+        borderTopMeasure.sizeOf(widget), borderRightMeasure.sizeOf(widget),
+        borderBottomMeasure.sizeOf(widget), borderLeftMeasure.sizeOf(widget)};
+  }
+
+  public int[] getPaddingSize(Widget widget) {
+    return new int[] {
+        paddingTopMeasure.sizeOf(widget), paddingRightMeasure.sizeOf(widget),
+        paddingBottomMeasure.sizeOf(widget), paddingLeftMeasure.sizeOf(widget)};
   }
 
   // -----------------
@@ -180,46 +224,40 @@ public abstract class BaseLayout implements LayoutManager {
   }
 
   protected void syncDecoratorVisibility(Widget child) {
-    LayoutData layoutData = (LayoutData) child.getLayoutData();
-    if (layoutData != null && layoutData.hasDecoratorPanel()) {
-      layoutData.decoratorPanel.setVisible(DOM.isVisible(child.getElement()));
+    final Widget parent = child.getParent();
+    if (parent instanceof InternalDecoratorPanel) {
+      //
+      // parent.setVisible(DOM.isVisible(child.getElement()));
+      //
+      // replaced by:
+      parent.setVisible(child.isVisible());
     }
   }
 
-  // DecoratorPanel width calculations *************************************
-
-  protected int getDecoratorFrameWidth(DecoratorPanel decPanel, Widget child) {
-    return decPanel.getOffsetWidth() - child.getOffsetWidth();
-  }
-
-  protected int getDecoratorFrameHeight(DecoratorPanel decPanel, Widget child) {
-    return decPanel.getOffsetHeight() - child.getOffsetHeight();
-  }
-
-  protected Dimension getDecoratorFrameSize(DecoratorPanel decPanel,
-      Widget child) {
-    return new Dimension(decPanel.getOffsetWidth() - child.getOffsetWidth(),
-        decPanel.getOffsetHeight() - child.getOffsetHeight());
-  }
-
-  protected Insets insets = new Insets(0, 0, 0, 0);
+  // -----------------------------------------------------------------------
 
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
     }
 
-    final Element layoutPanelElem = layoutPanel.getElement();
-    margins = DOM.getMarginSizes(layoutPanelElem);
-    borders = DOM.getBorderSizes(layoutPanelElem);
-    paddings = DOM.getPaddingSizes(layoutPanelElem);
-
-    insets.top = margins[0] + borders[0] + paddings[0];
-    insets.right = margins[1] + borders[1] + paddings[1];
-    insets.bottom = margins[2] + borders[2] + paddings[2];
-    insets.left = margins[3] + borders[3] + paddings[3];
-
     visibleChildList.clear();
+
+    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
+      Widget widget = iter.next();
+
+      syncDecoratorVisibility(widget);
+
+      //
+      // if (!DOM.isVisible(widget.getElement()))
+      //
+      // replaced by:
+      if (!widget.isVisible()) {
+        continue;
+      }
+
+      visibleChildList.add(widget);
+    }
 
     return true;
   }
@@ -233,7 +271,9 @@ public abstract class BaseLayout implements LayoutManager {
       final LayoutData layoutData = (LayoutData) child.getLayoutData();
 
       WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
-          layoutData.targetTop, layoutData.targetWidth, layoutData.targetHeight);
+          layoutData.targetTop, layoutData.targetWidth,
+          layoutData.targetHeight, getMarginSize(child), getBorderSize(child),
+          getPaddingSize(child));
     }
 
     layoutPanel.layoutChildren();
@@ -249,11 +289,13 @@ public abstract class BaseLayout implements LayoutManager {
         LayoutData layoutData = (LayoutData) child.getLayoutData();
         WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
             layoutData.targetTop, layoutData.targetWidth,
-            layoutData.targetHeight);
+            layoutData.targetHeight, getMarginSize(child),
+            getBorderSize(child), getPaddingSize(child));
       }
       return;
     }
 
+    // Cancel the old animation, if there is one.
     if (animation != null) {
       animation.cancel();
     }
@@ -285,6 +327,7 @@ public abstract class BaseLayout implements LayoutManager {
       @Override
       protected void onUpdate(double progress) {
         for (Widget child : visibleChildList) {
+
           if (child instanceof DecoratorPanel) {
             child = ((DecoratorPanel) child).getWidget();
           }
@@ -302,7 +345,8 @@ public abstract class BaseLayout implements LayoutManager {
               * progress);
 
           WidgetHelper.setBounds(layoutPanel, child, layoutData.left,
-              layoutData.top, layoutData.width, layoutData.height);
+              layoutData.top, layoutData.width, layoutData.height,
+              getMarginSize(child), getBorderSize(child), getPaddingSize(child));
         }
       }
     };
@@ -388,6 +432,180 @@ public abstract class BaseLayout implements LayoutManager {
     }
   }
 
+  // margin ----------------------------------------------------------------
+
+  /**
+   * Measures a widget by computing its margin top.
+   */
+  public static final class MarginTopMeasure extends CachingMeasure {
+
+    public MarginTopMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getMarginSize(widget).top;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its margin right.
+   */
+  public static final class MarginRightMeasure extends CachingMeasure {
+
+    public MarginRightMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getMarginSize(widget).right;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its margin bottom.
+   */
+  public static final class MarginBottomMeasure extends CachingMeasure {
+
+    public MarginBottomMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getMarginSize(widget).bottom;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its margin left.
+   */
+  public static final class MarginLeftMeasure extends CachingMeasure {
+
+    public MarginLeftMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getMarginSize(widget).bottom;
+    }
+  }
+
+  // border ----------------------------------------------------------------
+
+  /**
+   * Measures a widget by computing its border top.
+   */
+  public static final class BorderTopMeasure extends CachingMeasure {
+
+    public BorderTopMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getBorderSize(widget).top;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its border right.
+   */
+  public static final class BorderRightMeasure extends CachingMeasure {
+
+    public BorderRightMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getBorderSize(widget).right;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its border bottom.
+   */
+  public static final class BorderBottomMeasure extends CachingMeasure {
+
+    public BorderBottomMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getBorderSize(widget).bottom;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its border left.
+   */
+  public static final class BorderLeftMeasure extends CachingMeasure {
+
+    public BorderLeftMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getBorderSize(widget).bottom;
+    }
+  }
+
+  // padding ----------------------------------------------------------------
+
+  /**
+   * Measures a widget by computing its padding top.
+   */
+  public static final class PaddingTopMeasure extends CachingMeasure {
+
+    public PaddingTopMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getPaddingSize(widget).top;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its padding right.
+   */
+  public static final class PaddingRightMeasure extends CachingMeasure {
+
+    public PaddingRightMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getPaddingSize(widget).right;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its padding bottom.
+   */
+  public static final class PaddingBottomMeasure extends CachingMeasure {
+
+    public PaddingBottomMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getPaddingSize(widget).bottom;
+    }
+  }
+
+  /**
+   * Measures a widget by computing its padding left.
+   */
+  public static final class PaddingLeftMeasure extends CachingMeasure {
+
+    public PaddingLeftMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+
+    public int sizeOf(Widget widget) {
+      return cache.getPaddingSize(widget).bottom;
+    }
+  }
+
   // Caching Component Sizes ***********************************************
 
   public final class WidgetSizeCache {
@@ -398,12 +616,24 @@ public abstract class BaseLayout implements LayoutManager {
     /** Maps components to their preferred sizes. */
     private final Map<Widget, Dimension> preferredSizes;
 
+    /** Maps components to their margin sizes. */
+    private final Map<Widget, Insets> marginSizes;
+
+    /** Maps components to their border sizes. */
+    private final Map<Widget, Insets> borderSizes;
+
+    /** Maps components to their padding sizes. */
+    private final Map<Widget, Insets> paddingSizes;
+
     /**
      * Constructs a {@code WidgetSizeCache}.
      */
     public WidgetSizeCache() {
       minimumSizes = new HashMap<Widget, Dimension>();
       preferredSizes = new HashMap<Widget, Dimension>();
+      marginSizes = new HashMap<Widget, Insets>();
+      borderSizes = new HashMap<Widget, Insets>();
+      paddingSizes = new HashMap<Widget, Insets>();
     }
 
     /**
@@ -412,6 +642,9 @@ public abstract class BaseLayout implements LayoutManager {
     public void invalidate() {
       minimumSizes.clear();
       preferredSizes.clear();
+      marginSizes.clear();
+      borderSizes.clear();
+      paddingSizes.clear();
     }
 
     /**
@@ -458,9 +691,63 @@ public abstract class BaseLayout implements LayoutManager {
       return size;
     }
 
+    /**
+     * Returns the margin size for the given widget. Tries to look up the value
+     * from the cache; lazily creates the value if it has not been requested
+     * before.
+     * 
+     * @param widget the widget to compute the margin size
+     * @return the widget's margin size
+     */
+    Insets getMarginSize(Widget widget) {
+      Insets insets = marginSizes.get(widget);
+      if (insets == null) {
+        insets = new Insets(DOM.getMarginSizes(widget.getElement()));
+        marginSizes.put(widget, insets);
+      }
+      return insets;
+    }
+
+    /**
+     * Returns the border size for the given widget. Tries to look up the value
+     * from the cache; lazily creates the value if it has not been requested
+     * before.
+     * 
+     * @param widget the widget to compute the border size
+     * @return the widget's border size
+     */
+    Insets getBorderSize(Widget widget) {
+      Insets insets = borderSizes.get(widget);
+      if (insets == null) {
+        insets = new Insets(DOM.getBorderSizes(widget.getElement()));
+        borderSizes.put(widget, insets);
+      }
+      return insets;
+    }
+
+    /**
+     * Returns the padding size for the given widget. Tries to look up the value
+     * from the cache; lazily creates the value if it has not been requested
+     * before.
+     * 
+     * @param widget the widget to compute the padding size
+     * @return the widget's border size
+     */
+    Insets getPaddingSize(Widget widget) {
+      Insets insets = paddingSizes.get(widget);
+      if (insets == null) {
+        insets = new Insets(DOM.getPaddingSizes(widget.getElement()));
+        paddingSizes.put(widget, insets);
+      }
+      return insets;
+    }
+
     public void removeEntry(Widget widget) {
       minimumSizes.remove(widget);
       preferredSizes.remove(widget);
+      marginSizes.remove(widget);
+      borderSizes.remove(widget);
+      paddingSizes.remove(widget);
     }
   }
 

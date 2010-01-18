@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,6 @@
  * the License.
  */
 package org.gwt.mosaic.ui.client.layout;
-
-import java.util.Iterator;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
@@ -137,7 +135,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
   public HorizontalAlignmentConstant getHorizontalAlignment() {
     return horizontalAlignment;
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -146,7 +144,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
   public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
     this.horizontalAlignment = align;
   }
-  
+
   /**
    * Used by UiBinder parser.
    * 
@@ -164,7 +162,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       setHorizontalAlignment(ALIGN_DEFAULT);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -182,7 +180,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
   public void setVerticalAlignment(VerticalAlignmentConstant align) {
     this.verticalAlignment = align;
   }
-  
+
   /**
    * Used by UiBinder parser.
    * 
@@ -203,6 +201,7 @@ public class FillLayout extends BaseLayout implements HasAlignment {
     final Dimension result = new Dimension();
 
     try {
+
       if (layoutPanel == null || !init(layoutPanel)) {
         return result;
       }
@@ -210,15 +209,27 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       result.setSize(preferredWidthMeasure.sizeOf(child),
           preferredHeightMeasure.sizeOf(child));
 
-      if (layoutData.hasDecoratorPanel()) {
-        final Dimension d = getDecoratorFrameSize(layoutData.decoratorPanel,
-            child);
-        result.width += d.width;
-        result.height += d.height;
+      final Widget parent = child.getParent();
+      if (parent instanceof InternalDecoratorPanel) {
+        final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+        final int borderSizes[] = decPanel.getBorderSizes();
+        result.width += (borderSizes[1] + borderSizes[3]);
+        result.height += (borderSizes[0] + borderSizes[0]);
       }
 
-      result.width += insets.left + insets.right;
-      result.height += insets.top + insets.bottom;
+      result.width += marginLeftMeasure.sizeOf(layoutPanel)
+          + marginRightMeasure.sizeOf(layoutPanel)
+          + borderLeftMeasure.sizeOf(layoutPanel)
+          + borderRightMeasure.sizeOf(layoutPanel)
+          + paddingLeftMeasure.sizeOf(layoutPanel)
+          + paddingRightMeasure.sizeOf(layoutPanel);
+
+      result.height += marginTopMeasure.sizeOf(layoutPanel)
+          + marginBottomMeasure.sizeOf(layoutPanel)
+          + borderTopMeasure.sizeOf(layoutPanel)
+          + borderBottomMeasure.sizeOf(layoutPanel)
+          + paddingTopMeasure.sizeOf(layoutPanel)
+          + paddingBottomMeasure.sizeOf(layoutPanel);
 
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
@@ -240,18 +251,11 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
     child = null;
 
-    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-      Widget widget = iter.next();
-
-      syncDecoratorVisibility(widget);
-
-      if (!DOM.isVisible(widget.getElement())) {
-        continue;
-      } else if (child == null) {
-        child = widget;
-        layoutData = getLayoutData(child);
-        visibleChildList.add(child);
-      }
+    if (visibleChildList.size() > 0) {
+      child = visibleChildList.get(0);
+      layoutData = getLayoutData(child);
+      visibleChildList.clear();
+      visibleChildList.add(child);
     }
 
     return initialized = child != null;
@@ -274,22 +278,20 @@ public class FillLayout extends BaseLayout implements HasAlignment {
         return;
       }
 
-      if (!child.isVisible()) {
-        return;
-      }
-
       final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
-      final int left = paddings[3];
-      final int top = paddings[0];
-      int width = box.width - (paddings[1] + paddings[3]);
-      int height = box.height - (paddings[0] + paddings[2]);
+      final int left = paddingLeftMeasure.sizeOf(layoutPanel);
+      final int top = paddingTopMeasure.sizeOf(layoutPanel);
+      int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
+      int height = box.height
+          - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
-      if (layoutData.hasDecoratorPanel()) {
-        final Dimension d = getDecoratorFrameSize(layoutData.decoratorPanel,
-            child);
-        width -= d.width;
-        height -= d.height;
+      final Widget parent = child.getParent();
+      if (parent instanceof InternalDecoratorPanel) {
+        final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+        final int borderSizes[] = decPanel.getBorderSizes();
+        width -= (borderSizes[1] + borderSizes[3]);
+        height -= (borderSizes[0] + borderSizes[2]);
       }
 
       HorizontalAlignmentConstant hAlignment = layoutData.getHorizontalAlignment();
@@ -345,9 +347,11 @@ public class FillLayout extends BaseLayout implements HasAlignment {
       }
 
       layoutData.setSourceLeft(child.getAbsoluteLeft()
-          - layoutPanel.getAbsoluteLeft() - paddings[3]);
+          - layoutPanel.getAbsoluteLeft()
+          - paddingLeftMeasure.sizeOf(layoutPanel));
       layoutData.setSourceTop(child.getAbsoluteTop()
-          - layoutPanel.getAbsoluteTop() - paddings[0]);
+          - layoutPanel.getAbsoluteTop()
+          - paddingTopMeasure.sizeOf(layoutPanel));
       layoutData.setSourceWidth(child.getOffsetWidth());
       layoutData.setSourceHeight(child.getOffsetHeight());
 

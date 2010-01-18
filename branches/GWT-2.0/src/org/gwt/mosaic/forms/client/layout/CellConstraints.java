@@ -1076,7 +1076,8 @@ public final class CellConstraints extends LayoutData implements Cloneable {
     int y = origin(concreteVAlign, cellY, cellH, compH);
     int w = extent(concreteHAlign, cellW, compW);
     int h = extent(concreteVAlign, cellH, compH);
-    WidgetHelper.setBounds(layoutPanel, c, x, y, w, h);
+    WidgetHelper.setBounds(layoutPanel, c, x, y, w, h, layout.getMarginSize(c),
+        layout.getBorderSize(c), layout.getPaddingSize(c));
   }
 
   /**
