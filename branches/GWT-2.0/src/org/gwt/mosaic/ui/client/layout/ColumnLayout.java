@@ -130,8 +130,10 @@ public class ColumnLayout extends BaseLayout {
 
       int left = paddingLeftMeasure.sizeOf(layoutPanel);
       int top = paddingTopMeasure.sizeOf(layoutPanel);
-      final int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
-      final int height = box.height - (top + paddingBottomMeasure.sizeOf(layoutPanel));
+      final int width = box.width
+          - (left + paddingRightMeasure.sizeOf(layoutPanel));
+      final int height = box.height
+          - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
       int fillWidth = width;
 
@@ -223,12 +225,16 @@ public class ColumnLayout extends BaseLayout {
 
         left += (w + spacing);
 
-        layoutData.setSourceLeft(child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft() - paddingLeftMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceTop(child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop() - paddingTopMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(child.getOffsetWidth());
-        layoutData.setSourceHeight(child.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(child.getAbsoluteLeft()
+              - layoutPanel.getAbsoluteLeft()
+              - paddingLeftMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceTop(child.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingTopMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(child.getOffsetWidth());
+          layoutData.setSourceHeight(child.getOffsetHeight());
+        }
       }
 
       super.layoutPanel(layoutPanel);

@@ -206,7 +206,9 @@ public abstract class BaseLayout implements LayoutManager {
             true);
       } else {
         style.setProperty("width", "auto");
-        result.width = clonedElem.getOffsetWidth();
+        result.width = clonedElem.getOffsetWidth()
+            + marginLeftMeasure.sizeOf(widget)
+            + marginRightMeasure.sizeOf(widget);
       }
 
       if (layoutData.getPreferredHeight() != null) {
@@ -214,7 +216,9 @@ public abstract class BaseLayout implements LayoutManager {
             layoutData.getPreferredHeight(), false);
       } else {
         style.setProperty("height", "auto");
-        result.height = clonedElem.getOffsetHeight();
+        result.height = clonedElem.getOffsetHeight()
+            + marginTopMeasure.sizeOf(widget)
+            + marginBottomMeasure.sizeOf(widget);
       }
 
       parentElem.removeChild(clonedElem);
@@ -429,6 +433,17 @@ public abstract class BaseLayout implements LayoutManager {
 
     public int sizeOf(Widget c) {
       return cache.getPreferredSize(c).height;
+    }
+  }
+  
+  public static final class ClientWidthMeasure extends CachingMeasure {
+
+    public ClientWidthMeasure(WidgetSizeCache cache) {
+      super(cache);
+    }
+    
+    public int sizeOf(Widget widget) {
+      return cache.getPreferredSize(widget).width;
     }
   }
 
@@ -646,6 +661,18 @@ public abstract class BaseLayout implements LayoutManager {
       borderSizes.clear();
       paddingSizes.clear();
     }
+    
+    /**
+     * Invalidates the cache for one individual {@code Widget}. 
+     * @param widget
+     */
+    public void removeEntry(Widget widget) {
+      minimumSizes.remove(widget);
+      preferredSizes.remove(widget);
+      marginSizes.remove(widget);
+      borderSizes.remove(widget);
+      paddingSizes.remove(widget);
+    }
 
     /**
      * Returns the minimum size for the given widget. Tries to look up the value
@@ -740,14 +767,6 @@ public abstract class BaseLayout implements LayoutManager {
         paddingSizes.put(widget, insets);
       }
       return insets;
-    }
-
-    public void removeEntry(Widget widget) {
-      minimumSizes.remove(widget);
-      preferredSizes.remove(widget);
-      marginSizes.remove(widget);
-      borderSizes.remove(widget);
-      paddingSizes.remove(widget);
     }
   }
 
