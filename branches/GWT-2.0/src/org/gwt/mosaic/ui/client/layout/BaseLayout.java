@@ -25,6 +25,7 @@ import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Insets;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.animation.client.Animation;
@@ -271,11 +272,22 @@ public abstract class BaseLayout implements LayoutManager {
       if (child instanceof DecoratorPanel) {
         child = ((DecoratorPanel) child).getWidget();
       }
-
       final LayoutData layoutData = (LayoutData) child.getLayoutData();
 
-      WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
-          layoutData.targetTop, layoutData.targetWidth,
+      /*
+       * getComputedStyleAttribute seems to return the wrong marginRight value
+       * for almost any block element that's not floated. Looks like it returns
+       * the distance from the element's right edge to its parent's right edge.
+       * 
+       * see: https://bugs.webkit.org/show_bug.cgi?id=13343
+       * 
+       * A workaround is to set position = absolute before and marginRight
+       * request. We do this with Widget.setXY().
+       */
+
+      WidgetHelper.setXY(layoutPanel, child, layoutData.targetLeft,
+          layoutData.targetTop);
+      WidgetHelper.setSize(child, layoutData.targetWidth,
           layoutData.targetHeight, getMarginSize(child), getBorderSize(child),
           getPaddingSize(child));
     }
@@ -290,9 +302,22 @@ public abstract class BaseLayout implements LayoutManager {
   public void layoutPanel(final LayoutPanel layoutPanel) {
     if (!layoutPanel.isAnimationEnabled()) {
       for (Widget child : visibleChildList) {
-        LayoutData layoutData = (LayoutData) child.getLayoutData();
-        WidgetHelper.setBounds(layoutPanel, child, layoutData.targetLeft,
-            layoutData.targetTop, layoutData.targetWidth,
+        final LayoutData layoutData = (LayoutData) child.getLayoutData();
+        
+        /*
+         * getComputedStyleAttribute seems to return the wrong marginRight value
+         * for almost any block element that's not floated. Looks like it returns
+         * the distance from the element's right edge to its parent's right edge.
+         * 
+         * see: https://bugs.webkit.org/show_bug.cgi?id=13343
+         * 
+         * A workaround is to set position = absolute before and marginRight
+         * request. We do this with Widget.setXY().
+         */
+        
+        WidgetHelper.setXY(layoutPanel, child, layoutData.targetLeft,
+            layoutData.targetTop);
+        WidgetHelper.setSize(child, layoutData.targetWidth,
             layoutData.targetHeight, getMarginSize(child),
             getBorderSize(child), getPaddingSize(child));
       }
@@ -348,8 +373,20 @@ public abstract class BaseLayout implements LayoutManager {
           layoutData.height = (int) (layoutData.getSourceHeight() + (layoutData.targetHeight - layoutData.getSourceHeight())
               * progress);
 
-          WidgetHelper.setBounds(layoutPanel, child, layoutData.left,
-              layoutData.top, layoutData.width, layoutData.height,
+          /*
+           * getComputedStyleAttribute seems to return the wrong marginRight value
+           * for almost any block element that's not floated. Looks like it returns
+           * the distance from the element's right edge to its parent's right edge.
+           * 
+           * see: https://bugs.webkit.org/show_bug.cgi?id=13343
+           * 
+           * A workaround is to set position = absolute before and marginRight
+           * request. We do this with Widget.setXY().
+           */
+          
+          WidgetHelper.setXY(layoutPanel, child, layoutData.left,
+              layoutData.top);
+          WidgetHelper.setSize(child, layoutData.width, layoutData.height,
               getMarginSize(child), getBorderSize(child), getPaddingSize(child));
         }
       }
@@ -435,13 +472,13 @@ public abstract class BaseLayout implements LayoutManager {
       return cache.getPreferredSize(c).height;
     }
   }
-  
+
   public static final class ClientWidthMeasure extends CachingMeasure {
 
     public ClientWidthMeasure(WidgetSizeCache cache) {
       super(cache);
     }
-    
+
     public int sizeOf(Widget widget) {
       return cache.getPreferredSize(widget).width;
     }
@@ -501,7 +538,7 @@ public abstract class BaseLayout implements LayoutManager {
     }
 
     public int sizeOf(Widget widget) {
-      return cache.getMarginSize(widget).bottom;
+      return cache.getMarginSize(widget).left;
     }
   }
 
@@ -559,7 +596,7 @@ public abstract class BaseLayout implements LayoutManager {
     }
 
     public int sizeOf(Widget widget) {
-      return cache.getBorderSize(widget).bottom;
+      return cache.getBorderSize(widget).left;
     }
   }
 
@@ -617,7 +654,7 @@ public abstract class BaseLayout implements LayoutManager {
     }
 
     public int sizeOf(Widget widget) {
-      return cache.getPaddingSize(widget).bottom;
+      return cache.getPaddingSize(widget).left;
     }
   }
 
@@ -661,9 +698,10 @@ public abstract class BaseLayout implements LayoutManager {
       borderSizes.clear();
       paddingSizes.clear();
     }
-    
+
     /**
-     * Invalidates the cache for one individual {@code Widget}. 
+     * Invalidates the cache for one individual {@code Widget}.
+     * 
      * @param widget
      */
     public void removeEntry(Widget widget) {

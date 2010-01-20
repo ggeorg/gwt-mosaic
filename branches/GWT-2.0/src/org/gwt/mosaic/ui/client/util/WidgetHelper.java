@@ -222,54 +222,11 @@ public class WidgetHelper {
   public static void setBounds(final LayoutPanel layoutPanel,
       final Widget widget, final int x, final int y, int width, int height) {
     final Element elem = widget.getElement();
-    setBounds(layoutPanel, widget, x, y, width, height,
-        DOM.getMarginSizes(elem), DOM.getBorderSizes(elem),
-        DOM.getPaddingSizes(elem));
-  }
-
-  /**
-   * Moves and resizes the given {@code Widget}.
-   * 
-   * @param layoutPanel the parent {@code LayoutPanel}
-   * @param widget the given {@code Widget}
-   * @param x the new <i>x</i>-coordinate
-   * @param y the new <i>y</i>-coordinate
-   * @param width the new width
-   * @param height the new height
-   * @param margin the widget's margin sizes
-   * @param border the widget's border width sizes
-   * @param padding the widget's padding sizes
-   */
-  public static void setBounds(final LayoutPanel layoutPanel,
-      final Widget widget, final int x, final int y, int width, int height,
-      int[] margin, int[] border, int[] padding) {
 
     setXY(layoutPanel, widget, x, y);
 
-    // TODO review and write a test case!
-    if (widget instanceof FormPanel) {
-      final Widget child = ((FormPanel) widget).getWidget();
-      if (child != null && child instanceof HasLayoutManager) {
-        int[] margins = DOM.getMarginSizes(child.getElement());
-        if (width != -1) {
-          width -= (margins[1] + margins[3]);
-        }
-        if (height != -1) {
-          height -= (margins[0] + margins[2]);
-        }
-        setSize(child, width, height);
-
-        // (ggeorg) needs:
-        // border: none;
-        // padding: 0px;
-        // margin: 0px
-        setSize(widget, WidgetHelper.getPreferredSize(child));
-
-        return;
-      }
-    }
-
-    setSize(widget, width, height, margin, border, padding);
+    setSize(widget, width, height, DOM.getMarginSizes(elem),
+        DOM.getBorderSizes(elem), DOM.getPaddingSizes(elem));
   }
 
   /**
@@ -423,6 +380,29 @@ public class WidgetHelper {
   public static void setSize(final Widget widget, int width, int height,
       final int[] margin, final int[] border, final int[] padding) {
 
+    // TODO review and write a test case!
+    if (widget instanceof FormPanel) {
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && child instanceof HasLayoutManager) {
+        int[] margins = DOM.getMarginSizes(child.getElement());
+        if (width != -1) {
+          width -= (margins[1] + margins[3]);
+        }
+        if (height != -1) {
+          height -= (margins[0] + margins[2]);
+        }
+        setSize(child, width, height);
+
+        // (ggeorg) needs:
+        // border: none;
+        // padding: 0px;
+        // margin: 0px
+        setSize(widget, WidgetHelper.getPreferredSize(child));
+
+        return;
+      }
+    }
+
     //
     // Note: we use Widget calls, e.g. Widget.setWidth() or Widget.setHeight()
     //
@@ -483,7 +463,6 @@ public class WidgetHelper {
    * 
    * @deprecated replaced by {@link #setXY(LayoutPanel, Widget, Point)}
    */
-  @Deprecated
   public static void setXY(final LayoutPanel layoutPanel, final Widget widget,
       final int x, final int y) {
     layoutPanel.setWidgetPosition(widget, x, y);
