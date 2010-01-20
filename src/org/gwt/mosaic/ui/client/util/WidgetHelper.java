@@ -460,8 +460,6 @@ public class WidgetHelper {
    * @param widget the given {@code Widget}
    * @param x the new <i>x</i>-coordinate
    * @param y the new <i>y</i>-coordinate
-   * 
-   * @deprecated replaced by {@link #setXY(LayoutPanel, Widget, Point)}
    */
   public static void setXY(final LayoutPanel layoutPanel, final Widget widget,
       final int x, final int y) {

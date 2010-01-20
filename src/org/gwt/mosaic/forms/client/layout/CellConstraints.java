@@ -1076,7 +1076,20 @@ public final class CellConstraints extends LayoutData implements Cloneable {
     int y = origin(concreteVAlign, cellY, cellH, compH);
     int w = extent(concreteHAlign, cellW, compW);
     int h = extent(concreteVAlign, cellH, compH);
-    WidgetHelper.setBounds(layoutPanel, c, x, y, w, h, layout.getMarginSize(c),
+
+    /*
+     * getComputedStyleAttribute seems to return the wrong marginRight value for
+     * almost any block element that's not floated. Looks like it returns the
+     * distance from the element's right edge to its parent's right edge.
+     * 
+     * see: https://bugs.webkit.org/show_bug.cgi?id=13343
+     * 
+     * A workaround is to set position = absolute before and marginRight
+     * request. We do this with Widget.setXY().
+     */
+
+    WidgetHelper.setXY(layoutPanel, c, x, y);
+    WidgetHelper.setSize(c, w, h, layout.getMarginSize(c),
         layout.getBorderSize(c), layout.getPaddingSize(c));
   }
 
