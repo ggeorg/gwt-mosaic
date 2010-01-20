@@ -410,7 +410,8 @@ public class GridLayout extends BaseLayout implements HasAlignment {
       final int left = paddingLeftMeasure.sizeOf(layoutPanel);
       final int top = paddingTopMeasure.sizeOf(layoutPanel);
       int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
-      int height = box.height - (top + paddingBottomMeasure.sizeOf(layoutPanel));
+      int height = box.height
+          - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -508,12 +509,14 @@ public class GridLayout extends BaseLayout implements HasAlignment {
             layoutData.targetHeight = prefSize.height;
           }
 
-          layoutData.setSourceLeft(widget.getAbsoluteLeft()
-              - layoutPanel.getAbsoluteLeft());
-          layoutData.setSourceTop(widget.getAbsoluteTop()
-              - layoutPanel.getAbsoluteTop());
-          layoutData.setSourceWidth(widget.getOffsetWidth());
-          layoutData.setSourceHeight(widget.getOffsetHeight());
+          if (layoutPanel.isAnimationEnabled()) {
+            layoutData.setSourceLeft(widget.getAbsoluteLeft()
+                - layoutPanel.getAbsoluteLeft());
+            layoutData.setSourceTop(widget.getAbsoluteTop()
+                - layoutPanel.getAbsoluteTop());
+            layoutData.setSourceWidth(widget.getOffsetWidth());
+            layoutData.setSourceHeight(widget.getOffsetHeight());
+          }
         }
       }
 

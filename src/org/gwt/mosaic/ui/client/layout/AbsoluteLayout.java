@@ -269,14 +269,16 @@ public class AbsoluteLayout extends BaseLayout {
         layoutData.targetWidth = fw;
         layoutData.targetHeight = fh;
 
-        layoutData.setSourceLeft(child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft()
-            - paddingLeftMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceTop(child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop()
-            - paddingTopMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(child.getOffsetWidth());
-        layoutData.setSourceHeight(child.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(child.getAbsoluteLeft()
+              - layoutPanel.getAbsoluteLeft()
+              - paddingLeftMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceTop(child.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingTopMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(child.getOffsetWidth());
+          layoutData.setSourceHeight(child.getOffsetHeight());
+        }
       }
 
       super.layoutPanel(layoutPanel);

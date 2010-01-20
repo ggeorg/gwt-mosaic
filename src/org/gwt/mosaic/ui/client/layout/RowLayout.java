@@ -132,7 +132,8 @@ public class RowLayout extends BaseLayout {
       final int left = paddingLeftMeasure.sizeOf(layoutPanel);
       int top = paddingTopMeasure.sizeOf(layoutPanel);
       int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
-      int height = box.height - (top + paddingBottomMeasure.sizeOf(layoutPanel));
+      int height = box.height
+          - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
       int fillHeight = height;
 
@@ -225,12 +226,16 @@ public class RowLayout extends BaseLayout {
 
         top += (h + spacing);
 
-        layoutData.setSourceLeft(child.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft() - paddingLeftMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceTop(child.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop() - paddingTopMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(child.getOffsetWidth());
-        layoutData.setSourceHeight(child.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(child.getAbsoluteLeft()
+              - layoutPanel.getAbsoluteLeft()
+              - paddingLeftMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceTop(child.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingTopMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(child.getOffsetWidth());
+          layoutData.setSourceHeight(child.getOffsetHeight());
+        }
       }
 
       super.layoutPanel(layoutPanel);

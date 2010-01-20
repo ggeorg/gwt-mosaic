@@ -214,17 +214,16 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
     return (BorderLayoutData) layoutDataObject;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * org.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.mosaic.ui
-   * .client.layout.LayoutPanel)
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     final Dimension result = new Dimension(0, 0);
 
     try {
+
       if (layoutPanel == null || !init(layoutPanel)) {
         return result;
       }
@@ -246,29 +245,23 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       final int spacing = layoutPanel.getWidgetSpacing();
 
       if (north != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) north.getLayoutData();
-
-        int northHeight = preferredHeightMeasure.sizeOf(north);
-
-        height += northHeight;
+        height += preferredHeightMeasure.sizeOf(north);
         final Widget parent = north.getParent();
         if (parent instanceof InternalDecoratorPanel) {
           final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
-          height += (decPanel.getOffsetHeight() - north.getOffsetHeight());
+          final int borderSizes[] = decPanel.getBorderSizes();
+          height += (borderSizes[0] + borderSizes[2]);
         }
         height += spacing;
       }
 
       if (south != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) south.getLayoutData();
-
-        int southHeight = preferredHeightMeasure.sizeOf(south);;
-
-        height += southHeight;
+        height += preferredHeightMeasure.sizeOf(south);
         final Widget parent = south.getParent();
         if (parent instanceof InternalDecoratorPanel) {
           final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
-          height += (decPanel.getOffsetHeight() - south.getOffsetHeight());
+          final int borderSizes[] = decPanel.getBorderSizes();
+          height += (borderSizes[0] + borderSizes[2]);
         }
         height += spacing;
       }
@@ -276,15 +269,12 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       Dimension westSize = null;
 
       if (west != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) west.getLayoutData();
-
-        int westWidth = preferredWidthMeasure.sizeOf(west);
-
-        width += (int) Math.round(westWidth);
+        width += preferredWidthMeasure.sizeOf(west);
         final Widget parent = west.getParent();
         if (parent instanceof InternalDecoratorPanel) {
           final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
-          width += (decPanel.getOffsetWidth() - west.getOffsetWidth());
+          final int borderSizes[] = decPanel.getBorderSizes();
+          width += (borderSizes[1] + borderSizes[3]);
         }
         width += spacing;
       }
@@ -292,15 +282,12 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       Dimension eastSize = null;
 
       if (east != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) east.getLayoutData();
-
-        int eastWidth = preferredWidthMeasure.sizeOf(east);
-
-        width += (int) Math.round(eastWidth);
+        width += preferredWidthMeasure.sizeOf(east);
         final Widget parent = east.getParent();
         if (parent instanceof InternalDecoratorPanel) {
           final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
-          width += (decPanel.getOffsetWidth() - east.getOffsetWidth());
+          final int borderSizes[] = decPanel.getBorderSizes();
+          width += (borderSizes[1] + borderSizes[3]);
         }
         width += spacing;
       }
@@ -333,8 +320,9 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       final Widget parent = center.getParent();
       if (parent instanceof InternalDecoratorPanel) {
         final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
-        width += (decPanel.getOffsetWidth() - center.getOffsetWidth());
-        height += (decPanel.getOffsetHeight() - center.getOffsetHeight());
+        final int borderSizes[] = decPanel.getBorderSizes();
+        width += (borderSizes[1] + borderSizes[3]);
+        height += (borderSizes[0] + borderSizes[2]);
       }
 
       result.width = width;
@@ -420,12 +408,10 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * org.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.mosaic.ui.client
-   * .LayoutPanel)
+   * @see org.gwt.mosaic.ui.client.layout.BaseLayout#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public void layoutPanel(final LayoutPanel layoutPanel) {
     try {
@@ -433,14 +419,16 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
         return;
       }
 
-      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
-
+      // ---
       int left = paddingLeftMeasure.sizeOf(layoutPanel);
       int top = paddingTopMeasure.sizeOf(layoutPanel);
+
+      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
       final int width = box.width
           - (left + paddingRightMeasure.sizeOf(layoutPanel));
       final int height = box.height
           - (top + paddingBottomMeasure.sizeOf(layoutPanel));
+      // ---
 
       final int spacing = layoutPanel.getWidgetSpacing();
 
@@ -448,7 +436,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       int bottom = top + height;
 
       if (north != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) north.getLayoutData();
+        final BorderLayoutData layoutData = getLayoutData(north);
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (northSplitBar == null) {
@@ -480,10 +468,12 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
           h += decPanelBorderSize.height;
         }
 
-        layoutData.setSourceLeft(layoutData.targetLeft);
-        layoutData.setSourceTop(layoutData.targetTop);
-        layoutData.setSourceWidth(north.getOffsetWidth());
-        layoutData.setSourceHeight(north.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(layoutData.targetLeft);
+          layoutData.setSourceTop(layoutData.targetTop);
+          layoutData.setSourceWidth(north.getOffsetWidth());
+          layoutData.setSourceHeight(north.getOffsetHeight());
+        }
 
         // split bar
         if (layoutData.resizable && northSplitBar.isAttached()) {
@@ -495,7 +485,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (south != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) south.getLayoutData();
+        final BorderLayoutData layoutData = getLayoutData(south);
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (southSplitBar == null) {
@@ -528,12 +518,14 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
           h += decPanelBorderSize.height;
         }
 
-        layoutData.setSourceLeft(layoutData.targetLeft);
-        layoutData.setSourceTop(south.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop()
-            - paddingBottomMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(south.getOffsetWidth());
-        layoutData.setSourceHeight(south.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(layoutData.targetLeft);
+          layoutData.setSourceTop(south.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingBottomMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(south.getOffsetWidth());
+          layoutData.setSourceHeight(south.getOffsetHeight());
+        }
 
         // split bar
         if (layoutData.resizable && southSplitBar.isAttached()) {
@@ -546,7 +538,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (west != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) west.getLayoutData();
+        final BorderLayoutData layoutData = getLayoutData(west);
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (westSplitBar == null) {
@@ -578,14 +570,16 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
           w += decPanelBorderSize.width;
         }
 
-        layoutData.setSourceLeft(west.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft()
-            - paddingLeftMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceTop(west.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop()
-            - paddingTopMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(west.getOffsetWidth());
-        layoutData.setSourceHeight(west.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(west.getAbsoluteLeft()
+              - layoutPanel.getAbsoluteLeft()
+              - paddingLeftMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceTop(west.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingTopMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(west.getOffsetWidth());
+          layoutData.setSourceHeight(west.getOffsetHeight());
+        }
 
         // split bar
         if (layoutData.resizable && westSplitBar.isAttached()) {
@@ -597,7 +591,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (east != null) {
-        final BorderLayoutData layoutData = (BorderLayoutData) east.getLayoutData();
+        final BorderLayoutData layoutData = getLayoutData(east);
 
         if (layoutData.resizable && !layoutData.collapsed) {
           if (eastSplitBar == null) {
@@ -630,14 +624,16 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
           w += decPanelBorderSize.width;
         }
 
-        layoutData.setSourceLeft(east.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft()
-            - paddingRightMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceTop(east.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop()
-            - paddingTopMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(east.getOffsetWidth());
-        layoutData.setSourceHeight(east.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(east.getAbsoluteLeft()
+              - layoutPanel.getAbsoluteLeft()
+              - paddingRightMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceTop(east.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingTopMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(east.getOffsetWidth());
+          layoutData.setSourceHeight(east.getOffsetHeight());
+        }
 
         // split bar
         if (layoutData.resizable && eastSplitBar.isAttached()) {
@@ -650,7 +646,7 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
       }
 
       if (center != null) {
-        BorderLayoutData layoutData = (BorderLayoutData) center.getLayoutData();
+        BorderLayoutData layoutData = getLayoutData(center);
 
         layoutData.targetLeft = left;
         layoutData.targetTop = top;
@@ -667,14 +663,16 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
           layoutData.targetHeight -= decPanelBorderSize.height;
         }
 
-        layoutData.setSourceLeft(center.getAbsoluteLeft()
-            - layoutPanel.getAbsoluteLeft()
-            - paddingLeftMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceTop(center.getAbsoluteTop()
-            - layoutPanel.getAbsoluteTop()
-            - paddingTopMeasure.sizeOf(layoutPanel));
-        layoutData.setSourceWidth(center.getOffsetWidth());
-        layoutData.setSourceHeight(center.getOffsetHeight());
+        if (layoutPanel.isAnimationEnabled()) {
+          layoutData.setSourceLeft(center.getAbsoluteLeft()
+              - layoutPanel.getAbsoluteLeft()
+              - paddingLeftMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceTop(center.getAbsoluteTop()
+              - layoutPanel.getAbsoluteTop()
+              - paddingTopMeasure.sizeOf(layoutPanel));
+          layoutData.setSourceWidth(center.getOffsetWidth());
+          layoutData.setSourceHeight(center.getOffsetHeight());
+        }
       }
 
       super.layoutPanel(layoutPanel);
