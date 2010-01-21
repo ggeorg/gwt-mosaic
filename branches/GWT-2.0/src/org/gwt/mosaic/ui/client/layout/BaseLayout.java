@@ -25,7 +25,6 @@ import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Insets;
-import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.animation.client.Animation;
@@ -228,17 +227,6 @@ public abstract class BaseLayout implements LayoutManager {
     }
   }
 
-  protected void syncDecoratorVisibility(Widget child) {
-    final Widget parent = child.getParent();
-    if (parent instanceof InternalDecoratorPanel) {
-      //
-      // parent.setVisible(DOM.isVisible(child.getElement()));
-      //
-      // replaced by:
-      parent.setVisible(child.isVisible());
-    }
-  }
-
   // -----------------------------------------------------------------------
 
   protected boolean init(LayoutPanel layoutPanel) {
@@ -250,6 +238,9 @@ public abstract class BaseLayout implements LayoutManager {
 
     for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
       Widget widget = iter.next();
+
+      // iter.next() should return the undecorated widget
+      assert !(widget instanceof InternalDecoratorPanel);
 
       syncDecoratorVisibility(widget);
 
@@ -265,6 +256,18 @@ public abstract class BaseLayout implements LayoutManager {
     }
 
     return true;
+  }
+
+  protected void syncDecoratorVisibility(Widget widget) {
+    // sync DecoratorPanel (if used) visibility
+    final Widget parent = widget.getParent();
+    if (parent instanceof InternalDecoratorPanel) {
+      //
+      // parent.setVisible(DOM.isVisible(child.getElement()));
+      //
+      // replaced by:
+      parent.setVisible(widget.isVisible());
+    }
   }
 
   private void layoutPanelImpl(LayoutPanel layoutPanel) {
@@ -303,18 +306,19 @@ public abstract class BaseLayout implements LayoutManager {
     if (!layoutPanel.isAnimationEnabled()) {
       for (Widget child : visibleChildList) {
         final LayoutData layoutData = (LayoutData) child.getLayoutData();
-        
+
         /*
          * getComputedStyleAttribute seems to return the wrong marginRight value
-         * for almost any block element that's not floated. Looks like it returns
-         * the distance from the element's right edge to its parent's right edge.
+         * for almost any block element that's not floated. Looks like it
+         * returns the distance from the element's right edge to its parent's
+         * right edge.
          * 
          * see: https://bugs.webkit.org/show_bug.cgi?id=13343
          * 
          * A workaround is to set position = absolute before and marginRight
          * request. We do this with Widget.setXY().
          */
-        
+
         WidgetHelper.setXY(layoutPanel, child, layoutData.targetLeft,
             layoutData.targetTop);
         WidgetHelper.setSize(child, layoutData.targetWidth,
@@ -374,16 +378,17 @@ public abstract class BaseLayout implements LayoutManager {
               * progress);
 
           /*
-           * getComputedStyleAttribute seems to return the wrong marginRight value
-           * for almost any block element that's not floated. Looks like it returns
-           * the distance from the element's right edge to its parent's right edge.
+           * getComputedStyleAttribute seems to return the wrong marginRight
+           * value for almost any block element that's not floated. Looks like
+           * it returns the distance from the element's right edge to its
+           * parent's right edge.
            * 
            * see: https://bugs.webkit.org/show_bug.cgi?id=13343
            * 
            * A workaround is to set position = absolute before and marginRight
            * request. We do this with Widget.setXY().
            */
-          
+
           WidgetHelper.setXY(layoutPanel, child, layoutData.left,
               layoutData.top);
           WidgetHelper.setSize(child, layoutData.width, layoutData.height,
