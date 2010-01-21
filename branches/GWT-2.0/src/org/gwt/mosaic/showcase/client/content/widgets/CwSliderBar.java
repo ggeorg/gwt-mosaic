@@ -24,13 +24,16 @@ import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.ui.client.SliderBar;
 import org.gwt.mosaic.ui.client.SliderBar.LabelFormatter;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -91,32 +94,24 @@ public class CwSliderBar extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
         Orientation.VERTICAL));
     layoutPanel.setPadding(0);
-
-    final InlineLabel label1 = new InlineLabel("Value: 0.5");
-    final InlineLabel label2 = new InlineLabel("Value: 0.5");
-    final InlineLabel label3 = new InlineLabel("Value: 50.0");
+    
+    final Label label1 = new Label("Value: 0.5");
+    final Label label2 = new Label("Value: 0.5");
+    final Label label3 = new Label("Value: 50.0");
 
     final SliderBar sliderBar1 = new SliderBar();
-    sliderBar1.setStepSize(0.1);
-    sliderBar1.setCurrentValue(0.5);
     sliderBar1.addValueChangeHandler(new ValueChangeHandler<Double>() {
       public void onValueChange(ValueChangeEvent<Double> event) {
         label1.setText("Value: " + event.getValue());
-        layoutPanel.invalidate(label1);
-        layoutPanel.layout();
       }
     });
 
     final SliderBar sliderBar2 = new SliderBar();
-    sliderBar2.setStepSize(0.1);
-    sliderBar2.setCurrentValue(0.5);
     sliderBar2.setNumTicks(10);
     sliderBar2.setNumLabels(5);
     sliderBar2.addValueChangeHandler(new ValueChangeHandler<Double>() {
       public void onValueChange(ValueChangeEvent<Double> event) {
         label2.setText("Value: " + event.getValue());
-        layoutPanel.invalidate(label2);
-        layoutPanel.layout();
       }
     });
 
@@ -127,24 +122,20 @@ public class CwSliderBar extends ContentWidget {
           }
         });
     sliderBar3.setStepSize(5.0);
-    sliderBar3.setCurrentValue(50.0);
     sliderBar3.setNumTicks(10);
     sliderBar3.setNumLabels(5);
     sliderBar3.addValueChangeHandler(new ValueChangeHandler<Double>() {
       public void onValueChange(ValueChangeEvent<Double> event) {
         label3.setText("Value: " + event.getValue());
-        layoutPanel.invalidate(label3);
-        layoutPanel.layout();
       }
     });
 
-    // SliderBar implements ResizableWidget
     layoutPanel.add(sliderBar1);
-    layoutPanel.add(label1);
+    layoutPanel.add(label1, new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel.add(sliderBar2);
-    layoutPanel.add(label2);
+    layoutPanel.add(label2, new BoxLayoutData(FillStyle.HORIZONTAL));
     layoutPanel.add(sliderBar3);
-    layoutPanel.add(label3);
+    layoutPanel.add(label3, new BoxLayoutData(FillStyle.HORIZONTAL));
 
     return layoutPanel;
   }
