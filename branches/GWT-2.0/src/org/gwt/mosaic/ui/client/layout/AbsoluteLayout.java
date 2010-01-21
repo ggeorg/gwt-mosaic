@@ -22,9 +22,7 @@ import org.gwt.mosaic.core.client.util.FloatParser;
 import org.gwt.mosaic.core.client.util.UnitParser;
 import org.gwt.mosaic.ui.client.layout.LayoutData.ParsedSize;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -144,149 +142,125 @@ public class AbsoluteLayout extends BaseLayout {
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    assert layoutPanel != null;
+
     final Dimension result = new Dimension();
 
-    try {
-      if (layoutPanel == null || !init(layoutPanel)) {
-        return result;
-      }
+    init(layoutPanel);
 
-      result.width = layoutPanel.toPixelSize(width, true);
-      result.height = layoutPanel.toPixelSize(height, false);
+    result.width = layoutPanel.toPixelSize(width, true);
+    result.height = layoutPanel.toPixelSize(height, false);
 
-      result.width += marginLeftMeasure.sizeOf(layoutPanel)
-          + marginRightMeasure.sizeOf(layoutPanel)
-          + borderLeftMeasure.sizeOf(layoutPanel)
-          + borderRightMeasure.sizeOf(layoutPanel)
-          + paddingLeftMeasure.sizeOf(layoutPanel)
-          + paddingRightMeasure.sizeOf(layoutPanel);
+    result.width += marginLeftMeasure.sizeOf(layoutPanel)
+        + marginRightMeasure.sizeOf(layoutPanel)
+        + borderLeftMeasure.sizeOf(layoutPanel)
+        + borderRightMeasure.sizeOf(layoutPanel)
+        + paddingLeftMeasure.sizeOf(layoutPanel)
+        + paddingRightMeasure.sizeOf(layoutPanel);
 
-      result.height += marginTopMeasure.sizeOf(layoutPanel)
-          + marginBottomMeasure.sizeOf(layoutPanel)
-          + borderTopMeasure.sizeOf(layoutPanel)
-          + borderBottomMeasure.sizeOf(layoutPanel)
-          + paddingTopMeasure.sizeOf(layoutPanel)
-          + paddingBottomMeasure.sizeOf(layoutPanel);
-
-    } catch (Exception e) {
-      GWT.log(e.getMessage(), e);
-
-      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
-          + e.toString());
-    }
+    result.height += marginTopMeasure.sizeOf(layoutPanel)
+        + marginBottomMeasure.sizeOf(layoutPanel)
+        + borderTopMeasure.sizeOf(layoutPanel)
+        + borderBottomMeasure.sizeOf(layoutPanel)
+        + paddingTopMeasure.sizeOf(layoutPanel)
+        + paddingBottomMeasure.sizeOf(layoutPanel);
 
     return result;
   }
 
   /**
-   * Lays out the specified {@link LayoutPanel} using this layout.
+   * {@inheritDoc}
    * 
    * @param layoutPanel the panel in which to do the layout
    * @see org.gwt.mosaic.ui.client.layout.LayoutManager#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public void layoutPanel(LayoutPanel layoutPanel) {
-    try {
-      if (layoutPanel == null || !init(layoutPanel)) {
-        return;
-      }
+    assert layoutPanel != null;
 
-      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
+    if (!init(layoutPanel)) {
+      return;
+    }
 
-      final int totalWidth = box.width;
-      final int totalHeight = box.height;
+    final Dimension box = DOM.getClientSize(layoutPanel.getElement());
+    final int totalWidth = box.width;
+    final int totalHeight = box.height;
 
-      final int panelWidth = layoutPanel.toPixelSize(this.width, true);
-      final int panelHeight = layoutPanel.toPixelSize(this.height, false);
+    final int panelWidth = layoutPanel.toPixelSize(this.width, true);
+    final int panelHeight = layoutPanel.toPixelSize(this.height, false);
 
-      final double deltaX = totalWidth - panelWidth;
-      final double deltaY = totalHeight - panelHeight;
+    final double deltaX = totalWidth - panelWidth;
+    final double deltaY = totalHeight - panelHeight;
 
-      InternalDecoratorPanel decPanel = null;
+    for (Widget child : visibleChildList) {
+      AbsoluteLayoutData layoutData = getLayoutData(child);
+      
       Dimension decPanelFrameSize = null;
 
-      for (Widget child : visibleChildList) {
-        if (child instanceof InternalDecoratorPanel) {
-          decPanel = (InternalDecoratorPanel) child;
-          child = ((InternalDecoratorPanel) child).getWidget();
-        } else {
-          decPanel = null;
-        }
-
-        if (!DOM.isVisible(child.getElement())) {
-          continue;
-        }
-
-        AbsoluteLayoutData layoutData = getLayoutData(child);
-
-        if (decPanel != null) {
-          final int borderSizes[] = decPanel.getBorderSizes();
-          decPanelFrameSize = new Dimension(borderSizes[1] + borderSizes[3],
-              borderSizes[0] + borderSizes[0]);
-        }
-
-        Dimension clientSize = new Dimension(
-            preferredWidthMeasure.sizeOf(child),
-            preferredHeightMeasure.sizeOf(child));
-
-        if (clientSize.width == -1) {
-          clientSize.width = getPreferredSize(layoutPanel, child, layoutData).width;
-        }
-
-        if (clientSize.height == -1) {
-          clientSize.height = getPreferredSize(layoutPanel, child, layoutData).height;
-        }
-
-        Point point = new Point(layoutPanel.toPixelSize(layoutData.left, true),
-            layoutPanel.toPixelSize(layoutData.top, false));
-
-        int fw = clientSize.width;
-        int fh = clientSize.height;
-
-        if (decPanel != null) {
-          fw -= decPanelFrameSize.width;
-          fh -= decPanelFrameSize.height;
-        }
-
-        if (layoutData.marginPolicy.left && layoutData.marginPolicy.right) {
-          point.x += deltaX / 2;
-        } else if (layoutData.marginPolicy.left) {
-          point.x += deltaX;
-        }
-
-        if (layoutData.marginPolicy.top && layoutData.marginPolicy.bottom) {
-          point.y += deltaY / 2;
-        } else if (layoutData.marginPolicy.top) {
-          point.y += deltaY;
-        }
-
-        if (layoutData.dimensionPolicy.width)
-          fw += deltaX;
-        if (layoutData.dimensionPolicy.height)
-          fh += deltaY;
-
-        layoutData.targetLeft = point.x;
-        layoutData.targetTop = point.y;
-        layoutData.targetWidth = fw;
-        layoutData.targetHeight = fh;
-
-        if (layoutPanel.isAnimationEnabled()) {
-          layoutData.setSourceLeft(child.getAbsoluteLeft()
-              - layoutPanel.getAbsoluteLeft()
-              - paddingLeftMeasure.sizeOf(layoutPanel));
-          layoutData.setSourceTop(child.getAbsoluteTop()
-              - layoutPanel.getAbsoluteTop()
-              - paddingTopMeasure.sizeOf(layoutPanel));
-          layoutData.setSourceWidth(child.getOffsetWidth());
-          layoutData.setSourceHeight(child.getOffsetHeight());
-        }
+      final Widget parent = child.getParent();
+      if (parent instanceof InternalDecoratorPanel) {
+        final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+        final int borderSizes[] = decPanel.getBorderSizes();
+        decPanelFrameSize = new Dimension(borderSizes[1] + borderSizes[3],
+            borderSizes[0] + borderSizes[0]);
       }
 
-      super.layoutPanel(layoutPanel);
+      final Dimension clientSize = new Dimension(preferredWidthMeasure.sizeOf(child),
+          preferredHeightMeasure.sizeOf(child));
 
-    } catch (Exception e) {
-      GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ": " + e.getMessage());
+      if (clientSize.width == -1) {
+        clientSize.width = getPreferredSize(layoutPanel, child, layoutData).width;
+      }
+
+      if (clientSize.height == -1) {
+        clientSize.height = getPreferredSize(layoutPanel, child, layoutData).height;
+      }
+
+      Point point = new Point(layoutPanel.toPixelSize(layoutData.left, true),
+          layoutPanel.toPixelSize(layoutData.top, false));
+
+      int fw = clientSize.width;
+      int fh = clientSize.height;
+
+      if (parent instanceof InternalDecoratorPanel) {
+        fw -= decPanelFrameSize.width;
+        fh -= decPanelFrameSize.height;
+      }
+
+      if (layoutData.marginPolicy.left && layoutData.marginPolicy.right) {
+        point.x += deltaX / 2;
+      } else if (layoutData.marginPolicy.left) {
+        point.x += deltaX;
+      }
+
+      if (layoutData.marginPolicy.top && layoutData.marginPolicy.bottom) {
+        point.y += deltaY / 2;
+      } else if (layoutData.marginPolicy.top) {
+        point.y += deltaY;
+      }
+
+      if (layoutData.dimensionPolicy.width)
+        fw += deltaX;
+      if (layoutData.dimensionPolicy.height)
+        fh += deltaY;
+
+      layoutData.targetLeft = point.x;
+      layoutData.targetTop = point.y;
+      layoutData.targetWidth = fw;
+      layoutData.targetHeight = fh;
+
+      if (layoutPanel.isAnimationEnabled()) {
+        layoutData.setSourceLeft(child.getAbsoluteLeft()
+            - layoutPanel.getAbsoluteLeft()
+            - paddingLeftMeasure.sizeOf(layoutPanel));
+        layoutData.setSourceTop(child.getAbsoluteTop()
+            - layoutPanel.getAbsoluteTop()
+            - paddingTopMeasure.sizeOf(layoutPanel));
+        layoutData.setSourceWidth(child.getOffsetWidth());
+        layoutData.setSourceHeight(child.getOffsetHeight());
+      }
     }
+
+    super.layoutPanel(layoutPanel);
   }
 
   private AbsoluteLayoutData getLayoutData(Widget child) {
