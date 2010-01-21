@@ -17,6 +17,7 @@ package org.gwt.mosaic.ui.client.layout;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -32,6 +33,14 @@ class InternalDecoratorPanel extends AbstractDecoratorPanel {
 
   InternalDecoratorPanel(String[] rowStyles, int containerIndex) {
     super(rowStyles, containerIndex);
+  }
+
+  @Override
+  public boolean remove(Widget w) {
+    if (isAttached()) {
+      removeFromParent();
+    }
+    return super.remove(w);
   }
 
   int[] getBorderSizes() {
