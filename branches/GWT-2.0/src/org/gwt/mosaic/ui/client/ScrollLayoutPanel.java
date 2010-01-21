@@ -1,7 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.UIObject;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
+@SuppressWarnings("deprecation")
 public class ScrollLayoutPanel extends LayoutPanel implements
     SourcesScrollEvents, HasScrollHandlers {
 
@@ -60,15 +61,28 @@ public class ScrollLayoutPanel extends LayoutPanel implements
   public ScrollLayoutPanel(LayoutManager layout) {
     super(layout);
     setAlwaysShowScrollBars(false);
+
     // Prevent IE standard mode bug when a AbsolutePanel is contained.
     DOM.setStyleAttribute(getElement(), "position", "relative");
+
+    // Hack to account for the IE6/7 scrolling bug described here:
+    // http://stackoverflow.com/questions/139000/div-with-overflowauto-and-a-100-wide-table-problem
+    DOM.setStyleAttribute(getElement(), "zoom", "1");
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.event.dom.client.HasScrollHandlers#addScrollHandler(com.google.gwt.event.dom.client.ScrollHandler)
+   */
   public HandlerRegistration addScrollHandler(ScrollHandler handler) {
     return addDomHandler(handler, ScrollEvent.getType());
   }
 
   /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.SourcesScrollEvents#addScrollListener(com.google.gwt.user.client.ui.ScrollListener)
    * @deprecated Use {@link #addScrollHandler} instead
    */
   @Deprecated
@@ -88,24 +102,6 @@ public class ScrollLayoutPanel extends LayoutPanel implements
     ensureVisibleImpl(scroll, element);
   }
 
-  private native void ensureVisibleImpl(Element scroll, Element e)
-  /*-{
-    if (!e)
-      return; 
-    
-    var item = e;
-    var realOffsetX = 0;
-    var realOffsetY = 0;
-    while (item && (item != scroll)) {
-      realOffsetX += item.offsetLeft;
-      realOffsetY += item.offsetTop;
-      item = item.offsetParent;
-    }
-    
-    scroll.scrollLeft = realOffsetX - scroll.offsetWidth / 2;
-    scroll.scrollTop  = realOffsetY - scroll.offsetHeight / 2;
-  }-*/;
-
   /**
    * Gets the horizontal scroll position.
    * 
@@ -124,18 +120,23 @@ public class ScrollLayoutPanel extends LayoutPanel implements
     return DOM.getElementPropertyInt(getElement(), "scrollTop");
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutPanel#layout()
+   */
   @Override
   public void layout() {
     final Element elem = getElement();
-    
+
     final Dimension size1 = new Dimension(elem.getClientWidth(),
         elem.getClientHeight());
-    
+
     super.layout();
-    
+
     final Dimension size2 = new Dimension(elem.getClientWidth(),
         elem.getClientHeight());
-    
+
     if (!size1.equals(size2)) {
       // second layout() call will fix the layout after the
       // scrollbar appears/dissapears for the first time
@@ -143,12 +144,10 @@ public class ScrollLayoutPanel extends LayoutPanel implements
     }
   }
 
-  @Override
-  protected void onLayout() {
-    // XXX don't call super.onLoad()
-  }
-
   /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.SourcesScrollEvents#removeScrollListener(com.google.gwt.user.client.ui.ScrollListener)
    * @deprecated Use the {@link HandlerRegistration#removeHandler} method on the
    *             object returned by {@link addScrollHandler} instead
    */
@@ -213,5 +212,33 @@ public class ScrollLayoutPanel extends LayoutPanel implements
    */
   public void setScrollPosition(int position) {
     DOM.setElementPropertyInt(getElement(), "scrollTop", position);
+  }
+
+  private native void ensureVisibleImpl(Element scroll, Element e)
+  /*-{
+    if (!e)
+      return; 
+    
+    var item = e;
+    var realOffsetX = 0;
+    var realOffsetY = 0;
+    while (item && (item != scroll)) {
+      realOffsetX += item.offsetLeft;
+      realOffsetY += item.offsetTop;
+      item = item.offsetParent;
+    }
+    
+    scroll.scrollLeft = realOffsetX - scroll.offsetWidth / 2;
+    scroll.scrollTop  = realOffsetY - scroll.offsetHeight / 2;
+  }-*/;
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutPanel#onLayout()
+   */
+  @Override
+  protected void onLayout() {
+    // XXX don't call super.onLoad()
   }
 }
