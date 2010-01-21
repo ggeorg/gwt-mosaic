@@ -1212,12 +1212,12 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 
 .gwt-SliderBar-shell {
 	height: 34pt;
-	width: 50%;
+	width: 256px;
 }
 
 .gwt-SliderBar-shell .gwt-SliderBar-line {
-	border: 1px solid black;
-	background-color: white;
+	border: 1px solid #4d4d4d;
+	background-color: #cdcdcd;
 	height: 4px;
 	width: 95%;
 	top: 22pt;
@@ -1225,13 +1225,11 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 }
 
 .gwt-SliderBar-shell .gwt-SliderBar-line-disabled {
-	border: 1px solid gray;
+	border: 1px solid #8d8d8d;
 }
 
 .gwt-SliderBar-shell .gwt-SliderBar-knob {
 	top: 14pt;
-	width: 11px;
-	height: 21px;
 	z-index: 1;
 	cursor: pointer;
 }
@@ -1240,12 +1238,12 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	top: 16pt;
 	width: 1px;
 	height: 6pt;
-	background: black;
+	background: #4d4d4d;
 	overflow: hidden;
 }
 
 .gwt-SliderBar-shell .gwt-SliderBar-tick-disabled {
-	background: gray;
+	background: #8d8d8d;
 }
 
 .gwt-SliderBar-shell .gwt-SliderBar-label {
@@ -1262,3 +1260,19 @@ html>body .mosaic-DecoratedBottomTabBar .gwt-TabBarItem-selected .tabBottomRight
 	cursor: pointer;
 }
 
+/*** GWT Incubator ProgressBar ***/
+
+.gwt-ProgressBar-shell {
+	border: 1px solid #4d4d4d;
+	background-color: #AAAAAA;
+	height: 1em;
+	width: 256px;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+	background-color: #67A7E3;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+	padding: 0px;
+	margin: 0px;
+	color: white;
+}
