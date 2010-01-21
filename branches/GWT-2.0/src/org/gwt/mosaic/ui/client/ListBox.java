@@ -249,11 +249,13 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     return ((DataTable) scrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
 
+  @SuppressWarnings("deprecation")
   public com.google.gwt.gen2.event.shared.HandlerRegistration addRowSelectionHandler(
       RowSelectionHandler handler) {
     return scrollTable.getDataTable().addRowSelectionHandler(handler);
   }
 
+  @SuppressWarnings("deprecation")
   public com.google.gwt.gen2.event.shared.HandlerRegistration addRowHighlightHandler(
       RowHighlightHandler handler) {
     return scrollTable.getDataTable().addRowHighlightHandler(handler);
