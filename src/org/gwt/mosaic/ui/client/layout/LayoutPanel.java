@@ -518,11 +518,11 @@ public class LayoutPanel extends AbsolutePanel implements HasLayoutManager,
 
     // ---------------------------------
     final Widget widget = getDecoratorWidget(w);
-    if (widget instanceof InternalDecoratorPanel) {
-      ((InternalDecoratorPanel) widget).remove(w);
-    }
-
-    if (removeImpl(widget)) {
+    final boolean  removed = removeImpl(widget);
+    if (removed) {
+      if (widget instanceof InternalDecoratorPanel) {
+        ((InternalDecoratorPanel) widget).remove(w);
+      }
       // invalidate(w);
       invalidate();
       return true;
