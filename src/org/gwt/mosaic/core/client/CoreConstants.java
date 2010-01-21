@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 package org.gwt.mosaic.core.client;
 
 /**
- * Common used constant values in the {@code org.gwt.mosaic.core} package.
+ * Common used constant values.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
@@ -26,4 +26,6 @@ public interface CoreConstants {
   int MIN_DELAY_MILLIS = 1;
   /** How long to wait before the timer elapses, in milliseconds */
   int DEFAULT_DELAY_MILLIS = 333;
+  /** How long to wait before the timer repeats, in milliseconds */
+  int REPEAT_DELAY_MILLIS = 33;
 }
