@@ -77,7 +77,7 @@ public class Viewport extends LayoutComposite implements ResizeHandler {
       }
     });
 
-    Window.enableScrolling(false);    
+    Window.enableScrolling(false);
   }
 
   /**
