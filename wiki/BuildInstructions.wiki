@@ -1,4 +1,5 @@
 #summary Build instructions for building gwt-mosaic.jar and running the demo.
+#sidebar TableOfContents
 
 === Requirements ===
 
