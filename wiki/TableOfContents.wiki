@@ -1,3 +1,8 @@
 #summary Table Of Contents
 
+ * [BuildInstructions BuildInstructions]
  * [HelloWorld Hello World]
+ * HOWTO
+  * [ContextMenu Tree Context Menu]
+  * [WindowPanel WindowPanel]
+  * [MixingWithGWT MixingWithGWT]
