@@ -16,7 +16,7 @@ This section provides a series of examples that incrementally expose many of the
 
 To write an application, you need to do just a few things:
 
- * Make your {{{EntryPoint}} class to extend the {{{Application}}} class and override its {{{startup}}} method. Your {{{startup}}} method should create and show the application's initial GUI.
+ * Make your {{{EntryPoint}}} class to extend the {{{Application}}} class and override its {{{startup}}} method. Your {{{startup}}} method should create and show the application's initial GUI.
  * In your {{{Entrypoint}}} {{{onLoad}}} method, call the static {{{Application.launch}}} method. This initializes the application module.
 
 The following example does just that.
