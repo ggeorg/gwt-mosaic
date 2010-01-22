@@ -1,4 +1,5 @@
 #summary Table Of Contents
+#labels Featured
 
  * [BuildInstructions BuildInstructions]
  * [HelloWorld Hello World]
