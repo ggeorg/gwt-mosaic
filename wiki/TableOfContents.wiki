@@ -4,7 +4,7 @@
  * [BuildInstructions BuildInstructions]
  * [HelloWorld Hello World]
  * [ApplicationModule Application Module]
-  *[ContactsApplication Sample Application]
+  * [ContactsApplication Sample Application]
  * HOWTO
   * [MixingWithGWT MixingWithGWT]
   * [WindowPanel WindowPanel]
