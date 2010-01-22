@@ -2,7 +2,8 @@
 
  * [BuildInstructions BuildInstructions]
  * [HelloWorld Hello World]
+ * [ApplicationModule Application Module]
  * HOWTO
-  * [ContextMenu Tree Context Menu]
-  * [WindowPanel WindowPanel]
   * [MixingWithGWT MixingWithGWT]
+  * [WindowPanel WindowPanel]
+  * [ContextMenu Tree Context Menu]
