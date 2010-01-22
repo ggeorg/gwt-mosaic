@@ -46,3 +46,11 @@ public class Test extends Application implements EntryPoint {
   }
 }
 }}}
+
+If you run {{{Test}}} class you'll see something like this:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-example1.png
+
+There is still a lot of ({{{Viewport}}}) boilerplate here, because {{{Application}}} base class can't assume very much about how the application's GUI is structured. The next example shows how to write the same thing more simply, by using a class that extends {{{Application}}} called {{{SingleFrameApplication}}}.
+
+== Hello World based on {{{SingleFrameApplication}}} ==
