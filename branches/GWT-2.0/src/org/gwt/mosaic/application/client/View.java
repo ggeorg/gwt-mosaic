@@ -1,7 +1,6 @@
 package org.gwt.mosaic.application.client;
 
 import org.gwt.beansbinding.core.client.util.AbstractBean;
-import org.gwt.mosaic.ui.client.Viewport;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -10,11 +9,7 @@ import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A {@code View} encapsulates a top-level application GUI component, like
- * {@link Viewport}.
- * 
- * @author ggeorg
- * 
+ * A {@code View} encapsulates a top-level application GUI component.
  */
 public abstract class View extends AbstractBean {
 
@@ -66,7 +61,7 @@ public abstract class View extends AbstractBean {
    * 
    * @return the {@code layoutPanel} for this {@code View}
    */
-  public abstract LayoutPanel getLayoutPanel();
+  protected abstract LayoutPanel getLayoutPanel();
 
   /**
    * The main {@code Widget} for this {@code View}.
@@ -75,21 +70,6 @@ public abstract class View extends AbstractBean {
    */
   public Widget getWidget() {
     return widget;
-  }
-
-  private void replaceLayoutPanelChild(Widget oldChild, Widget newChild,
-      LayoutData layoutData) {
-    LayoutPanel layoutPanel = getLayoutPanel();
-    if (oldChild != null) {
-      layoutPanel.remove(oldChild);
-    }
-    if (newChild != null) {
-      layoutPanel.add(newChild, layoutData);
-    }
-    if (layoutPanel.isAttached()) {
-      layoutPanel.invalidate(newChild);
-      // XXX layoutPanel.layout();
-    }
   }
 
   public void setWidget(Widget widget) {
@@ -153,5 +133,20 @@ public abstract class View extends AbstractBean {
     replaceLayoutPanelChild(oldValue, this.sideBar, new BorderLayoutData(
         Region.WEST, preferredSize, "5em", preferredSize, decorate));
     firePropertyChange("sideBar", oldValue, this.sideBar);
+  }
+
+  private void replaceLayoutPanelChild(Widget oldChild, Widget newChild,
+      LayoutData layoutData) {
+    LayoutPanel layoutPanel = getLayoutPanel();
+    if (oldChild != null) {
+      layoutPanel.remove(oldChild);
+    }
+    if (newChild != null) {
+      layoutPanel.add(newChild, layoutData);
+    }
+    if (layoutPanel.isAttached()) {
+      layoutPanel.invalidate(newChild);
+      // XXX layoutPanel.layout();
+    }
   }
 }
