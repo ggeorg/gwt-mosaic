@@ -208,7 +208,7 @@ and we use the static method {{{ApplicationFramework.newButton("helloWorld")}}} 
   }
 }}}
 
-The default presentation properties of Actions defined this way are initialized automatically from the {{{ApplicationResources}}} bundle. In this case the Action's text can be defined in {{{TestConstants}}}:
+The default presentation properties of Actions defined this way are initialized automatically from the {{{ApplicationResources}}} bundle. In this case the Action's text and short description (tooltip) can be defined in {{{TestConstants}}}:
 
 {{{
 import org.gwt.mosaic.application.client.ApplicationConstants;
@@ -217,8 +217,13 @@ public interface TestConstants extends ApplicationConstants {
 
   @DefaultStringValue("Hello World")
   String helloWorld();
+  
+  @DefaultStringValue("Hello World Short Description")
+  String helloWorldShortDescription();
 }
 }}}
+
+We inherit the {{{bell}}} image from the {{{ApplicationClientBundle}}} in {{{TestClientBundle}}}.
 
 == Exiting or reloading the {{{Application}}} ==
 
