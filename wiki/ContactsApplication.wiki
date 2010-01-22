@@ -2,12 +2,23 @@
 
 = Introduction =
 
-Add your content here.
+The application we want to build is the Contacts application from [http://code.google.com/webtoolkit/doc/latest/tutorial/mvp-architecture.html Large scale application development and MVP]. Focus again is turned to decouple the view from the logic, this allows us to minimize our use of GWTTestCase and reduce the overall time spent running tests.
 
+This application will allow users to view, edit, and add contacts to a list of contacts that are stored on the server.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/contacts.png
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The application structure in eclipse is:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/contacts-structure.png
+
+The {{{Contact}}} and {{{ContactDetails}}} classes is our *Model*:
+
+ * {{{Contact}}} class represents a contact within the contact list.
+ * {{{ContactDetails}}} is a light version of {{{Contact}}} that will make the {{{Contact}}} list retrieval more efficient.
+
+Both model classes in our application extend the {{{AbstractBean}}} and fire {{{PropertyChange}}} events. This feature is required by the GWT Beans Binding framework.
+
+For example, bellow you'll see
