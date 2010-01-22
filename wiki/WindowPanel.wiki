@@ -1,5 +1,4 @@
 #summary WindowPanel tutorial.
-#labels Featured
 #sidebar TableOfContents
 
 = NOTE: This tutorial is valid only for gwt-mosaic >= 0.1.9 =
