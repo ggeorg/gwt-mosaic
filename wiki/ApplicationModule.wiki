@@ -1,0 +1,16 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+The application module provides a simple framework for building GWT based applications. It is a small set of Java classes that provides infrastructure that's common to most GWT applications:
+
+ * Management of application life-cycle, startup and shutdown
+ * Support for loading localized resources, like strings, TODO: messages and images
+ * Support for loosely coupling Actions to their presentation
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
