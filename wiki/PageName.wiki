@@ -1,3 +1,0 @@
-#summary Table Of Contents
-
- * [HelloWorld Hello World]
