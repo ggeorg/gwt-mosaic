@@ -91,3 +91,95 @@ public class Test extends SingleFrameApplication implements EntryPoint {
   }
 }
 }}}
+
+This example does exactly what the previous one does, however the biolerplate for creating and configuring {{{Viewport}}} is handled by the {{{SingleFrameApplication.show}}} method. {{{SingleFrameApplication}}} also takes care of some other things like History management.
+
+=== An {{{Application}}} with Resources ===
+
+In the previous examples, we created an application that shows by default {{{[Application Title]}}} in the browsers title bar, and a button with a literal string. Strings that are going to be read by the user should be localized, and to enable that, they should be loaded from an {{{ApplicationResource}}} bundle.
+
+Here's a new version of the previous example, that configures the application module with an {{{ApplicationResource}}} bundle:
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+import org.gwt.mosaic.application.client.ApplicationConstants;
+import org.gwt.mosaic.application.client.ApplicationResources;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this, new ApplicationResources() {
+      final TestConstants constants = GWT.create(TestConstants.class);
+      final TestClientBundle clientBundle = GWT.create(TestClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
+      }
+
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
+      }
+    });
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = new Button("Hello World", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Thank you!");
+      }
+    });
+
+    show(btn);
+  }
+}
+}}}
+
+Where {{{TestConstants}}} is an interface that extends {{{ApplicationConstants}}}:
+
+{{{
+import org.gwt.mosaic.application.client.ApplicationConstants;
+
+public interface TestConstants extends ApplicationConstants {
+
+}
+}}}
+
+and, {{{TestClientBundle}}} is an interface that extends {{{ApplicationClientBundle}}}:
+
+{{{
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+
+public interface TestClientBundle extends ApplicationClientBundle {
+
+}
+}}}
+
+The {{{TestConstants.properties}}} file for our application contains the string literals defined in {{{ApplicationConstants}}} that we want to override:
+
+{{{
+applicationId = test
+applicationTitle = Test
+applicationVersion = 0.1
+applicationVendor = GWT Mosaic
+applicationVendorId = GWTMosaic
+applicationHomepage = http://code.google.com/p/gwt-mosaic/
+applicationDescription = GWT Mosaic Test Application
+}}}
+
+This example goes a little overboard configuring the browser's title bar from the {{{ApplicationResource}}} bundle. In a real application, one would use resources for values that were likely to be localized, or images. This can make it easier for a developer to understand what the application's external resource dependencies are, and it can simplify making systematic changes.
+
+If you run our {{{SingleFrameApplication}}} based application you'll see something like this:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-example2.png
+
+The application module uses the {{{TestConstants.properties}}} to set the browser's title bar to the specified value.
