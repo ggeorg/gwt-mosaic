@@ -1,5 +1,4 @@
 #summary A Hello World demo.
-#labels Featured
 #sidebar TableOfContents
 
 = Introduction =
