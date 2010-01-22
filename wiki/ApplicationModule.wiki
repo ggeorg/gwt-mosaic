@@ -18,3 +18,31 @@ To write an application, you need to do just a few things:
 
  * Make your {{{EntryPoint}} class to extend the {{{Application}}} class and override its {{{startup}}} method. Your {{{startup}}} method should create and show the application's initial GUI.
  * In your {{{Entrypoint}}} {{{onLoad}}} method, call the static {{{Application.launch}}} method. This initializes the application module.
+
+The following example does just that.
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.ui.client.Viewport;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.InlineHTML;
+
+public class Test extends Application implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this);
+  }
+
+  @Override
+  protected void startup() {
+    InlineHTML label = new InlineHTML("<b>Hello World</b>");
+    label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+    Viewport viewport = new Viewport();
+    viewport.getLayoutPanel().add(label);
+    viewport.attach();
+  }
+}
+}}}
