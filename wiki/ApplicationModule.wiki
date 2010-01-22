@@ -1,5 +1,4 @@
 #summary A JSR 296 inspired application framework.
-#labels Featured
 #sidebar TableOfContents
 
 = Introduction =
