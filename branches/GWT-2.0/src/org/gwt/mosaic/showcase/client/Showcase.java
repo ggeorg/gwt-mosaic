@@ -78,6 +78,7 @@ import org.gwt.mosaic.showcase.client.content.other.CwListBoxBinding;
 import org.gwt.mosaic.showcase.client.content.other.CwPageBus1;
 import org.gwt.mosaic.showcase.client.content.other.CwPageBus2;
 import org.gwt.mosaic.showcase.client.content.other.CwRadioButtonActions;
+import org.gwt.mosaic.showcase.client.content.other.CwSliderBarBinding;
 import org.gwt.mosaic.showcase.client.content.panels.CwBottomTabBars;
 import org.gwt.mosaic.showcase.client.content.panels.CwColumnView;
 import org.gwt.mosaic.showcase.client.content.panels.CwDeckLayoutPanel;
@@ -652,6 +653,8 @@ public class Showcase implements EntryPoint {
     // Other
     TreeItem catOther = mainMenu.addItem("Other Features");
     TreeItem catBindings = catOther.addItem("Beans Binding");
+    setupMainMenuOption(catBindings, new CwSliderBarBinding(constants),
+        IMAGES.catOther());
     setupMainMenuOption(catBindings, new CwListBoxBinding(constants),
         IMAGES.catOther());
 
