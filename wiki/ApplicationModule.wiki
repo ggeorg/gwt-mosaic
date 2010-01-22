@@ -5,12 +5,16 @@
 The application module provides a simple framework for building GWT based applications. It is a small set of Java classes that provides infrastructure that's common to most GWT applications:
 
  * Management of application life-cycle, startup and shutdown
- * Support for loading localized resources, like strings, TODO: messages and images
+ * Support for loading localized resources, like strings, messages (TODO) and images
  * Support for loosely coupling Actions to their presentation
 
-= Details =
+= Application module examples =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+This section provides a series of examples that incrementally expose many of the most important aspects of the API.
+
+== Hello World based on {{{Application}}} ==
+
+To write an application, you need to do just a few things:
+
+ * Make your {{{EntryPoint}} class to extend the {{{Application}}} class and override its {{{startup}}} method. Your {{{startup}}} method should create and show the application's initial GUI.
+ * In your {{{Entrypoint}}} {{{onLoad}}} method, call the static {{{Application.launch}}} method. This initializes the application module.
