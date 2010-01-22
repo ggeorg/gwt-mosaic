@@ -178,7 +178,7 @@ applicationDescription = GWT Mosaic Test Application
 
 This example goes a little overboard configuring the browser's title bar from the {{{ApplicationResource}}} bundle. In a real application, one would use resources for values that were likely to be localized, or images. This can make it easier for a developer to understand what the application's external resource dependencies are, and it can simplify making systematic changes.
 
-If you run our {{{SingleFrameApplication}}} based application you'll see something like this:
+If you run our {{{Test}}} you'll see something like this:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/app-example2.png
 
