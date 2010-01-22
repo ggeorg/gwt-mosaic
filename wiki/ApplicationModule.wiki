@@ -183,3 +183,20 @@ If you run our {{{Test}}} you'll see something like this:
 http://gwt-mosaic.googlecode.com/svn/wiki/app-example2.png
 
 The application module uses the {{{TestConstants.properties}}} to set the browser's title bar to the specified value.
+
+== Exiting or reloading the {{{Application}}} ==
+
+TODO
+
+== Defining Actions with the {{{@CmdAction}}} Annotation ==
+
+The {{{@CmdAction}}} annotation marks a method that's intended to serve as the implementation of an {{{Action}}}'s {{{actionPerformed}}} method. The {{{ApplicationContext getActionMap}}} method creates an {{{ActionMap}}} that contains one {{{Action}}} object for each {{{@CmdAction}}} defined by a class that extends {{{Application}}} class.
+
+Lets define an {{{@CmdAction}}} for our {{{Test}}} application:
+
+{{{
+  @CmdAction
+  public void helloWorld() {
+    Window.alert("Thank you!");
+  }
+}}}
