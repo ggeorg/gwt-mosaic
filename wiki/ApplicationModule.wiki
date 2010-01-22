@@ -184,19 +184,42 @@ http://gwt-mosaic.googlecode.com/svn/wiki/app-example2.png
 
 The application module uses the {{{TestConstants.properties}}} to set the browser's title bar to the specified value.
 
-== Exiting or reloading the {{{Application}}} ==
-
-TODO
-
 == Defining Actions with the {{{@CmdAction}}} Annotation ==
 
 The {{{@CmdAction}}} annotation marks a method that's intended to serve as the implementation of an {{{Action}}}'s {{{actionPerformed}}} method. The {{{ApplicationContext getActionMap}}} method creates an {{{ActionMap}}} that contains one {{{Action}}} object for each {{{@CmdAction}}} defined by a class that extends {{{Application}}} class.
 
-Lets define an {{{@CmdAction}}} for our {{{Test}}} application:
+We define a {{{@CmdAction}}} for our {{{Test}}} application:
 
 {{{
-  @CmdAction
+  @CmdAction(description = "helloWorldShortDescription", image = "bell")
   public void helloWorld() {
     Window.alert("Thank you!");
   }
 }}}
+
+and we use the static method {{{ApplicationFramework.newButton("helloWorld")}}} to create the button in {{{startup}}}:
+
+{{{
+  @Override
+  protected void startup() {
+    Button btn = ApplicationFramework.newButton("helloWorld");
+
+    show(btn);
+  }
+}}}
+
+The default presentation properties of Actions defined this way are initialized automatically from the {{{ApplicationResources}}} bundle. In this case the Action's text can be defined in {{{TestConstants}}}:
+
+{{{
+import org.gwt.mosaic.application.client.ApplicationConstants;
+
+public interface TestConstants extends ApplicationConstants {
+
+  @DefaultStringValue("Hello World")
+  String helloWorld();
+}
+}}}
+
+== Exiting or reloading the {{{Application}}} ==
+
+TODO
