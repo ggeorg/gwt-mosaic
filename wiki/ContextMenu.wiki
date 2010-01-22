@@ -1,4 +1,5 @@
 #summary A Context Menu demo.
+#sidebar TableOfContents
 
 = Introduction =
 
