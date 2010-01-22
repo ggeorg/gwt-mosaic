@@ -223,7 +223,58 @@ public interface TestConstants extends ApplicationConstants {
 }
 }}}
 
-We inherit the {{{bell}}} image from the {{{ApplicationClientBundle}}} in {{{TestClientBundle}}}.
+We inherit the {{{bell}}} image from the {{{ApplicationClientBundle}}}.
+
+Finally out {{{Test}}} application {{{EntryPoint}}} class looks like:
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+import org.gwt.mosaic.application.client.ApplicationConstants;
+import org.gwt.mosaic.application.client.ApplicationResources;
+import org.gwt.mosaic.application.client.CmdAction;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+import org.gwt.mosaic.application.client.util.ApplicationFramework;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this, new ApplicationResources() {
+      final TestConstants constants = GWT.create(TestConstants.class);
+      final TestClientBundle clientBundle = GWT.create(TestClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
+      }
+
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
+      }
+    });
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = ApplicationFramework.newButton("helloWorld");
+
+    show(btn);
+  }
+
+  @CmdAction(description = "helloWorldShortDescription", image = "bell")
+  public void helloWorld() {
+    Window.alert("Thank you!");
+  }
+}
+}}}
+
+If you run {{{Test}}} you'll see something like this:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-example3.png
 
 == Exiting or reloading the {{{Application}}} ==
 
