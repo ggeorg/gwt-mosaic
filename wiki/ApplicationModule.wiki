@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary A JSR 296 inspired application framework.
 
 = Introduction =
 
@@ -225,7 +225,7 @@ public interface TestConstants extends ApplicationConstants {
 
 We inherit the {{{bell}}} image from the {{{ApplicationClientBundle}}}.
 
-Finally out {{{Test}}} application {{{EntryPoint}}} class looks like:
+Finally our {{{Test}}} application {{{EntryPoint}}} class looks like:
 
 {{{
 import org.gwt.mosaic.application.client.Application;
@@ -275,6 +275,8 @@ public class Test extends SingleFrameApplication implements EntryPoint {
 If you run {{{Test}}} you'll see something like this:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/app-example3.png
+
+The {{{helloWorld}}} method is executed each time you click on the button.
 
 == Exiting or reloading the {{{Application}}} ==
 
