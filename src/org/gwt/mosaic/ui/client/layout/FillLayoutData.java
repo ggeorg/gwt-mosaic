@@ -48,13 +48,11 @@ public class FillLayoutData extends LayoutData implements HasAlignment {
     super(decorate);
   }
 
-  @Deprecated
   public FillLayoutData(HorizontalAlignmentConstant horizontalAlignment,
       VerticalAlignmentConstant verticalAlignment) {
     this(horizontalAlignment, verticalAlignment, false);
   }
 
-  @Deprecated
   public FillLayoutData(HorizontalAlignmentConstant horizontalAlignment,
       VerticalAlignmentConstant verticalAlignment, final boolean decorate) {
     super(decorate);

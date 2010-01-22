@@ -24,7 +24,6 @@ import org.gwt.mosaic.application.client.util.ApplicationFramework;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
@@ -116,6 +115,28 @@ public abstract class Application extends AbstractBean {
 
     ApplicationFramework applicationFramework = GWT.create(ApplicationFramework.class);
     applicationFramework.setupActions();
+    
+    /*
+     * Setup window title, closing and close handlers.
+     */
+
+    Window.setTitle(context.getConstants().applicationTitle());
+
+    Window.addWindowClosingHandler(new ClosingHandler() {
+      public void onWindowClosing(ClosingEvent event) {
+        event.setMessage(Application.application.getClosingHandlerMessage());
+      }
+    });
+
+    Window.addCloseHandler(new CloseHandler<Window>() {
+      public void onClose(CloseEvent<Window> event) {
+        Application.application.shutdown();
+      }
+    });
+    
+    /*
+     * Call initialize(), startup() and ready() ...
+     */
 
     Command doCreateAndShowGUI = new Command() {
       public void execute() {
@@ -129,6 +150,7 @@ public abstract class Application extends AbstractBean {
         }
       }
     };
+
     DeferredCommand.addCommand(doCreateAndShowGUI);
   }
 
@@ -164,32 +186,10 @@ public abstract class Application extends AbstractBean {
      * Initialize the ApplicationContext and application properties.
      */
     context.setApplication(this);
-
-    /*
-     * Setup window closing and close handlers.
-     */
-
-    setupClosingHandler("");
-
-    Window.addCloseHandler(new CloseHandler<Window>() {
-      public void onClose(CloseEvent<Window> event) {
-        shutdown();
-      }
-    });
   }
 
-  private HandlerRegistration closingHandlerRegistration;
-
-  public void setupClosingHandler(final String message) {
-    closingHandlerRegistration = Window.addWindowClosingHandler(new ClosingHandler() {
-      public void onWindowClosing(ClosingEvent event) {
-        event.setMessage(message);
-      }
-    });
-  }
-
-  public void removeClosingHandler() {
-    closingHandlerRegistration.removeHandler();
+  protected String getClosingHandlerMessage() {
+    return null;
   }
 
   /**
