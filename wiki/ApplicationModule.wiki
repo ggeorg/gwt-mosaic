@@ -24,6 +24,7 @@ The following example does just that.
 {{{
 import org.gwt.mosaic.application.client.Application;
 import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -45,7 +46,7 @@ public class Test extends Application implements EntryPoint {
       }
     });
 
-    Viewport viewport = new Viewport();
+    Viewport viewport = new Viewport(new BorderLayout());
     viewport.getLayoutPanel().add(btn);
     viewport.attach();
   }
@@ -59,3 +60,34 @@ http://gwt-mosaic.googlecode.com/svn/wiki/app-example1.png
 There is still a lot of ({{{Viewport}}}) boilerplate here, because {{{Application}}} base class can't assume very much about how the application's GUI is structured. The next example shows how to write the same thing more simply, by using a class that extends {{{Application}}} called {{{SingleFrameApplication}}}.
 
 == Hello World based on {{{SingleFrameApplication}}} ==
+
+To create an application based on {{{Viewport}}}, extend the {{{SingleFrameApplication}}} class. Your application's subclass should override {{{startup}}} to create the application's main GUI panel and then call {{{show}}} to create, configure, and show a {{{Viewport}}} that contains the panel.
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this);
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = new Button("Hello World", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Thank you!");
+      }
+    });
+
+    show(btn);
+  }
+}
+}}}
