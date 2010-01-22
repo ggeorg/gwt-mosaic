@@ -26,8 +26,10 @@ import org.gwt.mosaic.application.client.Application;
 import org.gwt.mosaic.ui.client.Viewport;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 
 public class Test extends Application implements EntryPoint {
 
@@ -37,11 +39,14 @@ public class Test extends Application implements EntryPoint {
 
   @Override
   protected void startup() {
-    InlineHTML label = new InlineHTML("<b>Hello World</b>");
-    label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    Button btn = new Button("Hello World", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Thank you!");
+      }
+    });
 
     Viewport viewport = new Viewport();
-    viewport.getLayoutPanel().add(label);
+    viewport.getLayoutPanel().add(btn);
     viewport.attach();
   }
 }
