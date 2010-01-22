@@ -57,7 +57,7 @@ public class CwSliderBarBinding extends ContentWidget {
         + "Notice that the TextBox is filled with the default value of the SliderBar, "
         + "indicating that the two widgets are connected. "
         + "In other words, change something in the SliderBar and the TextBox will automatically be updated. "
-        + "Type a value between 0 and 100 in the TextBox and hit [Enter], the SliderBar will be updated!";
+        + "Now, type a value between 0.0 and 100.0 in the TextBox and hit [Enter]... the SliderBar is updated!";
   }
 
   @Override
