@@ -1,5 +1,6 @@
 #summary Mixing GWT widgets (panels) with GWT Mosaic widgets.
 #labels Featured
+#sidebar TableOfContents
 
 = Introduction =
 
