@@ -344,7 +344,7 @@ public interface HasHistoryToken {
 
 interface. In our application, both, {{{ContactsView}}} and {{{EditContact}}} implement this interface.
 
-We initialize the history token by in {{{startup}}} method:
+We initialize the history token in {{{startup}}} method:
 
 {{{
   @Override
