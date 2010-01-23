@@ -21,7 +21,7 @@ Both model classes in our application extend [http://code.google.com/p/gwt-beans
 
 The classes in the {{{org.gwt.mosaic.client.ui}}} package is our *View*.
 
- * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is used to show a list of all contacts http://gwt-mosaic.googlecode.com/svn/wiki/contacts.png screenshot
+ * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is used to show a list of all contacts http://gwt-mosaic.googlecode.com/svn/wiki/contacts.png
  * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact] is used to add new contacts as well as editing existing contacts http://gwt-mosaic.googlecode.com/svn/wiki/contacts-edit.png
 
 The view classes are totally decoupled and communicate with the rest of the application with messages. They don't have to implement any specific interface, and if created with {{{GWT create}}} the view classes can be switch-able.
@@ -30,12 +30,12 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/
 
 == Contacts {{{EntryPoint}}} class ==
 
-The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] class is the application {{{EntryPoint}}} class. This class:
+The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] class is the application {{{EntryPoint}}} class. The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] class:
 
- # extends the {{{SingleFrameApplication}}} class
+ # extends [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/SingleFrameApplication.java SingleFrameApplication]
  # calls {{{Application launch}}} in {{{onModuleLoad}}} to initialize the application framework 
  # overrides the {{{initialize}}} method to initialize:
-  # the GWT Beans Binding framework with the adapters we are going to use ({{{HasValueAdapterProvider}}} and {{{ListBoxAdapterProvider}}})
+  # the [http://code.google.com/p/gwt-beans-binding/ GWT Beans Binding] framework with the adapters we are going to use ([http://code.google.com/p/gwt-beans-binding/source/browse/trunk/src/org/gwt/beansbinding/ui/client/adapters/HasValueAdapterProvider.java HasValueAdapterProvider] and [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/beansbinding/client/adapters/ListBoxAdapterProvider.java ListBoxAdapterProvider])
   # all application controllers, in our application only {{{ContactsController}}}
   # a PageBus subscriber to selection events fired by the contacts view class
  # calls {{{show}}} in {{{startup}}} method
