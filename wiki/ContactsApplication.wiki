@@ -81,8 +81,8 @@ The {{{Contacts}}} class is the application {{{EntryPoint}}} class. This class:
  # extends the {{{SingleFrameApplication}}} class
  # calls {{{Application launch}}} in {{{onModuleLoad}}} to initialize the application framework 
  # overrides the {{{initialize}}} method to initialize:
-  # the GWT Beans Binding framework by adding the adapters we are going to use ({{{HasValueAdapterProvider}}} and {{{ListBoxAdapterProvider}}})
-  # the application controllers, in our application only {{{ContactsController}}}
+  # the GWT Beans Binding framework with the adapters we are going to use ({{{HasValueAdapterProvider}}} and {{{ListBoxAdapterProvider}}})
+  # all application controllers, in our application only {{{ContactsController}}}
   # a PageBus subscriber to selection events fired by the contacts view class
  # calls {{{show}}} in {{{startup}}} method
  # defines all {{{Action}}}s used in the Contacts application
@@ -139,11 +139,6 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
   }
 
   @Override
-  protected void startup() {
-    show(ContactsView.get().getHistoryToken());
-  }
-
-  @Override
   protected void initialize() {
 
     // Register all Adapters used in code.
@@ -163,6 +158,11 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
           }
         });
 
+  }
+
+  @Override
+  protected void startup() {
+    show(ContactsView.get().getHistoryToken());
   }
 
   // Getters & Setters -----------------------------------------------------
@@ -200,9 +200,9 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
   }
 
   /**
-   * @return the contactsMgr
+   * @return the contactsCtrl
    */
-  public ContactsController getContactsMgr() {
+  public ContactsController getContactsCtrl() {
     return contactsCtrl;
   }
 
@@ -220,7 +220,7 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
 
   @CmdAction(description = "doAddContactShortDescription", image = "form_add_action")
   public void doAddContact() {
-    getContactsMgr().doAddContact();
+    getContactsCtrl().doAddContact();
   }
 
   @CmdAction(description = "doEditContactShortDescription", image = "form_edit_action", enabledProperty = "singleSelection")
@@ -230,7 +230,7 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
           @SuppressWarnings("unchecked")
           public boolean onResult(String subject, Object value, Object data) {
             if (value != null && value instanceof List<?>) {
-              getContactsMgr().editSelectedContact(
+              getContactsCtrl().editSelectedContact(
                   ((List<ContactDetails>) value).get(0));
             }
             return false;
@@ -245,7 +245,7 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
           @SuppressWarnings("unchecked")
           public boolean onResult(String subject, Object value, Object data) {
             if (value != null && value instanceof List<?>) {
-              getContactsMgr().deleteSelectedContacts(
+              getContactsCtrl().deleteSelectedContacts(
                   (List<ContactDetails>) value);
             }
             return false;
@@ -258,7 +258,7 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
     PageBus.query(PageBusSubjects.CONTACTS_STORE_CURRENT, new QueryCallback() {
       public boolean onResult(String subject, Object value, Object data) {
         if (value != null && value instanceof Contact) {
-          getContactsMgr().saveContact((Contact) value);
+          getContactsCtrl().saveContact((Contact) value);
         }
         return false;
       }
@@ -278,3 +278,15 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
   }
 }
 }}}
+
+=== Contacts Application {{{@CmdAction}}} definitions ===
+
+The main {{{@CmdAction}}} definitions are:
+
+ * {{{doAddContact}}}
+ * {{{doEditContact}}}
+ * {{{doDeleteContacts}}}
+ * {{{doSaveContact}}}
+ * {{{doCancelEditContact}}}
+
+all of the pass forward the action to the {{{ContactsController}}}.
