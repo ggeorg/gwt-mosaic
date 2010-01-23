@@ -15,56 +15,12 @@ The application structure in eclipse is:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/contacts-structure.png
 
-The {{{Contact}}} and {{{ContactDetails}}} classes is our *Model*:
+The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactDetails.java ContactDetails] classes is our *Model*:
 
- * {{{Contact}}} class represents a contact within the contact list.
- * {{{ContactDetails}}} is a light version of {{{Contact}}} that will make the {{{Contact}}} list retrieval more efficient.
+ * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] class represents a contact within the contact list.
+ * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactDetails.java ContactDetails] is a light version of [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] that will make the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] list retrieval more efficient.
 
 Both model classes in our application extend the {{{AbstractBean}}} and fire {{{PropertyChange}}} events. This feature is required by the GWT Beans Binding framework.
-
-The {{{ContactDetails}}} class, for example, looks like:
-
-{{{
-import java.io.Serializable;
-
-import org.gwt.beansbinding.core.client.util.AbstractBean;
-
-@SuppressWarnings("serial")
-public class ContactDetails extends AbstractBean implements Serializable {
-	private String id;
-	private String displayName;
-
-	public ContactDetails() {
-		this("0", "");
-	}
-
-	public ContactDetails(String id, String displayName) {
-		super();
-		this.id = id;
-		this.displayName = displayName;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		String oldValue = this.id;
-		this.id = id;
-		firePropertyChange("id", oldValue, this.id);
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		String oldValue = displayName;
-		this.displayName = displayName;
-		firePropertyChange("displayName", oldValue, this.displayName);
-	}
-}
-}}}
 
 The classes in the {{{org.gwt.mosaic.client.ui}}} package is our *View*.
 
