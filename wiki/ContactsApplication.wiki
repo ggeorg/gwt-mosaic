@@ -329,3 +329,28 @@ Both {{{singleSelection}}} and {{{itemsSelected}}} properties are updated by:
 The {{{doSaveContact}}} {{{@CmdAction}}} queries the PageBus store to get the current {{{Contact}}} instance we use in the edit contact view and forwards the action to {{{ContactsController}}}.
 
 The {{{doCancelEditContact}}} {{{@CmdAction}}} hides the edit contact view and shows the {{{ContactsView}}} panel.
+
+=== History and view transitions ===
+
+Similar to [http://code.google.com/webtoolkit/doc/latest/tutorial/mvp-architecture.html#history Large scale application development and MVP] the {{{SingleFrameApplication}}} is able to handle flow transitions for each view class that implements the:
+
+{{{
+package org.gwt.mosaic.application.client;
+
+public interface HasHistoryToken {
+  String getHistoryToken();
+}
+}}}
+
+interface.
+
+Both, {{{ContactsView}}} and {{{EditContact}}} views in our application implement this interface.
+
+We initialize the history token by in {{{startup}}} method:
+
+{{{
+  @Override
+  protected void startup() {
+    show(ContactsView.get().getHistoryToken());
+  }
+}}}
