@@ -22,7 +22,7 @@ The {{{Contact}}} and {{{ContactDetails}}} classes is our *Model*:
 
 Both model classes in our application extend the {{{AbstractBean}}} and fire {{{PropertyChange}}} events. This feature is required by the GWT Beans Binding framework.
 
-For example, bellow you'll see the {{{ContactDetails}}} class:
+The {{{ContactDetails}}} class, for example, looks like:
 
 {{{
 import java.io.Serializable;
