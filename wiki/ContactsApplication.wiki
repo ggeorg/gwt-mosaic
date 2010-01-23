@@ -294,7 +294,7 @@ The {{{@CmdAction}}} definitions are:
  * {{{doSaveContact}}} used to save the currently added or updated contact
  * {{{doCancelEditContact}}} used to close the add/edit contact form
 
-The first two {{{@CmdAction}}} definitions are related to {{{History}}}, see [History and view transitions] below.
+The first two {{{@CmdAction}}} definitions are related to {{{History}}}, see [History_and_view_transitions] below.
 
 The {{{doAddContact}}} {{{@CmdAction}}} forwards the action to the {{{ContactsController}}}.
 
