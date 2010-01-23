@@ -281,12 +281,18 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
 
 === Contacts Application {{{@CmdAction}}} definitions ===
 
-The main {{{@CmdAction}}} definitions are:
+The {{{@CmdAction}}} definitions are:
 
- * {{{doAddContact}}}
- * {{{doEditContact}}}
- * {{{doDeleteContacts}}}
- * {{{doSaveContact}}}
- * {{{doCancelEditContact}}}
+ * {{{showContactsView}}} used to switch into the contacts list view
+ * {{{showEditContact}}} used to switch into the contact edit view
+ * {{{doAddContact}}} used to add a new contact into the contacts list
+ * {{{doEditContact}}} used to edit the selected contact
+ * {{{doDeleteContacts}}} used to delete the selected contacts
+ * {{{doSaveContact}}} used to save the currently added or updated contact
+ * {{{doCancelEditContact}}} used to close the add/edit contact form
 
-all of the pass forward the action to the {{{ContactsController}}}.
+The first two {{{@CmdAction}}} definitions are related to {{{History}}}.
+
+The {{{doAddContact}}} {{{@CmdAction}}} forwards the action to the {{{ContactsController}}}.
+
+The {{{doEditContact}}} {{{@CmdAction}}} queries the PageBus store for selected items and forwards the action to the {{{ContactsController}}}. The {{{doEditContact}} {{@CmdAction}}} is using {{{enabledProperty = "singleSelection"}}} in the definition. This extra {{{@CmdAction}}} property specifies that the {{{enabled}}} state of the action depends on the value of the {{{Contacts singleSelection}}} property.
