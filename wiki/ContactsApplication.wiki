@@ -77,7 +77,7 @@ The {{{ContactsController}}} contains all the logic for our Contacts application
 
 == Contacts {{{EntryPoint}}} class ==
 
-The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java {{{Contacts}}}] class is the application {{{EntryPoint}}} class. This class:
+The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] class is the application {{{EntryPoint}}} class. This class:
 
  # extends the {{{SingleFrameApplication}}} class
  # calls {{{Application launch}}} in {{{onModuleLoad}}} to initialize the application framework 
