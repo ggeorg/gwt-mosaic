@@ -7,7 +7,6 @@ import org.gwt.mosaic.actions.client.ActionMap;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -72,18 +71,19 @@ public abstract class SingleFrameApplication extends Application {
     }
   }
   
-  public void startup(String historyToken) {
+  private void showImpl(Widget w, boolean decorate) {
+    assert w != null;
+
+    getMainView().setWidget(w, decorate);
+    getMainView().getLayoutPanel().layout();
+  }
+  
+  public void show(String historyToken) {
     if ("".equals(History.getToken())) {
       History.newItem(historyToken);
     } else {
       History.fireCurrentHistoryState();
     }
-  }
-
-  private void showImpl(Widget w, boolean decorate) {
-    assert w != null;
-
-    getMainView().setWidget(w, decorate);
   }
 
   public View getMainView() {
