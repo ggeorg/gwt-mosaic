@@ -342,9 +342,7 @@ public interface HasHistoryToken {
 }
 }}}
 
-interface.
-
-Both, {{{ContactsView}}} and {{{EditContact}}} views in our application implement this interface.
+interface. In our application, both, {{{ContactsView}}} and {{{EditContact}}} implement this interface.
 
 We initialize the history token by in {{{startup}}} method:
 
@@ -354,3 +352,5 @@ We initialize the history token by in {{{startup}}} method:
     show(ContactsView.get().getHistoryToken());
   }
 }}}
+
+{{{SingleFrameApplication}}} is using the {{{ApplicationContext getActionMap}}} to find {{{Action}}}s with a name equal to the history token and calls its {{{actionPerformed}}} method. Those {{{Action}}}s in the Contacts applications are the {{{Action}}}s defined with {{{@CmdAction(name = "ContactsView")}}} and {{{@CmdAction(name = "EditContact")}}}.
