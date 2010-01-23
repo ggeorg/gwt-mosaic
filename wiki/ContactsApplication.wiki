@@ -297,7 +297,7 @@ The {{{doAddContact}}} {{{@CmdAction}}} forwards the action to the {{{ContactsCo
 
 The {{{doEditContact}}} {{{@CmdAction}}} queries the PageBus store for selected items and forwards the action to the {{{ContactsController}}}. The {{{doEditContact}}} {{{@CmdAction}}} is using {{{enabledProperty = "singleSelection"}}} in the definition. This extra {{{@CmdAction}}} property specifies that the {{{enabled}}} state of the action depends on the value of the {{{Contacts singleSelection}}} property.
 
-The {{{doDeleteContacts}}} {{@CmdAction}}} like {{{doEditContact}}} queries the PageBus store for selected items and forwards the action to the {{{ContactsController}}}. The {{{doDeleteContacts}}} {{{@CmdAction}}} is using {{{enabledProperty = "itemsSelected"}}}. This extra {{{@CmdAction}}} property specifies that the {{{enabled}}} state of the action depends on the value of the {{{Contacts itemsSelected}}} property.
+The {{{doDeleteContacts}}} {{{@CmdAction}}} like {{{doEditContact}}} queries the PageBus store for selected items and forwards the action to the {{{ContactsController}}}. The {{{doDeleteContacts}}} {{{@CmdAction}}} is using {{{enabledProperty = "itemsSelected"}}}. This extra {{{@CmdAction}}} property specifies that the {{{enabled}}} state of the action depends on the value of the {{{Contacts itemsSelected}}} property.
 
 Both {{{singleSelection}}} and {{{itemsSelected}}} properties are updated by:
 
