@@ -4,9 +4,10 @@
 
 The application we want to build is the Contacts application from [http://code.google.com/webtoolkit/doc/latest/tutorial/mvp-architecture.html Large scale application development and MVP]. Focus again is turned to decouple the view from the logic.
 
-This application will allow users to view, edit, and add contacts to a list of contacts that are stored on the server.
+This application will allow users to view, edit, and add contacts to a list of contacts that are stored on the server:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/contacts.png
+http://gwt-mosaic.googlecode.com/svn/wiki/contacts-edit.png
 
 = Details =
 
