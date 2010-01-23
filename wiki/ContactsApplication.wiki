@@ -21,4 +21,51 @@ The {{{Contact}}} and {{{ContactDetails}}} classes is our *Model*:
 
 Both model classes in our application extend the {{{AbstractBean}}} and fire {{{PropertyChange}}} events. This feature is required by the GWT Beans Binding framework.
 
-For example, bellow you'll see
+For example, bellow you'll see the {{{ContactDetails}}} class:
+
+{{{
+import java.io.Serializable;
+
+import org.gwt.beansbinding.core.client.util.AbstractBean;
+
+@SuppressWarnings("serial")
+public class ContactDetails extends AbstractBean implements Serializable {
+	private String id;
+	private String displayName;
+
+	public ContactDetails() {
+		this("0", "");
+	}
+
+	public ContactDetails(String id, String displayName) {
+		super();
+		this.id = id;
+		this.displayName = displayName;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		String oldValue = this.id;
+		this.id = id;
+		firePropertyChange("id", oldValue, this.id);
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		String oldValue = displayName;
+		this.displayName = displayName;
+		firePropertyChange("displayName", oldValue, this.displayName);
+	}
+}
+}}}
+
+The classes in the {{{org.gwt.mosaic.client.ui}}} package is out *View*. The view in our Contacts application are:
+
+ * {{{ContactsView}}} used to show a list of all contacts
+ * {{{EditContact}}} used to add new contacts as well as editing existing contacts
