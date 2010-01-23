@@ -88,6 +88,8 @@ The {{{Contacts}}} class is the application {{{EntryPoint}}} class. This class:
  # calls {{{show}}} in {{{startup}}} method
  # defines all {{{Action}}}s used in the Contacts application
 
+The code for {{{Contacts}}} class is:
+
 {{{
 package org.gwt.mosaic.contacts.client;
 
@@ -323,3 +325,7 @@ Both {{{singleSelection}}} and {{{itemsSelected}}} properties are updated by:
     setSingleSelection(selection != null && selection.size() == 1);
   }
 }}}
+
+The {{{doSaveContact}}} {{{@CmdAction}}} queries the PageBus store to get the current {{{Contact}}} instance we use in the edit contact view and forwards the action to {{{ContactsController}}}.
+
+The {{{doCancelEditContact}}} {{{@CmdAction}}} hides the edit contact view and shows the {{{ContactsView}}} panel.
