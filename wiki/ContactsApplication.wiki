@@ -76,7 +76,16 @@ The {{{ContactsController}}} contains all the logic for our Contacts application
 
 == Contacts {{{EntryPoint}}} class ==
 
-The {{{Contacts}}} class is the Contacts application entry point class. This class extends the {{{SingleFrameApplication}}} class and defines all {{{Action}}}s used by the application:
+The {{{Contacts}}} class is the Contacts application entry point class. This class:
+
+ # extends the {{{SingleFrameApplication}}} class
+ # calls {{{Application launch}}} in {{{onModuleLoad}}} to initialize the application framework 
+ # overrides the {{{initialize}}} method to initialize:
+  # the GWT Beans Binding framework by adding the adapters we are going to use ({{{HasValueAdapterProvider}}} and {{{ListBoxAdapterProvider}}})
+  # the application controllers, in this application only {{{ContactsController}}}
+  # a PageBus subscriber to selection events fired by the contacts view class
+ # calls {{{show}}} in {{{startup}}}
+ # defines all {{{Action}}}s used in the Contacts application
 
 {{{
 package org.gwt.mosaic.contacts.client;
@@ -131,7 +140,7 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
 
   @Override
   protected void startup() {
-    startup(ContactsView.get().getHistoryToken());
+    show(ContactsView.get().getHistoryToken());
   }
 
   @Override
