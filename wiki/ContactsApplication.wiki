@@ -76,15 +76,15 @@ The {{{ContactsController}}} contains all the logic for our Contacts application
 
 == Contacts {{{EntryPoint}}} class ==
 
-The {{{Contacts}}} class is the Contacts application entry point class. This class:
+The {{{Contacts}}} class is the application {{{EntryPoint}}} class. This class:
 
  # extends the {{{SingleFrameApplication}}} class
  # calls {{{Application launch}}} in {{{onModuleLoad}}} to initialize the application framework 
  # overrides the {{{initialize}}} method to initialize:
   # the GWT Beans Binding framework by adding the adapters we are going to use ({{{HasValueAdapterProvider}}} and {{{ListBoxAdapterProvider}}})
-  # the application controllers, in this application only {{{ContactsController}}}
+  # the application controllers, in our application only {{{ContactsController}}}
   # a PageBus subscriber to selection events fired by the contacts view class
- # calls {{{show}}} in {{{startup}}}
+ # calls {{{show}}} in {{{startup}}} method
  # defines all {{{Action}}}s used in the Contacts application
 
 {{{
