@@ -20,7 +20,7 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/
  * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] class represents a contact within the contact list.
  * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactDetails.java ContactDetails] is a light version of [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] that will make the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] list retrieval more efficient.
 
-Both model classes in our application extend the [http://code.google.com/p/gwt-beans-binding/source/browse/trunk/src/org/gwt/beansbinding/core/client/util/AbstractBean.java AbstractBean] and fire {{{PropertyChange}}} events. This feature is required by the GWT Beans Binding framework.
+Both model classes in our application extend [http://code.google.com/p/gwt-beans-binding/source/browse/trunk/src/org/gwt/beansbinding/core/client/util/AbstractBean.java AbstractBean] and fire [http://code.google.com/p/gwtx/source/browse/trunk/src/main/java/com/googlecode/gwtx/java/beans/emul/java/beans/PropertyChangeEvent.java PropertyChange] events. This feature is required by the GWT Beans Binding framework.
 
 The classes in the {{{org.gwt.mosaic.client.ui}}} package is our *View*.
 
