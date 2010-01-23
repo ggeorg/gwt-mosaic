@@ -6,8 +6,6 @@ The application we want to build is the Contacts application from [http://code.g
 
 This application will allow users to view, edit, and add contacts to a list of contacts that are stored on the server:
 
-http://gwt-mosaic.googlecode.com/svn/wiki/contacts-edit.png
-
 = Details =
 
 The application structure in eclipse is:
@@ -23,9 +21,8 @@ Both model classes in our application extend [http://code.google.com/p/gwt-beans
 
 The classes in the {{{org.gwt.mosaic.client.ui}}} package is our *View*.
 
- * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is used to show a list of all contacts ([
-http://gwt-mosaic.googlecode.com/svn/wiki/contacts.png screenshot])
- * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact] is used to add new contacts as well as editing existing contacts
+ * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is used to show a list of all contacts http://gwt-mosaic.googlecode.com/svn/wiki/contacts.png screenshot
+ * [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact] is used to add new contacts as well as editing existing contacts http://gwt-mosaic.googlecode.com/svn/wiki/contacts-edit.png
 
 The view classes are totally decoupled and communicate with the rest of the application with messages. They don't have to implement any specific interface, and if created with {{{GWT create}}} the view classes can be switch-able.
 
