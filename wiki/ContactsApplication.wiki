@@ -41,9 +41,9 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/
  # calls {{{show}}} in {{{startup}}} method
  # defines all [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/actions/client/Action.java Action]s used in the Contacts application
 
-=== Contacts Application [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] definitions ===
+=== Contacts Application @CmdAction definitions ===
 
-The [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] definitions are:
+The @CmdAction definitions are:
 
  * {{{showContactsView}}} used to switch into the contacts list view
  * {{{showEditContact}}} used to switch into the contact edit view
@@ -53,13 +53,13 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/
  * {{{doSaveContact}}} used to save the currently added or updated contact
  * {{{doCancelEditContact}}} used to close the add/edit contact form
 
-The first two [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] definitions are related to {{{History}}}, see [ContactsApplication#History_and_view_transitions History and view transitions] below.
+The first two @CmdAction definitions are related to {{{History}}}, see [ContactsApplication#History_and_view_transitions History and view transitions] below.
 
-The {{{doAddContact}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] forwards the action to the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController].
+The {{{doAddContact}}} @CmdAction forwards the action to the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController].
 
-The {{{doEditContact}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] queries the [http://developer.tibco.com/pagebus/default.jsp PageBus] store for selected items and forwards the action to the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]. The {{{doEditContact}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] is using {{{enabledProperty = "singleSelection"}}} in the definition. This extra [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] property specifies that the {{{enabled}}} state of the action depends on the value of the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{singleSelection}}} property.
+The {{{doEditContact}}} @CmdAction queries the [http://developer.tibco.com/pagebus/default.jsp PageBus] store for selected items and forwards the action to the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]. The {{{doEditContact}}} @CmdAction is using {{{enabledProperty = "singleSelection"}}} in the definition. This extra @CmdAction property specifies that the {{{enabled}}} state of the action depends on the value of the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{singleSelection}}} property.
 
-The {{{doDeleteContacts}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] like {{{doEditContact}}} queries the [http://developer.tibco.com/pagebus/default.jsp PageBus] store for selected items and forwards the action to the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]. The {{{doDeleteContacts}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] is using {{{enabledProperty = "itemsSelected"}}}. This extra [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] property specifies that the {{{enabled}}} state of the action depends on the value of the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{itemsSelected}}} property.
+The {{{doDeleteContacts}}} @CmdAction like {{{doEditContact}}} queries the [http://developer.tibco.com/pagebus/default.jsp PageBus] store for selected items and forwards the action to the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]. The {{{doDeleteContacts}}} @CmdAction is using {{{enabledProperty = "itemsSelected"}}}. This extra @CmdAction property specifies that the {{{enabled}}} state of the action depends on the value of the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{itemsSelected}}} property.
 
 Both {{{singleSelection}}} and {{{itemsSelected}}} properties are updated by:
 
@@ -85,9 +85,9 @@ Both {{{singleSelection}}} and {{{itemsSelected}}} properties are updated by:
   }
 }}}
 
-The {{{doSaveContact}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] queries the [http://developer.tibco.com/pagebus/default.jsp PageBus] store to get the current [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] instance we use in the edit contact view and forwards the action to [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController].
+The {{{doSaveContact}}} @CmdAction queries the [http://developer.tibco.com/pagebus/default.jsp PageBus] store to get the current [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] instance we use in the edit contact view and forwards the action to [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController].
 
-The {{{doCancelEditContact}}} [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/application/client/CmdAction.java @CmdAction] hides the edit contact view and shows the {{{ContactsView}}} panel.
+The {{{doCancelEditContact}}} @CmdAction hides the edit contact view and shows the {{{ContactsView}}} panel.
 
 === History and view transitions ===
 
