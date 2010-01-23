@@ -131,7 +131,7 @@ public class Contacts extends SingleFrameApplication implements EntryPoint {
 
   @Override
   protected void startup() {
-    super.startup(ContactsView.get().getHistoryToken());
+    startup(ContactsView.get().getHistoryToken());
   }
 
   @Override
