@@ -137,7 +137,6 @@ The {{{Action actionPerformed}}} method can be called directly, if needed. This 
       }
     });
   }
-...
 
   private void invokeAction(String actionName) {
     final Action action = Application.getInstance().getContext().getActionMap().get(
@@ -147,3 +146,5 @@ The {{{Action actionPerformed}}} method can be called directly, if needed. This 
     }
   }
 }}}
+
+=== Using PageBus/PageBus Store ===
