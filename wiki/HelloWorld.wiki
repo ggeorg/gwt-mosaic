@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Test implements EntryPoint {
+public class HelloWorld implements EntryPoint {
   private final Command menuCommand = new Command() {
     public void execute() {
       MessageBox.alert(Window.getTitle(),
