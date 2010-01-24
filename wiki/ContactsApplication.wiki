@@ -138,6 +138,7 @@ private ContactsView() {
 show the use of {{{ApplicationFramework}}}'s static helpers methods to construct the {{{ToolButton}}}s for the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] {{{ToolBar}}}. The {{{ToolButton}}}s constructed with {{{newToolButton}}} are bound to the given (by name) {{{Action}}}. Each time you click on those buttons the relevant [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{@CmdAction}}} method is called.
 
 In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact], the lines:
+
 {{{
   private EditContact() {
 ...
@@ -147,6 +148,7 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/E
 ...
   }
 }}}
+
 show the use of {{{ApplicationFramework newButton}}} method, to construct the form's "Save" and "Cancel" buttons. Those buttons once clicked will invoke the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{doSaveContact}}} and {{{doCancelEditContact}}} methods, respectively.
 
 The {{{ToolButton}}}'s (and {{{Button}}}'s) localized text, tooltip and image is taken from the resources defined by the equivalent {{{@CmdAction}}} definition.
@@ -220,7 +222,7 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/C
 
 In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact], we use:
 
- * {{{PageBus query}}} to query the {{{PageBusSubjects.CONTACTS_STORE_CURRENT}}}
+ * {{{PageBus query}}} to query the {{{PageBusSubjects.CONTACTS_STORE_CURRENT}}} to get the {{{Contact}}} instance we want to edit:
 
 {{{
   private void bind() {
@@ -233,3 +235,5 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/E
     });
   }
 }}}
+
+== The Application Controller(s) ==
