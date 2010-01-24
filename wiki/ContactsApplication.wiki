@@ -246,9 +246,9 @@ The controller:
  * is also a sink and source for [http://developer.tibco.com/pagebus/default.jsp PageBus] events
  * contains all the RPC calls
 
-== Use of GWT Beans Binding ==
+== The use of GWT Beans Binding in Contacts application ==
 
-The [http://code.google.com/p/gwt-beans-binding/ GWT Beans Binding] framework is is a library for implementing property binding with Java objects. It is used internally by GWT Mosaic's {{{Action}}}s implementation. GWT Beans Binding is used also by the Application module for the {{{@CmdAction}}}'s {{{enabledProperty}}} and {{{selectedProperty}}}, see:
+The [http://code.google.com/p/gwt-beans-binding/ GWT Beans Binding] framework is is a library for implementing property binding with Java objects. It is used internally by GWT Mosaic's {{{Action}}}s implementation. GWT Beans Binding is used also by the Application module for the {{{@CmdAction}}}'s {{{enabledProperty}}} and {{{selectedProperty}}} properties:
 
 {{{
 public @interface CmdAction {
@@ -259,3 +259,25 @@ public @interface CmdAction {
   String selectedProperty() default "";
 }
 }}}
+
+We have already used the {{{enabledProperty}}} in the definitions of {{{doEditContact}}} and {{{doDeleteContacts}}} {{{@CmdAction}}}s:
+
+{{{
+  @CmdAction(description = "doEditContactShortDescription", image = "form_edit_action", enabledProperty = "singleSelection")
+  public void doEditContact() {
+    ...
+  }
+
+  @CmdAction(description = "doDeleteContactsShortDescription", image = "form_delete_action", enabledProperty = "itemsSelected")
+  public void doDeleteContacts() {
+    ...
+  }
+}}}
+
+Those properties synchronize the {{{Action}}}s with [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts]
+
+{{{
+  private boolean itemsSelected = false, singleSelection = false;
+}}}
+
+properties.
