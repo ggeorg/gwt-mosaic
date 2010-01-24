@@ -116,7 +116,7 @@ We initialize the history token in {{{startup}}} method:
 
 == The View classes ==
 
-The view classes ([http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact]) do not have to implement any application specific interface or to extend any application specific class. The view classes are using {{{Action}}}s or [http://developer.tibco.com/pagebus/default.jsp PageBus] to interact with the other building blocks of the application. The missing of direct coupling with the other parts of the application allows us to switch out the views without having to change anu of the surrounding application code.
+The view classes ([http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact]) do not have to implement any application specific interface or to extend any application specific class. The view classes are using {{{Action}}}s or [http://developer.tibco.com/pagebus/default.jsp PageBus] to interact with the other building blocks of the application. The missing of direct coupling with the other parts of the application allows us to switch out the views without having to change any of the surrounding application code.
 
 === Binding with {{{Action}}}s ===
 
