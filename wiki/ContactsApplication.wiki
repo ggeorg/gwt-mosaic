@@ -114,4 +114,10 @@ We initialize the history token in {{{startup}}} method:
 
 {{{SingleFrameApplication}}} is using the {{{ApplicationContext getActionMap}}} to find {{{Action}}}s with a name equal to the history token and calls its {{{actionPerformed}}} method. Those {{{Action}}}s in the Contacts applications are the {{{Action}}}s defined with {{{@CmdAction(name = "ContactsView")}}} and {{{@CmdAction(name = "EditContact")}}}.
 
-== [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact] ==
+== The View classes ==
+
+The view classes ([http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact]) do not have to implement any application specific interface or to extend any application specific class. The view classes are using the either {{{Action}}}s or {{{PageBus}}} to interact with the other building blocks of the application. There is no direct coupling with any other part of the application.
+
+=== Binding with {{{Action}}}s ===
+
+In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView], lines [62, 67], show the use of {{{ApplicationFramework}}}'s static helpers methods to construct the {{{ToolButton}}}s for the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] {{{ToolBar}}}.
