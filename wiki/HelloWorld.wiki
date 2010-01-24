@@ -1,4 +1,4 @@
-#summary A Hello World demo.
+#summary A Hello World application.
 #sidebar TableOfContents
 
 = Introduction =
