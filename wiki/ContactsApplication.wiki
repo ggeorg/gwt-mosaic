@@ -120,7 +120,22 @@ The view classes ([http://code.google.com/p/gwt-mosaic/source/browse/wiki/Contac
 
 === Binding with {{{Action}}}s ===
 
-In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView], lines 62-67, show the use of {{{ApplicationFramework}}}'s static helpers methods to construct the {{{ToolButton}}}s for the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] {{{ToolBar}}}. The {{{ToolButton}}}s constructed with {{{newToolButton}}} are bound to the given (by name) {{{Action}}}. Each time you click on those buttons the relevant [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{@CmdAction}}} method is called.
+In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView]:
+
+{{{
+private ContactsView() {
+...
+    final ToolBar toolBar = new ToolBar();
+    toolBar.add(ApplicationFramework.newToolButton("doAddContact"));
+    toolBar.add(ApplicationFramework.newToolButton("doEditContact"));
+    toolBar.addSeparator();
+    toolBar.add(ApplicationFramework.newToolButton("doDeleteContacts"));
+    layoutPanel.add(toolBar, new BoxLayoutData(FillStyle.HORIZONTAL));
+...
+}
+}}}
+
+we show the use of {{{ApplicationFramework}}}'s static helpers methods to construct the {{{ToolButton}}}s for the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] {{{ToolBar}}}. The {{{ToolButton}}}s constructed with {{{newToolButton}}} are bound to the given (by name) {{{Action}}}. Each time you click on those buttons the relevant [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{@CmdAction}}} method is called.
 
 In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact], lines 49-51, show the use of {{{ApplicationFramework newButton}}} method, to construct the form's "Save" and "Cancel" buttons. Those buttons once clicked will invoke the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{doSaveContact}}} and {{{doCancelEditContact}}} methods, respectively.
 
