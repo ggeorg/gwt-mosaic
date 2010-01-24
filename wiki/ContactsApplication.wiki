@@ -251,13 +251,11 @@ The controller:
 The [http://code.google.com/p/gwt-beans-binding/ GWT Beans Binding] framework is is a library for implementing property binding with Java objects. It is used internally by GWT Mosaic's {{{Action}}}s implementation. GWT Beans Binding is used also by the Application module for the {{{@CmdAction}}}'s {{{enabledProperty}}} and {{{selectedProperty}}}, see:
 
 {{{
-  @CmdAction(description = "doEditContactShortDescription", image = "form_edit_action", enabledProperty = "singleSelection")
-  public void doEditContact() {
-    ...
-  }
+public @interface CmdAction {
+...
 
-  @CmdAction(description = "doDeleteContactsShortDescription", image = "form_delete_action", enabledProperty = "itemsSelected")
-  public void doDeleteContacts() {
-    ...
-  }
+  String enabledProperty() default "";
+
+  String selectedProperty() default "";
+}
 }}}
