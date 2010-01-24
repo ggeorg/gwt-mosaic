@@ -5,15 +5,13 @@
 
 Demonstration of `Viewport` & `LayoutPanel`.
 
-http://gwt-mosaic.googlecode.com/svn/wiki/hello-world.jpg
+http://gwt-mosaic.googlecode.com/svn/wiki/hello-world.png
 
 = Details =
 
 Java code:
 
 {{{
-package org.gwt.mosaic.client;
-
 import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
 import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.MessageBox;
@@ -37,13 +35,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class HelloWorld implements EntryPoint {
+public class Test implements EntryPoint {
   private final Command menuCommand = new Command() {
     public void execute() {
       MessageBox.alert(Window.getTitle(),
@@ -51,7 +48,7 @@ public class HelloWorld implements EntryPoint {
     }
   };
 
-  private final ClickHandler clickListener = new ClickHandler() {
+  private final ClickHandler clickHandler = new ClickHandler() {
     public void onClick(ClickEvent event) {
       final Button btn = (Button) event.getSource();
       InfoPanel.show(btn.getHTML(), "Stop poking me!");
@@ -95,15 +92,15 @@ public class HelloWorld implements EntryPoint {
   private Widget newToolBar() {
     final ToolBar toolBar = new ToolBar();
 
-    toolBar.add(new ToolButton("Push 1", clickListener));
-    toolBar.add(new ToolButton("Push 2", clickListener));
-    toolBar.add(new ToolButton("Push 3", clickListener));
+    toolBar.add(new ToolButton("Push 1", clickHandler));
+    toolBar.add(new ToolButton("Push 2", clickHandler));
+    toolBar.add(new ToolButton("Push 3", clickHandler));
 
     toolBar.addSeparator();
 
-    toolBar.add(new ToolButton("Push 4", clickListener));
-    toolBar.add(new ToolButton("Push 5", clickListener));
-    toolBar.add(new ToolButton("Push 6", clickListener));
+    toolBar.add(new ToolButton("Push 4", clickHandler));
+    toolBar.add(new ToolButton("Push 5", clickHandler));
+    toolBar.add(new ToolButton("Push 6", clickHandler));
 
     return toolBar;
   }
@@ -126,10 +123,10 @@ public class HelloWorld implements EntryPoint {
 
     content.add(toolBox, new BorderLayoutData(Region.NORTH));
     content.add(new CaptionLayoutPanel("West"), new BorderLayoutData(
-        Region.WEST, 200, 100, 300, true));
+        Region.WEST, "20%", "3em", "25%", true));
     content.add(new CaptionLayoutPanel("Center"), new BorderLayoutData(true));
 
-    RootPanel.get().add(viewport);
+    viewport.attach();
   }
 }
 }}}
