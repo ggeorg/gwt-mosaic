@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class HelloWorld implements EntryPoint {
+public class Test implements EntryPoint {
   private final Command menuCommand = new Command() {
     public void execute() {
       MessageBox.alert(Window.getTitle(),
@@ -100,6 +101,9 @@ public class HelloWorld implements EntryPoint {
 
     toolBar.add(new ToolButton("Push 4", clickHandler));
     toolBar.add(new ToolButton("Push 5", clickHandler));
+    
+    toolBar.addSpring();
+    
     toolBar.add(new ToolButton("Push 6", clickHandler));
 
     return toolBar;
@@ -108,23 +112,21 @@ public class HelloWorld implements EntryPoint {
   /**
    * This is the entry point method.
    */
-  public void onModuleLoad() {
-    final Viewport viewport = new Viewport();
-
-    final LayoutPanel content = viewport.getLayoutPanel();
-    content.setPadding(1);
-    content.setLayout(new BorderLayout());
-
-    LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+  public void onModuleLoad() {    
+    final LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
     toolBox.setPadding(0);
     toolBox.setWidgetSpacing(0);
     toolBox.add(newMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
     toolBox.add(newToolBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
 
+    final Viewport viewport = new Viewport(new BorderLayout());
+    final LayoutPanel content = viewport.getLayoutPanel();
+    content.setPadding(0);
     content.add(toolBox, new BorderLayoutData(Region.NORTH));
     content.add(new CaptionLayoutPanel("West"), new BorderLayoutData(
         Region.WEST, "20%", "3em", "25%", true));
     content.add(new CaptionLayoutPanel("Center"), new BorderLayoutData(true));
+    content.add(new HTML("Status bar"), new BorderLayoutData(Region.SOUTH));
 
     viewport.attach();
   }
