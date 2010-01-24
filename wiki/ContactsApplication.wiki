@@ -36,7 +36,7 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/
  # calls {{{Application launch}}} in {{{onModuleLoad}}} to initialize the application framework 
  # overrides the {{{initialize}}} method to initialize:
   # the [http://code.google.com/p/gwt-beans-binding/ GWT Beans Binding] framework with the adapters we are going to use ([http://code.google.com/p/gwt-beans-binding/source/browse/trunk/src/org/gwt/beansbinding/ui/client/adapters/HasValueAdapterProvider.java HasValueAdapterProvider] and [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/beansbinding/client/adapters/ListBoxAdapterProvider.java ListBoxAdapterProvider])
-  # all application controllers, in our application only [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]
+  # all application controllers (in Contacts application only [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController])
   # a [http://developer.tibco.com/pagebus/default.jsp PageBus] subscriber to selection events fired by the contacts view class
  # calls {{{show}}} in {{{startup}}} method
  # defines all [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/actions/client/Action.java Action]s used in the Contacts application
