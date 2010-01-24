@@ -281,3 +281,42 @@ Those properties synchronize the {{{Action}}}s with [http://code.google.com/p/gw
 }}}
 
 properties.
+
+[http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is using GWT Beans Binding to bind the UI ({{{ListBox<ContactDetails>}}}) with the data ({{{java.util.List<ContactDetails>}}} in:
+
+{{{
+  protected void getContactDetailsData() {
+
+    if (bindingGroup != null) {
+      bindingGroup.unbind();
+    }
+    bindingGroup = new BindingGroup();
+
+    PageBus.query(PageBusSubjects.CONTACTS_STORE, new QueryCallback() {
+      @SuppressWarnings("unchecked")
+      public boolean onResult(String subject, Object value, Object data) {
+        if (value != null && value instanceof List<?>) {
+          List<ContactDetails> list = ObservableCollections.observableList((List<ContactDetails>) value);
+
+          // create the binding from List to ListBox
+          final ListBoxBinding<ContactDetails, List<ContactDetails>, ListBox<ContactDetails>> listBoxBinding = GWTMosaicBindings.createListBoxBinding(
+              UpdateStrategy.READ, list, contactsTable);
+
+          BeanProperty<ContactDetails, String> idP = BeanProperty.<ContactDetails, String> create("id");
+          BeanProperty<ContactDetails, String> nameP = BeanProperty.<ContactDetails, String> create("displayName");
+
+          // add columns bindings to the ListBoxBinding
+          listBoxBinding.addColumnBinding(idP).setColumnName("Id");
+          listBoxBinding.addColumnBinding(nameP).setColumnName("Name");
+
+          bindingGroup.addBinding(listBoxBinding);
+          bindingGroup.bind();
+
+          contactsTable.setColumnWidth(0, DOM.toPixelSize("8em", true));
+          contactsTable.layout();
+        }
+        return false;
+      }
+    });
+  }
+}}}
