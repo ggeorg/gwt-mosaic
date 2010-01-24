@@ -151,7 +151,7 @@ The {{{Action actionPerformed}}} method can be called directly, if needed. This 
 
 Views can sink or emit [http://developer.tibco.com/pagebus/default.jsp PageBus] events.[http://developer.tibco.com/pagebus/default.jsp PageBus] is an event bus implemented in JavaScript that enables gadgets and other Ajax components in a Web page to broadcast and listen for messages published on topic names. [http://developer.tibco.com/pagebus/default.jsp PageBus] topic names are hierarchical and support wildcards, allowing widgets to listen for both general as well as specific information. It also allows components to share information using the {{{store}}} and {{{query}}} methods (see [http://69.20.122.77/gwt-mosaic/Showcase.html#CwPageBus2 demo]).
 
-We use [http://developer.tibco.com/pagebus/default.jsp PageBus] {{{store}}} to store our selection in [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView]:
+We use {{{PageBus store}}} to store our selection in [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView]:
 
 {{{
     contactsTable.addRowSelectionHandler(new RowSelectionHandler() {
@@ -168,7 +168,7 @@ We use [http://developer.tibco.com/pagebus/default.jsp PageBus] {{{store}}} to s
     });
 }}}
 
-[http://developer.tibco.com/pagebus/default.jsp PageBus] {{{publish}}} to notify that we want the contacts manager (in our case [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]) to fetch the contacts list to show:
+{{{PageBus publish}}} to notify that we want the contacts manager (in our case [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]) to fetch the contacts list to show:
 
 {{{
   private void fetchContactDetails() {
@@ -176,7 +176,7 @@ We use [http://developer.tibco.com/pagebus/default.jsp PageBus] {{{store}}} to s
   }
 }}}
 
-[http://developer.tibco.com/pagebus/default.jsp PageBus] {{{subscribe}}} to get notified if the list of contacts has changed:
+{{{PageBus subscribe}}} to get notified if the list of contacts has changed:
 
 {{{
   private void bind() {
