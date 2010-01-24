@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Test implements EntryPoint {
+public class HelloWorld implements EntryPoint {
   private final Command menuCommand = new Command() {
     public void execute() {
       MessageBox.alert(Window.getTitle(),
@@ -135,24 +135,25 @@ The GWT Module XML should contain:
 
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" 
-	"http://google-web-toolkit.googlecode.com/svn/tags/1.6.4/distro-source/core/src/gwt-module.dtd">
-<module rename-to='hello'>
+<module rename-to='test'>
+	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
 	<inherits name='org.gwt.mosaic.Mosaic' />
 
 	<!-- Inherit the default GWT Mosaic style sheet. You can change -->
 	<!-- the theme of your GWT Mosaic application by uncommenting   -->
 	<!-- any one of the following lines.                            -->
-	<inherits name='org.gwt.mosaic.theme.standard.Standard' />
+	<!-- <inherits name='org.gwt.mosaic.theme.standard.Standard' /> -->
 	<!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
 	<!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
-	<!-- <inherits name='org.gwt.mosaic.theme.aegean.Aegean' />     -->
+	<inherits name='org.gwt.mosaic.theme.aegean.Aegean' />
 
 	<!-- Other module inherits                                      -->
-	<inherits name='...' />
 
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='...' />
+
+	<!-- Specify the paths for translatable code                    -->
+	<source path='client' />
 </module>
 }}}
 
