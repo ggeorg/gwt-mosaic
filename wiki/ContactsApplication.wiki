@@ -1,4 +1,4 @@
-#summary Sample application using Application module and PageBus.
+#summary Sample application using Application module, PageBus and GWT Beans Binding framework.
 
 = Introduction =
 
