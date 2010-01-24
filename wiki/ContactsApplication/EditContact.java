@@ -78,30 +78,7 @@ public class EditContact extends LayoutComposite implements HasHistoryToken {
     // Subject: CONTACTS_STORE_CURRENT
     PageBus.query(PageBusSubjects.CONTACTS_STORE_CURRENT, new QueryCallback() {
       public boolean onResult(String subject, Object value, Object data) {
-        Contact contact = (Contact) value;
-
-        BeanProperty<HasValue<String>, String> valueP = BeanProperty.create("value");
-
-        Binding<Contact, String, HasValue<String>, String> firstNameB = Bindings.createAutoBinding(
-            UpdateStrategy.READ_WRITE, contact,
-            BeanProperty.<Contact, String> create("firstName"), firstName,
-            valueP);
-
-        Binding<Contact, String, HasValue<String>, String> lastNameB = Bindings.createAutoBinding(
-            UpdateStrategy.READ_WRITE, contact,
-            BeanProperty.<Contact, String> create("lastName"), lastName, valueP);
-
-        Binding<Contact, String, HasValue<String>, String> emailAddressB = Bindings.createAutoBinding(
-            UpdateStrategy.READ_WRITE, contact,
-            BeanProperty.<Contact, String> create("emailAddress"),
-            emailAddress, valueP);
-
-        bindingGroup.addBinding(firstNameB);
-        bindingGroup.addBinding(lastNameB);
-        bindingGroup.addBinding(emailAddressB);
-        
-        bindingGroup.bind();
-
+        bindContactToUI((Contact) value);        
         return false;
       }
     });
@@ -109,5 +86,29 @@ public class EditContact extends LayoutComposite implements HasHistoryToken {
 
   private void unbind() {
     bindingGroup.unbind();
+  }
+  
+  private void bindContactToUI(Contact contact) {
+    BeanProperty<HasValue<String>, String> valueP = BeanProperty.create("value");
+
+    Binding<Contact, String, HasValue<String>, String> firstNameB = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, contact,
+        BeanProperty.<Contact, String> create("firstName"), firstName,
+        valueP);
+
+    Binding<Contact, String, HasValue<String>, String> lastNameB = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, contact,
+        BeanProperty.<Contact, String> create("lastName"), lastName, valueP);
+
+    Binding<Contact, String, HasValue<String>, String> emailAddressB = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, contact,
+        BeanProperty.<Contact, String> create("emailAddress"),
+        emailAddress, valueP);
+
+    bindingGroup.addBinding(firstNameB);
+    bindingGroup.addBinding(lastNameB);
+    bindingGroup.addBinding(emailAddressB);
+    
+    bindingGroup.bind();
   }
 }
