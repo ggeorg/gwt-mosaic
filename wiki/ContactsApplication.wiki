@@ -168,7 +168,7 @@ We use {{{PageBus store}}} to store our selection in [http://code.google.com/p/g
     });
 }}}
 
-{{{PageBus publish}}} to notify that we want the contacts manager (in our case [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]) to fetch the contacts list to show:
+{{{PageBus publish}}} to notify that we want the contacts manager (in our case [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]) to fetch a list of contacts:
 
 {{{
   private void fetchContactDetails() {
