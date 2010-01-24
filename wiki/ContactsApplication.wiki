@@ -151,9 +151,9 @@ The {{{Action actionPerformed}}} method can be called directly, if needed. This 
 
 Views can sink or emit [http://developer.tibco.com/pagebus/default.jsp PageBus] events.[http://developer.tibco.com/pagebus/default.jsp PageBus] is an event bus implemented in JavaScript that enables gadgets and other Ajax components in a Web page to broadcast and listen for messages published on topic names. [http://developer.tibco.com/pagebus/default.jsp PageBus] topic names are hierarchical and support wildcards, allowing widgets to listen for both general as well as specific information. It also allows components to share information using the {{{store}}} and {{{query}}} methods (see [http://69.20.122.77/gwt-mosaic/Showcase.html#CwPageBus2 demo]).
 
-In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView]:
+In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView], we use:
 
- * We use {{{PageBus store}}} to store our selection
+ * {{{PageBus store}}} to store our selection
 
 {{{
     contactsTable.addRowSelectionHandler(new RowSelectionHandler() {
@@ -192,3 +192,7 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/C
         });
   }
 }}}
+
+In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact], we use:
+
+ * {{{PageBus query}}} to query the {{{PageBusSubjects.CONTACTS_STORE_CURRENT}}}
