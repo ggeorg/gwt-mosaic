@@ -37,7 +37,7 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/
  # overrides the {{{initialize}}} method to initialize:
   # the [http://code.google.com/p/gwt-beans-binding/ GWT Beans Binding] framework with the adapters we are going to use ([http://code.google.com/p/gwt-beans-binding/source/browse/trunk/src/org/gwt/beansbinding/ui/client/adapters/HasValueAdapterProvider.java HasValueAdapterProvider] and [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/beansbinding/client/adapters/ListBoxAdapterProvider.java ListBoxAdapterProvider])
   # all application controllers, in our application only [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController]
-  # a PageBus subscriber to selection events fired by the contacts view class
+  # a [http://developer.tibco.com/pagebus/default.jsp PageBus] subscriber to selection events fired by the contacts view class
  # calls {{{show}}} in {{{startup}}} method
  # defines all [http://code.google.com/p/gwt-mosaic/source/browse/branches/GWT-2.0/src/org/gwt/mosaic/actions/client/Action.java Action]s used in the Contacts application
 
@@ -116,8 +116,10 @@ We initialize the history token in {{{startup}}} method:
 
 == The View classes ==
 
-The view classes ([http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact]) do not have to implement any application specific interface or to extend any application specific class. The view classes are using the either {{{Action}}}s or {{{PageBus}}} to interact with the other building blocks of the application. There is no direct coupling with any other part of the application.
+The view classes ([http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact]) do not have to implement any application specific interface or to extend any application specific class. The view classes are using {{{Action}}}s or [http://developer.tibco.com/pagebus/default.jsp PageBus] to interact with the other building blocks of the application. The missing of direct coupling with the other parts of the application allows us to switch out the views without having to change anu of the surrounding application code.
 
 === Binding with {{{Action}}}s ===
 
 In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView], lines [62, 67], show the use of {{{ApplicationFramework}}}'s static helpers methods to construct the {{{ToolButton}}}s for the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] {{{ToolBar}}}.
+
+The {{{ToolButton}}}s constructed with {{{newToolButton}}} are bound to the given (by name) {{{Action}}}. Each time you click on those buttons the defined {{{@CmdAction}}} method is called.
