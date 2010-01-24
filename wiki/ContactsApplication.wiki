@@ -237,3 +237,11 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/E
 }}}
 
 == The Application Controller(s) ==
+
+[http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsController.java ContactsController] contains all of the logic for our Contacts application. 
+
+The controller:
+
+ * provides an API for the {{{Application}}} ({{{EntryPoint}}}) class
+ * is also a sink and source for [http://developer.tibco.com/pagebus/default.jsp PageBus] events
+ * contains all the RPC calls
