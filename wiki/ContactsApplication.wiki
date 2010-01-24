@@ -113,3 +113,5 @@ We initialize the history token in {{{startup}}} method:
 }}}
 
 {{{SingleFrameApplication}}} is using the {{{ApplicationContext getActionMap}}} to find {{{Action}}}s with a name equal to the history token and calls its {{{actionPerformed}}} method. Those {{{Action}}}s in the Contacts applications are the {{{Action}}}s defined with {{{@CmdAction(name = "ContactsView")}}} and {{{@CmdAction(name = "EditContact")}}}.
+
+== [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] and [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact] ==
