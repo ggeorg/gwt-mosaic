@@ -125,3 +125,25 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/C
 In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact], lines 49-51, show the use of {{{ApplicationFramework newButton}}} method, to construct the form's "Save" and "Cancel" buttons. Those buttons once clicked will invoke the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contacts.java Contacts] {{{doSaveContact}}} and {{{doCancelEditContact}}} methods, respectively.
 
 The {{{ToolButton}}}'s (and {{{Button}}}'s) localized text, tooltip and image is taken from the resources defined by the equivalent {{{@CmdAction}}} definition.
+
+The {{{Action actionPerformed}}} method can be called directly, if needed. This is the case in the double click handler of the contacts list:
+
+{{{
+ private ContactsView() {
+...
+    contactsTable.addDoubleClickHandler(new DoubleClickHandler() {
+      public void onDoubleClick(DoubleClickEvent event) {
+        invokeAction("doEditContact");
+      }
+    });
+  }
+...
+
+  private void invokeAction(String actionName) {
+    final Action action = Application.getInstance().getContext().getActionMap().get(
+        actionName);
+    if (action != null) {
+      action.actionPerformed(new ActionEvent(action, this));
+    }
+  }
+}}}
