@@ -196,3 +196,15 @@ In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/C
 In [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact], we use:
 
  * {{{PageBus query}}} to query the {{{PageBusSubjects.CONTACTS_STORE_CURRENT}}}
+
+{{{
+  private void bind() {
+    // Subject: CONTACTS_STORE_CURRENT
+    PageBus.query(PageBusSubjects.CONTACTS_STORE_CURRENT, new QueryCallback() {
+      public boolean onResult(String subject, Object value, Object data) {
+        bindContactToUI((Contact) value);        
+        return false;
+      }
+    });
+  }
+}}}
