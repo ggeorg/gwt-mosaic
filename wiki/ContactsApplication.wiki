@@ -282,7 +282,7 @@ Those properties synchronize the {{{Action}}}s with [http://code.google.com/p/gw
 
 properties.
 
-[http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is using GWT Beans Binding to bind the UI ({{{ListBox<ContactDetails>}}}) with the data ({{{java.util.List<ContactDetails>}}} in:
+[http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/ContactsView.java ContactsView] is using GWT Beans Binding to bind the UI ({{{ListBox<ContactDetails>}}}) with the data ({{{java.util.List<ContactDetails>}}}) in:
 
 {{{
   protected void getContactDetailsData() {
@@ -320,3 +320,33 @@ properties.
     });
   }
 }}}
+
+[http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/EditContact.java EditContact] is using GWT Beans Binding to bind the form UI elements with the [http://code.google.com/p/gwt-mosaic/source/browse/wiki/ContactsApplication/Contact.java Contact] object:
+
+{{{
+  private void bindContactToUI(Contact contact) {
+    BeanProperty<HasValue<String>, String> valueP = BeanProperty.create("value");
+
+    Binding<Contact, String, HasValue<String>, String> firstNameB = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, contact,
+        BeanProperty.<Contact, String> create("firstName"), firstName,
+        valueP);
+
+    Binding<Contact, String, HasValue<String>, String> lastNameB = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, contact,
+        BeanProperty.<Contact, String> create("lastName"), lastName, valueP);
+
+    Binding<Contact, String, HasValue<String>, String> emailAddressB = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, contact,
+        BeanProperty.<Contact, String> create("emailAddress"),
+        emailAddress, valueP);
+
+    bindingGroup.addBinding(firstNameB);
+    bindingGroup.addBinding(lastNameB);
+    bindingGroup.addBinding(emailAddressB);
+    
+    bindingGroup.bind();
+  }
+}}}
+
+By using GWT Beans Binding, adding basic form validation is trivial, see: http://code.google.com/p/gwt-beans-binding/wiki/MoreIntroduction
