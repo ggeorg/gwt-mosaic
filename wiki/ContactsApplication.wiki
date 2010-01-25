@@ -356,4 +356,4 @@ By using GWT Beans Binding, adding basic form validation is trivial, see: http:/
 In future articles we look to discuss the following concepts:
 
  * Replacing RPC calls with PageBus events
- * PageBus for bidirectional client to server communication
+ * PageBus for bidirectional client/server communication
