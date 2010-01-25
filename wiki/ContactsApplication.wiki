@@ -350,3 +350,10 @@ properties.
 }}}
 
 By using GWT Beans Binding, adding basic form validation is trivial, see: http://code.google.com/p/gwt-beans-binding/wiki/MoreIntroduction
+
+= Follow-up topics =
+
+In future articles we look to discuss the following concepts:
+
+ * Replacing RPC calls with PageBus events
+ * PageBus for bidirectional client to server communication
