@@ -307,4 +307,5 @@ http://gwt-mosaic.googlecode.com/svn/wiki/mix06.png
 
 A LayoutPanel if not added to a GWT Mosaic widget will call layout(), in a DeferredCommand, and initialize a monitor to monitor size changes (almost like Viewport).
 
-<wiki:gadget url="http://69.20.122.77/gwt-mosaic-current/gwt-mosaic-wiki.xml?v=4" height="95" width="728" border="0"/>
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
