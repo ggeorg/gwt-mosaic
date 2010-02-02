@@ -91,6 +91,7 @@ import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopups;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwSheetPanel;
 import org.gwt.mosaic.showcase.client.content.tables.CwFilterListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwLiveTable;
@@ -435,6 +436,8 @@ public class Showcase implements EntryPoint {
     setupMainMenuOption(catPopups, new CwLayoutPopups(constants),
         IMAGES.catPopups());
     setupMainMenuOption(catPopups, new CwFormDialog(constants),
+        IMAGES.catPopups());
+    setupMainMenuOption(catPopups, new CwSheetPanel(constants),
         IMAGES.catPopups());
 
     // Panels
