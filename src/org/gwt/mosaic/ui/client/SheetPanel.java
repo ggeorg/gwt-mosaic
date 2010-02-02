@@ -19,10 +19,17 @@ import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventPreview;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -31,11 +38,32 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.Strict;
 
+
+
 /**
  * 
  * @author johan.rydberg(at)gmail.com
  */
 public class SheetPanel extends SimplePanel {
+
+  /**
+   * Css stylenames.
+   */
+  public interface Css extends CssResource {
+    String sheet();
+
+    String open();
+
+  }
+
+  /**
+   * Resources for {@link SheetPanel}.
+   */
+  public interface Resources extends ClientBundle {
+    @Source("SheetPanel.css")
+    @Strict
+    Css sheetPanelCss();
+  }
 
   private static final int ANIMATION_DURATION = 350;
 
@@ -106,28 +134,7 @@ public class SheetPanel extends SimplePanel {
 
   private int topPosition = -1;
 
-  /**
-   * Css stylenames.
-   */
-  public interface Css extends CssResource {
-    String sheet();
-
-    String open();
-
-  }
-
-  /**
-   * Resources for {@link SheetPanel}.
-   */
-  public interface Resources extends ClientBundle {
-    @Source("SheetPanel.css")
-    @Strict
-    Css sheetPanelCss();
-  }
-
-  private String onLoadHeight = null;
-
-  private String onLoadWidth = null;
+  private HandlerRegistration nativePreviewHandlerRegistration;
 
   private boolean showing;
 
@@ -348,6 +355,45 @@ public class SheetPanel extends SimplePanel {
   }
 
   /**
+   * Does the event target this popup?
+   * 
+   * @param event the native event
+   * @return true if the event targets the popup
+   */
+  private boolean eventTargetsPopup(NativeEvent event) {
+    EventTarget target = event.getEventTarget();
+    if (Element.is(target)) {
+      return getElement().isOrHasChild(Element.as(target));
+    }
+    return false;
+  }
+
+  /**
+   * Preview the {@link NativePreviewEvent}.
+   * 
+   * @param event the {@link NativePreviewEvent}
+   */
+  private void previewNativeEvent(NativePreviewEvent event) {
+    // If the event has been canceled or consumed, ignore it
+    if (event.isCanceled() || event.isConsumed()) {
+      // We need to ensure that we cancel the event even if its been consumed so
+      // that popups lower on the stack do not auto hide
+      event.cancel();
+      return;
+    }
+
+    // If the event targets the popup or the partner, consume it
+    Event nativeEvent = Event.as(event.getNativeEvent());
+    if (eventTargetsPopup(nativeEvent)) {
+      event.consume();
+    }
+
+    // Cancel the event if it doesn't target the modal popup. Note that the
+    // event can be both canceled and consumed.
+    event.cancel();
+  }
+
+  /**
    * Set the showing state of the popup.
    * 
    * @param showing the new state
@@ -355,6 +401,18 @@ public class SheetPanel extends SimplePanel {
   private void setState(boolean showing) {
     animation.setState(showing);
     this.showing = showing;
+
+    // Create or remove the native preview handler
+    if (showing) {
+      nativePreviewHandlerRegistration = Event.addNativePreviewHandler(new NativePreviewHandler() {
+	public void onPreviewNativeEvent(NativePreviewEvent event) {
+	  previewNativeEvent(event);
+	}
+      });
+    } else if (nativePreviewHandlerRegistration != null) {
+      nativePreviewHandlerRegistration.removeHandler();
+      nativePreviewHandlerRegistration = null;
+    }
   }
 
 }
