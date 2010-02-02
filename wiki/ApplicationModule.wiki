@@ -282,3 +282,6 @@ The {{{helloWorld}}} method is executed each time you click on the button.
 == Exiting or reloading the {{{Application}}} ==
 
 TODO
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
