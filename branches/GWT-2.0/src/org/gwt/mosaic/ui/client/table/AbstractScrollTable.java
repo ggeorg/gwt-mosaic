@@ -739,7 +739,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
      * 
      * @return an image resource of this image
      */
-    //@Source("scrollTableFillWidth.gif")
+    // @Source("scrollTableFillWidth.gif")
     @Source("scrollTableFillWidth.png")
     ImageResource scrollTableFillWidth();
 
@@ -1049,7 +1049,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
     this.headerTable = headerTable;
     this.resources = resources;
     resizeWorker.setScrollTable(this);
-    
+
     setCellPadding(3);
     setCellSpacing(0);
 
@@ -1497,7 +1497,8 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
         // We update the ResizableWidgetCollection before changing the size of
         // the ScrollTable, because change the size of the scroll table could
         // require an additional layout (ex. if window scroll bars show up).
-        redraw();
+        // ResizableWidgetCollection.get().updateWidgetSize(
+        // AbstractScrollTable.this);
       }
     };
 
@@ -2213,7 +2214,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
       fillWidthImage.setVisible(true);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -2229,7 +2230,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
     final int[] m = DOM.getMarginSizes(getElement());
     return new Dimension(width + m[1] + m[3], height + m[0] + m[2]);
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -2247,7 +2248,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
   public void invalidate(Widget widget) {
     WidgetHelper.invalidate(getParent());
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -2256,7 +2257,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
   public void layout() {
     redraw();
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -2265,7 +2266,7 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
   public void onResize() {
     layout();
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -2274,5 +2275,5 @@ public abstract class AbstractScrollTable extends ComplexPanel implements
   public boolean needsLayout() {
     return false;
   }
-  
+
 }
