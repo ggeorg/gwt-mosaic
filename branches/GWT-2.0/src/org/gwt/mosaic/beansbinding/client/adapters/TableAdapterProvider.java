@@ -8,10 +8,10 @@ import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase;
 import org.gwt.mosaic.ui.client.Table;
+import org.gwt.mosaic.ui.client.event.RowSelectionEvent;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
 
-import com.google.gwt.gen2.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public class TableAdapterProvider implements BeanAdapterProvider {
 

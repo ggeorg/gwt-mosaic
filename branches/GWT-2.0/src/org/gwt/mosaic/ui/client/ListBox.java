@@ -22,13 +22,25 @@ import java.util.List;
 import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.override.client.HTMLTable.CellFormatter;
+import org.gwt.mosaic.ui.client.event.RowHighlightHandler;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
 import org.gwt.mosaic.ui.client.list.DefaultListModel;
 import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
 import org.gwt.mosaic.ui.client.list.ListHeader;
 import org.gwt.mosaic.ui.client.list.ListModel;
 import org.gwt.mosaic.ui.client.table.DataTable;
+import org.gwt.mosaic.ui.client.table.FixedWidthFlexTable;
 import org.gwt.mosaic.ui.client.table.ScrollTable2;
+import org.gwt.mosaic.ui.client.table.SortableGrid;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ColumnResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.SortPolicy;
+import org.gwt.mosaic.ui.client.table.SelectionGrid.SelectionPolicy;
+import org.gwt.mosaic.ui.client.table.SortableGrid.ColumnSorter;
+import org.gwt.mosaic.ui.client.table.SortableGrid.ColumnSorterCallback;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.ColumnSortList;
 
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -36,18 +48,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
-import com.google.gwt.gen2.table.client.SortableGrid;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
-import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.gen2.table.client.SortableGrid.ColumnSorter;
-import com.google.gwt.gen2.table.client.SortableGrid.ColumnSorterCallback;
-import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
-import com.google.gwt.gen2.table.event.client.RowHighlightHandler;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
-import com.google.gwt.gen2.table.override.client.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
@@ -249,15 +249,11 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     return ((DataTable) scrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
 
-  @SuppressWarnings("deprecation")
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowSelectionHandler(
-      RowSelectionHandler handler) {
+  public HandlerRegistration addRowSelectionHandler(RowSelectionHandler handler) {
     return scrollTable.getDataTable().addRowSelectionHandler(handler);
   }
 
-  @SuppressWarnings("deprecation")
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowHighlightHandler(
-      RowHighlightHandler handler) {
+  public HandlerRegistration addRowHighlightHandler(RowHighlightHandler handler) {
     return scrollTable.getDataTable().addRowHighlightHandler(handler);
   }
 
@@ -383,7 +379,8 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   @SuppressWarnings("unchecked")
   public T getItem(int index) {
     checkIndex(index);
-    return (T) dataTable.getRowFormatter().getElement(index).getPropertyObject("data");
+    return (T) dataTable.getRowFormatter().getElement(index).getPropertyObject(
+        "data");
   }
 
   /**
@@ -482,7 +479,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    * @return true if the column is sortable, false if it is not sortable
    */
   public boolean isColumnSortable(int column) {
-    return isColumnSortable(column);
+    return scrollTable.isColumnSortable(column);
   }
 
   /**
@@ -598,7 +595,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     Element trElem = dataTable.getRowFormatter().getElement(index);
     trElem.setPropertyObject("data", item);
     rowsInModelOrder.add(index, trElem);
-    
+
     // Set the data in the new row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
       cellRenderer.renderCell(this, index, cellIndex, item);
@@ -618,11 +615,11 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
     if (item == null) {
       throw new NullPointerException("Cannot set an item to null");
     }
-    
+
     // Map item with <tr>
     Element trElem = dataTable.getRowFormatter().getElement(index);
     trElem.setPropertyObject("data", item);
-    
+
     // Set the data in the row
     for (int cellIndex = 0, n = dataTable.getColumnCount(); cellIndex < n; ++cellIndex) {
       cellRenderer.renderCell(this, index, cellIndex, item);
@@ -649,10 +646,10 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
    */
   protected void renderOnRemove(int index) {
     checkIndex(index);
-    
+
     final Element tr = dataTable.getRowFormatter().getElement(index);
     tr.setPropertyObject("data", null);
-    
+
     dataTable.removeRow(index);
     rowsInModelOrder.remove(index);
   }
@@ -915,7 +912,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public void setText(int row, int column, String text) {
     dataTable.setText(modelToView(row), column, text);
   }
-  
+
   public void setHTML(int row, int column, String html) {
     dataTable.setHTML(modelToView(row), column, html);
   }
@@ -923,7 +920,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   public void setWidget(int row, int column, Widget widget) {
     dataTable.setWidget(modelToView(row), column, widget);
   }
-  
+
   protected int modelToView(int index) {
     TableRowElement trElem = rowsInModelOrder.get(index).cast();
     return trElem.getSectionRowIndex() - 1;

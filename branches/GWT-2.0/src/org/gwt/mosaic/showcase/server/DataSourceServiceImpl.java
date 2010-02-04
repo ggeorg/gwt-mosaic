@@ -20,10 +20,10 @@ import java.util.Random;
 import org.gwt.mosaic.showcase.client.content.tables.DataSourceService;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
+import org.gwt.mosaic.ui.client.table.SerializableResponse;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.ColumnSortList;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
 
-import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
-import com.google.gwt.gen2.table.client.TableModelHelper.Request;
-import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**

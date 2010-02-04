@@ -15,6 +15,7 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +26,18 @@ import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.LiveTable;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.table.DefaultColumnDefinition;
+import org.gwt.mosaic.ui.client.table.DefaultTableDefinition;
+import org.gwt.mosaic.ui.client.table.IterableTableModel;
+import org.gwt.mosaic.ui.client.table.SerializableResponse;
+import org.gwt.mosaic.ui.client.table.TableDefinition;
+import org.gwt.mosaic.ui.client.table.TableModel;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.gen2.table.client.DefaultTableDefinition;
-import com.google.gwt.gen2.table.client.IterableTableModel;
-import com.google.gwt.gen2.table.client.TableDefinition;
-import com.google.gwt.gen2.table.client.TableModel;
-import com.google.gwt.gen2.table.client.TableModelHelper.Request;
-import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -71,7 +71,7 @@ public class CwLiveTable extends ContentWidget {
    * User object.
    */
   @ShowcaseSource
-  class Foo implements IsSerializable {
+  class Foo implements Serializable {
     private static final long serialVersionUID = 1120309810337478764L;
 
     int[] values = new int[5];

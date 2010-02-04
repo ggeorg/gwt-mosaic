@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2009 GWT Mosaic Georgopoulos J. Georgios.
+ * Copyright 2008-2010 GWT Mosaic Georgopoulos J. Georgios.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * Displays information in the bottom region of the browser for a specified

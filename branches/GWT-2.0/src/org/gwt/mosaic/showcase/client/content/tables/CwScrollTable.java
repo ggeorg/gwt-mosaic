@@ -17,19 +17,19 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
+import org.gwt.mosaic.override.client.FlexTable.FlexCellFormatter;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable;
+import org.gwt.mosaic.ui.client.table.FixedWidthFlexTable;
+import org.gwt.mosaic.ui.client.table.FixedWidthGrid;
+import org.gwt.mosaic.ui.client.table.ScrollTable;
+import org.gwt.mosaic.ui.client.table.SelectionGrid.SelectionPolicy;
 
-import com.google.gwt.gen2.table.client.AbstractScrollTable;
-import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
-import com.google.gwt.gen2.table.client.FixedWidthGrid;
-import com.google.gwt.gen2.table.client.ScrollTable;
-import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Widget;

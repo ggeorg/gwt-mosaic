@@ -83,7 +83,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
 
     private void addNewStyleName(String styleName) {
       addStyleName(styleName);
-      if (!isEnabled()) {
+      if (!ToolButton.this.isEnabled()) {
         addStyleName(styleName + "-disabled");
       }
     }
@@ -201,7 +201,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
 
     private void removeOldStyleName(String styleName) {
       removeStyleName(styleName);
-      if (!isEnabled()) {
+      if (!ToolButton.this.isEnabled()) {
         removeStyleName(styleName + "-disabled");
       }
     }

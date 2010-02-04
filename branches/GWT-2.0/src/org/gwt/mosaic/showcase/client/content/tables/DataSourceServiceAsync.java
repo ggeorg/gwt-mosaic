@@ -16,9 +16,9 @@
 package org.gwt.mosaic.showcase.client.content.tables;
 
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
+import org.gwt.mosaic.ui.client.table.SerializableResponse;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
 
-import com.google.gwt.gen2.table.client.TableModelHelper.Request;
-import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**

@@ -202,18 +202,52 @@ public class Rectangle implements /*Shape,*/ Serializable {
     return dst;
   }
 
+
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#hashCode()
+   */
   @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-    if (obj instanceof Rectangle) {
-      Rectangle r = (Rectangle) obj;
-      return r.x == x && r.y == y && r.width == width && r.height == height;
-    }
-    return false;
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + height;
+    result = prime * result + width;
+    result = prime * result + x;
+    result = prime * result + y;
+    return result;
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Rectangle other = (Rectangle) obj;
+    if (height != other.height)
+      return false;
+    if (width != other.width)
+      return false;
+    if (x != other.x)
+      return false;
+    if (y != other.y)
+      return false;
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     return getClass().getName() + "[x=" + x + ",y=" + y + //$NON-NLS-1$ //$NON-NLS-2$

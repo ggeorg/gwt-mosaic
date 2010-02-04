@@ -16,14 +16,14 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
+import org.gwt.mosaic.ui.client.event.RowSelectionEvent;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
 import org.gwt.mosaic.ui.client.list.ComboBoxModel;
 import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
 import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
 
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;

@@ -8,12 +8,11 @@ import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase;
 import org.gwt.mosaic.ui.client.ListBox;
+import org.gwt.mosaic.ui.client.event.RowSelectionEvent;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
 
-import com.google.gwt.gen2.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
-@SuppressWarnings("deprecation")
 public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
   private static final String SELECTED_ELEMENT_P = "selectedElement".intern();
@@ -65,7 +64,6 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
           : getSelectedElement();
       firePropertyChange(oldValue, cachedElementOrElements);
     }
-
   }
 
   private static Object getSelectedElement(ListBox<?> listBox) {

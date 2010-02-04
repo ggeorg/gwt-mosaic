@@ -164,6 +164,29 @@ public class Point implements java.io.Serializable {
   }
 
   /**
+   * Returns the X coordinate of this <code>Point</code>.
+   * 
+   * @return the X coordinate of this <code>Point</code>.
+   */
+  public int getX() {
+    return x;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + x;
+    result = prime * result + y;
+    return result;
+  }
+
+  /**
    * Determines whether or not two points are equal. Two instances of
    * <code>Point</code> are equal if the values of their <code>x</code> and
    * <code>y</code> member fields, representing their position in the
@@ -173,22 +196,22 @@ public class Point implements java.io.Serializable {
    * @return <code>true</code> if the object to be compared is an instance of
    *         <code>Point</code> and has the same values; <code>false</code>
    *         otherwise.
+   * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Point) {
-      Point pt = (Point) obj;
-      return (x == pt.x) && (y == pt.y);
-    }
-    return false;
-  }
-
-  /**
-   * Returns the X coordinate of this <code>Point</code>.
-   * 
-   * @return the X coordinate of this <code>Point</code>.
-   */
-  public int getX() {
-    return x;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Point other = (Point) obj;
+    if (x != other.x)
+      return false;
+    if (y != other.y)
+      return false;
+    return true;
   }
 
   /**

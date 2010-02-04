@@ -26,12 +26,12 @@ import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.Table;
 import org.gwt.mosaic.ui.client.table.DefaultColumnDefinition;
+import org.gwt.mosaic.ui.client.table.DefaultTableDefinition;
+import org.gwt.mosaic.ui.client.table.IterableTableModel;
+import org.gwt.mosaic.ui.client.table.TableDefinition;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.gen2.table.client.DefaultTableDefinition;
-import com.google.gwt.gen2.table.client.IterableTableModel;
-import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;

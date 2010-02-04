@@ -82,7 +82,6 @@ import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.GlassPanel;
 
 /**
  * A {@code WindowPanel} is a {@code DecoratedPopupPanel} that has a caption
@@ -135,7 +134,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
 
     public HandlerRegistration addResizeHandler(ResizeHandler handler) {
-      return addHandler(ResizeEvent.getType(), handler);
+      return WindowPanel.this.addHandler(ResizeEvent.getType(), handler);
     }
 
     public HandlerManager getHandler() {

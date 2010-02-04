@@ -15,23 +15,23 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.gen2.table.client.MutableTableModel;
-import com.google.gwt.gen2.table.client.TableModelHelper.Request;
-import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
-import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
-
 import java.util.List;
 
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
 import org.gwt.mosaic.showcase.client.content.tables.shared.StudentGenerator;
+import org.gwt.mosaic.ui.client.table.AbstractMutableTableModel;
+import org.gwt.mosaic.ui.client.table.SerializableResponse;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 /**
  * An iterator that serves as the data source for TableOracle requests.
  */
-public class DataSourceTableModel extends MutableTableModel<Student> {
+public class DataSourceTableModel extends AbstractMutableTableModel<Student> {
   /**
    * The source of the data.
    */
@@ -123,6 +123,7 @@ public class DataSourceTableModel extends MutableTableModel<Student> {
               callback.onRowsReady(request, result);
             }
           });
+
     } else {
       // Generate data locally
       int numRows = request.getNumRows();
@@ -160,18 +161,15 @@ public class DataSourceTableModel extends MutableTableModel<Student> {
     this.zeroMode = enabled;
   }
 
-  @Override
-  protected boolean onRowInserted(int beforeRow) {
+  public boolean onRowInserted(int beforeRow) {
     return true;
   }
 
-  @Override
-  protected boolean onRowRemoved(int row) {
+  public boolean onRowRemoved(int row) {
     return true;
   }
 
-  @Override
-  protected boolean onSetRowValue(int row, Student rowValue) {
+  public boolean onSetRowValue(int row, Student rowValue) {
     return true;
   }
 }
