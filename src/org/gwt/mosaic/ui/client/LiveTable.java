@@ -18,23 +18,25 @@ package org.gwt.mosaic.ui.client;
 import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable;
 import org.gwt.mosaic.ui.client.table.DataTable;
+import org.gwt.mosaic.ui.client.table.FixedWidthFlexTable;
+import org.gwt.mosaic.ui.client.table.HasTableDefinition;
+import org.gwt.mosaic.ui.client.table.LiveScrollTable;
+import org.gwt.mosaic.ui.client.table.TableDefinition;
+import org.gwt.mosaic.ui.client.table.TableModel;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ColumnResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ScrollTableResources;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.SortPolicy;
 
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
-import com.google.gwt.gen2.table.client.HasTableDefinition;
-import com.google.gwt.gen2.table.client.LiveScrollTable;
-import com.google.gwt.gen2.table.client.TableDefinition;
-import com.google.gwt.gen2.table.client.TableModel;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ScrollTableImages;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,7 +48,8 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
  * 
  * @param RowType
  */
-public class LiveTable<RowType> extends LayoutComposite implements Focusable, HasTableDefinition<RowType> {
+public class LiveTable<RowType> extends LayoutComposite implements Focusable,
+    HasTableDefinition<RowType> {
 
   private static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
@@ -65,11 +68,11 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   }
 
   public LiveTable(TableModel<RowType> tableModel,
-      TableDefinition<RowType> tableDefinistion, ScrollTableImages images) {
+      TableDefinition<RowType> tableDefinistion, ScrollTableResources resources) {
     super(impl.createFocusable());
 
     liveScrollTable = new LiveScrollTable<RowType>(tableModel, new DataTable(),
-        new FixedWidthFlexTable(), tableDefinistion, images);
+        new FixedWidthFlexTable(), tableDefinistion, resources);
     liveScrollTable.setHeaderGenerated(true);
     liveScrollTable.setFooterGenerated(true);
 
@@ -90,11 +93,11 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
 
   public LiveTable(TableModel<RowType> tableModel,
       FixedWidthFlexTable headerTable,
-      TableDefinition<RowType> tableDefinition, ScrollTableImages images) {
+      TableDefinition<RowType> tableDefinition, ScrollTableResources resources) {
     super(impl.createFocusable());
 
     liveScrollTable = new LiveScrollTable<RowType>(tableModel, new DataTable(),
-        headerTable, tableDefinition, images);
+        headerTable, tableDefinition, resources);
     liveScrollTable.setHeaderGenerated(false);
     liveScrollTable.setFooterGenerated(true);
 
@@ -104,16 +107,16 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   protected void init() {
     liveScrollTable.setPageSize(50); // TODO
     liveScrollTable.setEmptyTableWidget(new HTML("There is no data to display"));
-    
+
     liveScrollTable.setCellPadding(3);
     liveScrollTable.setCellSpacing(0);
-    
+
     liveScrollTable.setCrossPageSelectionEnabled(true);
-    
+
     getLayoutPanel().add(liveScrollTable);
-    
+
     setStyleName("mosaic-Table");
-    
+
     // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
     // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
     sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
@@ -125,21 +128,20 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
     // Hide focus outline in IE 6/7
     DOM.setElementAttribute(getElement(), "hideFocus", "true");
   }
-  
+
   public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
     return ((DataTable) liveScrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
-  
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowSelectionHandler(
-      RowSelectionHandler handler) {
+
+  public HandlerRegistration addRowSelectionHandler(RowSelectionHandler handler) {
     return liveScrollTable.getDataTable().addRowSelectionHandler(handler);
   }
-  
+
   private void eatEvent(Event event) {
     DOM.eventCancelBubble(event, true);
     DOM.eventPreventDefault(event);
   }
-  
+
   /**
    * Adjust all column widths so they take up the maximum amount of space
    * without needing a horizontal scroll bar. The distribution will be
@@ -151,14 +153,14 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public void fillWidth() {
     liveScrollTable.fillWidth();
   }
-  
+
   /**
    * @return the column resize policy
    */
   public ColumnResizePolicy getColumnResizePolicy() {
     return liveScrollTable.getColumnResizePolicy();
   }
-  
+
   /**
    * Return the column width for a given column index.
    * 
@@ -168,14 +170,14 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public int getColumnWidth(int column) {
     return liveScrollTable.getColumnWidth(column);
   }
-  
+
   /**
    * @return the widget displayed when the data table is empty
    */
   public Widget getEmptyTableWidget() {
     return liveScrollTable.getEmptyTableWidget();
   }
-  
+
   /**
    * Get the absolute maximum width of a column.
    * 
@@ -185,7 +187,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public int getMaximumColumnWidth(int column) {
     return liveScrollTable.getMaximumColumnWidth(column);
   }
-  
+
   /**
    * Get the absolute minimum width of a column.
    * 
@@ -195,7 +197,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public int getMinimumColumnWidth(int column) {
     return liveScrollTable.getMinimumColumnWidth(column);
   }
-  
+
   /**
    * Get the preferred width of a column.
    * 
@@ -205,14 +207,14 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public int getPreferredColumnWidth(int column) {
     return liveScrollTable.getPreferredColumnWidth(column);
   }
-  
+
   /**
    * @return the resize policy
    */
   public ResizePolicy getResizePolicy() {
     return liveScrollTable.getResizePolicy();
   }
-  
+
   /**
    * Get the value associated with a row.
    * 
@@ -222,7 +224,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public RowType getRowValue(int row) {
     return liveScrollTable.getRowValue(row);
   }
-  
+
   /**
    * Gets the currently selected item. If multiple items are selected, this
    * method will return the first selected item ({@link #isItemSelected(int)}
@@ -239,14 +241,14 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
     }
     return -1;
   }
-  
+
   /**
    * @return the set of selected row indexes
    */
   public Set<Integer> getSelectedIndices() {
     return liveScrollTable.getDataTable().getSelectedRows();
   }
-  
+
   /**
    * @return the current sort policy
    */
@@ -257,11 +259,11 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public int getTabIndex() {
     return impl.getTabIndex(getElement());
   }
-  
+
   public TableDefinition<RowType> getTableDefinition() {
     return liveScrollTable.getTableDefinition();
   }
-  
+
   /**
    * Returns true if the specified column is sortable.
    * 
@@ -271,14 +273,14 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public boolean isColumnSortable(int column) {
     return liveScrollTable.isColumnSortable(column);
   }
-  
+
   /**
    * @return the table model
    */
   public TableModel<RowType> getTableModel() {
     return liveScrollTable.getTableModel();
   }
-  
+
   private void moveDown() {
     if (selectFirstItemIfNodeSelected()) {
       return;
@@ -331,25 +333,25 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
 
     liveScrollTable.gotoPage(0, false);
   }
-  
+
   public void reload() {
     liveScrollTable.reloadPage();
   }
-  
+
   /**
    * Redraw the table.
    */
   public void redraw() {
     liveScrollTable.redraw();
   }
-  
+
   /**
    * Reset the widths of all columns to their preferred sizes.
    */
   public void resetColumnWidths() {
     liveScrollTable.resetColumnWidths();
   }
-  
+
   /**
    * Selects the first item in the list if no items are currently selected. This
    * method assumes that the list has at least 1 item.
@@ -364,7 +366,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
     }
     return false;
   }
-  
+
   private void selectNextItem() {
     int index = getSelectedIndex();
     if (index == -1) {
@@ -378,7 +380,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
           getSelectedIndex()).getFirstChild());
     }
   }
-  
+
   private void selectPrevItem() {
     int index = getSelectedIndex();
     if (index == -1) {
@@ -392,11 +394,11 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
           getSelectedIndex()).getFirstChild());
     }
   }
-  
+
   public void setAccessKey(char key) {
     impl.setAccessKey(getElement(), key);
   }
-  
+
   /**
    * Set the resize policy applied to user actions that resize columns.
    * 
@@ -405,7 +407,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public void setColumnResizePolicy(ColumnResizePolicy columnResizePolicy) {
     liveScrollTable.setColumnResizePolicy(columnResizePolicy);
   }
-  
+
   /**
    * Set the width of a column.
    * 
@@ -416,7 +418,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public int setColumnWidth(int column, int width) {
     return liveScrollTable.setColumnWidth(column, width);
   }
-  
+
   /**
    * Set the {@link Widget} that will be displayed in place of the data table
    * when the data table has no data to display.
@@ -434,7 +436,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
       impl.blur(getElement());
     }
   }
-  
+
   /**
    * Set the resize policy of the table.
    * 
@@ -443,7 +445,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public void setResizePolicy(ResizePolicy resizePolicy) {
     liveScrollTable.setResizePolicy(resizePolicy);
   }
-  
+
   /**
    * Associate a row in the table with a value.
    * 
@@ -453,7 +455,7 @@ public class LiveTable<RowType> extends LayoutComposite implements Focusable, Ha
   public void setRowValue(int row, RowType value) {
     liveScrollTable.setRowValue(row, value);
   }
-  
+
   /**
    * Sets the currently selected index.
    * <p>

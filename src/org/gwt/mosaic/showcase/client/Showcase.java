@@ -103,8 +103,8 @@ import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
 import org.gwt.mosaic.showcase.client.content.trees.CwBasicTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
-import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
-import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
+//import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
+//import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderAbsoluteLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBorderLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBoxLayout;
@@ -610,11 +610,11 @@ public class Showcase implements EntryPoint {
     // images.catTables());
 
     // TreeTables
-    TreeItem catTreeTables = mainMenu.addItem("TreeTables");
-    setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants),
-        IMAGES.catLists());
-    setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
-        IMAGES.catLists());
+//    TreeItem catTreeTables = mainMenu.addItem("TreeTables");
+//    setupMainMenuOption(catTreeTables, new CwBasicTreeTable(constants),
+//        IMAGES.catLists());
+//    setupMainMenuOption(catTreeTables, new CwLazyTreeTable(constants),
+//        IMAGES.catLists());
 
     // Validation
     // TreeItem catValidation = mainMenu.addItem("Validation");

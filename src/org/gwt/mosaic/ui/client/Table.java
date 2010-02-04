@@ -18,30 +18,31 @@ package org.gwt.mosaic.ui.client;
 import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.event.HasPageCountChangeHandlers;
+import org.gwt.mosaic.ui.client.event.HasPageLoadHandlers;
+import org.gwt.mosaic.ui.client.event.HasPagingFailureHandlers;
+import org.gwt.mosaic.ui.client.event.PageChangeHandler;
+import org.gwt.mosaic.ui.client.event.PageCountChangeHandler;
+import org.gwt.mosaic.ui.client.event.PageLoadHandler;
+import org.gwt.mosaic.ui.client.event.PagingFailureHandler;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable;
 import org.gwt.mosaic.ui.client.table.DataTable;
+import org.gwt.mosaic.ui.client.table.FixedWidthFlexTable;
+import org.gwt.mosaic.ui.client.table.HasTableDefinition;
 import org.gwt.mosaic.ui.client.table.PagingScrollTable2;
+import org.gwt.mosaic.ui.client.table.TableDefinition;
+import org.gwt.mosaic.ui.client.table.TableModel;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ColumnResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.SortPolicy;
 
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.client.AbstractScrollTable;
-import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
-import com.google.gwt.gen2.table.client.HasTableDefinition;
-import com.google.gwt.gen2.table.client.TableDefinition;
-import com.google.gwt.gen2.table.client.TableModel;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
-import com.google.gwt.gen2.table.event.client.HasPageCountChangeHandlers;
-import com.google.gwt.gen2.table.event.client.HasPageLoadHandlers;
-import com.google.gwt.gen2.table.event.client.HasPagingFailureHandlers;
-import com.google.gwt.gen2.table.event.client.PageChangeHandler;
-import com.google.gwt.gen2.table.event.client.PageCountChangeHandler;
-import com.google.gwt.gen2.table.event.client.PageLoadHandler;
-import com.google.gwt.gen2.table.event.client.PagingFailureHandler;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -50,9 +51,10 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 /**
  * 
  * @author ggeorg
- *
+ * 
  * @param <RowType>
  */
+@SuppressWarnings("deprecation")
 public class Table<RowType> extends LayoutComposite implements Focusable,
     HasTableDefinition<RowType>, HasPageCountChangeHandlers,
     HasPageLoadHandlers, HasPagingFailureHandlers {
@@ -72,7 +74,7 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
     pagingScrollTable.setPageSize(100);
     pagingScrollTable.setEmptyTableWidget(new HTML(
         "There is no data to display"));
-    
+
     pagingScrollTable.setCellPadding(3);
     pagingScrollTable.setCellSpacing(0);
 
@@ -96,28 +98,25 @@ public class Table<RowType> extends LayoutComposite implements Focusable,
     return ((DataTable) pagingScrollTable.getDataTable()).addDoubleClickHandler(handler);
   }
 
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPageChangeHandler(
-      PageChangeHandler handler) {
+  public HandlerRegistration addPageChangeHandler(PageChangeHandler handler) {
     return pagingScrollTable.addPageChangeHandler(handler);
   }
 
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPageCountChangeHandler(
+  public HandlerRegistration addPageCountChangeHandler(
       PageCountChangeHandler handler) {
     return pagingScrollTable.addPageCountChangeHandler(handler);
   }
 
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPageLoadHandler(
-      PageLoadHandler handler) {
+  public HandlerRegistration addPageLoadHandler(PageLoadHandler handler) {
     return pagingScrollTable.addPageLoadHandler(handler);
   }
 
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addPagingFailureHandler(
+  public HandlerRegistration addPagingFailureHandler(
       PagingFailureHandler handler) {
     return pagingScrollTable.addPagingFailureHandler(handler);
   }
 
-  public com.google.gwt.gen2.event.shared.HandlerRegistration addRowSelectionHandler(
-      RowSelectionHandler handler) {
+  public HandlerRegistration addRowSelectionHandler(RowSelectionHandler handler) {
     return pagingScrollTable.getDataTable().addRowSelectionHandler(handler);
   }
 

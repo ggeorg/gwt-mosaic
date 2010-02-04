@@ -15,16 +15,21 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.Set;
+
 import org.gwt.mosaic.core.client.CoreConstants;
 import org.gwt.mosaic.ui.client.ColumnView.ColumnViewItem;
+import org.gwt.mosaic.ui.client.event.HasRowSelectionHandlers;
+import org.gwt.mosaic.ui.client.event.RowSelectionEvent;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
+import org.gwt.mosaic.ui.client.event.TableEvent.Row;
+import org.gwt.mosaic.ui.client.table.TableDefinition;
+import org.gwt.mosaic.ui.client.table.TableModel;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
 
-import com.google.gwt.gen2.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.table.client.TableDefinition;
-import com.google.gwt.gen2.table.client.TableModel;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
-import com.google.gwt.gen2.table.event.client.HasRowSelectionHandlers;
-import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
-import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -33,7 +38,6 @@ import com.google.gwt.user.client.Timer;
  * 
  * @param <T>
  */
-@SuppressWarnings("deprecation")
 public abstract class LiveTableColumnViewItem<T> extends ColumnViewItem<T>
     implements RowSelectionHandler, HasRowSelectionHandlers {
   private final ColumnView<T> columnView;
@@ -73,7 +77,7 @@ public abstract class LiveTableColumnViewItem<T> extends ColumnViewItem<T>
   /**
    * {@inheritDoc}
    * 
-   * @see com.google.gwt.gen2.table.event.client.RowSelectionHandler#onRowSelection(com.google.gwt.gen2.table.event.client.RowSelectionEvent)
+   * @see org.gwt.mosaic.ui.client.event.RowSelectionHandler#onRowSelection(org.gwt.mosaic.ui.client.event.RowSelectionEvent)
    */
   public void onRowSelection(RowSelectionEvent event) {
     if (event.getSelectedRows().size() != 1) {
@@ -99,6 +103,12 @@ public abstract class LiveTableColumnViewItem<T> extends ColumnViewItem<T>
             @Override
             protected TableModel<T> createTableModel(T data) {
               return LiveTableColumnViewItem.this.createTableModelInternal(data);
+            }
+
+            public HandlerRegistration addRowSelectionHandler(
+                RowSelectionHandler handler) {
+              // TODO Auto-generated method stub
+              return null;
             }
           };
 

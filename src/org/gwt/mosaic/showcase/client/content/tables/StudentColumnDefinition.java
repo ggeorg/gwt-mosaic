@@ -16,9 +16,8 @@
 package org.gwt.mosaic.showcase.client.content.tables;
 
 import org.gwt.mosaic.showcase.client.content.tables.shared.Student;
-
-import com.google.gwt.gen2.table.client.AbstractColumnDefinition;
-import com.google.gwt.gen2.table.client.property.FooterProperty;
+import org.gwt.mosaic.ui.client.table.AbstractColumnDefinition;
+import org.gwt.mosaic.ui.client.table.property.FooterProperty;
 
 /**
  * An {@link AbstractColumnDefinition} applied to {@link Student} row values.

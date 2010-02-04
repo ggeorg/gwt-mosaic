@@ -573,7 +573,7 @@ public abstract class FormSpec implements Serializable {
    * An ordinal-based serializable typesafe enumeration for the column and row
    * default alignment types.
    */
-  public static final class DefaultAlignment implements Serializable {
+  public static final class DefaultAlignment {
 
     private final transient String name;
 

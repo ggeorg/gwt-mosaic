@@ -285,4 +285,43 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
     remove(index);
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result
+        + ((listenerList == null) ? 0 : listenerList.hashCode());
+    result = prime * result
+        + ((selectedObject == null) ? 0 : selectedObject.hashCode());
+    return result;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    DefaultComboBoxModel other = (DefaultComboBoxModel) obj;
+    if (listenerList == null) {
+      if (other.listenerList != null)
+        return false;
+    } else if (!listenerList.equals(other.listenerList))
+      return false;
+    if (selectedObject == null) {
+      if (other.selectedObject != null)
+        return false;
+    } else if (!selectedObject.equals(other.selectedObject))
+      return false;
+    return true;
+  }
 }

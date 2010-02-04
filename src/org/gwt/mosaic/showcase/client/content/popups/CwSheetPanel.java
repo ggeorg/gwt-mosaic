@@ -60,7 +60,7 @@ public class CwSheetPanel extends ContentWidget {
   public interface Resources extends SheetLayoutPanel.Resources {
 
   };
-    
+
   /**
    * Constructor.
    * 
@@ -94,15 +94,15 @@ public class CwSheetPanel extends ContentWidget {
             MarginPolicy.NONE, DimensionPolicy.BOTH));
 
     final ClickHandler clickHandler = new ClickHandler() {
-	public void onClick(ClickEvent clickEvent) {
-	  sheetPanel.hide();
-	}
-      };
+      public void onClick(ClickEvent clickEvent) {
+        sheetPanel.hide();
+      }
+    };
 
-    layoutPanel.add(new Button("OK", clickHandler), new AbsoluteLayoutData("14em", "21em",
-        "8em", "2em", MarginPolicy.LEFT_TOP));
-    layoutPanel.add(new Button("Cancel", clickHandler), new AbsoluteLayoutData("23em",
-        "21em", "8em", "2em", MarginPolicy.LEFT_TOP));
+    layoutPanel.add(new Button("OK", clickHandler), new AbsoluteLayoutData(
+        "14em", "21em", "8em", "2em", MarginPolicy.LEFT_TOP));
+    layoutPanel.add(new Button("Cancel", clickHandler), new AbsoluteLayoutData(
+        "23em", "21em", "8em", "2em", MarginPolicy.LEFT_TOP));
 
     layoutPanel.add(new Button("Help"), new AbsoluteLayoutData("1em", "21em",
         "8em", "2em", MarginPolicy.RIGHT_TOP));
@@ -116,7 +116,6 @@ public class CwSheetPanel extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-
     final Resources resources = GWT.create(Resources.class);
     StyleInjector.inject(resources.sheetPanelCss().getText());
 
@@ -131,11 +130,11 @@ public class CwSheetPanel extends ContentWidget {
 
     layoutPanel.add(new Button("Show sheet...", new ClickHandler() {
       public void onClick(ClickEvent event) {
-	sheetPanel.show();
+        sheetPanel.show();
       }
     }));
 
     return layoutPanel;
   }
-  
+
 }

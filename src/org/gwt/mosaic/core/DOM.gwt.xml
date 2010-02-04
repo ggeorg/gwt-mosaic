@@ -1,5 +1,5 @@
 <!--                                                                        -->
-<!-- Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.           -->
+<!-- Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.           -->
 <!--                                                                        -->
 <!-- Licensed under the Apache License, Version 2.0 (the "License"); you    -->
 <!-- may not use this file except in compliance with the License. You may   -->
@@ -14,10 +14,10 @@
 <!-- limitations under the License.                                         -->
 <!--                                                                        -->
 
+<!--                                                                        -->
+<!-- This module is typically inherited via org.gwt.core.Core               -->
+<!--                                                                        -->
 <module>
-
-	<!-- Inherit the core Web Toolkit stuff.                        -->
-	<inherits name='com.google.gwt.user.User' />
 	
 	<replace-with class="org.gwt.mosaic.core.client.impl.DOMImplIE8">
 		<when-type-is class="org.gwt.mosaic.core.client.impl.DOMImpl" />
