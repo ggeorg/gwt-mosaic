@@ -1,8 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
- * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -28,6 +26,7 @@ import org.gwt.mosaic.ui.client.table.AbstractScrollTable;
 import org.gwt.mosaic.ui.client.table.FixedWidthFlexTable;
 import org.gwt.mosaic.ui.client.table.FixedWidthGrid;
 import org.gwt.mosaic.ui.client.table.ScrollTable;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
 import org.gwt.mosaic.ui.client.table.SelectionGrid.SelectionPolicy;
 
 import com.google.gwt.i18n.client.Constants;
@@ -73,8 +72,8 @@ public class CwScrollTable extends ContentWidget {
   /**
    * The scroll table.
    */
-  @ShowcaseData
-  private AbstractScrollTable scrollTable = null;
+  @ShowcaseSource
+  private ScrollTable scrollTable = null;
 
   /**
    * Constructor.
@@ -118,7 +117,7 @@ public class CwScrollTable extends ContentWidget {
     // Level 1 headers
     FlexCellFormatter headerFormatter = headerTable.getFlexCellFormatter();
     headerTable.setHTML(0, 0, "User Information");
-    headerFormatter.setColSpan(0, 0, 13);
+    headerFormatter.setColSpan(0, 0, 12);
 
     // Level 2 headers
     headerTable.setHTML(1, 0, "First and Last Name");
@@ -149,7 +148,7 @@ public class CwScrollTable extends ContentWidget {
 
     return headerTable;
   }
-
+  
   /**
    * Setup the scroll table.
    */
@@ -167,7 +166,7 @@ public class CwScrollTable extends ContentWidget {
     // Setup the formatting
     scrollTable.setCellPadding(3);
     scrollTable.setCellSpacing(0);
-    scrollTable.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
+    scrollTable.setResizePolicy(ResizePolicy.UNCONSTRAINED);
 
     // first name
     scrollTable.setMinimumColumnWidth(0, 50);
@@ -224,7 +223,7 @@ public class CwScrollTable extends ContentWidget {
 
     return scrollTable;
   }
-
+  
   /**
    * @return the data table.
    */
@@ -236,14 +235,14 @@ public class CwScrollTable extends ContentWidget {
   public String getDescription() {
     return constants.mosaicScrollTableDescription();
   }
-
+  
   /**
    * @return the footer table.
    */
   public FixedWidthFlexTable getFooterTable() {
     return getScrollTable().getFooterTable();
   }
-
+  
   /**
    * @return the header table.
    */
@@ -255,7 +254,7 @@ public class CwScrollTable extends ContentWidget {
   public String getName() {
     return constants.mosaicScrollTableName();
   }
-
+  
   /**
    * @return the scroll table.
    */
@@ -315,5 +314,5 @@ public class CwScrollTable extends ContentWidget {
 
     return scrollTable;
   }
-
+  
 }

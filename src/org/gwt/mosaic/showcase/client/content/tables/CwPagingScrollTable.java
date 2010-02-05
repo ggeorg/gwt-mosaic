@@ -40,7 +40,6 @@ import org.gwt.mosaic.ui.client.table.PagingScrollTable;
 import org.gwt.mosaic.ui.client.table.RadioCellEditor;
 import org.gwt.mosaic.ui.client.table.TableDefinition;
 import org.gwt.mosaic.ui.client.table.TextCellEditor;
-import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
 import org.gwt.mosaic.ui.client.table.TableDefinition.AbstractCellView;
 import org.gwt.mosaic.ui.client.table.property.FooterProperty;
 
@@ -75,7 +74,7 @@ public class CwPagingScrollTable extends ContentWidget {
    */
   @ShowcaseData
   private CwConstants constants;
-  
+
   /**
    * The {@link CachedTableModel} around the main table model.
    */
@@ -85,12 +84,12 @@ public class CwPagingScrollTable extends ContentWidget {
    * The {@link PagingScrollTable}.
    */
   private PagingScrollTable<Student> pagingScrollTable = null;
-  
+
   /**
    * The {@link DataSourceTableModel}.
    */
   private DataSourceTableModel tableModel = null;
-  
+
   /**
    * The {@link DefaultTableDefinition}.
    */
@@ -130,9 +129,9 @@ public class CwPagingScrollTable extends ContentWidget {
     pagingScrollTable.setBulkRenderer(bulkRenderer);
 
     // Setup the formatting
-    pagingScrollTable.setCellPadding(3); 
+    pagingScrollTable.setCellPadding(3);
     pagingScrollTable.setCellSpacing(0);
-    pagingScrollTable.setResizePolicy(ResizePolicy.UNCONSTRAINED);
+    pagingScrollTable.setResizePolicy(PagingScrollTable.ResizePolicy.UNCONSTRAINED);
   }
 
   /**
@@ -632,15 +631,15 @@ public class CwPagingScrollTable extends ContentWidget {
 
     return layoutPanel;
   }
-  
+
   /**
    * Called when initialization has completed and the widget has been added to
    * the page.
    */
   protected void onInitializeComplete() {
     super.onInitializeComplete();
-    
+
     pagingScrollTable.gotoFirstPage();
   }
-  
+
 }
