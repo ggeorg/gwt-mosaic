@@ -130,7 +130,8 @@ public class UiBinderWriter {
    * @param type the base type
    * @return a breadth-first collection of its type hierarchy
    */
-  static Iterable<JClassType> getClassHierarchyBreadthFirst(JClassType type) {
+  static Iterable<JClassType> getClassHierarchyBreadthFirst(
+      JClassType type) {
     LinkedList<JClassType> list = new LinkedList<JClassType>();
     LinkedList<JClassType> q = new LinkedList<JClassType>();
 
@@ -620,13 +621,16 @@ public class UiBinderWriter {
    * @throws IllegalStateException if an initializer has already been set
    */
   public void setFieldInitializer(String fieldName, String factoryMethod) {
-    FieldWriter i = fieldManager.lookup(fieldName);
     fieldManager.lookup(fieldName).setInitializer(factoryMethod);
   }
 
   /**
    * Instructs the writer to initialize the field with a specific contructor
    * invocaction, instead of the default GWT.create call.
+   * 
+   * @param fieldName the field to intialize
+   * @param type the type of the field
+   * @param arguments to the constructor call
    */
   public void setFieldInitializerAsConstructor(String fieldName,
       JClassType type, String... args) {
@@ -938,7 +942,6 @@ public class UiBinderWriter {
     addWidgetParser("TabPanel");
     addWidgetParser("MenuItem");
     addWidgetParser("MenuBar");
-    addWidgetParser("RadioButton");
     addWidgetParser("CellPanel");
     addWidgetParser("CustomButton");
     addWidgetParser("DialogBox");
@@ -946,6 +949,7 @@ public class UiBinderWriter {
     addWidgetParser("DockLayoutPanel");
     addWidgetParser("StackLayoutPanel");
     addWidgetParser("TabLayoutPanel");
+    addWidgetParser("Image");
 
     // Register custom widget parsers... (almost automagically)
 
@@ -1004,7 +1008,7 @@ public class UiBinderWriter {
 
     // createAndBindUi method
     w.write("public %s createAndBindUi(final %s owner) {",
-        uiRootType.getName(), uiOwnerType.getName());
+        uiRootType.getParameterizedQualifiedSourceName(), uiOwnerType.getParameterizedQualifiedSourceName());
     w.indent();
     w.newline();
 
@@ -1035,7 +1039,7 @@ public class UiBinderWriter {
 
   private void writeClassOpen(IndentedWriter w) {
     w.write("public class %s implements UiBinder<%s, %s>, %s {", implClassName,
-        uiRootType.getName(), uiOwnerType.getName(), baseClass.getName());
+        uiRootType.getParameterizedQualifiedSourceName(), uiOwnerType.getParameterizedQualifiedSourceName(), baseClass.getParameterizedQualifiedSourceName());
     w.indent();
   }
 
