@@ -19,7 +19,6 @@
 <!--                                                                        -->
 <module>
 	<inherits name='org.gwt.mosaic.override.Override' />
-	<inherits name='com.google.gwt.gen2.table.FixedWidthTable' />
 
 	<!-- IE uses a different implementation -->
 	<replace-with

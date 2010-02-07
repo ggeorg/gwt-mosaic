@@ -90,8 +90,8 @@ import org.gwt.mosaic.showcase.client.content.popups.CwFormDialog;
 import org.gwt.mosaic.showcase.client.content.popups.CwInfoPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwLayoutPopups;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
-import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
 import org.gwt.mosaic.showcase.client.content.popups.CwSheetPanel;
+import org.gwt.mosaic.showcase.client.content.popups.CwWindowPanel;
 import org.gwt.mosaic.showcase.client.content.tables.CwFilterListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwLiveTable;
@@ -99,12 +99,9 @@ import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwRichListBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwSimpleTable;
-import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
 import org.gwt.mosaic.showcase.client.content.trees.CwBasicTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwLazyTree;
 import org.gwt.mosaic.showcase.client.content.trees.CwVerboseTree;
-//import org.gwt.mosaic.showcase.client.content.treetables.CwBasicTreeTable;
-//import org.gwt.mosaic.showcase.client.content.treetables.CwLazyTreeTable;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderAbsoluteLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBorderLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderBoxLayout;
@@ -604,8 +601,6 @@ public class Showcase implements EntryPoint {
     // setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
     // IMAGES.catTables());
     setupMainMenuOption(catTables, new CwPagingScrollTable(constants),
-        IMAGES.catTables());
-    setupMainMenuOption(catTables, new CwTableLoadingBenchmark(constants),
         IMAGES.catTables());
     // setupMainMenuOption(catTables, new TablePage(constants),
     // images.catTables());

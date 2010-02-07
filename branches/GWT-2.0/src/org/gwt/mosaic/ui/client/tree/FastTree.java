@@ -15,6 +15,20 @@
  */
 package org.gwt.mosaic.ui.client.tree;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.gwt.mosaic.override.client.DOMHelper;
+import org.gwt.mosaic.override.client.WidgetIterators;
+import org.gwt.mosaic.ui.client.Decorator;
+import org.gwt.mosaic.ui.client.event.BeforeCloseEvent;
+import org.gwt.mosaic.ui.client.event.BeforeCloseHandler;
+import org.gwt.mosaic.ui.client.event.BeforeOpenEvent;
+import org.gwt.mosaic.ui.client.event.BeforeOpenHandler;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -25,6 +39,7 @@ import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.dom.client.HasMouseDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -43,33 +58,16 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.commonevent.shared.BeforeCloseEvent;
-import com.google.gwt.gen2.commonevent.shared.BeforeCloseHandler;
-import com.google.gwt.gen2.commonevent.shared.BeforeOpenEvent;
-import com.google.gwt.gen2.commonevent.shared.BeforeOpenHandler;
-import com.google.gwt.gen2.commonwidget.client.Decorator;
-import com.google.gwt.gen2.commonwidget.client.impl.StandardCssImpl;
-import com.google.gwt.gen2.widgetbase.client.Gen2CssInjector;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetAdaptorImpl;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.google.gwt.widgetideas.client.event.KeyboardHandler;
-import com.google.gwt.widgetideas.client.overrides.DOMHelper;
-import com.google.gwt.widgetideas.client.overrides.WidgetIterators;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Fast tree implementation.
@@ -78,63 +76,10 @@ public class FastTree extends Panel implements HasClickHandlers,
     HasMouseDownHandlers, HasSelectionHandlers<FastTreeItem>, HasFocusHandlers,
     HasFastTreeItems, HasKeyDownHandlers, HasKeyPressHandlers,
     HasKeyUpHandlers, HasFastTreeItemHandlers {
-  /**
-   * Interface used to allow the widget access to css style names.
-   * <p/>
-   * The class names indicate the default gwt names for these styles.
-   */
-  static interface Css {
-
-    String fastTree();
-
-    String selectionBar();
-  }
-
-  static class StandardCss extends StandardCssImpl implements Css {
-
-    static FastTree.Css DEFAULT_CSS;
-
-    static Css ensureDefaultCss() {
-      if (DEFAULT_CSS == null) {
-        DEFAULT_CSS = createCss(STYLENAME_DEFAULT);
-      }
-      return DEFAULT_CSS;
-    }
-
-    public StandardCss(String styleName) {
-      super(styleName, "gwt-FastTree");
-    }
-
-    public String fastTree() {
-      return getWidgetStyleName();
-    }
-
-    public String selectionBar() {
-      return " selection-bar";
-    }
-  }
 
   private static FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
   static final String STYLENAME_DEFAULT = "gwt-FastTree";
-
-  /**
-   * Creates a {@link Css} instance with the given style name. Note, only the
-   * primary style name changes.
-   * 
-   * @param styleName style name for the widget
-   * @return the standard css
-   */
-  static Css createCss(final String styleName) {
-    return new StandardCss(styleName);
-  }
-
-  /**
-   * Injects the default styles as a css resource.
-   */
-  public static void injectDefaultCss() {
-    Gen2CssInjector.addFastTreeDefault();
-  }
 
   /**
    * Map of TreeItem.widget -> TreeItem.
@@ -151,15 +96,11 @@ public class FastTree extends Panel implements HasClickHandlers,
    * Constructs a tree.
    */
   public FastTree() {
-    this(StandardCss.ensureDefaultCss());
-  }
-
-  FastTree(final Css css) {
     setElement(DOM.createDiv());
     getElement().getStyle().setProperty("position", "relative");
 
     focusable = createFocusElement();
-    setStyleName(focusable, css.selectionBar());
+    setStyleName(focusable, "selectionBar");
 
     sinkEvents(Event.ONMOUSEDOWN | Event.ONCLICK | Event.KEYEVENTS);
 
@@ -168,7 +109,7 @@ public class FastTree extends Panel implements HasClickHandlers,
     root = buildRootItem();
     root.setTree(this);
 
-    setStyleName(css.fastTree());
+    setStyleName(STYLENAME_DEFAULT);
     moveFocusable(curSelection, null);
 
     // Add accessibility role to tree.
@@ -393,7 +334,7 @@ public class FastTree extends Panel implements HasClickHandlers,
         if (e.getTypeInt() == Event.ONKEYUP) {
           // If we got here because of a key tab, then we need to make sure the
           // current tree item is selected.
-          if (DOM.eventGetKeyCode(e) == KeyboardHandler.KEY_TAB) {
+          if (DOM.eventGetKeyCode(e) == KeyCodes.KEY_TAB) {
             ArrayList<Element> chain = new ArrayList<Element>();
             collectElementChain(chain, getElement(), DOM.eventGetTarget(e));
             FastTreeItem item = findItemByChain(chain, 0, getTreeRoot());
@@ -529,15 +470,15 @@ public class FastTree extends Panel implements HasClickHandlers,
       // Handle keyboard events if keyboard navigation is enabled
 
       switch (DOMHelper.standardizeKeycode(DOM.eventGetKeyCode(e))) {
-        case KeyboardHandler.KEY_UP: {
+        case KeyCodes.KEY_UP: {
           moveSelectionUp(curSelection);
           break;
         }
-        case KeyboardHandler.KEY_DOWN: {
+        case KeyCodes.KEY_DOWN: {
           moveSelectionDown(curSelection, true);
           break;
         }
-        case KeyboardHandler.KEY_LEFT: {
+        case KeyCodes.KEY_LEFT: {
           if (curSelection.isOpen()) {
             curSelection.setState(false);
           } else {
@@ -548,7 +489,7 @@ public class FastTree extends Panel implements HasClickHandlers,
           }
           break;
         }
-        case KeyboardHandler.KEY_RIGHT: {
+        case KeyCodes.KEY_RIGHT: {
           if (!curSelection.isOpen()) {
             curSelection.setState(true);
           }
@@ -654,7 +595,7 @@ public class FastTree extends Panel implements HasClickHandlers,
     assert (!childWidgets.containsKey(widget));
     childWidgets.put(widget, treeItem);
     WidgetAdaptorImpl.setParent(widget, this);
-//    super.adopt(widget);
+    // super.adopt(widget);
   }
 
   /**
@@ -713,7 +654,7 @@ public class FastTree extends Panel implements HasClickHandlers,
   }
 
   void treeOrphan(Widget widget) {
-//    super.orphan(widget);
+    // super.orphan(widget);
     WidgetAdaptorImpl.setParent(widget, null);
 
     // Logical detach.

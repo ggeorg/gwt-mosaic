@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Google Inc.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,17 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic.ui.client.tree;
+package org.gwt.mosaic.ui.client;
 
 /**
- * 
- * A widget that implements this interface contains {@link FastTreeItem}
- * children and can add and remove them.
- * 
- * Note: This interface is NOT intended to be implemented by any classes other
- * then FastTree and FastTreeItem, even for testing, as methods will be added to
- * it over time.
+ * Every widget that can be wired to {@link Spinner} must implement this interface 
  */
-interface HasFastTreeItems extends HasFastTreeItemsImpl {
-
+public interface SpinnerListener {
+  /**
+   * Implement this method to listen to spinner changes
+   * @param value the current spinner value
+   */
+  void onSpinning(long value);
 }

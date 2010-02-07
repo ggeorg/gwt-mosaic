@@ -15,21 +15,18 @@
  */
 package org.gwt.mosaic.ui.client.tree;
 
+import org.gwt.mosaic.ui.client.event.HasBeforeCloseHandlers;
+import org.gwt.mosaic.ui.client.event.HasBeforeOpenHandlers;
+
 import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
-import com.google.gwt.gen2.commonevent.shared.HasBeforeCloseHandlers;
-import com.google.gwt.gen2.commonevent.shared.HasBeforeOpenHandlers;
 
 /**
  * Represents a convenience interface for all FastTreeItem events.
- * 
- * @deprecated as of feb 10th, this interface is probably going to be removed in
- *             the near future.
  */
-@Deprecated
-public interface HasFastTreeItemHandlers extends HasOpenHandlers<FastTreeItem>,
+interface HasFastTreeItemHandlers extends HasOpenHandlers<FastTreeItem>,
     HasBeforeOpenHandlers<FastTreeItem>, HasCloseHandlers<FastTreeItem>,
     HasBeforeCloseHandlers<FastTreeItem>, HasSelectionHandlers<FastTreeItem>,
     HasBeforeSelectionHandlers<FastTreeItem> {

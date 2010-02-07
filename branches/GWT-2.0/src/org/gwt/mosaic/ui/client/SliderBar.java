@@ -47,7 +47,6 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.gen2.widgetbase.client.Gen2CssInjector;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Element;
@@ -144,13 +143,6 @@ public class SliderBar extends LayoutComposite implements Focusable,
      */
     @Source("sliderSliding.gif")
     ImageResource sliderSliding();
-  }
-
-  /**
-   * Injects the default styles as a css resource.
-   */
-  public static void injectDefaultCss() {
-    Gen2CssInjector.addSliderBarDefault();
   }
 
   /**

@@ -28,7 +28,6 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.gen2.picker.client.TimePicker;
 
 public class DateTimePicker extends LayoutComposite {
   

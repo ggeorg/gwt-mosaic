@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Google Inc.
+ * Copyright 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,17 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic.ui.client.tree;
+
+package com.google.gwt.user.client.ui;
 
 /**
- * 
- * A widget that implements this interface contains {@link FastTreeItem}
- * children and can add and remove them.
- * 
- * Note: This interface is NOT intended to be implemented by any classes other
- * then FastTree and FastTreeItem, even for testing, as methods will be added to
- * it over time.
+ * Implementation class (i.e. DO NOT USE) meant to allow incubator base widget
+ * classes to access widget package protected fields.
  */
-interface HasFastTreeItems extends HasFastTreeItemsImpl {
+public class WidgetAdaptorImpl {
 
+  public static void onAttach(Widget widget) {
+    widget.onAttach();
+  }
+
+  public static void onDetach(Widget widget) {
+    widget.onDetach();
+  }
+
+  public static void setParent(Widget widget, Widget parent) {
+    widget.setParent(parent);
+  }
 }

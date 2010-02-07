@@ -24,15 +24,19 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
+
 /**
- * This is the default implementation for rendering system events in the right bottom of your application.
- * if InfoPanelType.HUMANIZED_MESSAGE is used then the event is showed in modal mode and centered to the screen.
- *
+ * This is the default implementation for rendering system events in the right
+ * bottom of your application. if InfoPanelType.HUMANIZED_MESSAGE is used then
+ * the event is showed in modal mode and centered to the screen.
+ * 
  * @author luciano.broussal(at)gmail.com
  */
-public class TrayInfoPanelNotifier implements InfoPanelNotifier, CloseHandler<PopupPanel> {
+public class TrayInfoPanelNotifier implements InfoPanelNotifier,
+    CloseHandler<PopupPanel> {
 
-  //TODO Separate Humanized message from tray ones. no sense to have both in this class.
+  // TODO Separate Humanized message from tray ones. no sense to have both in
+  // this class.
 
   List<InfoPanel> waintingInfoPanel = new ArrayList<InfoPanel>();
   List<InfoPanel> visibleInfoPanel = new ArrayList<InfoPanel>();
@@ -47,11 +51,11 @@ public class TrayInfoPanelNotifier implements InfoPanelNotifier, CloseHandler<Po
     return instance;
   }
 
-  public static void notifyTrayEvent(String caption , String text){
+  public static void notifyTrayEvent(String caption, String text) {
     getInstance().show(InfoPanelType.TRAY_NOTIFICATION, caption, text);
   }
 
-  public static void notifyModalEvent(String caption , String text){
+  public static void notifyModalEvent(String caption, String text) {
     getInstance().show(InfoPanelType.HUMANIZED_MESSAGE, caption, text);
   }
 
@@ -77,7 +81,7 @@ public class TrayInfoPanelNotifier implements InfoPanelNotifier, CloseHandler<Po
       return;
     }
 
-    if(infoPanelType == InfoPanelType.HUMANIZED_MESSAGE){
+    if (infoPanelType == InfoPanelType.HUMANIZED_MESSAGE) {
       final InfoPanel infoPanel = new InfoPanel(caption, content, true);
       infoPanel.showModal();
       return;
@@ -93,7 +97,8 @@ public class TrayInfoPanelNotifier implements InfoPanelNotifier, CloseHandler<Po
 
   private boolean canLayoutInfoPanel(InfoPanel infoPanel) {
     final int ch = Window.getClientHeight();
-    final int top = ch - InfoPanel.HEIGHT - 20 - (currentLevel * (InfoPanel.HEIGHT + 20));
+    final int top = ch - InfoPanel.HEIGHT - 20
+        - (currentLevel * (InfoPanel.HEIGHT + 20));
     return top >= 0;
   }
 
@@ -103,7 +108,7 @@ public class TrayInfoPanelNotifier implements InfoPanelNotifier, CloseHandler<Po
     final int left = (windowWidth - InfoPanel.WIDTH - 20);
     final int top = windowHeight - (level * (InfoPanel.HEIGHT + 20));
 
-    return new int[] { left, top };
+    return new int[] {left, top};
 
   }
 
