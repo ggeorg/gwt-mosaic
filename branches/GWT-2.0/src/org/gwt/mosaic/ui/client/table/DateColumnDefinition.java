@@ -253,7 +253,4 @@ public abstract class DateColumnDefinition<RowType> extends
   protected CellEditor<Date> createDateCellEditor(DateTimeFormat dateTimeFormat) {
     return new DateCellEditor(dateTimeFormat);
   }
-
-  public void setCellValue(RowType rowValue, Date cellValue) {
-  };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -113,11 +113,6 @@ public class LayoutPanelParser implements ElementParser {
   private boolean isLayoutManagerElement(XMLElement layout) {
     String uri = layout.getNamespaceUri();
     return uri != null && uri.startsWith("urn:import:");
-  }
-
-  public String getUiType() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

@@ -42,6 +42,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,7 +54,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @param <RowType> the data type of the row values
  */
-public abstract class NumberColumnDefinition<RowType> extends
+public class NumberColumnDefinition<RowType> extends
     AbstractColumnDefinition<RowType, Double> {
   /**
    * The {@link NumberCellRenderer} used by the {@link NumberColumnDefinition}
@@ -75,6 +76,7 @@ public abstract class NumberColumnDefinition<RowType> extends
       } else {
         view.setText(numberFormat.format(cellValue));
       }
+      view.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
     }
   }
 
@@ -145,7 +147,7 @@ public abstract class NumberColumnDefinition<RowType> extends
 
     @Override
     protected Double getValue() {
-      return numberFormat.parse(textBox.getText());
+      return new Double(numberFormat.parse(textBox.getText()));
     }
 
     @Override
@@ -153,7 +155,7 @@ public abstract class NumberColumnDefinition<RowType> extends
       if (cellValue == null) {
         textBox.setText("");
       } else {
-        textBox.setText(numberFormat.format(cellValue));
+        textBox.setText(numberFormat.format(cellValue.doubleValue()));
       }
     }
   }
@@ -208,6 +210,11 @@ public abstract class NumberColumnDefinition<RowType> extends
   }
 
   protected NumberFormat numberFormat;
+
+  public NumberColumnDefinition() {
+    this(NumberFormat.getDecimalFormat(), true,
+        new DefaultNumberColumnResources());
+  }
 
   public NumberColumnDefinition(Widget headerWidget, NumberFormat numberFormat,
       boolean editingEnabled) {
@@ -267,7 +274,4 @@ public abstract class NumberColumnDefinition<RowType> extends
       NumberFormat numberFormat) {
     return new NumberCellRenderer(numberFormat);
   }
-
-  public void setCellValue(RowType rowValue, Double cellValue) {
-  };
 }
