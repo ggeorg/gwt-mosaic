@@ -113,7 +113,7 @@ public class ListBox<T> extends LayoutComposite implements Focusable,
   /**
    * The column comparator used by the column sorter.
    */
-  private ColumnComparator<T> columnComparator;;
+  private ColumnComparator<T> columnComparator;
 
   /**
    * The table rows in model order.

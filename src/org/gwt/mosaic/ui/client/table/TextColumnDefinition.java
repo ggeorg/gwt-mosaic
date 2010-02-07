@@ -52,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @param <RowType> the data type of the row values
  */
-public abstract class TextColumnDefinition<RowType> extends
+public class TextColumnDefinition<RowType> extends
     AbstractColumnDefinition<RowType, String> {
   /**
    * The {@link TextCellRenderer} used by the {@link TextColumnDefinition} when
@@ -203,6 +203,10 @@ public abstract class TextColumnDefinition<RowType> extends
     }
   }
 
+  public TextColumnDefinition() {
+    this(true, true, new DefaultTextColumnResources());
+  }
+
   public TextColumnDefinition(Widget headerWidget, boolean sortable,
       boolean editingEnabled) {
     this(headerWidget, sortable, editingEnabled,
@@ -260,6 +264,19 @@ public abstract class TextColumnDefinition<RowType> extends
     return new TextCellRenderer();
   }
 
+  @Override
+  public String getCellValue(RowType rowValue) {
+    if (getName() != null && getReader(rowValue, getName()) != null) {
+      return (String) getProperty(rowValue, getName());
+    } else {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  @Override
   public void setCellValue(RowType rowValue, String cellValue) {
-  };
+    if (getName() != null && getWriter(rowValue, getName()) != null) {
+      setProperty(rowValue, getName(), cellValue);
+    }
+  }
 }

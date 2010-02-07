@@ -13,28 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/*
- * This is derived work from GWT Incubator project:
- * http://code.google.com/p/google-web-toolkit-incubator/
- * 
- * Copyright 2008 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package org.gwt.mosaic.ui.client.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,18 +29,22 @@ import org.gwt.mosaic.ui.client.event.RowRemovalEvent;
 import org.gwt.mosaic.ui.client.event.RowRemovalHandler;
 import org.gwt.mosaic.ui.client.event.RowValueChangeEvent;
 import org.gwt.mosaic.ui.client.event.RowValueChangeHandler;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.ColumnSortList;
 import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
 import org.gwt.mosaic.ui.client.table.TableModelHelper.Response;
 
 /**
  * 
- * @author Derived work from GWT Incubator project
  * @author georgopoulos.georgios(at)gmail.com
  * 
  * @param <RowType> the data type of the row values
  */
 public class DefaultTableModel<RowType> extends
     AbstractMutableTableModel<RowType> {
+
+  public static interface ColumnComparator<T> {
+    int compare(T t1, T t2, int column);
+  }
 
   public static interface Provider<RowType> {
     void requestRows(Request request, TableModel.Callback<RowType> callback);
@@ -121,6 +109,11 @@ public class DefaultTableModel<RowType> extends
   private final Provider<RowType> provider;
   private final Resolver<RowType> resolver;
 
+  /**
+   * The column comparator used by the column sorter.
+   */
+  private ColumnComparator<RowType> columnComparator;
+
   private List<RowType> data;
 
   private boolean readOnly = false;
@@ -137,6 +130,26 @@ public class DefaultTableModel<RowType> extends
     provider = new Provider<RowType>() {
       public void requestRows(final Request request,
           TableModel.Callback<RowType> callback) {
+        // Get the primary column and sort order
+        final ColumnSortList sortList = request.getColumnSortList();
+        final int column = sortList.getPrimaryColumn();
+        final boolean ascending = sortList.isPrimaryAscending();
+
+        // Sort the row elements
+        if (DefaultTableModel.this.columnComparator != null) {
+          Collections.sort(data, new Comparator<RowType>() {
+            public int compare(RowType o1, RowType o2) {
+              if (ascending) {
+                return DefaultTableModel.this.columnComparator.compare(o1, o2,
+                    column);
+              } else {
+                return DefaultTableModel.this.columnComparator.compare(o2, o1,
+                    column);
+              }
+            }
+          });
+        }
+
         // numRows = -1 means all rows (see PagingScrollTable API)
         final int numRows = Math.min(request.getNumRows() < 0 ? data.size()
             : request.getNumRows(), data.size() - request.getStartRow());
@@ -165,6 +178,8 @@ public class DefaultTableModel<RowType> extends
     };
 
     bind();
+    
+    setRowCount(data.size());
   }
 
   public DefaultTableModel(Provider<RowType> provider) {
@@ -179,6 +194,13 @@ public class DefaultTableModel<RowType> extends
     this.resolver = resolver;
 
     bind();
+  }
+
+  /**
+   * @return the columnComparator
+   */
+  public ColumnComparator<RowType> getColumnComparator() {
+    return columnComparator;
   }
 
   /**
@@ -217,6 +239,13 @@ public class DefaultTableModel<RowType> extends
   @Override
   public void requestRows(Request request, TableModel.Callback<RowType> callback) {
     getProvider().requestRows(request, callback);
+  }
+
+  /**
+   * @param columnComparator the columnComparator to set
+   */
+  public void setColumnComparator(ColumnComparator<RowType> columnComparator) {
+    this.columnComparator = columnComparator;
   }
 
   /**

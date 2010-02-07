@@ -89,6 +89,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.ElementParserToUse;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -107,6 +110,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
  * 
  * @param <RowType> the data type of the row values
  */
+@ElementParserToUse(className = "org.gwt.mosaic.ui.elementparsers.PagingScrollTableParser")
 public class PagingScrollTable<RowType> extends AbstractScrollTable implements
     HasTableDefinition<RowType>, HasPageCountChangeHandlers,
     HasPageLoadHandlers, HasPageChangeHandlers, HasPagingFailureHandlers {
@@ -414,6 +418,16 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
 
   /**
    * Construct a new {@link PagingScrollTable}.
+   */
+  public PagingScrollTable() {
+    this(new DefaultTableModel<RowType>(), new FixedWidthGrid(),
+        new FixedWidthFlexTable(), new DefaultTableDefinition<RowType>());
+    isHeaderGenerated = true;
+    isFooterGenerated = true;
+  }
+
+  /**
+   * Construct a new {@link PagingScrollTable}.
    * 
    * @param tableModel the underlying table model
    * @param tableDefinition the column definitions
@@ -456,14 +470,13 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
    * @param tableDefinition the column definitions
    * @param resources the images to use in the table
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("deprecation")
   public PagingScrollTable(TableModel<RowType> tableModel,
       FixedWidthGrid dataTable, FixedWidthFlexTable headerTable,
       TableDefinition<RowType> tableDefinition, ScrollTableResources resources) {
     super(dataTable, headerTable, tableDefinition, resources);
-    this.tableModel = tableModel;
+    setTableModel(tableModel);
     setTableDefinition(tableDefinition);
-    refreshVisibleColumnDefinitions();
     oldPageCount = getPageCount();
 
     // Setup the empty table widget wrapper
@@ -475,44 +488,6 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
     emptyTableWidgetWrapper.getElement().getStyle().setPropertyPx("padding", 0);
     insert(emptyTableWidgetWrapper, getAbsoluteElement(), 2, true);
     setEmptyTableWidgetVisible(false);
-
-    // Listen to table model events
-    tableModel.addRowCountChangeHandler(new RowCountChangeHandler() {
-      public void onRowCountChange(RowCountChangeEvent event) {
-        int pageCount = getPageCount();
-        if (pageCount != oldPageCount) {
-          fireEvent(new PageCountChangeEvent(oldPageCount, pageCount));
-          oldPageCount = pageCount;
-        }
-      }
-    });
-    if (tableModel instanceof HasRowInsertionHandlers) {
-      ((HasRowInsertionHandlers) tableModel).addRowInsertionHandler(new RowInsertionHandler() {
-        public void onRowInsertion(RowInsertionEvent event) {
-          insertAbsoluteRow(event.getRowIndex());
-        }
-      });
-    }
-    if (tableModel instanceof HasRowRemovalHandlers) {
-      ((HasRowRemovalHandlers) tableModel).addRowRemovalHandler(new RowRemovalHandler() {
-        public void onRowRemoval(RowRemovalEvent event) {
-          removeAbsoluteRow(event.getRowIndex());
-        }
-      });
-    }
-    if (tableModel instanceof HasRowValueChangeHandlers) {
-      ((HasRowValueChangeHandlers<RowType>) tableModel).addRowValueChangeHandler(new RowValueChangeHandler<RowType>() {
-        public void onRowValueChange(RowValueChangeEvent<RowType> event) {
-          int rowIndex = event.getRowIndex();
-          if (rowIndex < getAbsoluteFirstRowIndex()
-              || rowIndex > getAbsoluteLastRowIndex()) {
-            return;
-          }
-          setRowValue(rowIndex - getAbsoluteFirstRowIndex(),
-              event.getRowValue());
-        }
-      });
-    }
 
     // Listen for cell click events
     dataTable.addTableListener(new TableListener() {
@@ -690,6 +665,78 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
    */
   public TableModel<RowType> getTableModel() {
     return tableModel;
+  }
+
+  private HandlerRegistration rowCountChangeHandlerReg = null;
+  private HandlerRegistration rowInsertionHandlerReg = null;
+  private HandlerRegistration rowRemovalHandlerReg = null;
+  private HandlerRegistration rowValueChangeHandlerReg = null;
+
+  @SuppressWarnings("unchecked")
+  public void setTableModel(TableModel<RowType> tableModel) {
+    assert tableModel != null : "tableModel cannot be null";
+    this.tableModel = tableModel;
+
+    // Listen to table model events
+
+    if (rowCountChangeHandlerReg != null) {
+      rowCountChangeHandlerReg.removeHandler();
+      rowCountChangeHandlerReg = null;
+    }
+
+    if (rowInsertionHandlerReg != null) {
+      rowInsertionHandlerReg.removeHandler();
+      rowInsertionHandlerReg = null;
+    }
+
+    if (rowRemovalHandlerReg != null) {
+      rowRemovalHandlerReg.removeHandler();
+      rowRemovalHandlerReg = null;
+    }
+
+    if (rowValueChangeHandlerReg != null) {
+      rowValueChangeHandlerReg.removeHandler();
+      rowValueChangeHandlerReg = null;
+    }
+
+    rowCountChangeHandlerReg = tableModel.addRowCountChangeHandler(new RowCountChangeHandler() {
+      public void onRowCountChange(RowCountChangeEvent event) {
+        int pageCount = getPageCount();
+        if (pageCount != oldPageCount) {
+          fireEvent(new PageCountChangeEvent(oldPageCount, pageCount));
+          oldPageCount = pageCount;
+        }
+      }
+    });
+    if (tableModel instanceof HasRowInsertionHandlers) {
+      rowInsertionHandlerReg = ((HasRowInsertionHandlers) tableModel).addRowInsertionHandler(new RowInsertionHandler() {
+        public void onRowInsertion(RowInsertionEvent event) {
+          insertAbsoluteRow(event.getRowIndex());
+        }
+      });
+    }
+    if (tableModel instanceof HasRowRemovalHandlers) {
+      rowRemovalHandlerReg = ((HasRowRemovalHandlers) tableModel).addRowRemovalHandler(new RowRemovalHandler() {
+        public void onRowRemoval(RowRemovalEvent event) {
+          removeAbsoluteRow(event.getRowIndex());
+        }
+      });
+    }
+    if (tableModel instanceof HasRowValueChangeHandlers<?>) {
+      rowValueChangeHandlerReg = ((HasRowValueChangeHandlers<RowType>) tableModel).addRowValueChangeHandler(new RowValueChangeHandler<RowType>() {
+        public void onRowValueChange(RowValueChangeEvent<RowType> event) {
+          int rowIndex = event.getRowIndex();
+          System.out.println(rowIndex + "========" + getAbsoluteFirstRowIndex()
+              + "========" + getAbsoluteLastRowIndex());
+          if (rowIndex < getAbsoluteFirstRowIndex()
+              || rowIndex > getAbsoluteLastRowIndex()) {
+            return;
+          }
+          setRowValue(rowIndex - getAbsoluteFirstRowIndex(),
+              event.getRowValue());
+        }
+      });
+    }
   }
 
   /**
@@ -979,6 +1026,16 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
   public void setTableDefinition(TableDefinition<RowType> tableDefinition) {
     assert tableDefinition != null : "tableDefinition cannot be null";
     this.tableDefinition = tableDefinition;
+
+    refreshVisibleColumnDefinitions();
+
+    refreshHeaderTable();
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        redraw();
+      }
+    });
   }
 
   /**

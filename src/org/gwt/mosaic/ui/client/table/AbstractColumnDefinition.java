@@ -33,6 +33,14 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import org.gwt.beansbinding.core.client.PropertyResolutionException;
 import org.gwt.mosaic.ui.client.table.property.ColumnProperty;
 import org.gwt.mosaic.ui.client.table.property.ColumnPropertyManager;
 import org.gwt.mosaic.ui.client.table.property.FooterProperty;
@@ -53,7 +61,7 @@ import org.gwt.mosaic.ui.client.table.property.TruncationProperty;
  * @param <ColType> the data type of the column
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractColumnDefinition<RowType, ColType> implements
+public class AbstractColumnDefinition<RowType, ColType> implements
     ColumnDefinition<RowType, ColType> {
 
   /**
@@ -84,8 +92,6 @@ public abstract class AbstractColumnDefinition<RowType, ColType> implements
   public CellRenderer<RowType, ColType> getCellRenderer() {
     return cellRenderer;
   }
-
-  public abstract ColType getCellValue(RowType rowValue);
 
   public <P extends ColumnProperty> P getColumnProperty(
       ColumnProperty.Type<P> type) {
@@ -220,8 +226,6 @@ public abstract class AbstractColumnDefinition<RowType, ColType> implements
     assert cellRenderer != null : "cellRenderer cannot be null";
     this.cellRenderer = cellRenderer;
   }
-
-  public abstract void setCellValue(RowType rowValue, ColType cellValue);
 
   /**
    * Set a {@link ColumnProperty}.
@@ -385,5 +389,186 @@ public abstract class AbstractColumnDefinition<RowType, ColType> implements
   public void setPreferredColumnWidth(int preferredWidth) {
     setColumnProperty(PreferredWidthProperty.TYPE, new PreferredWidthProperty(
         preferredWidth));
+  }
+
+  // -----------------------------------------------------------------------
+  // PropertyDescriptor related code
+
+  protected static final Object NOREAD = new Object();
+
+  /**
+   * The RowType propperty name used by getCellValue(Object) and
+   * setCellValue(Object, Object).
+   */
+  private String name;
+
+  /**
+   * Returns the {@code RowType} propperty name used by
+   * {@link #getCellValue(Object)} and {@link #setCellValue(Object, Object)}.
+   * 
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Set the {@code RowType} propperty name used by
+   * {@link #getCellValue(Object)} and {@link #setCellValue(Object, Object)}.
+   * 
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public ColType getCellValue(RowType rowValue) {
+    if (getName() != null && getReader(rowValue, getName()) != null) {
+      return (ColType) getProperty(rowValue, getName());
+    } else {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  public void setCellValue(RowType rowValue, ColType cellValue) {
+    if (getName() != null && getWriter(rowValue, getName()) != null) {
+      setProperty(rowValue, getName(), cellValue);
+    }
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   */
+  protected Object getProperty(Object object, String string) {
+    if (object == null || object == NOREAD) {
+      return NOREAD;
+    }
+
+    Object reader = getReader(object, string);
+    if (reader == null) {
+      return NOREAD;
+    }
+
+    return read(reader, object, string);
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   * @throws IllegalStateException
+   */
+  protected void setProperty(Object object, String string, Object value) {
+    if (object == null || object == NOREAD) {
+      throw new UnsupportedOperationException("Unwritable");
+    }
+
+    Object writer = getWriter(object, string);
+    if (writer == null) {
+      throw new UnsupportedOperationException("Unwritable");
+    }
+
+    write(writer, object, string, value);
+  }
+
+  protected Object getReader(Object object, String string) {
+    assert object != null;
+
+    if (object instanceof Map<?, ?>) {
+      return object;
+    }
+
+    final PropertyDescriptor pd = getPropertyDescriptor(object, string);
+    return pd == null ? null : pd.getReadMethod();
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   */
+  private Object read(Object reader, Object object, String string) {
+    assert reader != null;
+
+    if (reader instanceof Map) {
+      assert reader == object;
+      return ((Map) reader).get(string);
+    }
+
+    return invokeMethod((Method) reader, object);
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   */
+  private void write(Object writer, Object object, String string, Object value) {
+    assert writer != null;
+
+    if (writer instanceof Map) {
+      assert writer == object;
+      ((Map) writer).put(string, value);
+      return;
+    }
+
+    invokeMethod((Method) writer, object, value);
+  }
+
+  protected Object getWriter(Object object, String string) {
+    assert object != null;
+
+    if (object instanceof Map<?, ?>) {
+      return object;
+    }
+
+    final PropertyDescriptor pd = getPropertyDescriptor(object, string);
+    return pd == null ? null : pd.getWriteMethod();
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   */
+  private static PropertyDescriptor getPropertyDescriptor(Object object,
+      String string) {
+    assert object != null;
+
+    final PropertyDescriptor[] pds = getBeanInfo(object).getPropertyDescriptors();
+    if (pds == null) {
+      return null;
+    }
+
+    for (PropertyDescriptor pd : pds) {
+      if (/*
+           * !(pd instanceof IndexedPropertyDescriptor) &&
+           */pd.getName().equals(string)) {
+        return pd;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   */
+  private static BeanInfo getBeanInfo(Object object) {
+    try {
+      return Introspector.getBeanInfo(object.getClass());
+    } catch (IntrospectionException ie) {
+      throw new PropertyResolutionException("Exception while introspecting "
+          + object.getClass().getName(), ie);
+    }
+  }
+
+  /**
+   * @throws PropertyResolutionException
+   */
+  private static Object invokeMethod(Method method, Object object,
+      Object... args) {
+    Exception reason = null;
+
+    try {
+      return method.invoke(object, args);
+    } catch (Exception ex) {
+      reason = ex;
+    }
+
+    throw new PropertyResolutionException("Exception invoking method " + method
+        + " on " + object, reason);
   }
 }
