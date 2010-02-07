@@ -18,7 +18,6 @@ package org.gwt.mosaic.showcase.client;
 import org.gwt.mosaic.showcase.client.content.popups.CwMessageBox;
 import org.gwt.mosaic.showcase.client.content.tables.CwPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.tables.CwScrollTable;
-import org.gwt.mosaic.showcase.client.content.tables.CwTableLoadingBenchmark;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
 import org.gwt.mosaic.showcase.client.content.widgets.CwCustomButton;
@@ -40,7 +39,7 @@ public interface ShowcaseConstants extends Constants,
     CwSliderBar.CwConstants, CwCustomButton.CwConstants,
     CwToolButton.CwConstants, CwComboBox.CwConstants, CwToolBar.CwConstants,
     CwMenuBar.CwConstants, CwScrollTable.CwConstants,
-    CwPagingScrollTable.CwConstants, CwTableLoadingBenchmark.CwConstants,
+    CwPagingScrollTable.CwConstants,
     /* CwBasicTreeTable.CwConstants, */CwDatePicker.CwConstants,
     CwMessageBox.CwConstants {
 

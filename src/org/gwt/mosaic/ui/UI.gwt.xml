@@ -22,8 +22,6 @@
 	<inherits
 		name='org.gwt.beansbinding.observablecollections.ObservableCollections' />
 
-	<inherits name='com.google.gwt.gen2.picker.Picker' />
-
 	<inherits name='org.gwt.mosaic.override.Override' />
 	<inherits name='org.gwt.mosaic.ui.GlassPanel' />
 

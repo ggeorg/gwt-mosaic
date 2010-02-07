@@ -12,7 +12,6 @@
 	<classpathentry kind="lib" path="lib/gwt-dnd-3.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-beans-binding-0.3.jar"/>
 	<classpathentry kind="var" path="GWT20_HOME"/>
-	<classpathentry kind="lib" path="lib/gwt-incubator-trunk-r1738.jar"/>
 	<classpathentry kind="lib" path="lib/gwtx-1.5.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

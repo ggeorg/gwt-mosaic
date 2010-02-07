@@ -24,9 +24,6 @@
 	<inherits name='org.gwt.mosaic.forms.Forms' />
 	<inherits name='org.gwt.mosaic.pagebus.PageBus' />
 	
-	<!-- Inherit the complex panel code for FastTree                -->
-	<inherits name='com.google.gwt.gen2.complexpanel.ComplexPanel' />
-	
 	<!-- Includes the public resources used by the GWT Mosaic       --> 
 	<!-- themes. Those files do not inject a style sheet into the   -->
 	<!-- application.                                               -->

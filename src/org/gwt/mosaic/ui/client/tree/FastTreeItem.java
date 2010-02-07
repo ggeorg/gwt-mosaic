@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.overrides.DOMHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,80 +30,6 @@ import java.util.List;
  * Fast tree item.
  */
 public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML {
-
-  /**
-   * Interface used to allow the widget access to css style names.
-   * <p/>
-   * The class names indicate the default gwt names for these styles.
-   */
-  static interface Css extends FastTree.Css {
-
-    String children();
-
-    String closed();
-
-    String content();
-
-    String leaf();
-
-    String leafDefault();
-
-    String open();
-
-    String selected();
-  }
-
-  /**
-   * Creates the standard css instance used for this widget and groups all the
-   * css processing under it.
-   */
-  static class StandardCss extends FastTree.StandardCss implements Css {
-
-    public static Css DEFAULT_TREEITEM_CSS;
-
-    static Css ensureDefaultCss() {
-      if (DEFAULT_TREEITEM_CSS == null) {
-        DEFAULT_TREEITEM_CSS = new StandardCss(FastTree.STYLENAME_DEFAULT);
-      }
-      return DEFAULT_TREEITEM_CSS;
-    }
-
-    public StandardCss(String styleName) {
-      super(styleName);
-    }
-
-    public String children() {
-      return pad(STYLENAME_CHILDREN);
-    }
-
-    public String closed() {
-      return pad(STYLENAME_CLOSED);
-    }
-
-    public String content() {
-      return pad(STYLENAME_CONTENT);
-    }
-
-    public String leaf() {
-      return pad(STYLENAME_LEAF);
-    }
-
-    public String leafDefault() {
-      return pad(STYLENAME_LEAF_DEFAULT);
-    }
-
-    public String open() {
-      return pad(STYLENAME_OPEN);
-    }
-
-    public String selected() {
-      return pad(STYLENAME_SELECTED);
-    }
-
-    private String pad(String styleName) {
-      return " " + styleName;
-    }
-  }
   enum TreeNodeState {
     TREE_NODE_LEAF, TREE_NODE_INTERIOR_NEVER_OPENED, TREE_NODE_INTERIOR_OPEN, TREE_NODE_INTERIOR_CLOSED
   }
@@ -152,13 +77,11 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
    */
   private FastTree tree;
   private Widget widget;
-  private Css css;
 
   /**
    * Creates an empty tree item.
    */
   public FastTreeItem() {
-    css = StandardCss.ensureDefaultCss();
     Element elem = createLeafElement();
     setElement(elem);
   }
@@ -230,7 +153,7 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
       state = TreeNodeState.TREE_NODE_INTERIOR_NEVER_OPENED;
 
       Element control = DOM.createDiv();
-      setStyleName(control, css.closed());
+      setStyleName(control, STYLENAME_CLOSED);
       DOM.appendChild(control, contentElement);
       convertElementToInteriorNode(control);
     }
@@ -265,7 +188,7 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
       // set leaf state
       state = TreeNodeState.TREE_NODE_LEAF;
       DOM.appendChild(getElement(), contentElement);
-      setStyleName(getElement(), css.leafDefault());
+      setStyleName(getElement(), "leafDefault");
     }
   }
 
@@ -471,7 +394,7 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
       boolean isFirstTime = state == TreeNodeState.TREE_NODE_INTERIOR_NEVER_OPENED;
       if (beforeOpen(isFirstTime)) {
         childElems = DOM.createDiv();
-        UIObject.setStyleName(childElems, css.children());
+        UIObject.setStyleName(childElems, STYLENAME_CHILDREN);
         convertElementToHaveChildren(childElems);
 
         if (children != null) {
@@ -601,8 +524,8 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
   }
 
   Element createLeafElement() {
-    Element elem = DOMHelper.clone(TREE_LEAF, true);
-    contentElement = DOMHelper.rawFirstChild(elem);
+    Element elem = TREE_LEAF.cloneNode(true).cast();
+    contentElement = elem.getFirstChildElement().cast();
     return elem;
   }
 
@@ -650,7 +573,7 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
    *          it.
    */
   void setSelection(boolean selected, boolean fireEvents) {
-    setStyleName(getControlElement(), css.selected(), selected);
+    setStyleName(getControlElement(), STYLENAME_SELECTED, selected);
     if (selected && fireEvents) {
       onSelected();
     }
@@ -709,12 +632,12 @@ public class FastTreeItem extends UIObject implements HasFastTreeItems, HasHTML 
   }
 
   private void showClosedImage() {
-    setStyleName(getControlElement(), css.open(), false);
-    setStyleName(getControlElement(), css.closed(), true);
+    setStyleName(getControlElement(), STYLENAME_OPEN, false);
+    setStyleName(getControlElement(), STYLENAME_CLOSED, true);
   }
 
   private void showOpenImage() {
-    setStyleName(getControlElement(), css.closed(), false);
-    setStyleName(getControlElement(), css.open(), true);
+    setStyleName(getControlElement(), STYLENAME_CLOSED, false);
+    setStyleName(getControlElement(), STYLENAME_OPEN, true);
   }
 }

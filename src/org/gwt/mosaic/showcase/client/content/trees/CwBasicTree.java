@@ -20,9 +20,9 @@ package org.gwt.mosaic.showcase.client.content.trees;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
+import org.gwt.mosaic.ui.client.tree.FastTree;
+import org.gwt.mosaic.ui.client.tree.FastTreeItem;
 
-import com.google.gwt.gen2.complexpanel.client.FastTree;
-import com.google.gwt.gen2.complexpanel.client.FastTreeItem;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
