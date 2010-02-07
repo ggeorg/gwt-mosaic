@@ -15,36 +15,24 @@
  */
 package org.gwt.mosaic.showcase.client.content.popups;
 
-import com.google.gwt.core.client.GWT;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.SheetLayoutPanel;
-import org.gwt.mosaic.ui.client.ScrollLayoutPanel;
-import org.gwt.mosaic.ui.client.WindowPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout;
-import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
-import org.gwt.mosaic.ui.client.layout.BoxLayout;
-import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
-import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
-
-import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.Widget;
-
 import org.gwt.mosaic.ui.client.layout.AbsoluteLayout;
 import org.gwt.mosaic.ui.client.layout.AbsoluteLayoutData;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.AbsoluteLayout.DimensionPolicy;
 import org.gwt.mosaic.ui.client.layout.AbsoluteLayout.MarginPolicy;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
@@ -80,6 +68,11 @@ public class CwSheetPanel extends ContentWidget {
     return "Sheet Panel";
   }
 
+  /**
+   * 
+   * @param sheetPanel
+   * @return
+   */
   @ShowcaseSource
   protected Widget createSheetContent(final SheetLayoutPanel sheetPanel) {
     // Create a layout panel to align the widgets
