@@ -17,13 +17,13 @@ package org.gwt.mosaic.showcase.client.content.tables.shared;
 
 import java.io.Serializable;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import org.gwt.beansbinding.core.client.util.AbstractBean;
 
 /**
  * A representation of a college student.
  */
 @SuppressWarnings("serial")
-public class Student implements Serializable {
+public class Student extends AbstractBean implements Serializable {
   /**
    * The number of fields in this class.
    */
