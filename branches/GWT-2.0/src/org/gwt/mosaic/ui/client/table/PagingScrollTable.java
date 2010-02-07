@@ -238,6 +238,15 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
     public void incrementRowSpan() {
       rowSpan++;
     }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((header == null) ? 0 : header.hashCode());
+      result = prime * result + rowSpan;
+      return result;
+    }
   }
 
   /**
@@ -726,8 +735,6 @@ public class PagingScrollTable<RowType> extends AbstractScrollTable implements
       rowValueChangeHandlerReg = ((HasRowValueChangeHandlers<RowType>) tableModel).addRowValueChangeHandler(new RowValueChangeHandler<RowType>() {
         public void onRowValueChange(RowValueChangeEvent<RowType> event) {
           int rowIndex = event.getRowIndex();
-          System.out.println(rowIndex + "========" + getAbsoluteFirstRowIndex()
-              + "========" + getAbsoluteLastRowIndex());
           if (rowIndex < getAbsoluteFirstRowIndex()
               || rowIndex > getAbsoluteLastRowIndex()) {
             return;
