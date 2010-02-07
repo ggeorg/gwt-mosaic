@@ -46,8 +46,8 @@ import com.google.gwt.user.client.Element;
 public class GlassPanelImplSafari extends GlassPanelImplStandard {
   private static native void implMatchDocumentSize(Element elem)
   /*-{
-    var scrollWidth = @com.google.gwt.widgetideas.client.impl.GlassPanelImpl::getWindowScrollWidth()();
-    var scrollHeight = @com.google.gwt.widgetideas.client.impl.GlassPanelImpl::getWindowScrollHeight()();
+    var scrollWidth = @org.gwt.mosaic.ui.client.impl.GlassPanelImpl::getWindowScrollWidth()();
+    var scrollHeight = @org.gwt.mosaic.ui.client.impl.GlassPanelImpl::getWindowScrollHeight()();
 
     var width = Math.max($wnd.innerWidth, scrollWidth);
     var height = Math.max($wnd.innerHeight, scrollHeight);
