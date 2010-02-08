@@ -130,8 +130,7 @@ public class UiBinderWriter {
    * @param type the base type
    * @return a breadth-first collection of its type hierarchy
    */
-  static Iterable<JClassType> getClassHierarchyBreadthFirst(
-      JClassType type) {
+  static Iterable<JClassType> getClassHierarchyBreadthFirst(JClassType type) {
     LinkedList<JClassType> list = new LinkedList<JClassType>();
     LinkedList<JClassType> q = new LinkedList<JClassType>();
 
@@ -791,12 +790,25 @@ public class UiBinderWriter {
     return fieldName;
   }
 
+  private String getAnnotatedParserForClass(JClassType uiClass) {
+    String parserClassName = null;
+    if (uiClass.isAnnotationPresent(ElementParserToUse.class)) {
+      String uiClassName = uiClass.getQualifiedSourceName();
+      parserClassName = uiClass.getAnnotation(ElementParserToUse.class).className();
+      elementParsers.put(uiClassName, parserClassName);
+    }
+    return parserClassName;
+  }
+
   private Class<? extends ElementParser> getParserForClass(JClassType uiClass) {
     // Find the associated parser.
     String uiClassName = uiClass.getQualifiedSourceName();
     String parserClassName = elementParsers.get(uiClassName);
     if (parserClassName == null) {
-      return null;
+      parserClassName = getAnnotatedParserForClass(uiClass);
+      if (parserClassName == null) {
+        return null;
+      }
     }
 
     // And instantiate it.
@@ -950,35 +962,6 @@ public class UiBinderWriter {
     addWidgetParser("StackLayoutPanel");
     addWidgetParser("TabLayoutPanel");
     addWidgetParser("Image");
-
-    // Register custom widget parsers... (almost automagically)
-
-    Collection<OwnerField> uiFields = ownerClass.getUiFields();
-
-    if (uiFields == null) {
-      return;
-    }
-
-    for (OwnerField uiField : uiFields) {
-      
-      JClassType fieldType = uiField.getType().getRawType().isClass();
-      
-      if (fieldType != null
-          && fieldType.isAnnotationPresent(ElementParserToUse.class)) {
-
-        String uiClassName = fieldType.getQualifiedSourceName();
-
-        if (elementParsers.containsKey(uiClassName)) {
-          continue;
-        }
-
-        String parserClassName = fieldType.getAnnotation(
-            ElementParserToUse.class).className();
-        if (parserClassName != null && parserClassName.length() > 0) {
-          addElementParser(uiClassName, parserClassName);
-        }
-      }
-    }
   }
 
   /**
@@ -1008,7 +991,8 @@ public class UiBinderWriter {
 
     // createAndBindUi method
     w.write("public %s createAndBindUi(final %s owner) {",
-        uiRootType.getParameterizedQualifiedSourceName(), uiOwnerType.getParameterizedQualifiedSourceName());
+        uiRootType.getParameterizedQualifiedSourceName(),
+        uiOwnerType.getParameterizedQualifiedSourceName());
     w.indent();
     w.newline();
 
@@ -1039,7 +1023,9 @@ public class UiBinderWriter {
 
   private void writeClassOpen(IndentedWriter w) {
     w.write("public class %s implements UiBinder<%s, %s>, %s {", implClassName,
-        uiRootType.getParameterizedQualifiedSourceName(), uiOwnerType.getParameterizedQualifiedSourceName(), baseClass.getParameterizedQualifiedSourceName());
+        uiRootType.getParameterizedQualifiedSourceName(),
+        uiOwnerType.getParameterizedQualifiedSourceName(),
+        baseClass.getParameterizedQualifiedSourceName());
     w.indent();
   }
 
