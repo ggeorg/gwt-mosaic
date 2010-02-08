@@ -2,7 +2,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
 	xmlns:tbl='urn:import:org.gwt.mosaic.ui.client.table' xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout'
 	xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
-	<tbl:PagingScrollTable ui:field='table'>
+	<tbl:LiveScrollTable ui:field='table' pageSize='50'>
 		<tbl:DefaultTableDefinition>
 			<tbl:TextColumnDefinition name='firstName'
 				columnSortable='true' columnTruncatable='false' minimumColumnWidth='50'
@@ -20,5 +20,5 @@
 				Age
 			</tbl:IntegerColumnDefinition>
 		</tbl:DefaultTableDefinition>
-	</tbl:PagingScrollTable>
+	</tbl:LiveScrollTable>
 </ui:UiBinder>
