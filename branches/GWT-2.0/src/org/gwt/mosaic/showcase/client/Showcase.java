@@ -111,6 +111,7 @@ import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderFlowLayo
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderGridLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.layout.CwUiBinderRowLayout;
 import org.gwt.mosaic.showcase.client.content.uibinder.panels.CwUiBinderToolBar;
+import org.gwt.mosaic.showcase.client.content.uibinder.tables.CwUiBinderLiveScrollTable;
 import org.gwt.mosaic.showcase.client.content.uibinder.tables.CwUiBinderPagingScrollTable;
 import org.gwt.mosaic.showcase.client.content.widgets.CwBasicButton;
 import org.gwt.mosaic.showcase.client.content.widgets.CwComboBox;
@@ -646,6 +647,8 @@ public class Showcase implements EntryPoint {
     
     TreeItem catUiBinderTables = catUiBinder.addItem("Tables");
     setupMainMenuOption(catUiBinderTables, new CwUiBinderPagingScrollTable(constants),
+        IMAGES.catTables());
+    setupMainMenuOption(catUiBinderTables, new CwUiBinderLiveScrollTable(constants),
         IMAGES.catTables());
 
     // DragAndDrop
