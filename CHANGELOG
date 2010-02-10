@@ -1,3 +1,47 @@
+Change log for v0.4.0-rc3
+================================
+
+ - (Bug Fix) FormPanel bug fixed (related with LayoutPanel)
+ - (Bug Fix) igeorg's patch for DefaultComboBoxModel
+ - (Update) UiBinderWriter update based on http://cafebab3.blogspot.com/2010/01/non-intrusive-gwt-2-mod-2nd-part.html
+ - (Added) UiBinder parser for LiveScrollTable
+ - (Upgrade) GWTx-1.5.4-SNAPSHOT
+ - (Update) Removed all GWT Incubator dependencies
+ - (Added) UiBinder PagingScrollTableParser & ColumnDescriptors
+ - (Added) Add SheetPanel with a Showcase demo.
+ - (Added) SliderBar & ProgressBar from GWT Incubator
+ - (Update) Layout managers optimizations
+ - (Bug Fix) Render problem in Safari fixed, see: https://bugs.webkit.org/show_bug.cgi?id=13343
+ - (Update) Layout system refactoring & cleanup
+ - (Added) Cache for margin, border and padding sizes similar to width & height
+ - (Update) HasLayoutManager extends RequiresResize and ProvidesResize, this makes the GWT Mosaic layout system compatible with the new GWT Layout panels.
+ - (Added) Drag & Drop support in LayoutPanel; Showcase demo with Column & RowLayout
+ - (Update) ClientBundle instead of ImageBundle in Application module
+ - (Update) ClientBundle instead of ImageBundle in Actions module
+ - (Update) ToolBar respects widget's width & size
+ - (Update) ToolBar updated so that it can be used also with UiBinder (UiBinder demo)
+ - (Added) ToolBarSpring a widget used with ToolBar to add flexible space between toolbar items.
+ - (Added) ListBoxBindings & ListBoxAdapter
+ - (Bug Fix) Various ListBox/ListModel synchronization bugs
+ - (Added) History support in application module
+ - (Added) AbsoluteLayout demo
+ - (Update) AbsoluteLayout
+ - (Refactor) MosaicBindings to GWTMosaicBindings
+ - (Bug Fix) Bug in LayoutPanel onAttach()/onDetach() for DecoratorPanel fixed
+ - (Upgrade) gwt-beans-binding 0.3
+ - (Bug Fix) BoxLayout bad center/end alignments with DecoratorPanel fixed & code simplified
+ - (Added) UiBinder ColumnLayout, RowLayout, GridLayout & FlowLayout changes to support the LayoutPanel UiBinder parser & Showcase demos
+ - (Added) UiBinder support for LayoutPanel. FillLayout, BorderLayout & BoxLayout changes to support the LayoutPanel UiBinder parser & Showcase demos
+ - (Added) FlowLayout and Showcase demo
+ - (Bug Fix) fix the layout issue after the scrollbar appears/dissapears for the first time
+ - (Bug Fix) LiveTable scrollbar synchronization fixed
+ - (Added) LiveTableColumnViewItem.getColumnView() added
+ - (Update) CSS for form separator (text color set to #5a5a5a) and scroll tables data wrapper (background-color: white)
+ - (Bug Fix) Loading panel animation removed
+ - (Update) Column/RowLayout splitbar CSS for aegean theme & code cleanup
+ - (Added) ColumnView.deleteColumn(int index) & LiveTableColumnViewItem.
+ - (Added) class SerializableResponse adds rowCount property.
+
 Change log for v0.4.0-rc2
 ================================
 
