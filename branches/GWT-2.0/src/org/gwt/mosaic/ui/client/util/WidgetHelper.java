@@ -391,15 +391,13 @@ public class WidgetHelper {
         if (height != -1) {
           height -= (margins[0] + margins[2]);
         }
-        setSize(child, width, height);
 
-        // (ggeorg) needs:
+        // (ggeorg) FormPanel needs:
         // border: none;
         // padding: 0px;
         // margin: 0px
-        setSize(widget, WidgetHelper.getPreferredSize(child));
 
-        return;
+        setSize(child, width, height);
       }
     }
 
