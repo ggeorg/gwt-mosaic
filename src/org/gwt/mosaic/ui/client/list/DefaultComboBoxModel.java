@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -84,8 +84,8 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.ui.client.list.ListModel#getElementAt(int)
    */
@@ -93,8 +93,8 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
     return get(index);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.ui.client.list.ComboBoxModel#getSelectedItem()
    */
@@ -125,7 +125,8 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
     if ((selectedObject != null && !selectedObject.equals(item))
         || selectedObject == null && item != null) {
       selectedObject = item;
-      fireContentsChanged(this, -1, -1);
+      // (igeorg) fireContentsChanged(this, -1, -1);
+      fireContentsChanged(this, 0, getSize());
     }
   }
 
