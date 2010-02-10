@@ -1,0 +1,20 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout' xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
+
+	<l:LayoutPanel ui:field='layoutPanel'>
+		<l:GridLayout columns="3" rows="3">
+			<l:GridLayoutData colspan="2">
+				<m:ToolButton text="ToolButton1" />
+			</l:GridLayoutData>
+			<l:GridLayoutData rowspan="3">
+				<m:ToolButton text="ToolButton2" />
+			</l:GridLayoutData>
+			<m:ToolButton text="ToolButton3" />
+			<m:ToolButton text="ToolButton4" />
+			<m:ToolButton text="ToolButton5" />
+			<m:ToolButton text="ToolButton6" />
+		</l:GridLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>

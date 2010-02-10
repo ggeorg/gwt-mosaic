@@ -16,36 +16,67 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
+import org.gwt.mosaic.ui.client.layout.LayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.widgetideas.client.ResizableWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * A type of widget that can wrap an aggregate of multiple other widgets
+ * contained in a single {@link LayoutPanel}, hiding the wrapped
+ * {@link LayoutPanel}'s methods.
+ * 
+ * @see LayoutPanel
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
 public abstract class LayoutComposite extends Composite implements
     HasLayoutManager {
 
   /**
-   * Default constructor.
+   * Creates a new {@code LayoutComposite} with {@link FillLayout}.
    */
   protected LayoutComposite() {
     initWidget(new LayoutPanel());
   }
 
   /**
-   * Creates a LayoutComposite with the given element. This is protected so that
-   * it can be used by a subclass that wants to substitute another element. The
-   * element is presumed to be a &lt;div&gt;.
+   * Creates a {@code LayoutComposite} with the given element. This is protected
+   * so that it can be used by a subclass that wants to substitute another
+   * element. The element is presumed to be a &lt;div&gt;.
    * 
    * @param elem the element to be used for this panel.
    */
   protected LayoutComposite(Element elem) {
     initWidget(new LayoutPanel(elem) {
+    });
+  }
+
+  /**
+   * Creates a new {@code LayoutCombosite} with the specified layout manager.
+   * 
+   * @param layout the {@link LayoutManager} to use
+   */
+  protected LayoutComposite(LayoutManager layout) {
+    initWidget(new LayoutPanel(layout));
+  }
+
+  /**
+   * Creates a new {@code LayoutCombosite} with the specified layout manager and
+   * with the given element. This is protected so that it can be used by a
+   * subclass that wants to substitute another element. The element is presumed
+   * to be a &lt;div&gt;.
+   * 
+   * @param elem the element to be used for this panel.
+   * @param layout the {@link LayoutManager} to use
+   */
+  protected LayoutComposite(Element elem, LayoutManager layout) {
+    initWidget(new LayoutPanel(elem, layout) {
     });
   }
 
@@ -58,8 +89,8 @@ public abstract class LayoutComposite extends Composite implements
     return (LayoutPanel) super.getWidget();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
@@ -67,8 +98,26 @@ public abstract class LayoutComposite extends Composite implements
     return getLayoutPanel().getPreferredSize();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   */
+  public void invalidate() {
+    invalidate(null);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
+    getLayoutPanel().invalidate(widget);
+  }
+
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
@@ -76,32 +125,55 @@ public abstract class LayoutComposite extends Composite implements
     getLayoutPanel().layout();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
    */
-  public void invalidate() {
-    getLayoutPanel().invalidate();
+  public void onResize() {
+    layout();
   }
 
   /**
-   * Set the {@code ResizableWidget} to add to a {@code
-   * ResizableWidgetCollection} that periodically checks the outer dimensions of
-   * a widget and redraws it as necessary.
+   * {@inheritDoc}
    * 
-   * @param resizableWidget the {@code ResizableWidget}
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
    */
-  public void setResizableWidget(ResizableWidget resizableWidget) {
-    getLayoutPanel().setResizableWidget(resizableWidget);
+  public boolean needsLayout() {
+    return getLayoutPanel().needsLayout();
+  }
+  
+  /**
+   * @return the autoLayout
+   */
+  public boolean isAutoLayout() {
+    return getLayoutPanel().isAutoLayout();
   }
 
   /**
-   * Gets the {@code ResizableWidget} used.
-   * 
-   * @return the {@code ResizableWidget}
+   * @param autoLayout the autoLayout to set
    */
-  public ResizableWidget getResizableWidget() {
-    return getLayoutPanel().getResizableWidget();
+  public void setAutoLayout(boolean autoLayout) {
+    getLayoutPanel().setAutoLayout(autoLayout);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
+   */
+  @Override
+  public void setWidth(String width) {
+    getLayoutPanel().setWidth(width);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
+   */
+  @Override
+  public void setHeight(String height) {
+    getLayoutPanel().setHeight(height);
   }
 }

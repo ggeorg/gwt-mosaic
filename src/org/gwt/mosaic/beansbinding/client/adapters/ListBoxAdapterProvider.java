@@ -8,19 +8,22 @@ import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase;
 import org.gwt.mosaic.ui.client.ListBox;
+import org.gwt.mosaic.ui.client.event.RowSelectionEvent;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
 
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
-  private static final String SELECTED_ELEMENT_P = "selectedElement";
-  private static final String SELECTED_ELEMENTS_P = "selectedElements";
+  private static final String SELECTED_ELEMENT_P = "selectedElement".intern();
+  private static final String SELECTED_ELEMENTS_P = "selectedElements".intern();
 
-  public final class Adapter extends BeanAdapterBase {
+  public final class Adapter extends BeanAdapterBase implements
+      RowSelectionHandler {
     private ListBox<?> listBox;
-    private Handler handler;
     private Object cachedElementOrElements;
+
+    private HandlerRegistration handlerRegistration = null;
 
     private Adapter(ListBox<?> listBox, String property) {
       super(property);
@@ -41,28 +44,26 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     @Override
     protected void listeningStarted() {
-      handler = new Handler();
       cachedElementOrElements = isPlural() ? getSelectedElements()
           : getSelectedElement();
-      listBox.addChangeListener(handler);
+      handlerRegistration = listBox.addRowSelectionHandler(this);
     }
 
     @Override
     protected void listeningStopped() {
-      listBox.removeChangeListener(handler);
-      cachedElementOrElements = null;
-      handler = null;
-    }
-
-    private class Handler implements ChangeListener {
-      public void onChange(Widget sender) {
-        Object oldElementOrElements = cachedElementOrElements;
-        cachedElementOrElements = isPlural() ? getSelectedElements()
-            : getSelectedElement();
-        firePropertyChange(oldElementOrElements, cachedElementOrElements);
+      if (handlerRegistration != null) {
+        handlerRegistration.removeHandler();
+        handlerRegistration = null;
       }
+      cachedElementOrElements = null;
     }
 
+    public void onRowSelection(RowSelectionEvent event) {
+      Object oldValue = cachedElementOrElements;
+      cachedElementOrElements = isPlural() ? getSelectedElements()
+          : getSelectedElement();
+      firePropertyChange(oldValue, cachedElementOrElements);
+    }
   }
 
   private static Object getSelectedElement(ListBox<?> listBox) {
@@ -84,22 +85,21 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     Set<Integer> selection = listBox.getSelectedIndices();
 
-    if (selection == null || selection.size() > 0) {
+    if (selection == null || selection.size() == 0) {
       return elements;
     }
 
-    for (int i = 0, n = selection.size(); i < n; ++i) {
+    for (Integer i : selection) {
       elements.add(listBox.getItem(i));
     }
 
     return elements;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#createAdapter(java.lang.Object,
-   *      java.lang.String)
+   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#createAdapter(java.lang.Object, java.lang.String)
    */
   public BeanAdapter createAdapter(Object source, String property) {
     if (!providesAdapter(source.getClass(), property)) {
@@ -108,8 +108,9 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
     return new Adapter((ListBox<?>) source, property);
   }
 
-  /*
-   * (non-Javadoc)
+
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#getAdapterClass(java.lang.Class)
    */
@@ -118,11 +119,10 @@ public final class ListBoxAdapterProvider implements BeanAdapterProvider {
         : null;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#providesAdapter(java.lang.Class,
-   *      java.lang.String)
+   * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#providesAdapter(java.lang.Class, java.lang.String)
    */
   public boolean providesAdapter(Class<?> type, String property) {
     if (type != ListBox.class) {

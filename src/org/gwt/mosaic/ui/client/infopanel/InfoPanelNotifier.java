@@ -21,5 +21,5 @@ import org.gwt.mosaic.ui.client.infopanel.InfoPanel.InfoPanelType;
  * @author luciano.broussal(at)gmail.com
  */
 public interface InfoPanelNotifier {
-    public void show(InfoPanelType infoPanelType , String caption , String content);
+  public void show(InfoPanelType infoPanelType, String caption, String content);
 }

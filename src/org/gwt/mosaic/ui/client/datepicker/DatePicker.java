@@ -15,8 +15,6 @@
  */
 package org.gwt.mosaic.ui.client.datepicker;
 
-import java.util.Date;
-
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
@@ -25,17 +23,18 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Date picker.
  */
 public class DatePicker extends
-    com.google.gwt.widgetideas.datepicker.client.DatePicker implements
+    com.google.gwt.user.datepicker.client.DatePicker implements
     HasLayoutManager {
 
-  /**
-   * The default style name.
-   */
-  private static final String DEFAULT_STYLENAME = "mosaic-DatePicker";
+  public DatePicker() {
+    super();
+  }
 
   /**
    * Sets up the date picker.
@@ -48,24 +47,12 @@ public class DatePicker extends
 
     layoutPanel.add(this.getMonthSelector(), new BoxLayoutData(
         FillStyle.HORIZONTAL));
-    showDate(new Date());
-    layoutPanel.add(this.getCalendarView(), new BoxLayoutData(FillStyle.BOTH));
 
-    setStyleName(DEFAULT_STYLENAME);
+    layoutPanel.add(this.getView(), new BoxLayoutData(FillStyle.BOTH));
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  @Override
-  protected LayoutPanel getWidget() {
-    return (LayoutPanel) super.getWidget();
-  }
-
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#getPreferredSize()
    */
@@ -73,21 +60,48 @@ public class DatePicker extends
     return ((LayoutPanel) getWidget()).getPreferredSize();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.mosaic.ui.client.layout.HasLayoutManager#layout()
    */
   public void layout() {
-    getWidget().layout();
+    ((LayoutPanel) getWidget()).layout();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(boolean)
+   * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+   */
+  public void onResize() {
+    layout();
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#needsLayout()
+   */
+  public boolean needsLayout() {
+    return ((LayoutPanel) getWidget()).needsLayout();
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate()
    */
   public void invalidate() {
-    getWidget().invalidate();
+
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.HasLayoutManager#invalidate(com.google.gwt.user.client.ui.Widget)
+   */
+  public void invalidate(Widget widget) {
+    ((LayoutPanel) getWidget()).invalidate(widget);
   }
 }

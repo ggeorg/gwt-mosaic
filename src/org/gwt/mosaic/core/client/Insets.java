@@ -17,8 +17,6 @@ package org.gwt.mosaic.core.client;
 
 import java.io.Serializable;
 
-import org.gwt.mosaic.core.client.util.HashCode;
-
 /**
  * 
  * @author Dmitry A. Durnev
@@ -36,18 +34,22 @@ public class Insets implements Cloneable, Serializable {
 
   public int right;
 
+  public Insets(int[] insets) {
+    setValues(insets[0], insets[3], insets[2], insets[1]);
+  }
+
   public Insets(int top, int left, int bottom, int right) {
     setValues(top, left, bottom, right);
   }
 
   @Override
   public int hashCode() {
-    int hashCode = HashCode.EMPTY_HASH_CODE;
-    hashCode = HashCode.combine(hashCode, top);
-    hashCode = HashCode.combine(hashCode, left);
-    hashCode = HashCode.combine(hashCode, bottom);
-    hashCode = HashCode.combine(hashCode, right);
-    return hashCode;
+    int hash = 3;
+    hash = 71 * hash + this.top;
+    hash = 71 * hash + this.left;
+    hash = 71 * hash + this.bottom;
+    hash = 71 * hash + this.right;
+    return hash;
   }
 
   public Object clone() {
@@ -68,8 +70,8 @@ public class Insets implements Cloneable, Serializable {
 
   @Override
   public String toString() {
-    return (getClass().getName() + "[left=" + left + ",top=" + top +
-        ",right=" + right + ",bottom=" + bottom + "]");
+    return (getClass().getName() + "[left=" + left + ",top=" + top + ",right="
+        + right + ",bottom=" + bottom + "]");
   }
 
   public void set(int top, int left, int bottom, int right) {

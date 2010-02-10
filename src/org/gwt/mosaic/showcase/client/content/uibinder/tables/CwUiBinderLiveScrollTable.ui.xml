@@ -1,0 +1,24 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:tbl='urn:import:org.gwt.mosaic.ui.client.table' xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout'
+	xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
+	<tbl:LiveScrollTable ui:field='table' pageSize='50'>
+		<tbl:DefaultTableDefinition>
+			<tbl:TextColumnDefinition name='firstName'
+				columnSortable='true' columnTruncatable='false' minimumColumnWidth='50'
+				preferredColumnWidth='100'>
+				First Name
+			</tbl:TextColumnDefinition>
+			<tbl:TextColumnDefinition name='lastName'
+				columnSortable='true' columnTruncatable='false' minimumColumnWidth='50'
+				preferredColumnWidth='100'>
+				Last Name
+			</tbl:TextColumnDefinition>
+			<tbl:IntegerColumnDefinition name='age'
+				columnSortable='true' minimumColumnWidth='35' preferredColumnWidth='35'
+				maximumColumnWidth='35'>
+				Age
+			</tbl:IntegerColumnDefinition>
+		</tbl:DefaultTableDefinition>
+	</tbl:LiveScrollTable>
+</ui:UiBinder>

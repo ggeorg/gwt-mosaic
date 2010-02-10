@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -57,7 +57,7 @@ public abstract class AbstractLayoutPage extends ContentWidget {
     final Button b14 = new Button("Button 14");
 
     final BoxLayoutData blData = new BoxLayoutData(FillStyle.VERTICAL);
-    blData.setPreferredWidth(100);
+    blData.setPreferredWidth(100+"px");
     layoutPanel1.add(b11, blData);
     layoutPanel1.add(b12, new BoxLayoutData(FillStyle.VERTICAL));
     layoutPanel1.add(b13);

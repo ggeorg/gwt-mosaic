@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,16 +26,15 @@ import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
 import org.gwt.beansbinding.observablecollections.client.ObservableCollections;
 import org.gwt.beansbinding.observablecollections.client.ObservableList;
-import org.gwt.beansbinding.ui.client.adapters.TextBoxAdapterProvider;
+import org.gwt.beansbinding.ui.client.adapters.HasTextAdapterProvider;
+import org.gwt.mosaic.beansbinding.client.GWTMosaicBindings;
 import org.gwt.mosaic.beansbinding.client.ListBoxBinding;
-import org.gwt.mosaic.beansbinding.client.MosaicBindings;
 import org.gwt.mosaic.beansbinding.client.adapters.ListBoxAdapterProvider;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.ui.client.ListBox;
 import org.gwt.mosaic.ui.client.LoadingPanel;
-import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -46,6 +45,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -93,7 +93,7 @@ public class CwListBoxBinding extends ContentWidget {
   @ShowcaseSource
   @Override
   protected Widget onInitialize() {
-    BeanAdapterFactory.addProvider(new TextBoxAdapterProvider());
+    BeanAdapterFactory.addProvider(new HasTextAdapterProvider());
     BeanAdapterFactory.addProvider(new ListBoxAdapterProvider());
 
     // Create a layout panel to align the widgets
@@ -101,24 +101,7 @@ public class CwListBoxBinding extends ContentWidget {
         Orientation.VERTICAL));
     layoutPanel.setPadding(0);
 
-    listBox = new ListBox<Customer>(
-        new String[] {"Id", "Discount Code", "Name"});
-    listBox.setCellRenderer(new CellRenderer<Customer>() {
-      public void renderCell(ListBox<Customer> litsBox, int row, int column,
-          Customer item) {
-        switch (column) {
-          case 0:
-            listBox.setText(row, column, item.getCustomerId().toString());
-            break;
-          case 1:
-            listBox.setText(row, column, String.valueOf(item.getDiscountCode()));
-            break;
-          case 2:
-            listBox.setText(row, column, item.getName());
-            break;
-        }
-      }
-    });
+    listBox = new ListBox<Customer>();
 
     list = ObservableCollections.observableList(new ArrayList<Customer>());
     list.supportsElementPropertyChanged();
@@ -126,27 +109,35 @@ public class CwListBoxBinding extends ContentWidget {
     final BindingGroup bindingGroup = new BindingGroup();
 
     // create the binding from List to ListBox
-    final ListBoxBinding listBoxBinding = MosaicBindings.createListBoxBinding(
+    final ListBoxBinding<Customer, List<Customer>, ListBox<Customer>> listBoxBinding = GWTMosaicBindings.createListBoxBinding(
         UpdateStrategy.READ, list, listBox);
 
+    BeanProperty<Customer, String> codeP = BeanProperty.<Customer, String> create("discountCode");
+    BeanProperty<Customer, String> nameP = BeanProperty.<Customer, String> create("name");
+
     // add columns bindings to the ListBoxBinding
-    listBoxBinding.addColumnBinding(BeanProperty.create("discountCode"));
-    listBoxBinding.addColumnBinding(BeanProperty.create("name"));
+    listBoxBinding.addColumnBinding(codeP).setColumnName("Discount Code");
+    listBoxBinding.addColumnBinding(nameP).setColumnName("Name");
+
+    // The text property can be used to get the text property of any HasText implementation
+    final BeanProperty<HasText, String> textP = BeanProperty.<HasText, String> create("text");
 
     TextBox textBox1 = new TextBox();
     textBox1.setMaxLength(1);
 
-    final Binding textBoxBinding1 = Bindings.createAutoBinding(
-        UpdateStrategy.READ_WRITE, listBox,
-        BeanProperty.create("selectedElement.discountCode"), textBox1,
-        BeanProperty.create("text"));
+    final Binding<ListBox<Customer>, Customer, HasText, String> textBoxBinding1 = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE,
+        listBox,
+        BeanProperty.<ListBox<Customer>, Customer> create("selectedElement.discountCode"),
+        textBox1, textP);
 
     TextBox textBox2 = new TextBox();
 
-    final Binding textBoxBinding2 = Bindings.createAutoBinding(
-        UpdateStrategy.READ_WRITE, listBox,
-        BeanProperty.create("selectedElement.name"), textBox2,
-        BeanProperty.create("text"));
+    final Binding<ListBox<Customer>, Customer, HasText, String> textBoxBinding2 = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE,
+        listBox,
+        BeanProperty.<ListBox<Customer>, Customer> create("selectedElement.name"),
+        textBox2, textP);
 
     // realize the binding
     bindingGroup.addBinding(listBoxBinding);

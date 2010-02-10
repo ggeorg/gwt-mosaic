@@ -28,7 +28,7 @@ import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
@@ -49,7 +49,7 @@ public abstract class ActionBindings<T> {
     protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(
         this);
 
-    private AbstractImagePrototype image;
+    private ImageResource image;
 
     public TargetBean(T target) {
       this.target = target;
@@ -80,7 +80,7 @@ public abstract class ActionBindings<T> {
       }
     }
 
-    public AbstractImagePrototype getImage() {
+    public ImageResource getImage() {
       return image;
     }
 
@@ -112,7 +112,7 @@ public abstract class ActionBindings<T> {
       if (target instanceof Widget && !(target instanceof HasLayoutManager)) {
         HasLayoutManager lm = WidgetHelper.getParent((Widget) target);
         if (lm != null) {
-          lm.invalidate();
+          lm.invalidate((Widget) target);
         }
       }
     }
@@ -124,7 +124,7 @@ public abstract class ActionBindings<T> {
 
     public void setAccessKey(Character key) {
       if (target instanceof FocusWidget) {
-        String accessKey = DOM.getStyleAttribute(
+        String accessKey = DOM.getComputedStyleAttribute(
             ((FocusWidget) target).getElement(), "accessKey");
         Character oldValue = Character.valueOf(accessKey != null
             && accessKey.length() > 0 ? accessKey.charAt(0) : '\0');
@@ -158,8 +158,8 @@ public abstract class ActionBindings<T> {
       }
     }
 
-    public void setImage(AbstractImagePrototype image) {
-      AbstractImagePrototype oldValue = this.image;
+    public void setImage(ImageResource image) {
+      ImageResource oldValue = this.image;
       this.image = image;
       invalidate();
       changeSupport.firePropertyChange("image", oldValue, image);
@@ -210,6 +210,13 @@ public abstract class ActionBindings<T> {
   private final BindingGroup bindingGroup = new BindingGroup();
 
   public ActionBindings(Action source, T target) {
+    if (source == null) {
+      throw new IllegalArgumentException("null source");
+    }
+    if (source == null) {
+      throw new IllegalArgumentException("null target");
+    }
+    assert(target != null);
     this.source = source;
     this.target = target;
   }

@@ -17,12 +17,12 @@ package org.gwt.mosaic.actions.client;
 
 /**
  * An {@code Action} represents the non-UI side of a command which can be
- * triggered by the end user. {@code Actions} are typically associated with
+ * triggered by the end user. {@code Action}s are typically associated with
  * buttons, menu items, and items in tool bars. When the end user triggers the
  * command via its control, the action's {@code #actionPerformed(ActionEvent)}
  * method is invoked to do the real work.
  * <p>
- * This interface exists only to define the API for {@code Actions}. It is not
+ * This interface exists only to define the API for {@code Action}s. It is not
  * intended to be implemented by clients.
  * 
  * @author georgopoulos.georgios(at)gmail.com

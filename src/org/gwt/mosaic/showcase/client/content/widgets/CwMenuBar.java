@@ -1,12 +1,12 @@
 /*
  * Copyright 2008 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,6 +16,7 @@
 package org.gwt.mosaic.showcase.client.content.widgets;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
+import org.gwt.mosaic.showcase.client.Showcase;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
@@ -31,13 +32,14 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Example file.
- *
+ * 
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".gwt-MenuBar"})
@@ -80,7 +82,7 @@ public class CwMenuBar extends ContentWidget {
 
   /**
    * Constructor.
-   *
+   * 
    * @param constants the constants
    */
   public CwMenuBar(CwConstants constants) {
@@ -90,12 +92,12 @@ public class CwMenuBar extends ContentWidget {
 
   @Override
   public String getDescription() {
-    return constants.mosaicMenuBarDescription();
+    return "MenuBar description";
   }
 
   @Override
   public String getName() {
-    return constants.mosaicMenuBarName();
+    return "MenuBar";
   }
 
   /**
@@ -106,11 +108,11 @@ public class CwMenuBar extends ContentWidget {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel();
-    layoutPanel.setPadding(5);
 
     final CaptionLayoutPanel toolBox = new CaptionLayoutPanel(Window.getTitle());
     toolBox.setPadding(0);
     toolBox.setLayout(new BoxLayout(Orientation.VERTICAL));
+    toolBox.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     toolBox.add(createMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
 
     layoutPanel.add(toolBox, new FillLayoutData(true));
@@ -189,5 +191,5 @@ public class CwMenuBar extends ContentWidget {
     menu.ensureDebugId("mosaicMenuBar");
     return menu;
   }
-
+  
 }

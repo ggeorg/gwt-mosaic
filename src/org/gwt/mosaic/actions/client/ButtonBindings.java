@@ -19,6 +19,7 @@ import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 
@@ -35,11 +36,12 @@ public class ButtonBindings extends ButtonBaseBindings {
     }
 
     private String createLabel() {
-      AbstractImagePrototype image = this.getImage();
+      ImageResource image = this.getImage();
       if (image == null) {
         return text;
       } else {
-        return ButtonHelper.createButtonLabel(image, text, labelType);
+        return ButtonHelper.createButtonLabel(
+            AbstractImagePrototype.create(image), text, labelType);
       }
     }
 
@@ -49,7 +51,7 @@ public class ButtonBindings extends ButtonBaseBindings {
     }
 
     @Override
-    public void setImage(AbstractImagePrototype image) {
+    public void setImage(ImageResource image) {
       super.setImage(image);
       target.setHTML(createLabel());
     }
@@ -59,7 +61,7 @@ public class ButtonBindings extends ButtonBaseBindings {
       String oldValue = this.text;
       this.text = text;
       invalidate(); // ButtonBase does not implement HasLayoutManager, so we
-                    // need to invalidate at least the button's parent
+      // need to invalidate at least the button's parent
       changeSupport.firePropertyChange("text", oldValue, text);
       target.setHTML(createLabel());
     }

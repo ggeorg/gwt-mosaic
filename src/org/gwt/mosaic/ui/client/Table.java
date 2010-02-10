@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -13,365 +15,566 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import java.io.Serializable;
+import java.util.Set;
 
-import org.gwt.mosaic.ui.client.layout.LayoutPanel;
-import org.gwt.mosaic.ui.client.table.AbstractTableModel;
-import org.gwt.mosaic.ui.client.table.PagingScrollTable;
-import org.gwt.mosaic.ui.client.table.ScrollTable;
-import org.gwt.mosaic.ui.client.table.TableColumnModel;
-import org.gwt.mosaic.ui.client.table.TableColumnModelEvent;
-import org.gwt.mosaic.ui.client.table.TableColumnModelListener;
+import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.event.HasPageCountChangeHandlers;
+import org.gwt.mosaic.ui.client.event.HasPageLoadHandlers;
+import org.gwt.mosaic.ui.client.event.HasPagingFailureHandlers;
+import org.gwt.mosaic.ui.client.event.PageChangeHandler;
+import org.gwt.mosaic.ui.client.event.PageCountChangeHandler;
+import org.gwt.mosaic.ui.client.event.PageLoadHandler;
+import org.gwt.mosaic.ui.client.event.PagingFailureHandler;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable;
+import org.gwt.mosaic.ui.client.table.DataTable;
+import org.gwt.mosaic.ui.client.table.FixedWidthFlexTable;
+import org.gwt.mosaic.ui.client.table.HasTableDefinition;
+import org.gwt.mosaic.ui.client.table.PagingScrollTable2;
+import org.gwt.mosaic.ui.client.table.TableDefinition;
 import org.gwt.mosaic.ui.client.table.TableModel;
-import org.gwt.mosaic.ui.client.table.TableModelEvent;
-import org.gwt.mosaic.ui.client.table.TableModelListener;
-import org.gwt.mosaic.ui.client.table.ScrollTable.DataGrid;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ColumnResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.ResizePolicy;
+import org.gwt.mosaic.ui.client.table.AbstractScrollTable.SortPolicy;
 
-import com.google.gwt.user.client.ui.FocusListener;
-import com.google.gwt.user.client.ui.FocusListenerCollection;
-import com.google.gwt.user.client.ui.HasFocus;
-import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.KeyboardListenerCollection;
-import com.google.gwt.widgetideas.table.client.AbstractCellEditor;
-import com.google.gwt.widgetideas.table.client.CachedTableModel;
-import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
-import com.google.gwt.widgetideas.table.client.FixedWidthGridBulkRenderer;
-import com.google.gwt.widgetideas.table.client.TableBulkRenderer;
-import com.google.gwt.widgetideas.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.widgetideas.table.client.TableModelHelper.Request;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 /**
- * A {@link PagingScrollTable} that acts as a view of the underlying
- * {@link TableModel}.
  * 
- * @param <T> the data type of the row values
+ * @author ggeorg
  * 
- * @author georgopoulos.georgios(at)gmail.com
+ * @param <RowType>
  */
-public class Table<T> extends LayoutComposite implements HasFocus,
-    TableModelListener, TableColumnModelListener {
+@SuppressWarnings("deprecation")
+public class Table<RowType> extends LayoutComposite implements Focusable,
+    HasTableDefinition<RowType>, HasPageCountChangeHandlers,
+    HasPageLoadHandlers, HasPagingFailureHandlers {
 
-  /**
-   * The renderer used to set cell contents.
-   */
-  public static interface CellRenderer<T> {
-    String renderCell(int row, int column, T item);
-  };
+  private static final FocusImpl impl = FocusImpl.getFocusImplForPanel();
 
-  private CellRenderer<Serializable> cellRenderer = new CellRenderer<Serializable>() {
-    public String renderCell(int row, int column, Serializable item) {
-      return item.toString();
-    }
-  };
+  private final PagingScrollTable2<RowType> pagingScrollTable;
 
-  private PagingScrollTable<T> table;
+  public Table(TableModel<RowType> tableModel,
+      TableDefinition<RowType> tableDefinition) {
+    super(impl.createFocusable());
 
-  private FocusListenerCollection focusListeners;
+    pagingScrollTable = new PagingScrollTable2<RowType>(tableModel,
+        new DataTable(), new FixedWidthFlexTable(), tableDefinition);
+    pagingScrollTable.setHeaderGenerated(true);
+    pagingScrollTable.setFooterGenerated(true);
+    pagingScrollTable.setPageSize(100);
+    pagingScrollTable.setEmptyTableWidget(new HTML(
+        "There is no data to display"));
 
-  private KeyboardListenerCollection keyboardListeners;
+    pagingScrollTable.setCellPadding(3);
+    pagingScrollTable.setCellSpacing(0);
 
-  private TableModel<T> dataModel;
-  private TableColumnModel<T> columnModel;
+    getLayoutPanel().add(pagingScrollTable);
 
-  /**
-   * 
-   * @param tableModel
-   * @param columnModel
-   */
-  public Table(final TableModel<T> tableModel,
-      final TableColumnModel<T> columnModel) {
-    super();
+    setStyleName("mosaic-Table");
 
-    // this.dataModel = tableModel;
-    this.columnModel = columnModel;
-    this.columnModel.addColumnModelListener(this);
+    // sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
+    // | Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
+    sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
+        | Event.ONFOCUS | Event.ONKEYDOWN);
 
-    setModel(tableModel);
+    // Hide focus outline in Mozilla/Webkit/Opera
+    DOM.setStyleAttribute(getElement(), "outline", "0px");
 
-    FixedWidthFlexTable headerTable = table.getHeaderTable();
+    // Hide focus outline in IE 6/7
+    DOM.setElementAttribute(getElement(), "hideFocus", "true");
+  }
 
-    for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
-      headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
-      table.setColumnWidth(i, columnModel.getColumn(i).getWidth());
-      table.setCellEditor(i,
-          (AbstractCellEditor<T>) columnModel.getColumn(i).getCellEditor());
-    }
+  public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+    return ((DataTable) pagingScrollTable.getDataTable()).addDoubleClickHandler(handler);
+  }
 
-    // table.setCellRenderer(new
-    // org.gwt.mosaic.ui.client.table.PagingScrollTable.CellRenderer() {
-    // @SuppressWarnings("unchecked")
-    // public void renderCell(DataGrid grid, int row, int column, Object data) {
-    // System.out.println("----------------");
-    // if (data == null) {
-    // grid.clearCell(row, column);
-    // return;
-    // }
-    // grid.setHTML(row, column,
-    // cellRenderer.renderCell(row, column, (T) data));
-    // }
-    // });
-    // table.setPageSize(0);
+  public HandlerRegistration addPageChangeHandler(PageChangeHandler handler) {
+    return pagingScrollTable.addPageChangeHandler(handler);
+  }
 
-    // Setup the bulk renderer
-    FixedWidthGridBulkRenderer bulkRenderer = new FixedWidthGridBulkRenderer(
-        table.getDataTable(), columnModel.getColumnCount());
-    bulkRenderer.setCellRenderer(new TableBulkRenderer.CellRenderer() {
-      @SuppressWarnings("unchecked")
-      public void renderCell(int row, int column, Object cellData,
-          StringBuffer accum) {
-        if (cellData == null) {
-          return;
-        }
-        accum.append(Table.this.cellRenderer.renderCell(row, column,
-            (Serializable) cellData));
-      }
-    });
-    table.setBulkRenderer(bulkRenderer);
+  public HandlerRegistration addPageCountChangeHandler(
+      PageCountChangeHandler handler) {
+    return pagingScrollTable.addPageCountChangeHandler(handler);
+  }
 
-    // Setup the scroll table
-    table.setCellPadding(3);
-    table.setCellSpacing(0);
-    table.setResizePolicy(ScrollTable.ResizePolicy.UNCONSTRAINED);
+  public HandlerRegistration addPageLoadHandler(PageLoadHandler handler) {
+    return pagingScrollTable.addPageLoadHandler(handler);
+  }
 
-    setMultipleSelect(false);
+  public HandlerRegistration addPagingFailureHandler(
+      PagingFailureHandler handler) {
+    return pagingScrollTable.addPagingFailureHandler(handler);
+  }
+
+  public HandlerRegistration addRowSelectionHandler(RowSelectionHandler handler) {
+    return pagingScrollTable.getDataTable().addRowSelectionHandler(handler);
+  }
+
+  private void eatEvent(Event event) {
+    DOM.eventCancelBubble(event, true);
+    DOM.eventPreventDefault(event);
   }
 
   /**
-   * @param data
-   * @param columnModel
+   * Adjust all column widths so they take up the maximum amount of space
+   * without needing a horizontal scroll bar. The distribution will be
+   * proportional to the current width of each column.
+   * 
+   * The {@link AbstractScrollTable} must be visible on the page for this method
+   * to work.
    */
-  public Table(final Object[][] data, final TableColumnModel<T> columnModel) {
-    this(new AbstractTableModel<T>() {
-      private static final long serialVersionUID = 5132764391482749460L;
+  public void fillWidth() {
+    pagingScrollTable.fillWidth();
+  }
 
-      public int getRowCount() {
-        return data.length;
-      }
+  /**
+   * @return the absolute index of the first visible row
+   */
+  public int getAbsoluteFirstRowIndex() {
+    return pagingScrollTable.getAbsoluteFirstRowIndex();
+  }
 
-      public Object getValueAt(int rowIndex, int columnIndex) {
-        return data[rowIndex][columnIndex];
-      }
+  /**
+   * @return the absolute index of the last visible row
+   */
+  public int getAbsoluteLastRowIndex() {
+    return pagingScrollTable.getAbsoluteLastRowIndex();
+  }
 
-      public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        data[rowIndex][columnIndex] = value;
-        fireTableCellUpdated(rowIndex, columnIndex);
-      }
-    }, columnModel);
+  /**
+   * @return the column resize policy
+   */
+  public ColumnResizePolicy getColumnResizePolicy() {
+    return pagingScrollTable.getColumnResizePolicy();
+  }
+
+  /**
+   * Return the column width for a given column index.
+   * 
+   * @param column the column index
+   * @return the column width in pixels
+   */
+  public int getColumnWidth(int column) {
+    return pagingScrollTable.getColumnWidth(column);
+  }
+
+  /**
+   * @return the current page
+   */
+  public int getCurrentPage() {
+    return pagingScrollTable.getCurrentPage();
+  }
+
+  /**
+   * @return the widget displayed when the data table is empty
+   */
+  public Widget getEmptyTableWidget() {
+    return pagingScrollTable.getEmptyTableWidget();
+  }
+
+  /**
+   * Get the absolute maximum width of a column.
+   * 
+   * @param column the column index
+   * @return the maximum allowable width of the column
+   */
+  public int getMaximumColumnWidth(int column) {
+    return pagingScrollTable.getMaximumColumnWidth(column);
+  }
+
+  /**
+   * Get the absolute minimum width of a column.
+   * 
+   * @param column the column index
+   * @return the minimum allowable width of the column
+   */
+  public int getMinimumColumnWidth(int column) {
+    return pagingScrollTable.getMinimumColumnWidth(column);
+  }
+
+  /**
+   * @return the number of pages, or -1 if not known
+   */
+  public int getPageCount() {
+    return pagingScrollTable.getPageCount();
+  }
+
+  /**
+   * @return the number of rows per page
+   */
+  public int getPageSize() {
+    return pagingScrollTable.getPageSize();
+  }
+
+  /**
+   * Get the preferred width of a column.
+   * 
+   * @param column the column index
+   * @return the preferred width of the column
+   */
+  public int getPreferredColumnWidth(int column) {
+    return pagingScrollTable.getPreferredColumnWidth(column);
+  }
+
+  /**
+   * @return the resize policy
+   */
+  public ResizePolicy getResizePolicy() {
+    return pagingScrollTable.getResizePolicy();
+  }
+
+  /**
+   * Get the value associated with a row.
+   * 
+   * @param row the row index
+   * @return the value associated with the row
+   */
+  public RowType getRowValue(int row) {
+    return pagingScrollTable.getRowValue(row);
+  }
+
+  /**
+   * Gets the currently selected item. If multiple items are selected, this
+   * method will return the first selected item ({@link #isItemSelected(int)}
+   * can be used to query individual items).
+   * 
+   * @return the selected index, or {@code -1} if none is selected
+   * @see #isItemSelected(int)
+   * @see #addChangeListener(ChangeListener)
+   */
+  public int getSelectedIndex() {
+    Set<Integer> selection = pagingScrollTable.getDataTable().getSelectedRows();
+    if (selection != null && selection.size() > 0) {
+      return selection.iterator().next();
+    }
+    return -1;
+  }
+
+  /**
+   * @return the set of selected row indexes
+   */
+  public Set<Integer> getSelectedIndices() {
+    return pagingScrollTable.getDataTable().getSelectedRows();
+  }
+
+  /**
+   * @return the current sort policy
+   */
+  public SortPolicy getSortPolicy() {
+    return pagingScrollTable.getSortPolicy();
+  }
+
+  public int getTabIndex() {
+    return impl.getTabIndex(getElement());
+  }
+
+  public TableDefinition<RowType> getTableDefinition() {
+    return pagingScrollTable.getTableDefinition();
+  }
+
+  /**
+   * @return the table model
+   */
+  public TableModel<RowType> getTableModel() {
+    return pagingScrollTable.getTableModel();
+  }
+
+  /**
+   * Go to the first page.
+   */
+  public void gotoFirstPage() {
+    pagingScrollTable.gotoFirstPage();
+  }
+
+  /**
+   * Go to the last page. If the number of pages is not known, this method is
+   * ignored.
+   */
+  public void gotoLastPage() {
+    pagingScrollTable.gotoLastPage();
+  }
+
+  /**
+   * Go to the next page.
+   */
+  public void gotoNextPage() {
+    pagingScrollTable.gotoNextPage();
+  }
+
+  /**
+   * Set the current page. If the page is out of bounds, it will be
+   * automatically set to zero or the last page without throwing any errors.
+   * 
+   * @param page the page
+   * @param forced reload the page even if it is already loaded
+   */
+  public void gotoPage(int page, boolean forced) {
+    pagingScrollTable.gotoPage(page, forced);
+  }
+
+  /**
+   * Go to the previous page.
+   */
+  public void gotoPreviousPage() {
+    pagingScrollTable.gotoPreviousPage();
+  }
+
+  /**
+   * Returns true if the specified column is sortable.
+   * 
+   * @param column the column index
+   * @return true if the column is sortable, false if it is not sortable
+   */
+  public boolean isColumnSortable(int column) {
+    return pagingScrollTable.isColumnSortable(column);
+  }
+
+  /**
+   * @return true if a page load is pending
+   */
+  public boolean isPageLoading() {
+    return pagingScrollTable.isPageLoading();
+  }
+
+  private void moveDown() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectNextItem();
+  }
+
+  private void moveUp() {
+    if (selectFirstItemIfNodeSelected()) {
+      return;
+    }
+    selectPrevItem();
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONKEYDOWN:
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+          case KeyCodes.KEY_UP:
+            moveUp();
+            eatEvent(event);
+            break;
+          case KeyCodes.KEY_DOWN:
+            moveDown();
+            eatEvent(event);
+            break;
+          case KeyCodes.KEY_LEFT:
+
+            break;
+          case KeyCodes.KEY_RIGHT:
+
+            break;
+          default:
+            super.onBrowserEvent(event);
+            break;
+        }
+        break;
+      case Event.ONCLICK:
+        setFocus(true);
+      default:
+        super.onBrowserEvent(event);
+    }
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    pagingScrollTable.gotoFirstPage();
+  }
+
+  /**
+   * Redraw the table.
+   */
+  public void redraw() {
+    pagingScrollTable.redraw();
+  }
+
+  /**
+   * Reload the current page.
+   */
+  public void reloadPage() {
+    pagingScrollTable.reloadPage();
+  }
+
+  /**
+   * Reset the widths of all columns to their preferred sizes.
+   */
+  public void resetColumnWidths() {
+    pagingScrollTable.resetColumnWidths();
+  }
+
+  /**
+   * Selects the first item in the list if no items are currently selected. This
+   * method assumes that the list has at least 1 item.
+   * 
+   * @return {@code true} if no item was previously selected and the first item
+   *         in the list was selected, {@code false} otherwise
+   */
+  private boolean selectFirstItemIfNodeSelected() {
+    if (getSelectedIndex() == -1) {
+      setSelectedIndex(0);
+      return true;
+    }
+    return false;
+  }
+
+  private void selectNextItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index < pagingScrollTable.getDataTable().getRowCount() - 1) {
+      setSelectedIndex(++index);
+
+      DOM.scrollIntoView((Element) pagingScrollTable.getDataTable().getRowFormatter().getElement(
+          getSelectedIndex()).getFirstChild());
+    }
+  }
+
+  private void selectPrevItem() {
+    int index = getSelectedIndex();
+    if (index == -1) {
+      return;
+    }
+
+    if (index > 0) {
+      setSelectedIndex(--index);
+
+      DOM.scrollIntoView((Element) pagingScrollTable.getDataTable().getRowFormatter().getElement(
+          getSelectedIndex()).getFirstChild());
+    }
+  }
+
+  public void setAccessKey(char key) {
+    impl.setAccessKey(getElement(), key);
+  }
+
+  /**
+   * Set the resize policy applied to user actions that resize columns.
+   * 
+   * @param columnResizePolicy the resize policy
+   */
+  public void setColumnResizePolicy(ColumnResizePolicy columnResizePolicy) {
+    pagingScrollTable.setColumnResizePolicy(columnResizePolicy);
+  }
+
+  /**
+   * Set the width of a column.
+   * 
+   * @param column the index of the column
+   * @param width the width in pixels
+   * @return the new column width
+   */
+  public int setColumnWidth(int column, int width) {
+    return pagingScrollTable.setColumnWidth(column, width);
+  }
+
+  /**
+   * Set the {@link Widget} that will be displayed in place of the data table
+   * when the data table has no data to display.
+   * 
+   * @param emptyTableWidget the widget to display when the data table is empty
+   */
+  public void setEmptyTableWidget(Widget emptyTableWidget) {
+    pagingScrollTable.setEmptyTableWidget(emptyTableWidget);
+  }
+
+  public void setFocus(boolean focused) {
+    if (focused) {
+      impl.focus(getElement());
+    } else {
+      impl.blur(getElement());
+    }
   }
 
   /**
    * Set the number of rows per page.
    * 
-   * TODO By default, the page size is zero, which indicates that all rows
-   * should be shown on the page.
+   * By default, the page size is zero, which indicates that all rows should be
+   * shown on the page.
    * 
    * @param pageSize the number of rows per page
    */
   public void setPageSize(int pageSize) {
-    table.setPageSize(pageSize);
+    pagingScrollTable.setPageSize(pageSize);
   }
 
   /**
-   * Get the number of rows per page.
+   * Set the resize policy of the table.
    * 
-   * @return the number of rows per page
+   * @param resizePolicy the resize policy
    */
-  public int getPageSize() {
-    return table.getPageSize();
-  }
-
-  public void addFocusListener(FocusListener listener) {
-    if (focusListeners == null) {
-      focusListeners = new FocusListenerCollection();
-    }
-    focusListeners.add(listener);
-  }
-
-  public void addKeyboardListener(KeyboardListener listener) {
-    if (keyboardListeners == null) {
-      keyboardListeners = new KeyboardListenerCollection();
-    }
-    keyboardListeners.add(listener);
-  }
-
-  public int getTabIndex() {
-    return 0; // TODO table.getTabIndex(getElement());
-  }
-
-  public void removeFocusListener(FocusListener listener) {
-    if (focusListeners != null) {
-      focusListeners.remove(listener);
-    }
-  }
-
-  public void removeKeyboardListener(KeyboardListener listener) {
-    if (keyboardListeners != null) {
-      keyboardListeners.remove(listener);
-    }
-  }
-
-  public void setAccessKey(char key) {
-    // TODO table.setAccessKey(getElement(), key);
-  }
-
-  public void setFocus(boolean focused) {
-    // TODO table.setFocus(focused);
+  public void setResizePolicy(ResizePolicy resizePolicy) {
+    pagingScrollTable.setResizePolicy(resizePolicy);
   }
 
   /**
-   * Sets whether this list allows multiple selections.
+   * Associate a row in the table with a value.
    * 
-   * @param multiple {@code true} to allow multiple selections
+   * @param row the row index
+   * @param value the value to associate
    */
-  public void setMultipleSelect(boolean multiple) {
-    table.getDataTable().setSelectionPolicy(
-        multiple ? SelectionPolicy.MULTI_ROW : SelectionPolicy.ONE_ROW);
+  public void setRowValue(int row, RowType value) {
+    pagingScrollTable.setRowValue(row, value);
+  }
+
+  /**
+   * Sets the currently selected index.
+   * <p>
+   * After calling this method, only the specified item in the list will remain
+   * selected. For a {@code ListBox} with multiple selection enabled, see
+   * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
+   * <p>
+   * TODO (check) Note that setting the selected index programmatically does
+   * <em>not</em> cause the {@link ChangeListener#onChange(Widget)} event to be
+   * fired.
+   * 
+   * @param row the row of the item to be selected
+   * @see #setItemSelected(int, boolean)
+   * @see #getSelectedIndex()
+   */
+  public void setSelectedIndex(int row) {
+    pagingScrollTable.getDataTable().selectRow(row, true);
+  }
+
+  /**
+   * Set the {@link SortPolicy} that defines what columns users can sort.
+   * 
+   * @param sortPolicy the {@link SortPolicy}
+   */
+  public void setSortPolicy(SortPolicy sortPolicy) {
+    pagingScrollTable.setSortPolicy(sortPolicy);
   }
 
   public void setTabIndex(int index) {
-    // TODO table.setTabIndex(getElement(), index);
+    impl.setTabIndex(getElement(), index);
   }
 
   /**
-   * A penel that wraps a {@link Table} and icludes options to manipulate the
-   * page.
+   * Set the {@link TableDefinition} used to define the columns.
    * 
-   * <h3>CSS Style Rules</h3>
-   * <ul class="css">
-   * <li> .gwt-PagingOptions { applied to the entire widget } </li>
-   * <li> .gwt-PagingOptions .errorMessage { applied to the error message }
-   * </li>
-   * </ul>
+   * @param tableDefinition the new table definition.
    */
-  public static class PagingOptions extends
-      org.gwt.mosaic.ui.client.table.PagingOptions {
-    public PagingOptions(Table<?> table) {
-      super(table.table);
-    }
+  public void setTableDefinition(TableDefinition<RowType> tableDefinition) {
+    pagingScrollTable.setTableDefinition(tableDefinition);
   }
 
-  /**
-   * Set the data model.
-   * 
-   * @param model the new data model
-   * @exception IllegalArgumentException if {@code model} is {@code null}
-   */
-  public void setModel(TableModel<T> model) {
-    if (model == null) {
-      throw new IllegalArgumentException();
-    }
-    TableModel<T> oldValue = dataModel;
-    if (oldValue != null) {
-      oldValue.removeTableModelListener(this);
-    }
-    dataModel = model;
-    dataModel.addTableModelListener(this);
-    if (oldValue != dataModel) {
-      // Setup the controller
-      CachedTableModel<T> cachedTableModel = new CachedTableModel<T>(
-          new com.google.gwt.widgetideas.table.client.ClientTableModel<T>() {
-
-            @Override
-            public void requestRows(Request request, Callback<T> callback) {
-              super.requestRows(request, callback);
-            }
-
-            @Override
-            public Object getCell(int rowNum, int colNum) {
-              // XXX Get the value for a given cell. Return null if no more
-              // values are available!
-              if (rowNum >= dataModel.getRowCount()
-                  || colNum >= columnModel.getColumnCount()) {
-                return null;
-              }
-              Object value = dataModel.getValueAt(rowNum, colNum);
-              return value == null ? "" : value.toString();
-            }
-
-            @Override
-            protected boolean onRowInserted(int beforeRow) {
-              return true;
-            }
-
-            @Override
-            protected boolean onRowRemoved(int row) {
-              return true;
-            }
-
-            @Override
-            protected boolean onSetData(int row, int cell, Object data) {
-              dataModel.setValueAt(data, row, cell);
-              return true;
-            }
-          });
-      cachedTableModel.setRowCount(dataModel.getRowCount());
-      cachedTableModel.setPreCachedRowCount(50);
-      cachedTableModel.setPostCachedRowCount(50);
-
-      final LayoutPanel layoutPanel = getLayoutPanel();
-      table = new PagingScrollTable<T>(cachedTableModel, new DataGrid(),
-          new FixedWidthFlexTable());
-      layoutPanel.clear();
-      layoutPanel.add(table);
-    }
-  }
-
-  /**
-   * Receives notification when the table model changes.
-   * 
-   * @see org.gwt.mosaic.ui.client.table.TableModelListener#tableChanged(org.gwt.mosaic.ui.client.table.TableModelEvent)
-   */
-  public void tableChanged(TableModelEvent event) {
-    if (event == null || event.getFirstRow() == TableModelEvent.ALL_ROWS) {
-      table.getDataTable().deselectAllRows();
-
-      // TODO
-
-      return;
-    }
-
-    if (event.getType() == TableModelEvent.Type.INSERT) {
-
-    } else if (event.getType() == TableModelEvent.Type.DELETE) {
-
-    } else {
-
-    }
-  }
-
-  /**
-   * Invoked when a column is added to the {@code TableColumnModel}.
-   * 
-   * {@inheritDoc}
-   * 
-   * @see org.gwt.mosaic.ui.client.table.TableColumnModelListener#columnAdded(org.gwt.mosaic.ui.client.table.TableColumnModelEvent)
-   */
-  public void columnAdded(TableColumnModelEvent event) {
-    final FixedWidthFlexTable headerTable = table.getHeaderTable();
-    for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
-      headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
-      table.setColumnWidth(i, columnModel.getColumn(i).getWidth());
-      table.setCellEditor(i,
-          (AbstractCellEditor<T>) columnModel.getColumn(i).getCellEditor());
-    }
-    //table.
-  }
-
-  /**
-   * Invoked when a column is removed from the {@code TableColumnModel}.
-   * 
-   * {@inheritDoc}
-   * 
-   * @see org.gwt.mosaic.ui.client.table.TableColumnModelListener#columnRemoved(org.gwt.mosaic.ui.client.table.TableColumnModelEvent)
-   */
-  public void columnRemoved(TableColumnModelEvent event) {
-    final FixedWidthFlexTable headerTable = table.getHeaderTable();
-    for (int i = 0, n = columnModel.getColumnCount(); i < n; ++i) {
-      headerTable.setHTML(0, i, columnModel.getColumn(i).getLabel());
-      table.setColumnWidth(i, columnModel.getColumn(i).getWidth());
-      table.setCellEditor(i,
-          (AbstractCellEditor<T>) columnModel.getColumn(i).getCellEditor());
-    }
-    table.reloadPage();
-  }
 }

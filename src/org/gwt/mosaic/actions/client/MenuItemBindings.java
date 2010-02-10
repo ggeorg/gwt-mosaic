@@ -19,6 +19,7 @@ import org.gwt.beansbinding.core.client.BeanProperty;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -39,11 +40,12 @@ public class MenuItemBindings extends ActionBindings<MenuItem> {
     }
 
     private String createLabel() {
-      AbstractImagePrototype image = this.getImage();
+      ImageResource image = this.getImage();
       if (image == null) {
         image = CommandAction.ACTION_IMAGES.noimage();
       }
-      return ButtonHelper.createButtonLabel(image, text,
+      return ButtonHelper.createButtonLabel(
+          AbstractImagePrototype.create(image), text,
           ButtonLabelType.TEXT_ON_RIGHT);
     }
 
@@ -73,7 +75,7 @@ public class MenuItemBindings extends ActionBindings<MenuItem> {
     }
 
     @Override
-    public void setImage(AbstractImagePrototype image) {
+    public void setImage(ImageResource image) {
       super.setImage(image);
       target.setHTML(createLabel());
     }

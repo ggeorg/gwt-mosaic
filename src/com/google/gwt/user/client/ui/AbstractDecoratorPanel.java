@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008-2010 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,21 @@
  */
 package com.google.gwt.user.client.ui;
 
+/**
+ * A {@code DecoratorPanel} that exports the package protected constructor
+ * {@link #AbstractDecoratorPanel(String[], int)}.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ * @see DecoratorPanel
+ */
 public abstract class AbstractDecoratorPanel extends DecoratorPanel {
+  
+  /**
+   * Create a new {@link AbstractDecoratorPanel}.
+   */
+  public AbstractDecoratorPanel() {
+    super();
+  }
 
   /**
    * Creates a new panel using the specified style names to apply to each row.

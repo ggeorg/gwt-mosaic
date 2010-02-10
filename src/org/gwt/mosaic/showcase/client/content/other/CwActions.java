@@ -1,4 +1,6 @@
 /*
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -16,12 +18,12 @@ package org.gwt.mosaic.showcase.client.content.other;
 import org.gwt.mosaic.actions.client.Action;
 import org.gwt.mosaic.actions.client.ButtonBindings;
 import org.gwt.mosaic.actions.client.CheckBoxBindings;
+import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
 import org.gwt.mosaic.actions.client.CommandAction;
 import org.gwt.mosaic.actions.client.MenuItemBindings;
 import org.gwt.mosaic.actions.client.PushButtonBindings;
 import org.gwt.mosaic.actions.client.RadioButtonBindings;
 import org.gwt.mosaic.actions.client.ToggleButtonBindings;
-import org.gwt.mosaic.actions.client.CheckBoxMenuItemBindings;
 import org.gwt.mosaic.actions.client.ToolButtonBindings;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
@@ -40,10 +42,10 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -144,32 +146,26 @@ public class CwActions extends ContentWidget {
   private void addButton(final LayoutPanel panel) {
     final LayoutPanel hBox = new LayoutPanel(new BoxLayout());
 
-    final ButtonBindings btnActionSupport1 = new ButtonBindings(
-        action);
+    final ButtonBindings btnActionSupport1 = new ButtonBindings(action);
     btnActionSupport1.bind();
 
-    final ButtonBindings btnActionSupport2 = new ButtonBindings(
-        action);
+    final ButtonBindings btnActionSupport2 = new ButtonBindings(action);
     btnActionSupport2.setLabelType(ButtonLabelType.TEXT_ON_BOTTOM);
     btnActionSupport2.bind();
 
-    final ButtonBindings btnActionSupport3 = new ButtonBindings(
-        action);
+    final ButtonBindings btnActionSupport3 = new ButtonBindings(action);
     btnActionSupport3.setLabelType(ButtonLabelType.TEXT_ON_LEFT);
     btnActionSupport3.bind();
 
-    final ButtonBindings btnActionSupport4 = new ButtonBindings(
-        action);
+    final ButtonBindings btnActionSupport4 = new ButtonBindings(action);
     btnActionSupport4.setLabelType(ButtonLabelType.TEXT_ON_TOP);
     btnActionSupport4.bind();
 
-    final ButtonBindings btnActionSupport5 = new ButtonBindings(
-        action);
+    final ButtonBindings btnActionSupport5 = new ButtonBindings(action);
     btnActionSupport5.setLabelType(ButtonLabelType.TEXT_ONLY);
     btnActionSupport5.bind();
 
-    final ButtonBindings btnActionSupport6 = new ButtonBindings(
-        action);
+    final ButtonBindings btnActionSupport6 = new ButtonBindings(action);
     btnActionSupport6.setLabelType(ButtonLabelType.NO_TEXT);
     btnActionSupport6.bind();
 
@@ -455,8 +451,7 @@ public class CwActions extends ContentWidget {
             MessageBox.MESSAGEBOX_IMAGES.dialogQuestion().createImage()));
     toggleBtnActionSupport.bind();
 
-    final CheckBoxBindings checkBoxActionSupport = new CheckBoxBindings(
-        action);
+    final CheckBoxBindings checkBoxActionSupport = new CheckBoxBindings(action);
     checkBoxActionSupport.bind();
 
     final RadioButtonBindings radioButtonActionSupport = new RadioButtonBindings(
@@ -485,8 +480,7 @@ public class CwActions extends ContentWidget {
     MenuBar actionMenu = new MenuBar(true);
     menu.addItem(new MenuItem("MenuItem", actionMenu));
 
-    final MenuItemBindings actionBinding1 = new MenuItemBindings(
-        action);
+    final MenuItemBindings actionBinding1 = new MenuItemBindings(action);
     actionMenu.addItem(actionBinding1.getTarget());
     actionBinding1.bind();
 
@@ -543,7 +537,7 @@ public class CwActions extends ContentWidget {
 
     actionCtrlMenu.addItem(new MenuItem("Toggle Icon", new Command() {
       public void execute() {
-        AbstractImagePrototype icon = (AbstractImagePrototype) action.getValue(Action.SMALL_ICON);
+        ImageResource icon = (ImageResource) action.getValue(Action.SMALL_ICON);
         if (CommandAction.ACTION_IMAGES.bell().equals(icon)) {
           icon = CommandAction.ACTION_IMAGES.award_star_bronze_1();
         } else {
@@ -555,5 +549,4 @@ public class CwActions extends ContentWidget {
 
     panel.add(menu, new BoxLayoutData(FillStyle.HORIZONTAL));
   }
-
 }

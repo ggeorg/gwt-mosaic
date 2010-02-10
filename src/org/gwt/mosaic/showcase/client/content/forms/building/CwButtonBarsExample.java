@@ -84,7 +84,7 @@ public class CwButtonBarsExample extends ContentWidget {
   public String getName() {
     return "Button Bars";
   }
-  
+
   @Override
   public boolean hasStyle() {
     return false;
@@ -103,6 +103,7 @@ public class CwButtonBarsExample extends ContentWidget {
     tabPanel.add(buildButtonBar4Panel(), "Unrelated");
     tabPanel.add(buildButtonMixedBar1Panel(), "Mix");
     tabPanel.add(buildButtonMixedBar2Panel(), "Mix Narrow");
+
     return tabPanel;
   }
 
@@ -235,5 +236,5 @@ public class CwButtonBarsExample extends ContentWidget {
     panel.add(buttonBar, CellConstraints.xy(1, 3));
     return panel;
   }
-  
+
 }
