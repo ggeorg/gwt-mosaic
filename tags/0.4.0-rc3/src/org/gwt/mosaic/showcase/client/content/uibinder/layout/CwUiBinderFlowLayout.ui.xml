@@ -1,0 +1,162 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout' xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
+
+	<l:LayoutPanel ui:field='layoutPanel'>
+		<l:FlowLayout>
+			<l:FlowLayoutData preferredWidth="25%"
+				preferredHeight="25%" decorated="true">
+				<l:LayoutPanel ui:field='layoutPanel1'>
+					<l:BorderLayout>
+						<l:BorderLayoutData region="north">
+							<m:ToolButton text="NORTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="south">
+							<m:ToolButton text="SOUTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="east">
+							<m:ToolButton text="EAST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="west" resizable="true"
+							preferredWidth="25%">
+							<m:ToolButton text="WEST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData decorated="true">
+							<m:ToolButton text="CENTER" />
+						</l:BorderLayoutData>
+					</l:BorderLayout>
+				</l:LayoutPanel>
+			</l:FlowLayoutData>
+			<l:LayoutPanel ui:field='layoutPanel2'>
+				<l:BorderLayout>
+					<l:BorderLayoutData region="north">
+						<m:ToolButton text="NORTH" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="south">
+						<m:ToolButton text="SOUTH" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="east">
+						<m:ToolButton text="EAST" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="west" resizable="true"
+						preferredWidth="25%">
+						<m:ToolButton text="WEST" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData decorated="true">
+						<m:ToolButton text="CENTER" />
+					</l:BorderLayoutData>
+				</l:BorderLayout>
+			</l:LayoutPanel>
+			<l:FlowLayoutData preferredWidth="25%"
+				preferredHeight="25%" decorated="true">
+				<l:LayoutPanel ui:field='layoutPanel3'>
+					<l:BorderLayout>
+						<l:BorderLayoutData region="north">
+							<m:ToolButton text="NORTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="south">
+							<m:ToolButton text="SOUTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="east">
+							<m:ToolButton text="EAST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="west" resizable="true"
+							preferredWidth="25%">
+							<m:ToolButton text="WEST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData decorated="true">
+							<m:ToolButton text="CENTER" />
+						</l:BorderLayoutData>
+					</l:BorderLayout>
+				</l:LayoutPanel>
+			</l:FlowLayoutData>
+			<l:LayoutPanel ui:field='layoutPanel4'>
+				<l:BorderLayout>
+					<l:BorderLayoutData region="north">
+						<m:ToolButton text="NORTH" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="south">
+						<m:ToolButton text="SOUTH" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="east">
+						<m:ToolButton text="EAST" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="west" resizable="true"
+						preferredWidth="25%">
+						<m:ToolButton text="WEST" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData decorated="true">
+						<m:ToolButton text="CENTER" />
+					</l:BorderLayoutData>
+				</l:BorderLayout>
+			</l:LayoutPanel>
+			<l:FlowLayoutData preferredWidth="25%"
+				preferredHeight="25%" decorated="true">
+				<l:LayoutPanel ui:field='layoutPanel5'>
+					<l:BorderLayout>
+						<l:BorderLayoutData region="north">
+							<m:ToolButton text="NORTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="south">
+							<m:ToolButton text="SOUTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="east">
+							<m:ToolButton text="EAST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="west" resizable="true"
+							preferredWidth="25%">
+							<m:ToolButton text="WEST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData decorated="true">
+							<m:ToolButton text="CENTER" />
+						</l:BorderLayoutData>
+					</l:BorderLayout>
+				</l:LayoutPanel>
+			</l:FlowLayoutData>
+			<l:LayoutPanel ui:field='layoutPanel6'>
+				<l:BorderLayout>
+					<l:BorderLayoutData region="north">
+						<m:ToolButton text="NORTH" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="south">
+						<m:ToolButton text="SOUTH" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="east">
+						<m:ToolButton text="EAST" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData region="west" resizable="true"
+						preferredWidth="25%">
+						<m:ToolButton text="WEST" />
+					</l:BorderLayoutData>
+					<l:BorderLayoutData decorated="true">
+						<m:ToolButton text="CENTER" />
+					</l:BorderLayoutData>
+				</l:BorderLayout>
+			</l:LayoutPanel>
+			<l:FlowLayoutData preferredWidth="25%"
+				preferredHeight="25%" decorated="true">
+				<l:LayoutPanel ui:field='layoutPanel7'>
+					<l:BorderLayout>
+						<l:BorderLayoutData region="north">
+							<m:ToolButton text="NORTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="south">
+							<m:ToolButton text="SOUTH" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="east">
+							<m:ToolButton text="EAST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData region="west" resizable="true"
+							preferredWidth="25%">
+							<m:ToolButton text="WEST" />
+						</l:BorderLayoutData>
+						<l:BorderLayoutData decorated="true">
+							<m:ToolButton text="CENTER" />
+						</l:BorderLayoutData>
+					</l:BorderLayout>
+				</l:LayoutPanel>
+			</l:FlowLayoutData>
+		</l:FlowLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>
