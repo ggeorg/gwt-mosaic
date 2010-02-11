@@ -169,7 +169,7 @@ public class CachedTableModel<RowType> extends
 
     public boolean hasNext() {
       return curRow < lastRow
-          && rowValuesMap.containsKey(new Integer(curRow + 1));
+          && rowValuesMap.containsKey(Integer.valueOf(curRow + 1));
     }
 
     public RowType next() {
