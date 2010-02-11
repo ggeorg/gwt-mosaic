@@ -108,9 +108,11 @@ public abstract class DateColumnDefinition<RowType> extends
      */
     public DateCellEditor(DateBox dateBox, DateTimeFormat dateTimeFormat) {
       super(dateBox);
-      dateBox.setFormat(new DateBox.DefaultFormat(dateTimeFormat));
       
-      dateBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+      this.dateBox = dateBox;
+      this.dateBox.setFormat(new DateBox.DefaultFormat(dateTimeFormat));
+      
+      this.dateBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
         public void onKeyUp(KeyUpEvent event) {
           int keyCode = event.getNativeKeyCode();
           switch (keyCode) {
