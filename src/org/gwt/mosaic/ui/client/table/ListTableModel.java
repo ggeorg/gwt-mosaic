@@ -71,7 +71,7 @@ public class ListTableModel extends AbstractMutableTableModel<List<Object>> {
       }
 
       curRow++;
-      return rowValues.get(new Integer(curRow));
+      return rowValues.get(curRow);
     }
 
     public void remove() {
