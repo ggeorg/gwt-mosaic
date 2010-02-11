@@ -109,15 +109,16 @@ public class PagingScrollTableParser implements ElementParser {
           writer.die("In %s, class %s has no appropriate set%s() method",
               columnDefinition, columnDefinition.getLocalName(),
               initialCap(propertyName));
-        }
-        String n = attribute.getName();
-        String value = columnDefinition.consumeAttributeWithDefault(n, null,
-            getParamTypes(setter));
+        } else {
+          String n = attribute.getName();
+          String value = columnDefinition.consumeAttributeWithDefault(n, null,
+              getParamTypes(setter));
 
-        if (value == null) {
-          writer.die("In %s, unable to parse %s.", elem, attribute);
+          if (value == null) {
+            writer.die("In %s, unable to parse %s.", elem, attribute);
+          }
+          setterValues.put(propertyName, value);
         }
-        setterValues.put(propertyName, value);
       }
 
       final String columnHeader = columnDefinition.consumeInnerTextEscapedAsHtmlStringLiteral(
