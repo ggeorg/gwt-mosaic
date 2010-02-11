@@ -52,6 +52,8 @@ public class Insets implements Cloneable, Serializable {
     return hash;
   }
 
+  // FIXME Bug: org.gwt.mosaic.core.client.Insets.clone() does not call
+  // super.clone()
   public Object clone() {
     return new Insets(top, left, bottom, right);
   }
