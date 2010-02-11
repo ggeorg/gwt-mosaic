@@ -54,7 +54,7 @@ public class CwRichListBox extends ContentWidget {
    * @return
    */
   @ShowcaseSource
-  class Person {
+  static class Person {
     private String name;
     private String gender;
     private Boolean isMarried = false;
