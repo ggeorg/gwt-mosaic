@@ -236,7 +236,7 @@ public class ScrollTable extends AbstractScrollTable {
    */
   private ColumnWidthInfo getColumnWidthInfo(int column) {
     int curWidth = getColumnWidth(column);
-    ColumnWidthInfo info = columnWidthInfos.get(new Integer(column));
+    ColumnWidthInfo info = columnWidthInfos.get(Integer.valueOf(column));
     if (info == null) {
       info = new ColumnWidthInfo(FixedWidthGrid.MIN_COLUMN_WIDTH, -1,
           FixedWidthGrid.DEFAULT_COLUMN_WIDTH, curWidth);
