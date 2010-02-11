@@ -1312,8 +1312,8 @@ public final class CellConstraints extends LayoutData implements Cloneable {
     private static final int VERTICAL = 1;
     private static final int BOTH = 2;
 
-    private final transient String name;
-    private final transient int orientation;
+    private final String name;
+    private final int orientation;
 
     private Alignment(String name, int orientation) {
       this.name = name;
