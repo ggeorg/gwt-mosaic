@@ -698,7 +698,7 @@ public class FixedWidthFlexTable extends FlexTable {
         int numRows = columnCountMap.get(numColumnsI).intValue();
         columnCountMap.put(numColumnsI, new Integer(numRows + 1));
       } else {
-        columnCountMap.put(numColumnsI, new Integer(1));
+        columnCountMap.put(numColumnsI, Integer.valueOf(1));
       }
     }
 
