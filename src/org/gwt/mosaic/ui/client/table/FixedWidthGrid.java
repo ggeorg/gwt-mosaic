@@ -270,7 +270,7 @@ public class FixedWidthGrid extends SortableGrid {
 
     // Add the width to the map
     width = Math.max(MIN_COLUMN_WIDTH, width);
-    colWidths.put(new Integer(column), new Integer(width));
+    colWidths.put(new Integer(column), Integer.valueOf(width));
 
     // Update the cell width if possible
     if (column >= numColumns) {
