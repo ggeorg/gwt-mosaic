@@ -58,10 +58,10 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
   class SplitBarDragController extends AbstractDragController {
     private Widget movablePanel;
 
-    private int draggableOldAbsoluteLeft, draggableOldAbsoluteTop;
+    private int draggableOldAbsoluteTop;
 
     private int boundaryOffsetX, boundaryOffsetY;
-    private int dropTargetClientHeight, dropTargetClientWidth;
+    private int dropTargetClientHeight;
 
     public SplitBarDragController(AbsolutePanel boundaryPanel) {
       super(boundaryPanel);
@@ -91,10 +91,8 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
       boundaryOffsetX = widgetLocation.getLeft() + border[3];
       boundaryOffsetY = widgetLocation.getTop() + border[0];
       final Dimension box = DOM.getClientSize(context.boundaryPanel.getElement());
-      dropTargetClientWidth = box.width;
       dropTargetClientHeight = box.height;
 
-      draggableOldAbsoluteLeft = context.draggable.getAbsoluteLeft();
       draggableOldAbsoluteTop = context.draggable.getAbsoluteTop();
     }
 
