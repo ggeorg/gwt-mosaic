@@ -178,7 +178,7 @@ public class CachedTableModel<RowType> extends
       }
 
       curRow++;
-      return rowValuesMap.get(new Integer(curRow));
+      return rowValuesMap.get(Integer.valueOf(curRow));
     }
 
     public void remove() {
@@ -406,7 +406,7 @@ public class CachedTableModel<RowType> extends
    *      java.lang.Object)
    */
   public boolean onSetRowValue(int row, RowType rowValue) {
-    rowValuesMap.put(new Integer(row), rowValue);
+    rowValuesMap.put(Integer.valueOf(row), rowValue);
     return tableModel.onSetRowValue(row, rowValue);
   }
 }
