@@ -170,7 +170,7 @@ public class FixedWidthGrid extends SortableGrid {
    * @return the column width in pixels
    */
   public int getColumnWidth(int column) {
-    Integer colWidth = colWidths.get(new Integer(column));
+    Integer colWidth = colWidths.get(Integer.valueOf(column));
     if (colWidth == null) {
       return DEFAULT_COLUMN_WIDTH;
     } else {
