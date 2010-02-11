@@ -467,7 +467,7 @@ public class FixedWidthFlexTable extends FlexTable {
 
     // Add the width to the map
     width = Math.max(1, width);
-    colWidths.put(new Integer(column), new Integer(width));
+    colWidths.put(new Integer(column), Integer.valueOf(width));
 
     // Update the cell width if possible
     int numGhosts = getGhostColumnCount();
