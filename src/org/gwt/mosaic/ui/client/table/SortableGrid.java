@@ -429,8 +429,8 @@ public class SortableGrid extends SelectionGrid implements
 
     // Update the selected rows table
     Map<Integer, Element> selectedRows = getSelectedRowsMap();
-    Element tr1 = selectedRows.remove(new Integer(row1));
-    Element tr2 = selectedRows.remove(new Integer(row2));
+    Element tr1 = selectedRows.remove(Integer.valueOf(row1));
+    Element tr2 = selectedRows.remove(Integer.valueOf(row2));
     if (tr1 != null) {
       selectedRows.put(Integer.valueOf(row2), tr1);
     }
