@@ -814,7 +814,8 @@ public class SliderBar extends LayoutComposite implements Focusable,
     Element knobElement = knobImage.getElement();
     int lineWidth = DOM.getElementPropertyInt(lineElement, "offsetWidth");
     int knobWidth = DOM.getElementPropertyInt(knobElement, "offsetWidth");
-    int knobLeftOffset = (int) (lineLeftOffset + (getKnobPercent() * lineWidth) - (knobWidth / 2));
+    int knobLeftOffset = lineLeftOffset + (int) (getKnobPercent() * lineWidth)
+        - (knobWidth / 2);
     knobLeftOffset = Math.min(knobLeftOffset, lineLeftOffset + lineWidth
         - (knobWidth / 2) - 1);
     DOM.setStyleAttribute(knobElement, "left", knobLeftOffset + "px");
