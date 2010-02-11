@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Alejandro D. Garin.
+ * Copyright (c) 2008-2010 GWT Mosaic Alejandro D. Garin.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package org.gwt.mosaic.contrib.client;
 
 import org.gwt.mosaic.core.client.DOM;
 
-import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 /**
@@ -32,8 +31,6 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
 public class PopupMenu extends org.gwt.mosaic.ui.client.PopupMenu {
 
   private static class MenuItemDisabled extends MenuItemSeparator {
-    private MenuBar parentMenu;
-
     public MenuItemDisabled(String text, boolean asHTML) {
       if (asHTML) {
         DOM.setInnerHTML(getElement(), text);
@@ -41,10 +38,6 @@ public class PopupMenu extends org.gwt.mosaic.ui.client.PopupMenu {
         DOM.setInnerText(getElement(), text);
       }
       DOM.setStyleAttribute(getElement(), "color", "#B5B5B5");
-    }
-
-    public MenuBar getParentMenu() {
-      return parentMenu;
     }
   }
 
