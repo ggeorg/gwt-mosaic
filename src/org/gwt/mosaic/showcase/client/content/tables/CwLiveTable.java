@@ -15,27 +15,24 @@
  */
 package org.gwt.mosaic.showcase.client.content.tables;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseStyle;
-import org.gwt.mosaic.ui.client.InfoPanel;
 import org.gwt.mosaic.ui.client.LiveTable;
-import org.gwt.mosaic.ui.client.PopupMenu;
 import org.gwt.mosaic.ui.client.table.DefaultColumnDefinition;
 import org.gwt.mosaic.ui.client.table.DefaultTableDefinition;
 import org.gwt.mosaic.ui.client.table.IterableTableModel;
-import org.gwt.mosaic.ui.client.table.SerializableResponse;
 import org.gwt.mosaic.ui.client.table.TableDefinition;
 import org.gwt.mosaic.ui.client.table.TableModel;
 import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Response;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -106,11 +103,16 @@ public class CwLiveTable extends ContentWidget {
       public void requestRows(Request request, Callback<Foo> callback) {
         int numRows = Math.min(request.getNumRows(), data.size()
             - request.getStartRow());
-        List<Foo> list = new ArrayList<Foo>();
+        final List<Foo> list = new ArrayList<Foo>();
         for (int i = 0, n = numRows; i < n; i++) {
           list.add(data.get(request.getStartRow() + i));
         }
-        SerializableResponse<Foo> response = new SerializableResponse<Foo>(list);
+        Response<Foo> response = new Response<Foo>() {
+          @Override
+          public Iterator<Foo> getRowValues() {
+            return list.iterator();
+          }
+        };
         callback.onRowsReady(request, response);
       }
     };
@@ -188,31 +190,6 @@ public class CwLiveTable extends ContentWidget {
     tableDef.addColumnDefinition(colDef4);
 
     return tableDef;
-  }
-
-  /**
-   * 
-   * @return
-   */
-  @ShowcaseSource
-  private PopupMenu createContextMenu() {
-    Command cmd = new Command() {
-      public void execute() {
-        InfoPanel.show("Menu Button", "You selected a menu item!");
-      }
-    };
-
-    PopupMenu contextMenu = new PopupMenu();
-
-    contextMenu.addItem("MenuItem 1", cmd);
-    contextMenu.addItem("MenuItem 2", cmd);
-
-    contextMenu.addSeparator();
-
-    contextMenu.addItem("MenuItem 3", cmd);
-    contextMenu.addItem("MenuItem 4", cmd);
-
-    return contextMenu;
   }
 
 }
