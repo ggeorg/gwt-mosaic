@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
  * @author Alejandro D. Garin
  * 
  */
+// FIXME: Bug: The class name org.gwt.mosaic.contrib.client.PopupMenu shadows
+// the simple name of the superclass org.gwt.mosaic.ui.client.PopupMenu
 public class PopupMenu extends org.gwt.mosaic.ui.client.PopupMenu {
 
   private class MenuItemDisabled extends MenuItemSeparator {

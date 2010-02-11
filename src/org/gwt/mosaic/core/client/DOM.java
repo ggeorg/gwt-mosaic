@@ -30,6 +30,8 @@ import com.google.gwt.user.client.Element;
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
+// FIXME: Bug: The class name org.gwt.mosaic.core.client.DOM shadows the simple
+// name of the superclass com.google.gwt.user.client.DOM
 public class DOM extends com.google.gwt.user.client.DOM {
 
   private static final DOMImpl impl = GWT.create(DOMImpl.class);

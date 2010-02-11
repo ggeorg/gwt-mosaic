@@ -39,6 +39,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @param <T> listener type
  * @deprecated will be removed in GWT 2.0 with the handler listeners themselves
  */
+// FIXME: Bug: The class name org.gwt.mosaic.ui.client.ListenerWrapper shadows
+// the simple name of the superclass
+// com.google.gwt.user.client.ui.ListenerWrapper
 @Deprecated
 public abstract class ListenerWrapper<T> extends
     com.google.gwt.user.client.ui.ListenerWrapper<T> {
