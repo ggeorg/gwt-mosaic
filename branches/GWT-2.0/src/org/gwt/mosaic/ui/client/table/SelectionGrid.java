@@ -613,7 +613,7 @@ public class SelectionGrid extends Grid implements HasRowHighlightHandlers,
    * @param fireEvent true to fire events
    */
   protected void deselectRow(int row, boolean fireEvent) {
-    Element rowElem = selectedRows.remove(new Integer(row));
+    Element rowElem = selectedRows.remove(Integer.valueOf(row));
     if (rowElem != null) {
       // Get the old list of selected rows
       Set<Row> oldRows = null;
