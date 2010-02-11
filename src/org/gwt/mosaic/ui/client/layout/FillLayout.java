@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,11 +18,7 @@ package org.gwt.mosaic.ui.client.layout;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.Viewport;
-import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -77,9 +73,9 @@ import com.google.gwt.user.client.ui.Widget;
  * public void onModuleLoad() {
  *   Viewport viewport = new Viewport();
  *   
- *   viewport.add(new Button("Button 1"));
+ *   viewport.getLayoutPanel().add(new Button("Button 1"));
  *   
- *   RootPanel.get().add(viewport);
+ *   viewport.attach();
  * }
  * </pre>
  * 
@@ -87,66 +83,259 @@ import com.google.gwt.user.client.ui.Widget;
  * </tr>
  * </table>
  * 
+ * <p>
+ * In the next example a {@code Button} placed inside a {@link Viewport} is
+ * using size and alignment hints:
+ * 
+ * <table>
+ * <tr>
+ * <td><img border="0" src="FillLayout3.png"></td>
+ * <td>
+ * 
+ * <pre>
+ * public void onModuleLoad() {
+ *   Viewport viewport = new Viewport();
+ *   
+ *   FillLayoutData layoutData = new FillLayoutData();
+ *   layoutData.setHorizontalAlignment(FillLayoutData.ALIGN_RIGHT);
+ *   layoutData.setVerticalAlignment(FillLayoutData.ALIGN_TOP);
+ *   layoutData.xsetPreferredWidth("10em");
+ *   layoutData.xsetPreferredHeight("50%");
+ *
+ *   LayoutPanel layoutPanel = viewport.getLayoutPanel();
+ *   layoutPanel.add(new Button("Button 1"), layoutData);
+ *   
+ *   viewport.attach();
+ * }
+ * </pre>
+ * 
+ * </td>
+ * </tr>
+ * </table>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * @see FillLayoutData
  */
 public class FillLayout extends BaseLayout implements HasAlignment {
 
+  private HorizontalAlignmentConstant horizontalAlignment;
+  private VerticalAlignmentConstant verticalAlignment;
+  
   private Widget child;
   private FillLayoutData layoutData;
 
-  private boolean runTwiceFlag;
-
-  private HorizontalAlignmentConstant horizontalAlignment;
-
-  private VerticalAlignmentConstant verticalAlignment;
-
-  @Override
-  public void flushCache() {
-    initialized = false;
-  }
-
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasHorizontalAlignment#getHorizontalAlignment()
+   */
   public HorizontalAlignmentConstant getHorizontalAlignment() {
     return horizontalAlignment;
   }
 
-  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
-    final Dimension result = new Dimension();
-
-    try {
-      if (layoutPanel == null || !init(layoutPanel)) {
-        return result;
-      }
-
-      result.setSize(WidgetHelper.getPreferredSize(child));
-
-      if (layoutData.hasDecoratorPanel()) {
-        final Dimension d = getDecoratorFrameSize(layoutData.decoratorPanel,
-            child);
-        result.width += d.width;
-        result.height += d.height;
-      }
-
-      result.width += (margins[1] + margins[3]) + (paddings[1] + paddings[3])
-          + (borders[1] + borders[3]);
-      result.height += (margins[0] + margins[2]) + (paddings[0] + paddings[2])
-          + (borders[0] + borders[2]);
-
-    } catch (Exception e) {
-      GWT.log(e.getMessage(), e);
-
-      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
-          + e.toString());
-    }
-
-    return result;
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasHorizontalAlignment#setHorizontalAlignment(com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant)
+   */
+  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+    this.horizontalAlignment = align;
   }
 
+  /**
+   * Used by UiBinder parser.
+   * 
+   * @param align
+   */
+  public void setHorizontalAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("left".intern())) {
+      setHorizontalAlignment(ALIGN_LEFT);
+    } else if (align.equals("center".intern())) {
+      setHorizontalAlignment(ALIGN_CENTER);
+    } else if (align.equals("right".intern())) {
+      setHorizontalAlignment(ALIGN_RIGHT);
+    } else if (align.equals("default".intern())) {
+      setHorizontalAlignment(ALIGN_DEFAULT);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasVerticalAlignment#getVerticalAlignment()
+   */
   public VerticalAlignmentConstant getVerticalAlignment() {
     return verticalAlignment;
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasVerticalAlignment#setVerticalAlignment(com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+   */
+  public void setVerticalAlignment(VerticalAlignmentConstant align) {
+    this.verticalAlignment = align;
+  }
+
+  /**
+   * Used by UiBinder parser.
+   * 
+   * @param align
+   */
+  public void setVerticalAlignment(String align) {
+    align = align.trim().toLowerCase();
+    if (align.equals("top".intern())) {
+      setVerticalAlignment(ALIGN_TOP);
+    } else if (align.equals("middle".intern())) {
+      setVerticalAlignment(ALIGN_MIDDLE);
+    } else if (align.equals("bottom".intern())) {
+      setVerticalAlignment(ALIGN_BOTTOM);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   */
+  public Dimension getPreferredSize(LayoutPanel layoutPanel) {
+    assert layoutPanel != null;
+
+    final Dimension result = new Dimension();
+
+    init(layoutPanel);
+
+    if (child != null) {
+      result.setSize(preferredWidthMeasure.sizeOf(child),
+          preferredHeightMeasure.sizeOf(child));
+
+      final Widget parent = child.getParent();
+      if (parent instanceof InternalDecoratorPanel) {
+        final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+        final int borderSizes[] = decPanel.getBorderSizes();
+        result.width += (borderSizes[1] + borderSizes[3]);
+        result.height += (borderSizes[0] + borderSizes[0]);
+      }
+    }
+
+    result.width += marginLeftMeasure.sizeOf(layoutPanel)
+        + marginRightMeasure.sizeOf(layoutPanel)
+        + borderLeftMeasure.sizeOf(layoutPanel)
+        + borderRightMeasure.sizeOf(layoutPanel)
+        + paddingLeftMeasure.sizeOf(layoutPanel)
+        + paddingRightMeasure.sizeOf(layoutPanel);
+
+    result.height += marginTopMeasure.sizeOf(layoutPanel)
+        + marginBottomMeasure.sizeOf(layoutPanel)
+        + borderTopMeasure.sizeOf(layoutPanel)
+        + borderBottomMeasure.sizeOf(layoutPanel)
+        + paddingTopMeasure.sizeOf(layoutPanel)
+        + paddingBottomMeasure.sizeOf(layoutPanel);
+
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.BaseLayout#layoutPanel(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   */
+  @Override
+  public void layoutPanel(final LayoutPanel layoutPanel) {
+    assert layoutPanel != null;
+
+    if (!init(layoutPanel)) {
+      return;
+    }
+
+    final int left = paddingLeftMeasure.sizeOf(layoutPanel);
+    final int top = paddingTopMeasure.sizeOf(layoutPanel);
+
+    final Dimension box = DOM.getClientSize(layoutPanel.getElement());
+    int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
+    int height = box.height - (top + paddingBottomMeasure.sizeOf(layoutPanel));
+
+    final Widget parent = child.getParent();
+    if (parent instanceof InternalDecoratorPanel) {
+      final InternalDecoratorPanel decPanel = (InternalDecoratorPanel) parent;
+      final int borderSizes[] = decPanel.getBorderSizes();
+      width -= (borderSizes[1] + borderSizes[3]);
+      height -= (borderSizes[0] + borderSizes[2]);
+    }
+
+    HorizontalAlignmentConstant hAlignment = layoutData.getHorizontalAlignment();
+    if (hAlignment == null) {
+      hAlignment = getHorizontalAlignment();
+    }
+
+    Dimension prefSize = null;
+
+    if (hAlignment == null) {
+      layoutData.targetLeft = left;
+      layoutData.targetWidth = width;
+    } else {
+      // (ggeorg) this call to WidgetHelper.getPreferredSize() is
+      // required even for ALIGN_LEFT
+      prefSize = new Dimension(preferredWidthMeasure.sizeOf(child),
+          preferredHeightMeasure.sizeOf(child));
+
+      if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
+        layoutData.targetLeft = left;
+      } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
+        layoutData.targetLeft = left + (width - prefSize.width) / 2;
+      } else {
+        layoutData.targetLeft = left + width - prefSize.width;
+      }
+      layoutData.targetWidth = prefSize.width;
+    }
+
+    VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
+    if (vAlignment == null) {
+      vAlignment = getVerticalAlignment();
+    }
+
+    if (vAlignment == null) {
+      layoutData.targetTop = top;
+      layoutData.targetHeight = height;
+    } else {
+      if (prefSize == null) {
+        // (ggeorg) this call to WidgetHelper.getPreferredSize() is
+        // required even for ALIGN_TOP
+        prefSize = new Dimension(preferredWidthMeasure.sizeOf(child),
+            preferredHeightMeasure.sizeOf(child));
+      }
+
+      if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
+        layoutData.targetTop = top;
+      } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
+        layoutData.targetTop = top + (height - prefSize.height) / 2;
+      } else {
+        layoutData.targetTop = top + height - prefSize.height;
+      }
+      layoutData.targetHeight = prefSize.height;
+    }
+
+    if (layoutPanel.isAnimationEnabled()) {
+      layoutData.setSourceLeft(child.getAbsoluteLeft()
+          - layoutPanel.getAbsoluteLeft()
+          - paddingLeftMeasure.sizeOf(layoutPanel));
+      layoutData.setSourceTop(child.getAbsoluteTop()
+          - layoutPanel.getAbsoluteTop()
+          - paddingTopMeasure.sizeOf(layoutPanel));
+      layoutData.setSourceWidth(child.getOffsetWidth());
+      layoutData.setSourceHeight(child.getOffsetHeight());
+    }
+
+    super.layoutPanel(layoutPanel);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.layout.BaseLayout#init(org.gwt.mosaic.ui.client.layout.LayoutPanel)
+   */
+  @Override
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
@@ -154,133 +343,27 @@ public class FillLayout extends BaseLayout implements HasAlignment {
 
     super.init(layoutPanel);
 
-    for (int i = 0, size = layoutPanel.getWidgetCount(); i < size; i++) {
-      child = layoutPanel.getWidget(i);
-      if (child instanceof DecoratorPanel) {
-        child = ((DecoratorPanel) child).getWidget();
-      }
-
-      if (!DOM.isVisible(child.getElement())) {
-        continue;
-      }
-
-      layoutData = getFillLayoutData(child);
-
-      initialized = true;
-
-      break;
+    if (visibleChildList.size() > 0) {
+      child = visibleChildList.get(0);
+      layoutData = getLayoutData(child);
+      visibleChildList.clear();
+      visibleChildList.add(child);
+    } else {
+      child = null;
+      layoutData = null;
     }
 
-    return initialized;
+    return initialized = (child != null);
   }
 
-  private FillLayoutData getFillLayoutData(Widget child) {
-    Object layoutDataObject = getLayoutData(child);
+  private FillLayoutData getLayoutData(Widget child) {
+    Object layoutDataObject = child.getLayoutData();
     if (layoutDataObject == null
         || !(layoutDataObject instanceof FillLayoutData)) {
       layoutDataObject = new FillLayoutData();
-      setLayoutData(child, layoutDataObject);
+      child.setLayoutData(layoutDataObject);
     }
     return (FillLayoutData) layoutDataObject;
-  }
-
-  public void layoutPanel(LayoutPanel layoutPanel) {
-    try {
-      if (layoutPanel == null || !init(layoutPanel)) {
-        return;
-      }
-
-      final Dimension box = DOM.getClientSize(layoutPanel.getElement());
-
-      final int left = paddings[3];
-      final int top = paddings[0];
-      int width = box.width - (paddings[1] + paddings[3]);
-      int height = box.height - (paddings[0] + paddings[2]);
-
-      if (layoutData.hasDecoratorPanel()) {
-        final Dimension d = getDecoratorFrameSize(layoutData.decoratorPanel,
-            child);
-        width -= d.width;
-        height -= d.height;
-      }
-
-      HorizontalAlignmentConstant hAlignment = layoutData.getHorizontalAlignment();
-      if (hAlignment == null) {
-        hAlignment = getHorizontalAlignment();
-      }
-
-      int posLeft;
-      int widgetWidth;
-
-      runTwiceFlag = false;
-
-      if (hAlignment == null) {
-        posLeft = left;
-        widgetWidth = width;
-      } else if (HasHorizontalAlignment.ALIGN_LEFT == hAlignment) {
-        posLeft = left;
-        widgetWidth = -1;
-        runTwiceFlag = true;
-      } else if (HasHorizontalAlignment.ALIGN_CENTER == hAlignment) {
-        posLeft = left + (width / 2)
-            - WidgetHelper.getPreferredSize(child).width / 2;
-        widgetWidth = -1;
-        runTwiceFlag = true;
-      } else {
-        posLeft = left + width - WidgetHelper.getPreferredSize(child).width;
-        widgetWidth = -1;
-        runTwiceFlag = true;
-      }
-
-      VerticalAlignmentConstant vAlignment = layoutData.getVerticalAlignment();
-      if (vAlignment == null) {
-        vAlignment = getVerticalAlignment();
-      }
-
-      int posTop;
-      int widgetHeight;
-
-      if (vAlignment == null) {
-        posTop = top;
-        widgetHeight = height;
-      } else if (HasVerticalAlignment.ALIGN_TOP == vAlignment) {
-        posTop = top;
-        widgetHeight = -1;
-        runTwiceFlag = true;
-      } else if (HasVerticalAlignment.ALIGN_MIDDLE == vAlignment) {
-        posTop = top + (height / 2)
-            - WidgetHelper.getPreferredSize(child).height / 2;
-        widgetHeight = -1;
-        runTwiceFlag = true;
-      } else {
-        posTop = top + height - WidgetHelper.getPreferredSize(child).height;
-        widgetHeight = -1;
-        runTwiceFlag = true;
-      }
-
-      WidgetHelper.setBounds(layoutPanel, child, posLeft, posTop, widgetWidth,
-          widgetHeight);
-
-    } catch (Exception e) {
-      GWT.log(e.getMessage(), e);
-
-      Window.alert(this.getClass().getName() + ".layoutPanel(): "
-          + e.toString());
-    }
-
-  }
-
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
-  }
-
-  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-    this.horizontalAlignment = align;
-  }
-
-  public void setVerticalAlignment(VerticalAlignmentConstant align) {
-    this.verticalAlignment = align;
   }
 
 }

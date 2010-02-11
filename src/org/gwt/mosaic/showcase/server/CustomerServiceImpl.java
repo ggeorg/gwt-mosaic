@@ -15,7 +15,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class CustomerServiceImpl extends RemoteServiceServlet implements CustomerService {
   private static final long serialVersionUID = 4558037815093135955L;
 
-  private EntityManager samplePUEntityManager;
+  private transient EntityManager samplePUEntityManager;
 
   @Override
   public void init() throws ServletException {

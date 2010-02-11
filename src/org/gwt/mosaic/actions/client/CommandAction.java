@@ -28,11 +28,11 @@ import org.gwt.beansbinding.observablecollections.client.ObservableMap;
 import org.gwt.beansbinding.observablecollections.client.ObservableMapListener;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /**
- * The base class for the action library. All actions will inherit from this
+ * The base class for the action module. All actions will inherit from this
  * class. The {@code CommandAction} defines a generic implementation of
  * {@link CommandAction#actionPerformed(ActionEvent)}. Here the
  * {@link CommandAction#actionPerformed(ActionEvent)} simply calls the {@code
@@ -113,7 +113,7 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   public static final ActionImages ACTION_IMAGES = GWT.create(ActionImages.class);
-  
+
   public static final ActionConstants ACTION_CONSTANTS = GWT.create(ActionConstants.class);
 
   /**
@@ -131,6 +131,32 @@ public class CommandAction extends AbstractMap<String, Object> implements
   private Command command;
 
   /**
+   * This constructor creates an action without a name and an icon.
+   * 
+   * @param command the command for this action to act upon
+   */
+  public CommandAction(Command command) {
+    super();
+    setEnabled(true);
+    setCommand(command);
+  }
+
+  /**
+   * This constructor creates an action with an icon.
+   * 
+   * @param name the action's name
+   * @param icon the action's icon
+   * @param command the command for this action to act upon
+   */
+  public CommandAction(final String name, ImageResource icon, Command command) {
+    super();
+    putValue(Action.NAME, name);
+    putValue(Action.SMALL_ICON, icon);
+    setEnabled(true);
+    setCommand(command);
+  }
+
+  /**
    * This constructor creates an action without an icon.
    * 
    * @param name the action's name
@@ -144,23 +170,8 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   /**
-   * This constructor creates an action with an icon.
-   * 
-   * @param name the action's name
-   * @param icon the action's icon
-   * @param command the command for this action to act upon
-   */
-  public CommandAction(final String name, AbstractImagePrototype icon,
-      Command command) {
-    super();
-    putValue(Action.NAME, name);
-    putValue(Action.SMALL_ICON, icon);
-    setEnabled(true);
-    setCommand(command);
-  }
-
-  /**
-   * The actionPerformed implementation, simply calls {@code Command#eexecute()}.
+   * The actionPerformed implementation, simply calls {@code Command#eexecute()}
+   * .
    * 
    * @param event the action event
    */
@@ -248,8 +259,8 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   public void putAll(Map<? extends String, ? extends Object> m) {
-    for (String key : m.keySet()) {
-      put(key, m.get(key));
+    for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+      put(entry.getKey(), entry.getValue());
     }
   }
 

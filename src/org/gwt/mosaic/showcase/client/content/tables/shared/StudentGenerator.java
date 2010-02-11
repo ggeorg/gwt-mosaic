@@ -18,6 +18,8 @@ package org.gwt.mosaic.showcase.client.content.tables.shared;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.user.client.Random;
+
 /**
  * The static set of data used to populate the grid.
  */
@@ -102,6 +104,16 @@ public abstract class StudentGenerator {
    */
   private String nextValue(String[] array) {
     return array[getRandomInt(array.length)];
+  }
+
+  public static List<Student> generate(final int count) {
+    StudentGenerator g = new StudentGenerator() {
+      @Override
+      public int getRandomInt(int max) {
+        return Random.nextInt(max);
+      }
+    };
+    return g.generateStudents(count);
   }
 
 }

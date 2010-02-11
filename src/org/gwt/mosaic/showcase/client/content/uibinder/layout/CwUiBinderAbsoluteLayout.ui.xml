@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout' xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
+
+	<l:LayoutPanel ui:field='layoutPanel' width="32em" height="24em">
+		<l:AbsoluteLayout>
+			<l:AbsoluteLayoutData left="1em" top="1em" preferredWidth="8em" preferredHeight="8em" margin="right bottom" decorated="true">
+				<m:ToolButton text="Icon" />
+			</l:AbsoluteLayoutData>
+			<l:AbsoluteLayoutData left="10em" top="1em" preferredWidth="21em" preferredHeight="19em" stretch="width height">
+				<m:ToolButton text="This is a message to the user." />
+			</l:AbsoluteLayoutData>
+			<l:AbsoluteLayoutData left="14em" top="21em" preferredWidth="8em" preferredHeight="2em" margin="left top">
+				<m:ToolButton text="OK" />
+			</l:AbsoluteLayoutData>
+			<l:AbsoluteLayoutData left="23em" top="21em" preferredWidth="8em" preferredHeight="2em" margin="left top">
+				<m:ToolButton text="Cancel" />
+			</l:AbsoluteLayoutData>
+			<l:AbsoluteLayoutData left="1em" top="21em" preferredWidth="8em" preferredHeight="2em" margin="right top">
+				<m:ToolButton text="Help" />
+			</l:AbsoluteLayoutData>
+		</l:AbsoluteLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>

@@ -1,0 +1,20 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout' xmlns:f='urn:import:org.gwt.mosaic.forms.client.layout'>
+
+	<l:LayoutPanel ui:field='layoutPanel'>
+		<l:BoxLayout orientation="vertical">
+			<l:BoxLayoutData fillWidth="true">
+				<m:ToolBar>
+					<m:ToolButton text="ToolButton #1" />
+					<m:ToolBarSeparator />
+					<m:ToolButton text="ToolButton #2" width="10em"/>
+					<m:ToolButton text="ToolButton #3" />
+					<m:ToolBarSpring />
+					<m:ToolButton text="ToolButton #4" />
+				</m:ToolBar>
+			</l:BoxLayoutData>
+		</l:BoxLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>

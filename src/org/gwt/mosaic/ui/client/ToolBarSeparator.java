@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008-2010 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A separator that can be placed in a {@link ToolBar}.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ * @see ToolBar
  */
 public class ToolBarSeparator extends Widget {
   
@@ -29,8 +32,11 @@ public class ToolBarSeparator extends Widget {
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ToolBarSeparator";
   
+  /**
+   * Creates a {@code ToolBarSeparator} instance.
+   */
   public ToolBarSeparator() {
-    setElement(DOM.createDiv());
+    setElement(DOM.createSpan());
     setStyleName(DEFAULT_STYLENAME);
   }
 

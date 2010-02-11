@@ -33,19 +33,20 @@ import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.event.ChangeEvent;
-import com.google.gwt.widgetideas.client.event.ChangeHandler;
 
 /**
  * Example file.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-@ShowcaseStyle( {".mosaic-DatePicker"})
+@ShowcaseStyle( {".gwt-DatePicker"})
 public class CwDatePicker extends ContentWidget {
 
   /**
@@ -95,48 +96,47 @@ public class CwDatePicker extends ContentWidget {
     final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout());
 
     final Date d = new Date();
-    d.setMonth(2);
-    d.setDate(1);
-
     //
     // DatePicker
     //
 
     final DatePicker datePicker = new DatePicker();
-    datePicker.setSelectedDate(d);
+    datePicker.setValue(d, true);
 
     final CaptionLayoutPanel vPanel1 = new CaptionLayoutPanel(
-        datePicker.getSelectedDate().toString());
+        datePicker.getValue().toString());
     layoutPanel.add(vPanel1, new BoxLayoutData(FillStyle.BOTH, true));
-    vPanel1.getHeader().add(Showcase.IMAGES.calendar().createImage());
+    vPanel1.getHeader().add(new Image(Showcase.IMAGES.calendar()));
     vPanel1.add(datePicker, new BoxLayoutData(FillStyle.BOTH));
 
     // Log select events.
-    final ChangeHandler<Date> changeHandler = new ChangeHandler<Date>() {
-      public void onChange(ChangeEvent<Date> event) {
-        vPanel1.getHeader().setText(event.getNewValue().toString());
+    final ValueChangeHandler<Date> changeHandler = new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        vPanel1.getHeader().setText(event.getValue().toString());
         vPanel1.layout();
+
       }
-    };
-    datePicker.addChangeHandler(changeHandler);
+    };     
+    datePicker.addValueChangeHandler(changeHandler);
 
     //
     // DateTimePicker
     //
 
     final DateTimePicker dateTimePicker = new DateTimePicker();
-    dateTimePicker.getDatePicker().setSelectedDate(d);
+    //dateTimePicker.getDatePicker().setValue(d);
+    dateTimePicker.showDate(d);
 
     final CaptionLayoutPanel vPanel2 = new CaptionLayoutPanel(
         dateTimePicker.getDate().toString());
     layoutPanel.add(vPanel2, new BoxLayoutData(FillStyle.HORIZONTAL, true));
     final ImageButton collapseBtn = new ImageButton(Caption.IMAGES.toolMinus());
-    vPanel2.getHeader().add(Showcase.IMAGES.calendar().createImage());
+    vPanel2.getHeader().add(new Image(Showcase.IMAGES.calendar()));
     vPanel2.getHeader().add(collapseBtn, CaptionRegion.RIGHT);
     vPanel2.add(dateTimePicker, new BoxLayoutData(FillStyle.BOTH));
 
-    collapseBtn.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
+    collapseBtn.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
         vPanel2.setCollapsed(!vPanel2.isCollapsed());
         final Image image = vPanel2.isCollapsed()
             ? Caption.IMAGES.toolPlus().createImage()
@@ -147,14 +147,22 @@ public class CwDatePicker extends ContentWidget {
     });
 
     // Log select events.
-    final ChangeHandler<Date> changeHandler2 = new ChangeHandler<Date>() {
-      public void onChange(ChangeEvent<Date> event) {
+    final ValueChangeHandler<Date> dateChangeHandler2 = new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
         vPanel2.getHeader().setText(dateTimePicker.getDate().toString());
         vPanel2.layout();
       }
-    };
-    dateTimePicker.getDatePicker().addChangeHandler(changeHandler2);
-    dateTimePicker.getTimePicker().addChangeHandler(changeHandler2);
+    };     
+ 
+    final ValueChangeHandler<Date> timeChangeHandler2 = new ValueChangeHandler<Date>() {
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        vPanel2.getHeader().setText(dateTimePicker.getDate().toString());
+        vPanel2.layout();
+      }
+    };     
+
+    dateTimePicker.getDatePicker().addValueChangeHandler(dateChangeHandler2);
+    dateTimePicker.getTimePicker().addValueChangeHandler(timeChangeHandler2);
 
     return layoutPanel;
   }

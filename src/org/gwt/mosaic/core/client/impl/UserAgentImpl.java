@@ -21,23 +21,27 @@ package org.gwt.mosaic.core.client.impl;
  */
 public class UserAgentImpl {
 
-  public boolean isGecko() {
-    return false;
-  }
+	public boolean isGecko() {
+		return false;
+	}
 
-  public boolean isGecko18() {
-    return false;
-  }
+	public boolean isGecko18() {
+		return false;
+	}
 
-  public boolean isIE6() {
-    return false;
-  }
+	public boolean isIE8() {
+		return false;
+	}
 
-  public boolean isSafari() {
-    return false;
-  }
+	public boolean isIE6() {
+		return false;
+	}
 
-  public boolean isOpera() {
-    return false;
-  }
+	public boolean isSafari() {
+		return false;
+	}
+
+	public boolean isOpera() {
+		return false;
+	}
 }

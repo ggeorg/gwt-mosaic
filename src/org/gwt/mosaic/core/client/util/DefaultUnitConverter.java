@@ -86,6 +86,16 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
    */
   private DialogBaseUnits cachedGlobalDialogBaseUnits = null;
 
+  /**
+   * Holds lazily calculated font size value.
+   */
+  private int cachedFontSize = -1;
+
+  /**
+   * Holds lazily calculated x-height value.
+   */
+  private int cachedXHeight = -1;
+
   // Instance Creation and Access *******************************************
 
   /**
@@ -143,6 +153,24 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
     averageCharWidthTestString = newTestString;
   }
 
+  /**
+   * Sets the font size that will be used to compute CSS 'em' units.
+   * 
+   * @param fontSize the font size to set
+   */
+  public void setFontSize(int fontSize) {
+    this.cachedFontSize = fontSize;
+  }
+
+  /**
+   * Sets the x-height that will be used to compute CSS 'ex' units.
+   * 
+   * @param xHeight the x-height to set
+   */
+  public void setXHeight(int xHeight) {
+    this.cachedXHeight = xHeight;
+  }
+
   // Implementing Abstract Superclass Behavior ******************************
 
   /**
@@ -150,6 +178,7 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
    * 
    * @return the horizontal dialog base units
    */
+  @Override
   protected double getDialogBaseUnitsX() {
     return getDialogBaseUnits().x;
   }
@@ -161,8 +190,25 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
    * @param component a Component that provides the font and graphics
    * @return the vertical dialog base units
    */
+  @Override
   protected double getDialogBaseUnitsY() {
     return getDialogBaseUnits().y;
+  }
+
+  @Override
+  protected int getFontSize() {
+    if (cachedFontSize == -1) {
+      cachedFontSize = DOM.toPixelSize("1em", true);
+    }
+    return cachedFontSize;
+  }
+
+  @Override
+  protected int getXHeight() {
+    if (cachedXHeight == -1) {
+      cachedXHeight = DOM.toPixelSize("1ex", true);
+    }
+    return cachedFontSize;
   }
 
   // Compute and Cache Global and Components Dialog Base Units **************
@@ -188,7 +234,7 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
     final FontMetrics metrics = new FontMetrics();
     DOM.setStyleAttribute(metrics.getElement(), "whiteSpace", "nowrap");
     final Dimension boxSize = metrics.stringBoxSize(averageCharWidthTestString);
-    return new DialogBaseUnits(boxSize.width
+    return new DialogBaseUnits((double) boxSize.width
         / averageCharWidthTestString.length(), boxSize.height);
   }
 

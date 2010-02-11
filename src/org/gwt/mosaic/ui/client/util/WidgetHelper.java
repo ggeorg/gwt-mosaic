@@ -15,13 +15,18 @@
  */
 package org.gwt.mosaic.ui.client.util;
 
+import org.gwt.mosaic.core.client.CompatMode;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Point;
 import org.gwt.mosaic.core.client.Rectangle;
+import org.gwt.mosaic.core.client.UserAgent;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -41,23 +46,6 @@ public class WidgetHelper {
   private static final String MAX_WIDTH = "maxWidth";
 
   private static final String MAX_HEIGHT = "maxHeight";
-
-  /**
-   * Returns the current size of the {@code Widget} in the form of a
-   * {@link Dimension} object.
-   * <p>
-   * Get's the elements <code>height</code> and <code>width</code> plus the size
-   * of the borders and margins.
-   * <p>
-   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
-   * 
-   * @param widget the given {@code Widget}
-   * @return a {@link Dimension} object that indicates the size of this
-   *         component
-   */
-  public static Dimension getOffsetSize(final Widget widget) {
-    return new Dimension(widget.getOffsetWidth(), widget.getOffsetHeight());
-  }
 
   /**
    * Returns closest {@link HasLayoutManager} parent of the given {@code Widget}
@@ -80,27 +68,6 @@ public class WidgetHelper {
   }
 
   /**
-   * 
-   * @param widget
-   * @return
-   */
-  public static Dimension getPreferredSize(Widget widget) {
-    // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
-    if (widget instanceof FormPanel) {
-      final Widget _widget = ((FormPanel) widget).getWidget();
-      if (_widget != null && (_widget instanceof HasLayoutManager)) {
-        widget = _widget;
-      }
-    }
-    if (widget instanceof HasLayoutManager) {
-      final HasLayoutManager lp = (HasLayoutManager) widget;
-      return lp.getPreferredSize();
-    } else {
-      return getOffsetSize(widget);
-    }
-  }
-
-  /**
    * Invalidates the given {@code Widget} and all parents above it. This method
    * can be called often, so it needs to execute quickly.
    * 
@@ -108,11 +75,11 @@ public class WidgetHelper {
    */
   public static void invalidate(Widget widget) {
     if (widget instanceof HasLayoutManager) {
-      ((HasLayoutManager) widget).invalidate();
+      ((HasLayoutManager) widget).invalidate(null);
     } else {
       HasLayoutManager lm = getParent(widget);
       if (lm != null) {
-        lm.invalidate();
+        lm.invalidate(widget);
       }
     }
   }
@@ -154,37 +121,79 @@ public class WidgetHelper {
   }
 
   /**
-   * Moves and resizes the given {@code Widget}.
+   * Returns the current size of the {@code Widget} in the form of a
+   * {@link Dimension} object.
+   * <p>
+   * Get's the elements <code>height</code> and <code>width</code> plus the size
+   * of the borders and margins.
+   * <p>
+   * https://developer.mozilla.org/en/Determining_the_dimensions_of_elements
    * 
-   * @param layoutPanel the parent {@code LayoutPanel}
    * @param widget the given {@code Widget}
-   * @param x the new <i>x</i>-coordinate
-   * @param y the new <i>y</i>-coordinate
-   * @param width the new width
-   * @param height the new height
-   * 
-   * @deprecated replaced by {@code WidgetHelper#setBounds(LayoutPanel, Widget,
-   *             Rectangle)}
+   * @return a {@link Dimension} object that indicates the size of this
+   *         component
    */
-  @Deprecated
-  public static void setBounds(final LayoutPanel layoutPanel,
-      final Widget widget, final int x, final int y, int width, int height) {
-    int[] margins = DOM.getMarginSizes(widget.getElement());
-    if (width != -1) {
-      width -= (margins[1] + margins[3]);
-    }
-    if (height != -1) {
-      height -= (margins[0] + margins[2]);
-    }
-    setXY(layoutPanel, widget, x, y);
-    setSize(widget, width, height);
+  public static Dimension getOffsetSize(final Widget widget) {
+    return new Dimension(widget.getOffsetWidth(), widget.getOffsetHeight());
+  }
 
+  @Deprecated
+  public static Dimension getPreferredSize(Widget widget) {
+    // Ignore FormPanel if getWidget() returns a HasLayoutManager implementation
     if (widget instanceof FormPanel) {
       final Widget child = ((FormPanel) widget).getWidget();
       if (child != null && (child instanceof HasLayoutManager)) {
-        setSize(child, width, height);
+        widget = child;
       }
     }
+    if (widget instanceof HasLayoutManager) {
+      final HasLayoutManager lp = (HasLayoutManager) widget;
+      return lp.getPreferredSize();
+    } else {
+      final Element clonedElem = widget.getElement().cloneNode(true).cast();
+      final Element parentElem;
+      if (widget.getParent() instanceof DecoratorPanel) {
+        parentElem = widget.getParent().getParent().getElement();
+      } else {
+        parentElem = widget.getParent().getElement();
+      }
+      final Style style = clonedElem.getStyle();
+      style.setPosition(Position.STATIC);
+      style.setProperty("width", "auto");
+      style.setProperty("height", "auto");
+      style.setProperty("visibility", "hidden");
+      parentElem.appendChild(clonedElem);
+      final Dimension d = new Dimension(clonedElem.getOffsetWidth(),
+          clonedElem.getOffsetHeight());
+      parentElem.removeChild(clonedElem);
+      return d;
+    }
+  }
+
+  public static void setMaxHeight(final Widget w, final String height) {
+    DOM.setStyleAttribute(w.getElement(), MAX_HEIGHT, height);
+  }
+
+  public static void setMaxSize(Widget widget, String width, String height) {
+    setMaxWidth(widget, width);
+    setMaxHeight(widget, height);
+  }
+
+  public static void setMaxWidth(final Widget w, final String width) {
+    DOM.setStyleAttribute(w.getElement(), MAX_WIDTH, width);
+  }
+
+  public static void setMinHeight(final Widget w, final String height) {
+    DOM.setStyleAttribute(w.getElement(), MIN_HEIGHT, height);
+  }
+
+  public static void setMinSize(Widget widget, String width, String height) {
+    setMinWidth(widget, width);
+    setMinHeight(widget, height);
+  }
+
+  public static void setMinWidth(final Widget w, final String width) {
+    DOM.setStyleAttribute(w.getElement(), MIN_WIDTH, width);
   }
 
   /**
@@ -200,34 +209,69 @@ public class WidgetHelper {
     setBounds(layoutPanel, widget, r.x, r.y, r.width, r.height);
   }
 
-  public static void setMaxHeight(final Widget w, final String height) {
-    DOM.setStyleAttribute(w.getElement(), MAX_HEIGHT, height);
-  }
+  /**
+   * Moves and resizes the given {@code Widget}.
+   * 
+   * @param layoutPanel the parent {@code LayoutPanel}
+   * @param widget the given {@code Widget}
+   * @param x the new <i>x</i>-coordinate
+   * @param y the new <i>y</i>-coordinate
+   * @param width the new width
+   * @param height the new height
+   */
+  public static void setBounds(final LayoutPanel layoutPanel,
+      final Widget widget, final int x, final int y, int width, int height) {
+    final Element elem = widget.getElement();
 
-  public static void setMaxSize(Widget widget, String width, String height) {
-    setMaxWidth(widget, width);
-    setMaxHeight(widget, height);
-  }
-  public static void setMaxWidth(final Widget w, final String width) {
-    DOM.setStyleAttribute(w.getElement(), MAX_WIDTH, width);
-  }
-  public static void setMinHeight(final Widget w, final String height) {
-    DOM.setStyleAttribute(w.getElement(), MIN_HEIGHT, height);
-  }
-  public static void setMinSize(Widget widget, String width, String height) {
-    setMinWidth(widget, width);
-    setMinHeight(widget, height);
-  }
+    setXY(layoutPanel, widget, x, y);
 
-  public static void setMinWidth(final Widget w, final String width) {
-    DOM.setStyleAttribute(w.getElement(), MIN_WIDTH, width);
+    setSize(widget, width, height, DOM.getMarginSizes(elem),
+        DOM.getBorderSizes(elem), DOM.getPaddingSizes(elem));
   }
 
   /**
    * Resizes the given {@code Widget}.
+   * <p>
+   * This method fixes the box calculations for IE in QuirksMode, and also, the
+   * <em>button box model</em> bug in Explorer Windows and Mozilla:
+   * <ol>
+   * <li>
+   * Earlier versions of Internet Explorer calculate the {@code width} and
+   * {@code height} CSS properties in a way that does not comply with the CSS1
+   * box model. In CSS1, the {@code width} property is defined as the distance
+   * between the left and right edges of the bounding box that surrounds the
+   * element's content. Likewise, the {@code height} property is defined in CSS1
+   * as the distance between the top and bottom edges of the bounding box. With
+   * earlier versions of Internet Explorer, however, the {@code width} and
+   * {@code height} CSS properties also include the {@code border} and {@code
+   * padding} belts that surround the element's bounding box. The following
+   * graphic illustrates this difference.
+   * <p>
+   * <img border="1" src="BOXMODEL.gif">
+   * <p>
+   * <em>Note: To check the rendering mode in IE, type {@code
+   * javascript:alert(document.compatMode)} in IE's address line.</em>
+   * <p>
+   * For more information, see <a target="_blank"
+   * href="http://msdn.microsoft.com/en-us/library/bb250395%28VS.85%29.aspx">CSS
+   * Enhancements in Internet Explorer 6</a>.
+   * </li>
+   * <li>
+   * Both Explorer 6 Windows and Mozilla always give a button the traditional
+   * box model instead of the W3C one, even in strict mode.
+   * <p>
+   * Solution: For Mozilla, add -moz-box-sizing: content-box to the button.
+   * Unfortunately this bug is unsolvable in Explorer.
+   * <p>
+   * See: <a href="http://www.quirksmode.org/css/tests/mozie_button.html"
+   * target="_blank">Explorer Windows and Mozilla bug - button box model</a>
+   * </li>
+   * </ol>
    * 
    * @param widget the given {@code Widget}
    * @param d the {@code Dimension} specifying the new size in pixels
+   * @see #setSize(Widget, int, int)
+   * @see #setSize(Widget, int, int, int[], int[], int[])
    */
   public static void setSize(final Widget widget, final Dimension d) {
     setSize(widget, d.width, d.height);
@@ -235,57 +279,174 @@ public class WidgetHelper {
 
   /**
    * Resizes the given {@code Widget}.
+   * <p>
+   * This method fixes the box calculations for IE in QuirksMode, and also, the
+   * <em>button box model</em> bug in Explorer Windows and Mozilla:
+   * <ol>
+   * <li>
+   * Earlier versions of Internet Explorer calculate the {@code width} and
+   * {@code height} CSS properties in a way that does not comply with the CSS1
+   * box model. In CSS1, the {@code width} property is defined as the distance
+   * between the left and right edges of the bounding box that surrounds the
+   * element's content. Likewise, the {@code height} property is defined in CSS1
+   * as the distance between the top and bottom edges of the bounding box. With
+   * earlier versions of Internet Explorer, however, the {@code width} and
+   * {@code height} CSS properties also include the {@code border} and {@code
+   * padding} belts that surround the element's bounding box. The following
+   * graphic illustrates this difference.
+   * <p>
+   * <img border="1" src="BOXMODEL.gif">
+   * <p>
+   * <em>Note: To check the rendering mode in IE, type {@code
+   * javascript:alert(document.compatMode)} in IE's address line.</em>
+   * <p>
+   * For more information, see <a target="_blank"
+   * href="http://msdn.microsoft.com/en-us/library/bb250395%28VS.85%29.aspx">CSS
+   * Enhancements in Internet Explorer 6</a>.
+   * </li>
+   * <li>
+   * Both Explorer 6 Windows and Mozilla always give a button the traditional
+   * box model instead of the W3C one, even in strict mode.
+   * <p>
+   * Solution: For Mozilla, add -moz-box-sizing: content-box to the button.
+   * Unfortunately this bug is unsolvable in Explorer.
+   * <p>
+   * See: <a href="http://www.quirksmode.org/css/tests/mozie_button.html"
+   * target="_blank">Explorer Windows and Mozilla bug - button box model</a>
+   * </li>
+   * </ol>
    * 
    * @param widget the given {@code Widget}
    * @param width the new width in pixels
    * @param height the new height in pixels
-   * @deprecated replaced by {@link #setSize(Widget, Dimension)}
+   * @see #setSize(Widget, Dimension)
+   * @see #setSize(Widget, int, int, int[], int[], int[])
    */
-  @Deprecated
   public static void setSize(final Widget widget, final int width,
       final int height) {
     final Element elem = widget.getElement();
-
-    if (width >= 0) {
-      widget.setWidth(width + "px");
-      if (width != widget.getOffsetWidth()) {
-        setSize(widget, width, height, DOM.getBorderSizes(elem),
-            DOM.getPaddingSizes(elem));
-        return;
-      }
-    }
-
-    if (height >= 0) {
-      widget.setHeight(height + "px");
-      if (height != widget.getOffsetHeight()) {
-        final int[] b = DOM.getBorderSizes(elem);
-        final int[] p = DOM.getPaddingSizes(elem);
-        final int h = b[0] + b[2] + p[0] + p[2];
-        final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
-        widget.setHeight(Math.max(0, fixedHeight) + "px");
-      }
-    }
+    setSize(widget, width, height, DOM.getMarginSizes(elem),
+        DOM.getBorderSizes(elem), DOM.getPaddingSizes(elem));
   }
 
-  private static void setSize(Widget widget, int width, int height, int[] b,
-      int[] p) {
-    final Element elem = widget.getElement();
+  /**
+   * Resizes the given {@code Widget}.
+   * <p>
+   * This method fixes the box calculations for IE in QuirksMode, and also, the
+   * <em>button box model</em> bug in Explorer Windows and Mozilla:
+   * <ol>
+   * <li>
+   * Earlier versions of Internet Explorer calculate the {@code width} and
+   * {@code height} CSS properties in a way that does not comply with the CSS1
+   * box model. In CSS1, the {@code width} property is defined as the distance
+   * between the left and right edges of the bounding box that surrounds the
+   * element's content. Likewise, the {@code height} property is defined in CSS1
+   * as the distance between the top and bottom edges of the bounding box. With
+   * earlier versions of Internet Explorer, however, the {@code width} and
+   * {@code height} CSS properties also include the {@code border} and {@code
+   * padding} belts that surround the element's bounding box. The following
+   * graphic illustrates this difference.
+   * <p>
+   * <img border="1" src="BOXMODEL.gif">
+   * <p>
+   * <em>Note: To check the rendering mode in IE, type {@code
+   * javascript:alert(document.compatMode)} in IE's address line.</em>
+   * <p>
+   * For more information, see <a target="_blank"
+   * href="http://msdn.microsoft.com/en-us/library/bb250395%28VS.85%29.aspx">CSS
+   * Enhancements in Internet Explorer 6</a>.
+   * </li>
+   * <li>
+   * Both Explorer 6 Windows and Mozilla always give a button the traditional
+   * box model instead of the W3C one, even in strict mode.
+   * <p>
+   * Solution: For Mozilla, add -moz-box-sizing: content-box to the button.
+   * Unfortunately this bug is unsolvable in Explorer.
+   * <p>
+   * See: <a href="http://www.quirksmode.org/css/tests/mozie_button.html"
+   * target="_blank">Explorer Windows and Mozilla bug - button box model</a>
+   * </li>
+   * </ol>
+   * 
+   * @param widget the given {@code Widget}
+   * @param width the new width in pixels
+   * @param height the new height in pixels
+   * @param margin the widget's margin sizes
+   * @param border the widget's border width sizes
+   * @param padding the widget's padding sizes
+   * @see #setSize(Widget, Dimension)
+   * @see #setSize(Widget, int, int)
+   */
+  public static void setSize(final Widget widget, int width, int height,
+      final int[] margin, final int[] border, final int[] padding) {
+
+    // TODO review and write a test case!
+    if (widget instanceof FormPanel) {
+      final Widget child = ((FormPanel) widget).getWidget();
+      if (child != null && child instanceof HasLayoutManager) {
+        int[] margins = DOM.getMarginSizes(child.getElement());
+        if (width != -1) {
+          width -= (margins[1] + margins[3]);
+        }
+        if (height != -1) {
+          height -= (margins[0] + margins[2]);
+        }
+
+        // (ggeorg) FormPanel needs:
+        // border: none;
+        // padding: 0px;
+        // margin: 0px
+
+        setSize(child, width, height);
+      }
+    }
+
+    //
+    // Note: we use Widget calls, e.g. Widget.setWidth() or Widget.setHeight()
+    //
 
     if (width >= 0) {
-      widget.setWidth(width + "px");
-      if (width != widget.getOffsetWidth()) {
-        final int w = b[1] + b[3] + p[1] + p[3];
-        final int fixedWidth = DOM.fixQuirks(elem, width - w, 'w');
-        widget.setWidth(Math.max(0, fixedWidth) + "px");
+
+      width -= (margin[1] + margin[3]);
+
+      if (CompatMode.isStandardsMode() || !UserAgent.isIE()) {
+        final int w = width - (border[1] + border[3] + padding[1] + padding[3]);
+        widget.setWidth(Math.max(0, w) + Unit.PX.getType());
+
+        //
+        // handle button box model bug
+        //
+
+        if (width != widget.getOffsetWidth()) {
+          widget.setWidth(Math.max(0, width) + Unit.PX.getType());
+        }
+
+      } else {
+        // IE Quirks Mode
+        widget.setWidth(Math.max(0, width) + Unit.PX.getType());
       }
     }
 
     if (height >= 0) {
-      widget.setHeight(height + "px");
-      if (height != widget.getOffsetHeight()) {
-        final int h = b[0] + b[2] + p[0] + p[2];
-        final int fixedHeight = DOM.fixQuirks(elem, height - h, 'h');
-        widget.setHeight(Math.max(0, fixedHeight) + "px");
+
+      height -= (margin[0] + margin[2]);
+
+      if (CompatMode.isStandardsMode() || !UserAgent.isIE()) {
+        final int h = height
+            - (border[0] + border[2] + padding[0] + padding[2]);
+        widget.setHeight(Math.max(0, h) + Unit.PX.getType());
+
+        //
+        // handle button box model bug
+        //
+
+        if (height != widget.getOffsetHeight()) {
+          widget.setHeight(Math.max(0, height) + Unit.PX.getType());
+        }
+
+      } else {
+        // IE Quirks Mode
+        widget.setHeight(Math.max(0, height) + Unit.PX.getType());
       }
     }
   }
@@ -297,10 +458,7 @@ public class WidgetHelper {
    * @param widget the given {@code Widget}
    * @param x the new <i>x</i>-coordinate
    * @param y the new <i>y</i>-coordinate
-   * 
-   * @deprecated replaced by {@link #setXY(LayoutPanel, Widget, Point)}
    */
-  @Deprecated
   public static void setXY(final LayoutPanel layoutPanel, final Widget widget,
       final int x, final int y) {
     layoutPanel.setWidgetPosition(widget, x, y);

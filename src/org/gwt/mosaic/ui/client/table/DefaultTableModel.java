@@ -1,10 +1,9 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with this
- * work for additional information regarding copyright ownership. The ASF
- * licenses this file to You under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -16,383 +15,251 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.NoSuchElementException;
+
+import org.gwt.mosaic.ui.client.event.RowInsertionEvent;
+import org.gwt.mosaic.ui.client.event.RowInsertionHandler;
+import org.gwt.mosaic.ui.client.event.RowRemovalEvent;
+import org.gwt.mosaic.ui.client.event.RowRemovalHandler;
+import org.gwt.mosaic.ui.client.event.RowValueChangeEvent;
+import org.gwt.mosaic.ui.client.event.RowValueChangeHandler;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.ColumnSortList;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Response;
 
 /**
- * The default implementation of {@link TableModel} based on a {@code
- * java.util.Vector}.
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @param <RowType> the data type of the row values
  */
-public class DefaultTableModel extends Vector<Vector<Object>> implements
-    TableModel<Vector<Object>>, Serializable {
-  private static final long serialVersionUID = -6152131797498407068L;
+public class DefaultTableModel<RowType> extends
+    AbstractMutableTableModel<RowType> {
 
-  /** List of {@link TableModelListener TableModelListeners}. */
-  protected List<TableModelListener> listenerList = new ArrayList<TableModelListener>();
+  public static interface ColumnComparator<T> {
+    int compare(T t1, T t2, int column);
+  }
+
+  public static interface Provider<RowType> {
+    void requestRows(Request request, TableModel.Callback<RowType> callback);
+  }
+
+  public static interface Resolver<RowType> extends RowInsertionHandler,
+      RowRemovalHandler, RowValueChangeHandler<RowType> {
+  }
 
   /**
-   * Constructs an empty {@code DefaultListModel} instance.
+   * An iterator over the visible rows in an iterator over many rows.
    */
+  private class VisibleRowsIterator implements Iterator<RowType> {
+    /**
+     * The iterator of row data.
+     */
+    private Iterator<RowType> rows;
+
+    /**
+     * The current row of the rows iterator.
+     */
+    private int curRow;
+
+    /**
+     * The last visible row in the grid.
+     */
+    private int lastVisibleRow;
+
+    /**
+     * Constructor.
+     */
+    public VisibleRowsIterator(Iterator<RowType> rows, int startRow, int numRows) {
+      this.curRow = 0;
+      this.lastVisibleRow = startRow + numRows;
+
+      // Iterate up to the first row
+      while (curRow < startRow && rows.hasNext()) {
+        rows.next();
+        curRow++;
+      }
+      this.rows = rows;
+    }
+
+    public boolean hasNext() {
+      return (curRow < lastVisibleRow && rows.hasNext());
+    }
+
+    public RowType next() {
+      // Check that the next row exists
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+      ++curRow;
+      return rows.next();
+    }
+
+    public void remove() {
+      throw new UnsupportedOperationException("Remove not supported");
+    }
+  }
+
+  private final Provider<RowType> provider;
+  private final Resolver<RowType> resolver;
+
+  /**
+   * The column comparator used by the column sorter.
+   */
+  private ColumnComparator<RowType> columnComparator;
+
+  private List<RowType> data;
+
+  private boolean readOnly = false;
+
   public DefaultTableModel() {
+    this(new ArrayList<RowType>());
+  }
+
+  public DefaultTableModel(Collection<RowType> collection) {
     super();
+
+    data = new ArrayList<RowType>(collection);
+
+    provider = new Provider<RowType>() {
+      public void requestRows(final Request request,
+          TableModel.Callback<RowType> callback) {
+        // Get the primary column and sort order
+        final ColumnSortList sortList = request.getColumnSortList();
+        final int column = sortList.getPrimaryColumn();
+        final boolean ascending = sortList.isPrimaryAscending();
+
+        // Sort the row elements
+        if (DefaultTableModel.this.columnComparator != null) {
+          Collections.sort(data, new Comparator<RowType>() {
+            public int compare(RowType o1, RowType o2) {
+              if (ascending) {
+                return DefaultTableModel.this.columnComparator.compare(o1, o2,
+                    column);
+              } else {
+                return DefaultTableModel.this.columnComparator.compare(o2, o1,
+                    column);
+              }
+            }
+          });
+        }
+
+        // numRows = -1 means all rows (see PagingScrollTable API)
+        final int numRows = Math.min(request.getNumRows() < 0 ? data.size()
+            : request.getNumRows(), data.size() - request.getStartRow());
+        callback.onRowsReady(request, new Response<RowType>() {
+          @Override
+          public Iterator<RowType> getRowValues() {
+            return new VisibleRowsIterator(data.iterator(),
+                request.getStartRow(), numRows);
+          }
+        });
+      }
+    };
+
+    resolver = new Resolver<RowType>() {
+      public void onRowInsertion(RowInsertionEvent event) {
+        data.add(event.getRowIndex(), null);
+      }
+
+      public void onRowRemoval(RowRemovalEvent event) {
+        data.remove(event.getRowIndex());
+      }
+
+      public void onRowValueChange(RowValueChangeEvent<RowType> event) {
+        data.set(event.getRowIndex(), event.getRowValue());
+      }
+    };
+
+    bind();
+    
+    setRowCount(data.size());
+  }
+
+  public DefaultTableModel(Provider<RowType> provider) {
+    this(provider, null);
+  }
+
+  public DefaultTableModel(Provider<RowType> provider,
+      Resolver<RowType> resolver) {
+    super();
+
+    this.provider = provider;
+    this.resolver = resolver;
+
+    bind();
   }
 
   /**
-   * Constructs a model containing the elements of the specified collection, in
-   * the order they are returned by the collection's iterator.
-   * 
-   * @param c the collection whose elements are to be placed into this model
-   * @throws {@code NullPointerException} if the specified collection is {@code
-   *         null}
+   * @return the columnComparator
    */
-  public DefaultTableModel(Collection<? extends Vector<Object>> c) {
-    super(c);
+  public ColumnComparator<RowType> getColumnComparator() {
+    return columnComparator;
   }
 
   /**
-   * Adds a listener to the list that's notified each time a change to the data
-   * model occurs.
-   * 
-   * @param listener
-   * @see com.google.gwt.widgetideas.table.client.TableModel#addTableModelListener(com.google.gwt.widgetideas.table.client.TableModelListener)
+   * @return the provider
    */
-  public void addTableModelListener(TableModelListener listener) {
-    listenerList.add(listener);
+  public Provider<RowType> getProvider() {
+    return provider;
   }
 
   /**
-   * Removes a listener from the list.
-   * 
-   * @param listener the {@link TableModelListener}
+   * @return the resolver
    */
-  public void removeTableModelListener(TableModelListener listener) {
-    listenerList.remove(listener);
+  public Resolver<RowType> getResolver() {
+    return resolver;
   }
 
   /**
-   * Returns an array of all the table model listeners registered on this model.
-   * 
-   * @return all of this model's {@code TableModelListeners} or an empty array
-   *         if no table model listeners are currently registered
-   * 
-   * @see #addTableModelListener
-   * @see #removeTableModelListener
+   * @return the readOnly
    */
-  public TableModelListener[] getTableModelListeners() {
-    return (TableModelListener[]) listenerList.toArray(new TableModelListener[listenerList.size()]);
+  public boolean isReadOnly() {
+    return readOnly || resolver == null;
+  }
+
+  public boolean onRowInserted(int beforeRow) {
+    return !isReadOnly();
+  }
+
+  public boolean onRowRemoved(int row) {
+    return !isReadOnly();
+  }
+
+  public boolean onSetRowValue(int row, RowType rowValue) {
+    return !isReadOnly();
+  }
+
+  @Override
+  public void requestRows(Request request, TableModel.Callback<RowType> callback) {
+    getProvider().requestRows(request, callback);
   }
 
   /**
-   * Notifies all listeners that all cell values in the table's rows may have
-   * changed. The number of rows may also have changed and the {@code Table}
-   * should redraw the table from scratch. The structure of the table (as in the
-   * order of the columns) is assumed to be the same.
-   * 
-   * @see TableModelEvent
-   * @see org.gwt.mosaic.ui.client.Table#tableChanged(TableModelEvent)
+   * @param columnComparator the columnComparator to set
    */
-  public void fireTableDataChanged() {
-    fireTableChanged(new TableModelEvent(this));
+  public void setColumnComparator(ColumnComparator<RowType> columnComparator) {
+    this.columnComparator = columnComparator;
   }
 
   /**
-   * Notifies all listeners that the table's structure has changed. The number
-   * of columns in the table, and the names and types of the new columns may be
-   * different from the previous state. If the <code>JTable</code> receives this
-   * event and its <code>autoCreateColumnsFromModel</code> flag is set it
-   * discards any table columns that it had and reallocates default columns in
-   * the order they appear in the model. This is the same as calling
-   * <code>setModel(TableModel)</code> on the <code>JTable</code>.
-   * 
-   * @see TableModelEvent
+   * @param readOnly the readOnly to set
    */
-  public void fireTableStructureChanged() {
-    fireTableChanged(new TableModelEvent(this, 0 /* TableModelEvent.HEADER_ROW, */));
+  public void setReadOnly(boolean readOnly) {
+    this.readOnly = readOnly;
   }
 
-  /**
-   * Notifies all listeners that rows in the range
-   * <code>[firstRow, lastRow]</code>, inclusive, have been inserted.
-   * 
-   * @param firstRow the first row
-   * @param lastRow the last row
-   * 
-   * @see TableModelEvent
-   * 
-   */
-  public void fireTableRowsInserted(int firstRow, int lastRow) {
-    fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
-        TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.INSERT));
-  }
-
-  /**
-   * Notifies all listeners that rows in the range
-   * <code>[firstRow, lastRow]</code>, inclusive, have been updated.
-   * 
-   * @param firstRow the first row
-   * @param lastRow the last row
-   * 
-   * @see TableModelEvent
-   */
-  public void fireTableRowsUpdated(int firstRow, int lastRow) {
-    fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
-        TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.UPDATE));
-  }
-
-  /**
-   * Notifies all listeners that rows in the range
-   * <code>[firstRow, lastRow]</code>, inclusive, have been deleted.
-   * 
-   * @param firstRow the first row
-   * @param lastRow the last row
-   * 
-   * @see TableModelEvent
-   */
-  public void fireTableRowsDeleted(int firstRow, int lastRow) {
-    fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
-        TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.DELETE));
-  }
-
-  /**
-   * Notifies all listeners that the value of the cell at
-   * <code>[row, column]</code> has been updated.
-   * 
-   * @param row row of cell which has been updated
-   * @param column column of cell which has been updated
-   * @see TableModelEvent
-   */
-  public void fireTableCellUpdated(int row, int column) {
-    fireTableChanged(new TableModelEvent(this, row, row, column));
-  }
-
-  /**
-   * Forwards the given notification event to all
-   * <code>TableModelListeners</code> that registered themselves as listeners
-   * for this table model.
-   * 
-   * @param event the event to be forwarded
-   * 
-   * @see #addTableModelListener
-   * @see TableModelEvent
-   */
-  public void fireTableChanged(TableModelEvent event) {
-    for (TableModelListener listener : listenerList) {
-      listener.tableChanged(event);
+  private void bind() {
+    if (resolver != null) {
+      addRowInsertionHandler(resolver);
+      addRowRemovalHandler(resolver);
+      addRowValueChangeHandler(resolver);
     }
-  }
-
-  /**
-   * Inserts the specified element at the specified position.
-   * 
-   * @param index index at which the specified element is to be inserted
-   * @param element element to be inserted
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
-   *           {@code index < 0 || index > size()})
-   */
-  @Override
-  public void add(int index, Vector<Object> element) {
-    super.add(index, element);
-    fireTableRowsInserted(index, index);
-  }
-
-  /**
-   * Appends the specified element to the end of this model.
-   * 
-   * @param e element to be appended to this model
-   * @return {@code true} (as specified by {@link Collection#add})
-   */
-  @Override
-  public boolean add(Vector<Object> e) {
-    boolean result = super.add(e);
-    if (result) {
-      int index = super.size() - 1;
-      fireTableRowsInserted(index, index);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Appends all of the elements in the specified Collection to the end of this
-   * model, in the order that they are returned by the specified Collection's
-   * Iterator.
-   * 
-   * @param c elements to be inserted
-   * @return {@code true} if this model changed as a result of the call
-   * @throws NullPointerException if the specified collection is null
-   */
-  public boolean addAll(Collection<? extends Vector<Object>> c) {
-    return addAll(super.size(), c);
-  }
-
-  /**
-   * Inserts all of the elements in the specified Collection into this model at
-   * the specified position.
-   * 
-   * @param index index at which to insert the first element from the specified
-   *          collection
-   * @param c elements to be inserted
-   * @return {@code true} if this model changed as a result of the call
-   * @throws ArrayIndexOutOfBoundsException if the index is out of range (
-   *           {@code index < 0 || index > size()})
-   * @throws NullPointerException if the specified collection is null
-   */
-  public boolean addAll(int index, Collection<? extends Vector<Object>> c) {
-    if (super.addAll(index, c)) {
-      fireTableRowsInserted(index, index + c.size() - 1);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Adds the specified element to the end of this model.
-   * 
-   * @param obj the component to be added
-   * @deprecated Replaced by {@link #add(Object)}
-   */
-  @Override
-  public void addElement(Vector<Object> obj) {
-    add(obj);
-  }
-
-  /**
-   * Removes all of the elements from this model.
-   */
-  @Override
-  public void clear() {
-    int index1 = super.size() - 1;
-    super.clear();
-    fireTableRowsDeleted(0, index1);
-  }
-
-  /**
-   * Returns the number of elements in this model.
-   * 
-   * @return the number of elements in this model
-   * @deprecated Replaced by {@link #getRowCount()}
-   */
-  public int size() {
-    return super.size();
-  }
-
-  /**
-   * Gets the size of the list.
-   * 
-   * @return the number of elements currently in the list
-   * @see org.gwt.mosaic.ui.client.list.ListModel#getSize()
-   */
-  public int getRowCount() {
-    return super.size();
-  }
-
-  /**
-   * Replaces the element at the specified position in this Vector with the
-   * specified element.
-   * 
-   * @param index
-   * @param element
-   * @return the replaced element
-   */
-  @Override
-  public Vector<Object> set(int index, Vector<Object> element) {
-    Vector<Object> result = super.set(index, element);
-    fireTableRowsUpdated(index, index);
-    return result;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.table.TableModel#getValueAt(int, int)
-   */
-  public Object getValueAt(int rowIndex, int columnIndex) {
-    Vector<?> element = super.elementAt(rowIndex);
-    return element.elementAt(columnIndex);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.mosaic.ui.client.table.TableModel#setValueAt(java.lang.Object,
-   * int, int)
-   */
-  public void setValueAt(Object value, int rowIndex, int columnIndex) {
-    Vector<Object> element = super.elementAt(rowIndex);
-    element.setElementAt(value, columnIndex);
-    fireTableCellUpdated(rowIndex, columnIndex);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#remove(int)
-   */
-  @Override
-  public Vector<Object> remove(int index) {
-    Vector<Object> element = super.remove(index);
-    fireTableRowsDeleted(index, index);
-    return element;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#removeAll(java.util.Collection)
-   */
-  @Override
-  public boolean removeAll(Collection<?> c) {
-    int index1 = super.size() - 1;
-    boolean result = super.removeAll(c);
-    if (result) {
-      fireTableRowsDeleted(0, index1);
-      return true;
-    }
-    return false;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#removeAllElements()
-   */
-  @Override
-  public void removeAllElements() {
-    clear();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#removeElement(java.lang.Object)
-   */
-  @Override
-  public boolean removeElement(Object o) {
-    return remove(o);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#removeElementAt(int)
-   */
-  @Override
-  public void removeElementAt(int index) {
-    remove(index);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Vector#setSize(int)
-   */
-  @Override
-  public void setSize(int size) {
-    // TODO
   }
 }

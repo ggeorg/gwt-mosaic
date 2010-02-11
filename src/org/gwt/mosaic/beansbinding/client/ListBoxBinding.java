@@ -19,16 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gwt.beansbinding.core.client.AutoBinding;
-import org.gwt.beansbinding.core.client.ObjectProperty;
 import org.gwt.beansbinding.core.client.Property;
 import org.gwt.beansbinding.core.client.PropertyStateEvent;
 import org.gwt.beansbinding.core.client.PropertyStateListener;
+import org.gwt.beansbinding.core.client.util.Parameters;
 import org.gwt.beansbinding.ui.client.impl.AbstractColumnBinding;
 import org.gwt.beansbinding.ui.client.impl.ListBindingManager;
 import org.gwt.mosaic.ui.client.ListBox;
+import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
 import org.gwt.mosaic.ui.client.list.DefaultListModel;
+import org.gwt.mosaic.ui.client.list.ListColumn;
 import org.gwt.mosaic.ui.client.list.ListDataEvent;
 import org.gwt.mosaic.ui.client.list.ListDataListener;
+import org.gwt.mosaic.ui.client.list.ListHeader;
 import org.gwt.mosaic.ui.client.list.ListModel;
 
 /**
@@ -44,6 +47,7 @@ import org.gwt.mosaic.ui.client.list.ListModel;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
+@SuppressWarnings("unchecked")
 public final class ListBoxBinding<E, SS, TS> extends
     AutoBinding<SS, List<E>, TS, List> {
 
@@ -52,6 +56,7 @@ public final class ListBoxBinding<E, SS, TS> extends
   private Handler handler = new Handler();
   private ListBox<E> listBox;
   private BindingListModel model;
+  private boolean editable = true;
   private List<ColumnBinding> columnBindings = new ArrayList<ColumnBinding>();
 
   /**
@@ -75,21 +80,12 @@ public final class ListBoxBinding<E, SS, TS> extends
         : strategy, sourceObject, sourceListProperty, targetObject,
         new ElementsProperty<TS>(), name);
 
-    if (targetListBoxProperty == null) {
-      throw new IllegalArgumentException(
-          "target ListBox property can't be null");
-    }
+    Parameters.checkNotNull(targetListBoxProperty, "targetListBoxProperty");
 
     listBoxP = targetListBoxProperty;
     elementsP = (ElementsProperty<TS>) getTargetProperty();
-    addColumnBinding(null);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.beansbinding.core.client.AutoBinding#bindImpl()
-   */
   @Override
   protected void bindImpl() {
     elementsP.setAccessible(isListBoxAccessible());
@@ -98,11 +94,6 @@ public final class ListBoxBinding<E, SS, TS> extends
     super.bindImpl();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gwt.beansbinding.core.client.AutoBinding#unbindImpl()
-   */
   @Override
   protected void unbindImpl() {
     elementsP.removePropertyStateListener(null, handler);
@@ -114,11 +105,11 @@ public final class ListBoxBinding<E, SS, TS> extends
 
   private boolean isListBoxAccessible() {
     return listBoxP.isReadable(getTargetObject())
-        && listBoxP.getValue(getTargetObject()) != null;
+        && (listBoxP.getValue(getTargetObject()) != null);
   }
 
   private boolean isListBoxAccessible(Object value) {
-    return value != null && value != PropertyStateEvent.UNREADABLE;
+    return (value != null) && (value != PropertyStateEvent.UNREADABLE);
   }
 
   private void cleanupForLast() {
@@ -127,81 +118,210 @@ public final class ListBoxBinding<E, SS, TS> extends
     }
 
     listBox.setModel(new DefaultListModel<E>());
+
     listBox = null;
     model.setElements(null, true);
     model = null;
   }
 
+  public void setEditable(boolean editable) {
+    this.editable = editable;
+  }
+
+  public boolean isEditable() {
+    return editable;
+  }
+
   /**
-   * Creates a {@code ColumnBinding} and adds it to the list of
-   * {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
+   * Creates a {@code ColumnBinding} and adds it to the list of {@code
+   * ColumnBindings} maintained by this {@code ListBoxBinding}.
    * 
    * @param columnProperty the property with which to derive each list value
    *          from its corresponding object in the source {@code List}
    * @return the {@code ColumnBinding}
    */
   public ColumnBinding addColumnBinding(Property<E, ?> columnProperty) {
-    return addDetailBinding(columnProperty, null);
+    return addColumnBinding(columnProperty, null);
   }
 
   /**
-   * Creates a {@code ColumnBinding} and adds it to the list of
+   * Creates a named {@code ColumnBinding} and adds it to the end of the list of
    * {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@code ListBoxs}, with a {@code ColumnBinding's} order in the list
+   * determining its index.
    * 
-   * @param columnProperty the property with which to derive each list value
-   *          from its corresponding object in the source {@code List}
-   * @param name
+   * @param columnProperty the property with which to derive cell values from
+   *          the elements of the source {@code List}
+   * @param name a name for the column binding
    * @return the {@code ColumnBinding}
+   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
    */
-  public ColumnBinding addDetailBinding(Property<E, ?> detailProperty,
+  public ColumnBinding addColumnBinding(Property<E, ?> columnProperty,
       String name) {
     throwIfBound();
 
-    if (name == null && ListBoxBinding.this.getName() != null) {
+    Parameters.checkNotNull(columnProperty, "columnProperty");
+
+    if ((name == null) && (ListBoxBinding.this.getName() != null)) {
       name = ListBoxBinding.this.getName() + ".COLUMN_BINDING";
     }
 
-    ColumnBinding columnBinding = detailProperty == null ? new ColumnBinding(
-        ObjectProperty.<E> create(), name) : new ColumnBinding(detailProperty,
-        name);
+    ColumnBinding binding = new ColumnBinding(columnBindings.size(),
+        columnProperty, name);
+    columnBindings.add(binding);
 
-    columnBindings.add(columnBinding);
+    return binding;
+  }
 
-    return columnBinding;
+  /**
+   * Creates a {@code ColumnBinding} and inserts it at the given index into the
+   * list of {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@link ListBox}, with a {@code ColumnBinding's} order in the list
+   * determining its index.
+   * 
+   * @param index the index at which to insert the {@code ColumnBinding}
+   * @param columnProperty the property with which to derive cell values from
+   *          the elements of the source {@code List}
+   * @return the {@code ColumnBinding}
+   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
+   */
+  public ColumnBinding addColumnBinding(int index, Property<E, ?> columnProperty) {
+    return addColumnBinding(index, columnProperty, null);
+  }
+
+  /**
+   * Creates a {@code ColumnBinding} and inserts it at the given index into the
+   * list of {@code ColumnBindings} maintained by this {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
+   * determining its table model index.
+   * 
+   * @param index the index at which to insert the {@code ColumnBinding}
+   * @param columnProperty the property with which to derive cell values from
+   *          the elements of the source {@code List}
+   * @param name a name for the {@code ColumnBinding}
+   * @return the {@code ColumnBinding}
+   * @throws IllegalArgumentException if {@code columnProperty} is {@code null}
+   */
+  public ColumnBinding addColumnBinding(int index,
+      Property<E, ?> columnProperty, String name) {
+    throwIfBound();
+
+    Parameters.checkNotNull(columnProperty, "columnProperty");
+
+    if ((name == null) && (ListBoxBinding.this.getName() != null)) {
+      name = ListBoxBinding.this.getName() + ".COLUMN_BINDING";
+    }
+
+    ColumnBinding binding = new ColumnBinding(index, columnProperty, name);
+    columnBindings.add(index, binding);
+    adjustIndices(index + 1, true);
+
+    return binding;
   }
 
   /**
    * Removes the given {@code ColumnBinding} from the list maintained by this
    * {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@code ListBoxs}, with a {@code ColumnBinding's} order in the list
+   * determining its index.
    * 
    * @param binding the {@code ColumnBinding} to remove
-   * @return {@code true} if this list contained the specified element
-   * @see #addColumnBinding(Property)
-   * @see #addDetailBinding(Property, String)
    */
   public boolean removeColumnBinding(ColumnBinding binding) {
     throwIfBound();
-    return columnBindings.remove(binding);
+
+    boolean retVal = columnBindings.remove(binding);
+
+    if (retVal) {
+      adjustIndices(binding.getColumn(), false);
+    }
+
+    return retVal;
   }
 
   /**
-   * Returns an array of the {@code ColumnBindings} maintained by this
-   * {@code ListBoxBinding}.
+   * Removes the {@code ColumnBinding} with the given index from the list
+   * maintained by this {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@code ListBoxs}, with a {@code ColumnBinding's} order in the list
+   * determining its index.
    * 
-   * @return the list of {@code ColumnBindings}
-   * @see #addColumnBinding(Property)
-   * @see #addDetailBinding(Property, String)
+   * @param index the index of the {@code ColumnBinding} to remove
    */
-  public ColumnBinding[] getColumnBindings() {
-    return (ColumnBinding[]) columnBindings.toArray(new AbstractColumnBinding[columnBindings.size()]);
+  public ColumnBinding removeColumnBinding(int index) {
+    throwIfBound();
+
+    ColumnBinding retVal = columnBindings.remove(index);
+
+    if (retVal != null) {
+      adjustIndices(index, false);
+    }
+
+    return retVal;
   }
 
-  private final Property DETAIL_PROPERTY = new Property() {
-    public Class<Object> getWriteType(Object source) {
-      return Object.class;
+  /**
+   * Returns the {@code ColumnBinding} with the given index in the list
+   * maintained by this {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@code ListBoxs}, with a {@code ColumnBinding's} order in the list
+   * determining its index.
+   * 
+   * @param index the index of the {@code ColumnBinding} to return
+   * @return the {@code ColumnBinding} at the given index
+   */
+  public ColumnBinding getColumnBinding(int index) {
+    return columnBindings.get(index);
+  }
+
+  /**
+   * Returns an unmodifiable copy of the list of {@code ColumnBindings}
+   * maintained by this {@code ListBoxBinding}.
+   * <p>
+   * The list of {@code ColumnBindings} dictates the columns to be displayed in
+   * the {@code ListBox}, with a {@code ColumnBinding's} order in the list
+   * determining its index.
+   * 
+   * @return the list of {@code ColumnBindings}
+   */
+  public List<ColumnBinding> getColumnBindings() {
+    // XXX return Collections.unmodifiableList(columnBindings);
+    return columnBindings;
+  }
+
+  private void adjustIndices(int start, boolean up) {
+    int size = columnBindings.size();
+
+    for (int i = start; i < size; i++) {
+      ColumnBinding cb = columnBindings.get(i);
+      cb.adjustColumn(cb.getColumn() + (up ? 1 : (-1)));
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  private final class ColumnProperty extends Property {
+
+    private ColumnBinding binding;
+
+    public Class<? extends Object> getWriteType(Object source) {
+      return (binding.columnClass == null) ? Object.class : binding.columnClass;
     }
 
     public Object getValue(Object source) {
+      if (binding.isBound()) {
+        return binding.editingObject;
+      }
+
       throw new UnsupportedOperationException();
     }
 
@@ -210,7 +330,7 @@ public final class ListBoxBinding<E, SS, TS> extends
     }
 
     public boolean isReadable(Object source) {
-      throw new UnsupportedOperationException();
+      return binding.isBound();
     }
 
     public boolean isWriteable(Object source) {
@@ -219,42 +339,102 @@ public final class ListBoxBinding<E, SS, TS> extends
 
     public void addPropertyStateListener(Object source,
         PropertyStateListener listener) {
-      throw new UnsupportedOperationException();
     }
 
     public void removePropertyStateListener(Object source,
         PropertyStateListener listener) {
-      throw new UnsupportedOperationException();
     }
 
     public PropertyStateListener[] getPropertyStateListeners(Object source) {
-      throw new UnsupportedOperationException();
+      return new PropertyStateListener[0];
     }
-  };
-
-  /**
-   * {@code ColumnBinding} represents a binding between a property of the
-   * elements in the {@code ListBoxBinding's} source {@code List}, and the
-   * values shown in the {@code ListBox}.
-   * <p>
-   * A {@code Converter} may be specified on a {@code ColumnBinding}.
-   * Specifying a {@code Validator} is also possible, but doesn't make sense
-   * since {@code ListBox} values aren't editable.
-   * <p>
-   * {@code ColumnBindings} are managed by their {@code ListBoxBinding}. They
-   * are not to be explicitly bound, unbound, added to a {@code BindingGroup},
-   * or accessed in a way that is not allowed for a managed binding.
-   * 
-   * @see ListBoxBinding#addColumnBinding(Property)
-   */
-  public final class ColumnBinding extends AbstractColumnBinding {
-
-    private ColumnBinding(Property<E, ?> detailProperty, String name) {
-      super(0, detailProperty, DETAIL_PROPERTY, name);
-    }
-
   }
 
+  // -----------------------------------------------------------------------
+  public final class ColumnBinding extends AbstractColumnBinding {
+
+    private Class<?> columnClass;
+    private boolean editable = true;
+    private String columnName;
+    private Object editingObject;
+
+    private ColumnBinding(int column, Property<E, ?> columnProperty, String name) {
+      super(column, columnProperty, new ColumnProperty(), name);
+      ((ColumnProperty) getTargetProperty()).binding = this;
+    }
+
+    private void adjustColumn(int newCol) {
+      setColumn(newCol);
+    }
+
+    /**
+     * Sets a name for the column represented by this {@code ColumnBinding}.
+     * This is used to initialize the table's column header name. If {@code
+     * null} is specified, the {@code toString()} value of the {@code
+     * ColumnBinding's} source property is used.
+     * 
+     * @param name the name
+     * @return the {@code ColumnBinding} itself, to allow for method chaining
+     */
+    public ColumnBinding setColumnName(String name) {
+      ListBoxBinding.this.throwIfBound();
+      this.columnName = name;
+
+      return this;
+    }
+
+    /**
+     * Sets the column class to be used by {@code ListBox} to determine the
+     * renderer and editor for the column represented by this {@code
+     * ColumnBinding}.
+     * 
+     * @param columnClass the column class
+     * @return the {@code ColumnBinding} itself, to allow for method chaining
+     */
+    public ColumnBinding setColumnClass(Class<?> columnClass) {
+      ListBoxBinding.this.throwIfBound();
+      this.columnClass = columnClass;
+
+      return this;
+    }
+
+    /**
+     * Returns the column class to be used by {@code ListBox} to determine the
+     * renderer and editor for the column represented by this {@code
+     * ColumnBinding}.
+     * 
+     * @see #setColumnClass
+     */
+    public Class<?> getColumnClass() {
+      return (columnClass == null) ? Object.class : columnClass;
+    }
+
+    /**
+     * Returns the name for the column represented by this {@code ColumnBinding}
+     * . This is used to initialize the table's column header name. If no name
+     * has been specified, or if it has been set to {@code null}, the {@code
+     * toString()} value of the {@code ColumnBinding's} source property is
+     * returned.
+     * 
+     * @return the name for the column
+     * @see #setColumnName
+     */
+    public String getColumnName() {
+      return (columnName == null) ? getSourceProperty().toString() : columnName;
+    }
+
+    public ColumnBinding setEditable(boolean editable) {
+      this.editable = editable;
+
+      return this;
+    }
+
+    public boolean isEditable() {
+      return editable;
+    }
+  }
+
+  // -----------------------------------------------------------------------
   private class Handler implements PropertyStateListener {
     public void propertyStateChanged(PropertyStateEvent pse) {
       if (!pse.getValueChanged()) {
@@ -280,7 +460,22 @@ public final class ListBoxBinding<E, SS, TS> extends
         if (listBox == null) {
           listBox = listBoxP.getValue(getTargetObject());
           model = new BindingListModel();
+
           listBox.setModel(model);
+
+          ListHeader header = new ListHeader();
+          for (ColumnBinding columnBinding : ListBoxBinding.this.getColumnBindings()) {
+            header.add(new ListColumn(columnBinding.getColumnName()));
+          }
+          listBox.setHeader(header);
+
+          listBox.setCellRenderer(new CellRenderer<E>() {
+            public void renderCell(ListBox<E> listBox, int row, int column,
+                E item) {
+              listBox.setText(row, column,
+                  model.valueAt(row, column).toString());
+            }
+          });
         }
 
         model.setElements((List) pse.getNewValue(), true);
@@ -288,8 +483,10 @@ public final class ListBoxBinding<E, SS, TS> extends
     }
   }
 
+  // -----------------------------------------------------------------------
   private final class BindingListModel extends ListBindingManager implements
       ListModel {
+
     private final List<ListDataListener> listeners;
 
     public BindingListModel() {
@@ -297,10 +494,10 @@ public final class ListBoxBinding<E, SS, TS> extends
       listeners = new ArrayList<ListDataListener>();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.mosaic.beansbinding.client.impl.ListBindingManager#getColBindings()
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#getColBindings()
      */
     @Override
     protected AbstractColumnBinding[] getColBindings() {
@@ -309,20 +506,20 @@ public final class ListBoxBinding<E, SS, TS> extends
       return bindings;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.mosaic.beansbinding.client.impl.ListBindingManager#allChanged()
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#allChanged()
      */
     @Override
     protected void allChanged() {
       contentsChanged(0, size());
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.mosaic.beansbinding.client.impl.ListBindingManager#valueChanged(int,
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#valueChanged(int,
      *      int)
      */
     @Override
@@ -330,10 +527,10 @@ public final class ListBoxBinding<E, SS, TS> extends
       contentsChanged(row, row);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.mosaic.beansbinding.client.impl.ListBindingManager#added(int,
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#added(int,
      *      int)
      */
     @Override
@@ -348,10 +545,10 @@ public final class ListBoxBinding<E, SS, TS> extends
       }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.mosaic.beansbinding.client.impl.ListBindingManager#removed(int,
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#removed(int,
      *      int)
      */
     @Override
@@ -365,10 +562,10 @@ public final class ListBoxBinding<E, SS, TS> extends
       }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.mosaic.beansbinding.client.impl.ListBindingManager#changed(int)
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#changed(int)
      */
     @Override
     protected void changed(int row) {
@@ -383,19 +580,17 @@ public final class ListBoxBinding<E, SS, TS> extends
       }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.mosaic.ui.client.list.ListModel#getElementAt(int)
      */
     public Object getElementAt(int index) {
-      System.out.println(valueAt(index, 0));
-      System.out.println(getElement(index));
       return getElement(index);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.mosaic.ui.client.list.ListModel#addListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
      */
@@ -403,8 +598,8 @@ public final class ListBoxBinding<E, SS, TS> extends
       listeners.add(l);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.mosaic.ui.client.list.ListModel#removeListDataListener(org.gwt.mosaic.ui.client.list.ListDataListener)
      */
@@ -412,8 +607,8 @@ public final class ListBoxBinding<E, SS, TS> extends
       listeners.remove(l);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.mosaic.ui.client.list.ListModel#getSize()
      */

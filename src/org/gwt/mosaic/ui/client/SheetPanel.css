@@ -1,0 +1,18 @@
+@if user.agent ie6 ie7 ie8 {
+  .sheet {
+    border: 1p solid #000;
+    background: white;
+  }
+} @else {
+  .sheet {
+    \-moz-box-shadow: 0px 10px 20px #000000;
+    \-webkit-box-shadow: 0px 10px 20px rgba(0, 0, 0, 1.0);
+    box-shadow: 0px 10px 20px #000000;
+    border: 1px solid #999;
+    background: white;
+  }
+}
+
+.open {
+  filter: "progid:DXImageTransform.Microsoft.dropShadow(color=#818181, offX=7, offY=7, positive=true)";
+}

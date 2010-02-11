@@ -56,7 +56,7 @@ import java.util.Set;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
-import org.gwt.mosaic.core.client.UserAgent;
+import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
 import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -222,8 +222,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * Maps components to their associated <code>CellConstraints</code>.
    * 
    * @see CellConstraints
-   * @see #getConstraints(Component)
-   * @see #setConstraints(Component, CellConstraints)
+   * @see #getConstraints(Widget)
+   * @see #setConstraints(Widget, CellConstraints)
    */
   private final Map<Widget, CellConstraints> constraintMap;
 
@@ -242,22 +242,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * of these widgets.
    */
   private transient List<Widget>[] rowWidgets;
-
-  /**
-   * Caches component minimum and preferred sizes. All requests for component
-   * sizes shall be directed to the cache.
-   */
-  private final ComponentSizeCache componentSizeCache;
-
-  /**
-   * These functional objects are used to measure component sizes. They abstract
-   * from horizontal and vertical orientation and so, allow to implement the
-   * layout algorithm for both orientations with a single set of methods.
-   */
-  private final Measure minimumWidthMeasure;
-  private final Measure minimumHeightMeasure;
-  private final Measure preferredWidthMeasure;
-  private final Measure preferredHeightMeasure;
 
   // Instance Creation ****************************************************
 
@@ -429,6 +413,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @throws NullPointerException if colSpecs or rowSpecs is {@code null}
    */
   public FormLayout(ColumnSpec[] colSpecs, RowSpec[] rowSpecs) {
+    super();
+
     if (colSpecs == null)
       throw new NullPointerException(
           "The column specifications must not be null.");
@@ -441,11 +427,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
     rowGroupIndices = new int[][] {};
     int initialCapacity = colSpecs.length * rowSpecs.length / 4;
     constraintMap = new HashMap<Widget, CellConstraints>(initialCapacity);
-    componentSizeCache = new ComponentSizeCache(initialCapacity);
-    minimumWidthMeasure = new MinimumWidthMeasure(componentSizeCache);
-    minimumHeightMeasure = new MinimumHeightMeasure(componentSizeCache);
-    preferredWidthMeasure = new PreferredWidthMeasure(componentSizeCache);
-    preferredHeightMeasure = new PreferredHeightMeasure(componentSizeCache);
   }
 
   // Accessing the Column and Row Specifications **************************
@@ -593,11 +574,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @throws IndexOutOfBoundsException if the column index is out of range
    * @throws IllegalStateException if the column contains components or if the
    *           column is already grouped
-   * 
-   * @see com.jgoodies.forms.extras.FormLayoutUtils#columnContainsComponent(Container,
-   *      int)
-   * @see com.jgoodies.forms.extras.FormLayoutUtils#isGroupedColumn(FormLayout,
-   *      int)
    */
   public void removeColumn(int columnIndex) {
     if (columnIndex < 1 || columnIndex > getColumnCount()) {
@@ -678,11 +654,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * @throws IndexOutOfBoundsException if the row index is out of range
    * @throws IllegalStateException if the row contains components or if the row
    *           is already grouped
-   * 
-   * @see com.jgoodies.forms.extras.FormLayoutUtils#rowContainsComponent(Container,
-   *      int)
-   * @see com.jgoodies.forms.extras.FormLayoutUtils#isGroupedRow(FormLayout,
-   *      int)
    */
   public void removeRow(int rowIndex) {
     if (rowIndex < 1 || rowIndex > getRowCount()) {
@@ -976,92 +947,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
     setRowGroups(newRowGroups);
   }
 
-  // Other Accessors ********************************************************
-
-  /**
-   * Returns whether invisible components shall be taken into account by this
-   * layout. This container-wide setting can be overridden per component. See
-   * {@link #setHonorsVisibility(boolean)} for details.
-   * 
-   * @return <code>true</code> if the component visibility is honored by this
-   *         FormLayout, <code>false</code> if it is ignored. This setting can
-   *         be overridden by individual CellConstraints using
-   *         {@link #setHonorsVisibility(Component, Boolean)}.
-   * 
-   * @since 1.2
-   */
-  public boolean getHonorsVisibility() {
-    return honorsVisibility;
-  }
-
-  /**
-   * Specifies whether invisible components shall be taken into account by this
-   * layout for computing the layout size and setting component bounds. If set
-   * to <code>true</code> invisible components will be ignored by the layout. If
-   * set to <code>false</code> components will be taken into account regardless
-   * of their visibility. Visible components are always used for sizing and
-   * positioning.
-   * <p>
-   * 
-   * The default value for this setting is <code>true</code>. It is useful to
-   * set the value to <code>false</code> (in other words to ignore the
-   * visibility) if you switch the component visibility dynamically and want the
-   * container to retain the size and component positions.
-   * <p>
-   * 
-   * This container-wide default setting can be overridden per component using
-   * {@link #setHonorsVisibility(Component, Boolean)}.
-   * <p>
-   * 
-   * Components are taken into account, if
-   * <ol>
-   * <li>they are visible, or
-   * <li>they have no individual setting and the container-wide settings ignores
-   * the visibility (honorsVisibility set to <code>false</code>), or
-   * <li>the individual component ignores the visibility.
-   * </ol>
-   * 
-   * @param b <code>true</code> to honor the visibility, i.e. to exclude
-   *          invisible components from the sizing and positioning,
-   *          <code>false</code> to ignore the visibility, in other words to
-   *          layout visible and invisible components
-   */
-  public void setHonorsVisibility(boolean b) {
-    boolean oldHonorsVisibility = getHonorsVisibility();
-    if (oldHonorsVisibility == b)
-      return;
-    honorsVisibility = b;
-    Set componentSet = constraintMap.keySet();
-    if (componentSet.isEmpty())
-      return;
-    Widget firstComponent = (Widget) componentSet.iterator().next();
-    Widget container = firstComponent.getParent();
-    // XXX invalidateAndRepaint(container);
-  }
-
-  /**
-   * Specifies whether the given component shall be taken into account for
-   * sizing and positioning. This setting overrides the container-wide default.
-   * See {@link #setHonorsVisibility(boolean)} for details.
-   * 
-   * @param widget the component that shall get an individual setting
-   * @param b <code>Boolean.TRUE</code> to override the container default and
-   *          honor the visibility for the given component,
-   *          <code>Boolean.FALSE</code> to override the container default and
-   *          ignore the visibility for the given component, <code>null</code>
-   *          to use the container default value as specified by
-   *          {@link #getHonorsVisibility()}.
-   * 
-   * @since 1.2
-   */
-  public void setHonorsVisibility(Widget widget, Boolean b) {
-    CellConstraints constraints = getConstraints0(widget);
-    if (FormUtils.equals(b, constraints.honorsVisibility))
-      return;
-    constraints.honorsVisibility = b;
-    // XXX invalidateAndRepaint(widget.getParent());
-  }
-
   // Implementing the LayoutManager and LayoutManager2 Interfaces *********
 
   /**
@@ -1097,8 +982,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * Most applications do not call this method directly.
    * 
    * @param comp the component to be removed.
-   * @see Container#remove(java.awt.Component)
-   * @see Container#removeAll()
    */
   public void removeLayoutComponent(Widget comp) {
     removeConstraints(comp);
@@ -1115,20 +998,16 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * 
    * @param layoutPanel the container in which to do the layout
    * @return the minimum size of the <code>parent</code> container
-   * 
-   * @see Container#doLayout()
    */
   public Dimension minimumLayoutSize(LayoutPanel layoutPanel) {
     return computeLayoutSize(layoutPanel, minimumWidthMeasure,
         minimumHeightMeasure);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
-   * @see
-   * org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.
-   * mosaic.ui.client.layout.LayoutPanel)
+   * @see org.gwt.mosaic.ui.client.layout.LayoutManager#getPreferredSize(org.gwt.mosaic.ui.client.layout.LayoutPanel)
    */
   public Dimension getPreferredSize(LayoutPanel layoutPanel) {
     try {
@@ -1139,7 +1018,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
       }
     } catch (Exception e) {
       GWT.log(e.getMessage(), e);
-      Window.alert(this.getClass().getName() + ".getPreferredSize(): "
+      Window.alert(getClass().getName() + ".getPreferredSize(): "
           + e.getLocalizedMessage());
     }
     return new Dimension();
@@ -1150,9 +1029,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
    * specified target container.
    * 
    * @param target the container which needs to be laid out
-   * @see Container
-   * @see #minimumLayoutSize(Container)
-   * @see #preferredLayoutSize(Container)
    * @return the maximum dimensions for this layout
    */
   public Dimension maximumLayoutSize(Widget target) {
@@ -1186,16 +1062,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
   }
 
   /**
-   * Invalidates the layout, indicating that if the layout manager has cached
-   * information it should be discarded.
-   * 
-   * @param target the container that holds the layout to be invalidated
-   */
-  public void invalidateLayout(Widget target) {
-    invalidateCaches();
-  }
-
-  /**
    * Lays out the specified {@link LayoutPanel} using this form layout. This
    * method reshapes widgets in the specified {@link LayoutPanel} in order to
    * satisfy the constraints of this {@code FormLayout} object.
@@ -1226,10 +1092,11 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
       final Dimension box = DOM.getClientSize(layoutPanel.getElement());
 
-      final int left = paddings[3];
-      final int top = paddings[0];
-      int width = box.width - (paddings[1] + paddings[3]);
-      int height = box.height - (paddings[0] + paddings[2]);
+      final int left = paddingLeftMeasure.sizeOf(layoutPanel);
+      final int top = paddingTopMeasure.sizeOf(layoutPanel);
+      int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
+      int height = box.height
+          - (top + paddingBottomMeasure.sizeOf(layoutPanel));
 
       int[] x = computeGridOrigins(layoutPanel, width, left, colSpecs,
           colWidgets, colGroupIndices, minimumWidthMeasure,
@@ -1245,12 +1112,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
       throw new RuntimeException(e);
     }
 
-    // if (runTwice()) {
-    // recalculate(componentSizeCache.minimumSizes);
-    // }
-
   }
-  
+
   // Layout Algorithm *****************************************************
 
   /**
@@ -1362,11 +1225,19 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
     // XXX Insets insets = layoutPanel.getInsets();
 
-    maxWidth += (margins[1] + margins[3]);
-    maxHeight += (margins[0] + margins[2]);
+    maxWidth += marginLeftMeasure.sizeOf(layoutPanel)
+        + marginRightMeasure.sizeOf(layoutPanel)
+        + borderLeftMeasure.sizeOf(layoutPanel)
+        + borderRightMeasure.sizeOf(layoutPanel)
+        + paddingLeftMeasure.sizeOf(layoutPanel)
+        + paddingRightMeasure.sizeOf(layoutPanel);
 
-    maxWidth += paddings[1] + paddings[3];
-    maxHeight += paddings[0] + paddings[2];
+    maxHeight += marginTopMeasure.sizeOf(layoutPanel)
+        + marginBottomMeasure.sizeOf(layoutPanel)
+        + borderTopMeasure.sizeOf(layoutPanel)
+        + borderBottomMeasure.sizeOf(layoutPanel)
+        + paddingTopMeasure.sizeOf(layoutPanel)
+        + paddingBottomMeasure.sizeOf(layoutPanel);
 
     return new Dimension(maxWidth, maxHeight);
   }
@@ -1461,13 +1332,6 @@ public final class FormLayout extends BaseLayout implements Serializable {
           minimumWidthMeasure, minimumHeightMeasure, preferredWidthMeasure,
           preferredHeightMeasure);
     }
-  }
-
-  /**
-   * Invalidates the component size caches.
-   */
-  private void invalidateCaches() {
-    componentSizeCache.invalidate();
   }
 
   /**
@@ -1705,7 +1569,7 @@ public final class FormLayout extends BaseLayout implements Serializable {
   /**
    * Components are taken into account, if a) they are visible, or b) they have
    * no individual setting and the container-wide settings ignores the
-   * visibility, or c) the individual component ignores the visibility.
+   * visibility.
    * 
    * @param component
    * @param cc
@@ -1713,185 +1577,8 @@ public final class FormLayout extends BaseLayout implements Serializable {
    *         <code>false</code> otherwise
    */
   private boolean takeIntoAccount(Widget component, CellConstraints cc) {
-    return component.isVisible()
-        || ((cc.honorsVisibility == null) && !getHonorsVisibility())
+    return component.isVisible() || (cc.honorsVisibility == null)
         || Boolean.FALSE.equals(cc.honorsVisibility);
-  }
-
-  // Measuring Component Sizes ********************************************
-
-  /**
-   * An interface that describes how to measure a {@code Widget}. Used to
-   * abstract from horizontal and vertical dimensions as well as minimum and
-   * preferred sizes.
-   */
-  public static interface Measure {
-
-    /**
-     * Computes and returns the size of the given {@code Component}.
-     * 
-     * @param widget the widget to measure
-     * @return the widget's size
-     */
-    int sizeOf(Widget widget);
-  }
-
-  /**
-   * An abstract implementation of the <code>Measure</code> interface that
-   * caches widget sizes.
-   */
-  private abstract static class CachingMeasure implements Measure, Serializable {
-    private static final long serialVersionUID = 127202010383163822L;
-
-    /**
-     * Holds previously requested widget sizes. Used to minimize size requests
-     * to subwidgets.
-     */
-    protected final ComponentSizeCache cache;
-
-    private CachingMeasure(ComponentSizeCache cache) {
-      this.cache = cache;
-    }
-
-  }
-
-  /**
-   * Measures a widget by computing its minimum width.
-   */
-  private static final class MinimumWidthMeasure extends CachingMeasure {
-    private static final long serialVersionUID = 5292170041706270613L;
-
-    private MinimumWidthMeasure(ComponentSizeCache cache) {
-      super(cache);
-    }
-
-    public int sizeOf(Widget c) {
-      return cache.getMinimumSize(c).width;
-    }
-  }
-
-  /**
-   * Measures a widget by computing its minimum height.
-   */
-  private static final class MinimumHeightMeasure extends CachingMeasure {
-    private static final long serialVersionUID = 6309128736400196915L;
-
-    private MinimumHeightMeasure(ComponentSizeCache cache) {
-      super(cache);
-    }
-
-    public int sizeOf(Widget c) {
-      return cache.getMinimumSize(c).height;
-    }
-  }
-
-  /**
-   * Measures a widget by computing its preferred width.
-   */
-  private static final class PreferredWidthMeasure extends CachingMeasure {
-    private static final long serialVersionUID = -7722605116642790850L;
-
-    private PreferredWidthMeasure(ComponentSizeCache cache) {
-      super(cache);
-    }
-
-    public int sizeOf(Widget c) {
-      return cache.getPreferredSize(c).width;
-    }
-  }
-
-  /**
-   * Measures a widget by computing its preferred height.
-   */
-  private static final class PreferredHeightMeasure extends CachingMeasure {
-    private static final long serialVersionUID = -7294928543479708370L;
-
-    private PreferredHeightMeasure(ComponentSizeCache cache) {
-      super(cache);
-    }
-
-    public int sizeOf(Widget c) {
-      return cache.getPreferredSize(c).height;
-    }
-  }
-
-  // Caching Component Sizes **********************************************
-
-  /**
-   * A cache for widget minimum and preferred sizes. Used to reduce the requests
-   * to determine a widget's size.
-   */
-  private static final class ComponentSizeCache implements Serializable {
-    private static final long serialVersionUID = -209607124276425146L;
-
-    /** Maps components to their minimum sizes. */
-    private final Map<Widget, Dimension> minimumSizes;
-
-    /** Maps components to their preferred sizes. */
-    private final Map<Widget, Dimension> preferredSizes;
-
-    /**
-     * Constructs a <code>ComponentSizeCache</code>.
-     * 
-     * @param initialCapacity the initial cache capacity
-     */
-    private ComponentSizeCache(int initialCapacity) {
-      minimumSizes = new HashMap<Widget, Dimension>(initialCapacity);
-      preferredSizes = new HashMap<Widget, Dimension>(initialCapacity);
-      // preferredSizes = minimumSizes;
-    }
-
-    /**
-     * Invalidates the cache. Clears all stored size information.
-     */
-    void invalidate() {
-      minimumSizes.clear();
-      preferredSizes.clear();
-    }
-
-    /**
-     * Returns the minimum size for the given widget. Tries to look up the value
-     * from the cache; lazily creates the value if it has not been requested
-     * before.
-     * 
-     * @param widget the widget to compute the minimum size
-     * @return the widget's minimum size
-     */
-    Dimension getMinimumSize(Widget widget) {
-      Dimension size = minimumSizes.get(widget);
-      if (size == null) {
-        final String minWidth = DOM.getComputedStyleAttribute(
-            widget.getElement(), "minWidth");
-        final String minHeight = DOM.getComputedStyleAttribute(
-            widget.getElement(), "minHeight");
-        size = new Dimension(minWidth == null ? 1 : DOM.toPixelSize(minWidth),
-            minHeight == null ? 1 : DOM.toPixelSize(minHeight));
-        minimumSizes.put(widget, size);
-      }
-      return size;
-    }
-
-    /**
-     * Returns the preferred size for the given widget. Tries to look up the
-     * value from the cache; lazily creates the value if it has not been
-     * requested before.
-     * 
-     * @param widget the widget to compute the preferred size
-     * @return the widget's preferred size
-     */
-    Dimension getPreferredSize(Widget widget) {
-      Dimension size = preferredSizes.get(widget);
-      if (size == null) {
-        size = WidgetHelper.getPreferredSize(widget);// widget.getPreferredSize();
-        preferredSizes.put(widget, size);
-      }
-      return size;
-    }
-
-    void removeEntry(Widget component) {
-      minimumSizes.remove(component);
-      preferredSizes.remove(component);
-    }
   }
 
   // Exposing the Layout Information **************************************
@@ -2011,36 +1698,18 @@ public final class FormLayout extends BaseLayout implements Serializable {
 
   // GWT Mosaic (NEW CODE) ************************************************
 
-  private boolean runTwiceFlag;
-
-  private boolean initialized = false;
-
-  // private Map<Widget, Dimension> widgetSizes = new HashMap<Widget,
-  // Dimension>();
-
-  private int[] margins = {0, 0};
-  private int[] paddings = {0, 0};
-
   @Override
-  public void flushCache() {
-    // widgetSizes.clear();
-    invalidateCaches();
-    initialized = false;
-  }
-
   protected boolean init(LayoutPanel layoutPanel) {
     if (initialized) {
       return true;
     }
 
-    margins = DOM.getMarginSizes(layoutPanel.getElement());
-    paddings = DOM.getPaddingSizes(layoutPanel.getElement());
+    super.init(layoutPanel);
 
     constraintMap.clear();
 
-    for (Iterator<Widget> iter = layoutPanel.iterator(); iter.hasNext();) {
-      Widget widget = iter.next();
-      addLayoutComponent(widget, getLayoutData(widget));
+    for (Widget widget : visibleChildList) {
+      addLayoutComponent(widget, widget.getLayoutData());
     }
 
     initializeColAndRowWidgetLists();
@@ -2048,8 +1717,4 @@ public final class FormLayout extends BaseLayout implements Serializable {
     return initialized = true;
   }
 
-  @Override
-  public boolean runTwice() {
-    return runTwiceFlag;
-  }
 }

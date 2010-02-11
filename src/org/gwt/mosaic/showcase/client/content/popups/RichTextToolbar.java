@@ -1,7 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
  * 
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,15 +18,18 @@
 package org.gwt.mosaic.showcase.client.content.popups;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ImageBundle;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -163,71 +166,75 @@ public class RichTextToolbar extends Composite {
   }
 
   /**
-   * We use an inner EventListener class to avoid exposing event methods on the
+   * We use an inner EventHandler class to avoid exposing event methods on the
    * RichTextToolbar itself.
    */
-  private class EventListener implements ClickListener, ChangeListener,
-      KeyboardListener {
+  private class EventHandler implements ClickHandler, ChangeHandler,
+      KeyUpHandler {
 
-    public void onChange(Widget sender) {
+    public void onChange(ChangeEvent event) {
+      Widget sender = (Widget) event.getSource();
+
       if (sender == backColors) {
-        basic.setBackColor(backColors.getValue(backColors.getSelectedIndex()));
+        formatter.setBackColor(backColors.getValue(backColors.getSelectedIndex()));
         backColors.setSelectedIndex(0);
       } else if (sender == foreColors) {
-        basic.setForeColor(foreColors.getValue(foreColors.getSelectedIndex()));
+        formatter.setForeColor(foreColors.getValue(foreColors.getSelectedIndex()));
         foreColors.setSelectedIndex(0);
       } else if (sender == fonts) {
-        basic.setFontName(fonts.getValue(fonts.getSelectedIndex()));
+        formatter.setFontName(fonts.getValue(fonts.getSelectedIndex()));
         fonts.setSelectedIndex(0);
       } else if (sender == fontSizes) {
-        basic.setFontSize(fontSizesConstants[fontSizes.getSelectedIndex() - 1]);
+        formatter.setFontSize(fontSizesConstants[fontSizes.getSelectedIndex() - 1]);
         fontSizes.setSelectedIndex(0);
       }
     }
 
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
+      Widget sender = (Widget) event.getSource();
+
       if (sender == bold) {
-        basic.toggleBold();
+        formatter.toggleBold();
       } else if (sender == italic) {
-        basic.toggleItalic();
+        formatter.toggleItalic();
       } else if (sender == underline) {
-        basic.toggleUnderline();
+        formatter.toggleUnderline();
       } else if (sender == subscript) {
-        basic.toggleSubscript();
+        formatter.toggleSubscript();
       } else if (sender == superscript) {
-        basic.toggleSuperscript();
+        formatter.toggleSuperscript();
       } else if (sender == strikethrough) {
-        extended.toggleStrikethrough();
+        formatter.toggleStrikethrough();
       } else if (sender == indent) {
-        extended.rightIndent();
+        formatter.rightIndent();
       } else if (sender == outdent) {
-        extended.leftIndent();
+        formatter.leftIndent();
       } else if (sender == justifyLeft) {
-        basic.setJustification(RichTextArea.Justification.LEFT);
+        formatter.setJustification(RichTextArea.Justification.LEFT);
       } else if (sender == justifyCenter) {
-        basic.setJustification(RichTextArea.Justification.CENTER);
+        formatter.setJustification(RichTextArea.Justification.CENTER);
       } else if (sender == justifyRight) {
-        basic.setJustification(RichTextArea.Justification.RIGHT);
+        formatter.setJustification(RichTextArea.Justification.RIGHT);
       } else if (sender == insertImage) {
         String url = Window.prompt("Enter an image URL:", "http://");
         if (url != null) {
-          extended.insertImage(url);
+          formatter.insertImage(url);
         }
       } else if (sender == createLink) {
         String url = Window.prompt("Enter a link URL:", "http://");
         if (url != null) {
-          extended.createLink(url);
+          formatter.createLink(url);
         }
       } else if (sender == removeLink) {
-        extended.removeLink();
+        formatter.removeLink();
       } else if (sender == hr) {
-        extended.insertHorizontalRule();
+        formatter.insertHorizontalRule();
       } else if (sender == ol) {
-        extended.insertOrderedList();
+        formatter.insertOrderedList();
       } else if (sender == ul) {
-        extended.insertUnorderedList();
+        formatter.insertUnorderedList();
       } else if (sender == removeFormat) {
-        extended.removeFormat();
+        formatter.removeFormat();
       } else if (sender == richText) {
         // We use the RichTextArea's onKeyUp event to update the toolbar status.
         // This will catch any cases where the user moves the cursur using the
@@ -236,13 +243,8 @@ public class RichTextToolbar extends Composite {
       }
     }
 
-    public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-    }
-
-    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-    }
-
-    public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+    public void onKeyUp(KeyUpEvent event) {
+      Widget sender = (Widget) event.getSource();
       if (sender == richText) {
         // We use the RichTextArea's onKeyUp event to update the toolbar status.
         // This will catch any cases where the user moves the cursur using the
@@ -260,11 +262,10 @@ public class RichTextToolbar extends Composite {
 
   private Images images = (Images) GWT.create(Images.class);
   private Strings strings = (Strings) GWT.create(Strings.class);
-  private EventListener listener = new EventListener();
+  private EventHandler handler = new EventHandler();
 
   private RichTextArea richText;
-  private RichTextArea.BasicFormatter basic;
-  private RichTextArea.ExtendedFormatter extended;
+  private RichTextArea.Formatter formatter;
 
   private VerticalPanel outer = new VerticalPanel();
   private HorizontalPanel topPanel = new HorizontalPanel();
@@ -300,8 +301,7 @@ public class RichTextToolbar extends Composite {
    */
   public RichTextToolbar(RichTextArea richText) {
     this.richText = richText;
-    this.basic = richText.getBasicFormatter();
-    this.extended = richText.getExtendedFormatter();
+    this.formatter = richText.getFormatter();
 
     outer.add(topPanel);
     outer.add(bottomPanel);
@@ -312,9 +312,10 @@ public class RichTextToolbar extends Composite {
     setStyleName("gwt-RichTextToolbar");
     richText.addStyleName("hasRichTextToolbar");
 
-    if (basic != null) {
+    if (formatter != null) {
       topPanel.add(bold = createToggleButton(images.bold(), strings.bold()));
-      topPanel.add(italic = createToggleButton(images.italic(), strings.italic()));
+      topPanel.add(italic = createToggleButton(images.italic(),
+          strings.italic()));
       topPanel.add(underline = createToggleButton(images.underline(),
           strings.underline()));
       topPanel.add(subscript = createToggleButton(images.subscript(),
@@ -329,11 +330,12 @@ public class RichTextToolbar extends Composite {
           strings.justifyRight()));
     }
 
-    if (extended != null) {
+    if (formatter != null) {
       topPanel.add(strikethrough = createToggleButton(images.strikeThrough(),
           strings.strikeThrough()));
       topPanel.add(indent = createPushButton(images.indent(), strings.indent()));
-      topPanel.add(outdent = createPushButton(images.outdent(), strings.outdent()));
+      topPanel.add(outdent = createPushButton(images.outdent(),
+          strings.outdent()));
       topPanel.add(hr = createPushButton(images.hr(), strings.hr()));
       topPanel.add(ol = createPushButton(images.ol(), strings.ol()));
       topPanel.add(ul = createPushButton(images.ul(), strings.ul()));
@@ -347,22 +349,22 @@ public class RichTextToolbar extends Composite {
           strings.removeFormat()));
     }
 
-    if (basic != null) {
+    if (formatter != null) {
       bottomPanel.add(backColors = createColorList("Background"));
       bottomPanel.add(foreColors = createColorList("Foreground"));
       bottomPanel.add(fonts = createFontList());
       bottomPanel.add(fontSizes = createFontSizes());
 
-      // We only use these listeners for updating status, so don't hook them up
+      // We only use these handlers for updating status, so don't hook them up
       // unless at least basic editing is supported.
-      richText.addKeyboardListener(listener);
-      richText.addClickListener(listener);
+      richText.addKeyUpHandler(handler);
+      richText.addClickHandler(handler);
     }
   }
 
   private ListBox createColorList(String caption) {
     ListBox lb = new ListBox();
-    lb.addChangeListener(listener);
+    lb.addChangeHandler(handler);
     lb.setVisibleItemCount(1);
 
     lb.addItem(caption);
@@ -377,7 +379,7 @@ public class RichTextToolbar extends Composite {
 
   private ListBox createFontList() {
     ListBox lb = new ListBox();
-    lb.addChangeListener(listener);
+    lb.addChangeHandler(handler);
     lb.setVisibleItemCount(1);
 
     lb.addItem(strings.font(), "");
@@ -393,7 +395,7 @@ public class RichTextToolbar extends Composite {
 
   private ListBox createFontSizes() {
     ListBox lb = new ListBox();
-    lb.addChangeListener(listener);
+    lb.addChangeHandler(handler);
     lb.setVisibleItemCount(1);
 
     lb.addItem(strings.size());
@@ -409,14 +411,14 @@ public class RichTextToolbar extends Composite {
 
   private PushButton createPushButton(AbstractImagePrototype img, String tip) {
     PushButton pb = new PushButton(img.createImage());
-    pb.addClickListener(listener);
+    pb.addClickHandler(handler);
     pb.setTitle(tip);
     return pb;
   }
 
   private ToggleButton createToggleButton(AbstractImagePrototype img, String tip) {
     ToggleButton tb = new ToggleButton(img.createImage());
-    tb.addClickListener(listener);
+    tb.addClickHandler(handler);
     tb.setTitle(tip);
     return tb;
   }
@@ -425,16 +427,17 @@ public class RichTextToolbar extends Composite {
    * Updates the status of all the stateful buttons.
    */
   private void updateStatus() {
-    if (basic != null) {
-      bold.setDown(basic.isBold());
-      italic.setDown(basic.isItalic());
-      underline.setDown(basic.isUnderlined());
-      subscript.setDown(basic.isSubscript());
-      superscript.setDown(basic.isSuperscript());
+    if (formatter != null) {
+      bold.setDown(formatter.isBold());
+      italic.setDown(formatter.isItalic());
+      underline.setDown(formatter.isUnderlined());
+      subscript.setDown(formatter.isSubscript());
+      superscript.setDown(formatter.isSuperscript());
     }
 
-    if (extended != null) {
-      strikethrough.setDown(extended.isStrikethrough());
+    if (formatter != null) {
+      strikethrough.setDown(formatter.isStrikethrough());
     }
   }
+  
 }

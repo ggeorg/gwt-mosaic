@@ -15,9 +15,20 @@
  */
 package org.gwt.mosaic.ui.client;
 
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.KeyboardListener;
+import org.gwt.mosaic.ui.client.ListBox.CellRenderer;
+import org.gwt.mosaic.ui.client.event.RowSelectionEvent;
+import org.gwt.mosaic.ui.client.event.RowSelectionHandler;
+import org.gwt.mosaic.ui.client.list.ComboBoxModel;
+import org.gwt.mosaic.ui.client.list.DefaultComboBoxModel;
+import org.gwt.mosaic.ui.client.list.ListDataEvent;
+import org.gwt.mosaic.ui.client.list.ListDataListener;
+
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -29,59 +40,207 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
 
   private final ListBox<T> listBox;
 
-  private Timer updateTimer = new Timer() {
-    public void run() {
-      if (!isPopupVisible()) {
-        showPopup();
-      } else {
-        onShowPopup();
-      }
-    }
-  };
+  private final ListDataListener listDataListener;
+
+  private T selectedItemReminder = null;
 
   /**
    * Default constructor.
    */
   public ComboBox() {
-    this(new ListBox<T>());
+    this(null);
   }
 
-  protected ComboBox(final ListBox<T> listBox) {
+  /**
+   * 
+   * @param columns
+   */
+  public ComboBox(String[] columns) {
     super();
 
-    this.listBox = listBox;
-    this.listBox.setMultipleSelect(false);
-    //this.listBox.setVisibleItemCount(10);
-    this.listBox.addStyleName("mosaic-ComboBoxList");
-
-    super.addKeyboardListener(new KeyboardListener() {
-      public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
+    listBox = new ListBox<T>(columns) {
+      @Override
+      public void setElement(Element elem) {
+        super.setElement(elem);
+        sinkEvents(Event.ONMOUSEUP);
       }
 
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        // Nothing to do here!
+      @Override
+      public void onBrowserEvent(final Event event) {
+        super.onBrowserEvent(event);
+        if (isPopupVisible()) {
+          switch (DOM.eventGetType(event)) {
+            case Event.ONMOUSEUP:
+              DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                  hidePopup();
+                }
+              });
+              return;
+          }
+        }
       }
+    };
 
-      public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-          case KEY_ENTER:
-          case KEY_TAB:
-          case KEY_ESCAPE:
-          case KEY_UP:
-            break;
-          default:
-            updateTimer.schedule(333);
+    listBox.addRowSelectionHandler(new RowSelectionHandler() {
+      public void onRowSelection(RowSelectionEvent event) {
+        final int index = getSelectedIndex();
+        if (index != -1) {
+          dataModel.setSelectedItem(listBox.getItem(index));
+        } else {
+          dataModel.setSelectedItem(null);
         }
       }
     });
 
-    listBox.addChangeListener(new ChangeListener() {
-      public void onChange(Widget sender) {
-        setText((String)listBox.getItem(listBox.getSelectedIndex()));
-        hidePopup();
+    listDataListener = new ListDataListener() {
+
+      public void contentsChanged(ListDataEvent event) {
+        final T newSelection = (T) dataModel.getSelectedItem();
+        if (selectedItemReminder == null
+            || !selectedItemReminder.equals(newSelection)) {
+          selectedItemChanged();
+        }
+      }
+
+      public void intervalAdded(ListDataEvent event) {
+        if (selectedItemReminder != dataModel.getSelectedItem()) {
+          selectedItemChanged();
+        }
+      }
+
+      public void intervalRemoved(ListDataEvent event) {
+        contentsChanged(event);
+      }
+
+      private void selectedItemChanged() {
+        // set the new selected item
+        selectedItemReminder = dataModel.getSelectedItem();
+
+        final int index = listBox.getSelectedIndex();
+        if (index != -1) {
+          listBox.setItemSelected(index, false);
+        }
+
+        Object obj;
+        for (int i = 0, c = dataModel.getSize(); i < c; i++) {
+          obj = dataModel.getElementAt(i);
+          if (obj != null && obj.equals(selectedItemReminder)) {
+            listBox.setSelectedIndex(i);
+            break;
+          }
+        }
+
+        updateInput();
+      }
+
+    };
+
+    setCellRenderer(new ComboBoxCellRenderer<T>() {
+      public String getDisplayText(T item) {
+        return item.toString();
+      }
+
+      public void renderCell(ListBox<T> listBox, int row, int column, T item) {
+        if (item instanceof Widget) {
+          listBox.setWidget(row, column, (Widget) item);
+        } else {
+          listBox.setText(row, column, item.toString());
+        }
       }
     });
+
+    setModel(new DefaultComboBoxModel<T>());
+
+    init();
+  }
+
+  /**
+   * Sets the data model that the {@code ComboBox} uses to obtain the list of
+   * items.
+   * 
+   * @param model the {@code ComboBoxModel} that provides the displayed list of
+   *          items
+   */
+  public void setModel(ComboBoxModel<T> model) {
+    final ComboBoxModel<T> oldModel = dataModel;
+    if (oldModel != null) {
+      oldModel.removeListDataListener(listDataListener);
+    }
+    dataModel = model;
+    dataModel.addListDataListener(listDataListener);
+
+    // set the current selected item.
+    selectedItemReminder = dataModel.getSelectedItem();
+
+    listBox.setModel(dataModel);
+
+    // firePropertyChange("model", oldModel, dataModel);
+  }
+
+  /**
+   * Returns the data model currently used by the <code>JComboBox</code>.
+   * 
+   * @return the <code>ComboBoxModel</code> that provides the displayed list of
+   *         items
+   */
+  public ComboBoxModel<T> getModel() {
+    return dataModel;
+  }
+
+  private ComboBoxModel<T> dataModel;
+
+  protected void init() {
+    listBox.setMultipleSelect(false);
+    listBox.addStyleName("mosaic-ComboBoxList");
+  }
+
+  /**
+   * The render used to set cell contents.
+   * 
+   * @param <T>
+   */
+  public interface ComboBoxCellRenderer<T> extends CellRenderer<T> {
+    /**
+     * 
+     * @return
+     */
+    String getDisplayText(T item);
+  }
+
+  @Override
+  protected void updateInput() {
+    final T item = dataModel.getSelectedItem();
+    if (item != null) {
+      if (listBox.getCellRenderer() != null) {
+        final ComboBoxCellRenderer<T> renderer = (ComboBoxCellRenderer<T>) listBox.getCellRenderer();
+        ComboBox.this.setText(renderer.getDisplayText(item));
+      } else {
+        ComboBox.this.setText(item.toString());
+      }
+    } else {
+      ComboBox.this.setText("");
+    }
+    super.updateInput();
+  }
+
+  @Override
+  public void onBrowserEvent(Event event) {
+    switch (DOM.eventGetType(event)) {
+      case Event.ONKEYDOWN:
+        if (isPopupVisible()) {
+          int keyCode = DOM.eventGetKeyCode(event);
+          switch (keyCode) {
+            case KeyCodes.KEY_UP:
+            case KeyCodes.KEY_DOWN:
+            case KeyCodes.KEY_LEFT:
+            case KeyCodes.KEY_RIGHT:
+              listBox.onBrowserEvent(event);
+              return;
+          }
+        }
+    }
+    super.onBrowserEvent(event);
   }
 
   @Override
@@ -95,27 +254,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   }
 
   /**
-   * Adds an item to the list box. This method has the same effect as
-   * 
-   * <pre>
-   * addItem(item, item)
-   * </pre>
-   * 
-   * @param item the text of the item to be added
-   */
-  public void addItem(T item) {
-    //listBox.addItem(item);
-  }
-
-  /**
-   * Removes all items from the list box.
-   */
-  public void clear() {
-//    listBox.clear();
-//    setText("");
-  }
-
-  /**
    * Gets the number of items present in the list box.
    * 
    * @return the number of items
@@ -123,7 +261,14 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public int getItemCount() {
     return listBox.getItemCount();
   }
-  
+
+  /**
+   * Returns the list item at the specified index.
+   * 
+   * @param index an integer indicating the list position, where the first iteme
+   *          starts at zero
+   * @return the item at the list position; or {@code null} if out of range
+   */
   public T getItem(int index) {
     return listBox.getItem(index);
   }
@@ -138,16 +283,6 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public int getSelectedIndex() {
     return listBox.getSelectedIndex();
   }
-
-  /**
-   * Gets the number of items that are visible. If only one item is visible,
-   * then the box will be displayed as a drop-down list.
-   * 
-   * @return the visible item count
-   */
-//  public int getVisibleItemCount() {
-//    return listBox.getVisibleItemCount();
-//  }
 
   /**
    * Inserts an item into the list box. Has the same effect as
@@ -175,22 +310,7 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   }
 
   /**
-   * Removes the item at the specified index.
-   * 
-   * @param index the index of the item to be removed
-   * @throws IndexOutOfBoundsException if the index is out of range
-   */
-  public void removeItem(int index) {
-    //listBox.removeItem(index);
-  }
-
-  /**
    * Sets whether an individual list item is selected.
-   * 
-   * <p>
-   * Note that setting the selection programmatically does <em>not</em> cause
-   * the {@link ChangeListener#onChange(Widget)} event to be fired.
-   * </p>
    * 
    * @param index the index of the item to be selected or unselected
    * @param selected <code>true</code> to select the item
@@ -198,6 +318,9 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
    */
   public void setItemSelected(int index, boolean selected) {
     listBox.setItemSelected(index, selected);
+    if (selected == true) {
+      dataModel.setSelectedItem(listBox.getItem(index));
+    }
   }
 
   /**
@@ -210,36 +333,37 @@ public class ComboBox<T> extends ComboBoxBase<ListBox<T>> {
   public void setItem(int index, T item) {
     listBox.renderItemOnUpdate(index, item);
   }
-  
+
   /**
    * Sets the currently selected index.
    * 
-   * After calling this method, only the specified item in the list will
-   * remain selected.  For a ListBox with multiple selection enabled, see
+   * After calling this method, only the specified item in the list will remain
+   * selected. For a ListBox with multiple selection enabled, see
    * {@link #setItemSelected(int, boolean)} to select multiple items at a time.
-   * 
-   * <p>
-   * Note that setting the selected index programmatically does <em>not</em>
-   * cause the {@link ChangeListener#onChange(Widget)} event to be fired.
-   * </p>
    * 
    * @param index the index of the item to be selected
    */
   public void setSelectedIndex(int index) {
-    listBox.setSelectedIndex(index);
+    // listBox.setSelectedIndex(index);
+    dataModel.setSelectedItem(listBox.getItem(index));
   }
-  
+
   /**
-   * Sets the number of items that are visible. If only one item is visible,
-   * then the box will be displayed as a drop-down list.
+   * Set the {@link CellRenderer} used to render cell contents.
    * 
-   * @param visibleItems the visible item count
+   * @param cellRenderer the new renderer
    */
-//  public void setVisibleItemCount(int visibleItems) {
-//    if (visibleItems < 2) {
-//      throw new IllegalArgumentException();
-//    }
-//    listBox.setVisibleItemCount(visibleItems);
-//  }
+  public void setCellRenderer(ComboBoxCellRenderer<T> cellRenderer) {
+    listBox.setCellRenderer(cellRenderer);
+  }
+
+  /**
+   * Get the {@link CellRenderer} used to render cells.
+   * 
+   * @return the current renderer
+   */
+  public ComboBoxCellRenderer<T> getCellRenderer() {
+    return (ComboBoxCellRenderer<T>) listBox.getCellRenderer();
+  }
 
 }

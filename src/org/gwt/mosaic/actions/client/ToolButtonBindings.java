@@ -24,16 +24,18 @@ import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 import org.gwt.mosaic.ui.client.util.ButtonHelper;
 import org.gwt.mosaic.ui.client.util.ButtonHelper.ButtonLabelType;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
-public class ToolButtonBindings extends ActionBindings<ToolButton>
-    implements ClickListener {
+public class ToolButtonBindings extends ActionBindings<ToolButton> implements
+    ClickHandler {
 
   public final class ToolButtonBean extends TargetBean {
     private String text;
@@ -43,11 +45,12 @@ public class ToolButtonBindings extends ActionBindings<ToolButton>
     }
 
     private String createLabel() {
-      AbstractImagePrototype image = this.getImage();
+      ImageResource image = this.getImage();
       if (image == null) {
         return text;
       } else {
-        return ButtonHelper.createButtonLabel(image, text, labelType);
+        return ButtonHelper.createButtonLabel(
+            AbstractImagePrototype.create(image), text, labelType);
       }
     }
 
@@ -79,7 +82,7 @@ public class ToolButtonBindings extends ActionBindings<ToolButton>
     }
 
     @Override
-    public void setImage(AbstractImagePrototype image) {
+    public void setImage(ImageResource image) {
       super.setImage(image);
       target.setHTML(createLabel());
     }
@@ -159,12 +162,26 @@ public class ToolButtonBindings extends ActionBindings<ToolButton>
     return targetBean;
   }
 
+  private HandlerRegistration handlerReg = null;
+
   @Override
   protected void onBind() {
-    getTarget().addClickListener(this);
+    handlerReg = getTarget().addClickHandler(this);
   }
 
-  public void onClick(Widget sender) {
+  @Override
+  protected void onUnBind() {
+    if (handlerReg != null) {
+      handlerReg.removeHandler();
+    }
+  }
+
+  public void setLabelType(ButtonLabelType labelType) {
+    this.labelType = labelType;
+    getTargetBean().setText(getTargetBean().getText());
+  }
+
+  public void onClick(ClickEvent event) {
     if (getTarget().getStyle() == ToolButtonStyle.CHECKBOX) {
       Boolean newValue = getTarget().isChecked();
       getTargetBean().firePropertyChange("selected", !newValue, newValue);
@@ -177,17 +194,7 @@ public class ToolButtonBindings extends ActionBindings<ToolButton>
       // XXX } end of workaround
       getTargetBean().firePropertyChange("selected", !newValue, newValue);
     }
-    getSource().actionPerformed(new ActionEvent(getSource(), sender));
-  }
-
-  @Override
-  protected void onUnBind() {
-    getTarget().removeClickListener(this);
-  }
-
-  public void setLabelType(ButtonLabelType labelType) {
-    this.labelType = labelType;
-    getTargetBean().setText(getTargetBean().getText());
+    getSource().actionPerformed(new ActionEvent(getSource(), event.getSource()));
   }
 
 }

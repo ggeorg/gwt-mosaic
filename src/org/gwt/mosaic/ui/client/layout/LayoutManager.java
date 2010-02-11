@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 package org.gwt.mosaic.ui.client.layout;
 
 import org.gwt.mosaic.core.client.Dimension;
+
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Defines the interface for classes that know how to lay out a {@code
@@ -52,19 +54,13 @@ public interface LayoutManager {
   void layoutPanel(LayoutPanel layoutPanel);
 
   /**
-   * Indicates whether {@link #layoutPanel(LayoutPanel)} has to run twice. This
-   * method is called by a {@link LayoutPanel#layout()} internally to check if
-   * {@link #layoutPanel(LayoutPanel)} should be run twice because e.g.: text
-   * line wrapping.
+   * Invalidates the layout, indicating that if the layout manager has cached
+   * information it should be discarded.
    * 
-   * @return {@code true} if {@link #layoutPanel(LayoutPanel)} has to run twice,
-   *         {@code false} otherwise.
+   * @param widget the {@link Widget} that if the layout manager has cached
+   *          information that should be discarded, or {@code null} for all
+   *          widgets
    */
-  boolean runTwice();
-
-  /**
-   * Instructs the layout to flush any cached values.
-   */
-  void flushCache();
+  void invalidateLayout(Widget widget);
 
 }

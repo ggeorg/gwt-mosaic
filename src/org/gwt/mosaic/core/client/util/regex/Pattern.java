@@ -93,11 +93,11 @@ public class Pattern {
    * @return
    */
   public static String quote(String input) {
-    String output = "";
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
-      output += "\\" + input.charAt(i);
+      sb.append("\\").append(input.charAt(i));
     }
-    return output;
+    return sb.toString();
   }
 
   private JavaScriptObject regExp;

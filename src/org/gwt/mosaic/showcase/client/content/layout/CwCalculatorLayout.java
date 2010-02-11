@@ -1,6 +1,8 @@
 /*
  * Copyright 2008 IT Mill Ltd.
  * 
+ * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -15,6 +17,7 @@
  */
 package org.gwt.mosaic.showcase.client.content.layout;
 
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.showcase.client.ContentWidget;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseData;
 import org.gwt.mosaic.showcase.client.ShowcaseAnnotations.ShowcaseSource;
@@ -23,8 +26,9 @@ import org.gwt.mosaic.ui.client.layout.GridLayout;
 import org.gwt.mosaic.ui.client.layout.GridLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -34,7 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author georgopoulos.georgios(at)gmail.com
  */
 @ShowcaseStyle( {".mosaic-LayoutPanel"})
-public class CwCalculatorLayout extends ContentWidget implements ClickListener {
+public class CwCalculatorLayout extends ContentWidget implements ClickHandler {
 
   /** The label used as the display */
   @ShowcaseData
@@ -77,9 +81,9 @@ public class CwCalculatorLayout extends ContentWidget implements ClickListener {
    * @see com.google.gwt.user.client.ui.ClickListener#onClick(com.google.gwt.user.client.ui.Widget)
    */
   @ShowcaseSource
-  public void onClick(Widget sender) {
+  public void onClick(ClickEvent event) {
     try {
-      current = current * 10 + Double.parseDouble(((Button) sender).getText());
+      current = current * 10 + Double.parseDouble(((Button) event.getSource()).getText());
       display.setText(Double.toString(current));
       display.setTextAlignment(TextBox.ALIGN_RIGHT);
     } catch (NumberFormatException e) {
@@ -99,10 +103,10 @@ public class CwCalculatorLayout extends ContentWidget implements ClickListener {
       if (operation.equals("C")) {
         stored = current;
       }
-      if (((Button) sender).getText().equals("C")) {
+      if (((Button) event.getSource()).getText().equals("C")) {
         stored = 0.0;
       }
-      operation = ((Button) sender).getText();
+      operation = ((Button) event.getSource()).getText();
       current = 0.0;
       display.setText(Double.toString(stored));
     }
@@ -116,9 +120,13 @@ public class CwCalculatorLayout extends ContentWidget implements ClickListener {
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
     final LayoutPanel layoutPanel = new LayoutPanel(new GridLayout(4, 5));
+    layoutPanel.setPadding(0);
 
     display = new TextBox();
     display.setReadOnly(true);
+    
+    DOM.setStyleAttribute(display.getElement(), "fontSize", "xx-large");
+    DOM.setStyleAttribute(display.getElement(), "background", "#efefef");
 
     layoutPanel.add(display, new GridLayoutData(3, 1, true));
     layoutPanel.add(new Button("<b>C</b>", this), new GridLayoutData(true));

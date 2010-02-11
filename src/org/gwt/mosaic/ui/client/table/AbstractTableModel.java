@@ -1,10 +1,27 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with this
- * work for additional information regarding copyright ownership. The ASF
- * licenses this file to You under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+/*
+ * This is derived work from GWT Incubator project:
+ * http://code.google.com/p/google-web-toolkit-incubator/
+ * 
+ * Copyright 2008 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -16,152 +33,134 @@
  */
 package org.gwt.mosaic.ui.client.table;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.gwt.mosaic.ui.client.event.RowCountChangeEvent;
+import org.gwt.mosaic.ui.client.event.RowCountChangeHandler;
+import org.gwt.mosaic.ui.client.table.TableModelHelper.Request;
+
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 
 /**
- * A base class that for {@link TableModel} implementations.
+ * An abstract {@link TableModel} implementation.
  * 
- * @param <T>
- * 
+ * @author Derived work from GWT Incubator project
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @param <RowType> the data type of the row values
  */
-public abstract class AbstractTableModel<T> implements TableModel<T> {
-  private static final long serialVersionUID = 4235627486811656219L;
-
-  /** List of {@link TableModelListener TableModelListeners}. */
-  protected transient List<TableModelListener> listenerList = new ArrayList<TableModelListener>();
+public abstract class AbstractTableModel<RowType> implements
+    TableModel<RowType> {
 
   /**
-   * Adds a listener to the list that's notified each time a change to the data
-   * model occurs.
-   * 
-   * @param listener
-   * @see com.google.gwt.widgetideas.table.client.TableModel#addTableModelListener(com.google.gwt.widgetideas.table.client.TableModelListener)
+   * The manager of events.
    */
-  public void addTableModelListener(TableModelListener listener) {
-    listenerList.add(listener);
+  private HandlerManager handlerManager;
+
+  /**
+   * The total number of rows available in the model.
+   */
+  private int rowCount = UNKNOWN_ROW_COUNT;
+
+  public HandlerRegistration addRowCountChangeHandler(
+      RowCountChangeHandler handler) {
+    return addHandler(handler, RowCountChangeEvent.getType());
   }
 
   /**
-   * Removes a listener from the list.
+   * {@inheritDoc}
    * 
-   * @param listener the {@link TableModelListener}
+   * @see org.gwt.mosaic.ui.client.table.TableModel#getRowCount()
    */
-  public void removeTableModelListener(TableModelListener listener) {
-    listenerList.remove(listener);
+  public int getRowCount() {
+    return rowCount;
   }
 
   /**
-   * Returns an array of all the table model listeners registered on this model.
+   * {@inheritDoc}
    * 
-   * @return all of this model's {@code TableModelListeners} or an empty array
-   *         if no table model listeners are currently registered
-   * 
-   * @see #addTableModelListener
-   * @see #removeTableModelListener
+   * @see org.gwt.mosaic.ui.client.table.TableModel#setRowCount(int)
    */
-  public TableModelListener[] getTableModelListeners() {
-    return (TableModelListener[]) listenerList.toArray(new TableModelListener[listenerList.size()]);
-  }
-
-  /**
-   * Notifies all listeners that all cell values in the table's rows may have
-   * changed. The number of rows may also have changed and the {@code Table}
-   * should redraw the table from scratch. The structure of the table (as in the
-   * order of the columns) is assumed to be the same.
-   * 
-   * @see TableModelEvent
-   * @see org.gwt.mosaic.ui.client.Table#tableChanged(TableModelEvent)
-   */
-  public void fireTableDataChanged() {
-    fireTableChanged(new TableModelEvent(this));
-  }
-
-  /**
-   * Notifies all listeners that the table's structure has changed. The number
-   * of columns in the table, and the names and types of the new columns may be
-   * different from the previous state. If the <code>JTable</code> receives this
-   * event and its <code>autoCreateColumnsFromModel</code> flag is set it
-   * discards any table columns that it had and reallocates default columns in
-   * the order they appear in the model. This is the same as calling
-   * <code>setModel(TableModel)</code> on the <code>JTable</code>.
-   * 
-   * @see TableModelEvent
-   */
-  public void fireTableStructureChanged() {
-    fireTableChanged(new TableModelEvent(this, 0 /* TableModelEvent.HEADER_ROW, */));
-  }
-
-  /**
-   * Notifies all listeners that rows in the range
-   * <code>[firstRow, lastRow]</code>, inclusive, have been inserted.
-   * 
-   * @param firstRow the first row
-   * @param lastRow the last row
-   * 
-   * @see TableModelEvent
-   * 
-   */
-  public void fireTableRowsInserted(int firstRow, int lastRow) {
-    fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
-        TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.INSERT));
-  }
-
-  /**
-   * Notifies all listeners that rows in the range
-   * <code>[firstRow, lastRow]</code>, inclusive, have been updated.
-   * 
-   * @param firstRow the first row
-   * @param lastRow the last row
-   * 
-   * @see TableModelEvent
-   */
-  public void fireTableRowsUpdated(int firstRow, int lastRow) {
-    fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
-        TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.UPDATE));
-  }
-
-  /**
-   * Notifies all listeners that rows in the range
-   * <code>[firstRow, lastRow]</code>, inclusive, have been deleted.
-   * 
-   * @param firstRow the first row
-   * @param lastRow the last row
-   * 
-   * @see TableModelEvent
-   */
-  public void fireTableRowsDeleted(int firstRow, int lastRow) {
-    fireTableChanged(new TableModelEvent(this, firstRow, lastRow,
-        TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.DELETE));
-  }
-
-  /**
-   * Notifies all listeners that the value of the cell at
-   * <code>[row, column]</code> has been updated.
-   * 
-   * @param row row of cell which has been updated
-   * @param column column of cell which has been updated
-   * @see TableModelEvent
-   */
-  public void fireTableCellUpdated(int row, int column) {
-    fireTableChanged(new TableModelEvent(this, row, row, column));
-  }
-
-  /**
-   * Forwards the given notification event to all
-   * <code>TableModelListeners</code> that registered themselves as listeners
-   * for this table model.
-   * 
-   * @param event the event to be forwarded
-   * 
-   * @see #addTableModelListener
-   * @see TableModelEvent
-   */
-  public void fireTableChanged(TableModelEvent event) {
-    for (TableModelListener listener : listenerList) {
-      listener.tableChanged(event);
+  public void setRowCount(int rowCount) {
+    if (this.rowCount != rowCount) {
+      int oldRowCount = this.rowCount;
+      this.rowCount = rowCount;
+      fireEvent(new RowCountChangeEvent(oldRowCount, rowCount));
     }
   }
 
+  /**
+   * {@inheritDoc}
+   * 
+   * @see org.gwt.mosaic.ui.client.table.TableModel#requestRows(org.gwt.mosaic.ui.client.table.TableModelHelper.Request,
+   *      org.gwt.mosaic.ui.client.table.TableModel.Callback)
+   */
+  public abstract void requestRows(Request request, Callback<RowType> callback);
+
+  public void fireEvent(GwtEvent<?> event) {
+    if (handlerManager != null) {
+      handlerManager.fireEvent(event);
+    }
+  }
+
+  /**
+   * Adds this handler to the widget.
+   * 
+   * @param key the event key
+   * @param handler the handler
+   */
+  protected final <H extends EventHandler> HandlerRegistration addHandler(
+      final H handler, GwtEvent.Type<H> type) {
+    return ensureHandlers().addHandler(type, handler);
+  }
+
+  /**
+   * Ensures the existence of the handler manager.
+   * 
+   * @return the handler manager
+   * */
+  HandlerManager ensureHandlers() {
+    return handlerManager == null ? handlerManager = new HandlerManager(this)
+        : handlerManager;
+  }
+
+  /**
+   * Returns this widget's {@link HandlerManager} used for event management.
+   */
+  protected final HandlerManager getHandlerManager() {
+    return handlerManager;
+  }
+
+  /**
+   * Is the event handled by one or more handlers?
+   */
+  protected final boolean isEventHandled(Type<?> type) {
+    return handlerManager.isEventHandled(type);
+  }
+
+  /**
+   * Gets the number of handlers listening to the event type.
+   * 
+   * @param type the event type
+   * @return the number of registered handlers
+   */
+  protected int getHandlerCount(Type<?> type) {
+    return handlerManager == null ? 0 : handlerManager.getHandlerCount(type);
+  }
+
+  /**
+   * Removes the given handler from the specified event key. Normally,
+   * applications should call {@link HandlerRegistration#removeHandler()}
+   * instead. This method is provided primary to support the deprecated
+   * listeners api.
+   * 
+   * @param key the event key
+   * @param handler the handler
+   */
+  protected <H extends EventHandler> void removeHandler(GwtEvent.Type<H> type,
+      final H handler) {
+    handlerManager.removeHandler(type, handler);
+  }
 }

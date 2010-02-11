@@ -17,12 +17,13 @@ package org.gwt.mosaic.showcase.client.content.tables.shared;
 
 import java.io.Serializable;
 
+import org.gwt.beansbinding.core.client.util.AbstractBean;
+
 /**
  * A representation of a college student.
  */
-public class Student implements Serializable {
-  private static final long serialVersionUID = -3076629464840968878L;
-
+@SuppressWarnings("serial")
+public class Student extends AbstractBean implements Serializable {
   /**
    * The number of fields in this class.
    */

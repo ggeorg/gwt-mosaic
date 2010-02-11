@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,9 +30,6 @@ public final class BoxLayoutData extends LayoutData {
     BOTH, HORIZONTAL, VERTICAL
   }
 
-  double preferredWidth = -1.0;
-  double preferredHeight = -1.0;
-
   boolean fillWidth;
   boolean fillHeight;
 
@@ -53,8 +50,8 @@ public final class BoxLayoutData extends LayoutData {
   /**
    * Creates a new instance of {@code BoxLayoutData} by specifying that the
    * associated widget should be decorated if parameter {@code decorate} is
-   * {@code true}, and undecorated if {@code false}. The width and height of
-   * the widget should be the calculated preferred width and height returned by
+   * {@code true}, and undecorated if {@code false}. The width and height of the
+   * widget should be the calculated preferred width and height returned by
    * {@link BaseLayout#getFlowWidth(Widget)} and
    * {@link BaseLayout#getFlowHeight(Widget)}.
    * 
@@ -77,15 +74,20 @@ public final class BoxLayoutData extends LayoutData {
    * @param height the preferred height or -1 indicating that the widget's
    *          calculated preferred height should be used instead of this value.
    */
+  @Deprecated
   public BoxLayoutData(final double width, final double height) {
+    this(width, height, false);
+  }
+
+  public BoxLayoutData(final String width, final String height) {
     this(width, height, false);
   }
 
   /**
    * Creates a new instance of {@code BoxLayoutData} by specifying that the
    * associated widget should be decorated if parameter {@code decorate} is
-   * {@code true}, and undecorated if {@code false}. The width and height of
-   * the widget is specified by the {@code width} and {@code height} parameters.
+   * {@code true}, and undecorated if {@code false}. The width and height of the
+   * widget is specified by the {@code width} and {@code height} parameters.
    * Values > 0 and <= 1 are in ratios of the available client area except
    * paddings, 0 and values > 1 are in pixels, and -1 means preferred size.
    * 
@@ -96,11 +98,32 @@ public final class BoxLayoutData extends LayoutData {
    * @param decorate specifies whether the associated widget will be decorated
    *          or not.
    */
+  @Deprecated
   public BoxLayoutData(final double width, final double height,
       final boolean decorate) {
     super(decorate);
-    this.preferredWidth = width;
-    this.preferredHeight = height;
+
+    if (width > 1.0) {
+      setPreferredWidth(((int) width) + "px");
+    } else if (width > 0.0) {
+      setPreferredWidth(((int) (width * 100.0)) + "%");
+    } else {
+      setPreferredWidth(null);
+    }
+
+    if (height > 1.0) {
+      setPreferredHeight(((int) height) + "px");
+    } else if (height > 0.0) {
+      setPreferredHeight(((int) (height * 100.0)) + "%");
+    } else {
+      setPreferredHeight(null);
+    }
+  }
+
+  public BoxLayoutData(final String width, final String height,
+      final boolean decorate) {
+    super(decorate);
+    setPreferredSize(width, height);
   }
 
   /**
@@ -131,8 +154,8 @@ public final class BoxLayoutData extends LayoutData {
   /**
    * Creates a new instance of {@code BoxLayoutData} by specifying that the
    * associated widget should be decorated if parameter {@code decorate} is
-   * {@code true}, and undecorated if {@code false}. The width and height of
-   * the widget depends on the {@code fillStyle} parameter:
+   * {@code true}, and undecorated if {@code false}. The width and height of the
+   * widget depends on the {@code fillStyle} parameter:
    * <ul>
    * <li>for {@link FillStyle#BOTH} the child widget will be stretched to fill
    * the available space in both directions</li>
@@ -164,43 +187,53 @@ public final class BoxLayoutData extends LayoutData {
     }
   }
 
-  /**
-   * Returns the user specified preferred height in pixels or ratio of the
-   * available client area height except paddings. Default is -1 which means
-   * that the widget's calculated preferred height should be used instead.
-   * Values > 0 and <= 1 are ratios, 0 and values > 1 are pixels.
-   * 
-   * @return the preferred height or -1 indicating that the widget's calculated
-   *         preferred height should be used instead of this value.
-   * @see BaseLayout#getFlowHeight(com.google.gwt.user.client.ui.Widget)
-   */
-  public double getPreferredHeight() {
-    return preferredHeight;
+  public BoxLayoutData(final FillStyle fillStyle, final String width,
+      final String height) {
+    this(fillStyle, false);
+    setPreferredSize(width, height);
+  }
+
+  public BoxLayoutData(final FillStyle fillStyle, final String width,
+      final String height, final boolean decorate) {
+    this(fillStyle, decorate);
+    setPreferredSize(width, height);
   }
 
   /**
-   * Returns the user specified preferred width in pixels or ratio of the
-   * available client area width except paddings. Default is -1 which means that
-   * the widget's calculated preferred width should be used instead. Values > 0
-   * and <= 1 are ratios, 0 and values > 1 are pixels.
+   * Returns {@code true} the child widget will be stretched vertically, {@code
+   * false} otherwise.
    * 
-   * @return the preferred width or -1 indicating that the widget's calculated
-   *         preferred width should be used instead of this value.
-   * @see BaseLayout#getFlowWidth(com.google.gwt.user.client.ui.Widget)
-   */
-  public double getPreferredWidth() {
-    return preferredWidth;
-  }
-
-  /**
-   * Returns {@code true} the child widget will be stretched vertically,
-   * {@code false} otherwise.
-   * 
-   * @return {@code true} the child widget will be stretched vertically,
-   *         {@code false} otherwise.
+   * @return {@code true} the child widget will be stretched vertically, {@code
+   *         false} otherwise.
    */
   public boolean isFillHeight() {
     return fillHeight;
+  }
+
+  /**
+   * Sets whether the child widget will be stretched vertically or not.
+   * 
+   * @param fillHeight {@code true} if the child widget should be stretched
+   *          vertically or {@code false} otherwise.
+   */
+  public void setFillHeight(final boolean fillHeight) {
+    this.fillHeight = fillHeight;
+  }
+
+  /**
+   * Sets whether the child widget will be stretched vertically or not, used by
+   * UiBinder.
+   * 
+   * @param fillHeight {@code true} if the child widget should be stretched
+   *          vertically or {@code false} otherwise.
+   */
+  public void setFillHeight(String fillHeight) {
+    fillHeight = fillHeight.trim().toLowerCase();
+    if (fillHeight.equals("true".intern())) {
+      setFillHeight(true);
+    } else if (fillHeight.equals("false".intern())) {
+      setFillHeight(false);
+    }
   }
 
   /**
@@ -215,16 +248,6 @@ public final class BoxLayoutData extends LayoutData {
   }
 
   /**
-   * Sets whether the child widget will be stretched vertically or not.
-   * 
-   * @param fillHeight {@code true} if the child widget should be stretched
-   *          vertically or {@code false} otherwise.
-   */
-  public void setFillHeight(final boolean fillHeight) {
-    this.fillHeight = fillHeight;
-  }
-
-  /**
    * Sets whether the child widget will be stretched horizontally or not.
    * 
    * @param fillWidth {@code true} if the child widget should be stretched
@@ -235,29 +258,19 @@ public final class BoxLayoutData extends LayoutData {
   }
 
   /**
-   * Sets the child widget's preferred height in pixels or ratio of the
-   * available client area height except paddings. Values > 0 and <= 1 are
-   * ratios, 0 and values > 1 are pixels, and -1 means that the widget's
-   * calculated preferred height should be used.
+   * Sets whether the child widget will be stretched horizontally or not used by
+   * UiBinder.
    * 
-   * @param height the preferred height or -1 indicating that the widget's
-   *          calculated preferred height should be used instead of this value.
+   * @param fillWidth {@code true} if the child widget should be stretched
+   *          horizontally or {@code false} otherwise.
    */
-  public void setPreferredHeight(final double height) {
-    this.preferredHeight = height;
-  }
-
-  /**
-   * Sets the child widget's preferred width in pixels or ratio of the available
-   * client area width except paddings. Values > 0 and <= 1 are ratios, 0 and
-   * values > 1 are pixels, and -1 means that the widget's calculated preferred
-   * width should be used.
-   * 
-   * @param width the preferred width or -1 indicating that the widget's
-   *          calculated preferred width should be used instead of this value.
-   */
-  public void setPreferredWidth(final double width) {
-    this.preferredWidth = width;
+  public void setFillWidth(String fillWidth) {
+    fillWidth = fillWidth.trim().toLowerCase();
+    if (fillWidth.equals("true".intern())) {
+      setFillWidth(true);
+    } else if (fillWidth.equals("false".intern())) {
+      setFillWidth(false);
+    }
   }
 
 }

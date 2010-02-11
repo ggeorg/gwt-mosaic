@@ -27,58 +27,66 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class WidgetWrapper extends Composite implements HasAlignment {
 
-  private static final String DEFAULT_STYLE_NAME = "mosaic-WidgetWrapper";
+	private static final String DEFAULT_STYLE_NAME = "mosaic-WidgetWrapper";
 
-  private HorizontalAlignmentConstant alignLeft;
-  private VerticalAlignmentConstant alignTop;
+	private HorizontalAlignmentConstant alignLeft;
+	private VerticalAlignmentConstant alignTop;
 
-  public WidgetWrapper(Widget widget) {
-    this(widget, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
-  }
+	public WidgetWrapper(Widget widget) {
+		this(widget, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
+	}
 
-  public WidgetWrapper(Widget widget, HorizontalAlignmentConstant alignLeft,
-      VerticalAlignmentConstant alignTop) {
-    Grid grid = new Grid(1, 1);
-    grid.setBorderWidth(0);
-    grid.setCellPadding(0);
-    grid.setCellSpacing(0);
-    this.alignLeft = alignLeft;
-    this.alignTop = alignTop;
-    setAlignment(grid);
-    grid.setWidget(0, 0, widget);
-    initWidget(grid);
-    addStyleName(DEFAULT_STYLE_NAME);
-  }
+	public WidgetWrapper(Widget widget, HorizontalAlignmentConstant hAlign) {
+		this(widget, hAlign, HasAlignment.ALIGN_MIDDLE);
+	}
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.Composite#getWidget()
-   */
-  public Grid getWidget() {
-    return (Grid) super.getWidget();
-  }
+	public WidgetWrapper(Widget widget, VerticalAlignmentConstant vAlign) {
+		this(widget, HasAlignment.ALIGN_CENTER, vAlign);
+	}
 
-  public HorizontalAlignmentConstant getHorizontalAlignment() {
-    return alignLeft;
-  }
+	public WidgetWrapper(Widget widget, HorizontalAlignmentConstant hAlign,
+			VerticalAlignmentConstant vAlign) {
+		Grid grid = new Grid(1, 1);
+		grid.setBorderWidth(0);
+		grid.setCellPadding(0);
+		grid.setCellSpacing(0);
+		this.alignLeft = hAlign;
+		this.alignTop = vAlign;
+		setAlignment(grid);
+		grid.setWidget(0, 0, widget);
+		initWidget(grid);
+		addStyleName(DEFAULT_STYLE_NAME);
+	}
 
-  public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-    alignLeft = align;
-    setAlignment(getWidget());
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#getWidget()
+	 */
+	public Grid getWidget() {
+		return (Grid) super.getWidget();
+	}
 
-  public VerticalAlignmentConstant getVerticalAlignment() {
-    return alignTop;
-  }
+	public HorizontalAlignmentConstant getHorizontalAlignment() {
+		return alignLeft;
+	}
 
-  public void setVerticalAlignment(VerticalAlignmentConstant align) {
-    alignTop = align;
-    setAlignment(getWidget());
-  }
+	public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+		alignLeft = align;
+		setAlignment(getWidget());
+	}
 
-  private void setAlignment(Grid grid) {
-    grid.getCellFormatter().setAlignment(0, 0, alignLeft, alignTop);
-  }
+	public VerticalAlignmentConstant getVerticalAlignment() {
+		return alignTop;
+	}
+
+	public void setVerticalAlignment(VerticalAlignmentConstant align) {
+		alignTop = align;
+		setAlignment(getWidget());
+	}
+
+	private void setAlignment(Grid grid) {
+		grid.getCellFormatter().setAlignment(0, 0, alignLeft, alignTop);
+	}
 
 }

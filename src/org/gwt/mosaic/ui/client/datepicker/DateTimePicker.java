@@ -26,9 +26,8 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
-import com.google.gwt.widgetideas.client.event.ChangeEvent;
-import com.google.gwt.widgetideas.client.event.ChangeHandler;
-import com.google.gwt.widgetideas.datepicker.client.TimePicker;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 public class DateTimePicker extends LayoutComposite {
   
@@ -39,16 +38,16 @@ public class DateTimePicker extends LayoutComposite {
 
   private DatePicker datePicker;
   private TimePicker timePicker;
-
-  private final ChangeHandler<Date> datePickerChangeHandler = new ChangeHandler<Date>() {
-    public void onChange(ChangeEvent<Date> event) {
-      timePicker.setDate(event.getNewValue());
+  
+  private final ValueChangeHandler<Date> datePickerChangeHandler = new ValueChangeHandler<Date>() {
+    public void onValueChange(ValueChangeEvent<Date> event) {
+      timePicker.setDate(event.getValue());
     }
-  };
+  };   
 
-  private final ChangeHandler<Date> timePickerChangeHandler = new ChangeHandler<Date>() {
-    public void onChange(ChangeEvent<Date> event) {
-      datePicker.setSelectedDate(event.getNewValue(), false);
+  private final ValueChangeHandler<Date> timePickerChangeHandler = new ValueChangeHandler<Date>() {
+    public void onValueChange(ValueChangeEvent<Date> event) {
+      datePicker.setValue(event.getValue(), true);
     }
   };
 
@@ -86,8 +85,8 @@ public class DateTimePicker extends LayoutComposite {
     layoutPanel.add(datePicker, new BoxLayoutData(FillStyle.BOTH));
     layoutPanel.add(new WidgetWrapper(timePicker), new BoxLayoutData(FillStyle.HORIZONTAL));
     
-    timePicker.addChangeHandler(timePickerChangeHandler);
-    datePicker.addChangeHandler(datePickerChangeHandler);
+    timePicker.addValueChangeHandler(timePickerChangeHandler);
+    datePicker.addValueChangeHandler(datePickerChangeHandler);
     
     setStyleName(DEFAULT_STYLENAME);
   }
@@ -96,15 +95,20 @@ public class DateTimePicker extends LayoutComposite {
    * 
    * @return the entered date
    */
+  @SuppressWarnings("deprecation")
   public Date getDate() {
-    return timePicker.getDateTime();
+    Date d = datePicker.getValue();
+    d.setHours(timePicker.getDateTime().getHours());
+    d.setMinutes(timePicker.getDateTime().getMinutes());
+    d.setSeconds(timePicker.getDateTime().getSeconds());
+    return d;
   }
   
   /**
    * This method causes the DatePicker to show the given date.
    */
   public final void showDate(Date date) {
-    getDatePicker().showDate(date);
+    getDatePicker().setValue(date);
     getTimePicker().setDate(date);
   }
   

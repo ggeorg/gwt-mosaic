@@ -44,7 +44,6 @@
  */
 package org.gwt.mosaic.forms.client.layout;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
@@ -115,7 +114,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @see Size
  * @see Sizes
  */
-public final class ConstantSize implements Size, Serializable {
+public final class ConstantSize implements Size {
 
   // Public Units *********************************************************
 
@@ -409,7 +408,7 @@ public final class ConstantSize implements Size, Serializable {
    * An ordinal-based serializable typesafe enumeration for units as used in
    * instances of {@link ConstantSize}.
    */
-  public static final class Unit implements Serializable {
+  public static final class Unit {
 
     private final transient String name;
     private final transient String abbreviation;

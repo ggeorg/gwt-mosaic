@@ -17,9 +17,9 @@ package org.gwt.mosaic.core.client;
 
 import java.io.Serializable;
 
-import org.gwt.mosaic.core.client.util.HashCode;
-
 /**
+ * Utility class that holds a width and height that represents a dimension of an
+ * element.
  * 
  * @author http://harmony.apache.org/
  * @author georgopoulos.georgios(at)gmail.com
@@ -31,34 +31,48 @@ public class Dimension implements Serializable {
   public int width;
   public int height;
 
+  /**
+   * Creates a new instance of {@code Dimension}.
+   */
   public Dimension() {
     this(0, 0);
   }
 
+  /**
+   * Creates a new instance of {@code Dimension} with a predefine dimension.
+   * 
+   * @param d {@code Dimension} to copy
+   */
   public Dimension(Dimension d) {
     this(d.width, d.height);
   }
 
+  /**
+   * Creates a new instance of {@code Dimension} with width and height.
+   * 
+   * @param width the dimension width
+   * @param height the dimension height
+   */
   public Dimension(int width, int height) {
     setSize(width, height);
   }
 
+  /**
+   * Creates a new instance of {@code Dimension} with {@code width=size[0]} and
+   * {@code height=size[1]}.
+   * 
+   * @param size the dimension array ({@code size[0]} is the width and {@code
+   *          size[1]} is the height)
+   */
   public Dimension(int[] size) {
     setSize(size[0], size[1]);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-    if (obj instanceof Dimension) {
-      Dimension d = (Dimension) obj;
-      return (d.width == width && d.height == height);
-    }
-    return false;
-  }
-
+  /**
+   * Return the height of the dimension.
+   * 
+   * @return height of the dimension
+   */
   public int getHeight() {
     return height;
   }
@@ -67,16 +81,31 @@ public class Dimension implements Serializable {
     return new Dimension(width, height);
   }
 
+  /**
+   * Return the width of the dimension.
+   * 
+   * @return width of the dimension
+   */
   public int getWidth() {
     return width;
   }
+  
+  /**
+   * Set the width of the dimension
+   * 
+   * @param width the dimension width
+   */
+  public void setWidth(int width) {
+    this.width = width;
+  }
 
-  @Override
-  public int hashCode() {
-    HashCode hash = new HashCode();
-    hash.append(width);
-    hash.append(height);
-    return hash.hashCode();
+  /**
+   * Set the height of the dimension.
+   * 
+   * @param height the dimension height
+   */
+  public void setHeight(int height) {
+    this.height = height;
   }
 
   public void setSize(Dimension d) {
@@ -88,12 +117,53 @@ public class Dimension implements Serializable {
     this.height = height;
   }
 
-  @Override
-  public String toString() {
-    return getClass().getName() + "[width=" + width + ",height=" + height + "]";
-  }
-
   public int[] toArray() {
     return new int[] {width, height};
   }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Dimension other = (Dimension) obj;
+    if (height != other.height)
+      return false;
+    if (width != other.width)
+      return false;
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + height;
+    result = prime * result + width;
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "Dimension [height=" + height + ", width=" + width + "]";
+  }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Georgios J. Georgopoulos.
+ * Copyright 2008-2010 Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,30 +15,42 @@
  */
 package org.gwt.mosaic.ui.client;
 
+import java.util.Iterator;
+
 import org.gwt.mosaic.ui.client.layout.BoxLayout;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ToolBar extends LayoutComposite implements IndexedPanel {
+/**
+ * A panel which typically contains a row of tool buttons.
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
+public class ToolBar extends LayoutComposite implements IndexedPanel,
+    HasWidgets {
 
   /**
    * The default style name.
    */
   private static final String DEFAULT_STYLENAME = "mosaic-ToolBar";
 
+  /**
+   * Creates a {@code ToolBar} instance.
+   */
   public ToolBar() {
-    super();
-    getLayoutPanel().setLayout(new BoxLayout());
+    super(new BoxLayout());
     setStyleName(DEFAULT_STYLENAME);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
    */
@@ -46,8 +58,8 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
     return getLayoutPanel().getWidget(index);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetCount()
    */
@@ -55,8 +67,8 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
     return getLayoutPanel().getWidgetCount();
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
    */
@@ -64,8 +76,8 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
     return getLayoutPanel().getWidgetIndex(child);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
    */
@@ -73,37 +85,150 @@ public class ToolBar extends LayoutComposite implements IndexedPanel {
     return getLayoutPanel().remove(index);
   }
 
-  public void add(Widget widget) {
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
+   */
+  public void add(Widget w) {
     final LayoutPanel layoutPanel = getLayoutPanel();
-    layoutPanel.add(widget);
-    if (((BoxLayout) layoutPanel.getLayout()).getOrient() == Orientation.HORIZONTAL) {
-      getLayoutPanel().add(widget, new BoxLayoutData(FillStyle.VERTICAL));
+    final BoxLayout boxLayoutMgr = (BoxLayout) layoutPanel.getLayout();
+    if (w instanceof ToolBarSpring) {
+      layoutPanel.add(w, new BoxLayoutData(FillStyle.BOTH));
+    } else if (boxLayoutMgr.getOrientation() == Orientation.HORIZONTAL) {
+      final String width = getWidgetWidth(w);
+      layoutPanel.add(w, new BoxLayoutData(FillStyle.VERTICAL, width, null));
     } else {
-      getLayoutPanel().add(widget, new BoxLayoutData(FillStyle.HORIZONTAL));
+      final String height = getWidgetHeight(w);
+      getLayoutPanel().add(w, new BoxLayoutData(FillStyle.BOTH, null, height));
+    }
+  }
+
+  private String getWidgetWidth(Widget w) {
+    final String width = w.getElement().getStyle().getWidth();
+    return (width != null && width.length() > 0) ? width : null;
+  }
+
+  private String getWidgetHeight(Widget w) {
+    final String height = w.getElement().getStyle().getHeight();
+    return (height != null && height.length() > 0) ? height : null;
+  }
+
+  /**
+   * Adds a thin line to the {@link ToolBar} to separate sections of {@code
+   * ToolBar} items.
+   * 
+   * @return the {@link ToolBarSeparator} instance added
+   */
+  public ToolBarSeparator addSeparator() {
+    final ToolBarSeparator separator = new ToolBarSeparator();
+    add(separator);
+    return separator;
+  }
+
+  /**
+   * Adds a flexible space between {@code ToolBar} items.
+   * 
+   * @return the {@link ToolBarSpring} instance added
+   */
+  public ToolBarSpring addSpring() {
+    final ToolBarSpring spring = new ToolBarSpring();
+    add(spring);
+    return spring;
+  }
+
+  /**
+   * Returns the {@code ToolBar} orientation. Whether the {@code ToolBar}
+   * children are oriented horizontally or vertically.
+   * 
+   * @return the {@code ToolBar} orientation
+   * @deprecated use {@link #getOrientation()} instead
+   */
+  @Deprecated
+  public BoxLayout.Orientation getOrient() {
+    return ((BoxLayout) getLayoutPanel().getLayout()).getOrientation();
+  }
+
+  /**
+   * Returns the {@code ToolBar} orientation. Whether the {@code ToolBar}
+   * children are oriented horizontally or vertically.
+   * 
+   * @return the {@code ToolBar} orientation
+   * @see #setOrientation(Orientation)
+   */
+  public BoxLayout.Orientation getOrientation() {
+    return getOrient();
+  }
+
+  /**
+   * Used to specify whether the {@code ToolBar} children are oriented
+   * horizontally or vertically. The default value is horizontal.
+   * 
+   * @param orient specifies if child elements are placed next to each other in
+   *          a row (horizontal) or in a column (vertical)
+   * @deprecated use {{@link #setOrientation(Orientation)} instead
+   */
+  @Deprecated
+  public void setOrient(BoxLayout.Orientation orient) {
+    final BoxLayout boxLayout = (BoxLayout) getLayoutPanel().getLayout();
+    if (boxLayout.getOrientation() != orient) {
+      boxLayout.setOrientation(orient);
     }
   }
 
   /**
-   * Adds a thin line to the {@link ToolBar} to separate sections of toolbar
-   * items.
+   * Used to specify whether the {@code ToolBar} children are oriented
+   * horizontally or vertically. The default value is horizontal.
    * 
-   * @return the {@link ToolBarSeparator} object created
+   * @param orient specifies if child elements are placed next to each other in
+   *          a row (horizontal) or in a column (vertical)
    */
-  public ToolBarSeparator addSeparator() {
-    final ToolBarSeparator sep = new ToolBarSeparator();
-    add(sep);
-    return sep;
+  public void setOrientation(BoxLayout.Orientation orient) {
+    setOrient(orient);
   }
 
-  public void setOrient(BoxLayout.Orientation orient) {
-    final BoxLayout boxLayout = (BoxLayout) getLayoutPanel().getLayout();
-    if (boxLayout.getOrient() != orient) {
-      boxLayout.setOrient(orient);
+  /**
+   * Sets the orientation of child widgets (used by UiBinder).
+   * 
+   * @param orient the orientation of child widgets, can be {@code horizontal}
+   *          or {@code vertical}
+   * @see #setOrientation(Orientation)
+   * @see #getOrientation()
+   */
+  public void setOrientation(String orient) {
+    orient = orient.trim().toLowerCase();
+    if (orient.equals("horizontal".intern())) {
+      setOrientation(Orientation.HORIZONTAL);
+    } else if (orient.equals("vertical".intern())) {
+      setOrientation(Orientation.VERTICAL);
     }
   }
 
-  public BoxLayout.Orientation getOrient() {
-    return ((BoxLayout) getLayoutPanel().getLayout()).getOrient();
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   */
+  public void clear() {
+    getLayoutPanel().clear();
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+   */
+  public Iterator<Widget> iterator() {
+    return getLayoutPanel().iterator();
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   */
+  public boolean remove(Widget w) {
+    return getLayoutPanel().remove(w);
   }
 
 }
