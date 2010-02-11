@@ -76,7 +76,7 @@ class HeaderPropertyBase extends ColumnProperty {
    * @return the header for the given row
    */
   Object getHeader(int row) {
-    return headers.get(new Integer(row));
+    return headers.get(Integer.valueOf(row));
   }
 
   /**
