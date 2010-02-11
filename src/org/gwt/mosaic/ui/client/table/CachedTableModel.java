@@ -329,7 +329,7 @@ public class CachedTableModel<RowType> extends
     }
     boolean fullyCached = true;
     for (int row = startRow; row <= lastRow; row++) {
-      if (!rowValuesMap.containsKey(new Integer(row))) {
+      if (!rowValuesMap.containsKey(Integer.valueOf(row))) {
         fullyCached = false;
         break;
       }
