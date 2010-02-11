@@ -124,7 +124,7 @@ class RowLayoutSplitBar extends Widget implements HasAllMouseHandlers {
       }
 
       RowLayoutData layoutDataT = (RowLayoutData) widgetT.getLayoutData();
-      RowLayoutData layoutDataB = (RowLayoutData) widgetB.getLayoutData();
+      // RowLayoutData layoutDataB = (RowLayoutData) widgetB.getLayoutData();
 
       layoutDataT.setPreferredHeight(sizeT + "px");
       // layoutDataB.setPreferredHeight(sizeB + "px");
