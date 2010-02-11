@@ -312,7 +312,7 @@ public class SelectionGrid extends Grid implements HasRowHighlightHandlers,
    * @return true if the row is selected, false if not
    */
   public boolean isRowSelected(int row) {
-    return selectedRows.containsKey(new Integer(row));
+    return selectedRows.containsKey(Integer.valueOf(row));
   }
 
   /**
