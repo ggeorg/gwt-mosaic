@@ -130,7 +130,7 @@ public class CachedTableModel<RowType> extends
         if (rowValues != null) {
           int curRow = request.getStartRow();
           while (rowValues.hasNext()) {
-            rowValuesMap.put(new Integer(curRow), rowValues.next());
+            rowValuesMap.put(Integer.valueOf(curRow), rowValues.next());
             curRow++;
           }
         }
