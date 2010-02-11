@@ -56,7 +56,7 @@ public class RowCountChangeEvent extends GwtEvent<RowCountChangeHandler> {
    * @param <S> The event source
    * @param source the source of the handlers
    */
-  public static <S extends PageChangeHandler & HasHandlers> void fire(
+  public static <S extends RowCountChangeHandler & HasHandlers> void fire(
       S source, int oldRowCount, int newRowCount) {
     if (TYPE != null) {
       RowCountChangeEvent event = new RowCountChangeEvent(oldRowCount, newRowCount);
