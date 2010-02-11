@@ -259,8 +259,8 @@ public class CommandAction extends AbstractMap<String, Object> implements
   }
 
   public void putAll(Map<? extends String, ? extends Object> m) {
-    for (String key : m.keySet()) {
-      put(key, m.get(key));
+    for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+      put(entry.getKey(), entry.getValue());
     }
   }
 
