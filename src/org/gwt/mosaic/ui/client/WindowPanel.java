@@ -142,7 +142,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  final class ElementDragHandle extends Widget implements HasAllMouseHandlers,
+  final static class ElementDragHandle extends Widget implements HasAllMouseHandlers,
       HasClickHandlers {
 
     public ElementDragHandle(Element elem) {
