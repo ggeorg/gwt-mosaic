@@ -88,7 +88,19 @@ public interface TableEvent {
     public Row(int rowIndex) {
       this.rowIndex = rowIndex;
     }
+    
+    /**
+     * @return the row index
+     */
+    public int getRowIndex() {
+      return rowIndex;
+    }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
     public int compareTo(Row o) {
       if (o == null) {
         return 1;
@@ -97,19 +109,36 @@ public interface TableEvent {
       }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     @Override
-    public boolean equals(Object o) {
-      if (o instanceof Row) {
-        return compareTo((Row) o) == 0;
-      }
-      return false;
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + rowIndex;
+      return result;
     }
 
     /**
-     * @return the row index
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
      */
-    public int getRowIndex() {
-      return rowIndex;
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      Row other = (Row) obj;
+      if (rowIndex != other.rowIndex)
+        return false;
+      return true;
     }
   }
 }
