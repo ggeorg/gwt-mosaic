@@ -36,7 +36,7 @@ public class DataSourceServiceImpl extends RemoteServiceServlet implements
   /**
    * The source of the data.
    */
-  private StudentGenerator data = new StudentGenerator() {
+  private transient StudentGenerator data = new StudentGenerator() {
     @Override
     protected int getRandomInt(int max) {
       return random.nextInt(max);
