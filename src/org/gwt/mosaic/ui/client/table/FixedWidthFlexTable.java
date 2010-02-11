@@ -333,7 +333,7 @@ public class FixedWidthFlexTable extends FlexTable {
     }
     Element tr = DOM.createTR();
     DOM.insertChild(getBodyElement(), tr, beforeRow + 1);
-    columnsPerRow.add(beforeRow, new Integer(0));
+    columnsPerRow.add(beforeRow, Integer.valueOf(0));
 
     // Make sure the column counts are still correct by iterating backward
     // through the rows looking for cells that span down into the newly
