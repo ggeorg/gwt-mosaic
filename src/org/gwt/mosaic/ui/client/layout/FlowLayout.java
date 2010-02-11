@@ -129,8 +129,8 @@ public class FlowLayout extends BaseLayout {
       int left = paddingLeftMeasure.sizeOf(layoutPanel);
       int top = paddingTopMeasure.sizeOf(layoutPanel);
       int width = box.width - (left + paddingRightMeasure.sizeOf(layoutPanel));
-      int height = box.height
-          - (top + paddingBottomMeasure.sizeOf(layoutPanel));
+      // int height = box.height - (top +
+      // paddingBottomMeasure.sizeOf(layoutPanel));
 
       Dimension decPanelFrameSize = null;
 
