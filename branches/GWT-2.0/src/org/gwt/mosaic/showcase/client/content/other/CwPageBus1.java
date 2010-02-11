@@ -284,7 +284,7 @@ public class CwPageBus1 extends ContentWidget {
     return layoutPanel;
   }
 
-  class Country {
+  static class Country {
     private String code;
     private String name;
     private double internet;
