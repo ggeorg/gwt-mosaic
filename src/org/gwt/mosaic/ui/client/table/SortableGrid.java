@@ -435,7 +435,7 @@ public class SortableGrid extends SelectionGrid implements
       selectedRows.put(new Integer(row2), tr1);
     }
     if (tr2 != null) {
-      selectedRows.put(new Integer(row1), tr2);
+      selectedRows.put(Integer.valueOf(row1), tr2);
     }
   }
 
