@@ -116,7 +116,7 @@ class HeaderPropertyBase extends ColumnProperty {
    * @param header the header
    */
   void setHeader(int row, Object header) {
-    headers.put(new Integer(row), header);
+    headers.put(Integer.valueOf(row), header);
     headerCount = Math.max(headerCount, row + 1);
   }
 
