@@ -107,7 +107,7 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
       ToggleButton btn = (ToggleButton) event.getSource();
       InfoPanel.show(constants.mosaicCustomButtonName(),
           constants.mosaicCustomButtonDown()
-              + new Boolean(btn.isDown()).toString());
+              + Boolean.valueOf(btn.isDown()).toString());
     }
   }
 
@@ -118,14 +118,16 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
   @Override
   protected Widget onInitialize() {
     // Create a layout panel to align the widgets
-    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    final LayoutPanel layoutPanel = new LayoutPanel(new BoxLayout(
+        Orientation.VERTICAL));
     layoutPanel.setPadding(0);
 
     //
     // push buttons
     //
 
-    final CaptionLayoutPanel pushBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonPush());
+    final CaptionLayoutPanel pushBtnPanel = new CaptionLayoutPanel(
+        constants.mosaicCustomButtonPush());
     pushBtnPanel.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     pushBtnPanel.setLayout(new BoxLayout());
     pushBtnPanel.setPadding(15);
@@ -146,14 +148,15 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     disabledPushButton.setEnabled(false);
 
     pushBtnPanel.add(new WidgetWrapper(disabledPushButton));
-    
+
     layoutPanel.add(pushBtnPanel, new BoxLayoutData(FillStyle.HORIZONTAL, true));
 
     //
     // toggle buttons
     //
-    
-    final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(constants.mosaicCustomButtonToggle());
+
+    final CaptionLayoutPanel toggleBtnPanel = new CaptionLayoutPanel(
+        constants.mosaicCustomButtonToggle());
     toggleBtnPanel.getHeader().add(new Image(Showcase.IMAGES.catWidgets()));
     toggleBtnPanel.setLayout(new BoxLayout());
     toggleBtnPanel.setPadding(15);
@@ -174,10 +177,10 @@ public class CwCustomButton extends ContentWidget implements ClickHandler {
     disabledToggleButton.setEnabled(false);
 
     toggleBtnPanel.add(new WidgetWrapper(disabledToggleButton));
-    
+
     layoutPanel.add(toggleBtnPanel, new BoxLayoutData(FillStyle.BOTH, true));
-    
+
     return layoutPanel;
   }
-  
+
 }
