@@ -672,8 +672,8 @@ public class FixedWidthFlexTable extends FlexTable {
     }
 
     // Update the list of columns per row
-    Integer numColumnsI = new Integer(numColumns);
-    Integer oldNumColumnsI = new Integer(oldNumColumns);
+    Integer numColumnsI = numColumns;
+    Integer oldNumColumnsI = oldNumColumns;
     if (row < columnsPerRow.size()) {
       columnsPerRow.set(row, numColumnsI);
     } else {
