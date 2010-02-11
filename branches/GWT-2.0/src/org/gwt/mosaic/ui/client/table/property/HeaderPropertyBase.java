@@ -104,7 +104,7 @@ class HeaderPropertyBase extends ColumnProperty {
    * @param row the row index from the bottom
    */
   void removeHeader(int row) {
-    headers.remove(new Integer(row));
+    headers.remove(Integer.valueOf(row));
   }
 
   /**
