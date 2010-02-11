@@ -769,7 +769,7 @@ public class SelectionGrid extends Grid implements HasRowHighlightHandlers,
     }
 
     // Ignore request if row already selected
-    Integer rowI = new Integer(row);
+    Integer rowI = Integer.valueOf(row);
     if (selectedRows.containsKey(rowI)) {
       return;
     }
