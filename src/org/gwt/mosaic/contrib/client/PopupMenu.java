@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
 // the simple name of the superclass org.gwt.mosaic.ui.client.PopupMenu
 public class PopupMenu extends org.gwt.mosaic.ui.client.PopupMenu {
 
-  private class MenuItemDisabled extends MenuItemSeparator {
+  private static class MenuItemDisabled extends MenuItemSeparator {
     private MenuBar parentMenu;
 
     public MenuItemDisabled(String text, boolean asHTML) {
