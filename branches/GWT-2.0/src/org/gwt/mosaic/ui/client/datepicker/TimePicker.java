@@ -198,7 +198,7 @@ public class TimePicker extends Composite implements
    */
   public void setDate(Date date) {
     // Only change the date part, leave time part untouched
-    dateInMillis = (long) ((Math.floor(date.getTime() / DAY_IN_MS) + 1) * DAY_IN_MS)
+    dateInMillis = ((date.getTime() / DAY_IN_MS) + 1) * DAY_IN_MS
         + dateInMillis % DAY_IN_MS;
     for (TimeSpinner spinner : timeSpinners) {
       spinner.getSpinner().setValue(dateInMillis, false);
