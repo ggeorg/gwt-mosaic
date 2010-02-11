@@ -406,11 +406,10 @@ public abstract class ContentWidget extends LayoutPanel implements
     builder.setCallback(realCallback);
 
     // Send the request
-    Request request = null;
     try {
-      request = builder.send();
+      builder.send();
     } catch (RequestException e) {
-      realCallback.onError(request, e);
+      realCallback.onError(null, e);
     }
   }
 
