@@ -52,7 +52,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class ApplicationFrameworkGenerator extends Generator {
 
-  protected class CmdActionDescriptor {
+  protected static class CmdActionDescriptor {
     public String name;
     public String description;
     public String image;
