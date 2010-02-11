@@ -157,7 +157,7 @@ public class DesktopPanel extends Composite implements
     }
   }
 
-  private class ResizeDragController extends AbstractDragController {
+  private static class ResizeDragController extends AbstractDragController {
 
     private static final int MIN_WIDGET_SIZE = 96;
 
