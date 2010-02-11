@@ -464,7 +464,7 @@ public class SelectionGrid extends Grid implements HasRowHighlightHandlers,
       deselectAllRows(false);
     }
 
-    boolean isSelected = selectedRows.containsKey(new Integer(row));
+    boolean isSelected = selectedRows.containsKey(Integer.valueOf(row));
     if (shiftKey && (lastSelectedRowIndex > -1)) {
       // Shift+select rows
       SelectionGridRowFormatter formatter = getSelectionGridRowFormatter();
