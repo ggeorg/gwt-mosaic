@@ -690,16 +690,15 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
 
   public void setCollapsed(final LayoutPanel layoutPanel, final Widget widget,
       boolean collapse) {
-    scanForPanels(layoutPanel);
+    //scanForPanels(layoutPanel);
+    
+    init(layoutPanel);
 
     final BorderLayoutData layoutData = (BorderLayoutData) widget.getLayoutData();
 
     if (collapse) {
       if (widget == west || widget == east || widget == north
           || widget == south) {
-        layoutData.collapsed = collapse;
-        widget.setVisible(false);
-        syncDecoratorVisibility(widget);
         if (layoutData.collapsedStateWidget == null) {
           ImageButton imgBtn = null;
           if (layoutData.region == Region.NORTH) {
@@ -719,6 +718,9 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
             imgBtn.addStyleName("WestCollapsedImageButton");
             imgBtn.setVerticalAlignment(HasAlignment.ALIGN_TOP);
           }
+          if (imgBtn == null) {
+            return;
+          }
           imgBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
               layoutPanel.setCollapsed(widget, false);
@@ -727,9 +729,11 @@ public class BorderLayout extends BaseLayout implements HasCollapsibleWidgets {
             }
           });
           layoutData.collapsedStateWidget = imgBtn;
-        } else {
-          layoutData.collapsedStateWidget.setVisible(true);
         }
+        layoutData.collapsed = collapse;
+        widget.setVisible(false);
+        syncDecoratorVisibility(widget);
+        layoutData.collapsedStateWidget.setVisible(true);
         if (!layoutData.collapsedStateWidget.isAttached()) {
           layoutPanel.add(layoutData.collapsedStateWidget,
               new BorderLayoutData(layoutData.region));
