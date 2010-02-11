@@ -161,7 +161,7 @@ public class ShowcaseGenerator extends Generator {
           + type.getSimpleSourceName() + ".ui.html";
       createPublicResource(dstPath, fileContents);
     } catch (Exception ex) {
-      return;
+      // Ignore it!
     }
   }
 
