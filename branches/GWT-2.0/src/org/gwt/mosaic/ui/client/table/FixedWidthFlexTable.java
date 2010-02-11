@@ -688,7 +688,7 @@ public class FixedWidthFlexTable extends FlexTable {
         columnCountMap.remove(oldNumColumnsI);
         oldNumColumnsRemoved = true;
       } else {
-        columnCountMap.put(oldNumColumnsI, new Integer(numRows - 1));
+        columnCountMap.put(oldNumColumnsI, Integer.valueOf(numRows - 1));
       }
     }
 
