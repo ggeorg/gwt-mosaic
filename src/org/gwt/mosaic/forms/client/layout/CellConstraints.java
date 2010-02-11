@@ -44,7 +44,6 @@
  */
 package org.gwt.mosaic.forms.client.layout;
 
-import java.io.Serializable;
 import java.util.StringTokenizer;
 
 import org.gwt.mosaic.core.client.Insets;
@@ -1307,8 +1306,7 @@ public final class CellConstraints extends LayoutData implements Cloneable {
    * An ordinal-based serializable typesafe enumeration for component alignment
    * types as used by the {@link FormLayout}.
    */
-  public static final class Alignment implements Serializable {
-    private static final long serialVersionUID = -8628301485993064488L;
+  public static final class Alignment {
 
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
