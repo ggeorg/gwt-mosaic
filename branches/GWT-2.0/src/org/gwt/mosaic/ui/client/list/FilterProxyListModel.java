@@ -73,7 +73,7 @@ public class FilterProxyListModel<T1, T2> extends AbstractListModel<T1>
       filter = new Vector<Integer>();
       for (int iter = 0; iter < underlying.getSize(); iter++) {
         if (modelFilter.select(underlying.getElementAt(iter), regexp)) {
-          filter.addElement(new Integer(iter));
+          filter.addElement(Integer.valueOf(iter));
         }
       }
     }
