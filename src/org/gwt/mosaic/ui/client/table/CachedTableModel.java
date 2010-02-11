@@ -363,7 +363,7 @@ public class CachedTableModel<RowType> extends
 
     // Skip past any data already retrieved from the last row
     for (int row = uncachedLastRow; row >= startRow; row--) {
-      if (rowValuesMap.containsKey(new Integer(row))) {
+      if (rowValuesMap.containsKey(Integer.valueOf(row))) {
         uncachedLastRow--;
       } else {
         // Need to request the remaining rows
