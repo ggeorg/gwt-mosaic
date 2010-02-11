@@ -432,7 +432,7 @@ public class SortableGrid extends SelectionGrid implements
     Element tr1 = selectedRows.remove(new Integer(row1));
     Element tr2 = selectedRows.remove(new Integer(row2));
     if (tr1 != null) {
-      selectedRows.put(new Integer(row2), tr1);
+      selectedRows.put(Integer.valueOf(row2), tr1);
     }
     if (tr2 != null) {
       selectedRows.put(Integer.valueOf(row1), tr2);
