@@ -71,7 +71,7 @@ public class CwLiveTable extends ContentWidget {
    * User object.
    */
   @ShowcaseSource
-  class Foo implements Serializable {
+  class Foo {
     private static final long serialVersionUID = 1120309810337478764L;
 
     int[] values = new int[5];
