@@ -228,7 +228,7 @@ public abstract class AbstractUnitConverter implements UnitConverter {
    * @return the given Points as pixels
    */
   protected final int pointAsPixel(int pt, int dpi) {
-    return Math.round(dpi * pt / DTP_RESOLUTION);
+    return (int) Math.round((double)(dpi * pt) / DTP_RESOLUTION);
   }
 
   /**
