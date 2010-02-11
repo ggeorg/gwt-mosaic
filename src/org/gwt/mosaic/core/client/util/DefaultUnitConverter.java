@@ -152,7 +152,7 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
 
     averageCharWidthTestString = newTestString;
   }
-  
+
   /**
    * Sets the font size that will be used to compute CSS 'em' units.
    * 
@@ -234,7 +234,7 @@ public class DefaultUnitConverter extends AbstractUnitConverter implements
     final FontMetrics metrics = new FontMetrics();
     DOM.setStyleAttribute(metrics.getElement(), "whiteSpace", "nowrap");
     final Dimension boxSize = metrics.stringBoxSize(averageCharWidthTestString);
-    return new DialogBaseUnits(boxSize.width
+    return new DialogBaseUnits((double) boxSize.width
         / averageCharWidthTestString.length(), boxSize.height);
   }
 
