@@ -269,7 +269,7 @@ public class FixedWidthFlexTable extends FlexTable {
    * @return the column width in pixels
    */
   public int getColumnWidth(int column) {
-    Object colWidth = colWidths.get(new Integer(column));
+    Object colWidth = colWidths.get(Integer.valueOf(column));
     if (colWidth == null) {
       return DEFAULT_COLUMN_WIDTH;
     } else {
