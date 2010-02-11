@@ -1,3 +1,10 @@
+Change log for v0.4.0-rc4
+================================
+
+ - (Bug Fix) Bug: beansbinding modul inheriting in 0.4.0-rc3 (http://groups.google.com/group/gwt-mosaic/browse_thread/thread/70a7e7146a31ebfc)
+ - (Bug Fix) Bug: setting collapse state is broken in http://127.0.0.1:8888/Showcase.html?gwt.codesvr=127.0.0.1:9997#CwBorderLayoutTest_Collapsed
+ - >50 bugs found with FindBugs (http://findbugs.sourceforge.net/)
+
 Change log for v0.4.0-rc3
 ================================
 
