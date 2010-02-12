@@ -40,7 +40,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.gwt.beansbinding.core.client.PropertyResolutionException;
 import org.gwt.mosaic.ui.client.table.property.ColumnProperty;
 import org.gwt.mosaic.ui.client.table.property.ColumnPropertyManager;
 import org.gwt.mosaic.ui.client.table.property.FooterProperty;
@@ -550,7 +549,7 @@ public class AbstractColumnDefinition<RowType, ColType> implements
     try {
       return Introspector.getBeanInfo(object.getClass());
     } catch (IntrospectionException ie) {
-      throw new PropertyResolutionException("Exception while introspecting "
+      throw new RuntimeException("Exception while introspecting "
           + object.getClass().getName(), ie);
     }
   }
@@ -568,7 +567,7 @@ public class AbstractColumnDefinition<RowType, ColType> implements
       reason = ex;
     }
 
-    throw new PropertyResolutionException("Exception invoking method " + method
+    throw new RuntimeException("Exception invoking method " + method
         + " on " + object, reason);
   }
 }
