@@ -61,6 +61,9 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
   }
 
   protected void fireContentsChanged(Object source, int index0, int index1) {
+	if (listenerList == null)
+		return;
+	
     ListDataEvent event = new ListDataEvent(source,
         ListDataEvent.Type.CONTENTS_CHANGED, index0, index1);
     for (ListDataListener listener : listenerList) {
@@ -69,6 +72,9 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
   }
 
   protected void fireIntervalAdded(Object source, int index0, int index1) {
+    if (listenerList == null)
+	  return;
+		
     ListDataEvent event = new ListDataEvent(source,
         ListDataEvent.Type.INTERVAL_ADDED, index0, index1);
     for (ListDataListener listener : listenerList) {
@@ -77,6 +83,9 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
   }
 
   protected void fireIntervalRemoved(Object source, int index0, int index1) {
+    if (listenerList == null)
+  	  return;
+    
     ListDataEvent event = new ListDataEvent(source,
         ListDataEvent.Type.INTERVAL_REMOVED, index0, index1);
     for (ListDataListener listener : listenerList) {
@@ -113,6 +122,9 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
   }
 
   public void removeListDataListener(ListDataListener listener) {
+    if (listenerList == null)
+ 	  return;
+
     listenerList.remove(listener);
   }
 
@@ -125,7 +137,6 @@ public class DefaultComboBoxModel<E> extends Vector<E> implements
     if ((selectedObject != null && !selectedObject.equals(item))
         || selectedObject == null && item != null) {
       selectedObject = item;
-      // (igeorg) fireContentsChanged(this, -1, -1);
       fireContentsChanged(this, 0, getSize());
     }
   }
