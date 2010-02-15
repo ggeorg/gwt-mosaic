@@ -156,5 +156,10 @@
 		<delete dir="war/WEB-INF/classes" failonerror="false" />
 		<delete dir="war/WEB-INF/lib" failonerror="false" />
 		<delete dir="war/showcase" failonerror="false" />
+		<delete>
+			<fileset dir="test">
+				<include name="**/*.class" />
+			</fileset>
+		</delete>
 	</target>
 </project>
