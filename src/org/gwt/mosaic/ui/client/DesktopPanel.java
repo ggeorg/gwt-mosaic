@@ -114,7 +114,7 @@ public class DesktopPanel extends Composite implements
       }
 
       if (!w.isModal()) {
-        w.setGlassEnabled(true);
+        w.setGlassEnabled(true, "mosaic-GlassPanel-invisible");
       }
 
       super.dragStart();
@@ -259,7 +259,7 @@ public class DesktopPanel extends Composite implements
       w.hideContent(true);
 
       if (!w.isModal()) {
-        w.setGlassEnabled(true);
+        w.setGlassEnabled(true, "mosaic-GlassPanel-invisible");
       }
 
       super.dragStart();
