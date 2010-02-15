@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,6 @@ import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
-import com.allen_sauer.gwt.dnd.client.drop.BoundaryDropController;
 import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
@@ -44,9 +43,13 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * {@code DesktopPanel} is a boundary panel for {@link WindowPanel}'s resize and
+ * move operations. {@code DesktopPanel} can be used to create a
+ * multiple-document interface or a virtual-desktop.
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
@@ -74,9 +77,7 @@ public class DesktopPanel extends Composite implements
       final WindowPanel w = (WindowPanel) context.draggable;
 
       super.dragEnd();
-      if (!w.isModal()) {
-        w.glassPanel.removeFromParent();
-      }
+
       if (w.isHideContentOnMove() && !w.isCollapsed()) {
         w.hideContent(false);
       }
@@ -106,18 +107,6 @@ public class DesktopPanel extends Composite implements
 
       if (!w.isCollapsed()) {
         w.hideContent(w.isHideContentOnMove());
-      }
-
-      if (!w.isModal()) {
-        if (w.glassPanel == null) {
-          w.glassPanel = new GlassPanel(false);
-        }
-
-        w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-        DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
-            DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
-
-        add(w.glassPanel);
       }
 
       super.dragStart();
@@ -180,9 +169,7 @@ public class DesktopPanel extends Composite implements
       final WindowPanel w = (WindowPanel) context.draggable.getParent();
 
       super.dragEnd();
-      if (!w.isModal()) {
-        w.glassPanel.removeFromParent();
-      }
+
       w.hideContent(false);
       w.setContentSize(w.getContentSize()); // XXX ?
       w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
@@ -258,17 +245,6 @@ public class DesktopPanel extends Composite implements
       }
 
       w.hideContent(true);
-      if (!w.isModal()) {
-        if (w.glassPanel == null) {
-          w.glassPanel = new GlassPanel(false);
-        }
-
-        w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
-        DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
-            DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
-
-        getBoundaryPanel().add(w.glassPanel, 0, 0);
-      }
 
       super.dragStart();
 
@@ -315,14 +291,6 @@ public class DesktopPanel extends Composite implements
       return directionMap.get(draggable);
     }
 
-    protected BoundaryDropController newBoundaryDropController(
-        AbsolutePanel boundaryPanel, boolean allowDroppingOnBoundaryPanel) {
-      if (allowDroppingOnBoundaryPanel) {
-        throw new IllegalArgumentException();
-      }
-      return new BoundaryDropController(boundaryPanel, false);
-    }
-
   }
 
   /**
@@ -339,8 +307,6 @@ public class DesktopPanel extends Composite implements
       this.directionLetters = directionLetters;
     }
   }
-
-  private static final Map<Element, DesktopPanel> map = new HashMap<Element, DesktopPanel>();
 
   /**
    * Specifies that resizing occur at the east edge.
@@ -409,15 +375,8 @@ public class DesktopPanel extends Composite implements
    */
   static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST,
       "w");
-
-  public static DesktopPanel get(Widget widget) {
-    assert (widget != null);
-    DesktopPanel desktopPanel = map.get(widget.getElement());
-    if (desktopPanel == null) {
-      desktopPanel = new DesktopPanel(widget.getElement());
-    }
-    return desktopPanel;
-  }
+  
+  static final DesktopPanel ROOTPANEL = new DesktopPanel(RootPanel.get().getElement());
 
   private WindowPanel active;
 
@@ -573,7 +532,7 @@ public class DesktopPanel extends Composite implements
       w.delayedLayout(CoreConstants.MIN_DELAY_MILLIS);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -582,7 +541,7 @@ public class DesktopPanel extends Composite implements
   public void onResize() {
     layout();
   }
-  
+
   /**
    * {@inheritDoc}
    * 
@@ -782,8 +741,6 @@ public class DesktopPanel extends Composite implements
   protected void initWidget(Widget widget) {
     super.initWidget(widget);
 
-    map.put(widget.getElement(), this);
-
     moveDragController = new MoveDragController((AbsolutePanel) widget);
     moveDragController.setBehaviorConstrainedToBoundaryPanel(true);
     // moveDragController.setBehaviorDragProxy(true);
@@ -794,10 +751,6 @@ public class DesktopPanel extends Composite implements
     resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
     resizeDragController.setBehaviorMultipleSelection(false);
     resizeDragController.setBehaviorDragStartSensitivity(3);
-  }
-
-  void add(GlassPanel glassPanel) {
-    ((AbsolutePanel) getWidget()).add(glassPanel, 0, 0);
   }
 
 }
