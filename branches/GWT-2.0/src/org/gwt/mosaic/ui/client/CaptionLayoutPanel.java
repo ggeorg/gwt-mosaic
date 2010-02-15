@@ -25,6 +25,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.user.client.ui.AttachDetachHelper;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -72,9 +73,12 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     setStyleName(DEFAULT_STYLENAME);
   }
 
+  // HasWidgets implementation ---------------------------------------------
+
   /**
    * Adds a widget to this panel.
    * 
+   * @param w the child widget to be added
    * @see com.google.gwt.user.client.ui.HasWidgets#add(com.google.gwt.user.client.ui.Widget)
    */
   public void add(Widget w) {
@@ -82,29 +86,119 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   }
 
   /**
-   * Appends the specified widget to the end of this container.
+   * Adds a widget to this panel.
    * 
-   * @param widget
-   * @param layoutData
+   * @param w the child widget to be added
+   * @param layoutData TODO
    */
-  public void add(Widget widget, LayoutData layoutData) {
-    body.add(widget, layoutData);
+  public void add(Widget w, LayoutData layoutData) {
+    body.add(w, layoutData);
   }
+
+  /**
+   * Removes all child widgets.
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
+   */
+  public void clear() {
+    body.clear();
+  }
+
+  /**
+   * Gets an iterator for the contained widgets. This iterator has to implement
+   * {@link Iterator#remove()}.
+   * 
+   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+   */
+  public Iterator<Widget> iterator() {
+    return body.iterator();
+  }
+
+  /**
+   * Removes a child widget.
+   * 
+   * @param w the widget to be removed
+   * @return <code>true</code> if the widget was present
+   * @see com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client.ui.Widget)
+   */
+  public boolean remove(Widget w) {
+    return body.remove(w);
+  }
+
+  // IndexedPanel implementation -------------------------------------------
+
+  /**
+   * Gets the child widget at the specified index.
+   * 
+   * @param index the child widget's index
+   * @return the child widget
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
+   */
+  public Widget getWidget(int index) {
+    return body.getWidget(index);
+  }
+
+  /**
+   * Gets the number of child widgets in this panel.
+   * 
+   * @return the number of children
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetCount()
+   */
+  public int getWidgetCount() {
+    return body.getWidgetCount();
+  }
+
+  /**
+   * Gets the index of the specified child widget.
+   * 
+   * @param child the widget to be found
+   * @return the widget's index, or {@code -1} if it is not a child of this
+   *         panel
+   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt.user.client.ui.Widget)
+   */
+  public int getWidgetIndex(Widget child) {
+    return body.getWidgetIndex(child);
+  }
+
+  /**
+   * Removes the widget at the specified index.
+   * 
+   * @param index the index of the widget to be removed
+   * @return <code>false</code> if the widget is not present
+   * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
+   */
+  public boolean remove(int index) {
+    return body.remove(index);
+  }
+
+  // -----------------------------------------------------------------------
+  
+  @Override
+  protected void doAttachChildren() {
+    // See comment in doDetachChildren for an explanation of this call
+    AttachDetachHelper.onAttach(getLayoutPanel());
+  }
+  
+  @Override
+  protected void doDetachChildren() {
+    // We need to detach the decPanel (which is layoutPanel's parent) because it
+    // is not part of the iterator of Widgets that this class returns (see the
+    // iterator() method override).
+    // Detaching the decPanel detaches both itself and its children. We do not
+    // call super.onDetachChildren() because that would detach the decPanel's
+    // children (redundantly) without detaching the decPanel itself.
+    // This is similar to a {@link ComplexPanel}, but we do not want to expose
+    // the decPanel widget, as its just an internal implementation.
+    AttachDetachHelper.onDetach(getLayoutPanel());
+  }
+  
+  // -----------------------------------------------------------------------
 
   public void addCollapsedListener(CollapsedListener listener) {
     if (collapsedListeners == null) {
       collapsedListeners = new CollapsedListenerCollection();
     }
     collapsedListeners.add(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#clear()
-   */
-  public void clear() {
-    body.clear();
   }
 
   protected void fireCollapsedChange(Widget sender) {
@@ -129,35 +223,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     return body.getPadding();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidget(int)
-   */
-  public Widget getWidget(int index) {
-    return body.getWidget(index);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#getWidgetCount()
-   */
-  public int getWidgetCount() {
-    return body.getWidgetCount();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.IndexedPanel#getWidgetIndex(com.google.gwt
-   * .user.client.ui.Widget)
-   */
-  public int getWidgetIndex(Widget child) {
-    return body.getWidgetIndex(child);
-  }
-
   public int getWidgetSpacing() {
     return body.getWidgetSpacing();
   }
@@ -173,35 +238,6 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
 
   public boolean isCollapsed() {
     return collapsed;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
-   */
-  public Iterator<Widget> iterator() {
-    return body.iterator();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.google.gwt.user.client.ui.IndexedPanel#remove(int)
-   */
-  public boolean remove(int index) {
-    return body.remove(index);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * com.google.gwt.user.client.ui.HasWidgets#remove(com.google.gwt.user.client
-   * .ui.Widget)
-   */
-  public boolean remove(Widget w) {
-    return body.remove(w);
   }
 
   public void removeCollapsedListener(CollapsedListener listener) {

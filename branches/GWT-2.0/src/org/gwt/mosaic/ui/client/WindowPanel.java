@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package org.gwt.mosaic.ui.client;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.gwt.mosaic.core.client.CoreConstants;
@@ -65,6 +66,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.AbstractWindowClosingEvent;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -80,7 +82,6 @@ import com.google.gwt.user.client.ui.HasCaption;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -136,14 +137,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     public HandlerRegistration addResizeHandler(ResizeHandler handler) {
       return WindowPanel.this.addHandler(ResizeEvent.getType(), handler);
     }
-
-    public HandlerManager getHandler() {
-      return this;
-    }
   }
 
-  final static class ElementDragHandle extends Widget implements HasAllMouseHandlers,
-      HasClickHandlers {
+  final static class ElementDragHandle extends Widget implements
+      HasAllMouseHandlers, HasClickHandlers {
 
     public ElementDragHandle(Element elem) {
       setElement(elem);
@@ -257,8 +254,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private List<WindowStateListener> windowStateListeners;
 
-  GlassPanel glassPanel;
-
   ElementDragHandle nwResizeHandle, nResizeHandle, neResizeHandle;
 
   ElementDragHandle swResizeHandle, sResizeHandle, seResizeHandle;
@@ -271,7 +266,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public WindowPanel() {
     this(null);
   }
-  
+
   /**
    * Creates a new empty window with the specified caption and default layout.
    * 
@@ -280,17 +275,17 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
   public WindowPanel(String caption) {
     this(caption, true, false);
   }
-  
+
   /**
    * Creates a new empty window with the specified caption and default layout.
-   *  
+   * 
    * @param caption the caption of the window
    * @param resizable
    */
   public WindowPanel(String caption, boolean resizable) {
     this(caption, resizable, false);
   }
-  
+
   /**
    * Creates a new empty window with default layout.
    * 
@@ -299,30 +294,29 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    * @param autoHide
    */
   protected WindowPanel(String caption, boolean resizable, boolean autoHide) {
-    this(RootPanel.get(), caption, resizable, autoHide);
+    this(DesktopPanel.ROOTPANEL, caption, resizable, autoHide);
   }
 
   /**
    * Creates a new empty window with default layout.
    * 
-   * @param boundaryPanel
+   * @param desktopPanel
    * @param caption the caption of the window
    * @param resizable
    * @param autoHide
    */
-  protected WindowPanel(AbsolutePanel boundaryPanel, String caption,
+  public WindowPanel(DesktopPanel desktopPanel, String caption,
       boolean resizable, boolean autoHide) {
-    this(DesktopPanel.get(boundaryPanel == null ? RootPanel.get()
-        : boundaryPanel), caption, resizable, autoHide);
+    this(desktopPanel, caption, resizable, autoHide, null);
   }
 
   public WindowPanel(DesktopPanel desktopPanel, String caption,
-      boolean resizable, boolean autoHide) {
+      boolean resizable, boolean autoHide, ClientBundle images) {
     super(autoHide);
 
     this.resizable = resizable;
 
-    this.desktopPanel = desktopPanel;
+    setDesktopPanel(desktopPanel);
 
     panel = new CaptionLayoutPanel(caption);
     panel.addCollapsedListener(new CollapsedListener() {
@@ -362,6 +356,95 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     addStyleName(DEFAULT_STYLENAME);
   }
+
+  // HasWidgets implementation ---------------------------------------------
+
+  /**
+   * Adds a widget to this {@code WindowPanel}.
+   * 
+   * @param w the child widget to be added
+   * @see com.google.gwt.user.client.ui.SimplePanel#add(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public void add(Widget w) {
+    // Can't add() more than one widget to a LayoutPoupPanel.
+    if (getWidget() != null) {
+      throw new IllegalStateException(
+          "WindowPanel can only contain one child widget");
+    }
+    setWidget(w);
+  }
+
+  /**
+   * Removes all child widgets.
+   * 
+   * @see com.google.gwt.user.client.ui.Panel#clear()
+   */
+  @Override
+  public void clear() {
+    panel.clear();
+  }
+
+  /**
+   * Gets an iterator for the contained widgets. This iterator has to implement
+   * {@link Iterator#remove()}.
+   * 
+   * @see com.google.gwt.user.client.ui.SimplePanel#iterator()
+   */
+  @Override
+  public Iterator<Widget> iterator() {
+    return panel.iterator();
+  }
+
+  /**
+   * Removes a child widget.
+   * 
+   * @param w the widget to be removed
+   * @return {@code true} if the widget was present
+   * @see org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel#remove(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public boolean remove(Widget w) {
+    return panel.remove(w);
+  }
+
+  // SimplePanel overrides -------------------------------------------------
+
+  /**
+   * Sets this {@code LayoutPopupPanel}'s widget. Any existing child widget will
+   * be removed.
+   * 
+   * @param w the panel's new widget, or {@code null} to clear the panel
+   * @see com.google.gwt.user.client.ui.PopupPanel#setWidget(com.google.gwt.user.client.ui.Widget)
+   */
+  @Override
+  public void setWidget(Widget w) {
+
+    // Validate
+    if (w == getWidget()) {
+      return;
+    }
+
+    panel.clear();
+    panel.add(w);
+  }
+
+  /**
+   * Gets the {@code LayoutPopupPanel}'s child widget.
+   * 
+   * @return the child widget, or {@code null} if none is present
+   * @see org.gwt.mosaic.ui.client.DecoratedLayoutPopupPanel#getWidget()
+   */
+  @Override
+  public Widget getWidget() {
+    if (panel.getWidgetCount() != 0) {
+      return panel.getWidget(0);
+    } else {
+      return null;
+    }
+  }
+
+  // -----------------------------------------------------------------------
 
   /**
    * Adds a {@code BeforeSelectionHandler} handler.
@@ -516,6 +599,10 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     return desktopPanel;
   }
 
+  public void setDesktopPanel(DesktopPanel desktopPanel) {
+    this.desktopPanel = desktopPanel;
+  }
+
   public Widget getFooter() {
     return panel.getFooter();
   }
@@ -562,15 +649,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  @Override
-  public Widget getWidget() {
-    if (panel.getWidgetCount() > 0) {
-      return panel.getWidget(0);
-    } else {
-      return null;
-    }
-  }
-
   /**
    * Gets the flag that determines the state of the window panel. Default is
    * 'NORMAL' (ie not MINIMIZED or MAXIMIZED).
@@ -613,9 +691,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       super.hide(autoHide);
     } finally {
       removeDesktopPanelHandlers();
-      if (modal && glassPanel != null) {
-        glassPanel.removeFromParent();
-      }
       if (modal) {
         modal = false;
       }
@@ -847,12 +922,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     }
   }
 
-  @Override
-  public void setWidget(Widget w) {
-    panel.clear();
-    panel.add(w);
-  }
-
   /**
    * Sets the flag to determine the state of the window panel. Default is
    * 'NORMAL' (ie not MINIMIZED or MAXIMIZED).
@@ -910,25 +979,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     getDesktopPanel().makeDraggable(this);
 
-    if (modal) {
-      if (glassPanel == null) {
-        glassPanel = new GlassPanel(false);
-        glassPanel.addStyleName("mosaic-GlassPanel-default");
-        String zIndex = DOM.getComputedStyleAttribute(
-            WindowPanel.this.getElement(), "zIndex");
-        if (zIndex != null) {
-          DOM.setStyleAttribute(glassPanel.getElement(), "zIndex", zIndex);
-        }
-      }
-      getDesktopPanel().add(glassPanel);
-
-      // new DelayedRunnable() {
-      // @Override
-      // public void run() {
-      // WindowPanel.super.show();
-      // }
-      // };
-    }
+    setGlassEnabled(modal);
 
     if (beforeHidePopupPosition != null) {
       super.setPopupPosition(beforeHidePopupPosition.x,
@@ -1071,12 +1122,14 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
       }
     });
   }
+
   void addDesktopPanelHandlers() {
     desktopPanelOpenHandler = addOpenHandler(desktopPanel);
     desktopPanelCloseHandler = addCloseHandler(desktopPanel);
     desktopPanelSelectionHandler = addSelectionHandler(desktopPanel);
     addWindowStateListener(desktopPanel);
   }
+
   void hideContent(boolean hideContent) {
     panel.hideContent(hideContent);
   }
@@ -1100,15 +1153,30 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     removeWindowStateListener(desktopPanel);
   }
 
-  void setZIndex(int zIndexOffset) {
-    int zIndex = (zIndexOffset + Z_INDEX_BASE);
-    if (modal) {
-      zIndex += Z_INDEX_MODAL_OFFSET;
+  @Override
+  public void setGlassEnabled(boolean enabled) {
+    setGlassEnabled(enabled, "mosaic-GlassPanel-default");
+  }
+
+  void setGlassEnabled(boolean enabled, String glassStyleName) {
+    super.setGlassEnabled(enabled);
+
+    if (enabled) {
+      String zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
+      if (zIndex != null) {
+        DOM.setStyleAttribute((Element) getGlassElement(), "zIndex", zIndex);
+      }
     }
-    DOM.setStyleAttribute(getElement(), "zIndex", Integer.toString(zIndex));
-    if (glassPanel != null && glassPanel.isAttached()) {
-      DOM.setStyleAttribute(glassPanel.getElement(), "zIndex",
-          Integer.toString(zIndex));
+  }
+
+  void setZIndex(int zIndexOffset) {
+    final int zIndex = (zIndexOffset + Z_INDEX_BASE)
+        + (modal ? Z_INDEX_MODAL_OFFSET : 0);
+
+    getElement().getStyle().setZIndex(zIndex);
+
+    if (modal) {
+      getGlassElement().getStyle().setZIndex(zIndex);
     }
   }
 
