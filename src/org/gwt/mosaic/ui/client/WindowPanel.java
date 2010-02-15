@@ -979,8 +979,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     getDesktopPanel().makeDraggable(this);
 
-    setGlassEnabled(modal);
-
     if (beforeHidePopupPosition != null) {
       super.setPopupPosition(beforeHidePopupPosition.x,
           beforeHidePopupPosition.y);
@@ -1013,6 +1011,9 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
    */
   public void showModal(boolean doPack) {
     modal = true;
+
+    setGlassEnabled(modal);
+
     if (doPack) {
       pack();
     }
@@ -1158,10 +1159,20 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
     setGlassEnabled(enabled, "mosaic-GlassPanel-default");
   }
 
-  void setGlassEnabled(boolean enabled, String glassStyleName) {
+  void setGlassEnabled(boolean enabled, String className) {
     super.setGlassEnabled(enabled);
 
+    // XXX workaround to show the glass panel
+    if (isShowing()) {
+      boolean oldValue = isAnimationEnabled();
+      setAnimationEnabled(false);
+      hide();
+      show();
+      setAnimationEnabled(oldValue);
+    }
+
     if (enabled) {
+      getGlassElement().addClassName(className);
       String zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
       if (zIndex != null) {
         DOM.setStyleAttribute((Element) getGlassElement(), "zIndex", zIndex);
@@ -1175,7 +1186,7 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
     getElement().getStyle().setZIndex(zIndex);
 
-    if (modal) {
+    if (modal || isGlassEnabled()) {
       getGlassElement().getStyle().setZIndex(zIndex);
     }
   }
