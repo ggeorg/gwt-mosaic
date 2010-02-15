@@ -76,6 +76,10 @@ public class DesktopPanel extends Composite implements
     public void dragEnd() {
       final WindowPanel w = (WindowPanel) context.draggable;
 
+      if (!w.isModal()) {
+        w.setGlassEnabled(false);
+      }
+
       super.dragEnd();
 
       if (w.isHideContentOnMove() && !w.isCollapsed()) {
@@ -107,6 +111,10 @@ public class DesktopPanel extends Composite implements
 
       if (!w.isCollapsed()) {
         w.hideContent(w.isHideContentOnMove());
+      }
+
+      if (!w.isModal()) {
+        w.setGlassEnabled(true);
       }
 
       super.dragStart();
@@ -167,6 +175,10 @@ public class DesktopPanel extends Composite implements
     @Override
     public void dragEnd() {
       final WindowPanel w = (WindowPanel) context.draggable.getParent();
+
+      if (!w.isModal()) {
+        w.setGlassEnabled(false);
+      }
 
       super.dragEnd();
 
@@ -245,6 +257,10 @@ public class DesktopPanel extends Composite implements
       }
 
       w.hideContent(true);
+
+      if (!w.isModal()) {
+        w.setGlassEnabled(true);
+      }
 
       super.dragStart();
 
@@ -375,8 +391,9 @@ public class DesktopPanel extends Composite implements
    */
   static final DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST,
       "w");
-  
-  static final DesktopPanel ROOTPANEL = new DesktopPanel(RootPanel.get().getElement());
+
+  static final DesktopPanel ROOTPANEL = new DesktopPanel(
+      RootPanel.get().getElement());
 
   private WindowPanel active;
 
