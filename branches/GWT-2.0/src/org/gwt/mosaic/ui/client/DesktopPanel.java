@@ -77,7 +77,7 @@ public class DesktopPanel extends Composite implements
       final WindowPanel w = (WindowPanel) context.draggable;
 
       if (!w.isModal()) {
-        w.setGlassEnabled(false);
+        w.glassPanel.removeFromParent();
       }
 
       super.dragEnd();
@@ -114,7 +114,13 @@ public class DesktopPanel extends Composite implements
       }
 
       if (!w.isModal()) {
-        w.setGlassEnabled(true, "mosaic-GlassPanel-invisible");
+        if (w.glassPanel == null) {
+          w.glassPanel = new GlassPanel(false);
+          w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+        }
+        DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
+            DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
+        RootPanel.get().add(w.glassPanel, 0, 0);
       }
 
       super.dragStart();
@@ -177,7 +183,7 @@ public class DesktopPanel extends Composite implements
       final WindowPanel w = (WindowPanel) context.draggable.getParent();
 
       if (!w.isModal()) {
-        w.setGlassEnabled(false);
+        w.glassPanel.removeFromParent();
       }
 
       super.dragEnd();
@@ -259,7 +265,13 @@ public class DesktopPanel extends Composite implements
       w.hideContent(true);
 
       if (!w.isModal()) {
-        w.setGlassEnabled(true, "mosaic-GlassPanel-invisible");
+        if (w.glassPanel == null) {
+          w.glassPanel = new GlassPanel(false);
+          w.glassPanel.addStyleName("mosaic-GlassPanel-invisible");
+        }
+        DOM.setStyleAttribute(w.glassPanel.getElement(), "zIndex",
+            DOM.getComputedStyleAttribute(w.getElement(), "zIndex"));
+        RootPanel.get().add(w.glassPanel, 0, 0);
       }
 
       super.dragStart();

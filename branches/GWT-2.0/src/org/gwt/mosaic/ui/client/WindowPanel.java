@@ -209,6 +209,8 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   private DesktopPanel desktopPanel;
 
+  GlassPanel glassPanel; // used by DesktopPanel for move and resize
+
   private HandlerRegistration desktopPanelCloseHandler;
 
   private HandlerRegistration desktopPanelOpenHandler;
@@ -1161,15 +1163,6 @@ public class WindowPanel extends DecoratedLayoutPopupPanel implements
 
   void setGlassEnabled(boolean enabled, String className) {
     super.setGlassEnabled(enabled);
-
-    // XXX workaround to show the glass panel
-    if (isShowing()) {
-      boolean oldValue = isAnimationEnabled();
-      setAnimationEnabled(false);
-      hide();
-      show();
-      setAnimationEnabled(oldValue);
-    }
 
     if (enabled) {
       getGlassElement().addClassName(className);

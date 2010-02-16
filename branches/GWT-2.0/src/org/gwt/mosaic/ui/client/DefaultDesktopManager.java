@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * <p>
  * This delegation allows each L&F to provide custom behaviors for for
  * desktop-specific actions (For example, how and where the internal frame's
- * icon would appera).
+ * icon would appear).
  * 
  * @see DesktopPanel
  * @see DesktopPanel.InternalWindowPanel
