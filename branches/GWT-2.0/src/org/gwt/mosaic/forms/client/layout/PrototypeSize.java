@@ -44,7 +44,6 @@
  */
 package org.gwt.mosaic.forms.client.layout;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.gwt.mosaic.core.client.DOM;
@@ -72,8 +71,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @see Size
  * @see Sizes
  */
-public final class PrototypeSize implements Size, Serializable {
-  private static final long serialVersionUID = -7711209479604414919L;
+public final class PrototypeSize implements Size {
 
   // Fields ***************************************************************
 

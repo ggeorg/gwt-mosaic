@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopolos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,9 @@
  * the License.
  */
 /*
+ * This is derived work from JGoodies project:
+ * http://www.jgoodies.com/freeware/forms/index.html
+ * 
  * Copyright (c) 2002-2008 JGoodies Karsten Lentzsch. All Rights Reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
