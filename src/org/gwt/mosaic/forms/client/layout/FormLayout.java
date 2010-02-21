@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 GWT Mosaic Georgios J. Georgopolos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,9 @@
  * the License.
  */
 /*
+ * This is derived work from JGoodies project:
+ * http://www.jgoodies.com/freeware/forms/index.html
+ * 
  * Copyright (c) 2002-2008 JGoodies Karsten Lentzsch. All Rights Reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -44,20 +47,17 @@
  */
 package org.gwt.mosaic.forms.client.layout;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.core.client.Rectangle;
 import org.gwt.mosaic.forms.client.builder.DefaultFormBuilder;
-import org.gwt.mosaic.forms.client.util.FormUtils;
 import org.gwt.mosaic.ui.client.layout.BaseLayout;
 import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
@@ -165,14 +165,13 @@ import com.google.gwt.user.client.ui.Widget;
  * @see RowSpec
  * @see CellConstraints
  * @see org.gwt.mosaic.ui.client.layout.builder.jgoodies.forms.builder.AbstractFormBuilder
- * @see com.jgoodies.forms.builder.ButtonBarBuilder
- * @see com.jgoodies.forms.builder.DefaultFormBuilder
- * @see com.jgoodies.forms.factories.FormFactory
+ * @see org.gwt.mosaic.forms.client.builder.ButtonBarBuilder
+ * @see org.gwt.mosaic.forms.client.builder.DefaultFormBuilder
+ * @see org.gwt.mosaic.forms.client.factories.FormFactory
  * @see Size
  * @see Sizes
  */
-public final class FormLayout extends BaseLayout implements Serializable {
-  private static final long serialVersionUID = 7911952585430389626L;
+public final class FormLayout extends BaseLayout {
 
   // Instance Fields ********************************************************
 

@@ -77,7 +77,6 @@ import org.gwt.mosaic.forms.client.util.FormUtils;
  * @see com.jgoodies.forms.factories.FormFactory
  */
 public final class RowSpec extends FormSpec {
-  private static final long serialVersionUID = 7498596826208602530L;
 
   // Vertical Orientations ************************************************
 
