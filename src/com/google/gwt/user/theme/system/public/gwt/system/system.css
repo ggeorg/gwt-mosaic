@@ -47,8 +47,8 @@ a, a:visited, a:hover {
 .gwt-Button {
 	margin: 0;
 
-       /* XXX IE hack to respect padding */
-       overflow: visible;
+	/* XXX IE hack to respect padding */
+	overflow: visible;
 	padding: 3px 5px;
 
 	text-decoration: none;
@@ -137,20 +137,20 @@ a, a:visited, a:hover {
 }
 
 .gwt-DialogBox {
-       border: 1px solid buttonshadow;
+	border: 1px solid buttonshadow;
 	-moz-border-radius: 2px 2px 0 0;
 	-webkit-border-radius: 2px 2px 0 0;
 	border-radius: 2px 2px 0 0;
 	
 	-moz-box-shadow: threedshadow 3px 3px 12px 0;
 	-webkit-box-shadow: threedshadow 3px 3px 12px 0;
-       box-shadow: threedshadow 3px 3px 12px 0;
+	box-shadow: threedshadow 3px 3px 12px 0;
 }
 .gwt-DialogBox .Caption {
 	background: url("images/button.png") repeat-x;
 	background-color: activecaption;
-       color: captiontext;
-       font-weight: bold;
+	color: captiontext;
+	font-weight: bold;
 	padding: 4px 4px 4px 8px;
 	cursor: default;
 }
@@ -304,9 +304,9 @@ a, a:visited, a:hover {
 	border: 0px;
 	border-left: 1px solid menutext;
 	background: menu;
-       opacity: 0.3;
-       filter: alpha(opacity=30);
-       zoom: 1;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-MenuBar-horizontal .gwt-MenuItemSeparator .menuSeparatorInner {
 	width: 1px;
@@ -317,7 +317,7 @@ a, a:visited, a:hover {
 	margin-top: 0px;
 	margin-left: 0px;
 	background: menu;
-       color: menutext;
+	color: menutext;
 }
 .gwt-MenuBar-vertical table {
 	border-collapse: collapse;
@@ -327,9 +327,9 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator {
 	padding: 2px 0px;
-       opacity: 0.3;
-       filter: alpha(opacity=30);
-       zoom: 1;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator .menuSeparatorInner {
 	height: 1px;
@@ -354,7 +354,7 @@ a, a:visited, a:hover {
 	
 	-moz-box-shadow: threedshadow 3px 3px 12px 0;
 	-webkit-box-shadow: threedshadow 3px 3px 12px 0;
-       box-shadow: black 3px 3px 12px 0;
+	box-shadow: black 3px 3px 12px 0;
 }
 .gwt-MenuBarPopup .menuPopupTopCenter {
 	/*background: url(images/hborder.png) 0px -12px repeat-x;*/
@@ -562,7 +562,7 @@ a, a:visited, a:hover {
 	background-color: buttonface;
 	
 	border: 1px outset buttonshadow;
-       /* XXX fails on IE & Opera */
+	/* XXX fails on IE & Opera */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
@@ -606,8 +606,8 @@ a, a:visited, a:hover {
 	cursor: hand;
 }
 .gwt-PushButton-down-disabled {
-       border: 1px inset buttonshadow;
-       /* XXX fails on IE & Opera */
+	border: 1px inset buttonshadow;
+	/* XXX fails on IE & Opera */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
@@ -641,7 +641,7 @@ a, a:visited, a:hover {
 	padding: 0px 1px 0px 0px;
 	margin-right: 4px;
 	margin-bottom: 4px;
-       border: 1px solid transparent;
+	border: 1px solid transparent;
 }
 .gwt-RichTextToolbar .gwt-PushButton-up-hovering {
 	margin-right: 4px;
@@ -662,7 +662,7 @@ a, a:visited, a:hover {
 	margin-right: 4px;
 	margin-bottom: 4px;
 	padding: 0px 1px 0px 0px;
-       border: 1px solid transparent;
+	border: 1px solid transparent;
 }
 .gwt-RichTextToolbar .gwt-ToggleButton-up-hovering {
 	margin-right: 4px;
