@@ -199,7 +199,7 @@ public abstract class BaseLayout implements LayoutManager {
       style.setProperty("position", "static");
       style.setProperty("visibility", "hidden");
 
-      parentElem.appendChild(clonedElem);
+      parentElem.replaceChild(clonedElem, widget.getElement());
 
       if (layoutData.getPreferredWidth() != null) {
         result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
@@ -221,7 +221,7 @@ public abstract class BaseLayout implements LayoutManager {
             + marginBottomMeasure.sizeOf(widget);
       }
 
-      parentElem.removeChild(clonedElem);
+      parentElem.replaceChild(widget.getElement(), clonedElem);
 
       return result;
     }
