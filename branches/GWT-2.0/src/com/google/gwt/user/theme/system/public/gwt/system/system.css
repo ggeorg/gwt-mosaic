@@ -1,3 +1,22 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Copyright (c) 2010 GWT Mosaic, Georgios J. Georgopoulos.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * Contributor(s):
+ *   
+ * ***** END LICENSE BLOCK ***** */
+
 /**
  * The file contains styles for GWT widgets in the standard theme.
  *
@@ -44,22 +63,24 @@ a, a:visited, a:hover {
 	zoom: 1;
 }
 
+/* :::::::::: Button :::::::::: */
+
 .gwt-Button {
 	margin: 0;
 
 	/* XXX IE hack to respect padding */
 	overflow: visible;
-	padding: 3px 5px;
+	padding: 1px 5px 2px 5px;
 
 	text-decoration: none;
 	font-size: small;
 	cursor: pointer;
 	cursor: hand;
 	
-	color: buttontext;
+	color: ButtonText;
 	
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
+	background-color: ButtonFace;
 
 	border: 1px outset buttonshadow;
        /* XXX fails on IE & Opera */
@@ -72,32 +93,36 @@ a, a:visited, a:hover {
 }
 /* XXX :active works for IE8 and fails in Compatibility View */
 .gwt-Button:active {
-	background-color: buttonshadow;
+	background-color: ButtonShadow;
 	border-style: inset;
 }
 .gwt-Button[disabled] {
 	cursor: default;
-	color: inactivecaptiontext;
+	color: GrayText;
+       text-shadow: 1px 1px ThreeDHighlight;
 }
 .gwt-Button[disabled]:hover {
-	background-color: buttonface;
+	background-color: ButtonFace;
 }
 .gwt-Button[disabled]:active {
-	background-color: buttonface;
+	background-color: ButtonFace;
 	border-style: outset;
 }
+
+/* ::::: CheckBox ::::: */
 
 .gwt-CheckBox {
 }
 .gwt-CheckBox-disabled {
-	color: graytext;
+	color: GrayText;
+       text-shadow: 1px 1px ThreeDHighlight;
 }
 
 .gwt-DecoratorPanel {
 	border: 2px groove buttonface;
-	-moz-border-radius: .333em .333em 0px 0px;
-	-webkit-border-radius: .333em .333em 0px 0px;
-	border-radius: .333em .333em 0px 0px;
+	-moz-border-radius: 3px 3px 0px 0px;
+	-webkit-border-radius: 3px 3px 0px 0px;
+	border-radius: 3px 3px 0px 0px;
 }
 .gwt-DecoratorPanel .topCenter,
 .gwt-DecoratorPanel .bottomCenter {
@@ -153,6 +178,9 @@ a, a:visited, a:hover {
 	font-weight: bold;
 	padding: 4px 4px 4px 8px;
 	cursor: default;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogContent {
 }
@@ -162,12 +190,21 @@ a, a:visited, a:hover {
 }
 .gwt-DialogBox .dialogBottomCenter {
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogMiddleLeft {
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogMiddleRight {
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogTopLeftInner {
 	/*width: 5px;
@@ -181,25 +218,41 @@ a, a:visited, a:hover {
 	width: 5px;
 	height: 5px;
 	zoom: 1;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
 }
 .gwt-DialogBox .dialogBottomRightInner {
 	width: 5px;
 	height: 5px;
 	zoom: 1;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
 }
 .gwt-DialogBox .dialogTopLeft {
 	background: url("images/button.png") repeat-x;
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogTopRight {
 	background: url("images/button.png") repeat-x;
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogBottomLeft {
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 .gwt-DialogBox .dialogBottomRight {
 	background-color: activecaption;
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+	zoom: 1;
 }
 * html .gwt-DialogBox .dialogTopLeftInner {
 	width: 5px;
@@ -276,26 +329,39 @@ a, a:visited, a:hover {
 .gwt-ListBox {
 }
 
+/* ::::: menubar ::::: */
+
 .gwt-MenuBar {
 	cursor: default;
 }
 .gwt-MenuBar .gwt-MenuItem {
 	cursor: default;
+
+       appearance: menuitem;
+       -moz-box-align: center;
 }
-.gwt-MenuBar .gwt-MenuItem-selected {
+.gwt-MenuBar-horizontal .gwt-MenuItem-selected {
 	background: url("images/button.png") repeat-x;
-	background-color: highlight;
-	color: highlighttext;
+	background-color: Highlight;
+	color: HighlightText;
 }
 .gwt-MenuBar-horizontal {
 	background: url("images/button.png") repeat-x;
-	background-color: menu;
-	color: menutext;
-	border-bottom: 1px solid buttonshadow;
+	background-color: Menu;
+	color: MenuText;
+	border-bottom: 1px solid ThreeDShadow;
+
+       /*-moz-appearance: toolbox toolbar menubar;*/
+       background-color: -moz-Dialog;
+
+       min-width: 1px;
+       min-height: 19px;
 }
 .gwt-MenuBar-horizontal .gwt-MenuItem {
 	padding: 0px 10px;
 	vertical-align: bottom;
+
+       /*-moz-appearance: menuitem;*/
 }
 .gwt-MenuBar-horizontal .gwt-MenuItemSeparator {
 	width: 1px;
@@ -307,6 +373,8 @@ a, a:visited, a:hover {
 	opacity: 0.3;
 	filter: alpha(opacity=30);
 	zoom: 1;
+
+       /*-moz-appearance: menuseparator !important;*/
 }
 .gwt-MenuBar-horizontal .gwt-MenuItemSeparator .menuSeparatorInner {
 	width: 1px;
@@ -316,14 +384,22 @@ a, a:visited, a:hover {
 .gwt-MenuBar-vertical {
 	margin-top: 0px;
 	margin-left: 0px;
-	background: menu;
-	color: menutext;
 }
 .gwt-MenuBar-vertical table {
 	border-collapse: collapse;
 }
 .gwt-MenuBar-vertical .gwt-MenuItem {
 	padding: 3px 14px 3px 14px;
+
+       /*-moz-appearance: menuitem;
+       -webkit-appearance: menuitem;*/
+}
+.gwt-MenuBar-vertical .gwt-MenuItem-selected {
+	background: url("images/button.png") repeat-x;
+	background-color: Highlight;
+	color: HighlightText;
+}
+.gwt-MenuBar-vertical tr {
 }
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator {
 	padding: 2px 0px;
@@ -345,94 +421,90 @@ a, a:visited, a:hover {
 .gwt-MenuBar-vertical .subMenuIcon-selected {
 	background: url("images/button.png") repeat-x;
 	background-color: highlight;
+
+       /*-moz-appearance: menuitem;
+       -webkit-appearance: menuitem;*/
 }
 .gwt-MenuBarPopup {
-	border: 1px solid buttonshadow;
-	-moz-border-radius: 0 0 2px 2px;
-	-webkit-border-radius: 0 0 2px 2px;
-	border-radius: 0 0 2px 2px;
-	
-	-moz-box-shadow: threedshadow 3px 3px 12px 0;
+       -moz-box-shadow: threedshadow 3px 3px 12px 0;
 	-webkit-box-shadow: threedshadow 3px 3px 12px 0;
 	box-shadow: black 3px 3px 12px 0;
 }
+.gwt-MenuBarPopup .menuPopupContent {
+	border: 1px solid ButtonShadow;
+	-moz-border-radius: 0 0 2px 2px;
+	-webkit-border-radius: 0 0 2px 2px;
+	border-radius: 0 0 2px 2px;
+
+	background-color: Menu;
+
+       /*-moz-appearance: menupopup;
+       -webkit-appearance: menupopup;*/
+
+       min-width: 1px;
+}
 .gwt-MenuBarPopup .menuPopupTopCenter {
-	/*background: url(images/hborder.png) 0px -12px repeat-x;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupBottomCenter {
-	/*background: url(images/hborder.png) 0px -13px repeat-x;
-	-background: url(images/hborder_ie6.png) 0px -13px repeat-x;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupMiddleLeft {
-	/*background: url(images/vborder.png) -12px 0px repeat-y;
-	-background: url(images/vborder_ie6.png) -12px 0px repeat-y;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupMiddleRight {
-	/*background: url(images/vborder.png) -13px 0px repeat-y;
-	-background: url(images/vborder_ie6.png) -13px 0px repeat-y;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupTopLeftInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupTopRightInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupBottomLeftInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupBottomRightInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupTopLeft {
-	/*background: url(images/corner.png) no-repeat 0px -36px;
-	-background: url(images/corner_ie6.png) no-repeat 0px -36px;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupTopRight {
-	/*background: url(images/corner.png) no-repeat -5px -36px;
-	-background: url(images/corner_ie6.png) no-repeat -5px -36px;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupBottomLeft {
-	/*background: url(images/corner.png) no-repeat 0px -41px;
-	-background: url(images/corner_ie6.png) no-repeat 0px -41px;*/
-	background-color: menu;
+	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupBottomRight {
-	/*background: url(images/corner.png) no-repeat -5px -41px;
-	-background: url(images/corner_ie6.png) no-repeat -5px -41px;*/
-	background-color: menu;
+	background-color: Menu;
 }
 * html .gwt-MenuBarPopup .menuPopupTopLeftInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	overflow: hidden;
 }
 * html .gwt-MenuBarPopup .menuPopupTopRightInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	overflow: hidden;
 }
 * html .gwt-MenuBarPopup .menuPopupBottomLeftInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	overflow: hidden;
 }
 * html .gwt-MenuBarPopup .menuPopupBottomRightInner {
-	/*width: 5px;
-	height: 5px;*/
+	width: 0px;
+	height: 0px;
 	overflow: hidden;
 }
 
@@ -451,8 +523,8 @@ a, a:visited, a:hover {
 	background: url("images/button.png") repeat-x;
 	background-color: infobackground;
 
-	border: 1px solid highlight;
-	
+	border: 1px solid buttonshadow;
+
 	-moz-box-shadow: threedshadow 3px 3px 12px 0;
 	-webkit-box-shadow: threedshadow 3px 3px 12px 0;
 	box-shadow: threedshadow 3px 3px 12px 0;
@@ -462,12 +534,12 @@ a, a:visited, a:hover {
 	color: buttontext;
 	
 	background: url("images/button.png") repeat-x;
-	background-color: infobackground;
+	background: buttonface;
 
-       border: 2px solid highlight;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	border: 2px solid buttonshadow;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	
 	-moz-box-shadow: threedshadow 3px 3px 12px 0;
 	-webkit-box-shadow: threedshadow 3px 3px 12px 0;
@@ -477,19 +549,14 @@ a, a:visited, a:hover {
 }
 .gwt-DecoratedPopupPanel .popupMiddleCenter {
 	padding: 3px;
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupTopCenter {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupBottomCenter {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupMiddleLeft {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupMiddleRight {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupTopLeftInner {
 	width: 5px;
@@ -497,31 +564,27 @@ a, a:visited, a:hover {
 	zoom: 1;
 }
 .gwt-DecoratedPopupPanel .popupTopRightInner {
-	width: 8px;
+	width: 5px;
 	height: 5px;
 	zoom: 1;
 }
 .gwt-DecoratedPopupPanel .popupBottomLeftInner {
 	width: 5px;
-	height: 8px;
+	height: 5px;
 	zoom: 1;
 }
 .gwt-DecoratedPopupPanel .popupBottomRightInner {
-	width: 8px;
-	height: 8px;
+	width: 5px;
+	height: 5px;
 	zoom: 1;
 }
 .gwt-DecoratedPopupPanel .popupTopLeft {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupTopRight {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupBottomLeft {
-	background: buttonface;
 }
 .gwt-DecoratedPopupPanel .popupBottomRight {
-	background: buttonface;
 }
 * html .gwt-DecoratedPopupPanel .popupTopLeftInner {
 	width: 5px;
@@ -529,18 +592,18 @@ a, a:visited, a:hover {
 	overflow: hidden;
 }
 * html .gwt-DecoratedPopupPanel .popupTopRightInner {
-	width: 8px;
+	width: 5px;
 	height: 5px;
 	overflow: hidden;
 }
 * html .gwt-DecoratedPopupPanel .popupBottomLeftInner {
 	width: 5px;
-	height: 8px;
+	height: 5px;
 	overflow: hidden;
 }
 * html .gwt-DecoratedPopupPanel .popupBottomRightInner {
-	width: 8px;
-	height: 8px;
+	width: 5px;
+	height: 5px;
 	overflow: hidden;
 }
 
@@ -586,6 +649,8 @@ a, a:visited, a:hover {
 	opacity: .5;
 	filter: alpha(opacity=40);
 	zoom: 1;
+
+       text-shadow: 1px 1px ThreeDHighlight;
 }
 .gwt-PushButton-down,
 .gwt-PushButton-down-hovering,
@@ -606,20 +671,24 @@ a, a:visited, a:hover {
 	cursor: hand;
 }
 .gwt-PushButton-down-disabled {
-	border: 1px inset buttonshadow;
+	border: 1px inset ButtonShadow;
 	/* XXX fails on IE & Opera */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 
 	cursor: default;
-	color: graytext;
+
+       text-shadow: 1px 1px ThreeDHighlight;
 }
+
+/* ::::: RadioButton ::::: */
 
 .gwt-RadioButton {
 }
 .gwt-RadioButton-disabled {
-	color: graytext;
+	color: GrayText;
+       text-shadow: 1px 1px ThreeDHighlight;
 }
 
 .gwt-RichTextArea {
@@ -641,6 +710,7 @@ a, a:visited, a:hover {
 	padding: 0px 1px 0px 0px;
 	margin-right: 4px;
 	margin-bottom: 4px;
+       background: transparent;
 	border: 1px solid transparent;
 }
 .gwt-RichTextToolbar .gwt-PushButton-up-hovering {
@@ -662,6 +732,7 @@ a, a:visited, a:hover {
 	margin-right: 4px;
 	margin-bottom: 4px;
 	padding: 0px 1px 0px 0px;
+       background: transparent;
 	border: 1px solid transparent;
 }
 .gwt-RichTextToolbar .gwt-ToggleButton-up-hovering {
@@ -888,7 +959,11 @@ a, a:visited, a:hover {
   overflow: hidden;
 }
 
+/* ::::: TabBar ::::: */
+
 .gwt-TabBar {
+       position: relative;
+       z-index: 0;
 }
 .gwt-TabBar .gwt-TabBarFirst {
 	width: 5px;  /* first tab distance from the left */
@@ -896,75 +971,118 @@ a, a:visited, a:hover {
 .gwt-TabBar .gwt-TabBarRest {
 }
 .gwt-TabBar .gwt-TabBarItem {
-	margin-left: 6px;
-	padding: 3px 6px 3px 6px;
+       position: relative;
+       /*-moz-appearance: tab;*/
+       margin-top: 2px;
+	padding: 3px 0.5em;
 	cursor: pointer;
 	cursor: hand;
-	color: buttontext;
-	font-weight: bold;
-	text-align: center;
+	color: ButtonText;
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
+	background-color: ButtonFace;
 
-	border: 1px solid buttonshadow;
-	-moz-border-radius: .333em .333em 0 0;
-	-webkit-border-radius: .333em .333em 0 0;
-	border-radius: .333em .333em 0 0;
-	
+	border: 1px outset ButtonShadow;
+       /* XXX fails on IE & Opera */
+	-moz-border-radius: 3px 3px 0 0;
+	-webkit-border-radius: 3px 3px 0 0;
+	border-radius: 3px 3px 0 0;
 	border-bottom: none;
+
+       outline: none;
+}
+.gwt-TabBar .gwt-TabBarItem { /* LTR */
+       margin-left: -2px;
 }
 .gwt-TabBar .gwt-TabBarItem-selected {
+       z-index: 1;
+       margin-top: 0;
+       margin-bottom: -1px;
+       padding-top: 4px;
+       padding-bottom: 5px;
 	cursor: default;
-	background-color: highlight;
-	color: highlighttext;
-} 
+	/*background-color: Highlight;
+       color: HighlightText;*/
+       background-color: ButtonHighlight;
+
+       -moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
 .gwt-TabBar .gwt-TabBarItem-disabled {
 	cursor: default;
-	color: graytext;
+	color: GrayText;
 }
+.gwt-TabBar .gwt-TabBarItem:focus > * {
+  /* Don't specify the outline-color, we should always use initial value. */
+  outline: 1px dotted;
+}
+
+
+/* ::::: TabPanel ::::: */
+
 .gwt-TabPanel {
 }
 .gwt-TabPanelBottom {
-	border-color: buttonface;
-	border-style: solid;
-	border-width: 3px 2px 2px;
+       /*-moz-appearance: tabpanels;*/
 
-	border-style: groove;
-	-moz-border-radius: .333em .333em 0 0;
-	-webkit-border-radius: .333em .333em 0 0;
-	border-radius: .333em .333em 0 0;
-	
-	border-top-color: highlight;
-	border-top-style: solid;
-	
+	border: 2px groove ButtonFace;
+       /* XXX fails on IE & Opera */
+	-moz-border-radius: 0 5px 5px 5px;
+	-webkit-border-radius: 0 5px 5px 5px;
+	border-radius: 0 5px 5px 5px;
+
+       /*border-top-width: 3px;
+       border-top-style: solid;
+       border-top-color: Highlight;*/
+
 	overflow: hidden;
-	padding: 6px;
+	padding: 8px;
+       background-color: ButtonFace;
+       color: ButtonText;
 }
+
+/* ::::: DecoratedTabBar ::::: */
 
 .gwt-DecoratedTabBar {
+       position: relative;
+       z-index: 0;
 }
 .gwt-DecoratedTabBar .gwt-TabBarFirst {
-	width: 1.5em;  /* first tab distance from the left */
+	width: 5px;  /* first tab distance from the left */
 }
 .gwt-DecoratedTabBar .gwt-TabBarRest {
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem {
-	margin-left: -1em;
-	padding: 3px 1em 3px .5em;
+       position: relative;
+       margin-top: 2px;
+	padding: 0px;
 	cursor: pointer;
 	cursor: hand;
-	color: buttontext;
-	font-weight: bold;
-	text-align: center;
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
+	background-color: ButtonFace;
 	
-	border: 1px solid buttonshadow;
-	-moz-border-radius: 0 2em 0 0;
-	-webkit-border-radius: 0 1.5em 0 0;
-	border-radius: 0 1.5em 0 0;
-	
+	border: 1px outset ButtonShadow;
+       /* XXX fails on IE & Opera */
+	-moz-border-radius: 3px 3px 0 0;
+	-webkit-border-radius: 3px 3px 0 0;
+	border-radius: 3px 3px 0 0;
 	border-bottom: none;
+}
+.gwt-DecoratedTabBar .gwt-TabBarItem { /* LTR */
+       margin-left: -2px;
+}
+.gwt-DecoratedTabBar .gwt-TabBarItem-selected {
+       z-index: 1;
+       margin-top: 0;
+       margin-bottom: -1px;
+	cursor: default;
+	/*background-color: Highlight;
+       color: HighlightText;*/
+       background-color: ButtonHighlight;
+
+       -moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
 }
 .gwt-DecoratedTabBar .tabTopCenter {
 	padding: 0px;
@@ -976,62 +1094,61 @@ a, a:visited, a:hover {
 }
 .gwt-DecoratedTabBar .tabTopLeftInner,
 .gwt-DecoratedTabBar .tabTopRightInner {
-	/*width: 6px;
-	height: 6px;*/
+	width: 0px;
+	height: 3px;
 }
 .gwt-DecoratedTabBar .tabTopLeft {
-	/*background: url(images/corner.png) no-repeat 0px -55px;
-	-background: url(images/corner_ie6.png) no-repeat 0px -55px;*/
 }
 .gwt-DecoratedTabBar .tabTopRight {
-	/*background: url(images/corner.png) no-repeat -6px -55px;
-	-background: url(images/corner_ie6.png) no-repeat -6px -55px;*/
 }
 * html .gwt-DecoratedTabBar .tabTopLeftInner,
 * html .gwt-DecoratedTabBar .tabTopRightInner {
-	/*width: 6px;
-	height: 6px;*/
+	width: 0px;
+	height: 3px;
 	overflow: hidden;
 }
 .gwt-DecoratedTabBar .tabMiddleLeft,
 .gwt-DecoratedTabBar .tabMiddleRight {
-	/*width: 6px;*/
+	width: 0px;
 	padding: 0px;
 }
 .gwt-DecoratedTabBar .tabMiddleLeftInner,
 .gwt-DecoratedTabBar .tabMiddleRightInner {
-	width: 1px;
-	height: 1px;
+	width: 0px;
+	height: 0px;
 }
 .gwt-DecoratedTabBar .tabMiddleCenter {
-	padding: 2px 4px 0px 4px;
-	cursor: pointer;
-	cursor: hand;
-	color: buttontext;
-	font-weight: bold;
+       padding: 3px 0.5em;
+	color: ButtonText;
 	text-align: center;
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected {
-	background-color: highlight;
+}
+.gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTop {
+       background: url("images/button.png") repeat-x;
+       background-color: Highlight;
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopCenter {
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopLeft {
-	/*background-position: 0px -61px;*/
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopRight {
-	/*background-position: -6px -61px;*/
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleLeft,
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleRight {
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleCenter {
+       padding-top: 4px;
+       padding-bottom: 5px;
 	cursor: default;
-	color: highlighttext;
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-disabled .tabMiddleCenter {
 	cursor: default;
-	color: graytext;
+	color: GrayText;
+}
+.gwt-DecoratedTabBar .tabMiddleCenterInner > div:focus  {
+  /* Don't specify the outline-color, we should always use initial value. */
+  outline: 1px dotted;
 }
 
 .gwt-TextArea {
@@ -1084,6 +1201,8 @@ a, a:visited, a:hover {
 	opacity: .5;
 	filter: alpha(opacity=40);
 	zoom: 1;
+
+       text-shadow: 1px 1px ThreeDHighlight;
 }
 .gwt-ToggleButton-down,
 .gwt-ToggleButton-down-hovering,
@@ -1111,7 +1230,8 @@ a, a:visited, a:hover {
 	border-radius: 3px;
 
 	cursor: default;
-	color: graytext;
+
+       text-shadow: 1px 1px ThreeDHighlight;
 }
 
 .gwt-Tree .gwt-TreeItem {
@@ -1146,9 +1266,9 @@ a, a:visited, a:hover {
 
 .gwt-DatePicker {
 	border: 2px groove buttonface;
-	-moz-border-radius: .333em;
-	-webkit-border-radius: .333em;
-	border-radius: .333em;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	
 	cursor: default;
 
@@ -1203,7 +1323,11 @@ a, a:visited, a:hover {
 	font-style: italic;
 }
 .datePickerDayIsHighlighted {
-	background-color: buttonhighlight;
+	background-color: highlight;
+       color: highlighttext;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+	zoom: 1;
 }
 .datePickerDayIsValueAndHighlighted {
 	background-color: infobackground;
@@ -1228,4 +1352,11 @@ td.datePickerMonth {
 	cursor: hand;
 	cursor: pointer;
 	padding: 0px 4px;
+       outline: none;
+       border: 1px solid transparent;
+}
+.datePickerPreviousButton:hover,
+.datePickerNextButton:hover {
+       background-color: buttonhighlight;
+       border: 1px solid buttonshadow;
 }

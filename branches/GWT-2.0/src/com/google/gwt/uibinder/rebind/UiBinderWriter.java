@@ -15,19 +15,6 @@
  */
 package com.google.gwt.uibinder.rebind;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
@@ -49,6 +36,19 @@ import com.google.gwt.uibinder.rebind.model.ImplicitClientBundle;
 import com.google.gwt.uibinder.rebind.model.ImplicitCssResource;
 import com.google.gwt.uibinder.rebind.model.OwnerClass;
 import com.google.gwt.uibinder.rebind.model.OwnerField;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Writer for UiBinder generated classes.
@@ -130,7 +130,8 @@ public class UiBinderWriter {
    * @param type the base type
    * @return a breadth-first collection of its type hierarchy
    */
-  static Iterable<JClassType> getClassHierarchyBreadthFirst(JClassType type) {
+  static Iterable<JClassType> getClassHierarchyBreadthFirst(
+      JClassType type) {
     LinkedList<JClassType> list = new LinkedList<JClassType>();
     LinkedList<JClassType> q = new LinkedList<JClassType>();
 
@@ -624,12 +625,12 @@ public class UiBinderWriter {
   }
 
   /**
-   * Instructs the writer to initialize the field with a specific contructor
-   * invocaction, instead of the default GWT.create call.
+   * Instructs the writer to initialize the field with a specific constructor
+   * invocation, instead of the default GWT.create call.
    * 
-   * @param fieldName the field to intialize
+   * @param fieldName the field to initialize
    * @param type the type of the field
-   * @param arguments to the constructor call
+   * @param args arguments to the constructor call
    */
   public void setFieldInitializerAsConstructor(String fieldName,
       JClassType type, String... args) {
@@ -991,8 +992,7 @@ public class UiBinderWriter {
 
     // createAndBindUi method
     w.write("public %s createAndBindUi(final %s owner) {",
-        uiRootType.getParameterizedQualifiedSourceName(),
-        uiOwnerType.getParameterizedQualifiedSourceName());
+        uiRootType.getParameterizedQualifiedSourceName(), uiOwnerType.getParameterizedQualifiedSourceName());
     w.indent();
     w.newline();
 
@@ -1023,9 +1023,7 @@ public class UiBinderWriter {
 
   private void writeClassOpen(IndentedWriter w) {
     w.write("public class %s implements UiBinder<%s, %s>, %s {", implClassName,
-        uiRootType.getParameterizedQualifiedSourceName(),
-        uiOwnerType.getParameterizedQualifiedSourceName(),
-        baseClass.getParameterizedQualifiedSourceName());
+        uiRootType.getParameterizedQualifiedSourceName(), uiOwnerType.getParameterizedQualifiedSourceName(), baseClass.getParameterizedQualifiedSourceName());
     w.indent();
   }
 
