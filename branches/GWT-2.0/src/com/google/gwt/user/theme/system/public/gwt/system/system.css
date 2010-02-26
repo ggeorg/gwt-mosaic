@@ -12,13 +12,11 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- *
- * Contributor(s):
  *   
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * The file contains styles for GWT widgets in the standard theme.
+ * The file contains styles for GWT widgets in the system theme.
  *
  * In order to maintain cross-browser compatibility, the following syntax is
  * used to create IE6 specific style rules:
@@ -34,21 +32,27 @@
 body, table td, select {
 	font-family: Arial Unicode MS, Arial, sans-serif;
 	font-size: small;
+       font: message-box;
 }
 pre {
 	font-family: "courier new", courier;
 	font-size: small;
 }
 body {
-	color: windowtext;
+       -moz-appearance: window;
+	background-color: Window;
+	background-color: -mox-Dialog;
+	color: WindowText;
+	color: -moz-DialogText;
+
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
-	background-color: window;
+
 	direction: ltr;
 }
 a, a:visited, a:hover {
-	color: windowtext;
+       text-decoration: none;
 }
 
 /**
@@ -80,6 +84,7 @@ a, a:visited, a:hover {
 	color: ButtonText;
 	
 	background: url("images/button.png") repeat-x;
+	-background: ButtonFace;
 	background-color: ButtonFace;
 
 	border: 1px outset buttonshadow;
@@ -118,19 +123,37 @@ a, a:visited, a:hover {
        text-shadow: 1px 1px ThreeDHighlight;
 }
 
+/* ::::: DecoratorPanel ::::: */
+
 .gwt-DecoratorPanel {
-	border: 2px groove buttonface;
-	-moz-border-radius: 3px 3px 0px 0px;
-	-webkit-border-radius: 3px 3px 0px 0px;
-	border-radius: 3px 3px 0px 0px;
+       border: 2px outset ThreeDLightShadow;
+       /* XXX fails on IE & Opera */
+	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
+      
+       color: ButtonText;
+}
+.gwt-DecoratorPanel, x:-moz-any-link {
+       border: 3px solid;
+       -moz-border-top-colors: transparent ThreeDHighlight ThreeDLightShadow;
+       -moz-border-right-colors: transparent ThreeDDarkShadow ThreeDShadow;
+       -moz-border-bottom-colors: transparent ThreeDDarkShadow ThreeDShadow;
+       -moz-border-left-colors: transparent ThreeDHighlight ThreeDLightShadow;
 }
 .gwt-DecoratorPanel .topCenter,
 .gwt-DecoratorPanel .bottomCenter {
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-DecoratorPanel .middleLeft,
 .gwt-DecoratorPanel .middleRight {
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-DecoratorPanel .topLeftInner,
 .gwt-DecoratorPanel .topRightInner,
@@ -141,16 +164,28 @@ a, a:visited, a:hover {
 	zoom: 1;
 }
 .gwt-DecoratorPanel .topLeft {
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-DecoratorPanel .topRight {
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-DecoratorPanel .bottomLeft {
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 .gwt-DecoratorPanel .bottomRight {
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 * html .gwt-DecoratorPanel .topLeftInner,
 * html .gwt-DecoratorPanel .topRightInner,
@@ -160,6 +195,8 @@ a, a:visited, a:hover {
 	height: 5px;
 	overflow: hidden;
 }
+
+/* ::::: DialogBox ::::: */
 
 .gwt-DialogBox {
 	border: 1px solid buttonshadow;
@@ -173,9 +210,11 @@ a, a:visited, a:hover {
 }
 .gwt-DialogBox .Caption {
 	background: url("images/button.png") repeat-x;
-	background-color: activecaption;
-	color: captiontext;
-	font-weight: bold;
+       -background: Highlight;
+       background-color: Highlight;
+       color: HighlightText;
+	font-size: larger;
+       font-weight: bold;
 	padding: 4px 4px 4px 8px;
 	cursor: default;
 	opacity: 0.75;
@@ -189,30 +228,30 @@ a, a:visited, a:hover {
 	background: window;
 }
 .gwt-DialogBox .dialogBottomCenter {
-	background-color: activecaption;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
 }
 .gwt-DialogBox .dialogMiddleLeft {
-	background-color: activecaption;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
 }
 .gwt-DialogBox .dialogMiddleRight {
-	background-color: activecaption;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
 }
 .gwt-DialogBox .dialogTopLeftInner {
-	/*width: 5px;
-	zoom: 1;*/
+	width: 0px;
+	zoom: 1;
 }
 .gwt-DialogBox .dialogTopRightInner {
-	/*width: 8px;
-	zoom: 1;*/
+	width: 0px;
+	zoom: 1;
 }
 .gwt-DialogBox .dialogBottomLeftInner {
 	width: 5px;
@@ -230,26 +269,28 @@ a, a:visited, a:hover {
 }
 .gwt-DialogBox .dialogTopLeft {
 	background: url("images/button.png") repeat-x;
-	background-color: activecaption;
+       -background: Highlight;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
 }
 .gwt-DialogBox .dialogTopRight {
 	background: url("images/button.png") repeat-x;
-	background-color: activecaption;
+	-background: Highlight;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
 }
 .gwt-DialogBox .dialogBottomLeft {
-	background-color: activecaption;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
 }
 .gwt-DialogBox .dialogBottomRight {
-	background-color: activecaption;
+	background-color: Highlight;
 	opacity: 0.75;
 	filter: alpha(opacity=75);
 	zoom: 1;
@@ -295,23 +336,48 @@ a, a:visited, a:hover {
 .gwt-FileUpload {
 }
 
+/* ::::: Frame ::::: */
+
 .gwt-Frame {
-	border: 2px groove buttonface;
+	border: none;
 }
+
+/* ::::: HorizontalSplitPanel ::::: */
 
 .gwt-HorizontalSplitPanel {
 }
 .gwt-HorizontalSplitPanel .hsplitter {
-	cursor: move;
+	cursor: w-resize;
 	border: 0px; 
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
+.gwt-HorizontalSplitPanel .hsplitter:hover {
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
+}
+
+/* ::::: VerticalSplitPanel ::::: */
+
 .gwt-VerticalSplitPanel {
 }
 .gwt-VerticalSplitPanel .vsplitter {
-	cursor: move;
+	cursor: s-resize;
 	border: 0px; 
-	background-color: buttonface;
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
+}
+.gwt-VerticalSplitPanel .vsplitter:hover {
+	background-color: Highlight;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
 }
 
 .gwt-HTML {
@@ -336,19 +402,19 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar .gwt-MenuItem {
 	cursor: default;
-
-       appearance: menuitem;
-       -moz-box-align: center;
+       font: menu;
 }
 .gwt-MenuBar-horizontal .gwt-MenuItem-selected {
 	background: url("images/button.png") repeat-x;
+	-background: Highlight;
 	background-color: Highlight;
 	color: HighlightText;
 }
 .gwt-MenuBar-horizontal {
 	background: url("images/button.png") repeat-x;
-	background-color: Menu;
-	color: MenuText;
+       -background: transparent;
+	/*background-color: Menu;
+	color: MenuText;*/
 	border-bottom: 1px solid ThreeDShadow;
 
        /*-moz-appearance: toolbox toolbar menubar;*/
@@ -368,18 +434,16 @@ a, a:visited, a:hover {
 	padding: 0px;
 	margin: 0px;
 	border: 0px;
-	border-left: 1px solid menutext;
-	background: menu;
-	opacity: 0.3;
-	filter: alpha(opacity=30);
-	zoom: 1;
+	border-left: 1px solid ThreeDShadow;
+	background: ThreeDHighlight;
+
 
        /*-moz-appearance: menuseparator !important;*/
 }
 .gwt-MenuBar-horizontal .gwt-MenuItemSeparator .menuSeparatorInner {
 	width: 1px;
 	height: 1px;
-	background: menu;
+	background: ThreeDHighlight;
 }
 .gwt-MenuBar-vertical {
 	margin-top: 0px;
@@ -396,6 +460,7 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar-vertical .gwt-MenuItem-selected {
 	background: url("images/button.png") repeat-x;
+	-background: Highlight;
 	background-color: Highlight;
 	color: HighlightText;
 }
@@ -403,16 +468,13 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator {
 	padding: 2px 0px;
-	opacity: 0.3;
-	filter: alpha(opacity=30);
-	zoom: 1;
 }
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator .menuSeparatorInner {
 	height: 1px;
 	padding: 0px;
 	border: 0px;
-	border-top: 1px solid menutext;
-	background: menu;
+	border-top: 1px solid ThreeDShadow;
+	background: ThreeDHighlight;
 	overflow: hidden;
 }
 .gwt-MenuBar-vertical .subMenuIcon {
@@ -420,27 +482,27 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar-vertical .subMenuIcon-selected {
 	background: url("images/button.png") repeat-x;
+	-background: highlight;
 	background-color: highlight;
 
        /*-moz-appearance: menuitem;
        -webkit-appearance: menuitem;*/
 }
+
+/* ::::: MenuBarPopup ::::: */
+
 .gwt-MenuBarPopup {
-       -moz-box-shadow: threedshadow 3px 3px 12px 0;
-	-webkit-box-shadow: threedshadow 3px 3px 12px 0;
+       -moz-box-shadow: ThreeDShadow 3px 3px 12px 0;
+	-webkit-box-shadow: ThreeDShadow 3px 3px 12px 0;
 	box-shadow: black 3px 3px 12px 0;
-}
-.gwt-MenuBarPopup .menuPopupContent {
+
 	border: 1px solid ButtonShadow;
 	-moz-border-radius: 0 0 2px 2px;
 	-webkit-border-radius: 0 0 2px 2px;
 	border-radius: 0 0 2px 2px;
-
+}
+.gwt-MenuBarPopup .menuPopupContent {
 	background-color: Menu;
-
-       /*-moz-appearance: menupopup;
-       -webkit-appearance: menupopup;*/
-
        min-width: 1px;
 }
 .gwt-MenuBarPopup .menuPopupTopCenter {
@@ -456,23 +518,23 @@ a, a:visited, a:hover {
 	background-color: Menu;
 }
 .gwt-MenuBarPopup .menuPopupTopLeftInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupTopRightInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupBottomLeftInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupBottomRightInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	zoom: 1;
 }
 .gwt-MenuBarPopup .menuPopupTopLeft {
@@ -488,31 +550,34 @@ a, a:visited, a:hover {
 	background-color: Menu;
 }
 * html .gwt-MenuBarPopup .menuPopupTopLeftInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	overflow: hidden;
 }
 * html .gwt-MenuBarPopup .menuPopupTopRightInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	overflow: hidden;
 }
 * html .gwt-MenuBarPopup .menuPopupBottomLeftInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	overflow: hidden;
 }
 * html .gwt-MenuBarPopup .menuPopupBottomRightInner {
-	width: 0px;
-	height: 0px;
+	width: 1px;
+	height: 1px;
 	overflow: hidden;
 }
+
+/* ::::: PasswordTextBox ::::: */
 
 .gwt-PasswordTextBox {
 	padding: 2px;
 }
+
 .gwt-PasswordTextBox-readonly {
-	color: graytext;
+	color: GrayText;
 }
 
 .gwt-PopupPanel {
@@ -521,7 +586,8 @@ a, a:visited, a:hover {
 	color: infotext;
 	
 	background: url("images/button.png") repeat-x;
-	background-color: infobackground;
+	-background: InfoBackground;
+	background-color: InfoBackground;
 
 	border: 1px solid buttonshadow;
 
@@ -534,7 +600,8 @@ a, a:visited, a:hover {
 	color: buttontext;
 	
 	background: url("images/button.png") repeat-x;
-	background: buttonface;
+       -background: ButtonFace;
+	background-color: ButtonFace;
 
 	border: 2px solid buttonshadow;
 	-moz-border-radius: 3px;
@@ -622,6 +689,7 @@ a, a:visited, a:hover {
 	margin: 0;
 	text-decoration: none;
 	background: url("images/button.png") repeat-x;
+       -background: buttonface;
 	background-color: buttonface;
 	
 	border: 1px outset buttonshadow;
@@ -629,6 +697,8 @@ a, a:visited, a:hover {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+
+       outline: none;
 }
 .gwt-PushButton-up,
 .gwt-PushButton-up-hovering,
@@ -699,9 +769,10 @@ a, a:visited, a:hover {
 }
 .gwt-RichTextToolbar {
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
+	-background: ButtonFace;
+	background-color: ButtonFace;
 	
-	border-bottom: 1px solid buttonshadow;
+	border-bottom: 1px solid ButtonShadow;
 	
 	padding: 3px;
 	margin: 0px;
@@ -712,6 +783,7 @@ a, a:visited, a:hover {
 	margin-bottom: 4px;
        background: transparent;
 	border: 1px solid transparent;
+       -border: 1px solid ButtonFace;
 }
 .gwt-RichTextToolbar .gwt-PushButton-up-hovering {
 	margin-right: 4px;
@@ -734,6 +806,7 @@ a, a:visited, a:hover {
 	padding: 0px 1px 0px 0px;
        background: transparent;
 	border: 1px solid transparent;
+       -border: 1px solid ButtonFace;
 }
 .gwt-RichTextToolbar .gwt-ToggleButton-up-hovering {
 	margin-right: 4px;
@@ -751,34 +824,38 @@ a, a:visited, a:hover {
 	padding: 0px 0px 0px 1px;
 }
 
+/* ::::: StackPanel ::::: */
+
 .gwt-StackPanel {
-	border-bottom: 1px solid buttonshadow;
+	border-bottom: 2px groove ThreeDFace;
 }
 .gwt-StackPanel .gwt-StackPanelItem {
 	cursor: pointer;
 	cursor: hand;
-	font-weight: bold;
 	padding: 3px;
-	border: 1px solid buttonshadow;
+	border: 2px groove ThreeDFace;
 	border-bottom: none;
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
-	color: buttontext;
+       -background: ButtonFace;
+	background-color: ButtonFace;
+       font: menu;
 }
 .gwt-StackPanel .gwt-StackPanelItem:hover {
-	background-color: buttonhighlight;
+	background-color: ThreeDHighlight;
 }
 .gwt-StackPanel .gwt-StackPanelItem-selected,
 .gwt-StackPanel .gwt-StackPanelItem-selected:hover {
-	background-color: highlight;
-	color: highlighttext;
+	background-color: Highlight;
+	color: HighlightText;
 }
 .gwt-StackPanel .gwt-StackPanelContent {
-	border: 1px solid buttonshadow;
+	border: 2px groove ThreeDFace;
 	border-bottom: none;
 	background: window;
 	padding: 2px 2px 10px 5px;
 }
+
+/* ::::: DecoratedStackPanel ::::: */
 
 .gwt-DecoratedStackPanel {
 	border-bottom: 2px groove buttonface;
@@ -792,13 +869,14 @@ a, a:visited, a:hover {
 	padding: 2px 2px 10px 5px;
 }
 .gwt-DecoratedStackPanel .gwt-StackPanelItem {
-	padding: 6px;
+	padding: 5px 5px 7px 5px;
 
 	cursor: pointer;
 	cursor: hand;
 	
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
+	-background: ButtonFace;
+	background-color: ButtonFace;
 	
 	border: 2px groove buttonface;
 	-moz-border-radius: .333em .333em 0 0;
@@ -807,11 +885,15 @@ a, a:visited, a:hover {
 	
 	border-bottom: none;
 }
-.gwt-DecoratedStackPanel .gwt-StackPanelItem-selected {
-	background-color: highlight;
+.gwt-DecoratedStackPanel .gwt-StackPanelItem:hover {
+	background-color: ThreeDHighlight;
+}
+.gwt-DecoratedStackPanel .gwt-StackPanelItem-selected,
+.gwt-DecoratedStackPanel .gwt-StackPanelItem-selected:hover {
+	background-color: Highlight;
 }
 .gwt-DecoratedStackPanel .gwt-StackPanelItem-selected .stackItemMiddleCenter {
-	color: highlighttext;
+	color: HighlightText;
 }
 .gwt-DecoratedStackPanel .stackItemTopLeft,
 .gwt-DecoratedStackPanel .stackItemTopRight {
@@ -857,8 +939,8 @@ a, a:visited, a:hover {
 	border-right: 1px solid buttonshadow;*/
 }
 .gwt-DecoratedStackPanel .stackItemMiddleCenter {
-	font-weight: bold;
-	color: buttontext;
+	font: menu;
+	color: ButtonText;
 	/*background: #d3def6 url(images/hborder.png) repeat-x 0px -989px;*/
 }
 .gwt-DecoratedStackPanel .gwt-StackPanelItem-first .stackItemTopRight,
@@ -871,92 +953,100 @@ a, a:visited, a:hover {
 	/*background-color: window;*/
 }
 
+/* ::::: SuggestBox ::::: */
+
 .gwt-SuggestBox {
-  padding: 2px;
+       padding: 2px;
 }
 .gwt-SuggestBoxPopup {
-  margin-left: 3px;
+       margin-left: 3px;
 }
+
+/* ::::: SuggestBoxPopup ::::: */
+
+.gwt-SuggestBoxPopup {
+       -moz-box-shadow: ThreeDShadow 3px 3px 12px 0;
+	-webkit-box-shadow: ThreeDShadow 3px 3px 12px 0;
+	box-shadow: black 3px 3px 12px 0;
+}
+
 .gwt-SuggestBoxPopup .item {
-  padding: 2px 6px;
-  color: #424242;
-  cursor: default;
+       padding: 2px 6px;
+       cursor: default;
+       font: menu;
 }
 .gwt-SuggestBoxPopup .item-selected {
-  background: #b7d6f6;
+       background: url("images/button.png") repeat-x;
+	-background: Highlight;
+	background-color: Highlight;
+       color: HighlightText;
 }
 .gwt-SuggestBoxPopup .suggestPopupContent {
-  background: white;
+       background-color: Menu;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopCenter {
-  background: url(images/hborder.png) repeat-x;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomCenter {
-  background: url(images/hborder.png) repeat-x 0px -4px;
-  -background: url(images/hborder_ie6.png) repeat-x 0px -4px;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
-  background: url(images/vborder.png) repeat-y;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupMiddleRight {
-  background: url(images/vborder.png) repeat-y -4px 0px;
-  -background: url(images/vborder_ie6.png) repeat-y -4px 0px;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
-  width: 5px;
-  height: 5px;
-  zoom: 1;  
+       width: 1px;
+       height: 1px;
+       zoom: 1;  
 }
 .gwt-SuggestBoxPopup .suggestPopupTopRightInner {
-  width: 8px;
-  height: 5px;
-  zoom: 1;
+       width: 1px;
+       height: 1px;
+       zoom: 1;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
-  width: 5px;
-  height: 8px;
-  zoom: 1;
+       width: 1px;
+       height: 1px;
+       zoom: 1;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
-  width: 8px;
-  height: 8px;
-  zoom: 1;
+       width: 1px;
+       height: 1px;
+       zoom: 1;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopLeft {
-  background: url(images/corner.png) no-repeat 0px -23px;
-  -background: url(images/corner_ie6.png) no-repeat 0px -23px;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopRight {
-  background: url(images/corner.png) no-repeat -5px -23px;
-  -background: url(images/corner_ie6.png) no-repeat -5px -23px;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomLeft {
-  background: url(images/corner.png) no-repeat 0px -28px;
-  -background: url(images/corner_ie6.png) no-repeat 0px -28px;
+       background-color: ThreeDShadow;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomRight {
-  background: url(images/corner.png) no-repeat -5px -28px;
-  -background: url(images/corner_ie6.png) no-repeat -5px -28px;
+       background-color: ThreeDShadow;
 }
 * html .gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
-  width: 5px;
-  height: 5px;
-  overflow: hidden;
+       width: 1px;
+       height: 1px;
+       overflow: hidden;
 }
 * html .gwt-SuggestBoxPopup .suggestPopupTopRightInner {
-  width: 8px;
-  height: 5px;
-  overflow: hidden;
+       width: 1px;
+       height: 1px;
+       overflow: hidden;
 }
 * html .gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
-  width: 5px;
-  height: 8px;
-  overflow: hidden;
+       width: 1px;
+       height: 1px;
+       overflow: hidden;
 }
 * html .gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
-  width: 8px;
-  height: 8px;
-  overflow: hidden;
+       width: 1px;
+       height: 1px;
+       overflow: hidden;
 }
 
 /* ::::: TabBar ::::: */
@@ -979,9 +1069,10 @@ a, a:visited, a:hover {
 	cursor: hand;
 	color: ButtonText;
 	background: url("images/button.png") repeat-x;
+	-background: ButtonFace;
 	background-color: ButtonFace;
 
-	border: 1px outset ButtonShadow;
+	border: 1px outset ThreeDLightShadow;
        /* XXX fails on IE & Opera */
 	-moz-border-radius: 3px 3px 0 0;
 	-webkit-border-radius: 3px 3px 0 0;
@@ -990,8 +1081,16 @@ a, a:visited, a:hover {
 
        outline: none;
 }
+.gwt-TabBar .gwt-TabBarItem, x:-moz-any-link {
+       border: 2px solid;
+       border-bottom: none;
+       -moz-border-top-colors: ThreeDHighlight ThreeDLightShadow;
+       -moz-border-right-colors: ThreeDDarkShadow ThreeDShadow;
+       -moz-border-left-colors: ThreeDHighlight ThreeDLightShadow;
+}
 .gwt-TabBar .gwt-TabBarItem { /* LTR */
        margin-left: -2px;
+       -margin-left: 1px;
 }
 .gwt-TabBar .gwt-TabBarItem-selected {
        z-index: 1;
@@ -1000,9 +1099,6 @@ a, a:visited, a:hover {
        padding-top: 4px;
        padding-bottom: 5px;
 	cursor: default;
-	/*background-color: Highlight;
-       color: HighlightText;*/
-       background-color: ButtonHighlight;
 
        -moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
@@ -1017,7 +1113,6 @@ a, a:visited, a:hover {
   outline: 1px dotted;
 }
 
-
 /* ::::: TabPanel ::::: */
 
 .gwt-TabPanel {
@@ -1025,7 +1120,13 @@ a, a:visited, a:hover {
 .gwt-TabPanelBottom {
        /*-moz-appearance: tabpanels;*/
 
-	border: 2px groove ButtonFace;
+	border: 1px solid;
+
+       border-right-color: ThreeDDarkShadow;
+       border-bottom-color: ThreeDDarkShadow;
+       border-left-color: ThreeDHighlight;
+       border-top-color: ThreeDLightShadow;
+
        /* XXX fails on IE & Opera */
 	-moz-border-radius: 0 5px 5px 5px;
 	-webkit-border-radius: 0 5px 5px 5px;
@@ -1039,6 +1140,13 @@ a, a:visited, a:hover {
 	padding: 8px;
        background-color: ButtonFace;
        color: ButtonText;
+}
+.gwt-TabPanelBottom, x:-moz-any-link {
+	border: 2px solid;
+       -moz-border-right-colors: ThreeDDarkShadow ThreeDShadow;
+       -moz-border-bottom-colors: ThreeDDarkShadow ThreeDShadow;
+       -moz-border-left-colors: ThreeDHighlight ThreeDLightShadow;
+       -moz-border-top-colors: ThreeDHighlight ThreeDLightShadow;
 }
 
 /* ::::: DecoratedTabBar ::::: */
@@ -1054,19 +1162,28 @@ a, a:visited, a:hover {
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem {
        position: relative;
+       /*-moz-appearance: tab;*/
        margin-top: 2px;
 	padding: 0px;
 	cursor: pointer;
 	cursor: hand;
 	background: url("images/button.png") repeat-x;
+	-background: ButtonFace;
 	background-color: ButtonFace;
 	
-	border: 1px outset ButtonShadow;
+	border: 1px outset ThreeDLightShadow;
        /* XXX fails on IE & Opera */
 	-moz-border-radius: 3px 3px 0 0;
 	-webkit-border-radius: 3px 3px 0 0;
 	border-radius: 3px 3px 0 0;
 	border-bottom: none;
+}
+.gwt-DecoratedTabBar .gwt-TabBarItem, x:-moz-any-link {
+       border: 2px solid;
+       border-bottom: none;
+       -moz-border-top-colors: ThreeDHighlight ThreeDLightShadow;
+       -moz-border-right-colors: ThreeDDarkShadow ThreeDShadow;
+       -moz-border-left-colors: ThreeDHighlight ThreeDLightShadow;
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem { /* LTR */
        margin-left: -2px;
@@ -1074,11 +1191,8 @@ a, a:visited, a:hover {
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected {
        z-index: 1;
        margin-top: 0;
-       margin-bottom: -1px;
+       margin-bottom: -2px;
 	cursor: default;
-	/*background-color: Highlight;
-       color: HighlightText;*/
-       background-color: ButtonHighlight;
 
        -moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
@@ -1126,6 +1240,7 @@ a, a:visited, a:hover {
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTop {
        background: url("images/button.png") repeat-x;
+       -background: Highlight;
        background-color: Highlight;
 }
 .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopCenter {
@@ -1151,18 +1266,22 @@ a, a:visited, a:hover {
   outline: 1px dotted;
 }
 
+/* ::::: TextArea ::::: */
+
 .gwt-TextArea {
 	padding: 2px;
 }
 .gwt-TextArea-readonly {
-	color: graytext;
+	color: GrayText;
 }
+
+/* ::::: PasswordTextBox ::::: */
 
 .gwt-TextBox {
 	padding: 2px;
 }
 .gwt-TextBox-readonly {
-	color: graytext;
+	color: GrayText;
 }
 
 .gwt-ToggleButton-up,
@@ -1174,13 +1293,16 @@ a, a:visited, a:hover {
 	margin: 0;
 	text-decoration: none;
 	background: url("images/button.png") repeat-x;
-	background-color: buttonface;
+	-background: ButtonFace;
+	background-color: ButtonFace;
 	
 	border: 1px outset buttonshadow;
        /* XXX fails on IE & Opera */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+
+       outline: none;
 }
 .gwt-ToggleButton-up,
 .gwt-ToggleButton-up-hovering,
@@ -1243,7 +1365,8 @@ a, a:visited, a:hover {
 }
 .gwt-Tree .gwt-TreeItem-selected {
 	background: url("images/button.png") repeat-x;
-	background-color: highlight;
+	-background: Highlight;
+	background-color: Highlight;
 	color: highlighttext;
 }
 .gwt-TreeItem .gwt-RadioButton input,
@@ -1255,6 +1378,8 @@ a, a:visited, a:hover {
 	margin-left: -4px;
 }
 
+/* ::::: DateBox ::::: */
+
 .gwt-DateBox input {
 	width: 8em;
 }
@@ -1264,16 +1389,25 @@ a, a:visited, a:hover {
 .dateBoxPopup {
 }
 
+/* ::::: DatePicker ::::: */
+
 .gwt-DatePicker {
-	border: 2px groove buttonface;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
+       margin: 2px 4px;
+       border: 2px inset ButtonShadow;
 	
 	cursor: default;
 
-	background-color: buttonface;
-	color: buttontext;
+	background-color: ButtonFace;
+	color: ButtonText; 
+}
+.gwt-DatePicker, x:-moz-any-link {
+       border: 2px solid;
+       -moz-border-top-colors: ThreeDShadow ThreeDDarkShadow;
+       -moz-border-right-colors: ThreeDHighlight ThreeDLightShadow;
+       -moz-border-bottom-colors: ThreeDHighlight ThreeDLightShadow;
+       -moz-border-left-colors: ThreeDShadow ThreeDDarkShadow;
+       background-color: -moz-Field;
+       color: -moz-FieldText;
 }
 .gwt-DatePicker td,
 .datePickerMonthSelector td:focus {
@@ -1293,8 +1427,9 @@ a, a:visited, a:hover {
 .datePickerWeekdayLabel,
 .datePickerWeekendLabel {
 	background: url("images/button.png") repeat-x;
-	background-color: highlight;
-	color: highlighttext;
+	-background: Highlight;
+	background-color: Highlight;
+	color: HighlightText;
 	font-weight: bold;
 	padding: 0px 4px 2px;
 	cursor: default;
@@ -1305,36 +1440,37 @@ a, a:visited, a:hover {
 	cursor: pointer;
 }
 .datePickerDayIsToday {
-	border: 1px solid highlight;
+	border: 1px solid Highlight;
 	padding: 3px;
 }
 .datePickerDayIsWeekend {
-	background-color: buttonface;
+	background-color: ButtonFace;
 }
 .datePickerDayIsFiller {
-	color: graytext;
+	color: GrayText;
 }
 .datePickerDayIsValue {
-	background-color: highlight;
-	color: highlighttext;
+	background-color: Highlight;
+	color: HighlightText;
 }
 .datePickerDayIsDisabled {
-	color: graytext;
+	color: GrayText;
 	font-style: italic;
 }
 .datePickerDayIsHighlighted {
-	background-color: highlight;
-       color: highlighttext;
+	background-color: Highlight;
+       color: HighlightText;
 	opacity: 0.7;
 	filter: alpha(opacity=70);
 	zoom: 1;
 }
 .datePickerDayIsValueAndHighlighted {
-	background-color: infobackground;
-	color: infotext;
+	background-color: InfoBackground;
+	color: Infotext;
 }
 .datePickerMonthSelector {
 	background: url("images/button.png") repeat-x;
+	-background: transparent;
 	width: 100%;
 }
 td.datePickerMonth {
@@ -1342,21 +1478,22 @@ td.datePickerMonth {
 	vertical-align: center;
 	white-space: nowrap;
 	font-weight: bold;
-	color: buttontext;
+	color: ButtonText;
 }
 .datePickerPreviousButton,
 .datePickerNextButton {
 	font-size: 120%;
 	line-height: 1em;
-	color: buttontext;
+	color: ButtonText;
 	cursor: hand;
 	cursor: pointer;
 	padding: 0px 4px;
        outline: none;
        border: 1px solid transparent;
+       -border: 1px solid ButtonFace;
 }
 .datePickerPreviousButton:hover,
 .datePickerNextButton:hover {
-       background-color: buttonhighlight;
-       border: 1px solid buttonshadow;
+       background-color: ButtonHighlight;
+       border: 1px solid ButtonShadow;
 }
