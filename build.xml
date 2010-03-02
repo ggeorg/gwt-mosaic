@@ -147,6 +147,14 @@
 		</jar>
 	</target>
 
+	<target name="system-theme-jar" depends="javac" description="Package up the GWT System theme">
+		<jar destfile="system-theme-${system-theme.version}.jar">
+			<fileset dir="src">
+				<include name="com/google/gwt/user/theme/system/**" />
+			</fileset>
+		</jar>
+	</target>
+
 	<target name="javadoc">
 		<property name="classpath" refid="project.class.path" />
 		<javadoc access="protected" classpath="${classpath}" author="true" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.google.gwt.*,org.gwt.mosaic.actions.*,org.gwt.mosaic.beansbinding.*,org.gwt.mosaic.contrib.*,org.gwt.mosaic.core.*,org.gwt.mosaic.forms.*,org.gwt.mosaic.ui.*" source="1.6" sourcepath="src" splitindex="true" use="true" version="true" />

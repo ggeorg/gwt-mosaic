@@ -18,12 +18,13 @@ Other ANT targets are:
 	- war	: for building the WAR only
 	- clean
 	- javadoc
+	- test
 
 2. The demo
 ============================================================================
 To run the Showcase demo enter:
 
-	ant hosted
+	ant devmode
 
 3. Using
 ============================================================================
