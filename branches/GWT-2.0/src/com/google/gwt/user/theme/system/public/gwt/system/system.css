@@ -347,7 +347,7 @@ a, a:visited, a:hover {
 .gwt-HorizontalSplitPanel {
 }
 .gwt-HorizontalSplitPanel .hsplitter {
-	cursor: w-resize;
+	cursor: col-resize;
 	border: 0px; 
 	background-color: Highlight;
 	opacity: 0.3;
@@ -366,7 +366,7 @@ a, a:visited, a:hover {
 .gwt-VerticalSplitPanel {
 }
 .gwt-VerticalSplitPanel .vsplitter {
-	cursor: s-resize;
+	cursor: row-resize;
 	border: 0px; 
 	background-color: Highlight;
 	opacity: 0.3;
@@ -1496,4 +1496,72 @@ td.datePickerMonth {
 .datePickerNextButton:hover {
        background-color: ButtonHighlight;
        border: 1px solid ButtonShadow;
+}
+
+/* ::::: StackLayoutPanel ::::: */
+
+.gwt-StackLayoutPanel {
+	border-bottom: 1px solid #bbbbbb;
+}
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelHeader {
+	cursor: pointer;
+	cursor: hand;
+	font-weight: bold;
+	font-size: 1.3em;
+	padding: 3px;
+	border: 1px solid #bbbbbb;
+	border-bottom: 0px;
+	background: #d3def6 url(images/hborder.png) repeat-x 0px -989px;
+}
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelContent {
+	border: 1px solid #bbbbbb;
+	border-bottom: 0px;
+	background: white;
+	padding: 2px 2px 10px 5px;
+}
+
+/* ::::: TabLayoutPanel ::::: */
+
+.gwt-TabLayoutPanel {
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
+	border-color: #92c1f0;
+	border-style: solid;
+	border-width: 3px 2px 2px;
+	overflow: hidden;
+	padding: 6px;
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
+	margin-left: 6px;
+	padding: 3px 6px 3px 6px;
+	cursor: pointer;
+	cursor: hand;
+	color: black;
+	font-weight: bold;
+	text-align: center;
+	background: #d0e4f6;
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
+	cursor: default;
+	background: #92c1f0;
+}
+
+/* ::::: SplitLayoutPanel ::::: */
+
+.gwt-SplitLayoutPanel-HDragger {
+	background: Highlight url(images/splitPanelThumb.png) center center no-repeat;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
+	cursor: col-resize;
+}
+
+.gwt-SplitLayoutPanel-VDragger {
+	background: Highlight url(images/splitPanelThumb.png) center center no-repeat;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+	zoom: 1;
+	cursor: row-resize;
 }
