@@ -1,5 +1,5 @@
 /**
- * The file contains styles for GWT widgets in the standard theme.
+ * The file contains styles for GWT widgets in the system theme.
  *
  * In order to maintain cross-browser compatibility, the following syntax is
  * used to create IE6 specific style rules:
@@ -20,8 +20,95 @@
  * name below, and attach it to the DOM.  Use a timer to detect when the
  * element's height and width are set to 5px.
  */
-.mosaic-Reference-aegean {
+.mosaic-Reference-system {
 	height: 5px;
 	width: 5px;
 	zoom: 1;
+}
+
+/* ::::: ToolButton ::::: */
+
+.mosaic-ToolButton {
+	/*-moz-appearance: button;
+	--webkit-appearance: button;
+	appearance: button;*/
+
+	margin: 1px 5px 2px 5px;
+
+	padding: 2px 0;
+	
+	background: url("images/button.png") repeat-x;
+	-background: ThreeDFace;
+	background-color: ThreeDFace;
+	
+	border: 1px outset ThreeDShadow;
+    /* XXX fails on IE & Opera */
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	
+	/* display: inline-block section
+	 * http://foohack.com/2007/11/cross-browser-support-for-inline-block-styling/ */
+	display: -moz-inline-stack;
+	display: inline-block;
+	-display: inline;
+	zoom: 1;
+}
+
+.mosaic-ToolButton .mosaic-Button {
+	margin: 0px;
+	
+	min-width: 6.3em;
+
+	/* XXX IE hack to respect padding */
+	overflow: visible;
+	padding: 1px 5px 2px 5px;
+	
+	text-decoration: none;
+	font-size: small;
+	cursor: pointer;
+	cursor: hand;
+	
+	color: ButtonText;
+	
+	border: none;
+	background: transparent;
+}
+
+.mosaic-ToolButton .mosaic-Menu-Button,
+.mosaic-ToolButton .mosaic-Split-Button {
+	padding-right: 20px;
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+.mosaic-ToolButton .mosaic-Menu-Button {
+	background-image: url(images/button/menu-button-arrow.png);
+}
+.mosaic-ToolButton .mosaic-Split-Button {
+	background-image: url(images/button/split-button-arrow.png);
+}
+.mosaic-ToolButton .mosaic-Split-Button-hover {
+	background-image: url(images/button/split-button-arrow-hover.png);
+}
+.mosaic-ToolButton .mosaic-Split-Button-activeoption {
+	background-image: url(images/button/split-button-arrow-active.png);
+}
+.mosaic-ToolButton:hover {
+	background-color: ButtonHighlight;
+}
+.mosaic-ToolButton:active {
+	background-color: ButtonShadow;
+	border-style: inset;
+}
+.mosaic-ToolButton-disabled:hover,
+.mosaic-ToolButton-disabled:active,
+.mosaic-ToolButton-disabled:hover:active,
+.mosaic-ToolButton-Split-Button-activeoption:active {
+	background-color: ThreeDFace;
+	border-style: outset;
+}
+.mosaic-ToolButton .mosaic-Button[disabled] {
+	cursor: default;
+	color: GrayText;
+	text-shadow: 1px 1px ThreeDHighlight;
 }

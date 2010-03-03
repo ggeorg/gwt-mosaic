@@ -87,16 +87,15 @@ a, a:visited, a:hover {
 	-background: ButtonFace;
 	background-color: ButtonFace;
 
-	border: 1px outset buttonshadow;
+	border: 1px outset ButtonShadow;
        /* XXX fails on IE & Opera */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
 .gwt-Button:hover {
-	background-color: buttonhighlight;
+	background-color: ButtonHighlight;
 }
-/* XXX :active works for IE8 and fails in Compatibility View */
 .gwt-Button:active {
 	background-color: ButtonShadow;
 	border-style: inset;
@@ -106,10 +105,9 @@ a, a:visited, a:hover {
 	color: GrayText;
        text-shadow: 1px 1px ThreeDHighlight;
 }
-.gwt-Button[disabled]:hover {
-	background-color: ButtonFace;
-}
-.gwt-Button[disabled]:active {
+.gwt-Button[disabled]:hover,
+.gwt-Button[disabled]:active,
+.gwt-Button[disabled]:hover:active {
 	background-color: ButtonFace;
 	border-style: outset;
 }
