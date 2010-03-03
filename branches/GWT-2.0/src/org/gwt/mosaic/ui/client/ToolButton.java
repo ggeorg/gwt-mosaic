@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos
+ * Copyright (c) 2008-2010 GWT Mosaic, Georgios J. Georgopoulos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.core.client.Dimension;
+import org.gwt.mosaic.ui.client.layout.FillLayoutData;
 import org.gwt.mosaic.ui.client.util.WidgetHelper;
 
 import com.google.gwt.dom.client.ButtonElement;
@@ -55,8 +56,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
+ * <h3>CSS Style Rules</h3>
+ * <dl>
+ * <dt>.mosaic-ToolButton</dt>
+ * <dd>the outer element</dd>
+ * </dl>
+ * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
  */
+@SuppressWarnings("deprecation")
 public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     SourcesClickEvents, HasClickHandlers, HasFocus, HasAllFocusHandlers,
     HasAllKeyHandlers, HasAllMouseHandlers, SourcesMouseEvents {
@@ -78,7 +87,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
       // ggeorg: for Event.ONCLICK see issue 39
       sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
 
-      addStyleName(DEFAULT_STYLE_NAME);
+      setStyleName(DEFAULT_STYLE_NAME);
     }
 
     private void addNewStyleName(String styleName) {
@@ -92,11 +101,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
       return menu;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.dev.jjs.ast.HasName#getName()
-     */
     public String getName() {
       return DOM.getElementProperty(getElement(), "name");
     }
@@ -158,6 +162,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
             if (getElement().getAbsoluteLeft()
                 + (getElement().getOffsetWidth() - p[1]) < event.getClientX()) {
               addStyleName("mosaic-Split-Button-activeoption");
+              ToolButton.this.addStyleDependentName("Split-Button-activeoption");
               return;
             }
           }
@@ -179,6 +184,7 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
                 menu.show();
               }
               removeStyleName("mosaic-Split-Button-activeoption");
+              ToolButton.this.removeStyleDependentName("Split-Button-activeoption");
               return;
             }
           }
@@ -251,7 +257,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
     public void setEnabled(boolean enabled) {
       super.setEnabled(enabled);
       if (enabled) {
-        removeStyleName("mosaic-Button-disabled");
         sinkEvents(Event.ONCLICK | Event.ONMOUSEDOWN | Event.ONMOUSEUP
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
         if (this.style == ToolButtonStyle.MENU) {
@@ -262,7 +267,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
           removeStyleName("mosaic-Checkbox-Button-disabled");
         }
       } else {
-        addStyleName("mosaic-Button-disabled");
         unsinkEvents(Event.ONCLICK | Event.ONMOUSEDOWN | Event.ONMOUSEUP
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
         if (style == ToolButtonStyle.MENU) {
@@ -279,11 +283,6 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
       this.menu = menu;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String)
-     */
     public void setName(String name) {
       DOM.setElementProperty(getElement(), "name", name);
     }
@@ -320,23 +319,12 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
 
   private final ButtonWidget button = new ButtonWidget();
 
-  @Override
-  public Dimension getPreferredSize() {
-    return getLayoutPanel().getPreferredSize();
-  }
-
-  @Override
-  public void invalidate(Widget widget) {
-    super.invalidate(widget);
-    button.setSize("auto", "auto");
-  }
-
   /**
    * Creates a tool button with no caption.
    */
   public ToolButton() {
     super();
-    getLayoutPanel().add(button);
+    getLayoutPanel().add(button, new FillLayoutData(false));
     setStyleName(DEFAULT_STYLENAME);
   }
 
@@ -674,6 +662,11 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
 
   public void setEnabled(boolean enabled) {
     button.setEnabled(enabled);
+    if (enabled) {
+      removeStyleDependentName("disabled");
+    } else {
+      addStyleDependentName("disabled");
+    }
   }
 
   /*
@@ -729,6 +722,17 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
   public void setText(String text) {
     button.setText(text);
     invalidate(button);
+  }
+
+  @Override
+  public Dimension getPreferredSize() {
+    return getLayoutPanel().getPreferredSize();
+  }
+
+  @Override
+  public void invalidate(Widget widget) {
+    super.invalidate(widget);
+    button.setSize("auto", "auto");
   }
 
 }
