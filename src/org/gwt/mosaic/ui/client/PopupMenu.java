@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,9 @@
 package org.gwt.mosaic.ui.client;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.ui.client.ToolButton.ToolButtonStyle;
 
+import com.google.gwt.uibinder.client.ElementParserToUse;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel;
@@ -25,13 +27,30 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.AbstractDecoratedPopupPanel.AnimationType;
 
 /**
+ * A {@code PopupMenu} is a {@code
+ * com.google.gwt.user.client.ui.DecoratedPopupPanel} that contains a {@code
+ * com.google.gwt.user.client.ui.MenuBar}. There are several ways in which a
+ * {@code PopupMenu} may be used:
+ * <ol>
+ * <li>It may be used as a menu for a {@link ToolButton} with the style property
+ * set to {@link ToolButtonStyle#MENU} or {@link ToolButtonStyle#SPLIT}.</li>
+ * <li>It may be as a menu when you wish to have a series of commands that can
+ * be activated by the user, but don't want to use the extra space for a button
+ * for each command. A menu is normally hidden, and when activated, a popup
+ * appears containing the list of commands. The user may select a command and
+ * the menu dissapperas again.</li>
+ * <li>It may be used as a context menu. A context menu is like a regular menu
+ * except that the commands it contains apply to what the user had clicked on to
+ * open the context menu. Often, depending on what was clicked on, certain
+ * commands may be hidden if not applicable to that element.</li>
+ * </ol>
  * 
  * @author georgopoulos.georgios(at)gmail.com
  * 
  */
+@ElementParserToUse(className = "org.gwt.mosaic.ui.elementparsers.PopupMenuParser")
 public class PopupMenu extends AbstractDecoratedPopupPanel implements
     HasAnimation {
 
