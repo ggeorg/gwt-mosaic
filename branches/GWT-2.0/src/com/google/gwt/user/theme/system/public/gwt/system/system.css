@@ -400,7 +400,7 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar .gwt-MenuItem {
 	cursor: default;
-       font: menu;
+	font: menu;
 }
 .gwt-MenuBar-horizontal .gwt-MenuItem-selected {
 	background: url("images/button.png") repeat-x;
@@ -410,16 +410,16 @@ a, a:visited, a:hover {
 }
 .gwt-MenuBar-horizontal {
 	background: url("images/button.png") repeat-x;
-       -background: transparent;
+	-background: transparent;
 	/*background-color: Menu;
 	color: MenuText;*/
 	border-bottom: 1px solid ThreeDShadow;
 
-       /*-moz-appearance: toolbox toolbar menubar;*/
-       background-color: -moz-Dialog;
-
-       min-width: 1px;
-       min-height: 19px;
+	/*-moz-appearance: toolbox toolbar menubar;*/
+	background-color: -moz-Dialog;
+	
+	min-width: 1px;
+	min-height: 19px;
 }
 .gwt-MenuBar-horizontal .gwt-MenuItem {
 	padding: 0px 10px;

@@ -112,3 +112,60 @@
 	color: GrayText;
 	text-shadow: 1px 1px ThreeDHighlight;
 }
+
+/* ::::: ToolBar ::::: */
+
+.mosaic-ToolBar {
+	-moz-appearance: toolbar;
+	-webkit-appearance: toolbar;
+	appearance: toolbar;
+	
+	padding: 2px 0px;
+	
+	background: url("images/button.png") repeat-x;
+	-background: transparent;
+	/*background-color: Menu;
+	color: MenuText;*/
+	border-bottom: 1px solid ThreeDShadow;
+
+	background-color: -moz-Dialog;
+}
+
+/* TODO: mode=icons|text */
+
+.mosaic-ToolBar .mosaic-ToolButton {
+	background: none;
+	border-color: transparent;
+}
+.mosaic-ToolBar .mosaic-ToolButton:hover {
+	background: url("images/button.png") repeat-x;
+	border-color: ButtonShadow;
+	border-style: solid;
+	color: -moz-buttonhovertext;
+}
+.mosaic-ToolBar .mosaic-ToolButton:active {
+	background-color: ButtonShadow;
+	border-style: inset;
+}
+.mosaic-ToolBar .mosaic-ToolButton-Split-Button-activeoption:active {
+	background: url("images/button.png") repeat-x;
+	border-color: ButtonShadow;
+	border-style: solid;
+	color: -moz-buttonhovertext;
+}
+.mosaic-ToolBar .mosaic-ToolButton-disabled:hover,
+.mosaic-ToolBar .mosaic-ToolButton-disabled:active,
+.mosaic-ToolBar .mosaic-ToolButton-disabled:hover:active {
+	background: none;
+	border-color: transparent;
+}
+
+.mosaic-ToolBar .mosaic-ToolButton .mosaic-Split-Button {
+	background-image: url(images/button/split-toolbutton-arrow.png);
+}
+.mosaic-ToolBar .mosaic-ToolButton .mosaic-Split-Button:hover {
+	background-image: url(images/button/split-button-arrow-hover.png);
+}
+.mosaic-ToolBar .mosaic-ToolButton .mosaic-Split-Button-activeoption:active {
+	background-image: url(images/button/split-button-arrow-active.png);
+}
