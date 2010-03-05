@@ -3,6 +3,7 @@
 
  * [HelloWorld Hello World]
  * [ApplicationModule Application Module]
+  * [AppModuleUiBinder UiBinder Integration]
   * [ContactsApplication Sample Application]
  * HOWTO
   * [BuildInstructions BuildInstructions]
