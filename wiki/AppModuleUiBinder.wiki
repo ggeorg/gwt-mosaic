@@ -6,9 +6,11 @@ The UiBinder framework allows you to build your applications as HTML pages with 
 
 This tutorial will show how to bind UiBinder declared elements with GWT Mosaic Actions using the Application module.
 
+A GWT Mosaic Action can be used to invoke an operation that can come from multiple sources. For example, an application 'exit' operation can be invoked from the Exit menu, a context menu or by pressing a button. The command will be called no matter how it is invoked by the user. In addition, disabling the command will automatically disable the menu items and buttons.
+
 = Details =
 
-Here's a very simple example of a UiBinder template that contains a MenuBar and a ToolBar:
+Here's a very simple example of a UiBinder template that contains a {{{MenuBar}}} with an Exit {{{MenuItem}}} and a {{{ToolBar}}} with an Exit {{{ToolButton}}}:
 
 {{{
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
@@ -39,7 +41,7 @@ Here's a very simple example of a UiBinder template that contains a MenuBar and 
 </ui:UiBinder>
 }}}
 
-If the owner class is our {{{EntryPoint}}} class the implementation looks like:
+If the owner class is our {{{EntryPoint}}} class, the implementation looks like:
 
 {{{
 import org.gwt.mosaic.actions.client.Action;
@@ -111,6 +113,6 @@ public class Test extends SingleFrameApplication implements EntryPoint {
 }
 }}}
 
-If you run our application you will notice that both the {{{ToolButton}} and {{{MenuItem}}} are bound to the {{{exitCmd}}} action:
+If you run the application you will notice that both the {{{ToolButton}} and {{{MenuItem}}} are bound to the same {{{exitCmd}}} action:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/app-uibinder.png
