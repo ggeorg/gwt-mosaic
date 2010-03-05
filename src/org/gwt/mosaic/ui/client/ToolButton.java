@@ -234,6 +234,8 @@ public class ToolButton extends LayoutComposite implements HasHTML, HasName,
         case Event.ONMOUSEOUT:
           if (style == ToolButtonStyle.SPLIT) {
             removeStyleName("mosaic-Split-Button-hover");
+          } else if (style == ToolButtonStyle.REPEAT) {
+            repeatTimer.cancel();
           }
           super.onBrowserEvent(event);
           break;

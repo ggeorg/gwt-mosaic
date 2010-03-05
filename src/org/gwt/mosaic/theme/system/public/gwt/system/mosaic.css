@@ -38,10 +38,10 @@
 	padding: 2px 0;
 	
 	background: url("images/button.png") repeat-x;
-	-background: ThreeDFace;
-	background-color: ThreeDFace;
+	-background: ButtonFace;
+	background-color: ButtonFace;
 	
-	border: 1px outset ThreeDShadow;
+	border: 1px outset ButtonShadow;
     /* XXX fails on IE & Opera */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -104,29 +104,29 @@
 .mosaic-ToolButton-disabled:active,
 .mosaic-ToolButton-disabled:hover:active,
 .mosaic-ToolButton-Split-Button-activeoption:active {
-	background-color: ThreeDFace;
+	background-color: ButtonFace;
 	border-style: outset;
 }
 .mosaic-ToolButton .mosaic-Button[disabled] {
 	cursor: default;
 	color: GrayText;
-	text-shadow: 1px 1px ThreeDHighlight;
+	text-shadow: 1px 1px ButtonHighlight;
 }
 
 /* ::::: ToolBar ::::: */
 
 .mosaic-ToolBar {
-	-moz-appearance: toolbar;
-	-webkit-appearance: toolbar;
-	appearance: toolbar;
+	/*-moz-appearance: toolbar;
+	--webkit-appearance: toolbar;
+	appearance: toolbar;*/
 	
 	padding: 2px 0px;
 	
 	background: url("images/button.png") repeat-x;
 	-background: transparent;
-	/*background-color: Menu;
-	color: MenuText;*/
-	border-bottom: 1px solid ThreeDShadow;
+	background-color: ButtonFace;
+	color: ButtonText;
+	border-bottom: 1px solid ButtonShadow;
 
 	background-color: -moz-Dialog;
 }
