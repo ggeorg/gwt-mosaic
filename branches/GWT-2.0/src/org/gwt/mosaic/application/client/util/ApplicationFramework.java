@@ -39,11 +39,12 @@ public class ApplicationFramework {
     }
     return actionMap;
   }
-  
+
   // ---
-  
+
   public static ImageButton newImageButton(final String action) {
-    final ImageButtonBindings bindings = new ImageButtonBindings(getActionMap().get(action));
+    final ImageButtonBindings bindings = new ImageButtonBindings(
+        getActionMap().get(action));
     final ImageButton imageButton = (ImageButton) bindings.getTarget();
     bindings.bind();
     return imageButton;
@@ -63,6 +64,18 @@ public class ApplicationFramework {
     bindings.setLabelType(labelType);
     bindings.bind();
     return button;
+  }
+
+  public static void bind(final String action, final Button button) {
+    bind(action, button, ButtonLabelType.TEXT_ON_RIGHT);
+  }
+
+  public static void bind(final String action, final Button button,
+      final ButtonLabelType labelType) {
+    final ButtonBindings bindings = new ButtonBindings(getActionMap().get(
+        action), button);
+    bindings.setLabelType(labelType);
+    bindings.bind();
   }
 
   // ---
@@ -93,6 +106,18 @@ public class ApplicationFramework {
     return toolButton;
   }
 
+  public static void bind(final String action, final ToolButton toolButton) {
+    bind(action, toolButton, ButtonLabelType.TEXT_ON_RIGHT);
+  }
+
+  public static void bind(final String action, final ToolButton toolButton,
+      final ButtonLabelType labelType) {
+    final ToolButtonBindings bindings = new ToolButtonBindings(
+        getActionMap().get(action), toolButton);
+    bindings.setLabelType(labelType);
+    bindings.bind();
+  }
+
   // ---
 
   public static MenuItem newMenuItem(final String action) {
@@ -103,12 +128,24 @@ public class ApplicationFramework {
     return menuItem;
   }
 
+  public static void bind(final String action, final MenuItem menuItem) {
+    final MenuItemBindings bindings = new MenuItemBindings(getActionMap().get(
+        action), menuItem);
+    bindings.bind();
+  }
+
   public static MenuItem newCheckBoxMenuItem(final String action) {
     final CheckBoxMenuItemBindings bindings = new CheckBoxMenuItemBindings(
         getActionMap().get(action));
     final MenuItem menuItem = bindings.getTarget();
     bindings.bind();
     return menuItem;
+  }
+
+  public static void bindAsCheckBox(final String action, final MenuItem menuItem) {
+    final CheckBoxMenuItemBindings bindings = new CheckBoxMenuItemBindings(
+        getActionMap().get(action), menuItem);
+    bindings.bind();
   }
 
   public static MenuItem newRadioButtonMenuItem(final String name,
@@ -120,4 +157,10 @@ public class ApplicationFramework {
     return menuItem;
   }
 
+  public static void bindAsRadioButton(final String name, final String action,
+      final MenuItem menuItem) {
+    final RadioButtonMenuItemBindings bindings = new RadioButtonMenuItemBindings(
+        name, getActionMap().get(action), menuItem);
+    bindings.bind();
+  }
 }
