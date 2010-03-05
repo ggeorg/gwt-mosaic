@@ -1,4 +1,4 @@
-#summary Simple Application using Application module, Actions & UiBinder.
+#summary Using Application module, Actions & UiBinder.
 
 = Introduction =
 
