@@ -39,5 +39,78 @@ Here's a very simple example of a UiBinder template that contains a MenuBar and 
 </ui:UiBinder>
 }}}
 
+If the owner class is our {{{EntryPoint}}} application the implementation looks like:
+
+{{{
+import org.gwt.mosaic.actions.client.Action;
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+import org.gwt.mosaic.application.client.ApplicationConstants;
+import org.gwt.mosaic.application.client.ApplicationResources;
+import org.gwt.mosaic.application.client.CmdAction;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+import org.gwt.mosaic.application.client.util.ApplicationFramework;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.ToolButton;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+  interface Binder extends UiBinder<Widget, Test> {
+  }
+
+  private static final Binder binder = GWT.create(Binder.class);
+
+  @UiField
+  LayoutPanel mainPanel;
+
+  @UiField
+  MenuItem miExit;
+
+  @UiField
+  ToolButton toolBtnExit;
+
+  public void onModuleLoad() {
+    launch(this, new ApplicationResources() {
+      private final ApplicationConstants constants = GWT.create(TestConstants.class);
+      private final ApplicationClientBundle clientBundle = GWT.create(TestClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
+      }
+
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
+      }
+    });
+  }
+
+  @Override
+  protected void initialize() {
+    binder.createAndBindUi(this);
+
+    ApplicationFramework.bind("exitName", miExit);
+    ApplicationFramework.bind("exitName", toolBtnExit);
+  }
+
+  @Override
+  protected void startup() {
+    show(mainPanel);
+  }
+
+  @CmdAction(name = "exitName", description = "exitShortDescription", image = "exit_action")
+  public void exitCmd() {
+    InfoPanel.show("Action", (String) getContext().getActionMap().get(
+        "exitName").getValue(Action.NAME));
+  }
+}
+}}}
+
+If you run our application you will see something like this:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/app-uibinder.png
