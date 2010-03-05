@@ -113,7 +113,7 @@ public class Test extends SingleFrameApplication implements EntryPoint {
 }
 }}}
 
-If you run the application you will notice that both the {{{ToolButton}} and {{{MenuItem}}} are bound to the same {{{exitCmd}}} action:
+If you run the application you will notice that both the {{{ToolButton}}} and {{{MenuItem}}} are bound to the same {{{exitCmd}}} action:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/app-uibinder.png
 
