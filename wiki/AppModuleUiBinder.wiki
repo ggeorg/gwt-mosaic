@@ -1,0 +1,43 @@
+#summary Simple Application using Application module, Actions & UiBinder.
+
+= Introduction =
+
+The UiBinder framework allows you to build your applications as HTML pages with GWT widgets sprinkled throughout them (see [http://code.google.com/intl/el/webtoolkit/doc/latest/DevGuideUiBinder.html Declarative Layout with UiBinder]).
+
+This tutorial will show how to bind UiBinder declared elements with GWT Mosaic Actions using the Application module.
+
+= Details =
+
+Here's a very simple example of a UiBinder template that contains a MenuBar and a ToolBar:
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout'>
+
+	<l:LayoutPanel ui:field='mainPanel' widgetSpacing="0">
+		<l:BoxLayout orientation="vertical">
+			<l:BoxLayoutData fillWidth="true">
+				<g:MenuBar>
+					<g:MenuItem>
+						<div>File</div>
+						<g:MenuBar>
+							<g:MenuItem ui:field='miExit' />
+						</g:MenuBar>
+					</g:MenuItem>
+				</g:MenuBar>
+			</l:BoxLayoutData>
+
+			<l:BoxLayoutData fillWidth="true">
+				<m:ToolBar>
+					<m:ToolButton ui:field='toolBtnExit' />
+				</m:ToolBar>
+			</l:BoxLayoutData>
+		</l:BoxLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>
+}}}
+
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-uibinder.png
