@@ -192,14 +192,16 @@ public abstract class BaseLayout implements LayoutManager {
 
       final Dimension result = new Dimension();
 
-      final Element parentElem = layoutPanel.getElement();
-      final Element clonedElem = widget.getElement().cloneNode(true).cast();
+      // final Element parentElem = layoutPanel.getElement();
+      final Element clonedElem = widget.getElement();// .cloneNode(true).cast();
 
       final Style style = clonedElem.getStyle();
+      final String oldPosition = style.getPosition();
+      final String oldVisibility = style.getVisibility();
       style.setProperty("position", "static");
       style.setProperty("visibility", "hidden");
 
-      parentElem.replaceChild(clonedElem, widget.getElement());
+      // parentElem.replaceChild(clonedElem, widget.getElement());
 
       if (layoutData.getPreferredWidth() != null) {
         result.width = layoutPanel.toPixelSize(layoutData.getPreferredWidth(),
@@ -221,7 +223,11 @@ public abstract class BaseLayout implements LayoutManager {
             + marginBottomMeasure.sizeOf(widget);
       }
 
-      parentElem.replaceChild(widget.getElement(), clonedElem);
+      // parentElem.replaceChild(widget.getElement(), clonedElem);
+
+      // restore position
+      style.setProperty("position", oldPosition);
+      style.setProperty("visibility", oldVisibility);
 
       return result;
     }
