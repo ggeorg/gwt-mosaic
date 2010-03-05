@@ -39,7 +39,7 @@ Here's a very simple example of a UiBinder template that contains a MenuBar and 
 </ui:UiBinder>
 }}}
 
-If the owner class is our {{{EntryPoint}}} application the implementation looks like:
+If the owner class is our {{{EntryPoint}}} class the implementation looks like:
 
 {{{
 import org.gwt.mosaic.actions.client.Action;
@@ -111,6 +111,6 @@ public class Test extends SingleFrameApplication implements EntryPoint {
 }
 }}}
 
-If you run our application you will see something like this:
+If you run our application you will notice that both the {{{ToolButton}} and {{{MenuItem}}} are bound to the {{{exitCmd}}} action:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/app-uibinder.png
