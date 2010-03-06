@@ -20,7 +20,7 @@
  * name below, and attach it to the DOM.  Use a timer to detect when the
  * element's height and width are set to 5px.
  */
-.mosaic-Reference-aegean {
+.mosaic-Reference-aegean-rtl {
 	height: 5px;
 	width: 5px;
 	zoom: 1;
@@ -161,6 +161,37 @@ a:active {
   display: inline-block;
   zoom: 1;
   -display: inline;
+}
+.mosaic-ToolButton .mosaic-Button {
+  margin: 0px;
+  padding: 3px 5px;
+  text-decoration: none;
+  font-size: small;
+  cursor: pointer;
+  cursor: hand;
+  /*background: url("images/hborder.png") repeat-x 0px -27px;*/
+  background: #e3e3e3 url("images/button.png") repeat-x;
+  -background: #e3e3e3 url("images/button_ie6.png") repeat-x;
+  /*border: 1px outset #ccc;*/
+  border: 1px solid;
+  border-color: #e3e3e3 #bbb #bbb #e3e3e3;
+}
+.mosaic-ToolButton .mosaic-Button:active {
+  border: 1px inset #ccc;
+}
+.mosaic-ToolButton .mosaic-Button:hover {
+  border-color: #adf #7af #7af #8bf;
+}
+.mosaic-ToolButton .mosaic-Button[disabled],
+.mosaic-ToolButton .mosaic-Button[disabled] div,
+.mosaic-ToolButton .mosaic-Button[disabled] td {
+  cursor: default;
+  color: #888;
+}
+.mosaic-ToolButton .mosaic-Button[disabled]:hover {
+  /*border: 1px outset #ccc;*/
+  border: 1px solid;
+  border-color: #e3e3e3 #bbb #bbb #e3e3e3;
 }
 .mosaic-ToolButton .mosaic-Button {
   background: none;
@@ -696,6 +727,26 @@ a:active {
 .gwt-InlineCellEditor .cancel {
 	cursor: pointer;
 	cursor: hand;
+}
+
+.gwt-TreeTable .treeTableIndent {
+	gwt-image: "treeIndent";
+}
+
+.gwt-TreeTable .treeTableIndentUp {
+	gwt-image: "treeIndentUp";
+}
+
+.gwt-TreeTable .treeTableOpenNode {
+	gwt-image: "treeOpen";
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.gwt-TreeTable .treeTableClosedNode {
+	gwt-image: "treeClosed";
+	margin-left: 2px;
+	margin-right: 2px;
 }
 
 /*** CaptionLayoutPanel ***/
