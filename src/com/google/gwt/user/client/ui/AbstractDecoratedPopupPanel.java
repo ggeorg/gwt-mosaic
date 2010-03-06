@@ -64,4 +64,15 @@ public abstract class AbstractDecoratedPopupPanel extends DecoratedPopupPanel {
     super(autoHide, modal, prefix);
     setAnimationType(type.getType());
   }
+  
+  @Override
+  protected void onDetach() {
+    // See GWT Issue 4720
+    super.onDetach();
+
+    if (getGlassElement() != null) {
+      getGlassElement().removeFromParent();
+    }
+  }
+
 }
