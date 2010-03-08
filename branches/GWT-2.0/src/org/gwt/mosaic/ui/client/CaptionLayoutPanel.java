@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2009 GWT Mosaic Georgios J. Georgopoulos.
+ * Copyright (c) 2008-2010 GWT Mosaic Georgios J. Georgopoulos.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import org.gwt.mosaic.ui.client.layout.LayoutPanel;
 import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
+import com.google.gwt.uibinder.client.ElementParserToUse;
 import com.google.gwt.user.client.ui.AttachDetachHelper;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
@@ -34,6 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
+@ElementParserToUse(className = "org.gwt.mosaic.ui.elementparsers.CaptionLayoutPanelParser")
 public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     IndexedPanel {
 
@@ -172,13 +174,13 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
   }
 
   // -----------------------------------------------------------------------
-  
+
   @Override
   protected void doAttachChildren() {
     // See comment in doDetachChildren for an explanation of this call
     AttachDetachHelper.onAttach(getLayoutPanel());
   }
-  
+
   @Override
   protected void doDetachChildren() {
     // We need to detach the decPanel (which is layoutPanel's parent) because it
@@ -191,7 +193,7 @@ public class CaptionLayoutPanel extends LayoutComposite implements HasWidgets,
     // the decPanel widget, as its just an internal implementation.
     AttachDetachHelper.onDetach(getLayoutPanel());
   }
-  
+
   // -----------------------------------------------------------------------
 
   public void addCollapsedListener(CollapsedListener listener) {
