@@ -19,7 +19,7 @@ public class CaptionLayoutPanelParser implements ElementParser {
 
   private static final String LEFT = "left";
   private static final String RIGHT = "right";
-  private static final String HEADER = "headers";
+  private static final String HEADER = "header";
   private static final String CAPTION = "caption";
 
   public void parse(XMLElement elem, String fieldName, JClassType type,
@@ -86,8 +86,7 @@ public class CaptionLayoutPanelParser implements ElementParser {
     elem.consumeChildElements(new XMLElement.Interpreter<Boolean>() {
       public Boolean interpretElement(XMLElement child)
           throws UnableToCompleteException {
-        
-        
+
         if (hasTag(child, HEADER)) {
           assertFirstHeader();
           children.header = child;
@@ -107,25 +106,28 @@ public class CaptionLayoutPanelParser implements ElementParser {
         }
 
         // FIXME (ggeorg) ignore body?
-        
+
         return true;
       }
 
       private void assertFirstHeader() throws UnableToCompleteException {
         if (null != children.header) {
-          writer.die("In %s, may have only one %2$s:headers element", elem, elem.getPrefix());
+          writer.die("In %s, may have only one %2$s:headers element", elem,
+              elem.getPrefix());
         }
       }
-      
+
       private void assertFirstLeft() throws UnableToCompleteException {
         if (null != children.left) {
-          writer.die("In %s, may have only one %2$s:left element", elem, elem.getPrefix());
+          writer.die("In %s, may have only one %2$s:left element", elem,
+              elem.getPrefix());
         }
       }
-      
+
       private void assertFirstRight() throws UnableToCompleteException {
         if (null != children.right) {
-          writer.die("In %s, may have only one %2$s:right element", elem, elem.getPrefix());
+          writer.die("In %s, may have only one %2$s:right element", elem,
+              elem.getPrefix());
         }
       }
 
