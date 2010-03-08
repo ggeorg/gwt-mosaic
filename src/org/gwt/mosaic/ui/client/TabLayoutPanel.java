@@ -19,7 +19,6 @@ package org.gwt.mosaic.ui.client;
 
 import java.util.Iterator;
 
-import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.layout.BorderLayout;
 import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
 import org.gwt.mosaic.ui.client.layout.HasLayoutManager;
@@ -34,7 +33,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.uibinder.client.ElementParserToUse;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.ListenerWrapper;
@@ -57,6 +56,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author georgopoulos.georgios(at)gmail.com
  */
+@ElementParserToUse(className = "org.gwt.mosaic.ui.elementparsers.TabLayoutPanelParser")
 public class TabLayoutPanel extends LayoutComposite implements TabListener,
     SourcesTabEvents, HasWidgets, /* TODO HasAnimation, */IndexedPanel,
     HasBeforeSelectionHandlers<Integer>, HasSelectionHandlers<Integer> {
@@ -129,7 +129,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
     this(region, false, decorateBody);
   }
 
-  protected TabLayoutPanel(TabBarPosition region, boolean decorate,
+  public TabLayoutPanel(TabBarPosition region, boolean decorate,
       boolean decorateBody) {
     super();
 
@@ -355,7 +355,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
     tabBar.insertTab(tabText, asHTML, beforeIndex);
     deck.insert(widget, beforeIndex);
-    
+
     int selection = tabBar.getSelectedTab();
     if (selection == -1 && tabBar.getTabCount() > 0) {
       selection = 0;
@@ -387,7 +387,7 @@ public class TabLayoutPanel extends LayoutComposite implements TabListener,
 
     tabBar.insertTab(tabWidget, beforeIndex);
     deck.insert(widget, beforeIndex);
-    
+
     int selection = tabBar.getSelectedTab();
     if (selection == -1 && tabBar.getTabCount() > 0) {
       selection = 0;
