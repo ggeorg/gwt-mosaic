@@ -24,6 +24,9 @@ import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
 import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarModel;
+import com.google.gwt.user.datepicker.client.CalendarView;
+import com.google.gwt.user.datepicker.client.MonthSelector;
 
 /**
  * Date picker.
@@ -37,8 +40,23 @@ public class DatePicker extends
     com.google.gwt.user.datepicker.client.DatePicker implements
     HasLayoutManager {
 
+  /**
+   * Create a new date picker.
+   */
   public DatePicker() {
     super();
+  }
+  
+  /**
+   * Creates a new date picker.
+   * 
+   * @param monthSelector the month selector
+   * @param view the view
+   * @param model the model
+   */
+  public DatePicker(MonthSelector monthSelector, CalendarView view,
+      CalendarModel model) {
+    super(monthSelector, view, model);
   }
 
   /**
