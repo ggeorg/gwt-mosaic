@@ -15,6 +15,8 @@
  */
 package org.gwt.mosaic.ui.client.layout;
 
+import org.gwt.mosaic.core.client.DOM;
+
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractDecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -50,10 +52,13 @@ class InternalDecoratorPanel extends AbstractDecoratorPanel {
       final Element topLeft = this.getCellElement(0, 0);
       final Element bottomRight = this.getCellElement(2, 2);
 
-      borderSizes[0] = topLeft.getOffsetHeight();
-      borderSizes[1] = bottomRight.getOffsetWidth();
-      borderSizes[2] = bottomRight.getOffsetHeight();
-      borderSizes[3] = topLeft.getOffsetWidth();
+      final int[] m = DOM.getMarginSizes(getElement());
+      final int[] b = DOM.getBorderSizes(getElement());
+      
+      borderSizes[0] = topLeft.getOffsetHeight() + b[0] + m[0];
+      borderSizes[1] = bottomRight.getOffsetWidth() + b[1] + m[1];
+      borderSizes[2] = bottomRight.getOffsetHeight() + b[2] + m[2];
+      borderSizes[3] = topLeft.getOffsetWidth() + b[3] + m[3];
     }
     return borderSizes;
   }
