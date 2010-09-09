@@ -50,6 +50,4 @@ The entities actually displayed by a show are called *features*.
 
 == Commands ==
 
-Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command.
-
-When a command is executed, it is done in a scene graph safe manner (commands are deferred until it is safe for execution). 
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution). 
