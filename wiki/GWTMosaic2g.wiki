@@ -1,4 +1,4 @@
-#summary GWT Mosaic Generation 2 .
+#summary The 2nd Generation of GWT Mosaic framework.
 #sidebar TableOfContents
 
 = Introduction =
