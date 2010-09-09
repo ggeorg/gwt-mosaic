@@ -46,7 +46,7 @@ A show doesn't provide any real control logic or application state; that's left 
 
 == Feature ==
 
-The entities actually displayed by a show are called *features*. 
+The entities actually displayed by a show are called *features*.
 
 == Synchronization ==
 
