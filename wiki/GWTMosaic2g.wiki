@@ -56,7 +56,7 @@ Any change to a show's model needs to be synchronized into the "frame pump" loop
 
 {{{
 for frame 1 to infinity
-	wait until it's time to display the next frame
+	wait until it is time to display the next frame
 	update show model
 	render show to screen
 rof
