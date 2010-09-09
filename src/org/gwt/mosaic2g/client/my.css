@@ -1,0 +1,16 @@
+.scene {
+	background-color: #cdcdff;
+}
+
+.labelWidget {
+	overflow: hidden;
+}
+
+.labelWidgetText {
+	margin: 0px;
+	border: 0px none;
+	padding: none;
+	background: inherited;
+	color: inhereted;
+	display: table-cell;
+}

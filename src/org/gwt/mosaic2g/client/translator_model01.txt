@@ -1,0 +1,7 @@
+translator_model {
+	0		0		0		start
+	25		440		80		ease-out-cubic
+	50		440		0		ease-in-out-cubic
+	75		0		80		ease-in-quart
+	100		0		0		ease-in-out-quart
+} repeat 0 ;
