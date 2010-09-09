@@ -40,9 +40,7 @@ The center of GWT Mosaic's scene graph is called a *Show*. The main function of 
 
 A set of features that are presented together (at the same time) are collected into a *Segment*.
 
-A show doesn't provide any real control logic or application state; that's left to the developer. 
-
-A show can:
+A show doesn't provide any real control logic or application state; that's left to the developer. A show can:
 
  * Move from any segment to any other segment.
  * Manage initialization, e.g. loading images.
