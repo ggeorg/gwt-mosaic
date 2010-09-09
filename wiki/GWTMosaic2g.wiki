@@ -36,12 +36,20 @@ public class Application implements EntryPoint {
 
 == Show ==
 
-The center of GWT Mosaic's scene graph is called a *Show*. The main function of a show is to display a *Feature*. A feature is something that presents something sensory to the user, like an image, text or maybe sound and video in future.
-
-A set of features that are presented together (at the same time) are collected into a *Segment*.
+The center of GWT Mosaic's scene graph is called a *Show*. The main function of a show is to display a *Feature*. A feature is something that presents something sensory to the user, like an image, text or maybe sound and video in future. A set of features that are presented together (at the same time) are collected into a *Segment*.
 
 A show doesn't provide any real control logic or application state; that's left to the developer. A show can:
 
  * Move from any segment to any other segment.
  * Manage initialization, e.g. loading images.
  * Automatically move to another segment e.g. when an animation within the segment finishes.
+
+== Feature ==
+
+The entities actually displayed by a show are called *features*. 
+
+== Commands ==
+
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command.
+
+When a command is executed, it is done in a scene graph safe manner (commands are deferred until it is safe for execution). 
