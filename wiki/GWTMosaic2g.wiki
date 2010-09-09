@@ -59,7 +59,6 @@ for frame 1 to infinity
 	wait until it is time to display the next frame
 	update show model
 	render show to screen
-rof
 }}}
 
 This is facilitated with a command model. At any time by calling {{{show.runCommand(Command)}}} the show queues the command for later execution, at the right point in the frame pump loop.
