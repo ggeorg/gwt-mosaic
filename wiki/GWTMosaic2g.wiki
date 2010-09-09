@@ -44,9 +44,17 @@ A show doesn't provide any real control logic or application state; that's left 
  * Manage initialization, e.g. loading images.
  * Automatically move to another segment e.g. when an animation within the segment finishes.
 
+== Segment ==
+
 == Feature ==
 
 The entities actually displayed by a show are called *features*.
+
+== Commands ==
+
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
+
+To execute a command simple call {{{show.runCommand(Command)}}} at any time in your code, as stated below, this will execute the command at the right point in the frame pump loop.
 
 == Synchronization ==
 
@@ -60,9 +68,3 @@ for frame 1 to infinity
 }}}
 
 This is facilitated with a command model. At any time by calling {{{show.runCommand(Command)}}} the show queues the command for later execution, at the right point in the frame pump loop.
-
-== Commands ==
-
-Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
-
-To execute a command simple call {{{show.runCommand(Command)}}} at any time in your code, as stated above, this will execute the command at the right point in the frame pump loop.
