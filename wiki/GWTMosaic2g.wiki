@@ -1,4 +1,5 @@
 #summary The 2nd Generation of GWT Mosaic framework designed as a GWT 2.1 extension.
+#labels Featured,Phase-Design
 #sidebar TableOfContents
 
 = Introduction =
