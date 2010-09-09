@@ -3,7 +3,7 @@
 
 = Introduction =
 
-GWT Mosaic 2g is built on top of a simple animation framework with support for maintaining a constant animation rate by dropping frames, rather slowing down the visual results. The second generation of GWT Mosaic provides a full-featured 2D scene graph API based on [https://hdcookbook.dev.java.net/grin.html HD Cookbook GRIN Scene Graph].
+The second generation of GWT Mosaic provides a full-featured 2D scene graph API based on [https://hdcookbook.dev.java.net/grin.html HD Cookbook GRIN Scene Graph]. GWT Mosaic 2g is built on top of a simple animation framework with support for maintaining a constant animation rate by dropping frames, rather slowing down the visual results.
 
 Similar to GRIN the framework is designed to be extended with other presentation elements, including programmatic elements. GWT Mosaic 2g scene graph doesn't try to address the overall control of an application; that's left for the developer to do in code. The framework does provide a simple state machine and timeline that might help structure application control.
 
