@@ -50,4 +50,16 @@ The entities actually displayed by a show are called *features*.
 
 == Commands ==
 
-Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution). 
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
+
+Any change to a show's model needs to be synchronized into the "frame pump" loop, which is basically:
+
+{{{
+for frame 1 to infinity
+	wait until it's time to display the next frame
+	update show model
+	render show to screen
+rof
+}}}
+
+This is facilitated with a command model. At any time by calling {{{show.runCommand(Command)}}} the show queues the command for later execution, at the right point in the frame pump loop.
