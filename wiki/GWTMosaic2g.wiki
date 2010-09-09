@@ -48,9 +48,7 @@ A show doesn't provide any real control logic or application state; that's left 
 
 The entities actually displayed by a show are called *features*. 
 
-== Commands ==
-
-Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
+== Synchronization ==
 
 Any change to a show's model needs to be synchronized into the "frame pump" loop, which is basically:
 
@@ -62,3 +60,7 @@ for frame 1 to infinity
 }}}
 
 This is facilitated with a command model. At any time by calling {{{show.runCommand(Command)}}} the show queues the command for later execution, at the right point in the frame pump loop.
+
+== Commands ==
+
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
