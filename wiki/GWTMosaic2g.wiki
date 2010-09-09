@@ -63,4 +63,6 @@ This is facilitated with a command model. At any time by calling {{{show.runComm
 
 == Commands ==
 
-Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution by calling {{{show.runCommand(Command)}}}).
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
+
+To execute a command simple call {{{show.runCommand(Command)}}} at any time in your code, as stated above, this will execute the command at the right point in the frame pump loop.
