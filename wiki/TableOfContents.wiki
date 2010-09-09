@@ -10,4 +10,4 @@
   * [WindowPanel WindowPanel]
   * [MixingWithGWT MixingWithGWT]
   * [ContextMenu Tree Context Menu]
- * GWT Mosaic 2g
+ * [GWTMosaic2g GWT Mosaic 2g]
