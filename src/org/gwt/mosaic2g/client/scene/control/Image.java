@@ -66,47 +66,126 @@
  *             A copy of the license(s) governing this code is located
  *             at https://hdcookbook.dev.java.net/misc/license.html
  */
-package org.gwt.mosaic2g.client.animator;
+package org.gwt.mosaic2g.client.scene.control;
 
+import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
+
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public interface AnimationClient {
+public class Image extends Control implements /* TODO Resizable */LoadHandler, ErrorHandler {
 
-	/**
-	 * Advance the state of the {@link Show} to the next frame. This is called
-	 * once per frame; the first time it is called can be considered "frame 0",
-	 * and can monotonically increase from there.
-	 * <p>
-	 * This method can be called multiple times before any attempt is made to
-	 * display the UI state. This happens when animation falls behind; the
-	 * {@link AnimationEngine} catches up by skipping frames. Animation clients
-	 * should only perform quick updates in this method; any more time-consuming
-	 * calculations should be deferred until an object is first painted for a
-	 * given frame.
-	 */
-	void nextFrame();
+	private String url;
+	private boolean urlChanged = false;
 
-	/**
-	 * Indicate to the animation client that we're not behind in the animation,
-	 * so that the current frame will actually be displayed. Clients shouldn't
-	 * make any changes to the model in this call; all such changes need to
-	 * happen in the nextFrame().
-	 * 
-	 * @see #nextFrame()
-	 */
-	void setCaughtUp();
+	private boolean imageSetup;
 
-	/**
-	 * Paint the current frame of the animation.
-	 * 
-	 * @param gc
-	 *            the graphics context
-	 */
-	void paintFrame(/* Graphics gc */);
+	private com.google.gwt.user.client.ui.Image cachedWidget;
+
+	public Image(Show show) {
+		this(show, 0, 0, Integer.MIN_VALUE, Integer.MIN_VALUE);
+	}
+
+	public Image(Show show, int x, int y, int width, int height) {
+		super(show, x, y, width, height);
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(final String url) {
+		assert url != null;
+		if (url.equals(this.url)) {
+			return;
+		}
+		if (isSetup()) {
+			final com.google.gwt.user.client.ui.Image img = new com.google.gwt.user.client.ui.Image(
+					url);
+			img.addLoadHandler(new LoadHandler() {
+				public void onLoad(LoadEvent event) {
+					RootPanel.get().remove(img);
+					Image.this.url = url;
+					Image.this.urlChanged = true;
+				}
+			});
+			Style imgStyle = img.getElement().getStyle();
+			imgStyle.setVisibility(Visibility.HIDDEN);
+			RootPanel.get().add(img, Short.MIN_VALUE, Short.MIN_VALUE);
+		} else {
+			this.imageSetup = false;
+			this.url = url;
+			// this.urlChanged = true;
+		}
+		markAsChanged();
+	}
+
+	@Override
+	protected Widget createWidget() {
+		updateWidget(cachedWidget = new com.google.gwt.user.client.ui.Image(),
+				true);
+		cachedWidget.addLoadHandler(this);
+		cachedWidget.addErrorHandler(this);
+		return cachedWidget;
+	}
+
+	@Override
+	protected void updateWidget(Widget w, boolean init) {
+		super.updateWidget(w, init);
+		if (urlChanged) {
+			cachedWidget.setUrl(url);
+		}
+	}
+
+	@Override
+	protected void setSetupMode(boolean mode) {
+		super.setSetupMode(mode);
+		if (mode) {
+			cachedWidget.setUrl(url);
+			if (!cachedWidget.isAttached()) {
+				Style widgetStyle = cachedWidget.getElement().getStyle();
+				widgetStyle.setVisibility(Visibility.HIDDEN);
+				RootPanel.get().add(cachedWidget, Short.MIN_VALUE,
+						Short.MIN_VALUE);
+			}
+		} else {
+			imageSetup = false;
+		}
+	}
+
+	@Override
+	public boolean needsMoreSetup() {
+		return !imageSetup;
+	}
+
+	public void onError(ErrorEvent event) {
+		imageSetup = true;
+		sendFeatureSetup();
+	}
+
+	public void onLoad(LoadEvent event) {
+		imageSetup = true;
+		sendFeatureSetup();
+	}
+
+	@Override
+	protected void sendFeatureSetup() {
+		RootPanel.get().remove(cachedWidget);
+		Style widgetStyle = cachedWidget.getElement().getStyle();
+		widgetStyle.setVisibility(Visibility.VISIBLE);
+		super.sendFeatureSetup();
+	}
 
 }

@@ -66,47 +66,37 @@
  *             A copy of the license(s) governing this code is located
  *             at https://hdcookbook.dev.java.net/misc/license.html
  */
-package org.gwt.mosaic2g.client.animator;
+package org.gwt.mosaic2g.client.scene.control;
 
+import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
+
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public interface AnimationClient {
+public class Box extends Control {
 
-	/**
-	 * Advance the state of the {@link Show} to the next frame. This is called
-	 * once per frame; the first time it is called can be considered "frame 0",
-	 * and can monotonically increase from there.
-	 * <p>
-	 * This method can be called multiple times before any attempt is made to
-	 * display the UI state. This happens when animation falls behind; the
-	 * {@link AnimationEngine} catches up by skipping frames. Animation clients
-	 * should only perform quick updates in this method; any more time-consuming
-	 * calculations should be deferred until an object is first painted for a
-	 * given frame.
-	 */
-	void nextFrame();
-
-	/**
-	 * Indicate to the animation client that we're not behind in the animation,
-	 * so that the current frame will actually be displayed. Clients shouldn't
-	 * make any changes to the model in this call; all such changes need to
-	 * happen in the nextFrame().
-	 * 
-	 * @see #nextFrame()
-	 */
-	void setCaughtUp();
-
-	/**
-	 * Paint the current frame of the animation.
-	 * 
-	 * @param gc
-	 *            the graphics context
-	 */
-	void paintFrame(/* Graphics gc */);
+	public Box(Show show, int x, int y, int width, int height) {
+		super(show, x, y, width, height);
+	}
+	
+	@Override
+	protected Widget createWidget() {
+		final Widget result = new BoxWidget();
+		updateWidget(result, true);
+		return result;
+	}
+	
+	// -------------------------
+	private class BoxWidget extends Widget {
+		public BoxWidget() {
+			setElement(Document.get().createDivElement());
+		}
+	}
 
 }

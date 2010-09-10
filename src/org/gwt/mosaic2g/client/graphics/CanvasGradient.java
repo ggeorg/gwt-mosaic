@@ -18,32 +18,35 @@ package org.gwt.mosaic2g.client.graphics;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * Abstract Class representing a color gradient.
- * Color gradients are comprised of multiple colors located at color stops.
+ * Abstract Class representing a color gradient. Color gradients are comprised
+ * of multiple colors located at color stops.
  */
 public abstract class CanvasGradient {
-  
-  private JavaScriptObject nativeGradient;
-  
-  /**
-   * Adds a color stop to the gradient.
-   * 
-   * @param offset the offset at which to apply the colorstop
-   * @param color the color of the color stop
-   */
-  public abstract void addColorStop(double offset, Color color);
-  
-  /**
-   * Called via Violator pattern.
-   * @return
-   */
-  @SuppressWarnings("unused")
-  private JavaScriptObject getObject() {
-    return nativeGradient;
-  }
 
-  @SuppressWarnings("unused")
-  private void setNativeGradient(JavaScriptObject grad) {
-    this.nativeGradient = grad;
-  }
+	private JavaScriptObject nativeGradient;
+
+	/**
+	 * Adds a color stop to the gradient.
+	 * 
+	 * @param offset
+	 *            the offset at which to apply the colorstop
+	 * @param color
+	 *            the color of the color stop
+	 */
+	public abstract void addColorStop(double offset, Color color);
+
+	/**
+	 * Called via Violator pattern.
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private JavaScriptObject getObject() {
+		return nativeGradient;
+	}
+
+	@SuppressWarnings("unused")
+	private void setNativeGradient(JavaScriptObject grad) {
+		this.nativeGradient = grad;
+	}
 }
