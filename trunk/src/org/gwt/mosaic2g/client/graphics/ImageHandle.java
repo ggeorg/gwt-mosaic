@@ -22,27 +22,27 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class ImageHandle extends JavaScriptObject {
 
-  protected ImageHandle() {
-    super();
-  }
+	protected ImageHandle() {
+		super();
+	}
 
-  public final native int getHeight()
-  /*-{
-    return this.height;
-  }-*/;
-  
-  public final native String getUrl()
-  /*-{
-    return this.src;
-  }-*/;
-  
-  public final native int getWidth()
-  /*-{
-    return this.width;
-  }-*/;
-  
-  public final native boolean isLoaded()
-  /*-{
-    return this.__isLoaded;
-  }-*/;
+	public final native int getHeight()
+	/*-{
+	  return this.height;
+	}-*/;
+
+	public final native String getUrl()
+	/*-{
+	  return this.src;
+	}-*/;
+
+	public final native int getWidth()
+	/*-{
+	  return this.width;
+	}-*/;
+
+	public final native boolean isLoaded()
+	/*-{
+	  return this.__isLoaded;
+	}-*/;
 }
