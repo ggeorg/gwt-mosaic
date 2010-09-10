@@ -47,9 +47,17 @@ A show doesn't provide any real control logic or application state; that's left 
 
 == Segment ==
 
+A segment specifies a number of features that are displayed (activated). A show is divided into a set of mutually-exclusive segments, exactly one of which is active at any given time.
+
 == Feature ==
 
-The entities actually displayed by a show are called *features*.
+The entities actually displayed by a show are called *features*. Features can be divided in to:
+
+ * Controls
+ * Groups
+ * Modifiers
+
+The controls are the easiest ones to understand because they have a visual representation. The primitive controls provided are: Box, Image, ImageSequence, Text.
 
 == Commands ==
 
