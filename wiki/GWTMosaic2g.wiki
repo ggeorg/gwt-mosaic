@@ -64,6 +64,8 @@ Groups are features that represent a group of features. The group features are: 
 
 Modifiers are features that modify a single feature. Those are the features used for translation (Translator), fade effects (Fade), clipping (Clipped) and the auto sizing (AutoSize) modifier used for dynamically layout out visual features in a scene by following simple rules (for a detailed tutorial about how AutoSize works, see: http://cappuccino.org/learn/tutorials/automatic-layout/).
 
+The Timer feature triggers a set of commands after a number of keyframes.
+
 == Commands ==
 
 Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
