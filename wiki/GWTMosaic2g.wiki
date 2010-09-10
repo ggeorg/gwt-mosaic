@@ -56,8 +56,13 @@ The entities actually displayed by a show are called *features*. Features can be
  * Controls
  * Groups
  * Modifiers
+ * Timers
 
-The controls are the easiest ones to understand because they have a visual representation. The primitive controls provided are: Box, Image, ImageSequence, Text.
+The controls are the easiest ones to understand because they have a visual representation. Those are: Box, Image, ImageSequence, Text and any composition of them.
+
+Groups are features that represent a group of features. The group features are: Group, Assembly (a special case of a group feature that acts like a switch statement: omly one child of an assembly can be active at a time), and Container which is the base class of all layout managers like Stack, HBox, VBox and Grid.
+
+Modifiers are features that modify a single feature. Those are the features used for translation (Translator), fade effects (Fade), clipping (Clipped) and the auto sizing (AutoSize) modifier used for dynamically layout out visual features in a scene by following simple rules (for a detailed tutorial about how AutoSize works, see: http://cappuccino.org/learn/tutorials/automatic-layout/).
 
 == Commands ==
 
