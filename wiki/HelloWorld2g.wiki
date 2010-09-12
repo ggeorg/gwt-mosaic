@@ -86,3 +86,26 @@ In GWT Mosaic 2g the bounds used for layout and positioning a visual feature are
  * bounds.height := height  - (paddingTop  + paddinBottom)
 
 Note: using those conventions the bounds.width and bounds.height is equal to clientWidth and clientHeight respectively.
+
+This can be visualized with the following code snip set:
+
+{{{
+Box b1 = new Box(show, 50, 50, 100, 100);
+b1.setBorder("20px solid orange");
+b1.setStyleName("with-padding");
+
+Box b2 = new Box(show, 50, 50, 100, 100);
+b2.setBorder("10px dashed green");
+b2.setStyleName("with-padding");
+
+Box b3 = new Box(show, 50, 50, 100, 100);
+b3.setBackground("yellow");
+}}}
+
+The CSS for class="with-padding" is:
+
+{{{
+.with-padding { padding: 10px !important; }
+}}}
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/bounds.png
