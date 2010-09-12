@@ -16,11 +16,6 @@ TODO
 == Using binding to layout a node ==
 
 For example, if you want to create a background color on a group of nodes, you would create a Box node and use binding to ensure its bounds track the bounds of the group:
-
-http://gwt-mosaic.googlecode.com/svn/wiki/2g/binding1.png
-
-The code snip set:
-
 {{{
 	private Show createShow() {
 		Show show = new Show();
@@ -39,9 +34,11 @@ The code snip set:
 		boxGroup.add(box2);
 		boxGroup.add(box3);
 
-		Box bgBox = new Box(show, boxGroup.getX().createBinding(), boxGroup
-				.getY().createBinding(), boxGroup.getWidth().createBinding(),
-				boxGroup.getHeight().createBinding());
+		Box bgBox = new Box(show, 
+                    boxGroup.getX().createBinding(), 
+                    boxGroup.getY().createBinding(),
+                    boxGroup.getWidth().createBinding(),
+                    boxGroup.getHeight().createBinding());
 		bgBox.setBorder("1px solid red");
 		bgBox.setBackground("yellow");
 
@@ -54,5 +51,6 @@ The code snip set:
 		return show;
 	}
 }}}
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/binding1.png
 
 Another common case where binding is usefull for layout is in centering a node within an area. ...
