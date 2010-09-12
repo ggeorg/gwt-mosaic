@@ -85,5 +85,5 @@ for frame 1 to infinity
 
 This is facilitated with a command model. At any time by calling {{{show.runCommand(Command)}}} the show queues the command for later execution, at the right point in the frame pump loop.
 
-----
+
 <wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
