@@ -1,4 +1,4 @@
-#summary Hello World example with GWT Mosaic 2g.
+#summary Hello World in GWT Mosaic 2g.
 #sidebar TableOfContents
 
 = Prerequisites =
@@ -8,7 +8,11 @@
 
 = Details =
 
-Lets structure our {{{EntryPoint}}} class:
+It's the classic hello world a la GWT Mosaic 2g:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
+
+Lets code our {{{EntryPoint}}} class:
 
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
@@ -55,5 +59,3 @@ public class Main implements EntryPoint {
 
 }
 }}}
-
-http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
