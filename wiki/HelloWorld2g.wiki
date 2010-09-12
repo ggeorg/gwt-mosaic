@@ -40,12 +40,11 @@ public class Main implements EntryPoint {
 		RootLayoutPanel.get().add(scene);
 		scene.setShow(createShow());
 
-		// Create the animation engine instance with all AnimationClient
-		// implementations it has to manage (Scene implements the
-		// AnimationClient interface).
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
 		final AnimationEngine animationEngine = new AnimationEngine(
 				new AnimationClient[] { scene });
-		// And start the animation engine.
+		// Start the animation engine.
 		animationEngine.start();
 	}
 
@@ -67,7 +66,7 @@ public class Main implements EntryPoint {
 		// Exactly one segment can be active at any given time.
 		show.activateSegment(s);
 
-		// Return the root node (which is always a show node) of out scene
+		// Return the root node (which is always a show node) of our scene
 		// graph.
 		return show;
 	}
