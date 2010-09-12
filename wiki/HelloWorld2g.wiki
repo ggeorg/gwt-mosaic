@@ -33,11 +33,10 @@ public class Main implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
-		// Specify a GWT panel (here we use RootLayoutPanel) to render our
-		// scene graph. Within the panel we add the scene. The scene is a top
-		// level area where you can set the root node of a scene graph, which is
-		// the show node.
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
 		RootLayoutPanel.get().add(scene);
 		scene.setShow(createShow());
 
