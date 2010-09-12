@@ -17,6 +17,6 @@ TODO
 
 For example, if you want to create a background color on a group of nodes, you would create a Box node and use binding to ensure its bounds track the bounds of the group:
 
-...
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
 
 Another common case where binding is usefull for layout is in centering a node within an area. ...
