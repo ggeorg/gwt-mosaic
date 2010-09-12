@@ -8,10 +8,11 @@
 
 = Details =
 
-It's the classic hello world a la GWT Mosaic 2g:
+It's the classic hello world a la GWT Mosaic 2g.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
 
+The code:
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
