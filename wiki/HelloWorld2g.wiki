@@ -12,8 +12,6 @@ It's the classic hello world a la GWT Mosaic 2g:
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
 
-Lets code our {{{EntryPoint}}} class:
-
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
@@ -35,25 +33,43 @@ public class Main implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+
+		// Specify a GWT panel (here we use RootLayoutPanel) to render our
+		// scene graph. Within the panel we add the scene. The scene is a top
+		// level area where you can set the root node of a scene graph, which is
+		// the show node.
 		RootLayoutPanel.get().add(scene);
 		scene.setShow(createShow());
 
+		// Create the animation engine instance with all AnimationClient
+		// implementations it has to manage (Scene implements the
+		// AnimationClient interface).
 		final AnimationEngine animationEngine = new AnimationEngine(
 				new AnimationClient[] { scene });
+		// And start the animation engine.
 		animationEngine.start();
 	}
 
 	private Show createShow() {
+		// The show is the root node of out scene graph.
 		Show show = new Show();
 
+		// Create a text node and set its text property to "Hello World".
 		Text text = new Text(show);
 		text.setText("Hello World");
+		// Declare a border for our text node.
 		text.setBorder("10px solid green");
-		
+
+		// Add our text node to a segment node. A segment specifies which nodes
+		// in a scene graph are active.
 		Segment s = new Segment(show);
 		s.add(text);
-		
-		show.activateSegment(s);		
+
+		// Exactly one segment can be active at any given time.
+		show.activateSegment(s);
+
+		// Return the root node (which is always a show node) of out scene
+		// graph.
 		return show;
 	}
 
