@@ -48,4 +48,4 @@ public class Main implements EntryPoint {
 }
 }}}
 
-http://gwt-mosaic.googlecode.com/svn/wiki/hello-world.png
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
