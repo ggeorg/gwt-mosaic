@@ -109,3 +109,5 @@ The CSS for class="with-padding" is:
 }}}
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/bounds.png
+
+_(Now it must be clear why, in the hello world screenshot above, the left and top part of the border is not visible)_
