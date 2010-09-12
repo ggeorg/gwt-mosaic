@@ -1,10 +1,10 @@
-#summary One-sentence summary of this page.
+#summary Hello World example with GWT Mosaic 2g.
 #sidebar TableOfContents
 
-= Introduction =
+= Prerequisites =
 
-Add your content here.
-
+ # You will need [http://code.google.com/p/google-web-toolkit/downloads/list GWT-2.1.0.m3.zip].
+ # Add gwt-mosaic-2.x.jar to your classpath and add {{{<inherits name="org.gwt.mosaic2g.Mosaic" />}}} into your gwt.xml module file.
 
 = Details =
 
