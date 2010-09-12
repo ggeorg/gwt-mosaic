@@ -5,6 +5,18 @@
 
 GWT Mosaic 2g provides a full-featured 2D scene graph API for creating dynamic and visually rich interfaces, however it does not yet include complete layout container classes which automate the process of creating dynamic layout in a scene. However this document will explain how to best achieve dynamic layout (including use with animated transitions).
 
+= Details =
+
 Dynamic layout is the ability to dynamically position and size elements in the scene graph in response to internal and external changes to the scene which are often triggered by user interaction and involve unpredictable content. For example the user resizes the browser window and expects the content to adjust to fill it. Additionally critical is the ability to support animated transitions without disturbing the layout of other nodes in the scene. Dynamic layout in GWT Mosaic can be achieved either using binding on individual nodes to respond to layout changes in the scene or by Container classes which have the ability to algorithmically layout their children.
 
-= Details =
+== Laying out a node ==
+
+TODO
+
+== Using binding to layout a node ==
+
+For example, if you want to create a background color on a group of nodes, you would create a Box node and use binding to ensure its bounds track the bounds of the group:
+
+...
+
+Another common case where binding is usefull for layout is in centering a node within an area. ...
