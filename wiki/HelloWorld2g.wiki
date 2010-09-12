@@ -14,7 +14,9 @@ Lets structure our {{{EntryPoint}}} class:
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
 import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
 import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.control.Text;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -40,8 +42,14 @@ public class Main implements EntryPoint {
 	private Show createShow() {
 		Show show = new Show();
 
-		// ...
+		Text text = new Text(show);
+		text.setText("Hello World");
+		text.setBorder("10px solid green");
 		
+		Segment s = new Segment(show);
+		s.add(text);
+		
+		show.activateSegment(s);		
 		return show;
 	}
 
