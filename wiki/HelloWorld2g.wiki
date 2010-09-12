@@ -3,12 +3,47 @@
 
 = Prerequisites =
 
- # You will need [http://code.google.com/p/google-web-toolkit/downloads/list GWT-2.1.0.m3.zip].
- # Add gwt-mosaic-2.x.jar to your classpath and add {{{<inherits name="org.gwt.mosaic2g.Mosaic" />}}} into your gwt.xml module file.
+ # You will need GWT-2.1.0.m3.zip; download it from [http://code.google.com/p/google-web-toolkit/downloads/list].
+ # Add the latest gwt-mosaic-2.x.jar to your classpath and add {{{<inherits name="org.gwt.mosaic2g.Mosaic" />}}} into your gwt.xml module file.
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Lets structure our {{{EntryPoint}}} class:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Show;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Main implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		// ...
+		
+		return show;
+	}
+
+}
+}}}
