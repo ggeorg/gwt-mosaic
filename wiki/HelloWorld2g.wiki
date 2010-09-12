@@ -73,3 +73,14 @@ public class Main implements EntryPoint {
 
 }
 }}}
+
+== Understanding Bounds ==
+
+The visual features displayed within a GWT Mosaic scene are fully represented by a 2D scene graph where each visual feature is represented by a distinct node with variables that can be manipulated dynamically. The node's size and position (otherwise known as "bounds") becomes complicated when considering these many CSS properties you can look at in order to determine the width and height of elements.
+
+In GWT Mosaic 2g the bounds used for layout and positioning a visual feature are:
+
+ * x := left margin edge - marginLeft - borderLeftWidth
+ * y := top margin edge - marginTop - borderTopWidth
+ * width := width of the content area + paddingLeft + paddingRight (= clientWidth)
+ * height := height of the content area + paddingTop + paddinBottom (= clientHeight)
