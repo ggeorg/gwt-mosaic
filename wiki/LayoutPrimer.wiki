@@ -19,41 +19,33 @@ For example, if you want to create a background color on a group of nodes, you w
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/binding1.png
 
-The code:
+The code snip set:
 {{{
-	private Show createShow() {
-		Show show = new Show();
+Box box1 = new Box(show, 50, 50, 100, 100);
+box1.setBackground("orange");
 
-		Box box1 = new Box(show, 50, 50, 100, 100);
-		box1.setBackground("orange");
-
-		Box box2 = new Box(show, 150, 150, 50, 50);
-		box2.setBackground("green");
+Box box2 = new Box(show, 150, 150, 50, 50);
+box2.setBackground("green");
 		
-		Box box3 = new Box(show, 250, 100, 50, 150);
-		box3.setBackground("magenta");
+Box box3 = new Box(show, 250, 100, 50, 150);
+box3.setBackground("magenta");
 
-		Group boxGroup = new Group(show);
-		boxGroup.add(box1);
-		boxGroup.add(box2);
-		boxGroup.add(box3);
+Group boxGroup = new Group(show);
+boxGroup.add(box1);
+boxGroup.add(box2);
+boxGroup.add(box3);
 
-		Box bgBox = new Box(show, 
-                    boxGroup.getX().createBinding(), 
-                    boxGroup.getY().createBinding(),
-                    boxGroup.getWidth().createBinding(),
-                    boxGroup.getHeight().createBinding());
-		bgBox.setBorder("1px solid yellow");
-		bgBox.setBackground("yellow");
+Box bgBox = new Box(show, 
+     boxGroup.getX().createBinding(), 
+     boxGroup.getY().createBinding(),
+     boxGroup.getWidth().createBinding(),
+     boxGroup.getHeight().createBinding());
+bgBox.setBorder("1px solid yellow");
+bgBox.setBackground("yellow");
 
-		Segment s = new Segment(show);
-		s.add(bgBox);
-		s.add(boxGroup);
-
-		show.activateSegment(s);
-
-		return show;
-	}
+Segment s = new Segment(show);
+s.add(bgBox);
+s.add(boxGroup);
 }}}
 
 
