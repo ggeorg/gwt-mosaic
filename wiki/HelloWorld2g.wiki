@@ -80,7 +80,9 @@ The visual features displayed within a GWT Mosaic scene are fully represented by
 
 In GWT Mosaic 2g the bounds used for layout and positioning a visual feature are:
 
- * x := left - marginLeft - borderLeftWidth
- * y := top  - marginTop  - borderTopWidth
- * width  := width   + paddingLeft + paddingRight (= clientWidth)
- * height := height  + paddingTop  + paddinBottom (= clientHeight)
+ * bounds.x := left - marginLeft - borderLeftWidth
+ * bounds.y := top  - marginTop  - borderTopWidth
+ * bounds.width  := width   - (paddingLeft + paddingRight)
+ * bounds.height := height  - (paddingTop  + paddinBottom)
+
+Note: using those conventions the bounds.width and bounds.height is equal to clientWidth and clientHeight respectively.
