@@ -17,13 +17,18 @@ package org.gwt.mosaic2g.client.scene;
 
 import org.gwt.mosaic2g.client.MyClientBundle;
 import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.binding.AbstractBinder;
+import org.gwt.mosaic2g.client.binding.Property;
 import org.gwt.mosaic2g.client.style.ComputedStyle;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ProvidesResize;
@@ -50,9 +55,28 @@ public class Scene extends Composite implements AnimationClient,
 	private Rectangle clipRegion;
 
 	private boolean sizeChanged = false;
+	private Property<Integer> clientWidth;
+	private Property<Integer> clientHeight;
 
 	public Scene() {
-		this(new AbsolutePanel());
+		this(new AbsolutePanel() {
+			@Override
+			protected void setWidgetPositionImpl(Widget w, int left, int top) {
+				/*
+				 * XXX The AbsolutePanel default implementation says: Setting a
+				 * position of (-1, -1) will cause the child widget to be
+				 * positioned statically.
+				 */
+				com.google.gwt.user.client.Element h = w.getElement();
+				// if (left == -1 && top == -1) {
+				// changeToStaticPositioning(h);
+				// } else {
+				DOM.setStyleAttribute(h, "position", "absolute");
+				DOM.setStyleAttribute(h, "left", left + "px");
+				DOM.setStyleAttribute(h, "top", top + "px");
+				// }
+			}
+		});
 	}
 
 	protected Scene(AbsolutePanel p) {
@@ -75,6 +99,47 @@ public class Scene extends Composite implements AnimationClient,
 	public void setShow(Show show) {
 		// TODO do show initialization/destroy
 		this.show = show;
+	}
+
+	public Property<Integer> getClientWidth() {
+		if (clientWidth == null) {
+			clientWidth = new Property<Integer>(new AbstractBinder<Integer>() {
+				protected void init() {
+					Window.addResizeHandler(new ResizeHandler() {
+						public void onResize(ResizeEvent event) {
+							fireValueChangeEvent(get());
+						}
+					});
+				}
+
+				@Override
+				public Integer get() {
+					return getElement().getClientWidth();
+				}
+			});
+		}
+		return clientWidth;
+	}
+
+	public Property<Integer> getClientHeight() {
+		if(clientHeight == null) {
+			clientHeight = new Property<Integer>(
+					new AbstractBinder<Integer>() {
+						protected void init() {
+							Window.addResizeHandler(new ResizeHandler() {
+								public void onResize(ResizeEvent event) {
+									fireValueChangeEvent(get());
+								}
+							});
+						}
+
+						@Override
+						public Integer get() {
+							return getElement().getClientHeight();
+						}
+					});
+		}
+		return clientHeight;
 	}
 
 	public boolean isSizeChanged() {
@@ -149,11 +214,15 @@ public class Scene extends Composite implements AnimationClient,
 		final Element elem = w.getElement();
 		final Style widgetStyle = elem.getStyle();
 
-		if (width != Integer.MIN_VALUE) {
+		if (width >= 0) {
+			width -= ComputedStyle.getPaddingLeft(elem);
+			width -= ComputedStyle.getPaddingRight(elem);
 			w.setWidth(width + Unit.PX.toString());
 			// widgetStyle.setWidth(width, Unit.PX);
 		}
-		if (height != Integer.MIN_VALUE) {
+		if (height >= 0) {
+			height -= ComputedStyle.getPaddingTop(elem);
+			height -= ComputedStyle.getPaddingBottom(elem);
 			w.setHeight(height + Unit.PX.toString());
 			// widgetStyle.setHeight(height, Unit.PX);
 		}
@@ -169,11 +238,9 @@ public class Scene extends Composite implements AnimationClient,
 
 		x -= ComputedStyle.getMarginLeft(elem);
 		x -= ComputedStyle.getBorderLeftWidth(elem);
-		x -= ComputedStyle.getPaddingLeft(elem);
 
 		y -= ComputedStyle.getMarginTop(elem);
 		y -= ComputedStyle.getBorderTopWidth(elem);
-		y -= ComputedStyle.getPaddingTop(elem);
 
 		if (!w.isAttached()) {
 			target.add(w, originX + x, originY + y);
@@ -214,7 +281,7 @@ public class Scene extends Composite implements AnimationClient,
 		style.setOpacity(opacity / 255.0);
 
 		// XXX IE
-		//style.setProperty("filter", "alpha(opacity=" + opacity + ")");
+		// style.setProperty("filter", "alpha(opacity=" + opacity + ")");
 	}
 
 }

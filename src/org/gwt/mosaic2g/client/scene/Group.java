@@ -71,6 +71,7 @@ package org.gwt.mosaic2g.client.scene;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.gwt.mosaic2g.client.binding.Property;
 
 /**
  * Represents a group of features that are all activated at the same time. It's
@@ -85,63 +86,71 @@ public class Group extends Feature implements HasFeatures {
 	protected FeatureCollection parts = new FeatureCollection(this);
 
 	private int numSetupChecked;
-	
+
 	public Group(Show show) {
 		super(show);
 	}
 
 	@Override
-	public int getX() {
+	public Property<Integer> getX() {
 		int x = Integer.MAX_VALUE;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			int val = it.next().getX();
+			int val = it.next().getX().$();
 			if (val < x) {
 				x = val;
 			}
 		}
-		return x;
+		super.getX().$(x);
+		return super.getX();
 	}
 
 	@Override
-	public int getY() {
+	public Property<Integer> getY() {
 		int y = Integer.MAX_VALUE;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			int val = it.next().getY();
+			int val = it.next().getY().$();
 			if (val < y) {
 				y = val;
 			}
 		}
-		return y;
+		super.getY().$(y);
+		return super.getY();
 	}
-	
+
 	@Override
-	public int getWidth() {
+	public Property<Integer> getWidth() {
 		int width = Integer.MIN_VALUE;
-		Iterator<Feature> it = iterator();
+		final int left = getX().$();
+		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			int val = it.next().getWidth();
-			if (val > width) {
-				width = val;
+			final Feature f = it.next();
+			final int fw = f.getWidth().$() + (f.getX().$() - left);
+			if (fw > width) {
+				width = fw;
 			}
 		}
-		return width;
+		super.getWidth().$(width);
+		return super.getWidth();
 	}
-	
+
 	@Override
-	public int getHeight() {
+	public Property<Integer> getHeight() {
 		int height = Integer.MIN_VALUE;
-		Iterator<Feature> it = iterator();
+		final int top = getY().$();
+		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			int val = it.next().getHeight();
-			if (val > height) {
-				height = val;
+			final Feature f = it.next();
+			final int fh = f.getHeight().$() + (f.getY().$() - top);
+			if (fh > height) {
+				height = fh;
 			}
 		}
-		return height;
+		super.getHeight().$(height);
+		return super.getHeight();
 	}
-	
+
 	@Override
 	protected void setSetupMode(boolean mode) {
 		if (mode) {
@@ -157,7 +166,7 @@ public class Group extends Feature implements HasFeatures {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean needsMoreSetup() {
 		while (numSetupChecked < parts.size()) {
@@ -209,7 +218,7 @@ public class Group extends Feature implements HasFeatures {
 	public boolean nextFrame(Scene scene) {
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			if(it.next().nextFrame(scene)) {
+			if (it.next().nextFrame(scene)) {
 				changed = true;
 			}
 		}
@@ -221,7 +230,7 @@ public class Group extends Feature implements HasFeatures {
 		if (!isActivated() || !changed) {
 			return;
 		}
-		
+
 		// TODO consult children changes events
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {

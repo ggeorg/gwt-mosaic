@@ -68,6 +68,8 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.client.binding.Property;
+
 /**
  * A {@code Translator} wraps other features, and adds movement taken from a
  * translator model (represented at runtime by an {@link InterpolatedModel} to
@@ -111,17 +113,17 @@ public class Translator extends Modifier {
 	}
 
 	@Override
-	public int getX() {
+	public Property<Integer> getX() {
 		int x = model.getField(X_FIELD);
-		x += getPart().getX();
-		return x;
+		x += getPart().getX().$();
+		return Property.valueOf(x); // TODO check if there is a problem
 	}
 
 	@Override
-	public int getY() {
+	public Property<Integer> getY() {
 		int y = model.getField(Y_FIELD);
-		y += getPart().getY();
-		return y;
+		y += getPart().getY().$();
+		return Property.valueOf(y); //TODO check if there is a problem
 	}
 
 	@Override

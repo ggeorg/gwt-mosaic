@@ -68,6 +68,7 @@
  */
 package org.gwt.mosaic2g.client.scene.control;
 
+import org.gwt.mosaic2g.client.binding.Property;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
 
@@ -84,14 +85,19 @@ public class Box extends Control {
 	public Box(Show show, int x, int y, int width, int height) {
 		super(show, x, y, width, height);
 	}
-	
+
+	public Box(Show show, Property<Integer> x, Property<Integer> y,
+			Property<Integer> width, Property<Integer> height) {
+		super(show, x, y, width, height);
+	}
+
 	@Override
 	protected Widget createWidget() {
 		final Widget result = new BoxWidget();
 		updateWidget(result, true);
 		return result;
 	}
-	
+
 	// -------------------------
 	private class BoxWidget extends Widget {
 		public BoxWidget() {
