@@ -68,6 +68,10 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.client.binding.Property;
+
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 
 /**
@@ -84,6 +88,23 @@ public abstract class Feature implements Node {
 
 	protected boolean changed = false;
 
+	private Property<Integer> x;
+	private Property<Integer> y;
+	private Property<Integer> width;
+	private Property<Integer> height;
+
+	private final ValueChangeHandler<Integer> locationChanged = new ValueChangeHandler<Integer>() {
+		public void onValueChange(ValueChangeEvent<Integer> event) {
+			markAsChanged();
+		}
+	};
+
+	private final ValueChangeHandler<Integer> sizeChanged = new ValueChangeHandler<Integer>() {
+		public void onValueChange(ValueChangeEvent<Integer> event) {
+			markAsChanged();
+		}
+	};
+
 	protected Feature(Show show) {
 		assert show != null;
 		this.show = show;
@@ -99,8 +120,21 @@ public abstract class Feature implements Node {
 	 * 
 	 * @return the x coordinate
 	 */
-	public int getX() {
-		return Integer.MAX_VALUE;
+	public Property<Integer> getX() {
+		if (x == null) {
+			setX(Property.valueOf(Integer.MAX_VALUE));
+		}
+		return x;
+	}
+
+	protected void setX(Property<Integer> x) {
+		if (this.x == null) {
+			this.x = x;
+			this.x.addValueChangeHandler(locationChanged);
+		} else {
+			throw new IllegalStateException("Feature.setX() may only be "
+					+ "called once.");
+		}
 	}
 
 	/**
@@ -109,8 +143,22 @@ public abstract class Feature implements Node {
 	 * 
 	 * @return the y coordinate
 	 **/
-	public int getY() {
-		return Integer.MAX_VALUE;
+	public Property<Integer> getY() {
+		if (y == null) {
+			y = Property.valueOf(Integer.MAX_VALUE);
+			y.addValueChangeHandler(locationChanged);
+		}
+		return y;
+	}
+	
+	protected void setY(Property<Integer> y) {
+		if (this.y == null) {
+			this.y = y;
+			this.y.addValueChangeHandler(locationChanged);
+		} else {
+			throw new IllegalStateException("Feature.setY() may only be "
+					+ "called once.");
+		}
 	}
 
 	/**
@@ -119,12 +167,21 @@ public abstract class Feature implements Node {
 	 * 
 	 * @return the width
 	 */
-	public int getWidth() {
-		return Integer.MIN_VALUE;
+	public Property<Integer> getWidth() {
+		if (width == null) {
+			setWidth(Property.valueOf(Integer.MIN_VALUE));
+		}
+		return width;
 	}
 
-	public void resize(int width, int height) {
-		// do nothing
+	protected void setWidth(Property<Integer> width) {
+		if (this.width == null) {
+			this.width = width;
+			this.width.addValueChangeHandler(sizeChanged);
+		} else {
+			throw new IllegalStateException("Feature.setWidth() may only be "
+					+ "called once.");
+		}
 	}
 
 	/**
@@ -133,12 +190,21 @@ public abstract class Feature implements Node {
 	 * 
 	 * @return the height
 	 */
-	public int getHeight() {
-		return Integer.MIN_VALUE;
+	public Property<Integer> getHeight() {
+		if (height == null) {
+			setHeight(Property.valueOf(Integer.MIN_VALUE));
+		}
+		return height;
 	}
 
-	protected void setHeight() {
-		// do nothing
+	protected void setHeight(Property<Integer> height) {
+		if (this.height == null) {
+			this.height = height;
+			this.height.addValueChangeHandler(sizeChanged);
+		} else {
+			throw new IllegalStateException("Feature.setHeight() may only be "
+					+ "called once.");
+		}
 	}
 
 	/**

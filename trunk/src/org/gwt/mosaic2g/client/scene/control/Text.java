@@ -69,6 +69,7 @@
 package org.gwt.mosaic2g.client.scene.control;
 
 import org.gwt.mosaic2g.client.MyClientBundle;
+import org.gwt.mosaic2g.client.binding.Property;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
 import org.gwt.mosaic2g.client.scene.layout.Resizable;
@@ -105,8 +106,22 @@ public class Text extends Control implements HasAlignment, Resizable {
 
 	private LabelWidget cachedWidget;
 
-	public Text(Show show, int x, int y, int width, int height) {
+	public Text(Show show) {
+		this(show, Property.valueOf(0), Property.valueOf(0));
+	}
+
+	public Text(Show show, Property<Integer> x, Property<Integer> y) {
+		this(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
+				.valueOf(Integer.MIN_VALUE));
+	}
+
+	public Text(Show show, Property<Integer> x, Property<Integer> y,
+			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
+	}
+	
+	public Text(Show show, int x, int y) {
+		super(show, x, y, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
 
 	public String getText() {
@@ -153,17 +168,17 @@ public class Text extends Control implements HasAlignment, Resizable {
 
 	public int getPrefWidth() {
 		if (cachedWidget == null) {
-			return super.getWidth();
+			return super.getWidth().$();
 		} else {
-			return cachedWidget.getOffsetWidth();
+			return cachedWidget.getElement().getClientWidth();
 		}
 	}
 
 	public int getPrefHeight() {
 		if (cachedWidget == null) {
-			return super.getHeight();
+			return super.getHeight().$();
 		} else {
-			return cachedWidget.getOffsetHeight();
+			return cachedWidget.getElement().getClientHeight();
 		}
 	}
 
@@ -257,7 +272,7 @@ public class Text extends Control implements HasAlignment, Resizable {
 							vertAlign == null ? "" : vertAlign
 									.getVerticalAlignString());
 		}
-		
+
 		@Override
 		public void setWidth(String width) {
 			super.setWidth(width);

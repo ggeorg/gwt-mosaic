@@ -17,6 +17,7 @@ package org.gwt.mosaic2g.client.scene.layout;
 
 import java.util.Iterator;
 
+import org.gwt.mosaic2g.client.binding.Property;
 import org.gwt.mosaic2g.client.scene.Container;
 import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
@@ -32,14 +33,16 @@ public class HBox extends Container {
 	private int count;
 
 	public HBox(Show show) {
-		this(show, 0, 0, Integer.MIN_VALUE, Integer.MIN_VALUE);
+		this(show, Property.valueOf(0), Property.valueOf(0));
 	}
 
-	public HBox(Show show, int x, int y) {
-		this(show, x, y, Integer.MIN_VALUE, Integer.MIN_VALUE);
+	public HBox(Show show, Property<Integer> x, Property<Integer> y) {
+		this(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
+				.valueOf(Integer.MIN_VALUE));
 	}
 
-	public HBox(Show show, int x, int y, int width, int height) {
+	public HBox(Show show, Property<Integer> x, Property<Integer> y,
+			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
 	}
 
@@ -65,7 +68,7 @@ public class HBox extends Container {
 			if (f instanceof Resizable) {
 				result += ((Resizable) f).getPrefWidth();
 			} else {
-				int val = f.getWidth();
+				int val = f.getWidth().$();
 				if (val == Integer.MIN_VALUE) {
 					continue;
 				}
@@ -89,8 +92,8 @@ public class HBox extends Container {
 
 		int direction = 0;
 
-		final Rectangle bounds = new Rectangle(getX(), getY(), getWidth(),
-				getHeight());
+		final Rectangle bounds = new Rectangle(getX().$(), getY().$(), getWidth().$(),
+				getHeight().$());
 
 		int startX, startY;
 		if (direction > 0) {
@@ -106,16 +109,17 @@ public class HBox extends Container {
 		while (it.hasNext()) {
 			final Feature f = it.next();
 
-			final int fw = f.getWidth();
-			final int fh = f.getHeight();
+			final int fw = f.getWidth().$();
+			final int fh = f.getHeight().$();
 			if (fw == Integer.MIN_VALUE || fh == Integer.MIN_VALUE) {
 				continue;
 			}
 
-			int dx = startX - f.getX();
-			int dy = startY - f.getY();
+			int dx = startX - f.getX().$();
+			int dy = startY - f.getY().$();
 
-			f.resize(fw, fh);
+			f.getWidth().$(fw);
+			f.getHeight().$(fh);
 
 			scene.translate(dx, dy);
 			f.paintFrame(scene);

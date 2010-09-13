@@ -9,8 +9,9 @@
 .labelWidgetText {
 	margin: 0px;
 	border: 0px none;
-	padding: none;
+	padding: 0.3em;
 	background: inherited;
 	color: inhereted;
 	display: table-cell;
+	line-height: 120%;
 }
