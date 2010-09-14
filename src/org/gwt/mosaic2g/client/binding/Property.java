@@ -1,15 +1,11 @@
 package org.gwt.mosaic2g.client.binding;
 
-import java.io.Serializable;
-
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-@SuppressWarnings("serial")
-public class Property<T extends Serializable> implements
-		HasValueChangeHandlers<T>, Serializable {
+public class Property<T> implements HasValueChangeHandlers<T> {
 
 	public static final Property<String> valueOf(String value) {
 		return new Property<String>(value);
@@ -39,7 +35,10 @@ public class Property<T extends Serializable> implements
 					fireValueChangeEvent(this.value);
 				}
 			}
-
+			
+			public boolean isReadOnly() {
+				return false;
+			}
 		});
 		binder.set(value);
 	}
@@ -89,6 +88,9 @@ public class Property<T extends Serializable> implements
 				thiz.fireEvent(event);
 			}
 
+			public boolean isReadOnly() {
+				return false;
+			}
 		});
 	}
 
