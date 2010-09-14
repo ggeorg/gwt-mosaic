@@ -1,7 +1,5 @@
 package org.gwt.mosaic2g.client.binding;
 
-import java.io.Serializable;
-
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -9,11 +7,10 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public abstract class AbstractBinder<T extends Serializable> implements
-		Binder<T> {
+public abstract class AbstractBinder<T> implements Binder<T> {
 
 	private transient HandlerManager handlerManager;
-	
+
 	public AbstractBinder() {
 		init();
 	}
@@ -50,7 +47,11 @@ public abstract class AbstractBinder<T extends Serializable> implements
 	public abstract T get();
 
 	public void set(T value) {
-		// do nothing
+		throw new UnsupportedOperationException("Property is read-only.");
+	}
+	
+	public boolean isReadOnly() {
+		return true;
 	}
 
 }
