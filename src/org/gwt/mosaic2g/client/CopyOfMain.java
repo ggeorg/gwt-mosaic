@@ -60,7 +60,7 @@ public class CopyOfMain implements EntryPoint {
 							public Integer get(Integer value) {
 								return value - 154;
 							}
-						}, null));
+						}));
 		b1.setBorder("1px solid blue");
 		b1.setBackground("cyan");
 
