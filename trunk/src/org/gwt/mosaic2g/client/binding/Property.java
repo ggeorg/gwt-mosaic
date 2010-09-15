@@ -1,6 +1,7 @@
 package org.gwt.mosaic2g.client.binding;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -35,7 +36,7 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 					fireValueChangeEvent(this.value);
 				}
 			}
-			
+
 			public boolean isReadOnly() {
 				return false;
 			}
@@ -64,8 +65,49 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 		binder.fireEvent(event);
 	}
 
+	// ---------------------------------------------------------------------
+	public Property<T> createReadOnlyBinding() {
+		return createBinding(new Getter<T>() {
+			public T get(T value) {
+				return value;
+			}
+		});
+	}
+	
+	public Property<T> createBinding() {
+		return this.createBinding((Validator<T>) null);
+	}
+
+	public Property<T> createBinding(final Validator<T> validator) {
+		return createBinding(new Getter<T>() {
+			public T get(T value) {
+				return value;
+			}
+		}, new Setter<T>() {
+			public T set(T value) {
+				// TODO validate
+				return value;
+			}
+		});
+	}
+
+	// ---------------------------------------------------------------------
+	public Property<T> createBinding(final Getter<T> getter) {
+		return createBinding(getter, null, (Validator<T>) null);
+	}
+
+	public Property<T> createBinding(final Getter<T> getter,
+			final Validator<T> validator) {
+		return createBinding(getter, null, (Validator<T>) null);
+	}
+
 	public Property<T> createBinding(final Getter<T> getter,
 			final Setter<T> setter) {
+		return this.createBinding(getter, setter, (Validator<T>) null);
+	}
+
+	public Property<T> createBinding(final Getter<T> getter,
+			final Setter<T> setter, final Validator<T> validator) {
 		assert getter != null;
 		final Property<T> thiz = this;
 		return new Property<T>(new Binder<T>() {
@@ -89,25 +131,71 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 			}
 
 			public boolean isReadOnly() {
-				return false;
+				return setter == null;
 			}
 		});
 	}
 
-	public Property<T> createBinding() {
-		return createBinding(new Getter<T>() {
+	// ---------------------------------------------------------------------
+
+	public <T2> Property<T2> createReadOnlyBinding(
+			final Converter<T, T2> converter) {
+		return this.createBinding(new Getter<T>() {
 			public T get(T value) {
 				return value;
 			}
-		}, new Setter<T>() {
-			public T set(T value) {
-				return value;
-			}
-		});
+		}, null, converter, (Validator<T>) null);
 	}
 
-	public Property<T> createBinding(final Getter<T> getter) {
-		return createBinding(getter, null);
+	public <T2> Property<T2> createBinding(final Getter<T> getter,
+			final Converter<T, T2> converter) {
+		return this.createBinding(getter, null, converter, (Validator<T>) null);
+	}
+
+	public <T2> Property<T2> createBinding(final Getter<T> getter,
+			final Setter<T> setter, final Converter<T, T2> converter) {
+		return this.createBinding(getter, setter, converter,
+				(Validator<T>) null);
+	}
+
+	public <T2> Property<T2> createBinding(final Getter<T> getter,
+			final Setter<T> setter, final Converter<T, T2> converter,
+			final Validator<T> validator) {
+		assert getter != null;
+		assert converter != null;
+		final Property<T> thiz = this;
+		return new Property<T2>(new AbstractBinder<T2>() {
+
+			@Override
+			public T2 get() {
+				return converter.convertForward(getter.get(thiz.$()));
+			}
+
+			@Override
+			public void set(T2 value) {
+				if (setter != null) {
+					// TODO use validator
+					thiz.$(setter.set(converter.convertReverse(value)));
+				}
+			}
+
+			public HandlerRegistration addValueChangeHandler(
+					final ValueChangeHandler<T2> handler) {
+				return new PropertyHandlerRegistration(
+						super.addValueChangeHandler(handler),
+						thiz.addValueChangeHandler(new ValueChangeHandler<T>() {
+							public void onValueChange(ValueChangeEvent<T> event) {
+								fireValueChangeEvent(converter
+										.convertForward(event.getValue()));
+							}
+						}));
+			}
+
+			@Override
+			public boolean isReadOnly() {
+				return setter == null;
+			}
+		});
 	}
 
 	@Override
