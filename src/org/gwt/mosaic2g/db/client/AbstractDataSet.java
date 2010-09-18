@@ -63,6 +63,9 @@ public abstract class AbstractDataSet<T> implements DataSet<T> {
 
 				@Override
 				public void set(Integer value) {
+					if(row == value) {
+						return;
+					}
 					moveTo(value);
 				}
 			});

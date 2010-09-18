@@ -37,10 +37,10 @@ public class DBListBox<T> extends AbstractViewer<T> {
 	private final ListBox listBox = new ListBox();
 
 	private Column<?> valueColumn;
-	private Column<?> textColumn;
+	private Column<?> itemTextColumn;
 
 	private HandlerRegistration valueColumnHR = null;
-	private HandlerRegistration textColumnHR = null;
+	private HandlerRegistration itemTextColumnHR = null;
 
 	private HandlerRegistration fillHR;
 
@@ -60,11 +60,11 @@ public class DBListBox<T> extends AbstractViewer<T> {
 	}
 
 	public DBListBox(DataSource<T> dataSource, Column<?> valueColumn,
-			Column<?> textColumn) {
+			Column<?> itemTextColumn) {
 		this();
 		setDataSource(dataSource);
 		setValueColumn(valueColumn);
-		setTextColumn(textColumn);
+		setItemTextColumn(itemTextColumn);
 	}
 
 	@Override
@@ -78,8 +78,7 @@ public class DBListBox<T> extends AbstractViewer<T> {
 		dataSource.getOpen().addValueChangeHandler(
 				new ValueChangeHandler<Boolean>() {
 					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						final DataSet<T> dataSet = dataSource.getDataSet();
-						if (event.getValue() && dataSet != null) {
+						if (event.getValue()) {
 							populate();
 						} else {
 							listBox.clear();
@@ -110,35 +109,61 @@ public class DBListBox<T> extends AbstractViewer<T> {
 			valueColumnHR = this.valueColumn.getValue().addValueChangeHandler(
 					new ValueChangeHandler() {
 						public void onValueChange(ValueChangeEvent event) {
-							rowDataChanged();
+							int index = listBox.getSelectedIndex();
+							System.out.println("================================ value");
+							final DataSet<T> dataSet;
+							if (index != -1 && getDataSource() != null
+									&& (dataSet = getDataSource().getDataSet()) != null) {
+								final Column<?> valueColumn = getValueColumn();
+								String value = (valueColumn == null) ? String.valueOf(dataSet
+										.getRowData()) : valueColumn.getDisplayValue().$();
+								String text = (itemTextColumn == null ? value : itemTextColumn
+										.getDisplayValue().$());
+								listBox.setValue(index, value);
+								listBox.setItemText(index, text);
+							}
 						}
 					});
 		}
 	}
 
-	public Column<?> getTextColumn() {
-		return textColumn;
+	public Column<?> getItemTextColumn() {
+		return itemTextColumn;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void setTextColumn(Column<?> textColumn) {
-		if (this.textColumn == textColumn) {
+	public void setItemTextColumn(Column<?> itemTextColumn) {
+		if (this.itemTextColumn == itemTextColumn) {
 			return;
 		}
 
-		if (textColumnHR != null) {
-			textColumnHR.removeHandler();
-			textColumnHR = null;
+		if (itemTextColumnHR != null) {
+			itemTextColumnHR.removeHandler();
+			itemTextColumnHR = null;
 		}
 
-		this.textColumn = textColumn;
+		this.itemTextColumn = itemTextColumn;
 
-		if (this.textColumn != null) {
+		if (this.itemTextColumn != null) {
 			populate();
-			textColumnHR = this.textColumn.getValue().addValueChangeHandler(
+			itemTextColumnHR = this.itemTextColumn.getValue().addValueChangeHandler(
 					new ValueChangeHandler() {
 						public void onValueChange(ValueChangeEvent event) {
-							rowDataChanged();
+							int index = listBox.getSelectedIndex();
+							System.out.println("================================ text");
+							final DataSet<T> dataSet;
+							if (index != -1 && getDataSource() != null
+									&& (dataSet = getDataSource().getDataSet()) != null) {
+								final Column<?> itemTextColumn = getItemTextColumn();
+								String value = (valueColumn == null) ? String.valueOf(dataSet
+										.getRowData()) : valueColumn.getDisplayValue().$();
+								String text = (itemTextColumn == null ? value : itemTextColumn
+										.getDisplayValue().$());
+								
+								System.out.println(index +" : "+text);
+								
+								listBox.setItemText(index, text);
+							}
 						}
 					});
 		}
@@ -156,8 +181,8 @@ public class DBListBox<T> extends AbstractViewer<T> {
 							String value = (valueColumn == null) ? String
 									.valueOf(dataSet.getRowData())
 									: valueColumn.getDisplayValue().$();
-							String text = (textColumn == null ? value
-									: textColumn.getDisplayValue().$());
+							String text = (itemTextColumn == null ? value
+									: itemTextColumn.getDisplayValue().$());
 							listBox.addItem(text, value);
 
 							// check if we are done
@@ -175,23 +200,22 @@ public class DBListBox<T> extends AbstractViewer<T> {
 		}
 	}
 
-	protected void rowDataChanged() {
-		int index = listBox.getSelectedIndex();
-		DataSet<T> dataSet;
-		if (index != -1 && getDataSource() != null
-				&& (dataSet = getDataSource().getDataSet()) != null) {
-			String value = (valueColumn == null) ? String.valueOf(dataSet
-					.getRowData()) : valueColumn.getDisplayValue().$();
-			String text = (textColumn == null ? value : textColumn
-					.getDisplayValue().$());
-			listBox.setValue(index, value);
-			listBox.setItemText(index, text);
-		}
+	@Override
+	protected void setEnabled(boolean enabled) {
+		listBox.setEnabled(enabled);
+	}
+	
+	@Override
+	protected void setRow(int index) {
+		listBox.setItemSelected(index, true);
 	}
 
-	@Override
-	protected void setEnabled(Boolean value) {
-		listBox.setEnabled(value);
+	public int getVisibleItemCount() {
+		return listBox.getVisibleItemCount();
+	}
+
+	public void setVisibleItemCount(int visibleItems) {
+		listBox.setVisibleItemCount(visibleItems);
 	}
 
 }
