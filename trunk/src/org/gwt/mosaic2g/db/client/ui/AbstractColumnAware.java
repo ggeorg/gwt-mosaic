@@ -15,34 +15,24 @@
  */
 package org.gwt.mosaic2g.db.client.ui;
 
-import org.gwt.mosaic2g.binding.client.AbstractBinder;
-import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.db.client.Column;
 
+import com.google.gwt.user.client.ui.Composite;
+
 /**
+ * Abstract implementation of {@link ColumnAware} as a {@link Composite}.
  * 
  * @param <T>
+ *            the row type in {@link DataSource}
  * @param <D>
+ *            the column type in {@link Column}
  * 
  * @author ggeorg
  */
-public abstract class AbstractEditor<T, D> extends AbstractViewer<T> implements
-		Editor<D> {
+public abstract class AbstractColumnAware<T, D> extends
+		AbstractDataSourceAware<T> implements ColumnAware<T, D> {
 
 	private Column<D> column;
-	private final Property<D> valueP = new Property<D>(new AbstractBinder<D>() {
-		@Override
-		public D get() {
-			if (column != null) {
-				return column.getValue().$();
-			}
-			return null;
-		}
-	});
-
-	public Property<D> getValue() {
-		return valueP;
-	}
 
 	public Column<D> getColumn() {
 		return column;
@@ -53,26 +43,6 @@ public abstract class AbstractEditor<T, D> extends AbstractViewer<T> implements
 			return;
 		}
 		this.column = column;
-	}
-	
-	@Override
-	protected final void setRow(int index) {
-		setValue(getColumn());
-	}
-
-	protected abstract void setValue(Column<D> value);
-
-	protected void edit() {
-		if (getDataSource() != null && getDataSource().getOpen().$()) {
-			getDataSource().getDataSet().editRow();
-		}
-	}
-
-	protected void cancel() {
-		if (getDataSource() != null && getDataSource().getOpen().$()
-				&& column != null) {
-			setValue(column);
-		}
 	}
 
 }

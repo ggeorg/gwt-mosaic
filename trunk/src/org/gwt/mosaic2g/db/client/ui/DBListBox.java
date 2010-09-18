@@ -27,12 +27,16 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
+ * A {@code DBListBox} is a data-aware extension of {@link ListBox}.
+ * {@code DBListBox} displays a list of choices from which a user may choose a
+ * single value.
  * 
  * @param <T>
+ *            the row type in {@link DataSource}
  * 
  * @author ggeorg
  */
-public class DBListBox<T> extends AbstractViewer<T> {
+public class DBListBox<T> extends AbstractDataSourceAware<T> {
 
 	private final ListBox listBox = new ListBox();
 
@@ -110,15 +114,18 @@ public class DBListBox<T> extends AbstractViewer<T> {
 					new ValueChangeHandler() {
 						public void onValueChange(ValueChangeEvent event) {
 							int index = listBox.getSelectedIndex();
-							System.out.println("================================ value");
+							System.out
+									.println("================================ value");
 							final DataSet<T> dataSet;
-							if (index != -1 && getDataSource() != null
+							if (index != -1
+									&& getDataSource() != null
 									&& (dataSet = getDataSource().getDataSet()) != null) {
 								final Column<?> valueColumn = getValueColumn();
-								String value = (valueColumn == null) ? String.valueOf(dataSet
-										.getRowData()) : valueColumn.getDisplayValue().$();
-								String text = (itemTextColumn == null ? value : itemTextColumn
-										.getDisplayValue().$());
+								String value = (valueColumn == null) ? String
+										.valueOf(dataSet.getRowData())
+										: valueColumn.getDisplayValue().$();
+								String text = (itemTextColumn == null ? value
+										: itemTextColumn.getDisplayValue().$());
 								listBox.setValue(index, value);
 								listBox.setItemText(index, text);
 							}
@@ -146,22 +153,25 @@ public class DBListBox<T> extends AbstractViewer<T> {
 
 		if (this.itemTextColumn != null) {
 			populate();
-			itemTextColumnHR = this.itemTextColumn.getValue().addValueChangeHandler(
-					new ValueChangeHandler() {
+			itemTextColumnHR = this.itemTextColumn.getValue()
+					.addValueChangeHandler(new ValueChangeHandler() {
 						public void onValueChange(ValueChangeEvent event) {
 							int index = listBox.getSelectedIndex();
-							System.out.println("================================ text");
+							System.out
+									.println("================================ text");
 							final DataSet<T> dataSet;
-							if (index != -1 && getDataSource() != null
+							if (index != -1
+									&& getDataSource() != null
 									&& (dataSet = getDataSource().getDataSet()) != null) {
 								final Column<?> itemTextColumn = getItemTextColumn();
-								String value = (valueColumn == null) ? String.valueOf(dataSet
-										.getRowData()) : valueColumn.getDisplayValue().$();
-								String text = (itemTextColumn == null ? value : itemTextColumn
-										.getDisplayValue().$());
-								
-								System.out.println(index +" : "+text);
-								
+								String value = (valueColumn == null) ? String
+										.valueOf(dataSet.getRowData())
+										: valueColumn.getDisplayValue().$();
+								String text = (itemTextColumn == null ? value
+										: itemTextColumn.getDisplayValue().$());
+
+								System.out.println(index + " : " + text);
+
 								listBox.setItemText(index, text);
 							}
 						}
@@ -204,7 +214,7 @@ public class DBListBox<T> extends AbstractViewer<T> {
 	protected void setEnabled(boolean enabled) {
 		listBox.setEnabled(enabled);
 	}
-	
+
 	@Override
 	protected void setRow(int index) {
 		listBox.setItemSelected(index, true);
