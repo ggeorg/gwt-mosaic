@@ -15,7 +15,7 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 import com.google.gwt.dom.client.Style;

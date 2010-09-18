@@ -15,10 +15,10 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.binding.client.AbstractBinder;
+import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.MyClientBundle;
 import org.gwt.mosaic2g.client.animator.AnimationClient;
-import org.gwt.mosaic2g.client.binding.AbstractBinder;
-import org.gwt.mosaic2g.client.binding.Property;
 import org.gwt.mosaic2g.client.style.ComputedStyle;
 import org.gwt.mosaic2g.client.util.Rectangle;
 

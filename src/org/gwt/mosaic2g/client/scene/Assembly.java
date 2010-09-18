@@ -68,7 +68,7 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 
 /**
  * An {@code Assembly} is a feature composed of other features. It is a bit like

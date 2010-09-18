@@ -17,7 +17,7 @@ package org.gwt.mosaic2g.client.scene;
 
 import java.util.Iterator;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.layout.Resizable;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
