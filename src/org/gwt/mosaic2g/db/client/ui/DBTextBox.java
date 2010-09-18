@@ -28,17 +28,35 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
+ * A {@code DBTextBox} is a data-aware extension of {@link TextBox}. Although
+ * data in a {@code DBTextBox} is always edited as a {@link String}, a
+ * {@code DBTextBox} can be used to display and edit data from all data types.
+ * <p>
+ * When a {@code DBTextBox} is attached to a {@link DataSource}, the following
+ * keystrokes perform special tasks when pressed:
+ * <ol>
+ * <li>ENTER - causes the data in the {@link TextBox} to be written to the
+ * {@link DataSource} column.</li>
+ * <li>ESC - makes the data in the {@link TextBox} change back to the value in
+ * the {@link DataSource} column.</li>
+ * </ol>
  * 
  * @param <T>
+ *            the row type in {@link DataSource}
  * @param <D>
+ *            the column type in {@link Column}
  * 
  * @author ggeorg
  */
-public class DBTextBox<T, D> extends AbstractEditor<T, D> {
+public class DBTextBox<T, D> extends AbstractValueAware<T, D> {
 
 	private final TextBox textBox = new TextBox();
 
 	public DBTextBox() {
+		this(null, null);
+	}
+
+	public DBTextBox(DataSource<T> dataSource, Column<D> column) {
 		super();
 		initWidget(textBox);
 		textBox.addKeyDownHandler(new KeyDownHandler() {
@@ -59,24 +77,6 @@ public class DBTextBox<T, D> extends AbstractEditor<T, D> {
 				getColumn().getDisplayValue().$(event.getValue());
 			}
 		});
-	}
-
-	@Override
-	public void setDataSource(DataSource<T> dataSource) {
-		super.setDataSource(dataSource);
-		if (dataSource == null) {
-			return;
-		}
-		dataSource.getOpen().addValueChangeHandler(
-				new ValueChangeHandler<Boolean>() {
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						textBox.setEnabled(event.getValue());
-					}
-				});
-	}
-
-	public DBTextBox(DataSource<T> dataSource, Column<D> column) {
-		this();
 		setDataSource(dataSource);
 		setColumn(column);
 	}

@@ -23,12 +23,15 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
+ * Abstract implementation of {@link DataSourceAware} as a {@link Composite}.
  * 
  * @param <T>
+ *            the row type in {@link DataSource}
  * 
  * @author ggeorg
  */
-public abstract class AbstractViewer<T> extends Composite implements Viewer<T> {
+public abstract class AbstractDataSourceAware<T> extends Composite implements
+		DataSourceAware<T> {
 
 	private DataSource<T> dataSource;
 

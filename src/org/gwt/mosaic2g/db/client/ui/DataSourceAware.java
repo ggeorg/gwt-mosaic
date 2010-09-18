@@ -15,21 +15,18 @@
  */
 package org.gwt.mosaic2g.db.client.ui;
 
-import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.db.client.Column;
+import org.gwt.mosaic2g.db.client.DataSource;
 
 /**
  * 
- * @param <D>
+ * @param <T> the row type in {@link DataSource}
  * 
  * @author ggeorg
  */
-public interface Editor<D> {
+public interface DataSourceAware<T> {
 
-	Column<D> getColumn();
-
-	void setColumn(Column<D> column);
-
-	Property<D> getValue();
+	DataSource<T> getDataSource();
+	
+	void setDataSource(DataSource<T> dataSource);
 
 }
