@@ -25,12 +25,12 @@ import org.gwt.mosaic2g.binding.client.Validator;
  * @author ggeorg
  * 
  */
-public class IntegerColumn extends NumericColumn<Integer> {
+public class ByteColumn extends NumericColumn<Byte> {
 
 	private final Property<String> displayValue = getValue().createBinding(
-			new Converter<Integer, String>() {
+			new Converter<Byte, String>() {
 				@Override
-				public String convertForward(Integer value) {
+				public String convertForward(Byte value) {
 					if (getNumberFormat() == null || value == null) {
 						return value != null ? String.valueOf(value) : "";
 					} else {
@@ -39,30 +39,30 @@ public class IntegerColumn extends NumericColumn<Integer> {
 				}
 
 				@Override
-				public Integer convertReverse(String value) {
+				public Byte convertReverse(String value) {
 					if (getNumberFormat() == null) {
-						return Integer.parseInt(value);
+						return Byte.parseByte(value);
 					} else {
-						return (int) getNumberFormat().parse(value);
+						return (byte) getNumberFormat().parse(value);
 					}
 				}
-			}, new Validator<Integer>() {
+			}, new Validator<Byte>() {
 				@Override
-				public Result validate(Integer value) {
+				public Result validate(Byte value) {
 					// TODO Auto-generated method stub
 					return null;
 				}
 			});
-
-	public IntegerColumn(String name) {
+	
+	public ByteColumn(String name) {
 		super(name);
 	}
 
-	public IntegerColumn(String name, Integer value) {
+	public ByteColumn(String name, Byte value) {
 		super(name, value);
 	}
 
-	public IntegerColumn(String name, Binder<Integer> binder) {
+	public ByteColumn(String name, Binder<Byte> binder) {
 		super(name, binder);
 	}
 

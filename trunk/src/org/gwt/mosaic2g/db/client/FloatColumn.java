@@ -25,12 +25,12 @@ import org.gwt.mosaic2g.binding.client.Validator;
  * @author ggeorg
  * 
  */
-public class IntegerColumn extends NumericColumn<Integer> {
+public class FloatColumn extends NumericColumn<Float> {
 
 	private final Property<String> displayValue = getValue().createBinding(
-			new Converter<Integer, String>() {
+			new Converter<Float, String>() {
 				@Override
-				public String convertForward(Integer value) {
+				public String convertForward(Float value) {
 					if (getNumberFormat() == null || value == null) {
 						return value != null ? String.valueOf(value) : "";
 					} else {
@@ -39,30 +39,30 @@ public class IntegerColumn extends NumericColumn<Integer> {
 				}
 
 				@Override
-				public Integer convertReverse(String value) {
+				public Float convertReverse(String value) {
 					if (getNumberFormat() == null) {
-						return Integer.parseInt(value);
+						return Float.parseFloat(value);
 					} else {
-						return (int) getNumberFormat().parse(value);
+						return (float) getNumberFormat().parse(value);
 					}
 				}
-			}, new Validator<Integer>() {
+			}, new Validator<Float>() {
 				@Override
-				public Result validate(Integer value) {
+				public Result validate(Float value) {
 					// TODO Auto-generated method stub
 					return null;
 				}
 			});
-
-	public IntegerColumn(String name) {
+	
+	public FloatColumn(String name) {
 		super(name);
 	}
 
-	public IntegerColumn(String name, Integer value) {
+	public FloatColumn(String name, Float value) {
 		super(name, value);
 	}
 
-	public IntegerColumn(String name, Binder<Integer> binder) {
+	public FloatColumn(String name, Binder<Float> binder) {
 		super(name, binder);
 	}
 

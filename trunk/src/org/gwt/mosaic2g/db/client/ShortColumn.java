@@ -25,12 +25,12 @@ import org.gwt.mosaic2g.binding.client.Validator;
  * @author ggeorg
  * 
  */
-public class IntegerColumn extends NumericColumn<Integer> {
+public class ShortColumn extends NumericColumn<Short> {
 
 	private final Property<String> displayValue = getValue().createBinding(
-			new Converter<Integer, String>() {
+			new Converter<Short, String>() {
 				@Override
-				public String convertForward(Integer value) {
+				public String convertForward(Short value) {
 					if (getNumberFormat() == null || value == null) {
 						return value != null ? String.valueOf(value) : "";
 					} else {
@@ -39,30 +39,30 @@ public class IntegerColumn extends NumericColumn<Integer> {
 				}
 
 				@Override
-				public Integer convertReverse(String value) {
+				public Short convertReverse(String value) {
 					if (getNumberFormat() == null) {
-						return Integer.parseInt(value);
+						return Short.parseShort(value);
 					} else {
-						return (int) getNumberFormat().parse(value);
+						return (short) getNumberFormat().parse(value);
 					}
 				}
-			}, new Validator<Integer>() {
+			}, new Validator<Short>() {
 				@Override
-				public Result validate(Integer value) {
+				public Result validate(Short value) {
 					// TODO Auto-generated method stub
 					return null;
 				}
 			});
-
-	public IntegerColumn(String name) {
+	
+	public ShortColumn(String name) {
 		super(name);
 	}
 
-	public IntegerColumn(String name, Integer value) {
+	public ShortColumn(String name, Short value) {
 		super(name, value);
 	}
 
-	public IntegerColumn(String name, Binder<Integer> binder) {
+	public ShortColumn(String name, Binder<Short> binder) {
 		super(name, binder);
 	}
 
