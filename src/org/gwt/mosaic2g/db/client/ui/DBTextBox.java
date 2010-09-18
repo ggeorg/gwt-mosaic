@@ -91,9 +91,4 @@ public class DBTextBox<T, D> extends AbstractEditor<T, D> {
 		textBox.setEnabled(enabled);
 	}
 
-	@Override
-	protected void setRow(int index) {
-		// TODO ???
-	}
-
 }

@@ -18,11 +18,6 @@ package org.gwt.mosaic2g.db.client.ui;
 import org.gwt.mosaic2g.binding.client.AbstractBinder;
 import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.db.client.Column;
-import org.gwt.mosaic2g.db.client.DataSource;
-
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * 
@@ -45,16 +40,8 @@ public abstract class AbstractEditor<T, D> extends AbstractViewer<T> implements
 		}
 	});
 
-	private HandlerRegistration columnHR = null;
-
 	public Property<D> getValue() {
 		return valueP;
-	}
-
-	@Override
-	public void setDataSource(DataSource<T> dataSource) {
-		super.setDataSource(dataSource);
-		// setValueManually();
 	}
 
 	public Column<D> getColumn() {
@@ -65,21 +52,12 @@ public abstract class AbstractEditor<T, D> extends AbstractViewer<T> implements
 		if (this.column == column) {
 			return;
 		}
-		if (columnHR != null) {
-			columnHR.removeHandler();
-			columnHR = null;
-		}
 		this.column = column;
-		if (this.column != null) {
-			this.columnHR = getDataSource().getRow().addValueChangeHandler(
-					new ValueChangeHandler<Integer>() {
-						public void onValueChange(
-								ValueChangeEvent<Integer> event) {
-							Column<D> column = AbstractEditor.this.column;
-							setValue(column);
-						}
-					});
-		}
+	}
+	
+	@Override
+	protected final void setRow(int index) {
+		setValue(getColumn());
 	}
 
 	protected abstract void setValue(Column<D> value);
