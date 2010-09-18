@@ -22,7 +22,6 @@ import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Segment;
 import org.gwt.mosaic2g.client.scene.Show;
 import org.gwt.mosaic2g.client.scene.control.Box;
-import org.gwt.mosaic2g.client.scene.control.Text;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootLayoutPanel;

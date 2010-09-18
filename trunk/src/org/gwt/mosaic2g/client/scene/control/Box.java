@@ -68,7 +68,7 @@
  */
 package org.gwt.mosaic2g.client.scene.control;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
 

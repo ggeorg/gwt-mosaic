@@ -71,7 +71,7 @@ package org.gwt.mosaic2g.client.scene;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 
 /**
  * Represents a group of features that are all activated at the same time. It's

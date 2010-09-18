@@ -15,10 +15,10 @@
  */
 package org.gwt.mosaic2g.client;
 
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
-import org.gwt.mosaic2g.client.binding.Getter;
-import org.gwt.mosaic2g.client.binding.Property;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Segment;
 import org.gwt.mosaic2g.client.scene.Show;

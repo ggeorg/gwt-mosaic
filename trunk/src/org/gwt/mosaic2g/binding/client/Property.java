@@ -1,4 +1,21 @@
-package org.gwt.mosaic2g.client.binding;
+/*
+ * Copyright 2010 ArkaSoft LLC.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package org.gwt.mosaic2g.binding.client;
+
+import java.util.Date;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -6,14 +23,52 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class Property<T> implements HasValueChangeHandlers<T> {
+/**
+ *
+ * @param <T>
+ *  
+ * @author ggeorg
+ */
+public final class Property<T> implements HasValueChangeHandlers<T> {
 
-	public static final Property<String> valueOf(String value) {
-		return new Property<String>(value);
+	public static Property<Boolean> valueOf(boolean value) {
+		return new Property<Boolean>(value);
+	}
+
+	public static Property<Byte> valueOf(byte value) {
+		return new Property<Byte>(value);
+	}
+
+	public static Property<Character> valueOf(char value) {
+		return new Property<Character>(value);
+	}
+
+	public static final Property<Float> valueOf(float value) {
+		return new Property<Float>(value);
+	}
+
+	public static final Property<Date> valueOf(Date value) {
+		return new Property<Date>(value);
+	}
+
+	public static final Property<Double> valueOf(double value) {
+		return new Property<Double>(value);
 	}
 
 	public static final Property<Integer> valueOf(int value) {
 		return new Property<Integer>(value);
+	}
+
+	public static final Property<Long> valueOf(long value) {
+		return new Property<Long>(value);
+	}
+
+	public static final Property<Short> valueOf(short value) {
+		return new Property<Short>(value);
+	}
+
+	public static final Property<String> valueOf(String value) {
+		return new Property<String>(value);
 	}
 
 	private final Binder<T> binder;
@@ -26,10 +81,12 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 		this(new AbstractBinder<T>() {
 			private T value;
 
+			@Override
 			public T get() {
 				return value;
 			}
 
+			@Override
 			public void set(T value) {
 				if (value != this.value) {
 					this.value = value;
@@ -37,11 +94,16 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 				}
 			}
 
+			@Override
 			public boolean isReadOnly() {
 				return false;
 			}
+
+			@Override
+			protected void init() {
+				set(value);
+			}
 		});
-		binder.set(value);
 	}
 
 	public Property(Binder<T> binder) {
@@ -73,7 +135,7 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 			}
 		});
 	}
-	
+
 	public Property<T> createBinding() {
 		return this.createBinding((Validator<T>) null);
 	}
@@ -147,6 +209,20 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 		}, null, converter, (Validator<T>) null);
 	}
 
+	public <T2> Property<T2> createBinding(final Converter<T, T2> converter,
+			final Validator<T> validator) {
+		return createBinding(new Getter<T>() {
+			public T get(T value) {
+				return value;
+			}
+		}, new Setter<T>() {
+			public T set(T value) {
+				// TODO validate
+				return value;
+			}
+		}, converter, validator);
+	}
+
 	public <T2> Property<T2> createBinding(final Getter<T> getter,
 			final Converter<T, T2> converter) {
 		return this.createBinding(getter, null, converter, (Validator<T>) null);
@@ -174,7 +250,7 @@ public class Property<T> implements HasValueChangeHandlers<T> {
 			@Override
 			public void set(T2 value) {
 				if (setter != null) {
-					// TODO use validator
+					// TODO validate
 					thiz.$(setter.set(converter.convertReverse(value)));
 				}
 			}

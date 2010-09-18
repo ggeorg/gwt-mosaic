@@ -68,7 +68,7 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 
 /**
  * Abstract base class for features that modify a single child feature.

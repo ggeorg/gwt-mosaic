@@ -68,7 +68,7 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.client.binding.Property;
+import org.gwt.mosaic2g.binding.client.Property;
 
 /**
  * A {@code Translator} wraps other features, and adds movement taken from a

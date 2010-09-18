@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2010 ArkaSoft LLC.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,36 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic2g.client.graphics;
+package org.gwt.mosaic2g.db.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.List;
+
+import org.gwt.mosaic2g.db.client.ListStoreProvider.DataFactory;
 
 /**
- * If I say an image element is a JavascriptObject... then it is!
+ * 
+ * @param <T>
+ * 
+ * @author ggeorg
  */
-public class ImageHandle extends JavaScriptObject {
+public class ListStoreDataSet<T> extends AbstractDataSet<T> {
 
-	protected ImageHandle() {
-		super();
+	public ListStoreDataSet(List<T> store, DataFactory<T> factory) {
+		this(new ListStoreProvider<T>(store, factory),
+				new ListStoreResolver<T>(store));
 	}
 
-	public final native int getHeight()
-	/*-{
-	  return this.height;
-	}-*/;
+	public ListStoreDataSet(Provider<T> provider, Resolver<T> resolver) {
+		super(provider, resolver);
+	}
 
-	public final native String getUrl()
-	/*-{
-	  return this.src;
-	}-*/;
-
-	public final native int getWidth()
-	/*-{
-	  return this.width;
-	}-*/;
-
-	public final native boolean isLoaded()
-	/*-{
-	  return this.__isLoaded;
-	}-*/;
 }
