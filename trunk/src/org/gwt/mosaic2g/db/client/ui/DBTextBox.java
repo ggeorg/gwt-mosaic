@@ -87,8 +87,13 @@ public class DBTextBox<T, D> extends AbstractEditor<T, D> {
 	}
 
 	@Override
-	protected void setEnabled(Boolean value) {
-		textBox.setEnabled(value);
+	protected void setEnabled(boolean enabled) {
+		textBox.setEnabled(enabled);
+	}
+
+	@Override
+	protected void setRow(int index) {
+		// TODO ???
 	}
 
 }

@@ -19,7 +19,6 @@ import org.gwt.mosaic2g.binding.client.Binder;
 import org.gwt.mosaic2g.binding.client.Property;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -84,7 +83,6 @@ public abstract class Column<T> implements HasValueChangeHandlers<T> {
 
 	protected void reset() {
 		cachedValue = value.$();
-		ValueChangeEvent.fire(value, value.$());
 	}
 
 	public abstract Property<String> getDisplayValue();

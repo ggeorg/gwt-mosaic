@@ -24,14 +24,16 @@ import com.google.gwt.user.client.ui.Composite;
 
 /**
  * 
- *  @param <T>
- *  
- *  @author ggeorg
+ * @param <T>
+ * 
+ * @author ggeorg
  */
 public abstract class AbstractViewer<T> extends Composite implements Viewer<T> {
 
 	private DataSource<T> dataSource;
-	private HandlerRegistration dataSourceHR = null;
+
+	private HandlerRegistration openHR = null;
+	private HandlerRegistration rowHR = null;
 
 	public DataSource<T> getDataSource() {
 		return dataSource;
@@ -41,22 +43,35 @@ public abstract class AbstractViewer<T> extends Composite implements Viewer<T> {
 		if (this.dataSource == dataSource) {
 			return;
 		}
-		if (dataSourceHR != null) {
-			dataSourceHR.removeHandler();
-			dataSourceHR = null;
+		if (openHR != null) {
+			openHR.removeHandler();
+			openHR = null;
+		}
+		if (rowHR != null) {
+			rowHR.removeHandler();
+			rowHR = null;
 		}
 		this.dataSource = dataSource;
 		if (this.dataSource != null) {
-			dataSourceHR = this.dataSource.getOpen().addValueChangeHandler(
+			openHR = this.dataSource.getOpen().addValueChangeHandler(
 					new ValueChangeHandler<Boolean>() {
 						public void onValueChange(
 								ValueChangeEvent<Boolean> event) {
 							setEnabled(event.getValue());
 						}
 					});
+			rowHR = this.dataSource.getRow().addValueChangeHandler(
+					new ValueChangeHandler<Integer>() {
+						public void onValueChange(
+								ValueChangeEvent<Integer> event) {
+							setRow(event.getValue());
+						}
+					});
 		}
 	}
 
-	protected abstract void setEnabled(Boolean value);
+	protected abstract void setEnabled(boolean enabled);
+
+	protected abstract void setRow(int index);
 
 }
