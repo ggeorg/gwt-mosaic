@@ -256,4 +256,4 @@ org.gwt.mosaic2g.binding.client.Property$1@44fd13b5: 25
 a: 25, b: 35
 }}}
 
-Note that the value change event is fired first again from property `a`.
+Note that the value change event is first fired from property `a`, this is why the value of `b` is 25. In case we want to get the correct value of `b` we have to use `b.$()` like we did in the previous example.
