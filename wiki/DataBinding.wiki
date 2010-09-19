@@ -24,3 +24,5 @@ The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2
 Not implemented yet, but will be in the next release is master-detail relationships.
 
 The purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Provider.java Provider] interface is to "provide" (or populate) a _DataSet_ with data and as a factory for creating new rows to insert to the _DataSet_. This interface is implemented so far by [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreProvider.java ListStoreProvider] and [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/BeanStoreProvider.java BeanStoreProvider].
+
+And, the purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Resolver.java Resolver] interface is the data from the local data sets back to the original source of the data (the database). [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreResolver.java ListStoreResolver] is the only implementor of _Resolver_ interface so far.
