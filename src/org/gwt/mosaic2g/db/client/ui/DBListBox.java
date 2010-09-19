@@ -46,7 +46,7 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 	private HandlerRegistration valueColumnHR = null;
 	private HandlerRegistration itemTextColumnHR = null;
 
-	private HandlerRegistration fillHR;
+	private HandlerRegistration populateHR;
 
 	public DBListBox() {
 		this(null, null, null);
@@ -107,10 +107,10 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 								String value = (valueColumn == null) ? String
 										.valueOf(dataSet.getRowData())
 										: valueColumn.getDisplayValue().$();
-								String text = (itemTextColumn == null ? value
+								String itemText = (itemTextColumn == null ? value
 										: itemTextColumn.getDisplayValue().$());
 								listBox.setValue(index, value);
-								listBox.setItemText(index, text);
+								listBox.setItemText(index, itemText);
 							}
 						}
 					});
@@ -148,9 +148,9 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 								String value = (valueColumn == null) ? String
 										.valueOf(dataSet.getRowData())
 										: valueColumn.getDisplayValue().$();
-								String text = (itemTextColumn == null ? value
+								String itemText = (itemTextColumn == null ? value
 										: itemTextColumn.getDisplayValue().$());
-								listBox.setItemText(index, text);
+								listBox.setItemText(index, itemText);
 							}
 						}
 					});
@@ -162,20 +162,20 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 		if (getDataSource() != null && getDataSource().getOpen().$()
 				&& (dataSet = getDataSource().getDataSet()) != null) {
 			dataSet.setDisableControls(true);
-			fillHR = dataSet.getRow().addValueChangeHandler(
+			populateHR = dataSet.getRow().addValueChangeHandler(
 					new ValueChangeHandler<Integer>() {
 						public void onValueChange(
 								ValueChangeEvent<Integer> event) {
 							String value = (valueColumn == null) ? String
 									.valueOf(dataSet.getRowData())
 									: valueColumn.getDisplayValue().$();
-							String text = (itemTextColumn == null ? value
+							String itemText = (itemTextColumn == null ? value
 									: itemTextColumn.getDisplayValue().$());
-							listBox.addItem(text, value);
+							listBox.addItem(itemText, value);
 
 							// check if we are done
 							if (listBox.getItemCount() == dataSet.getRowCount()) {
-								fillHR.removeHandler();
+								populateHR.removeHandler();
 								dataSet.setDisableControls(false);
 							}
 						}
