@@ -1,4 +1,4 @@
-#summary The evolution of binding.
+#summary The evolution of binding in GWTMosaic 2g.
 #sidebar TableOfContents
 
 = Introduction =
