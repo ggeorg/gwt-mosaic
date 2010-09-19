@@ -1,4 +1,4 @@
-#summary Data binding library & GWT data-aware widgets.
+#summary Data binding library & GWT data-aware widgets based on BindingBasics.
 #sidebar TableOfContents
 
 = Introduction =
