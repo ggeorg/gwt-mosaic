@@ -181,7 +181,7 @@ Exception in thread "main" java.lang.UnsupportedOperationException: Property is 
 a: 10, b: 20
 }}}
 
-Since we use a custom `Getter` we have to use a custom `Setter`, if not our binding will be read-only:
+Rule: since we use a custom `Getter` we have to use a custom `Setter`; if not our binding strategy will be read-only:
 
 {{{
 import org.gwt.mosaic2g.binding.client.Getter;
