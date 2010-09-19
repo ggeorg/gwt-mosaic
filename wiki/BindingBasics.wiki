@@ -6,6 +6,8 @@
 
 With binding you can easily synchornize an application's graphical user interface (GUI) with its underlying data.
 
+Source code: [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/binding/client/]
+
 
 = Details =
 
