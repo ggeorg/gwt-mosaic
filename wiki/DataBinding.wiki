@@ -3,7 +3,7 @@
 
 = Introduction =
 
-The data dinding library contains classes and interfaces that provide basic data access. The library contains also a few widgets (so far) like DBTextBox, DBLabel, DBListBox and DBLookupListBox capable of accessing (database) data.
+The data dinding library contains classes and interfaces that provide basic data access. The library contains also a few widgets (so far: DBTextBox, DBLabel, DBListBox and DBLookupListBox) capable of accessing (database) data.
 
 = Details =
 
