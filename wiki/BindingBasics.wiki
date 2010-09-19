@@ -1,0 +1,32 @@
+#summary Binding Basics.
+#sidebar TableOfContents
+
+= Introduction =
+
+With binding you can easily synchornize an application's graphical user interface (GUI) with its underlying data.
+
+
+= Details =
+
+The basic concepts can be demonstrated with just two variables. In the following variable `a` is bound to variable `b`. Whenever the value of `a` changes, the value of `b` automatically changes as well:
+
+{{{
+import org.gwt.mosaic2g.binding.client.Property;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Property<String> a = Property.valueOf("Hello");
+		Property<String> b = a.createBinding();
+		System.out.println("a: " + a + ", b: " + b);
+		a.$("Good-Bye");
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
+}}}
+
+Output:
+{{{
+a: Hello, b: Hello
+a: Good-Bye, b: Good-Bye
+}}}
