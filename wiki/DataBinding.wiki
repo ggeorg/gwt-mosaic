@@ -5,7 +5,7 @@
 
 The data dinding library contains classes and interfaces that provide basic data access. The library contains also a few widgets (so far: DBTextBox, DBLabel, DBListBox and DBLookupListBox) capable of accessing (database) data.
 
-The design follows the principles of the DataExpress library used in JBuilder and the DB related classes of Delphi.
+The design follows the principles of the DataExpress library used in JBuilder, and the DB related classes in Delphi.
 
 = Details =
 
@@ -17,4 +17,6 @@ The data dinding library includes functionality covering the three main phases o
 <li>Resolving: functionality for the updating of the data from the local data sets back to the original source of the data.</li>
 </ul>
 
-The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSet.java DataSet] interface is the corner stone or the library. It provides a cursor for accessing and navigating table data. Manages a list in memory to temporarily store a new inserted row, or changes to the current row. Multiple data-aware widgets can be bound to (through a [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSource.java DataSource] object) and synchronized with the same _DataSet_. The 
+The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSet.java DataSet] interface is the corner stone of the library. It provides a cursor for accessing and navigating table data. Manages a list in memory to temporarily store a new inserted row, or changes to the current row. Multiple data-aware widgets can be bound to (through a [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSource.java DataSource] object) and synchronized with the same _DataSet_.
+
+The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreDataSet.java ListStoreDataSet] and [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/BeanStoreDataSet.java BeanStoreDataSet] are only availbale so far implementors of _DataSet_. Both extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/AbstractDataSet.java AbstractDataSet] which is an almost complete abstract implementation of _DataSet_.
