@@ -50,3 +50,31 @@ Output:
 a: 10, b: 10
 a: 20, b: 20
 }}}
+
+In fact, you can bind to an entire expresseion, and it will still work:
+
+{{{
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.binding.client.Property;
+
+public class Main {
+	public static void main(String[] args) {
+		Property<Integer> a = Property.valueOf(10);
+		Property<Integer> b = a.createBinding(new Getter<Integer>() {
+			public Integer get(Integer value) {
+				return value + 10;
+			}
+		});
+		System.out.println("a: " + a + ", b: " + b);
+		a.$(20);
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
+}}}
+
+Output:
+
+{{{
+a: 10, b: 20
+a: 20, b: 30
+}}}
