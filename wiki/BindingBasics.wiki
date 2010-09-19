@@ -32,11 +32,17 @@ a: Good-Bye, b: Good-Bye
 
 In this example, both variables are strings, but binding works with other data types as weel:
 {{{
-Property<Integer> a = Property.valueOf(10);
-Property<Integer> b = a.createBinding();
-System.out.println("a: " + a + ", b: " + b);
-a.$(20);
-System.out.println("a: " + a + ", b: " + b);
+import org.gwt.mosaic2g.binding.client.Property;
+
+public class Main {
+	public static void main(String[] args) {
+		Property<Integer> a = Property.valueOf(10);
+		Property<Integer> b = a.createBinding();
+		System.out.println("a: " + a + ", b: " + b);
+		a.$(20);
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
 }}}
 
 Output:
