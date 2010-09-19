@@ -5,7 +5,7 @@ This demo shows all the available data-ware widgets so far; including a calculat
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/data-binding2.png
 
-Demo:
+Demo: [http://mosaic.arkasoft.com/data-binding/]
 
 Code:
 
