@@ -17,108 +17,173 @@ package org.gwt.mosaic2g.db.client.ui;
 
 import org.gwt.mosaic2g.db.client.Column;
 import org.gwt.mosaic2g.db.client.DataSet;
+import org.gwt.mosaic2g.db.client.DataSource;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
-/*
-public class DBLookupListBox<T, L> extends AbstractViewer<T> {
+
+/**
+ * 
+ * @param <T>
+ * @param <D>
+ * 
+ * @author ggeorg
+ */
+public class DBLookupListBox<T, D> extends AbstractValueAware<T, D> {
 
 	private final ListBox listBox = new ListBox();
 
-	private DataSet<?> lookupDataSet;
-	private Column<T> keyColumn;
-	private Column<L> displayColumn;
+	private DataSource<?> lookupDataSource;
+	private Column<D> keyColumn;
+	private Column<?> displayColumn;
+
+	private HandlerRegistration fillHR;
 
 	public DBLookupListBox() {
+		this(null, null, null, null, null);
+	}
+
+	public DBLookupListBox(DataSource<T> dataSource, Column<D> column,
+			DataSource<?> lookupDataSource, Column<D> keyColumn,
+			Column<?> displayColumn) {
 		initWidget(listBox);
 		listBox.addChangeHandler(new ChangeHandler() {
-			@Override
 			public void onChange(ChangeEvent event) {
 				int index = listBox.getSelectedIndex();
 				if (index != -1) {
-					getColumn().$(
-							getColumn().parseString(listBox.getValue(index)));
+					getColumn().getDisplayValue().$(listBox.getValue(index));
 				}
 			}
 		});
-		getEnabled().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				if (lookupDataSet != null && keyColumn != null
-						&& displayColumn != null) {
-					if (event.getValue()) {
-						lookupDataSet.open();
-						lookupDataSet.getRow().addValueChangeHandler(
-								new ValueChangeHandler<Integer>() {
-									@Override
-									public void onValueChange(
-											ValueChangeEvent<Integer> event) {
-										listBox.addItem(String
-												.valueOf(keyColumn.$()), String
-												.valueOf(displayColumn.$()));
-									}
-								});
-						listBox.clear();
-						lookupDataSet.first();
-						while (!lookupDataSet.atLast()) {
-							lookupDataSet.next();
-						}
-					} else {
-						listBox.clear();
-					}
-				}
-			}
-		});
-	}
-
-	public DBLookupListBox(DataSet<?> dataSet, Column<T> column,
-			DataSet<?> lookupDataSet, Column<T> keyColumn,
-			Column<L> displayColumn) {
-		this();
-		setDataSet(dataSet);
+		setDataSource(dataSource);
 		setColumn(column);
-		setLookupDataSet(lookupDataSet);
+		setLookupDataSource(lookupDataSource);
 		setKeyColumn(keyColumn);
 		setDisplayColumn(displayColumn);
 	}
 
-	@Override
-	protected void setValue(T value) {
-		if (lookupDataSet == null) {
+	public DataSource<?> getLookupDataSource() {
+		return lookupDataSource;
+	}
+
+	private HandlerRegistration lookupDataSourceOpenHR;
+
+	public void setLookupDataSource(DataSource<?> lookupDataSource) {
+		if (this.lookupDataSource == lookupDataSource) {
 			return;
 		}
-		int index = lookupDataSet.getRow().$();
-		if (index != -1) {
-			listBox.setSelectedIndex(index);
+		if (lookupDataSourceOpenHR != null) {
+			lookupDataSourceOpenHR.removeHandler();
+			lookupDataSourceOpenHR = null;
+		}
+		this.lookupDataSource = lookupDataSource;
+		if (this.lookupDataSource != null) {
+			this.lookupDataSource.getOpen().addValueChangeHandler(
+					new ValueChangeHandler<Boolean>() {
+						public void onValueChange(
+								ValueChangeEvent<Boolean> event) {
+							if (event.getValue()) {
+								populate();
+							} else {
+								listBox.clear();
+							}
+						}
+					});
 		}
 	}
 
-	public DataSet<?> getLookupDataSet() {
-		return lookupDataSet;
-	}
-
-	public void setLookupDataSet(DataSet<?> lookupDataSet) {
-		this.lookupDataSet = lookupDataSet;
-	}
-
-	public Column<T> getKeyColumn() {
+	public Column<D> getKeyColumn() {
 		return keyColumn;
 	}
 
-	public void setKeyColumn(Column<T> keyColumn) {
+	public void setKeyColumn(Column<D> keyColumn) {
 		this.keyColumn = keyColumn;
 	}
 
-	public Column<L> getDisplayColumn() {
+	public Column<?> getDisplayColumn() {
 		return displayColumn;
 	}
 
-	public void setDisplayColumn(Column<L> displayColumn) {
+	public void setDisplayColumn(Column<?> displayColumn) {
 		this.displayColumn = displayColumn;
 	}
 
+	private HandlerRegistration setValueHR;
+
+	@Override
+	protected void setValue(final Column<D> value) {
+		final DataSet<?> dataSet;
+		if (lookupDataSource == null
+				|| (dataSet = lookupDataSource.getDataSet()) == null) {
+			return;
+		}
+		dataSet.setDisableControls(true);
+		setValueHR = dataSet.getRow().addValueChangeHandler(
+				new ValueChangeHandler<Integer>() {
+					public void onValueChange(ValueChangeEvent<Integer> event) {
+						boolean found = value.getValue().equals(
+								keyColumn.getValue());
+
+						// check if we are done
+						if (found
+								|| (event.getValue() == dataSet.getRowCount() - 1)) {
+							setValueHR.removeHandler();
+							dataSet.setDisableControls(false);
+							if (found) {
+								listBox.setSelectedIndex(event.getValue());
+							}
+						}
+					}
+				});
+		dataSet.first();
+		while (!dataSet.atLast()) {
+			dataSet.next();
+		}
+	}
+
+	@Override
+	protected void setEnabled(boolean enabled) {
+		listBox.setEnabled(enabled);
+		if (enabled && lookupDataSource != null
+				&& lookupDataSource.getDataSet() != null && keyColumn != null
+				&& displayColumn != null) {
+			lookupDataSource.getDataSet().open();
+		}
+	}
+
+	protected void populate() {
+		final DataSet<?> dataSet;
+		if (lookupDataSource != null && lookupDataSource.getOpen().$()
+				&& (dataSet = lookupDataSource.getDataSet()) != null) {
+			dataSet.setDisableControls(true);
+			fillHR = dataSet.getRow().addValueChangeHandler(
+					new ValueChangeHandler<Integer>() {
+						public void onValueChange(
+								ValueChangeEvent<Integer> event) {
+							String value = (keyColumn == null) ? String
+									.valueOf(dataSet.getRowData()) : keyColumn
+									.getDisplayValue().$();
+							String text = (displayColumn == null ? value
+									: displayColumn.getDisplayValue().$());
+							listBox.addItem(text, value);
+
+							// check if we are done
+							if (listBox.getItemCount() == dataSet.getRowCount()) {
+								fillHR.removeHandler();
+								dataSet.setDisableControls(false);
+							}
+						}
+					});
+			listBox.clear();
+			dataSet.first();
+			while (!dataSet.atLast()) {
+				dataSet.next();
+			}
+		}
+	}
+
 }
-*/

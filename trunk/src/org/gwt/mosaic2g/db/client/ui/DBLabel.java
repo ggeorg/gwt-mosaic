@@ -63,7 +63,7 @@ public class DBLabel<T, D> extends AbstractColumnAware<T, D> {
 	}
 
 	@Override
-	protected void setRow(int index) {
+	protected void setValue(Column<D> value) {
 		if (asHTML) {
 			html.setHTML(getColumn().getDisplayValue().$());
 		} else {

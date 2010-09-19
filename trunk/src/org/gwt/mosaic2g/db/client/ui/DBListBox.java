@@ -49,8 +49,13 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 	private HandlerRegistration fillHR;
 
 	public DBListBox() {
-		initWidget(listBox);
+		this(null, null, null);
+	}
 
+	public DBListBox(DataSource<T> dataSource, Column<?> valueColumn,
+			Column<?> itemTextColumn) {
+		super();
+		initWidget(listBox);
 		listBox.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				int index = listBox.getSelectedIndex();
@@ -61,11 +66,6 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 				}
 			}
 		});
-	}
-
-	public DBListBox(DataSource<T> dataSource, Column<?> valueColumn,
-			Column<?> itemTextColumn) {
-		this();
 		setDataSource(dataSource);
 		setValueColumn(valueColumn);
 		setItemTextColumn(itemTextColumn);
@@ -74,21 +74,6 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 	@Override
 	public void setDataSource(final DataSource<T> dataSource) {
 		super.setDataSource(dataSource);
-
-		if (dataSource == null) {
-			return;
-		}
-
-		dataSource.getOpen().addValueChangeHandler(
-				new ValueChangeHandler<Boolean>() {
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						if (event.getValue()) {
-							populate();
-						} else {
-							listBox.clear();
-						}
-					}
-				});
 	}
 
 	public Column<?> getValueColumn() {
@@ -114,8 +99,6 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 					new ValueChangeHandler() {
 						public void onValueChange(ValueChangeEvent event) {
 							int index = listBox.getSelectedIndex();
-							System.out
-									.println("================================ value");
 							final DataSet<T> dataSet;
 							if (index != -1
 									&& getDataSource() != null
@@ -157,8 +140,6 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 					.addValueChangeHandler(new ValueChangeHandler() {
 						public void onValueChange(ValueChangeEvent event) {
 							int index = listBox.getSelectedIndex();
-							System.out
-									.println("================================ text");
 							final DataSet<T> dataSet;
 							if (index != -1
 									&& getDataSource() != null
@@ -169,9 +150,6 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 										: valueColumn.getDisplayValue().$();
 								String text = (itemTextColumn == null ? value
 										: itemTextColumn.getDisplayValue().$());
-
-								System.out.println(index + " : " + text);
-
 								listBox.setItemText(index, text);
 							}
 						}
@@ -213,6 +191,11 @@ public class DBListBox<T> extends AbstractDataSourceAware<T> {
 	@Override
 	protected void setEnabled(boolean enabled) {
 		listBox.setEnabled(enabled);
+		if (enabled) {
+			populate();
+		} else {
+			listBox.clear();
+		}
 	}
 
 	@Override
