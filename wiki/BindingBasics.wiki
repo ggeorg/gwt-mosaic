@@ -293,6 +293,52 @@ a: 10, b: 10
 a: 20, b: 20
 }}}
 
+And with a custom `Getter` and `Setter`:
+
+{{{
+import org.gwt.mosaic2g.binding.client.Converter;
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.binding.client.Setter;
+
+public class Main {
+	public static void main(String[] args) {
+		Property<Integer> a = Property.valueOf(10);
+		Property<String> b = a.createBinding(new Getter<Integer>() {
+			public Integer get(Integer value) {
+				return value + 10;
+			}
+		}, new Setter<Integer>() {
+			@Override
+			public Integer set(Integer value) {
+				return value - 5;
+			}
+		}, new Converter<Integer, String>() {
+			@Override
+			public String convertForward(Integer value) {
+				return String.valueOf(value);
+			}
+
+			@Override
+			public Integer convertReverse(String value) {
+				return Integer.parseInt(value);
+			}
+		});
+
+		System.out.println("a: " + a + ", b: " + b);
+		b.$("20");
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
+}}}
+
+Output:
+
+{{{
+a: 10, b: 20
+a: 15, b: 25
+}}}
+
 == Using a validator ==
 TODO
 
