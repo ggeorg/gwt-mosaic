@@ -60,6 +60,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class Showcase implements EntryPoint {
 
+	// 'userId' is used as a primary key for newly created users by a provider.
 	private int userId = 0;
 
 	/**
@@ -67,6 +68,8 @@ public class Showcase implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
+		// Create the database (store) - in a real example this will be database
+		// object.
 		final List<User> store = new ArrayList<User>();
 		for (int i = 0; i < 100; i++) {
 			User user = new User(++userId, "FirtsName" + i, "LastName" + i,
@@ -74,6 +77,10 @@ public class Showcase implements EntryPoint {
 			store.add(user);
 		}
 
+		// Create a DataSet: ListStoreDataSet is used since the database is a
+		// java.util.List. The DataFactory object is used in
+		// DataSet.insert(boolean before) to create a new row in the
+		// ListStoreDataSet.
 		final ListStoreDataSet<User> dataSet = new ListStoreDataSet<User>(
 				store, new DataFactory<User>() {
 					@Override
@@ -81,8 +88,10 @@ public class Showcase implements EntryPoint {
 						return new User(++userId, null, null, 0);
 					}
 				});
+		// Get the DataRowDescriptor to add column descriptors to the DataSet.
 		DataRowDescriptor<User> descr = dataSet.getDataRowDescriptor();
 
+		// Create the 'id' column and add it to the DataRowDescriptor.
 		Column<Integer> idC = new IntegerColumn("id",
 				new AbstractBinder<Integer>() {
 					public Integer get() {
@@ -94,7 +103,8 @@ public class Showcase implements EntryPoint {
 				});
 		descr.addColumn(idC);
 
-		final Column<String> firstNameC = new StringColumn("firstName",
+		// Create the 'firstName' column and add it to the DataRowDescriptor.
+		Column<String> firstNameC = new StringColumn("firstName",
 				new AbstractBinder<String>() {
 					public String get() {
 						if (dataSet.getOpen().$()) {
@@ -102,20 +112,26 @@ public class Showcase implements EntryPoint {
 						}
 						return null;
 					}
+
 					public void set(String value) {
 						if (dataSet.getOpen().$()) {
 							dataSet.getRowData().setFirstName(value);
+
+							// Fire a value change event so that other
+							// data-aware controls (like the DBListBox we are
+							// going to use) get notified about any changes in
+							// 'firstName' column.
 							fireValueChangeEvent(value);
 						}
 					}
 				});
 		descr.addColumn(firstNameC);
 
-		// ---
+		// Create the DataSource object (used by the data-aware widgets)
 
 		DataSource<User> dataSource = new DataSource<User>(dataSet);
 
-		// ---
+		// Create the data-ware widgets
 
 		DBListBox<User> usersLB = new DBListBox<User>(dataSource, idC,
 				firstNameC);
@@ -126,9 +142,11 @@ public class Showcase implements EntryPoint {
 		DBTextBox<User, String> firstNameTB = new DBTextBox<User, String>(
 				dataSource, firstNameC);
 
-		// ---
+		// Open the DataSet
 
 		dataSet.open();
+
+		// Add the data-aware widgets to a FlexTable and display them.
 
 		FlexTable panel = new FlexTable();
 		panel.setWidget(0, 1, usersLB);
@@ -138,6 +156,88 @@ public class Showcase implements EntryPoint {
 		panel.setWidget(2, 1, firstNameTB);
 
 		RootPanel.get().add(panel, 10, 10);
+	}
+}
+}}}
+
+The `User` class used:
+
+{{{
+public class User {
+	private int id;
+	private String firstName;
+	private String lastName;
+	private int age;
+
+	public User() {
+		// do nothing
+	}
+
+	public User(int id, String firstName, String lastName, int age) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.age = age;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", age=" + age + "]";
 	}
 }
 }}}
