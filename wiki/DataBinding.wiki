@@ -169,9 +169,7 @@ public class User {
 	private String lastName;
 	private int age;
 
-	public User() {
-		// do nothing
-	}
+	public User() { }
 
 	public User(int id, String firstName, String lastName, int age) {
 		this.id = id;
