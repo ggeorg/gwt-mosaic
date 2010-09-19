@@ -180,3 +180,54 @@ Exception in thread "main" java.lang.UnsupportedOperationException: Property is 
 	at org.gwt.mosaic2g.client.Main.main(Main.java:32)
 a: 10, b: 20
 }}}
+
+Since we use a custom `Getter` we have to use a custom `Setter`, if not our binding will be read-only:
+
+{{{
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.binding.client.Setter;
+
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+public class Main {
+	public static void main(String[] args) {
+		final Property<Integer> a = Property.valueOf(10);
+		final Property<Integer> b = a.createBinding(new Getter<Integer>() {
+			public Integer get(Integer value) {
+				return value + 10;
+			}
+		}, new Setter<Integer>() {
+			public Integer set(Integer value) {
+				return value - 5;
+			}
+		});
+
+		a.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				System.out.println(event.getSource() + ": " + event.getValue());
+			}
+		});
+
+		b.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				System.out.println(event.getSource() + ": " + event.getValue());
+			}
+		});
+
+		System.out.println("a: " + a + ", b: " + b);
+		b.$(30);
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
+}}}
+
+Output:
+
+{{{
+a: 10, b: 20
+org.gwt.mosaic2g.binding.client.Property$1@44fd13b5: 25
+org.gwt.mosaic2g.binding.client.Property$1@44fd13b5: 25
+a: 25, b: 35
+}}}
