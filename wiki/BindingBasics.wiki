@@ -124,3 +124,42 @@ org.gwt.mosaic2g.binding.client.Property$1@4318f375: 20
 org.gwt.mosaic2g.binding.client.Property$1@4318f375: 20
 a: 20, b: 30
 }}}
+
+Note that the value in both event handlers is 20. This is because the event handlers are used internally to notify about value changes and runs before the `Getter` expression. In case we want to get the correct value of `b` with an event handler we have to change our code to:
+
+{{{
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.binding.client.Property;
+
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+public class Main {
+	public static void main(String[] args) {
+		final Property<Integer> a = Property.valueOf(10);
+		final Property<Integer> b = a.createBinding(new Getter<Integer>() {
+			public Integer get(Integer value) {
+				return value + 10;
+			}
+		});
+
+		a.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				System.out.println(event.getSource() + ": " + event.getValue());
+			}
+		});
+		
+		b.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				System.out.println(event.getSource() + ": " + b.$());
+			}
+		});
+
+		System.out.println("a: " + a + ", b: " + b);
+		a.$(20);
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
+}}}
+
+== Using an expression for setting a value ==
