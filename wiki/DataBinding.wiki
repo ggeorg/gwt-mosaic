@@ -27,9 +27,13 @@ The purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/
 
 And, the purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Resolver.java Resolver] interface is the data from the local data sets back to the original source of the data (the database). [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreResolver.java ListStoreResolver] is the only implementor of _Resolver_ interface so far.
 
-== Example ===
+== Data Binding in Action ===
+
+This example shows how to bind a ListBox, a HTML and a TextBox widget to a list of users (`List<User>`) using the data dinding library.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/data-binding1.png
+
+Code:
 
 {{{
 import java.util.ArrayList;
