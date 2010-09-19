@@ -14,4 +14,5 @@
   * [HelloWorld2g Hello World]
   * [LayoutPrimer Layout Primer]
   * [BindingBasics Binding Basics]
-  * [DataBinding Data Binding] 
+  * [DataBinding Data Binding]
+   * [DataBinding2 Data-Aware Widgets]
