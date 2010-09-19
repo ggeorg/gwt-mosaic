@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Main" default="build" basedir=".">
+<project name="gwt-mosaic" default="build" basedir=".">
   <!-- Arguments to gwtc and devmode targets -->
   <property name="gwt.args" value="" />
+	
+  <property name="project.version" value="2.0.0-m2" />
 
   <!-- Configure path to GWT SDK -->
   <property name="gwt.sdk" location="C:/Users/ggeorg/projects/gwt-2.1.0.M3" />
@@ -135,6 +137,17 @@ Test targets suppressed because -junit argument was not specified when running w
 
   <target name="war" depends="build" description="Create a war file">
     <zip destfile="Main.war" basedir="war"/>
+  </target>
+	
+  <target name="jar" depends="javac" description="Package up the project">
+    <jar destfile="${ant.project.name}-${project.version}.jar">
+      <fileset dir="war/WEB-INF/classes">
+        <include name="**/*" />
+      </fileset>
+      <fileset dir="src">
+        <include name="**/*.java" />
+      </fileset>
+    </jar>
   </target>
 
   <target name="clean" description="Cleans this project">
