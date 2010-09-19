@@ -6,9 +6,6 @@
 
 With binding you can easily synchornize an application's graphical user interface (GUI) with its underlying data.
 
-Source code: [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/binding/client/]
-
-
 = Details =
 
 The basic concepts can be demonstrated with just two variables. In the following variable `a` is bound to variable `b`. Whenever the value of `a` changes, the value of `b` automatically changes as well:
@@ -259,3 +256,5 @@ a: 25, b: 35
 }}}
 
 Note that the value change event is first fired from property `a`, this is why the value of `b` is 25. In case we want to get the correct value of `b` we have to use `b.$()` like we did in the previous example.
+
+Binding source code: [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/binding/client/]
