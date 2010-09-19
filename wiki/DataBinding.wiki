@@ -16,3 +16,5 @@ The data dinding library includes functionality covering the three main phases o
 <li>Manipulation: navigation and editing of the data locally.</li>
 <li>Resolving: functionality for the updating of the data from the local data sets back to the original source of the data.</li>
 </ul>
+
+The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSet.java DataSet] interface is the corner stone or the library. It provides a cursor for accessing and navigating table data. Manages a list in memory to temporarily store a new inserted row, or changes to the current row. Multiple data-aware widgets can be bound to (through a [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSource.java DataSource] object) and synchronized with the same _DataSet_. The 
