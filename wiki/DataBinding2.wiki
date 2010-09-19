@@ -1,7 +1,7 @@
 #summary Data-aware widgets that work so far
 #sidebar TableOfContents
 
-This demo shows all the data-ware widgets that work so far, including a calculated field for the user's full name and a lookup relation for age by using [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ui/DBLookupListBox.java DBLookupListBox] and a simple `Integer` list as a store.
+This demo shows all the available data-ware widgets so far; including a calculated field for the user's full name and a lookup relation for age by using [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ui/DBLookupListBox.java DBLookupListBox] and a simple `Integer` list as a store.
 
 http://gwt-mosaic.googlecode.com/svn/wiki/2g/data-binding2.png
 
