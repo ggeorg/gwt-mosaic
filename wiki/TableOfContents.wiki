@@ -13,3 +13,4 @@
  * [GWTMosaic2g GWT Mosaic 2g]
   * [HelloWorld2g Hello World]
   * [LayoutPrimer Layout Primer]
+  * [BindingBasics Binding Basics]
