@@ -160,7 +160,7 @@ public class Showcase implements EntryPoint {
 }
 }}}
 
-The `User` class used:
+The `User` class used (POJOs are OK):
 
 {{{
 public class User {
