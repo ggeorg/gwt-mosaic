@@ -26,3 +26,114 @@ Not implemented yet, but will be in the next release is master-detail relationsh
 The purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Provider.java Provider] interface is to "provide" (or populate) a _DataSet_ with data and as a factory for creating new rows to insert to the _DataSet_. This interface is implemented so far by [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreProvider.java ListStoreProvider] and [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/BeanStoreProvider.java BeanStoreProvider].
 
 And, the purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Resolver.java Resolver] interface is the data from the local data sets back to the original source of the data (the database). [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreResolver.java ListStoreResolver] is the only implementor of _Resolver_ interface so far.
+
+== Example ===
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/data-binding1.png
+
+{{{
+import java.util.ArrayList;
+import java.util.List;
+
+import org.gwt.mosaic2g.binding.client.AbstractBinder;
+import org.gwt.mosaic2g.db.client.Column;
+import org.gwt.mosaic2g.db.client.DataRowDescriptor;
+import org.gwt.mosaic2g.db.client.DataSource;
+import org.gwt.mosaic2g.db.client.IntegerColumn;
+import org.gwt.mosaic2g.db.client.ListStoreDataSet;
+import org.gwt.mosaic2g.db.client.ListStoreProvider.DataFactory;
+import org.gwt.mosaic2g.db.client.StringColumn;
+import org.gwt.mosaic2g.db.client.ui.DBLabel;
+import org.gwt.mosaic2g.db.client.ui.DBListBox;
+import org.gwt.mosaic2g.db.client.ui.DBTextBox;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.RootPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+
+	private int userId = 0;
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+
+		final List<User> store = new ArrayList<User>();
+		for (int i = 0; i < 100; i++) {
+			User user = new User(++userId, "FirtsName" + i, "LastName" + i,
+					20 + (int) (Math.random() * 50));
+			store.add(user);
+		}
+
+		final ListStoreDataSet<User> dataSet = new ListStoreDataSet<User>(
+				store, new DataFactory<User>() {
+					@Override
+					public User create() {
+						return new User(++userId, null, null, 0);
+					}
+				});
+		DataRowDescriptor<User> descr = dataSet.getDataRowDescriptor();
+
+		Column<Integer> idC = new IntegerColumn("id",
+				new AbstractBinder<Integer>() {
+					public Integer get() {
+						if (dataSet.getOpen().$()) {
+							return dataSet.getRowData().getId();
+						}
+						return null;
+					}
+				});
+		descr.addColumn(idC);
+
+		final Column<String> firstNameC = new StringColumn("firstName",
+				new AbstractBinder<String>() {
+					public String get() {
+						if (dataSet.getOpen().$()) {
+							return dataSet.getRowData().getFirstName();
+						}
+						return null;
+					}
+					public void set(String value) {
+						if (dataSet.getOpen().$()) {
+							dataSet.getRowData().setFirstName(value);
+							fireValueChangeEvent(value);
+						}
+					}
+				});
+		descr.addColumn(firstNameC);
+
+		// ---
+
+		DataSource<User> dataSource = new DataSource<User>(dataSet);
+
+		// ---
+
+		DBListBox<User> usersLB = new DBListBox<User>(dataSource, idC,
+				firstNameC);
+		usersLB.setVisibleItemCount(10);
+
+		DBLabel<User, Integer> idL = new DBLabel<User, Integer>(dataSource, idC);
+
+		DBTextBox<User, String> firstNameTB = new DBTextBox<User, String>(
+				dataSource, firstNameC);
+
+		// ---
+
+		dataSet.open();
+
+		FlexTable panel = new FlexTable();
+		panel.setWidget(0, 1, usersLB);
+		panel.setText(1, 0, "Id: ");
+		panel.setWidget(1, 1, idL);
+		panel.setText(2, 0, "First Name: ");
+		panel.setWidget(2, 1, firstNameTB);
+
+		RootPanel.get().add(panel, 10, 10);
+	}
+}
+}}}
