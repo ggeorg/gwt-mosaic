@@ -1,10 +1,9 @@
-#summary Data binding library & GWT data-aware widgets based on BindingBasics.
+#summary Data binding library & GWT data-aware widgets.
 #sidebar TableOfContents
 
 = Introduction =
 
-Add your content here.
-
+The data dinding library contains classes and interfaces that provide basic data access. The library contains also a few widgets (so far) like DBTextBox, DBLabel, DBListBox and DBLookupListBox capable of accessing (database) data.
 
 = Details =
 
