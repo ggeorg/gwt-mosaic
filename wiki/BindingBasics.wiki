@@ -286,9 +286,15 @@ public class Main {
 }
 }}}
 
-== Using a validator ==
+Output:
 
-NOT YET IMPLEMENTED
+{{{
+a: 10, b: 10
+a: 20, b: 20
+}}}
+
+== Using a validator ==
+TODO
 
 == Source code ==
 
