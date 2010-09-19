@@ -257,4 +257,39 @@ a: 25, b: 35
 
 Note that the value change event is first fired from property `a`, this is why the value of `b` is 25. In case we want to get the correct value of `b` we have to use `b.$()` like we did in the previous example.
 
-Binding source code: [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/binding/client/]
+== Using value converters ==
+
+Sometimes synchronized properties don't have matching types, in that case you will need to convert from one property type to another:
+
+{{{
+import org.gwt.mosaic2g.binding.client.Converter;
+import org.gwt.mosaic2g.binding.client.Property;
+
+public class Main {
+    public static void main(String[] args) {
+        Property<Integer> a = Property.valueOf(10);
+        Property<String> b = a.createBinding(new Converter<Integer, String>() {
+            @Override
+            public String convertForward(Integer value) {
+                return String.valueOf(value);
+            }
+
+            @Override
+            public Integer convertReverse(String value) {
+                return Integer.parseInt(value);
+            }});
+        
+        System.out.println("a: " + a + ", b: " + b);
+        b.$("20");
+        System.out.println("a: " + a + ", b: " + b);
+    }
+}
+}}}
+
+== Using a validator ==
+
+NOT YET IMPLEMENTED
+
+== Source code ==
+
+[http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/binding/client/]
