@@ -48,13 +48,6 @@ public abstract class AbstractValueAware<T, D> extends
 		return valueP;
 	}
 
-	@Override
-	protected final void setRow(int index) {
-		setValue(getColumn());
-	}
-
-	protected abstract void setValue(Column<D> value);
-
 	protected void edit() {
 		if (getDataSource() != null && getDataSource().getOpen().$()) {
 			getDataSource().getDataSet().editRow();

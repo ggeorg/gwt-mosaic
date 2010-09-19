@@ -24,9 +24,9 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- *
+ * 
  * @param <T>
- *  
+ * 
  * @author ggeorg
  */
 public final class Property<T> implements HasValueChangeHandlers<T> {
@@ -71,6 +71,7 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 		return new Property<String>(value);
 	}
 
+	// ---------------------------------------------------------------------
 	private final Binder<T> binder;
 
 	public Property() {
@@ -110,6 +111,7 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 		this.binder = binder;
 	}
 
+	// ---------------------------------------------------------------------
 	public T $() {
 		return binder.get();
 	}
@@ -274,6 +276,7 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 		});
 	}
 
+	// ---------------------------------------------------------------------
 	@Override
 	public int hashCode() {
 		final T value = binder.get();

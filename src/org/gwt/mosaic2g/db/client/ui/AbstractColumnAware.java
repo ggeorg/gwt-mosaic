@@ -17,6 +17,9 @@ package org.gwt.mosaic2g.db.client.ui;
 
 import org.gwt.mosaic2g.db.client.Column;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -34,6 +37,8 @@ public abstract class AbstractColumnAware<T, D> extends
 
 	private Column<D> column;
 
+	private HandlerRegistration columnHR = null;
+
 	public Column<D> getColumn() {
 		return column;
 	}
@@ -42,7 +47,28 @@ public abstract class AbstractColumnAware<T, D> extends
 		if (this.column == column) {
 			return;
 		}
+
+		if (columnHR != null) {
+			columnHR.removeHandler();
+			columnHR = null;
+		}
+
 		this.column = column;
+
+		if (this.column != null) {
+			columnHR = column.getValue().addValueChangeHandler(
+					new ValueChangeHandler<D>() {
+						public void onValueChange(ValueChangeEvent<D> event) {
+							setValue(AbstractColumnAware.this.column);
+						}
+					});
+		}
+	}
+	
+	@Override
+	protected void setRow(int index) {
+		setValue(getColumn());
 	}
 
+	protected abstract void setValue(Column<D> value);
 }
