@@ -51,7 +51,7 @@ a: 10, b: 10
 a: 20, b: 20
 }}}
 
-Binding works also with more than two properties:
+Binding works also with more than two variables:
 
 {{{
 import org.gwt.mosaic2g.binding.client.Property;
