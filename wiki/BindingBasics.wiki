@@ -78,3 +78,49 @@ Output:
 a: 10, b: 20
 a: 20, b: 30
 }}}
+
+== Using event handlers ==
+
+{{{
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.binding.client.Property;
+
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+public class Main {
+	public static void main(String[] args) {
+		Property<Integer> a = Property.valueOf(10);
+		Property<Integer> b = a.createBinding(new Getter<Integer>() {
+			public Integer get(Integer value) {
+				return value + 10;
+			}
+		});
+
+		a.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				System.out.println(event.getSource() + ": " + event.getValue());
+			}
+		});
+		
+		b.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				System.out.println(event.getSource() + ": " + event.getValue());
+			}
+		});
+
+		System.out.println("a: " + a + ", b: " + b);
+		a.$(20);
+		System.out.println("a: " + a + ", b: " + b);
+	}
+}
+}}}
+
+Output:
+
+{{{
+a: 10, b: 20
+org.gwt.mosaic2g.binding.client.Property$1@4318f375: 20
+org.gwt.mosaic2g.binding.client.Property$1@4318f375: 20
+a: 20, b: 30
+}}}
