@@ -5,9 +5,14 @@
 
 The data dinding library contains classes and interfaces that provide basic data access. The library contains also a few widgets (so far: DBTextBox, DBLabel, DBListBox and DBLookupListBox) capable of accessing (database) data.
 
+The design follows the principles of the DataExpress library used in JBuilder and the DB related classes of Delphi.
+
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The data dinding library includes functionality covering the three main phases of data handling:
+
+<ul>
+<li>Providing: functionality to obtain data and manage local data sets.</li>
+<li>Manipulation: navigation and editing of the data locally.</li>
+<li>Resolving: functionality for the updating of the data from the local data sets back to the original source of the data.</li>
+</ul>
