@@ -231,3 +231,5 @@ org.gwt.mosaic2g.binding.client.Property$1@44fd13b5: 25
 org.gwt.mosaic2g.binding.client.Property$1@44fd13b5: 25
 a: 25, b: 35
 }}}
+
+_Note that the value change event is fired first again from `a`._
