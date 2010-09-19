@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Data binding library & GWT data-aware widgets.
 #sidebar TableOfContents
 
 = Introduction =
