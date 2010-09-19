@@ -14,7 +14,6 @@ The basic concepts can be demonstrated with just two variables. In the following
 import org.gwt.mosaic2g.binding.client.Property;
 
 public class Main {
-
 	public static void main(String[] args) {
 		Property<String> a = Property.valueOf("Hello");
 		Property<String> b = a.createBinding();
@@ -29,4 +28,19 @@ Output:
 {{{
 a: Hello, b: Hello
 a: Good-Bye, b: Good-Bye
+}}}
+
+In this example, both variables are strings, but binding works with other data types as weel:
+{{{
+Property<Integer> a = Property.valueOf(10);
+Property<Integer> b = a.createBinding();
+System.out.println("a: " + a + ", b: " + b);
+a.$(20);
+System.out.println("a: " + a + ", b: " + b);
+}}}
+
+Output:
+{{{
+a: 10, b: 10
+a: 20, b: 20
 }}}
