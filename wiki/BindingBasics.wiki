@@ -170,3 +170,13 @@ a: 20, b: 30
 }}}
 
 == Using an expression for setting a value ==
+
+In the previous example, if you try to set the value of `b`, you will get:
+
+{{{
+Exception in thread "main" java.lang.UnsupportedOperationException: Property is read-only.
+	at org.gwt.mosaic2g.binding.client.Property$5.set(Property.java:182)
+	at org.gwt.mosaic2g.binding.client.Property.$(Property.java:116)
+	at org.gwt.mosaic2g.client.Main.main(Main.java:32)
+a: 10, b: 20
+}}}
