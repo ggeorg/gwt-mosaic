@@ -1,4 +1,4 @@
-#summary Binding Basics.
+#summary The evolution of binding.
 #sidebar TableOfContents
 
 = Introduction =
