@@ -99,12 +99,8 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 			public boolean isReadOnly() {
 				return false;
 			}
-
-			@Override
-			protected void init() {
-				set(value);
-			}
 		});
+		binder.set(value);
 	}
 
 	public Property(Binder<T> binder) {
@@ -182,6 +178,9 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 			public void set(T value) {
 				if (setter != null) {
 					thiz.$(setter.set(value));
+				} else {
+					throw new UnsupportedOperationException(
+							"Property is read-only.");
 				}
 			}
 
@@ -209,6 +208,19 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 				return value;
 			}
 		}, null, converter, (Validator<T>) null);
+	}
+
+	public <T2> Property<T2> createBinding(final Converter<T, T2> converter) {
+		return createBinding(new Getter<T>() {
+			public T get(T value) {
+				return value;
+			}
+		}, new Setter<T>() {
+			public T set(T value) {
+				// TODO validate
+				return value;
+			}
+		}, converter, (Validator<T>) null);
 	}
 
 	public <T2> Property<T2> createBinding(final Converter<T, T2> converter,
@@ -254,6 +266,9 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 				if (setter != null) {
 					// TODO validate
 					thiz.$(setter.set(converter.convertReverse(value)));
+				} else {
+					throw new UnsupportedOperationException(
+							"Property is read-only.");
 				}
 			}
 
