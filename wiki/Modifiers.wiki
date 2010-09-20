@@ -3,8 +3,7 @@
 
 = Introduction =
 
-Add your content here.
-
+A modifier feature is a feature that has a child (which can be a group or features). A modifier will modify the display of its child features in some way.
 
 = Details =
 
