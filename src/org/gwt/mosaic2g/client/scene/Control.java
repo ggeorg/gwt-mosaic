@@ -15,12 +15,9 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -29,37 +26,27 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class Control extends Feature implements HasScalingModel {
 	private static final String DEFAULT_BORDER = "0px none";
-	private static final String DEFAULT_BACKGROUND = "none";
 
+	private int x, y, width, height;
 	private InterpolatedModel scalingModel;
 	private boolean managedSM;
 
 	private Rectangle scaledBounds;
 
-	private Property<String> border;
+	private String border = DEFAULT_BORDER;
 	private boolean borderChanged;
 
-	private Property<String> background;
-	private boolean backgroundChanged;
-
-	private String newStyleName;
-	private Property<String> styleName;
+	private String styleName, newStyleName;
 	private boolean styleNameChanged;
 
 	private Widget widget = null;
 
 	public Control(Show show, int x, int y, int width, int height) {
-		this(show, Property.valueOf(x), Property.valueOf(y), Property
-				.valueOf(width), Property.valueOf(height));
-	}
-
-	public Control(Show show, Property<Integer> x, Property<Integer> y,
-			Property<Integer> width, Property<Integer> height) {
 		super(show);
-		setX(x);
-		setY(y);
-		setWidth(width);
-		setHeight(height);
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 
 	public InterpolatedModel getScalingModel() {
@@ -79,56 +66,51 @@ public abstract class Control extends Feature implements HasScalingModel {
 		return scaledBounds;
 	}
 
-	public Property<String> getBorder() {
-		if (border == null) {
-			border = Property.valueOf(DEFAULT_BORDER);
-			border.addValueChangeHandler(new ValueChangeHandler<String>() {
-				public void onValueChange(ValueChangeEvent<String> event) {
-					borderChanged = true;
-					markAsChanged();
-				}
-			});
-		}
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		markAsChanged();
+	}
+
+	public String getBorder() {
 		return border;
 	}
 
-	public void setBorder(String value) {
-		getBorder().$(value);
+	public void setBorder(String border) {
+		this.border = border;
+		this.borderChanged = true;
+		markAsChanged();
 	}
 
-	public Property<String> getBackground() {
-		if (background == null) {
-			background = Property.valueOf(DEFAULT_BACKGROUND);
-			background.addValueChangeHandler(new ValueChangeHandler<String>() {
-				public void onValueChange(ValueChangeEvent<String> event) {
-					backgroundChanged = true;
-					markAsChanged();
-				}
-			});
-		}
-		return background;
-	}
-
-	public void setBackground(String value) {
-		getBackground().$(value);
-	}
-
-	public Property<String> getStyleName() {
-		if (styleName == null) {
-			styleName = new Property<String>();
-			styleName.addValueChangeHandler(new ValueChangeHandler<String>() {
-				public void onValueChange(ValueChangeEvent<String> event) {
-					newStyleName = event.getValue();
-					styleNameChanged = true;
-					markAsChanged();
-				}
-			});
-		}
+	public String getStyleName() {
 		return styleName;
 	}
 
 	public void setStyleName(String styleName) {
-		getStyleName().$(styleName);
+		this.newStyleName = styleName;
+		this.styleNameChanged = true;
+		markAsChanged();
 	}
 
 	@Override
@@ -145,21 +127,15 @@ public abstract class Control extends Feature implements HasScalingModel {
 	protected void updateWidget(Widget w, boolean init) {
 		final Style widgetStyle = w.getElement().getStyle();
 		if (init || borderChanged) {
-			widgetStyle.setProperty("border", getBorder().$());
+			widgetStyle.setProperty("border", border);
 			borderChanged = false;
 		}
-		if (init || backgroundChanged) {
-			widgetStyle.setProperty("background", getBackground().$());
-			backgroundChanged = false;
-		}
-		if (init || styleNameChanged) {
-			if (newStyleName != null) {
-				w.removeStyleName(newStyleName);
-				newStyleName = null;
+		if ((init || styleNameChanged) && newStyleName != null) {
+			if (styleName != null) {
+				w.removeStyleName(styleName);
 			}
-			if (getStyleName().$() != null) {
-				w.addStyleName(getStyleName().$());
-			}
+			w.addStyleName(styleName = newStyleName);
+			newStyleName = null;
 			styleNameChanged = false;
 		}
 	}
@@ -188,11 +164,9 @@ public abstract class Control extends Feature implements HasScalingModel {
 		if (scalingModel != null && !managedSM) {
 			scalingModel.nextFrame(scene);
 		}
-		if (scalingModel != null
-				&& getWidth().$() != Integer.MIN_VALUE
-				&& getHeight().$() != Integer.MIN_VALUE
-				&& scalingModel.scaleBounds(getX().$(), getY().$(), getWidth()
-						.$(), getHeight().$(), scaledBounds)) {
+		if (scalingModel != null && width != Integer.MIN_VALUE
+				&& height != Integer.MIN_VALUE
+				&& scalingModel.scaleBounds(x, y, width, height, scaledBounds)) {
 			if (scaledBounds.width < 0) {
 				scaledBounds.width = -scaledBounds.width;
 				scaledBounds.x -= scaledBounds.width;
@@ -215,13 +189,12 @@ public abstract class Control extends Feature implements HasScalingModel {
 		}
 
 		updateWidget(widget, false);
-		if (scalingModel != null && getWidth().$() != Integer.MIN_VALUE
-				&& getHeight().$() != Integer.MIN_VALUE) {
+		if (scalingModel != null && width != Integer.MIN_VALUE
+				&& height != Integer.MIN_VALUE) {
 			scene.renderWidget(widget, scaledBounds.x, scaledBounds.y,
 					scaledBounds.width, scaledBounds.height);
 		} else {
-			scene.renderWidget(widget, getX().$(), getY().$(), getWidth().$(),
-					getHeight().$());
+			scene.renderWidget(widget, x, y, width, height);
 		}
 
 		changed = false;

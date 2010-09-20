@@ -58,7 +58,7 @@ public class ColorImpl {
 		  ).split(/,/),
 		  returnValue;
 
-		var result = @org.gwt.mosaic2g.client.style.Color::new(IIID)(
+		var result = @org.gwt.mosaic2.client.style.Color::new(IIID)(
 			parseInt(decimal[0], 10),
 			parseInt(decimal[1], 10),
 			parseInt(decimal[2], 10),

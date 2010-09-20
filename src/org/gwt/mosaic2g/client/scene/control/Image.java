@@ -68,7 +68,6 @@
  */
 package org.gwt.mosaic2g.client.scene.control;
 
-import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
 
@@ -86,8 +85,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Image extends Control implements /* TODO Resizable */LoadHandler,
-		ErrorHandler {
+public class Image extends Control implements /* TODO Resizable */LoadHandler, ErrorHandler {
 
 	private String url;
 	private boolean urlChanged = false;
@@ -97,13 +95,10 @@ public class Image extends Control implements /* TODO Resizable */LoadHandler,
 	private com.google.gwt.user.client.ui.Image cachedWidget;
 
 	public Image(Show show) {
-		this(show, Property.valueOf(0), Property.valueOf(0), Property
-				.valueOf(Integer.MIN_VALUE), Property
-				.valueOf(Integer.MIN_VALUE));
+		this(show, 0, 0, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
 
-	public Image(Show show, Property<Integer> x, Property<Integer> y,
-			Property<Integer> width, Property<Integer> height) {
+	public Image(Show show, int x, int y, int width, int height) {
 		super(show, x, y, width, height);
 	}
 

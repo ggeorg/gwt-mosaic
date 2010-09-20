@@ -68,8 +68,6 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.binding.client.Property;
-
 /**
  * An {@code Assembly} is a feature composed of other features. It is a bit like
  * a switch statement: only one child of an assembly can be active at a time.
@@ -95,7 +93,7 @@ public class Assembly extends Group implements HasFeatures {
 		if (currentPart == part) {
 			return;
 		}
-		if (isActivated() && getParts().contains(part)) {
+		if (isActivated()&& getParts().contains(part)) {
 			part.activate();
 			currentPart.deactivate();
 		}
@@ -103,23 +101,28 @@ public class Assembly extends Group implements HasFeatures {
 	}
 
 	@Override
-	public Property<Integer> getX() {
+	public int getX() {
 		return currentPart.getX();
 	}
 
 	@Override
-	public Property<Integer> getY() {
+	public int getY() {
 		return currentPart.getY();
 	}
 
 	@Override
-	public Property<Integer> getWidth() {
+	public int getWidth() {
 		return currentPart.getWidth();
 	}
 
 	@Override
-	public Property<Integer> getHeight() {
+	public int getHeight() {
 		return currentPart.getHeight();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		currentPart.resize(width, height);
 	}
 
 	@Override

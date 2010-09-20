@@ -68,8 +68,6 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.binding.client.Property;
-
 /**
  * Abstract base class for features that modify a single child feature.
  * 
@@ -93,23 +91,28 @@ public abstract class Modifier extends Feature {
 	}
 
 	@Override
-	public Property<Integer> getX() {
+	public int getX() {
 		return part.getX();
 	}
 
 	@Override
-	public Property<Integer> getY() {
+	public int getY() {
 		return part.getY();
 	}
 
 	@Override
-	public Property<Integer> getWidth() {
+	public int getWidth() {
 		return part.getWidth();
 	}
 
 	@Override
-	public Property<Integer> getHeight() {
+	public int getHeight() {
 		return part.getHeight();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		part.resize(width, height);
 	}
 
 	@Override
