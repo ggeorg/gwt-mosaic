@@ -13,7 +13,7 @@
  * [GWTMosaic2g GWT Mosaic 2g]
   * [HelloWorld2g Hello World]
   * [LayoutPrimer Layout Primer]
-  * [BasicFeatureSet Basic Feature Set]
+  * [BasicFeatures Basic Features]
    * [Controls Controls]
    * [Groups Groups]
    * [Modifiers Modifiers]
