@@ -3,7 +3,7 @@
   <!-- Arguments to gwtc and devmode targets -->
   <property name="gwt.args" value="" />
 	
-  <property name="project.version" value="2.0.0-m2" />
+  <property name="project.version" value="2.0.0.m2" />
 
   <!-- Configure path to GWT SDK -->
   <property name="gwt.sdk" location="C:/Users/ggeorg/projects/gwt-2.1.0.M3" />
