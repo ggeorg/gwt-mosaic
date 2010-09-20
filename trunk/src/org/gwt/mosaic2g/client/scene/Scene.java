@@ -27,7 +27,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
@@ -55,8 +57,10 @@ public class Scene extends Composite implements AnimationClient,
 	private Rectangle clipRegion;
 
 	private boolean sizeChanged = false;
-	private Property<Integer> clientWidth;
-	private Property<Integer> clientHeight;
+	private Property<Integer> clientWidthP;
+	private Property<Integer> clientHeightP;
+
+	private int initialClientWidth, initialClientHeight;
 
 	public Scene() {
 		this(new AbsolutePanel() {
@@ -92,6 +96,23 @@ public class Scene extends Composite implements AnimationClient,
 		setStyleName(MyClientBundle.INSTANCE.css().scene());
 	}
 
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				initialClientWidth = getElement().getClientWidth();
+				initialClientHeight = getElement().getClientHeight();
+			}
+		});
+	}
+
+	@Override
+	protected void onUnload() {
+		initialClientWidth = initialClientHeight = 0;
+		super.onUnload();
+	}
+
 	public Show getShow() {
 		return show;
 	}
@@ -102,8 +123,8 @@ public class Scene extends Composite implements AnimationClient,
 	}
 
 	public Property<Integer> getClientWidth() {
-		if (clientWidth == null) {
-			clientWidth = new Property<Integer>(new AbstractBinder<Integer>() {
+		if (clientWidthP == null) {
+			clientWidthP = new Property<Integer>(new AbstractBinder<Integer>() {
 				protected void init() {
 					Window.addResizeHandler(new ResizeHandler() {
 						public void onResize(ResizeEvent event) {
@@ -118,12 +139,12 @@ public class Scene extends Composite implements AnimationClient,
 				}
 			});
 		}
-		return clientWidth;
+		return clientWidthP;
 	}
 
 	public Property<Integer> getClientHeight() {
-		if(clientHeight == null) {
-			clientHeight = new Property<Integer>(
+		if (clientHeightP == null) {
+			clientHeightP = new Property<Integer>(
 					new AbstractBinder<Integer>() {
 						protected void init() {
 							Window.addResizeHandler(new ResizeHandler() {
@@ -139,7 +160,15 @@ public class Scene extends Composite implements AnimationClient,
 						}
 					});
 		}
-		return clientHeight;
+		return clientHeightP;
+	}
+
+	public int getInitialClientWidth() {
+		return initialClientWidth;
+	}
+
+	public int getInitialClientHeight() {
+		return initialClientHeight;
 	}
 
 	public boolean isSizeChanged() {

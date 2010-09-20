@@ -79,7 +79,6 @@ import org.gwt.mosaic2g.binding.client.Property;
  * @author ggeorg
  */
 public class Translator extends Modifier {
-	public static final int OFFSCREEN = Integer.MAX_VALUE;
 
 	public final static int X_FIELD = 0;
 	public final static int Y_FIELD = 1;
@@ -89,23 +88,26 @@ public class Translator extends Modifier {
 	private int lastDx;
 	private int lastDy;
 
-	private final int refWidth;
-	private final int refHeight;
+	private final Property<Integer> xP = Property.valueOf(OFFSCREEN);
+	private final Property<Integer> yP = Property.valueOf(OFFSCREEN);
+
+	private final Property<Integer> dxP;
+	private final Property<Integer> dyP;
 
 	public Translator(Show show) {
 		this(show, InterpolatedModel.makeDefaultTranslatorModel());
 	}
 
 	public Translator(Show show, InterpolatedModel model) {
-		this(show, model, Integer.MIN_VALUE, Integer.MIN_VALUE);
+		this(show, model, null, null);
 	}
 
-	public Translator(Show show, InterpolatedModel model, int refWidth,
-			int refHeight) {
+	public Translator(Show show, InterpolatedModel model,
+			Property<Integer> dxP, Property<Integer> dyP) {
 		super(show);
 		this.model = model;
-		this.refWidth = refWidth;
-		this.refHeight = refHeight;
+		this.dxP = dxP;
+		this.dyP = dyP;
 	}
 
 	public InterpolatedModel getModel() {
@@ -114,24 +116,19 @@ public class Translator extends Modifier {
 
 	@Override
 	public Property<Integer> getX() {
-		int x = model.getField(X_FIELD);
-		x += getPart().getX().$();
-		return Property.valueOf(x); // TODO check if there is a problem
+		return xP;
 	}
 
 	@Override
 	public Property<Integer> getY() {
-		int y = model.getField(Y_FIELD);
-		y += getPart().getY().$();
-		return Property.valueOf(y); //TODO check if there is a problem
+		return yP;
 	}
 
 	@Override
 	protected void setActivateMode(boolean mode) {
 		if (mode) {
 			model.activate();
-			lastDx = OFFSCREEN;
-			lastDy = OFFSCREEN;
+			lastDx = lastDy = OFFSCREEN;
 			markAsChanged();
 		}
 		super.setActivateMode(mode);
@@ -140,19 +137,20 @@ public class Translator extends Modifier {
 	@Override
 	public boolean nextFrame(Scene scene) {
 		model.nextFrame(scene);
-		int dx = model.getField(X_FIELD);
-		if (refWidth > 0) {
-			dx = (int) (dx * (double) scene.getElement().getClientWidth() / refWidth);
-		}
-		int dy = model.getField(Y_FIELD);
-		if (refHeight > 0) {
-			dy = (int) (dy * (double) scene.getElement().getClientHeight() / refHeight);
-		}
+
+		final int dx = (int) (model.getField(X_FIELD) / 1000.0 * dxP.$());
+		final int dy = (int) (model.getField(Y_FIELD) / 1000.0 * dyP.$());
+
 		if (dx != OFFSCREEN && dy != OFFSCREEN && dx != lastDx || dy != lastDy) {
 			markAsChanged();
+
+			xP.$(super.getX().$() + dx);
+			yP.$(super.getY().$() + dy);
+
 			lastDx = dx;
 			lastDy = dy;
 		}
+
 		return (changed = super.nextFrame(scene));
 	}
 

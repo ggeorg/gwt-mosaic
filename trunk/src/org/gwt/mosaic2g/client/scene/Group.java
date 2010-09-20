@@ -101,8 +101,7 @@ public class Group extends Feature implements HasFeatures {
 				x = val;
 			}
 		}
-		super.getX().$(x);
-		return super.getX();
+		return super.getX().$(x);
 	}
 
 	@Override
@@ -115,8 +114,7 @@ public class Group extends Feature implements HasFeatures {
 				y = val;
 			}
 		}
-		super.getY().$(y);
-		return super.getY();
+		return super.getY().$(y);
 	}
 
 	@Override
@@ -131,8 +129,7 @@ public class Group extends Feature implements HasFeatures {
 				width = fw;
 			}
 		}
-		super.getWidth().$(width);
-		return super.getWidth();
+		return super.getWidth().$(width);
 	}
 
 	@Override
@@ -147,8 +144,7 @@ public class Group extends Feature implements HasFeatures {
 				height = fh;
 			}
 		}
-		super.getHeight().$(height);
-		return super.getHeight();
+		return super.getHeight().$(height);
 	}
 
 	@Override
