@@ -70,6 +70,8 @@ package org.gwt.mosaic2g.client.animator;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -130,6 +132,14 @@ public class AnimationEngine {
 	}
 
 	public final void start() {
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				startImpl();
+			}
+		});
+	}
+
+	private void startImpl() {
 		// Cancel the animation engine if it is running.
 		cancel();
 

@@ -75,11 +75,15 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 
 /**
+ * A {@code Feature} is a thing that presents some sort of UI. A {@link Segment}
+ * presents some number of {@code Feature}s, and {@code Feature}s can be shared
+ * between {@code Segment}s.
  * 
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
 public abstract class Feature implements Node {
+	public static final int OFFSCREEN = Integer.MAX_VALUE;
 
 	private final Show show;
 
@@ -88,10 +92,10 @@ public abstract class Feature implements Node {
 
 	protected boolean changed = false;
 
-	private Property<Integer> x;
-	private Property<Integer> y;
-	private Property<Integer> width;
-	private Property<Integer> height;
+	private Property<Integer> xP;
+	private Property<Integer> yP;
+	private Property<Integer> widthP;
+	private Property<Integer> heightP;
 
 	private final ValueChangeHandler<Integer> locationChanged = new ValueChangeHandler<Integer>() {
 		public void onValueChange(ValueChangeEvent<Integer> event) {
@@ -116,21 +120,21 @@ public abstract class Feature implements Node {
 
 	/**
 	 * Get the upper-left hand corner of this feature as presently displayed.
-	 * Return Integer.MAX_VALUE if this feature has no visible representation.
+	 * Return {@code OFFSCREEN} if this feature has no visible representation.
 	 * 
 	 * @return the x coordinate
 	 */
 	public Property<Integer> getX() {
-		if (x == null) {
-			setX(Property.valueOf(Integer.MAX_VALUE));
+		if (xP == null) {
+			setX(Property.valueOf(OFFSCREEN));
 		}
-		return x;
+		return xP;
 	}
 
 	protected void setX(Property<Integer> x) {
-		if (this.x == null) {
-			this.x = x;
-			this.x.addValueChangeHandler(locationChanged);
+		if (this.xP == null) {
+			this.xP = x;
+			this.xP.addValueChangeHandler(locationChanged);
 		} else {
 			throw new IllegalStateException("Feature.setX() may only be "
 					+ "called once.");
@@ -139,22 +143,22 @@ public abstract class Feature implements Node {
 
 	/**
 	 * Get the upper-left hand corner of this feature as presently displayed
-	 * Return Integer.MAX_VALUE if this feature has no visible representation.
+	 * Return {@code OFFSCREEN} if this feature has no visible representation.
 	 * 
 	 * @return the y coordinate
 	 **/
 	public Property<Integer> getY() {
-		if (y == null) {
-			y = Property.valueOf(Integer.MAX_VALUE);
-			y.addValueChangeHandler(locationChanged);
+		if (yP == null) {
+			yP = Property.valueOf(OFFSCREEN);
+			yP.addValueChangeHandler(locationChanged);
 		}
-		return y;
+		return yP;
 	}
-	
+
 	protected void setY(Property<Integer> y) {
-		if (this.y == null) {
-			this.y = y;
-			this.y.addValueChangeHandler(locationChanged);
+		if (this.yP == null) {
+			this.yP = y;
+			this.yP.addValueChangeHandler(locationChanged);
 		} else {
 			throw new IllegalStateException("Feature.setY() may only be "
 					+ "called once.");
@@ -168,16 +172,16 @@ public abstract class Feature implements Node {
 	 * @return the width
 	 */
 	public Property<Integer> getWidth() {
-		if (width == null) {
+		if (widthP == null) {
 			setWidth(Property.valueOf(Integer.MIN_VALUE));
 		}
-		return width;
+		return widthP;
 	}
 
 	protected void setWidth(Property<Integer> width) {
-		if (this.width == null) {
-			this.width = width;
-			this.width.addValueChangeHandler(sizeChanged);
+		if (this.widthP == null) {
+			this.widthP = width;
+			this.widthP.addValueChangeHandler(sizeChanged);
 		} else {
 			throw new IllegalStateException("Feature.setWidth() may only be "
 					+ "called once.");
@@ -191,16 +195,16 @@ public abstract class Feature implements Node {
 	 * @return the height
 	 */
 	public Property<Integer> getHeight() {
-		if (height == null) {
+		if (heightP == null) {
 			setHeight(Property.valueOf(Integer.MIN_VALUE));
 		}
-		return height;
+		return heightP;
 	}
 
 	protected void setHeight(Property<Integer> height) {
-		if (this.height == null) {
-			this.height = height;
-			this.height.addValueChangeHandler(sizeChanged);
+		if (this.heightP == null) {
+			this.heightP = height;
+			this.heightP.addValueChangeHandler(sizeChanged);
 		} else {
 			throw new IllegalStateException("Feature.setHeight() may only be "
 					+ "called once.");

@@ -112,8 +112,9 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 		return binder.get();
 	}
 
-	public void $(T value) {
+	public Property<T> $(T value) {
 		binder.set(value);
+		return this;
 	}
 
 	public HandlerRegistration addValueChangeHandler(

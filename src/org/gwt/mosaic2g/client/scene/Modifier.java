@@ -79,7 +79,7 @@ import org.gwt.mosaic2g.binding.client.Property;
 public abstract class Modifier extends Feature {
 
 	private Feature part;
-	
+
 	protected Modifier(Show show) {
 		super(show);
 	}
@@ -89,6 +89,9 @@ public abstract class Modifier extends Feature {
 	}
 
 	public void setPart(Feature part) {
+		if (this.part == part) {
+			return;
+		}
 		this.part = part;
 	}
 
