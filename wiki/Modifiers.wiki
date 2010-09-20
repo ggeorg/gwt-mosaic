@@ -7,7 +7,6 @@ A modifier feature is a feature that has a child (which can be a group or featur
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The basic set of modifiers are:
+  * Fade
+  * Translator
