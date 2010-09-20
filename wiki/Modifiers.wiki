@@ -8,5 +8,16 @@ A modifier feature is a feature that has a child (which can be a group or featur
 = Details =
 
 The basic set of modifiers are:
+  * Clipped
   * Fade
   * Translator
+
+== Translator ==
+
+A translator moves the position of its children on the page by a relative delta-x and delta-y. The delta values can be animated over time, and smooth animations can be had with various tweening functions. Translators work on pre-computed values linked into a path by linear interpolation.
+
+A translator is split into two piecces: the actual translator, and the translator model that holds the points.
+
+Example:
+
+{{{ }}}
