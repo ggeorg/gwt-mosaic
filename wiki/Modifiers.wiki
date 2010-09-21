@@ -506,10 +506,10 @@ The BNF for `tween_type`:
     tween_point ::= "(" integer * ")"
 }}}
 
-Read more about tween type at:
+Read more about tween functions at:
 
- * [http://robertpenner.com/easing/].
- * [http://robertpenner.com/easing/easing_demo.html Equation Visualizer].
+ * [http://robertpenner.com/easing/]
+ * [http://robertpenner.com/easing/easing_demo.html Equation Visualizer]
 
 
 
