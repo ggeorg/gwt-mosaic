@@ -98,3 +98,94 @@ translator_model {
 	100		0		0		ease-in-back
 } repeat 0 ;
 }}}
+
+{{{
+    translator_model ::= "feature" "translator_model" name 
+			    "{" trans_key_frame * "}" 
+			    [ "repeat" frame_number ] 
+			    [ loop_count ]
+			    [ "end_commands" commands ] ";"
+	# "translator_model" can be replaced by the old name "translation"
+	#
+	# If you want to set the x,y position programmatically, just have
+	# one key frame.
+        # Use "offscreen" keyword for x,y position to place a feature 
+        # off the screen without causing the animation engine to repaint extra
+        # region.  Use Integer.MIN_VALUE for x,y position to off-screen 
+        # programatically. 
+
+    trans_key_frame ::= frame_number x y trans_tween
+
+    trans_tween ::=    "linear-relative"  [ "max-error" integer ]
+    		     | tween_type
+    	# linear and linear-relative are special for translations.  You
+	# should always use linear-relative; that's linear interpolation
+	# using relative coordinates for the child nodes (that is, the
+	# interpolation specifies delta-x and delta-y for each child).
+	#
+	# "linear" is deprecated, and is kept for backwards compatibility
+	# with old show files.  In "linear", the coordinates are absolute
+	# coordinates for the upper-left hand corner of the children.  
+	# Trying to do this this was a bad idea - it's not always possible
+	# to determine the upper-left hand corner of the children.  When it's
+	# not, the compiler will report an error that suggests switching
+	# to linear-relative.
+
+    tween_type ::=
+              "linear"  [ "max-error" integer ]
+	    | "start"
+	    | "ease-in-quad" [ "max-error" integer ]
+	    | "ease-out-quad" [ "max-error" integer ]
+	    | "ease-in-out-quad" [ "max-error" integer ]
+	    | "ease-in-cubic" [ "max-error" integer ]
+	    | "ease-out-cubic" [ "max-error" integer ]
+	    | "ease-in-out-cubic" [ "max-error" integer ]
+	    | "ease-in-quart" [ "max-error" integer ]
+	    | "ease-out-quart" [ "max-error" integer ]
+	    | "ease-in-out-quart" [ "max-error" integer ]
+	    | "ease-in-quint" [ "max-error" integer ]
+	    | "ease-out-quint" [ "max-error" integer ]
+	    | "ease-in-out-quint" [ "max-error" integer ]
+	    | "ease-in-sine" [ "max-error" integer ]
+	    | "ease-out-sine" [ "max-error" integer ]
+	    | "ease-in-out-sine" [ "max-error" integer ]
+	    | "ease-in-expo" [ "max-error" integer ]
+	    | "ease-out-expo" [ "max-error" integer ]
+	    | "ease-in-out-expo" [ "max-error" integer ]
+	    | "ease-in-circ" [ "max-error" integer ]
+	    | "ease-out-circ" [ "max-error" integer ]
+	    | "ease-in-out-circ" [ "max-error" integer ]
+	    | "ease-in-elastic" [ "amplitude" double ] [ "period" double ] 
+	    			[ "max-error" integer ]
+	    | "ease-out-elastic" [ "amplitude" double ] [ "period" double ] 
+	    			 [ "max-error" integer ]
+	    | "ease-in-out-elastic" [ "amplitude" double ] [ "period" double ] 
+	    			    [ "max-error" integer ]
+	    | "ease-in-back" [ "overshoot" double ] [ "max-error" integer ]
+	    | "ease-out-back" [ "overshoot" double ] [ "max-error" integer ]
+	    | "ease-in-out-back" [ "overshoot" double ] [ "max-error" integer ]
+	    | "ease-in-bounce" [ "max-error" integer ]
+	    | "ease-out-bounce" [ "max-error" integer ]
+	    | "ease-in-out-bounce" [ "max-error" integer ]
+	    | "ease-points" "{" tween-point * "}" [ "max-error" integer ]
+        # The tween type give the algorithm used for the transition from the
+	# previous key frame to the present one.
+	#
+	# start is a synonym for linear.  It's intended to be
+	# used for the first keyframe, since the tween type for the
+	# first keyframe is meaningless.
+	#
+	# The other tweening types are described in 
+	# com.robertpenner.PennerEasing, and in his book, which you can
+	# find out about at http://robertpenner.com.
+	#
+	# max-error says how many units of error you're willing to tolerate
+	# when the compiler uses linear interpolation segments to approximate
+	# tweening.  It defaults to 0, that is, no error.  Setting a higher
+	# tolerance will result in a smaller .grin file and less runtime
+	# memory usage.  The grin compiler tells you how many key frames
+	# are added for interpolation due to tweening; if the number looks
+	# huge, consider increasing the error tolerance.
+
+    tween_point ::= "(" integer * ")"
+}}}
