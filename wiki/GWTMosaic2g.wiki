@@ -55,7 +55,7 @@ The entities actually displayed by a show are called *features*. Features can be
 
  * Controls
  * Groups
- * Modifiers
+ * [Modifiers]
  * Timers
 
 The controls are the easiest ones to understand because they have a visual representation. Those are: Box, Image, ImageSequence, Text and any composition of them.
