@@ -8,9 +8,9 @@ A modifier feature is a feature that has a child (which can be a group or featur
 = Details =
 
 The basic set of modifiers are:
-  * Clipped
   * Fade
   * Translator
+  * Clipped
 
 == Translator ==
 
@@ -85,6 +85,7 @@ public class Showcase implements EntryPoint {
 	@GrinFile(value = "translator_model.txt")
 	interface MyTranslatorModel extends InterpolatedModelParser {
 	};
+}
 }}}
 
 The translator model is declared in `translator_model.txt`:
@@ -119,6 +120,88 @@ The BNF describing the syntaxt of a translator model txt file:
 	# should always use linear-relative; that's linear interpolation
 	# using relative coordinates for the child nodes (that is, the
 	# interpolation specifies delta-x and delta-y for each child).
+}}}
+
+
+== Clipped ==
+
+A clipped modifier clips its children within a clipping rectangle. This can be useful in conjunction with a translator, to make a set of child nodes slide out.
+
+Example:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Clipped;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.Translator;
+import org.gwt.mosaic2g.client.scene.control.Box;
+import org.gwt.mosaic2g.client.util.Rectangle;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		Box box1 = new Box(show, 20, 20, 50, 50);
+		box1.setBackground("orange");
+		box1.setBorder("5px solid green");
+
+		MyTranslatorModel tm = GWT.create(MyTranslatorModel.class);
+		Translator translator = new Translator(show, tm.getModel());
+		translator.setPart(box1);
+
+		Clipped clipped = new Clipped(show, new Rectangle(10, 10, 250, 150));
+		clipped.setPart(translator);
+		
+		// A box that shows the clipping area
+		Box box2 = new Box(show, 10, 10, 250, 150);
+		box2.setBorder("1px dotted red");
+
+		Segment segment = new Segment(show);
+		segment.add(box2);
+		segment.add(clipped);
+
+		show.activateSegment(segment);
+
+		return show;
+	}
+
+	@GrinFile(value = "translator_model.txt")
+	interface MyTranslatorModel extends InterpolatedModelParser {
+	};
+}
 }}}
 
 == Tween Type ==
