@@ -20,10 +20,10 @@ import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.MyClientBundle;
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.style.ComputedStyle;
+import org.gwt.mosaic2g.client.style.Opacity;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -52,7 +52,7 @@ public class Scene extends Composite implements AnimationClient,
 	private int originX = 0;
 	private int originY = 0;
 
-	private int opacity = -1;
+	private Opacity opacity;
 
 	private Rectangle clipRegion;
 
@@ -175,11 +175,11 @@ public class Scene extends Composite implements AnimationClient,
 		return sizeChanged;
 	}
 
-	public int getOpacity() {
+	public Opacity getOpacity() {
 		return opacity;
 	}
 
-	public void setOpacity(int opacity) {
+	public void setOpacity(Opacity opacity) {
 		this.opacity = opacity;
 	}
 
@@ -245,7 +245,6 @@ public class Scene extends Composite implements AnimationClient,
 
 	public void renderWidget(Widget w, int x, int y, int width, int height) {
 		final Element elem = w.getElement();
-		final Style widgetStyle = elem.getStyle();
 
 		if (width >= 0) {
 			width -= ComputedStyle.getPaddingLeft(elem);
@@ -265,8 +264,9 @@ public class Scene extends Composite implements AnimationClient,
 					w.getOffsetWidth(), w.getOffsetHeight());
 		}
 
-		if (opacity >= 0 && opacity <= 255) {
-			setOpacity(widgetStyle, opacity);
+		//if (opacity >= 0 && opacity <= 255) {
+		if(opacity != null) {
+			opacity.applyTo(elem);
 		}
 
 		x -= ComputedStyle.getMarginLeft(elem);
@@ -308,13 +308,6 @@ public class Scene extends Composite implements AnimationClient,
 				.append("px, ").append(bottom).append("px, ").append(left)
 				.append("px)");
 		elem.getStyle().setProperty("clip", sb.toString());
-	}
-
-	private void setOpacity(Style style, double opacity) {
-		style.setOpacity(opacity / 255.0);
-
-		// XXX IE
-		// style.setProperty("filter", "alpha(opacity=" + opacity + ")");
 	}
 
 }
