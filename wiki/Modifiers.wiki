@@ -106,12 +106,9 @@ The BNF describing the syntaxt of a translator model txt file:
 			    [ "repeat" frame_number ] 
 			    [ loop_count ] ";"
 
-	# If you want to set the x,y position programmatically, just have
-	# one key frame.
         # Use "offscreen" keyword for x,y position to place a feature 
         # off the screen without causing the animation engine to repaint extra
-        # region. Use Integer.MIN_VALUE for x,y position to off-screen 
-        # programatically. 
+        # region.
 
     trans_key_frame ::= frame_number x y trans_tween
 
@@ -166,6 +163,7 @@ The BNF for `tween_type`:
 	    | "ease-out-bounce" [ "max-error" integer ]
 	    | "ease-in-out-bounce" [ "max-error" integer ]
 	    | "ease-points" "{" tween-point * "}" [ "max-error" integer ]
+
         # The tween type give the algorithm used for the transition from the
 	# previous key frame to the present one.
 	#
