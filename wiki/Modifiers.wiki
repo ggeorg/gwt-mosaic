@@ -185,7 +185,7 @@ public class Showcase implements EntryPoint {
 		Clipped clipped = new Clipped(show, new Rectangle(10, 10, 250, 150));
 		clipped.setPart(translator);
 		
-		// A box that shows the clipping area
+		// A box that shows the clipping rectangle
 		Box box2 = new Box(show, 10, 10, 250, 150);
 		box2.setBorder("1px dotted red");
 
