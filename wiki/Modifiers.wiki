@@ -18,10 +18,11 @@ A translator moves the position of its children on the page by a relative delta-
 
 A translator is split into two piecces: the actual translator, and the translator model that holds the points.
 
+Example:
 
 <wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-translator-wiki.xml?v=1" height="256" width="512" border="0"/>
 
-Example:
+Code:
 
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
@@ -129,6 +130,10 @@ A clipped modifier clips its children within a clipping rectangle. This can be u
 
 Example:
 
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-clipped-wiki.xml?v=1" height="256" width="512" border="0"/>
+
+Code:
+
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
@@ -203,6 +208,8 @@ public class Showcase implements EntryPoint {
 	};
 }
 }}}
+
+The `translator_model.txt` file is the same with the previous example.
 
 == Tween Type ==
 
