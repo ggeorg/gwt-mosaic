@@ -505,3 +505,12 @@ The BNF for `tween_type`:
 
     tween_point ::= "(" integer * ")"
 }}}
+
+Read more about tween type at:
+
+ * [http://robertpenner.com/easing/].
+ * [http://robertpenner.com/easing/easing_demo.html Equation Visualizer].
+
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
