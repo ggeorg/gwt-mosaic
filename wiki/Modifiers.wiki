@@ -20,9 +20,11 @@ All features that implement [http://code.google.com/p/gwt-mosaic/source/browse/t
 
 Both the scaling factors and the anchor point can be animated. As with other animated parameters, they can be animated smoothly using tweening functions that are computed at compile time, and represented as a series of linear interpolations at runtime.
 
-Example:
+Scaling model example:
 
-The code:
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-scaling-wiki.xml?v=2" height="256" width="512" border="0"/>
+
+Sode:
 
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
@@ -100,6 +102,8 @@ public class Showcase implements EntryPoint {
 	};
 }}}
 
+The fade model is declared in `scaling_model.txt`: 
+
 {{{
 scaling_model {
 	0	40 	40 	1000	1000	start 		mills
@@ -108,7 +112,22 @@ scaling_model {
 } repeat 0 ;
 }}}
 
+The BNF describing the syntaxt of a scaling model txt file:
 
+{{{
+    scaling_model ::= "scaling_model" "{" scale_key_frame* "}"
+		[ "repeat" frame_number ] 
+		[ loop_count ] ";"
+	# There must be >= 1 scale_key_frame
+    
+    scale_key_frame ::=  frame_number x y x_scale y_scale [ tween_type ] "mills"
+
+    	# The first frame must be zero
+	# The scale factor is in mills (1/1000); a factor of 1000 is 1:1 scale
+	# The x,y values are the anchor point for the scaling operation.  
+	#     Scaled objects get bigger and smaller, centered at this anchor
+	#     point.  You can also think of it as the "origin for scaling."
+}}}
 
 == Fade ==
 
