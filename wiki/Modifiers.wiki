@@ -13,7 +13,7 @@ The basic set of modifiers are:
   * Translator
   * Clipped
 
-Some node types can support runtime scaling. Images cab be scaled, and so can boxes, but e.g. text cannot. For this reason, the scaling model is not a normal modifier node (it does not have children whose appearance it modifies). The scaling model just maintains an x and y scale factor, and an anchor point. 
+Some node types can support runtime scaling. Images can be scaled, and so can boxes, but e.g. text cannot. For this reason, the scaling model is not a normal modifier node (yet(?)) - it does not have children whose appearance it modifies. The scaling model just maintains an x and y scale factor, and an anchor point. 
 
 
 All features that implement [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] can refer to a scaling model to modify their size and position. In general all features that extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] implement the `HasScalingModel` interface.
@@ -24,7 +24,7 @@ Scaling model example:
 
 <wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-scaling-wiki.xml?v=2" height="256" width="512" border="0"/>
 
-Sode:
+Code:
 
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
@@ -128,6 +128,8 @@ The BNF describing the syntaxt of a scaling model txt file:
 	#     Scaled objects get bigger and smaller, centered at this anchor
 	#     point.  You can also think of it as the "origin for scaling."
 }}}
+
+For `tween_type` see [Modifiers#Tween Type]
 
 == Fade ==
 
