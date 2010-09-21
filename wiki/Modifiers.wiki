@@ -87,7 +87,7 @@ public class Showcase implements EntryPoint {
 	};
 }}}
 
-The translator model is declated in `translator_model.txt`:
+The translator model is declared in `translator_model.txt`:
 
 {{{
 translator_model {
