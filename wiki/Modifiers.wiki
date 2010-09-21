@@ -8,9 +8,27 @@ A modifier feature is a feature that has a child (which can be a group or featur
 = Details =
 
 The basic set of modifiers are:
+
   * Fade
   * Translator
   * Clipped
+
+Some node types can support runtime scaling. Images cab be scaled, and so can boxes, but e.g. text cannot. For this reason, the scaling model is not a normal modifier node (it does not have children whose appearance it modifies). The scaling model just maintains an x and y scale factor, and an anchor point. 
+
+
+All features that implement [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] can refer to a scaling model to modify their size and position. In general all features that extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] implement the `HasScalingModel` interface.
+
+Both the scaling factors and the anchor point can be animated. As with other animated parameters, they can be animated smoothly using tweening functions that are computed at compile time, and represented as a series of linear interpolations at runtime.
+
+Example:
+
+The code:
+
+{{{
+
+}}}
+
+
 
 == Fade ==
 
