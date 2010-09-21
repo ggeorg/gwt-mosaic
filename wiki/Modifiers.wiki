@@ -18,7 +18,7 @@ A fade modifier will set the alpha level for the drawing of its children. The fa
 
 Example:
 
-<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-fade-wiki.xml?v=1" height="256" width="512" border="0"/>
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-fade-wiki.xml?v=2" height="256" width="512" border="0"/>
 
 Code:
 
