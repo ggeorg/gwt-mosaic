@@ -12,6 +12,100 @@ The basic set of modifiers are:
   * Translator
   * Clipped
 
+== Fade ==
+
+A fade modifier will set the alpha level for the drawing of its children. The fade level can vary over time, and a smooth animation effect can be achieved with one of the "tween" functions.
+
+Example:
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-fade-wiki.xml?v=1" height="256" width="512" border="0"/>
+
+Code:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Fade;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.control.Box;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		Box box1 = new Box(show, 20, 20, 100, 100);
+		box1.setBackground("orange");
+		box1.setBorder("5px solid green");
+
+		BreathEffect breathEffect = GWT.create(BreathEffect.class);
+		Fade fade = new Fade(show, breathEffect.createModel());
+		fade.setPart(box1);
+		
+		Segment segment = new Segment(show);
+		segment.add(fade);
+
+		show.activateSegment(segment);
+
+		return show;
+	}
+	
+	@GrinFile(value = "breath-effect.txt")
+	interface BreathEffect extends InterpolatedModelParser {
+	};
+}
+}}}
+
+The fade model is declared in `breath-effect.txt`: 
+
+{{{
+fade_model {
+	0		255		start
+	25		0		ease-in-cubic
+	50		255		ease-in-cubic
+} repeat 0 ;
+}}}
+
+The BNF describing the syntaxt of a fade model txt file:
+
+{{{
+    fade_model ::= "fade_model" "{" ( frame_number alpha_int tween_type ) * "}" 
+		[ "repeat" frame_number ] 
+		[ loop_count ] ";"
+
+}}}
+
 == Translator ==
 
 A translator moves the position of its children on the page by a relative delta-x and delta-y. The delta values can be animated over time, and smooth animations can be had with various tweening functions. Translators work on pre-computed values linked into a path by linear interpolation.
@@ -72,7 +166,7 @@ public class Showcase implements EntryPoint {
 		box1.setBorder("5px solid green");
 		
 		MyTranslatorModel tm = GWT.create(MyTranslatorModel.class);
-		Translator translator = new Translator(show, tm.getModel());
+		Translator translator = new Translator(show, tm.createModel());
 		translator.setPart(box1);
 		
 		Segment segment = new Segment(show);
@@ -184,7 +278,7 @@ public class Showcase implements EntryPoint {
 		box1.setBorder("5px solid green");
 
 		MyTranslatorModel tm = GWT.create(MyTranslatorModel.class);
-		Translator translator = new Translator(show, tm.getModel());
+		Translator translator = new Translator(show, tm.createModel());
 		translator.setPart(box1);
 
 		Clipped clipped = new Clipped(show, new Rectangle(10, 10, 250, 150));
