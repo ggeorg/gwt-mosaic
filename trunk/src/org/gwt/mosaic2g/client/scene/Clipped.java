@@ -68,6 +68,7 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 /**
@@ -79,14 +80,33 @@ import org.gwt.mosaic2g.client.util.Rectangle;
  */
 public class Clipped extends Modifier {
 
-	private Rectangle clipRegion;
+	private Property<Integer> clipXP;
+	private Property<Integer> clipYP;
+	private Property<Integer> clipWidthP;
+	private Property<Integer> clipHeightP;
 
 	private Rectangle lastClipRegion = new Rectangle();
 	private Rectangle tmpI = null;
 
 	public Clipped(Show show, Rectangle clipRegion) {
+		this(show, Property.valueOf(clipRegion.x), Property
+				.valueOf(clipRegion.y), Property.valueOf(clipRegion.width),
+				Property.valueOf(clipRegion.height));
+	}
+
+	public Clipped(Show show, int clipX, int clipY,
+			Property<Integer> clipWidth, Property<Integer> clipHeight) {
+		this(show, Property.valueOf(clipX), Property.valueOf(clipY), clipWidth,
+				clipHeight);
+	}
+
+	public Clipped(Show show, Property<Integer> clipX, Property<Integer> clipY,
+			Property<Integer> clipWidth, Property<Integer> clipHeight) {
 		super(show);
-		this.clipRegion = clipRegion;
+		this.clipXP = clipX;
+		this.clipYP = clipY;
+		this.clipWidthP = clipWidth;
+		this.clipHeightP = clipHeight;
 	}
 
 	@Override
@@ -94,7 +114,8 @@ public class Clipped extends Modifier {
 		lastClipRegion.x = Integer.MIN_VALUE;
 		scene.getClipBounds(lastClipRegion);
 		if (lastClipRegion.x == Integer.MIN_VALUE) {
-			scene.setClipBounds(clipRegion);
+			scene.setClipBounds(clipXP.$(), clipYP.$(), clipWidthP.$(),
+					clipHeightP.$());
 			getPart().paintFrame(scene);
 			scene.setClipBounds(null);
 		} else {
@@ -102,19 +123,19 @@ public class Clipped extends Modifier {
 				tmpI = new Rectangle(); // Holds intersection
 			}
 			tmpI.setBounds(lastClipRegion);
-			if (tmpI.x < clipRegion.x) {
-				tmpI.width -= clipRegion.x - tmpI.x;
-				tmpI.x = clipRegion.x;
+			if (tmpI.x < clipXP.$()) {
+				tmpI.width -= clipXP.$() - tmpI.x;
+				tmpI.x = clipXP.$();
 			}
-			if (tmpI.y < clipRegion.y) {
-				tmpI.height -= clipRegion.y - tmpI.y;
-				tmpI.y = clipRegion.y;
+			if (tmpI.y < clipYP.$()) {
+				tmpI.height -= clipYP.$() - tmpI.y;
+				tmpI.y = clipYP.$();
 			}
-			if (tmpI.x + tmpI.width > clipRegion.x + clipRegion.width) {
-				tmpI.width = clipRegion.x + clipRegion.width - tmpI.x;
+			if (tmpI.x + tmpI.width > clipXP.$() + clipWidthP.$()) {
+				tmpI.width = clipXP.$() + clipWidthP.$() - tmpI.x;
 			}
-			if (tmpI.y + tmpI.height > clipRegion.y + clipRegion.height) {
-				tmpI.height = clipRegion.y + clipRegion.height - tmpI.y;
+			if (tmpI.y + tmpI.height > clipYP.$() + clipHeightP.$()) {
+				tmpI.height = clipYP.$() + clipHeightP.$() - tmpI.y;
 			}
 			if (tmpI.width > 0 && tmpI.height > 0) {
 				scene.setClipBounds(tmpI);

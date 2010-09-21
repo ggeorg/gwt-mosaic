@@ -86,6 +86,11 @@ public class Box extends Control {
 		super(show, x, y, width, height);
 	}
 
+	public Box(Show show, int x, int y, Property<Integer> width,
+			Property<Integer> height) {
+		super(show, x, y, width, height);
+	}
+
 	public Box(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
