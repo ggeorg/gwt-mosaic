@@ -129,7 +129,7 @@ The BNF describing the syntaxt of a scaling model txt file:
 	#     point.  You can also think of it as the "origin for scaling."
 }}}
 
-For `tween_type` see [Modifiers#Tween-Type]
+For `tween_type` see [Modifiers#Tween_Type].
 
 == Fade ==
 
@@ -238,6 +238,8 @@ The BNF describing the syntaxt of a fade model txt file:
 		[ loop_count ] ";"
 
 }}}
+
+For `tween_type` see [Modifiers#Tween_Type].
 
 == Translator ==
 
@@ -350,6 +352,7 @@ The BNF describing the syntaxt of a translator model txt file:
 	# interpolation specifies delta-x and delta-y for each child).
 }}}
 
+For `tween_type` see [Modifiers#Tween_Type].
 
 == Clipped ==
 
