@@ -99,38 +99,36 @@ translator_model {
 } repeat 0 ;
 }}}
 
+The BNF describing the syntaxt of a translator model txt file:
+
 {{{
-    translator_model ::= "feature" "translator_model" name 
-			    "{" trans_key_frame * "}" 
+    translator_model ::= "translator_model" "{" trans_key_frame * "}" 
 			    [ "repeat" frame_number ] 
-			    [ loop_count ]
-			    [ "end_commands" commands ] ";"
-	# "translator_model" can be replaced by the old name "translation"
-	#
+			    [ loop_count ] ";"
+
 	# If you want to set the x,y position programmatically, just have
 	# one key frame.
         # Use "offscreen" keyword for x,y position to place a feature 
         # off the screen without causing the animation engine to repaint extra
-        # region.  Use Integer.MIN_VALUE for x,y position to off-screen 
+        # region. Use Integer.MIN_VALUE for x,y position to off-screen 
         # programatically. 
 
     trans_key_frame ::= frame_number x y trans_tween
 
     trans_tween ::=    "linear-relative"  [ "max-error" integer ]
     		     | tween_type
+
     	# linear and linear-relative are special for translations.  You
 	# should always use linear-relative; that's linear interpolation
 	# using relative coordinates for the child nodes (that is, the
 	# interpolation specifies delta-x and delta-y for each child).
-	#
-	# "linear" is deprecated, and is kept for backwards compatibility
-	# with old show files.  In "linear", the coordinates are absolute
-	# coordinates for the upper-left hand corner of the children.  
-	# Trying to do this this was a bad idea - it's not always possible
-	# to determine the upper-left hand corner of the children.  When it's
-	# not, the compiler will report an error that suggests switching
-	# to linear-relative.
+}}}
 
+== Tween Type ==
+
+The BNF for `tween_type`:
+
+{{{
     tween_type ::=
               "linear"  [ "max-error" integer ]
 	    | "start"
