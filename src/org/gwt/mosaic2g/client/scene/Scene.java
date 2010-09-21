@@ -205,6 +205,10 @@ public class Scene extends Composite implements AnimationClient,
 		}
 	}
 
+	public void setClipBounds(int x, int y, int width, int height) {
+		this.clipRegion = new Rectangle(originX + x, originY + y, width, height);
+	}
+
 	public void setClipBounds(Rectangle r) {
 		this.clipRegion = (r == null) ? null : new Rectangle(originX + r.x,
 				originY + r.y, r.width, r.height);

@@ -53,6 +53,11 @@ public abstract class Control extends Feature implements HasScalingModel {
 				.valueOf(width), Property.valueOf(height));
 	}
 
+	public Control(Show show, int x, int y, Property<Integer> width,
+			Property<Integer> height) {
+		this(show, Property.valueOf(x), Property.valueOf(y), width, height);
+	}
+
 	public Control(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
 		super(show);
