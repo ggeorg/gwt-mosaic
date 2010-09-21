@@ -138,8 +138,16 @@ public class Translator extends Modifier {
 	public boolean nextFrame(Scene scene) {
 		model.nextFrame(scene);
 
-		final int dx = (int) (model.getField(X_FIELD) / 1000.0 * dxP.$());
-		final int dy = (int) (model.getField(Y_FIELD) / 1000.0 * dyP.$());
+		int dx = model.getField(X_FIELD);
+		int dy = model.getField(Y_FIELD);
+		
+		// this is experimental
+		if(dxP != null) {
+			dx = (int) (model.getField(X_FIELD) / 1000.0 * dxP.$());
+		}
+		if(dxP != null) {
+			dy = (int) (model.getField(Y_FIELD) / 1000.0 * dyP.$());
+		}
 
 		if (dx != OFFSCREEN && dy != OFFSCREEN && dx != lastDx || dy != lastDy) {
 			markAsChanged();
