@@ -21,5 +21,5 @@ package org.gwt.mosaic2g.client.scene;
  * @author ggeorg
  */
 public interface InterpolatedModelParser {
-	InterpolatedModel getModel();
+	InterpolatedModel createModel();
 }

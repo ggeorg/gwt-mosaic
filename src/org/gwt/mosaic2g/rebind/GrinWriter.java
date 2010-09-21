@@ -104,7 +104,7 @@ public class GrinWriter {
 
 		writeClassOpen(w);
 
-		w.write("public InterpolatedModel getModel() {");
+		w.write("public InterpolatedModel createModel() {");
 		w.indent();
 		w.write("return new InterpolatedModel(");
 		w.write(makeIntArray(model.frames));
