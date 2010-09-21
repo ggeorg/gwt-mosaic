@@ -27,6 +27,7 @@ import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
 import org.gwt.mosaic2g.client.scene.Fade;
 import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.Group;
 import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Segment;
@@ -67,11 +68,24 @@ public class Showcase implements EntryPoint {
 
 		Box box1 = new Box(show, 20, 20, 100, 100);
 		box1.setBackground("orange");
-		box1.setBorder("5px solid green");
+		box1.setBorder("5px solid red");
+		
+		Box box2 = new Box(show, 100, 100, 50, 50);
+		box2.setBackground("yellow");
+		box2.setBorder("5px solid green");
+		
+		Box box3 = new Box(show, 135, 135, 25, 25);
+		box3.setBackground("cyan");
+		box3.setBorder("5px solid blue");
+		
+		Group group = new Group(show);
+		group.add(box1);
+		group.add(box2);
+		group.add(box3);
 
-		BreathEffect breathEffect = GWT.create(BreathEffect.class);
+		MyFadeModel breathEffect = GWT.create(MyFadeModel.class);
 		Fade fade = new Fade(show, breathEffect.createModel());
-		fade.setPart(box1);
+		fade.setPart(group);
 		
 		Segment segment = new Segment(show);
 		segment.add(fade);
@@ -81,19 +95,19 @@ public class Showcase implements EntryPoint {
 		return show;
 	}
 	
-	@GrinFile(value = "breath-effect.txt")
-	interface BreathEffect extends InterpolatedModelParser {
+	@GrinFile(value = "fade_model.txt")
+	interface MyFadeModel extends InterpolatedModelParser {
 	};
 }
 }}}
 
-The fade model is declared in `breath-effect.txt`: 
+The fade model is declared in `fade_model.txt`: 
 
 {{{
 fade_model {
-	0		255		start
-	25		0		ease-in-cubic
-	50		255		ease-in-cubic
+	0		192		start
+	25		64		linear
+	50		192		ease-out-cubic
 } repeat 0 ;
 }}}
 
