@@ -19,7 +19,7 @@ A translator moves the position of its children on the page by a relative delta-
 A translator is split into two piecces: the actual translator, and the translator model that holds the points.
 
 
-<wiki:gadget url="http://mosaic.arkasoft.com/translator-wiki" height="256" width="512" border="2"/>
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-translator-wiki.xml?v=1" height="256" width="512" border="0"/>
 
 Example:
 
