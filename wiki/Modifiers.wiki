@@ -25,7 +25,87 @@ Example:
 The code:
 
 {{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.InterpolatedModel;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.control.Box;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+	
+	private Show createShow() {
+		Show show = new Show();
+
+		MyScalingModel sm = GWT.create(MyScalingModel.class);
+		InterpolatedModel scalingModel = sm.createModel();
+		
+		Box box1 = new Box(show, 20, 20, 100, 100);
+		box1.setBackground("orange");
+		box1.setBorder("5px solid red");
+		box1.setScalingModel(scalingModel);
+		
+		Box box2 = new Box(show, 100, 100, 50, 50);
+		box2.setBackground("yellow");
+		box2.setBorder("5px solid green");
+		box2.setScalingModel(scalingModel);
+		
+		Box box3 = new Box(show, 135, 135, 25, 25);
+		box3.setBackground("cyan");
+		box3.setBorder("5px solid blue");
+		box3.setScalingModel(scalingModel);
+		
+		Segment segment = new Segment(show);
+		segment.add(box1);
+		segment.add(box2);
+		segment.add(box3);
+
+		show.activateSegment(segment);
+
+		return show;
+	}
+	
+	@GrinFile(value = "scaling_model.txt")
+	interface MyScalingModel extends InterpolatedModelParser {
+	};
+}}}
+
+{{{
+scaling_model {
+	0	40 	40 	1000	1000	start 		mills
+	50	40	40	1500	1500	ease-out-bounce	mills
+	100	40	40	1000	1000	ease-in-bounce	mills
+} repeat 0 ;
 }}}
 
 
@@ -101,8 +181,8 @@ public class Showcase implements EntryPoint {
 		group.add(box2);
 		group.add(box3);
 
-		MyFadeModel breathEffect = GWT.create(MyFadeModel.class);
-		Fade fade = new Fade(show, breathEffect.createModel());
+		MyFadeModel fm = GWT.create(MyFadeModel.class);
+		Fade fade = new Fade(show, fm.createModel());
 		fade.setPart(group);
 		
 		Segment segment = new Segment(show);
