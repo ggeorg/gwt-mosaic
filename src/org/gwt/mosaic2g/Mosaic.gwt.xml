@@ -3,6 +3,7 @@
 	<inherits name="org.gwt.mosaic2g.Color" />
 	<inherits name="org.gwt.mosaic2g.ComputedStyle" />
 	<inherits name="org.gwt.mosaic2g.InterpolatedModel" />
+	<inherits name="org.gwt.mosaic2g.Opacity" />
 	<inherits name="org.gwt.mosaic2g.binding.Binding" />
 
 	<!-- Specify the paths for translatable code -->

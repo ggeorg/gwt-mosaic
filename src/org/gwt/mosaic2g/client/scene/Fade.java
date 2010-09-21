@@ -68,6 +68,8 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.client.style.Opacity;
+
 /**
  * Modifies a child feature by applying an alpha value when drawing in it. This
  * lets you animate a fade-in and fade-out effect. It works be specifying alpha
@@ -83,7 +85,7 @@ public class Fade extends Modifier {
 
 	private final InterpolatedModel model;
 
-	private int lastAlpha;
+	private final Opacity lastAlpha = new Opacity(Integer.MIN_VALUE);
 
 	public Fade(Show show) {
 		this(show, InterpolatedModel.makeDefaultFadeModel());
@@ -102,7 +104,7 @@ public class Fade extends Modifier {
 	protected void setActivateMode(boolean mode) {
 		if (mode) {
 			// Setup initial values
-			lastAlpha = Short.MIN_VALUE;
+			lastAlpha.setOpacity(Integer.MIN_VALUE);
 			model.activate();
 		}
 		super.setActivateMode(mode);
@@ -119,8 +121,8 @@ public class Fade extends Modifier {
 		if (currAlpha < 0) {
 			currAlpha = 0;
 		}
-		if (currAlpha != lastAlpha) {
-			lastAlpha = currAlpha;
+		if (currAlpha != lastAlpha.getOpacity()) {
+			lastAlpha.setOpacity(currAlpha);
 			markAsChanged();
 		}
 
@@ -133,7 +135,7 @@ public class Fade extends Modifier {
 			return;
 		}
 
-		int old = scene.getOpacity();
+		Opacity old = scene.getOpacity();
 		scene.setOpacity(lastAlpha);
 		getPart().paintFrame(scene);
 		scene.setOpacity(old);
