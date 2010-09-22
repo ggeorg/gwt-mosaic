@@ -90,7 +90,8 @@ public abstract class Feature implements Node {
 	private int activateCount = 0;
 	private int setupCount = 0;
 
-	protected boolean changed = false;
+	protected boolean changed;
+	protected boolean resized;
 
 	private Property<Integer> xP;
 	private Property<Integer> yP;
@@ -105,6 +106,7 @@ public abstract class Feature implements Node {
 
 	private final ValueChangeHandler<Integer> sizeChanged = new ValueChangeHandler<Integer>() {
 		public void onValueChange(ValueChangeEvent<Integer> event) {
+			resized = true;
 			markAsChanged();
 		}
 	};
