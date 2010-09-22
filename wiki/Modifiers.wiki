@@ -76,16 +76,16 @@ public class Showcase implements EntryPoint {
 		box1.setBackground("orange");
 		box1.setBorder("5px solid red");
 		box1.setScalingModel(scalingModel);
-		
+
 		Box box2 = new Box(show, 100, 100, 50, 50);
 		box2.setBackground("yellow");
 		box2.setBorder("5px solid green");
-		box2.setScalingModel(scalingModel);
-		
+		box2.setScalingModel(scalingModel, true);
+
 		Box box3 = new Box(show, 135, 135, 25, 25);
 		box3.setBackground("cyan");
 		box3.setBorder("5px solid blue");
-		box3.setScalingModel(scalingModel);
+		box3.setScalingModel(scalingModel, true);
 		
 		Segment segment = new Segment(show);
 		segment.add(box1);
