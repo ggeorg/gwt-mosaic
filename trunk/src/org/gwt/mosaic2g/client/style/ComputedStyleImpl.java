@@ -26,7 +26,7 @@ public class ComputedStyleImpl {
 	    if (property == 'float') { // fix reserved word
 	      property = 'cssFloat';
 	    }
-	    var computed = elem.ownerDocument.defaultView.getComputedStyle(elem, '');
+	    var computed = elem.ownerDocument.defaultView.getComputedStyle(elem, null);
 	    if (computed) { // test computed before touching for safari
 	      value = computed[property];
 	    }
