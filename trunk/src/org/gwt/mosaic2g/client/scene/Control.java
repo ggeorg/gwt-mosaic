@@ -182,6 +182,7 @@ public abstract class Control extends Feature implements HasScalingModel {
 					scaledBounds.reshape(0, 0, 0, 0);
 				}
 			}
+			resized = true;
 			markAsChanged();
 		} else {
 			widget.removeFromParent();
@@ -224,9 +225,13 @@ public abstract class Control extends Feature implements HasScalingModel {
 				&& getHeight().$() != Integer.MIN_VALUE) {
 			scene.renderWidget(widget, scaledBounds.x, scaledBounds.y,
 					scaledBounds.width, scaledBounds.height);
-		} else {
+		} else if (resized) {
 			scene.renderWidget(widget, getX().$(), getY().$(), getWidth().$(),
 					getHeight().$());
+			resized = false;
+		} else {
+			scene.renderWidget(widget, getX().$(), getY().$(),
+					Integer.MIN_VALUE, Integer.MIN_VALUE);
 		}
 
 		changed = false;
