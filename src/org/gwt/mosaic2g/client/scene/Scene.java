@@ -246,6 +246,11 @@ public class Scene extends Composite implements AnimationClient,
 	public void renderWidget(Widget w, int x, int y, int width, int height) {
 		final Element elem = w.getElement();
 
+		if (!w.isAttached()) {
+			// webkit computed style does not work if the widget is not attached
+			target.add(w);
+		}
+
 		if (width >= 0) {
 			width -= ComputedStyle.getPaddingLeft(elem);
 			width -= ComputedStyle.getPaddingRight(elem);
@@ -264,8 +269,8 @@ public class Scene extends Composite implements AnimationClient,
 					w.getOffsetWidth(), w.getOffsetHeight());
 		}
 
-		//if (opacity >= 0 && opacity <= 255) {
-		if(opacity != null) {
+		// if (opacity >= 0 && opacity <= 255) {
+		if (opacity != null) {
 			opacity.applyTo(elem);
 		}
 
@@ -275,11 +280,11 @@ public class Scene extends Composite implements AnimationClient,
 		y -= ComputedStyle.getMarginTop(elem);
 		y -= ComputedStyle.getBorderTopWidth(elem);
 
-		if (!w.isAttached()) {
-			target.add(w, originX + x, originY + y);
-		} else {
-			target.setWidgetPosition(w, originX + x, originY + y);
-		}
+		// if (!w.isAttached()) {
+		// target.add(w, originX + x, originY + y);
+		// } else {
+		target.setWidgetPosition(w, originX + x, originY + y);
+		// }
 	}
 
 	private void clipWidget(Element elem, int absoluteLeft, int absoluteTop,
