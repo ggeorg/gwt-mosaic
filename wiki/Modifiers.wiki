@@ -22,7 +22,7 @@ Both the scaling factors and the anchor point can be animated. As with other ani
 
 Scaling model example:
 
-<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-scaling-wiki.xml?v=2" height="256" width="512" border="0"/>
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-scaling-wiki.xml?v=3" height="256" width="512" border="0"/>
 
 Code:
 
