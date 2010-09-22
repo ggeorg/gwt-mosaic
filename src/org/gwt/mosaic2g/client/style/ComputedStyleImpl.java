@@ -30,7 +30,7 @@ public class ComputedStyleImpl {
 	    if (computed) { // test computed before touching for safari
 	      value = computed[property];
 	    }
-	    return (elem.style[property] || value || '');
+	    return (value || elem.style[property] || '');
 	  } else { // default to inline only
 	    return (elem.style[property] || '');
 	  }
