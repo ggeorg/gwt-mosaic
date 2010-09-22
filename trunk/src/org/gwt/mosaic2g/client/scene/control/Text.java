@@ -123,6 +123,10 @@ public class Text extends Control implements HasAlignment, Resizable {
 	public Text(Show show, int x, int y) {
 		super(show, x, y, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
+	
+	public Text(Show show, int x, int y, int width, int height) {
+		super(show, x, y, width, height);
+	}
 
 	public String getText() {
 		return text;
