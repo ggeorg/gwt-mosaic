@@ -23,6 +23,7 @@ import org.gwt.mosaic2g.client.style.ComputedStyle;
 import org.gwt.mosaic2g.client.style.Opacity;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -64,6 +65,16 @@ public class Scene extends Composite implements AnimationClient,
 
 	public Scene() {
 		this(new AbsolutePanel() {
+			@Override
+			public void setWidgetPosition(Widget w, int left, int top) {
+				if (!GWT.isProdMode()) {
+					super.setWidgetPosition(w, left, top);
+				} else {
+					// we need to be fast, so no parent check in production
+					setWidgetPositionImpl(w, left, top);
+				}
+			}
+
 			@Override
 			protected void setWidgetPositionImpl(Widget w, int left, int top) {
 				/*
