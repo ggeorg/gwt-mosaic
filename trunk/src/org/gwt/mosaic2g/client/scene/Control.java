@@ -19,15 +19,36 @@ import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.dom.client.HasMouseDownHandlers;
+import com.google.gwt.event.dom.client.HasMouseMoveHandlers;
+import com.google.gwt.event.dom.client.HasMouseOutHandlers;
+import com.google.gwt.event.dom.client.HasMouseOverHandlers;
+import com.google.gwt.event.dom.client.HasMouseUpHandlers;
+import com.google.gwt.event.dom.client.HasMouseWheelHandlers;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
  * @author ggeorg
  */
-public abstract class Control extends Feature implements HasScalingModel {
+public abstract class Control extends Feature implements HasScalingModel,
+		HasAllMouseHandlers, HasClickHandlers, HasDoubleClickHandlers {
 	private static final String DEFAULT_BORDER = "0px none";
 	private static final String DEFAULT_BACKGROUND = "none";
 
@@ -78,6 +99,13 @@ public abstract class Control extends Feature implements HasScalingModel {
 	public void setScalingModel(InterpolatedModel scalingModel, boolean managed) {
 		this.scalingModel = scalingModel;
 		this.managedSM = managed;
+		if (isSetup()) {
+			getShow().runCommand(new Command() {
+				public void execute() {
+					setActivateMode(true);
+				}
+			});
+		}
 	}
 
 	public Rectangle getScaledBounds() {
@@ -235,6 +263,109 @@ public abstract class Control extends Feature implements HasScalingModel {
 		}
 
 		changed = false;
+	}
+
+	// ---------------------------------------------------------------------
+	// Mouse Handlers
+	// ---------------------------------------------------------------------
+
+	private void checkSetup() {
+		if (!isSetup()) {
+			throw new IllegalStateException(
+					"Can't add a handler to a control that is not setup");
+		}
+	}
+
+	public void fireEvent(GwtEvent<?> event) {
+		checkSetup();
+		widget.fireEvent(event);
+	}
+
+	public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+		checkSetup();
+		if (widget instanceof HasMouseDownHandlers) {
+			return ((HasMouseDownHandlers) widget).addMouseDownHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasMouseDownHandlers.class.getName()
+						+ " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+		checkSetup();
+		if (widget instanceof HasMouseUpHandlers) {
+			return ((HasMouseUpHandlers) widget).addMouseUpHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasMouseUpHandlers.class.getName() + " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+		checkSetup();
+		if (widget instanceof HasMouseOutHandlers) {
+			return ((HasMouseOutHandlers) widget).addMouseOutHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasMouseOutHandlers.class.getName() + " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+		checkSetup();
+		if (widget instanceof HasMouseOverHandlers) {
+			return ((HasMouseOverHandlers) widget).addMouseOverHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasMouseOverHandlers.class.getName()
+						+ " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+		checkSetup();
+		if (widget instanceof HasMouseMoveHandlers) {
+			return ((HasMouseMoveHandlers) widget).addMouseMoveHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasMouseMoveHandlers.class.getName()
+						+ " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
+		checkSetup();
+		if (widget instanceof HasMouseWheelHandlers) {
+			return ((HasMouseWheelHandlers) widget)
+					.addMouseWheelHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasMouseWheelHandlers.class.getName()
+						+ " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+		checkSetup();
+		if (widget instanceof HasDoubleClickHandlers) {
+			return ((HasDoubleClickHandlers) widget)
+					.addDoubleClickHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasDoubleClickHandlers.class.getName()
+						+ " is not implemented by "
+						+ widget.getClass().getName());
+	}
+
+	public HandlerRegistration addClickHandler(ClickHandler handler) {
+		checkSetup();
+		if (widget instanceof HasClickHandlers) {
+			return ((HasClickHandlers) widget).addClickHandler(handler);
+		}
+		throw new UnsupportedOperationException(
+				HasClickHandlers.class.getName() + " is not implemented by "
+						+ widget.getClass().getName());
 	}
 
 }
