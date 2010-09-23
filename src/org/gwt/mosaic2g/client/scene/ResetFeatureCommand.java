@@ -14,7 +14,7 @@
  * the License.
  */
 /*  
- * Copyright (c) 2007, Sun Microsystems, Inc.
+ * Copyright (c) 2008, Sun Microsystems, Inc.
  * 
  * All rights reserved.
  * 
@@ -66,103 +66,28 @@
  *             A copy of the license(s) governing this code is located
  *             at https://hdcookbook.dev.java.net/misc/license.html
  */
-package org.gwt.mosaic2g.client.scene.control;
+package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.client.scene.Control;
-import org.gwt.mosaic2g.client.scene.Show;
-
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Command;
 
 /**
+ * A command to reset a feature to the state it is in when activated. Grouping
+ * features, like {@link Group} and {@link Assembly}, reset their children as
+ * appropriate (e.g. an Assembly resets its active sub-feature).
  * 
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Box extends Control {
+public class ResetFeatureCommand implements Command {
 
-	public Box(Show show, int x, int y, int width, int height) {
-		super(show, x, y, width, height);
+	private final Feature feature;
+
+	public ResetFeatureCommand(Feature feature) {
+		this.feature = feature;
 	}
 
-	public Box(Show show, int x, int y, Property<Integer> width,
-			Property<Integer> height) {
-		super(show, x, y, width, height);
-	}
-
-	public Box(Show show, Property<Integer> x, Property<Integer> y,
-			Property<Integer> width, Property<Integer> height) {
-		super(show, x, y, width, height);
-	}
-
-	@Override
-	protected Widget createWidget() {
-		final Widget result = new BoxWidget();
-		updateWidget(result, true);
-		return result;
-	}
-
-	// -------------------------
-	private class BoxWidget extends Widget implements HasClickHandlers,
-			HasDoubleClickHandlers, HasAllMouseHandlers {
-		public BoxWidget() {
-			setElement(Document.get().createDivElement());
-		}
-
-		public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-			return addDomHandler(handler, MouseDownEvent.getType());
-		}
-
-		public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-			return addDomHandler(handler, MouseUpEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-			return addDomHandler(handler, MouseOutEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-			return addDomHandler(handler, MouseOverEvent.getType());
-		}
-
-		public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-			return addDomHandler(handler, MouseMoveEvent.getType());
-		}
-
-		public HandlerRegistration addMouseWheelHandler(
-				MouseWheelHandler handler) {
-			return addDomHandler(handler, MouseWheelEvent.getType());
-		}
-
-		public HandlerRegistration addDoubleClickHandler(
-				DoubleClickHandler handler) {
-			return addHandler(handler, DoubleClickEvent.getType());
-		}
-
-		public HandlerRegistration addClickHandler(ClickHandler handler) {
-			return addDomHandler(handler, ClickEvent.getType());
-		}
+	public void execute() {
+		feature.resetFeature();
 	}
 
 }

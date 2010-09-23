@@ -357,5 +357,16 @@ public abstract class Feature implements Node {
 		}
 		show.runCommand(featureSetupCommand);
 	}
+	
+	/**
+	 * Called from the {@link ResetFeatureCommand}, this should reset the internal
+     * state of the feature to what it was when first activated.
+	 */
+	public final void resetFeature() {
+		if(activateCount > 0) {
+			setActivateMode(false);
+			setActivateMode(true);
+		}
+	}
 
 }

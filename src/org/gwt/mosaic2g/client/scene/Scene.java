@@ -260,6 +260,9 @@ public class Scene extends Composite implements AnimationClient,
 		if (!w.isAttached()) {
 			// webkit computed style does not work if the widget is not attached
 			target.add(w);
+
+			// TODO try target.insert(w, index) to fix the z-index issue in
+			// scene transitions
 		}
 
 		if (width >= 0) {
