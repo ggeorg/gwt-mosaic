@@ -72,8 +72,9 @@ import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.MyClientBundle;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
-import org.gwt.mosaic2g.client.scene.layout.Resizable;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -92,7 +93,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Text extends Control implements HasAlignment, Resizable {
+public class Text extends Control implements HasAlignment {
 
 	private String text;
 	private boolean asHTML;
@@ -119,11 +120,11 @@ public class Text extends Control implements HasAlignment, Resizable {
 			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
 	}
-	
+
 	public Text(Show show, int x, int y) {
 		super(show, x, y, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
-	
+
 	public Text(Show show, int x, int y, int width, int height) {
 		super(show, x, y, width, height);
 	}
@@ -170,25 +171,19 @@ public class Text extends Control implements HasAlignment, Resizable {
 		vertAlignChanged = true;
 	}
 
-	public int getPrefWidth() {
-		if (cachedWidget == null) {
-			return super.getWidth().$();
-		} else {
-			return cachedWidget.getElement().getClientWidth();
-		}
-	}
-
-	public int getPrefHeight() {
-		if (cachedWidget == null) {
-			return super.getHeight().$();
-		} else {
-			return cachedWidget.getElement().getClientHeight();
-		}
-	}
-
 	@Override
 	protected Widget createWidget() {
-		updateWidget(cachedWidget = new LabelWidget(), true);
+		updateWidget(cachedWidget = new LabelWidget() {
+			@Override
+			protected void onLoad() {
+				super.onLoad();
+				DeferredCommand.addCommand(new Command() {
+					public void execute() {
+						Text.this.markAsChanged();
+					}
+				});
+			}
+		}, true);
 		return cachedWidget;
 	}
 
