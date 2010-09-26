@@ -127,6 +127,55 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 	}
 
 	// ---------------------------------------------------------------------
+	private HandlerRegistration otherHR = null;
+	private HandlerRegistration thizHR = null;
+
+	public void bindReadOnly(final Property<T> other) {
+		if (other == null) {
+			throw new NullPointerException("Can't bind to 'null'");
+		}
+		if (otherHR != null) {
+			otherHR.removeHandler();
+			otherHR = null;
+		}
+		if (thizHR != null) {
+			thizHR.removeHandler();
+			thizHR = null;
+		}
+		final Property<T> thiz = this;
+		other.addValueChangeHandler(new ValueChangeHandler<T>() {
+			public void onValueChange(ValueChangeEvent<T> event) {
+				thiz.$(other.$());
+			}
+		});
+	}
+	
+	public void bind(final Property<T> other) {
+		if (other == null) {
+			throw new NullPointerException("Can't bind to 'null'");
+		}
+		if (otherHR != null) {
+			otherHR.removeHandler();
+			otherHR = null;
+		}
+		if (thizHR != null) {
+			thizHR.removeHandler();
+			thizHR = null;
+		}
+		final Property<T> thiz = this;
+		other.addValueChangeHandler(new ValueChangeHandler<T>() {
+			public void onValueChange(ValueChangeEvent<T> event) {
+				thiz.$(other.$());
+			}
+		});
+		thiz.addValueChangeHandler(new ValueChangeHandler<T>() {
+			public void onValueChange(ValueChangeEvent<T> event) {
+				other.$(thiz.$());
+			}
+		});
+	}
+
+	// ---------------------------------------------------------------------
 	public Property<T> createReadOnlyBinding() {
 		return createBinding(new Getter<T>() {
 			public T get(T value) {
