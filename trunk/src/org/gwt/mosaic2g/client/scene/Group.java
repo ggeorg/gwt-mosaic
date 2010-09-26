@@ -69,7 +69,6 @@
 package org.gwt.mosaic2g.client.scene;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import org.gwt.mosaic2g.binding.client.Property;
 
@@ -81,14 +80,26 @@ import org.gwt.mosaic2g.binding.client.Property;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Group extends Feature implements HasFeatures {
+public class Group extends HasFeaturesImpl {
 
-	protected FeatureCollection parts = new FeatureCollection(this);
-
-	private int numSetupChecked;
+	private InterpolatedModel scalingModel;
+	private boolean managedSM;
 
 	public Group(Show show) {
 		super(show);
+	}
+
+	public InterpolatedModel getScalingModel() {
+		return scalingModel;
+	}
+
+	public void setScalingModel(InterpolatedModel scalingModel) {
+		setScalingModel(scalingModel, false);
+	}
+
+	public void setScalingModel(InterpolatedModel scalingModel, boolean managed) {
+		this.scalingModel = scalingModel;
+		this.managedSM = managed;
 	}
 
 	@Override
@@ -124,18 +135,16 @@ public class Group extends Feature implements HasFeatures {
 		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			
 			int w = f.getWidth().$();
 			if (w == Integer.MIN_VALUE) {
-				if(f instanceof Control) {
-					if(w == Integer.MIN_VALUE) {
+				if (f instanceof Control) {
+					if (w == Integer.MIN_VALUE) {
 						w = ((Control) f).getPrefWidth();
 					}
 				} else {
 					continue;
 				}
 			}
-			
 			final int fw = w + (f.getX().$() - left); // TODO check offscreen
 			if (fw > width) {
 				width = fw;
@@ -151,18 +160,16 @@ public class Group extends Feature implements HasFeatures {
 		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			
 			int h = f.getHeight().$();
 			if (h == Integer.MIN_VALUE) {
-				if(f instanceof Control) {
-					if(h == Integer.MIN_VALUE) {
+				if (f instanceof Control) {
+					if (h == Integer.MIN_VALUE) {
 						h = ((Control) f).getPrefHeight();
 					}
 				} else {
 					continue;
 				}
 			}
-			
 			final int fh = h + (f.getY().$() - top); // TODO check offscreen
 			if (fh > height) {
 				height = fh;
@@ -173,69 +180,45 @@ public class Group extends Feature implements HasFeatures {
 
 	@Override
 	protected void setSetupMode(boolean mode) {
-		if (mode) {
-			numSetupChecked = 0;
-			Iterator<Feature> it = iterator();
-			while (it.hasNext()) {
-				it.next().setup();
-			}
-		} else {
-			Iterator<Feature> it = iterator();
-			while (it.hasNext()) {
-				it.next().unsetup();
+		if (scalingModel != null) {
+			if (mode) {
+				Iterator<Feature> it = iterator();
+				while (it.hasNext()) {
+					final Feature f = it.next();
+					if (f instanceof HasScalingModel) {
+						((HasScalingModel) f).setScalingModel(scalingModel,
+								true);
+					}
+				}
+			} else {
+				Iterator<Feature> it = iterator();
+				while (it.hasNext()) {
+					final Feature f = it.next();
+					if (f instanceof HasScalingModel) {
+						((HasScalingModel) f).setScalingModel(null);
+					}
+				}
 			}
 		}
-	}
-
-	@Override
-	public boolean needsMoreSetup() {
-		while (numSetupChecked < parts.size()) {
-			if (parts.get(numSetupChecked).needsMoreSetup()) {
-				return true;
-			}
-			/*
-			 * Once a part doesn't need more setup, it will never go back to
-			 * needing setup until we call unsetup() then setup(). The variable
-			 * numSetupChecked is re-set to 0 just before calling setup() on our
-			 * part, so this is safe. Note that the contract of Feature requires
-			 * that setup() be called before needsMoreSetup() is consulted.
-			 * 
-			 * This optimization helps speed the calculation of needsMoreSetup()
-			 * in the case where a group or an assembly is the child of multiple
-			 * parts of an assembly. With this optimization, a potential O(n^2)
-			 * is turned into O(n) (albeit typically with a small n).
-			 */
-			numSetupChecked++;
-		}
-		return false;
+		super.setSetupMode(mode);
 	}
 
 	@Override
 	protected void setActivateMode(boolean mode) {
+		super.setActivateMode(mode);
 		if (mode) {
-			Iterator<Feature> it = iterator();
-			while (it.hasNext()) {
-				it.next().activate();
+			if (scalingModel != null && !managedSM) {
+				scalingModel.activate();
 			}
-		} else {
-			Iterator<Feature> it = iterator();
-			while (it.hasNext()) {
-				it.next().deactivate();
-			}
-		}
-	}
-
-	@Override
-	public void markAsChanged() {
-		super.markAsChanged();
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			it.next().markAsChanged();
+			markAsChanged();
 		}
 	}
 
 	@Override
 	public boolean nextFrame(Scene scene) {
+		if (scalingModel != null && !managedSM) {
+			scalingModel.nextFrame(scene);
+		}
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			if (it.next().nextFrame(scene)) {
@@ -258,32 +241,4 @@ public class Group extends Feature implements HasFeatures {
 		}
 	}
 
-	public void add(Feature f) {
-		parts.add(f);
-	}
-
-	public void clear() {
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			it.next();
-			it.remove();
-		}
-	}
-
-	public Iterator<Feature> iterator() {
-		return getParts().iterator();
-	}
-
-	protected FeatureCollection getParts() {
-		return parts;
-	}
-
-	public boolean remove(Feature f) {
-		try {
-			parts.remove(f);
-		} catch (NoSuchElementException ex) {
-			return false;
-		}
-		return true;
-	}
 }
