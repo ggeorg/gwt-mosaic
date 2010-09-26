@@ -29,10 +29,6 @@ public interface Resizable {
 
 	//int getMinHeight();
 
-	int getPrefWidth();
-
-	int getPrefHeight();
-
 	//int getMaxWidth();
 
 	//int getMaxHeight();

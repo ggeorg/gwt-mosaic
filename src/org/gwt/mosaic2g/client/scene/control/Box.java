@@ -71,6 +71,7 @@ package org.gwt.mosaic2g.client.scene.control;
 import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.layout.Resizable;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -100,7 +101,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Box extends Control {
+public class Box extends Control implements Resizable {
 
 	public Box(Show show, int x, int y, int width, int height) {
 		super(show, x, y, width, height);

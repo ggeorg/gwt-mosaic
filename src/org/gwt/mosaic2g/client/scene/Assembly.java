@@ -68,7 +68,8 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.binding.client.Property;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * An {@code Assembly} is a feature composed of other features. It is a bit like
@@ -79,9 +80,14 @@ import org.gwt.mosaic2g.binding.client.Property;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Assembly extends Group implements HasFeatures {
+public class Assembly extends Feature /* TODO Group ??? */implements
+		HasFeatures {
+
+	protected FeatureCollection parts = new FeatureCollection(this);
 
 	private Feature currentPart = null;
+
+	private int numSetupChecked;
 
 	public Assembly(Show show) {
 		super(show);
@@ -95,41 +101,60 @@ public class Assembly extends Group implements HasFeatures {
 		if (currentPart == part) {
 			return;
 		}
+
 		if (isActivated() && getParts().contains(part)) {
 			part.activate();
 			currentPart.deactivate();
 		}
 		currentPart = part;
-	}
 
-	@Override
-	public Property<Integer> getX() {
-		return currentPart.getX();
-	}
-
-	@Override
-	public Property<Integer> getY() {
-		return currentPart.getY();
-	}
-
-	@Override
-	public Property<Integer> getWidth() {
-		return currentPart.getWidth();
-	}
-
-	@Override
-	public Property<Integer> getHeight() {
-		return currentPart.getHeight();
+		if (currentPart != null) {
+			getX().bind(currentPart.getX());
+			getY().bind(currentPart.getY());
+			getWidth().bind(currentPart.getWidth());
+			getHeight().bind(currentPart.getHeight());
+		}
 	}
 
 	@Override
 	protected void setSetupMode(boolean mode) {
-		super.setSetupMode(mode);
 		if (mode) {
-			currentPart = parts.get(0);
+			numSetupChecked = 0;
+			Iterator<Feature> it = iterator();
+			while (it.hasNext()) {
+				it.next().setup();
+			}
+			setCurrentPart(parts.get(0));
 		} else {
-			currentPart = null;
+			Iterator<Feature> it = iterator();
+			while (it.hasNext()) {
+				it.next().unsetup();
+			}
+			setCurrentPart(null);
 		}
+	}
+
+	@Override
+	public boolean needsMoreSetup() {
+		while (numSetupChecked < parts.size()) {
+			if (parts.get(numSetupChecked).needsMoreSetup()) {
+				return true;
+			}
+			/*
+			 * Once a part doesn't need more setup, it will never go back to
+			 * needing setup until we call unsetup() then setup(). The variable
+			 * numSetupChecked is re-set to 0 just before calling setup() on our
+			 * part, so this is safe. Note that the contract of Feature requires
+			 * that setup() be called before needsMoreSetup() is consulted.
+			 * 
+			 * This optimization helps speed the calculation of needsMoreSetup()
+			 * in the case where a group or an assembly is the child of multiple
+			 * parts of an assembly. With this optimization, a potential O(n^2)
+			 * is turned into O(n) (albeit typically with a small n).
+			 */
+			numSetupChecked++;
+		}
+		return false;
 	}
 
 	@Override
@@ -138,6 +163,15 @@ public class Assembly extends Group implements HasFeatures {
 			currentPart.activate();
 		} else {
 			currentPart.deactivate();
+		}
+	}
+
+	@Override
+	public void markAsChanged() {
+		super.markAsChanged();
+		Iterator<Feature> it = iterator();
+		while (it.hasNext()) {
+			it.next().markAsChanged();
 		}
 	}
 
@@ -154,4 +188,32 @@ public class Assembly extends Group implements HasFeatures {
 		currentPart.paintFrame(scne);
 	}
 
+	public void add(Feature f) {
+		parts.add(f);
+	}
+
+	public void clear() {
+		Iterator<Feature> it = iterator();
+		while (it.hasNext()) {
+			it.next();
+			it.remove();
+		}
+	}
+
+	public Iterator<Feature> iterator() {
+		return getParts().iterator();
+	}
+
+	protected FeatureCollection getParts() {
+		return parts;
+	}
+
+	public boolean remove(Feature f) {
+		try {
+			parts.remove(f);
+		} catch (NoSuchElementException ex) {
+			return false;
+		}
+		return true;
+	}
 }

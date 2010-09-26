@@ -18,18 +18,47 @@ package org.gwt.mosaic2g.client.scene.layout;
 import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Group;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
+import com.google.gwt.i18n.client.BidiUtils;
+import com.google.gwt.i18n.client.HasDirection.Direction;
+import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+
 /**
+ * The {@code Stack} container arranges its child nodes in a back-to-front
+ * stack. The z-order of the child nodes is defined by the order the child nodes
+ * are added to the {@code Stack}.
+ * <p>
+ * By default, the preferred size of a stack will be the size required the
+ * largest preferred width and height of its managed child nodes.
+ * <p>
+ * {@link Resizable} child nodes will be resized to fill the width/height of the
+ * {@code Stack} container unless either of the of the dimensions are greater
+ * than the resizable's maximum width/height, in which case the node's maximum
+ * dimension will be used. Nodes which cannot be resized to fill the stack
+ * (either because they are not {@link Resizable} or their size prevents it)
+ * will be aligned within the space according to the TODO, which both default to
+ * {@code CENTER}.
  * 
  * @author ggeorg
  */
-public class Stack extends Group {
+public class Stack extends Group implements HasAutoHorizontalAlignment,
+		HasVerticalAlignment {
 
-	private int lastX, lastY;
+	private HorizontalAlignmentConstant horzAlign = HasHorizontalAlignment.ALIGN_CENTER;
+
+	private VerticalAlignmentConstant vertAlign = HasVerticalAlignment.ALIGN_MIDDLE;
+
+	private AutoHorizontalAlignmentConstant autoHorizontalAlignment;
+	private boolean autoHorzAlignChanged;
+
+	private int lastX, lastY, lastWidth, lastHeight;
 
 	public Stack(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0));
@@ -45,20 +74,60 @@ public class Stack extends Group {
 	protected void setSetupMode(boolean mode) {
 		super.setSetupMode(mode);
 		if (mode) {
-			lastX = Integer.MAX_VALUE;
-			lastY = Integer.MAX_VALUE;
+			lastX = lastY = OFFSCREEN;
+			lastWidth = lastHeight = Integer.MIN_VALUE;
 		}
 	}
 
 	@Override
 	public boolean nextFrame(Scene scene) {
-		changed = super.nextFrame(scene);
-		int X = getX().$() + getWidth().$() / 2;
-		int Y = getY().$() + getHeight().$() / 2;
-		if (lastX != X || lastY != Y) {
-			lastX = X;
-			lastY = Y;
-			markAsChanged();
+		changed = (changed || super.nextFrame(scene));
+		if (autoHorzAlignChanged) {
+			HorizontalAlignmentConstant align;
+			if (autoHorizontalAlignment == null) {
+				align = null;
+			} else if (autoHorizontalAlignment instanceof HorizontalAlignmentConstant) {
+				align = (HorizontalAlignmentConstant) autoHorizontalAlignment;
+			} else {
+				/*
+				 * autoHorizontalAlignment is a truly automatic policy, i.e.
+				 * either ALIGN_CONTENT_START or ALIGN_CONTENT_END
+				 */
+				Direction sceneDir = BidiUtils.getDirectionOnElement(scene
+						.getElement());
+				align = (autoHorizontalAlignment == ALIGN_CONTENT_START) ? HorizontalAlignmentConstant
+						.startOf(sceneDir) : HorizontalAlignmentConstant
+						.endOf(sceneDir);
+			}
+			if (align != horzAlign) {
+				horzAlign = align;
+			}
+		}
+		if (changed) {
+			int x = getX().$();
+			int y = getY().$();
+			int width = getWidth().$();
+			int height = getHeight().$();
+
+			if (horzAlign == Stack.ALIGN_RIGHT) {
+				x += width;
+			} else if (horzAlign == Stack.ALIGN_CENTER) {
+				x += (width / 2);
+			}/* else { default } */
+
+			if (vertAlign == Stack.ALIGN_BOTTOM) {
+				y += height;
+			} else if (vertAlign == Stack.ALIGN_MIDDLE) {
+				y += (height / 2);
+			}/* else { default } */
+
+			if (lastX != x || lastY != y || lastWidth != width
+					|| lastHeight != height) {
+				lastX = x;
+				lastY = y;
+				lastWidth = width;
+				lastHeight = height;
+			}
 		}
 		return changed;
 	}
@@ -72,14 +141,36 @@ public class Stack extends Group {
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			final int w = f.getWidth().$();
-			final int h = f.getHeight().$();
 
-			if (w == Integer.MIN_VALUE || h == Integer.MIN_VALUE) {
-				continue;
+			int w = f.getWidth().$();
+			int h = f.getHeight().$();
+
+			if (f instanceof Resizable) {
+				f.getWidth().$(lastWidth);
+				f.getHeight().$(lastHeight);
 			}
-			int dx = (lastX - f.getX().$()) - (w / 2);
-			int dy = (lastY - f.getY().$()) - (h / 2);
+
+			if (w == Integer.MIN_VALUE) {
+				w = ((Control) f).getPrefWidth();// lastWidth;
+			}
+			if (h == Integer.MIN_VALUE) {
+				h = ((Control) f).getPrefHeight();// lastHeight;
+			}
+
+			int dx = (lastX - f.getX().$());
+			int dy = (lastY - f.getY().$());
+
+			if (horzAlign == Stack.ALIGN_RIGHT) {
+				dx -= w;
+			} else if (horzAlign == Stack.ALIGN_CENTER) {
+				dx -= (w / 2);
+			} /* else { default } */
+
+			if (vertAlign == Stack.ALIGN_BOTTOM) {
+				dy -= h;
+			} else if (vertAlign == Stack.ALIGN_MIDDLE) {
+				dy -= (h / 2);
+			} /* else { default } */
 
 			scene.translate(dx, dy);
 			f.paintFrame(scene);
@@ -87,6 +178,44 @@ public class Stack extends Group {
 		}
 
 		changed = false;
+	}
+
+	public HorizontalAlignmentConstant getHorizontalAlignment() {
+		return horzAlign;
+	}
+
+	public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
+		if (this.horzAlign == align) {
+			return;
+		}
+		this.horzAlign = align;
+		markAsChanged();
+	}
+
+	public AutoHorizontalAlignmentConstant getAutoHorizontalAlignment() {
+		return autoHorizontalAlignment;
+	}
+
+	public void setAutoHorizontalAlignment(
+			AutoHorizontalAlignmentConstant autoHorizontalAlignment) {
+		if (this.autoHorizontalAlignment == autoHorizontalAlignment) {
+			return;
+		}
+		this.autoHorizontalAlignment = autoHorizontalAlignment;
+		this.autoHorzAlignChanged = true;
+		markAsChanged();
+	}
+
+	public VerticalAlignmentConstant getVerticalAlignment() {
+		return vertAlign;
+	}
+
+	public void setVerticalAlignment(VerticalAlignmentConstant align) {
+		if (this.vertAlign == align) {
+			return;
+		}
+		this.vertAlign = align;
+		markAsChanged();
 	}
 
 }

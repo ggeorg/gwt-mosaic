@@ -88,6 +88,22 @@ public abstract class Control extends Feature implements HasScalingModel,
 		setHeight(height);
 	}
 
+	public int getPrefWidth() {
+		if (widget == null || !widget.isAttached()) {
+			return super.getWidth().$();
+		} else {
+			return widget.getElement().getClientWidth();
+		}
+	}
+
+	public int getPrefHeight() {
+		if (widget == null || !widget.isAttached()) {
+			return super.getHeight().$();
+		} else {
+			return widget.getElement().getClientHeight();
+		}
+	}
+
 	public InterpolatedModel getScalingModel() {
 		return scalingModel;
 	}

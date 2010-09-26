@@ -93,7 +93,7 @@ public class Group extends Feature implements HasFeatures {
 
 	@Override
 	public Property<Integer> getX() {
-		int x = Integer.MAX_VALUE;
+		int x = OFFSCREEN;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			int val = it.next().getX().$();
@@ -106,7 +106,7 @@ public class Group extends Feature implements HasFeatures {
 
 	@Override
 	public Property<Integer> getY() {
-		int y = Integer.MAX_VALUE;
+		int y = OFFSCREEN;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			int val = it.next().getY().$();
@@ -124,7 +124,19 @@ public class Group extends Feature implements HasFeatures {
 		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			final int fw = f.getWidth().$() + (f.getX().$() - left);
+			
+			int w = f.getWidth().$();
+			if (w == Integer.MIN_VALUE) {
+				if(f instanceof Control) {
+					if(w == Integer.MIN_VALUE) {
+						w = ((Control) f).getPrefWidth();
+					}
+				} else {
+					continue;
+				}
+			}
+			
+			final int fw = w + (f.getX().$() - left); // TODO check offscreen
 			if (fw > width) {
 				width = fw;
 			}
@@ -139,7 +151,19 @@ public class Group extends Feature implements HasFeatures {
 		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			final int fh = f.getHeight().$() + (f.getY().$() - top);
+			
+			int h = f.getHeight().$();
+			if (h == Integer.MIN_VALUE) {
+				if(f instanceof Control) {
+					if(h == Integer.MIN_VALUE) {
+						h = ((Control) f).getPrefHeight();
+					}
+				} else {
+					continue;
+				}
+			}
+			
+			final int fh = h + (f.getY().$() - top); // TODO check offscreen
 			if (fh > height) {
 				height = fh;
 			}

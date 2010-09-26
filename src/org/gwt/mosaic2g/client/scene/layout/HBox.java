@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.Container;
+import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
@@ -65,8 +66,8 @@ public class HBox extends Container {
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			if (f instanceof Resizable) {
-				result += ((Resizable) f).getPrefWidth();
+			if (f instanceof Control) {
+				result += ((Control) f).getPrefWidth();
 			} else {
 				int val = f.getWidth().$();
 				if (val == Integer.MIN_VALUE) {
