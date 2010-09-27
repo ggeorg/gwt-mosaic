@@ -26,7 +26,7 @@ import org.gwt.mosaic2g.client.util.Rectangle;
  * 
  * @author ggeorg
  */
-public class Container extends Group implements HasPrefSize, Resizable {
+public class Container extends HasFeaturesImpl implements HasPrefSize, Resizable {
 
 	public Container(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
@@ -38,11 +38,25 @@ public class Container extends Group implements HasPrefSize, Resizable {
 	}
 
 	public int getPrefWidth() {
-		return super.getWidth().$();
+		throw new UnsupportedOperationException("TODO");
 	}
 
 	public int getPrefHeight() {
-		return super.getHeight().$();
+		throw new UnsupportedOperationException("TODO");
+	}
+	
+	@Override
+	public boolean nextFrame(Scene scene) {
+		Iterator<Feature> it = iterator();
+		while (it.hasNext()) {
+			Feature f = it.next();
+			if (f.nextFrame(scene)) {
+				if (!changed) {
+					changed = true;
+				}
+			}
+		}
+		return changed;
 	}
 
 	@Override
@@ -77,4 +91,5 @@ public class Container extends Group implements HasPrefSize, Resizable {
 
 		paintDone();
 	}
+	
 }
