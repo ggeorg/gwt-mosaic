@@ -16,6 +16,7 @@
 package org.gwt.mosaic2g.client.scene;
 
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
 import com.google.gwt.dom.client.Style;
@@ -47,8 +48,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author ggeorg
  */
-public abstract class Control extends Feature implements HasScalingModel,
-		HasAllMouseHandlers, HasClickHandlers, HasDoubleClickHandlers {
+public abstract class Control extends Feature implements HasPrefSize,
+		HasScalingModel, HasAllMouseHandlers, HasClickHandlers,
+		HasDoubleClickHandlers {
 	private static final String DEFAULT_BORDER = "0px none";
 	private static final String DEFAULT_BACKGROUND = "none";
 
@@ -278,7 +280,7 @@ public abstract class Control extends Feature implements HasScalingModel,
 					Integer.MIN_VALUE, Integer.MIN_VALUE);
 		}
 
-		changed = false;
+		paintDone();
 	}
 
 	// ---------------------------------------------------------------------

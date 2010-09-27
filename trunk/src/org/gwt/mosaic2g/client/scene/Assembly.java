@@ -134,10 +134,11 @@ public class Assembly extends HasFeaturesImpl {
 
 	@Override
 	public void paintFrame(Scene scne) {
-		if (!changed) {
+		if (!isActivated() || !changed) {
 			return;
 		}
 		currentPart.paintFrame(scne);
+		paintDone();
 	}
 
 }

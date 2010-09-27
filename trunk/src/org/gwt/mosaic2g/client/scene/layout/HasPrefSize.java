@@ -13,21 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwt.mosaic2g.client.scene;
-
-import java.util.Iterator;
+package org.gwt.mosaic2g.client.scene.layout;
 
 /**
  * 
  * @author ggeorg
  */
-public interface HasFeatures {
+public interface HasPrefSize {
 
-	void add(Feature f);
-	
-	void clear();
-	
-	Iterator<Feature> iterator();
-	
-	boolean remove(Feature f);
+	int getPrefWidth();
+
+	int getPrefHeight();
+
 }

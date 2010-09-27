@@ -18,9 +18,9 @@ package org.gwt.mosaic2g.client.scene.layout;
 import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.Container;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Feature;
-import org.gwt.mosaic2g.client.scene.Group;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
@@ -48,7 +48,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * 
  * @author ggeorg
  */
-public class Stack extends Group implements HasAutoHorizontalAlignment,
+public class Stack extends Container implements HasAutoHorizontalAlignment,
 		HasVerticalAlignment {
 
 	private HorizontalAlignmentConstant horzAlign = HasHorizontalAlignment.ALIGN_CENTER;
@@ -65,9 +65,28 @@ public class Stack extends Group implements HasAutoHorizontalAlignment,
 	}
 
 	public Stack(Show show, Property<Integer> x, Property<Integer> y) {
-		super(show);
-		setX(x);
-		setY(y);
+		super(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
+				.valueOf(Integer.MIN_VALUE));
+	}
+	
+	@Override
+	public Property<Integer> getX() {
+		return super.getX();
+	}
+	
+	@Override
+	public Property<Integer> getY() {
+		return super.getX();
+	}
+	
+	@Override
+	public Property<Integer> getWidth() {
+		return super.getWidth();
+	}
+	
+	@Override
+	public Property<Integer> getHeight() {
+		return super.getHeight();
 	}
 
 	@Override
@@ -177,7 +196,7 @@ public class Stack extends Group implements HasAutoHorizontalAlignment,
 			scene.translate(-dx, -dy);
 		}
 
-		changed = false;
+		paintDone();
 	}
 
 	public HorizontalAlignmentConstant getHorizontalAlignment() {

@@ -70,7 +70,7 @@ package org.gwt.mosaic2g.client.scene;
 
 import java.util.Iterator;
 
-import org.gwt.mosaic2g.binding.client.Property;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 /**
  * Represents a group of features that are all activated at the same time. It's
@@ -84,6 +84,8 @@ public class Group extends HasFeaturesImpl {
 
 	private InterpolatedModel scalingModel;
 	private boolean managedSM;
+	
+	private int lastX, lastY, lastWidth, lastHeight;
 
 	public Group(Show show) {
 		super(show);
@@ -100,82 +102,6 @@ public class Group extends HasFeaturesImpl {
 	public void setScalingModel(InterpolatedModel scalingModel, boolean managed) {
 		this.scalingModel = scalingModel;
 		this.managedSM = managed;
-	}
-
-	@Override
-	public Property<Integer> getX() {
-		int x = OFFSCREEN;
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			int val = it.next().getX().$();
-			if (val < x) {
-				x = val;
-			}
-		}
-		return super.getX().$(x);
-	}
-
-	@Override
-	public Property<Integer> getY() {
-		int y = OFFSCREEN;
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			int val = it.next().getY().$();
-			if (val < y) {
-				y = val;
-			}
-		}
-		return super.getY().$(y);
-	}
-
-	@Override
-	public Property<Integer> getWidth() {
-		int width = Integer.MIN_VALUE;
-		final int left = getX().$();
-		final Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			final Feature f = it.next();
-			int w = f.getWidth().$();
-			if (w == Integer.MIN_VALUE) {
-				if (f instanceof Control) {
-					if (w == Integer.MIN_VALUE) {
-						w = ((Control) f).getPrefWidth();
-					}
-				} else {
-					continue;
-				}
-			}
-			final int fw = w + (f.getX().$() - left); // TODO check offscreen
-			if (fw > width) {
-				width = fw;
-			}
-		}
-		return super.getWidth().$(width);
-	}
-
-	@Override
-	public Property<Integer> getHeight() {
-		int height = Integer.MIN_VALUE;
-		final int top = getY().$();
-		final Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			final Feature f = it.next();
-			int h = f.getHeight().$();
-			if (h == Integer.MIN_VALUE) {
-				if (f instanceof Control) {
-					if (h == Integer.MIN_VALUE) {
-						h = ((Control) f).getPrefHeight();
-					}
-				} else {
-					continue;
-				}
-			}
-			final int fh = h + (f.getY().$() - top); // TODO check offscreen
-			if (fh > height) {
-				height = fh;
-			}
-		}
-		return super.getHeight().$(height);
 	}
 
 	@Override
@@ -219,13 +145,122 @@ public class Group extends HasFeaturesImpl {
 		if (scalingModel != null && !managedSM) {
 			scalingModel.nextFrame(scene);
 		}
+		boolean recalculateBounds = false;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			if (it.next().nextFrame(scene)) {
-				changed = true;
+			Feature f = it.next();
+			if (f.nextFrame(scene)) {
+				if (!changed) {
+					changed = true;
+				}
+				if (!recalculateBounds) {
+					recalculateBounds = (f.moved || f.resized);
+				}
 			}
 		}
+		if(recalculateBounds) {
+			reclaculateBounds();
+		}
 		return changed;
+	}
+
+	protected void reclaculateBounds() {
+		
+		//
+		// calculate location
+		//
+		
+		int x = OFFSCREEN;
+		int y = OFFSCREEN;
+		Iterator<Feature> it = iterator();
+		while (it.hasNext()) {
+			Feature f = it.next();
+			
+			//
+			// location X
+			//
+			
+			int val = f.getX().$();
+			if (val < x) {
+				x = val;
+			}
+			
+			//
+			// location Y
+			//
+			
+			val = f.getY().$();
+			if (val < y) {
+				y = val;
+			}
+		}
+		if (lastX != x) {
+			super.getX().$(lastX = x);
+			ValueChangeEvent.fire(getX(), lastX);
+		}
+		if (lastY != y) {
+			super.getY().$(lastY = y);
+			ValueChangeEvent.fire(getY(), lastY);
+		}
+
+		//
+		// calculate size
+		//
+
+		int width = Integer.MIN_VALUE;
+		int height = Integer.MIN_VALUE;
+		it = iterator();
+		while (it.hasNext()) {
+			Feature f = it.next();
+			
+			//
+			// width
+			//
+			
+			int val = f.getWidth().$();
+			if (val == Integer.MIN_VALUE) {
+				if (f instanceof Control) {
+					if (val == Integer.MIN_VALUE) {
+						val = ((Control) f).getPrefWidth();
+					}
+				}
+			}
+			if (val != Integer.MIN_VALUE) {
+				// TODO check offscreen
+				final int fw = val + (f.getX().$() - lastX);
+				if (fw > width) {
+					width = fw;
+				}
+			}
+			
+			//
+			// height
+			//
+
+			val = f.getHeight().$();
+			if (val == Integer.MIN_VALUE) {
+				if (f instanceof Control) {
+					if (val == Integer.MIN_VALUE) {
+						val = ((Control) f).getPrefHeight();
+					}
+				}
+			}
+			if (val != Integer.MIN_VALUE) {
+				// TODO check offscreen
+				final int fh = val + (f.getY().$() - lastY);
+				if (fh > height) {
+					height = fh;
+				}
+			}
+		}
+		if (lastWidth != width) {
+			super.getWidth().$(lastWidth = width);
+			ValueChangeEvent.fire(getWidth(), lastWidth);
+		}
+		if (lastHeight != height) {
+			super.getHeight().$(lastHeight = height);
+			ValueChangeEvent.fire(getHeight(), lastHeight);
+		}
 	}
 
 	@Override
@@ -239,6 +274,8 @@ public class Group extends HasFeaturesImpl {
 		while (it.hasNext()) {
 			it.next().paintFrame(scene);
 		}
+		
+		paintDone();
 	}
 
 }
