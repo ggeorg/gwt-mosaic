@@ -129,7 +129,7 @@ public class HBox extends Container {
 			startX += fw + spacing;
 		}
 
-		changed = false;
+		paintDone();
 	}
 
 }

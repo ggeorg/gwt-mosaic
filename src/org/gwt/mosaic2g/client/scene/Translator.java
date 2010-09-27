@@ -172,6 +172,6 @@ public class Translator extends Modifier {
 		getPart().paintFrame(scene);
 		scene.translate(-lastDx, -lastDy);
 
-		changed = false;
+		paintDone();
 	}
 }

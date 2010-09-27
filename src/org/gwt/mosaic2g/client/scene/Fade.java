@@ -140,6 +140,6 @@ public class Fade extends Modifier {
 		getPart().paintFrame(scene);
 		scene.setOpacity(old);
 		
-		changed = false;
+		paintDone();
 	}
 }

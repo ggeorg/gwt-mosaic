@@ -18,6 +18,7 @@ package org.gwt.mosaic2g.client.scene;
 import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
 import org.gwt.mosaic2g.client.scene.layout.Resizable;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
@@ -25,10 +26,7 @@ import org.gwt.mosaic2g.client.util.Rectangle;
  * 
  * @author ggeorg
  */
-public class Container extends Group implements Resizable {
-
-	private InterpolatedModel scalingModel;
-	private boolean managedSM;
+public class Container extends Group implements HasPrefSize, Resizable {
 
 	public Container(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
@@ -39,69 +37,12 @@ public class Container extends Group implements Resizable {
 		setHeight(height);
 	}
 
-	public InterpolatedModel getScalingModel() {
-		return scalingModel;
-	}
-
-	public void setScalingModel(InterpolatedModel scalingModel) {
-		setScalingModel(scalingModel, false);
-	}
-
-	public void setScalingModel(InterpolatedModel scalingModel, boolean managed) {
-		this.scalingModel = scalingModel;
-		this.managedSM = managed;
-	}
-
 	public int getPrefWidth() {
 		return super.getWidth().$();
 	}
 
 	public int getPrefHeight() {
 		return super.getHeight().$();
-	}
-
-	@Override
-	protected void setSetupMode(boolean mode) {
-		if (scalingModel != null) {
-			if (mode) {
-				Iterator<Feature> it = iterator();
-				while (it.hasNext()) {
-					final Feature f = it.next();
-					if (f instanceof HasScalingModel) {
-						((HasScalingModel) f).setScalingModel(scalingModel,
-								true);
-					}
-				}
-			} else {
-				Iterator<Feature> it = iterator();
-				while (it.hasNext()) {
-					final Feature f = it.next();
-					if (f instanceof HasScalingModel) {
-						((HasScalingModel) f).setScalingModel(null);
-					}
-				}
-			}
-		}
-		super.setSetupMode(mode);
-	}
-
-	@Override
-	protected void setActivateMode(boolean mode) {
-		super.setActivateMode(mode);
-		if (mode) {
-			if (scalingModel != null && !managedSM) {
-				scalingModel.activate();
-			}
-			markAsChanged();
-		}
-	}
-
-	@Override
-	public boolean nextFrame(Scene scene) {
-		if (scalingModel != null && !managedSM) {
-			scalingModel.nextFrame(scene);
-		}
-		return super.nextFrame(scene);
 	}
 
 	@Override
@@ -134,6 +75,6 @@ public class Container extends Group implements Resizable {
 			scene.translate(-dx, -dy);
 		}
 
-		changed = false;
+		paintDone();
 	}
 }

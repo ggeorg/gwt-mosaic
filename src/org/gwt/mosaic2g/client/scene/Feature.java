@@ -69,6 +69,8 @@
 package org.gwt.mosaic2g.client.scene;
 
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
+import org.gwt.mosaic2g.client.scene.layout.Resizable;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -91,6 +93,7 @@ public abstract class Feature implements Node {
 	private int setupCount = 0;
 
 	protected boolean changed;
+	protected boolean moved;
 	protected boolean resized;
 
 	private Property<Integer> xP;
@@ -100,6 +103,7 @@ public abstract class Feature implements Node {
 
 	private final ValueChangeHandler<Integer> locationChanged = new ValueChangeHandler<Integer>() {
 		public void onValueChange(ValueChangeEvent<Integer> event) {
+			moved = true;
 			markAsChanged();
 		}
 	};
@@ -151,8 +155,7 @@ public abstract class Feature implements Node {
 	 **/
 	public Property<Integer> getY() {
 		if (yP == null) {
-			yP = Property.valueOf(OFFSCREEN);
-			yP.addValueChangeHandler(locationChanged);
+			setY(Property.valueOf(OFFSCREEN));
 		}
 		return yP;
 	}
@@ -227,6 +230,11 @@ public abstract class Feature implements Node {
 		if (!isActivated() || !changed) {
 			return;
 		}
+		paintDone();
+	}
+
+	protected void paintDone() {
+		changed = moved = resized = false;
 	}
 
 	/**
@@ -357,16 +365,26 @@ public abstract class Feature implements Node {
 		}
 		show.runCommand(featureSetupCommand);
 	}
-	
+
 	/**
-	 * Called from the {@link ResetFeatureCommand}, this should reset the internal
-     * state of the feature to what it was when first activated.
+	 * Called from the {@link ResetFeatureCommand}, this should reset the
+	 * internal state of the feature to what it was when first activated.
 	 */
 	public final void resetFeature() {
-		if(activateCount > 0) {
+		if (activateCount > 0) {
 			setActivateMode(false);
 			setActivateMode(true);
 		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	public boolean instanceOfResizable() {
+		return (this instanceof Resizable);
+	}
+
+	public boolean instanceOfHasPrefSize() {
+		return (this instanceof HasPrefSize);
 	}
 
 }
