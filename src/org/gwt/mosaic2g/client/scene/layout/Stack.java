@@ -68,26 +68,6 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 		super(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
 				.valueOf(Integer.MIN_VALUE));
 	}
-	
-	@Override
-	public Property<Integer> getX() {
-		return super.getX();
-	}
-	
-	@Override
-	public Property<Integer> getY() {
-		return super.getX();
-	}
-	
-	@Override
-	public Property<Integer> getWidth() {
-		return super.getWidth();
-	}
-	
-	@Override
-	public Property<Integer> getHeight() {
-		return super.getHeight();
-	}
 
 	@Override
 	protected void setSetupMode(boolean mode) {
