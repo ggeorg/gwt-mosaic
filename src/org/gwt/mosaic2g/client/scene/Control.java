@@ -90,6 +90,7 @@ public abstract class Control extends Feature implements HasPrefSize,
 		setHeight(height);
 	}
 
+	@Override
 	public int getPrefWidth() {
 		if (widget == null || !widget.isAttached()) {
 			return super.getWidth().$();
@@ -98,6 +99,7 @@ public abstract class Control extends Feature implements HasPrefSize,
 		}
 	}
 
+	@Override
 	public int getPrefHeight() {
 		if (widget == null || !widget.isAttached()) {
 			return super.getHeight().$();
