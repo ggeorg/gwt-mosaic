@@ -29,5 +29,5 @@ public interface HasScalingModel {
 
 	void setScalingModel(InterpolatedModel scalingModel, boolean managed);
 
-	Rectangle getScaledBounds();
+	Rectangle getScaledBounds(); // TODO remove
 }

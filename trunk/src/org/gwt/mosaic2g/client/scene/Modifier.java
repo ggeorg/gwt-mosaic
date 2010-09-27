@@ -170,4 +170,15 @@ public abstract class Modifier extends Feature {
 	public boolean instanceOfHasPrefSize() {
 		return (part instanceof HasPrefSize);
 	}
+	
+	@Override
+	public int getPrefWidth() {
+		return part.getPrefWidth();
+	}
+
+	@Override
+	public int getPrefHeight() {
+		return getPrefHeight();
+	}
+
 }

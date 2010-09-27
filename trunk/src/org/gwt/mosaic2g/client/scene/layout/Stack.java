@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.Container;
-import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
@@ -108,6 +107,14 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 			int width = getWidth().$();
 			int height = getHeight().$();
 
+			if (width == Integer.MIN_VALUE) {
+				width = getPrefWidth();
+			}
+
+			if (height == Integer.MIN_VALUE) {
+				height = getPrefHeight();
+			}
+
 			if (horzAlign == Stack.ALIGN_RIGHT) {
 				x += width;
 			} else if (horzAlign == Stack.ALIGN_CENTER) {
@@ -141,34 +148,38 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 		while (it.hasNext()) {
 			final Feature f = it.next();
 
-			int w = f.getWidth().$();
-			int h = f.getHeight().$();
+			int fw = f.getWidth().$();
+			int fh = f.getHeight().$();
+
+			if (fw == Integer.MIN_VALUE) {
+				if (f.instanceOfHasPrefSize()) {
+					fw = f.getPrefWidth();
+				}
+			}
+			if (fh == Integer.MIN_VALUE) {
+				if (f.instanceOfHasPrefSize()) {
+					fh = f.getPrefHeight();
+				}
+			}
 
 			if (f instanceof Resizable) {
 				f.getWidth().$(lastWidth);
 				f.getHeight().$(lastHeight);
 			}
 
-			if (w == Integer.MIN_VALUE) {
-				w = ((Control) f).getPrefWidth();// lastWidth;
-			}
-			if (h == Integer.MIN_VALUE) {
-				h = ((Control) f).getPrefHeight();// lastHeight;
-			}
-
 			int dx = (lastX - f.getX().$());
 			int dy = (lastY - f.getY().$());
 
 			if (horzAlign == Stack.ALIGN_RIGHT) {
-				dx -= w;
+				dx -= fw;
 			} else if (horzAlign == Stack.ALIGN_CENTER) {
-				dx -= (w / 2);
+				dx -= (fw / 2);
 			} /* else { default } */
 
 			if (vertAlign == Stack.ALIGN_BOTTOM) {
-				dy -= h;
+				dy -= fh;
 			} else if (vertAlign == Stack.ALIGN_MIDDLE) {
-				dy -= (h / 2);
+				dy -= (fh / 2);
 			} /* else { default } */
 
 			scene.translate(dx, dy);

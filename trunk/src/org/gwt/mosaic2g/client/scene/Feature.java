@@ -386,5 +386,13 @@ public abstract class Feature implements Node {
 	public boolean instanceOfHasPrefSize() {
 		return (this instanceof HasPrefSize);
 	}
+	
+	public int getPrefWidth() {
+		throw new UnsupportedOperationException();
+	}
+
+	public int getPrefHeight() {
+		throw new UnsupportedOperationException();
+	}
 
 }
