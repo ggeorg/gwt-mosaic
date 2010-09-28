@@ -173,6 +173,7 @@ public final class Segment implements Node, HasFeatures {
 			f.setup();
 			if (!f.needsMoreSetup()) {
 				f.activate();
+				f.markAsChanged();
 				featureWasActiveted.put(f, Boolean.TRUE);
 			}
 		}
@@ -217,6 +218,7 @@ public final class Segment implements Node, HasFeatures {
 				final Feature f = it.next();
 				if (!getFeatureWasActiveted(f)) {
 					f.activate();
+					f.markAsChanged();
 					featureWasActiveted.put(f, Boolean.TRUE);
 				}
 			}

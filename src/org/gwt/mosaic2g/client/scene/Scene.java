@@ -286,6 +286,9 @@ public class Scene extends Composite implements AnimationClient,
 		// if (opacity >= 0 && opacity <= 255) {
 		if (opacity != null) {
 			opacity.applyTo(elem);
+			elem.setPropertyBoolean("clearOpacity", true);
+		} else if(elem.getPropertyBoolean("clearOpacity")) {
+			elem.getStyle().clearOpacity(); // FIXME ie???
 		}
 
 		x -= ComputedStyle.getMarginLeft(elem);

@@ -71,6 +71,12 @@ public abstract class Control extends Feature implements HasPrefSize,
 
 	private Widget widget = null;
 
+	public Control(Show show, int x, int y) {
+		this(show, Property.valueOf(x), Property.valueOf(y), Property
+				.valueOf(Integer.MIN_VALUE), Property
+				.valueOf(Integer.MIN_VALUE));
+	}
+
 	public Control(Show show, int x, int y, int width, int height) {
 		this(show, Property.valueOf(x), Property.valueOf(y), Property
 				.valueOf(width), Property.valueOf(height));
@@ -231,7 +237,6 @@ public abstract class Control extends Feature implements HasPrefSize,
 				}
 			}
 			resized = true;
-			markAsChanged();
 		} else {
 			widget.removeFromParent();
 		}
@@ -255,10 +260,8 @@ public abstract class Control extends Feature implements HasPrefSize,
 				scaledBounds.height = -scaledBounds.height;
 				scaledBounds.y -= scaledBounds.height;
 			}
-
 			markAsChanged();
 		}
-
 		return changed;
 	}
 
