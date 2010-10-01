@@ -105,6 +105,7 @@ public class Assembly extends HasFeaturesImpl {
 			getY().bind(currentPart.getY());
 			getWidth().bind(currentPart.getWidth());
 			getHeight().bind(currentPart.getHeight());
+			currentPart.markAsChanged();
 		}
 	}
 

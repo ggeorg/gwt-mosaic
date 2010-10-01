@@ -163,12 +163,12 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 			thizHR = null;
 		}
 		final Property<T> thiz = this;
-		other.addValueChangeHandler(new ValueChangeHandler<T>() {
+		otherHR = other.addValueChangeHandler(new ValueChangeHandler<T>() {
 			public void onValueChange(ValueChangeEvent<T> event) {
 				thiz.$(other.$());
 			}
 		});
-		thiz.addValueChangeHandler(new ValueChangeHandler<T>() {
+		thizHR = thiz.addValueChangeHandler(new ValueChangeHandler<T>() {
 			public void onValueChange(ValueChangeEvent<T> event) {
 				other.$(thiz.$());
 			}
