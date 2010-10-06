@@ -18,20 +18,27 @@ package org.gwt.mosaic2g.client.scene.layout;
 import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.client.scene.Container;
-import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
-import org.gwt.mosaic2g.client.util.Rectangle;
+
+import com.google.gwt.user.client.ui.HasAlignment;
 
 /**
+ * The {@code HBox} container lays out its managed content nodes in a single
+ * horizontal row. Its content is layed out from left to right in the order of
+ * content sequence, spaced by {@code spacing}. The vertical alignement of each
+ * node is controlled by {@code nodeVpos}, which defaults to
+ * {@link HasAlignment#ALIGN_TOP}
  * 
  * @author ggeorg
  */
-public class HBox extends Container {
+public class HBox extends AbstractLayout {
 
 	private int count;
+
+	private int lastX, lastY, lastWidth, lastHeight;
+	private int lastFlexSum, lastFlexWidth, lastMaxFWidth, lastPrefWidth;
 
 	public HBox(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0));
@@ -45,17 +52,7 @@ public class HBox extends Container {
 	public HBox(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
-	}
-
-	private int spacing = 6;
-
-	public int getSpacing() {
-		return spacing;
-	}
-
-	public void setSpacing(int spacing) {
-		this.spacing = spacing;
-		markAsChanged();
+		setAutoHorizontalAlignment(ALIGN_CONTENT_START);
 	}
 
 	@Override
@@ -66,8 +63,8 @@ public class HBox extends Container {
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
-			if (f instanceof Control) {
-				result += ((Control) f).getPrefWidth();
+			if (f.instanceOfHasPrefSize()) {
+				result += f.getPrefWidth();
 			} else {
 				int val = f.getWidth().$();
 				if (val == Integer.MIN_VALUE) {
@@ -85,42 +82,151 @@ public class HBox extends Container {
 		return result;
 	}
 
+	private int spacing = 8;
+
+	public int getSpacing() {
+		return spacing;
+	}
+
+	public void setSpacing(int spacing) {
+		this.spacing = spacing;
+		markAsChanged();
+	}
+
+	@Override
+	protected void setSetupMode(boolean mode) {
+		super.setSetupMode(mode);
+		if (mode) {
+			lastX = lastY = OFFSCREEN;
+			lastWidth = lastHeight = Integer.MIN_VALUE;
+			lastFlexSum = lastFlexWidth = lastMaxFWidth = lastPrefWidth = 0;
+		}
+	}
+
+	@Override
+	public boolean nextFrame(Scene scene) {
+		changed = (changed || super.nextFrame(scene));
+		if (changed) {
+			int x = getX().$();
+			int y = getY().$();
+			int width = getWidth().$();
+			int height = getHeight().$();
+
+			if (width == Integer.MIN_VALUE) {
+				width = getPrefWidth();
+			}
+
+			if (height == Integer.MIN_VALUE) {
+				height = getPrefHeight();
+			}
+
+			// if(lastX != x || lastY != y || lastWidth != width || lastHeight
+			// != height) {
+			lastX = x;
+			lastY = y;
+			lastWidth = width;
+			lastHeight = height;
+			// }
+
+			int flexSum = 0;
+			int maxWidth = 0;
+			int prefWidth = 0;
+			Iterator<Feature> it = iterator();
+			while (it.hasNext()) {
+				final Feature f = it.next();
+				final int fflex = f.getFlex();
+				if (fflex > 0) {
+					flexSum += fflex;
+				} else {
+					int fw = f.getWidth().$();
+					if (fw == Integer.MIN_VALUE) {
+						fw = f.getPrefWidth();
+					}
+					if (fw > maxWidth) {
+						maxWidth = fw;
+					}
+					prefWidth += fw;
+				}
+			}
+			
+			int size = getParts().size();
+
+			if (prefWidth > 0) {
+				if(isEqualSize()) {
+					prefWidth = size * maxWidth;
+				}
+				prefWidth += (spacing * (size - 1));
+			}
+
+			lastFlexSum = flexSum;
+			lastFlexWidth = lastWidth - prefWidth;
+			lastMaxFWidth = maxWidth;
+			lastPrefWidth = prefWidth;
+		}
+		return changed;
+	}
+
 	@Override
 	public void paintFrame(Scene scene) {
 		if (!isActivated() || !changed) {
 			return;
 		}
 
-		int direction = 0;
-
-		final Rectangle bounds = new Rectangle(getX().$(), getY().$(), getWidth().$(),
-				getHeight().$());
-
 		int startX, startY;
-		if (direction > 0) {
-			startX = bounds.x;
-		} else if (direction < 0) {
-			startX = bounds.x + (bounds.width - getPrefWidth());
-		} else {
-			startX = bounds.x + (bounds.width - getPrefWidth()) / 2;
-		}
-		startY = bounds.y;
 
+		if (lastFlexSum == 0) {
+			HorizontalAlignmentConstant pack = getHorizontalAlignment();
+			if (pack == HBox.ALIGN_RIGHT) {
+				startX = lastX + (lastWidth - lastPrefWidth);
+			} else if (pack == HBox.ALIGN_CENTER) {
+				startX = lastX + (lastWidth - lastPrefWidth) / 2;
+			} else {
+				startX = lastX;
+			}
+		} else {
+			startX = lastX;
+		}
+		
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
 
-			final int fw = f.getWidth().$();
-			final int fh = f.getHeight().$();
-			if (fw == Integer.MIN_VALUE || fh == Integer.MIN_VALUE) {
-				continue;
+			int fw;
+
+			int fflex = f.getFlex();
+			if (fflex > 0) {
+				fw = (int) (lastFlexWidth * ((double) fflex / (double) lastFlexSum));
+				f.getWidth().$(fw);
+			} else if (isEqualSize()) {
+				fw = lastMaxFWidth;
+				f.getWidth().$(fw);
+			} else {
+				fw = f.getWidth().$();
+				if (fw == Integer.MIN_VALUE) {
+					fw = f.getPrefWidth();
+				}
+			}
+
+			VerticalAlignmentConstant align = getVerticalAlignment();
+			if (align == null) {
+				startY = lastY;
+				f.getHeight().$(lastHeight);
+			} else if (align == HBox.ALIGN_TOP) {
+				startY = lastY;
+			} else {
+				int fh = f.getHeight().$();
+				if (fh == Integer.MIN_VALUE) {
+					fh = f.getPrefHeight();
+				}
+				if (align == HBox.ALIGN_MIDDLE) {
+					startY = lastY + (lastHeight - fh) / 2;
+				} else {
+					startY = lastY + (lastHeight - fh);
+				}
 			}
 
 			int dx = startX - f.getX().$();
 			int dy = startY - f.getY().$();
-
-			f.getWidth().$(fw);
-			f.getHeight().$(fh);
 
 			scene.translate(dx, dy);
 			f.paintFrame(scene);

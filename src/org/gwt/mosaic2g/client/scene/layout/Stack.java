@@ -18,16 +18,9 @@ package org.gwt.mosaic2g.client.scene.layout;
 import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.client.scene.Container;
 import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
-
-import com.google.gwt.i18n.client.BidiUtils;
-import com.google.gwt.i18n.client.HasDirection.Direction;
-import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
 /**
  * The {@code Stack} container arranges its child nodes in a back-to-front
@@ -47,15 +40,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * 
  * @author ggeorg
  */
-public class Stack extends Container implements HasAutoHorizontalAlignment,
-		HasVerticalAlignment {
-
-	private HorizontalAlignmentConstant horzAlign = HasHorizontalAlignment.ALIGN_CENTER;
-
-	private VerticalAlignmentConstant vertAlign = HasVerticalAlignment.ALIGN_MIDDLE;
-
-	private AutoHorizontalAlignmentConstant autoHorizontalAlignment;
-	private boolean autoHorzAlignChanged;
+public class Stack extends AbstractLayout {
 
 	private int lastX, lastY, lastWidth, lastHeight;
 
@@ -66,6 +51,8 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 	public Stack(Show show, Property<Integer> x, Property<Integer> y) {
 		super(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
 				.valueOf(Integer.MIN_VALUE));
+		setHorizontalAlignment(ALIGN_CENTER);
+		setVerticalAlignment(ALIGN_MIDDLE);
 	}
 
 	@Override
@@ -80,27 +67,6 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 	@Override
 	public boolean nextFrame(Scene scene) {
 		changed = (changed || super.nextFrame(scene));
-		if (autoHorzAlignChanged) {
-			HorizontalAlignmentConstant align;
-			if (autoHorizontalAlignment == null) {
-				align = null;
-			} else if (autoHorizontalAlignment instanceof HorizontalAlignmentConstant) {
-				align = (HorizontalAlignmentConstant) autoHorizontalAlignment;
-			} else {
-				/*
-				 * autoHorizontalAlignment is a truly automatic policy, i.e.
-				 * either ALIGN_CONTENT_START or ALIGN_CONTENT_END
-				 */
-				Direction sceneDir = BidiUtils.getDirectionOnElement(scene
-						.getElement());
-				align = (autoHorizontalAlignment == ALIGN_CONTENT_START) ? HorizontalAlignmentConstant
-						.startOf(sceneDir) : HorizontalAlignmentConstant
-						.endOf(sceneDir);
-			}
-			if (align != horzAlign) {
-				horzAlign = align;
-			}
-		}
 		if (changed) {
 			int x = getX().$();
 			int y = getY().$();
@@ -114,6 +80,9 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 			if (height == Integer.MIN_VALUE) {
 				height = getPrefHeight();
 			}
+
+			final HorizontalAlignmentConstant horzAlign = getHorizontalAlignment();
+			final VerticalAlignmentConstant vertAlign = getVerticalAlignment();
 
 			if (horzAlign == Stack.ALIGN_RIGHT) {
 				x += width;
@@ -143,28 +112,34 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 		if (!isActivated() || !changed) {
 			return;
 		}
+		
+		final HorizontalAlignmentConstant horzAlign = getHorizontalAlignment();
+		final VerticalAlignmentConstant vertAlign = getVerticalAlignment();
 
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
 
-			int fw = f.getWidth().$();
-			int fh = f.getHeight().$();
-
-			if (fw == Integer.MIN_VALUE) {
-				if (f.instanceOfHasPrefSize()) {
-					fw = f.getPrefWidth();
-				}
-			}
-			if (fh == Integer.MIN_VALUE) {
-				if (f.instanceOfHasPrefSize()) {
-					fh = f.getPrefHeight();
-				}
-			}
+			int fw;
+			int fh;
 
 			if (f instanceof Resizable) {
-				f.getWidth().$(lastWidth);
-				f.getHeight().$(lastHeight);
+				f.getWidth().$(fw = lastWidth);
+				f.getHeight().$(fh = lastHeight);
+			} else {
+				fw = f.getWidth().$();
+				fh = f.getHeight().$();
+
+				if (fw == Integer.MIN_VALUE) {
+					if (f.instanceOfHasPrefSize()) {
+						fw = f.getPrefWidth();
+					}
+				}
+				if (fh == Integer.MIN_VALUE) {
+					if (f.instanceOfHasPrefSize()) {
+						fh = f.getPrefHeight();
+					}
+				}
 			}
 
 			int dx = (lastX - f.getX().$());
@@ -188,44 +163,6 @@ public class Stack extends Container implements HasAutoHorizontalAlignment,
 		}
 
 		paintDone();
-	}
-
-	public HorizontalAlignmentConstant getHorizontalAlignment() {
-		return horzAlign;
-	}
-
-	public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-		if (this.horzAlign == align) {
-			return;
-		}
-		this.horzAlign = align;
-		markAsChanged();
-	}
-
-	public AutoHorizontalAlignmentConstant getAutoHorizontalAlignment() {
-		return autoHorizontalAlignment;
-	}
-
-	public void setAutoHorizontalAlignment(
-			AutoHorizontalAlignmentConstant autoHorizontalAlignment) {
-		if (this.autoHorizontalAlignment == autoHorizontalAlignment) {
-			return;
-		}
-		this.autoHorizontalAlignment = autoHorizontalAlignment;
-		this.autoHorzAlignChanged = true;
-		markAsChanged();
-	}
-
-	public VerticalAlignmentConstant getVerticalAlignment() {
-		return vertAlign;
-	}
-
-	public void setVerticalAlignment(VerticalAlignmentConstant align) {
-		if (this.vertAlign == align) {
-			return;
-		}
-		this.vertAlign = align;
-		markAsChanged();
 	}
 
 }

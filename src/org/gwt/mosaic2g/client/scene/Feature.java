@@ -101,6 +101,8 @@ public abstract class Feature implements Node {
 	private Property<Integer> widthP;
 	private Property<Integer> heightP;
 
+	private int flex;
+
 	private final ValueChangeHandler<Integer> locationChanged = new ValueChangeHandler<Integer>() {
 		public void onValueChange(ValueChangeEvent<Integer> event) {
 			moved = true;
@@ -386,13 +388,26 @@ public abstract class Feature implements Node {
 	public boolean instanceOfHasPrefSize() {
 		return (this instanceof HasPrefSize);
 	}
-	
+
 	public int getPrefWidth() {
-		throw new UnsupportedOperationException();
+		return 0;
 	}
 
 	public int getPrefHeight() {
-		throw new UnsupportedOperationException();
+		return 0;
+	}
+
+	public int getFlex() {
+		return flex;
+	}
+
+	public void setFlex(int flex) {
+		flex = Math.max(flex, 0);
+		if (this.flex == flex) {
+			return;
+		}
+		this.flex = flex;
+		this.changed = true;
 	}
 
 }

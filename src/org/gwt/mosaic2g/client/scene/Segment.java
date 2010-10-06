@@ -80,7 +80,7 @@ import com.google.gwt.user.client.Command;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public final class Segment implements Node, HasFeatures {
+public class Segment implements Node, HasFeatures {
 
 	private final FeatureCollection activeFeatures = new FeatureCollection(this);
 	private final Map<Feature, Boolean> featureWasActiveted = new HashMap<Feature, Boolean>();

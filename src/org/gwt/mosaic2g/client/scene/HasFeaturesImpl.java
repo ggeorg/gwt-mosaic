@@ -98,6 +98,7 @@ public abstract class HasFeaturesImpl extends Feature implements HasFeatures {
 
 	public void add(Feature f) {
 		parts.add(f);
+		changed = true;
 	}
 
 	public void clear() {
@@ -106,6 +107,7 @@ public abstract class HasFeaturesImpl extends Feature implements HasFeatures {
 			it.next();
 			it.remove();
 		}
+		changed = true;
 	}
 
 	public Iterator<Feature> iterator() {
@@ -119,6 +121,7 @@ public abstract class HasFeaturesImpl extends Feature implements HasFeatures {
 	public boolean remove(Feature f) {
 		try {
 			parts.remove(f);
+			changed = true;
 		} catch (NoSuchElementException ex) {
 			return false;
 		}
