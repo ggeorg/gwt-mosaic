@@ -22,14 +22,9 @@ import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
-import com.google.gwt.user.client.ui.HasAlignment;
-
 /**
  * The {@code HBox} container lays out its managed content nodes in a single
- * horizontal row. Its content is layed out from left to right in the order of
- * content sequence, spaced by {@code spacing}. The vertical alignement of each
- * node is controlled by {@code nodeVpos}, which defaults to
- * {@link HasAlignment#ALIGN_TOP}
+ * horizontal row.
  * 
  * @author ggeorg
  */
@@ -148,11 +143,11 @@ public class HBox extends AbstractLayout {
 					prefWidth += fw;
 				}
 			}
-			
+
 			int size = getParts().size();
 
 			if (prefWidth > 0) {
-				if(isEqualSize()) {
+				if (isEqualSize()) {
 					prefWidth = size * maxWidth;
 				}
 				prefWidth += (spacing * (size - 1));
@@ -186,7 +181,7 @@ public class HBox extends AbstractLayout {
 		} else {
 			startX = lastX;
 		}
-		
+
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			final Feature f = it.next();
