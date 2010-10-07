@@ -26,7 +26,7 @@ box1.setBackground("orange");
 
 Box box2 = new Box(show, 150, 150, 50, 50);
 box2.setBackground("green");
-		
+
 Box box3 = new Box(show, 250, 100, 50, 150);
 box3.setBackground("magenta");
 
@@ -35,11 +35,11 @@ boxGroup.add(box1);
 boxGroup.add(box2);
 boxGroup.add(box3);
 
-Box bgBox = new Box(show, 
-     boxGroup.getX().createBinding(), 
-     boxGroup.getY().createBinding(),
-     boxGroup.getWidth().createBinding(),
-     boxGroup.getHeight().createBinding());
+Box bgBox = new Box(show);
+bgBox.getX().bind(boxGroup.getX());
+bgBox.getY().bind(boxGroup.getY());
+bgBox.getWidth().bind(boxGroup.getWidth());
+bgBox.getHeight().bind(boxGroup.getHeight());
 bgBox.setBorder("1px solid yellow");
 bgBox.setBackground("yellow");
 
@@ -47,7 +47,6 @@ Segment s = new Segment(show);
 s.add(bgBox);
 s.add(boxGroup);
 }}}
-
 
 Another common case where binding is usefull for layout is in centering a node within an area. ...
 
