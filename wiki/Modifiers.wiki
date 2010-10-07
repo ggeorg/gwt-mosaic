@@ -296,25 +296,26 @@ public class Showcase implements EntryPoint {
 
 	private Show createShow() {
 		Show show = new Show();
-		
+
 		Box box1 = new Box(show, 20, 20, 50, 50);
 		box1.setBackground("orange");
 		box1.setBorder("5px solid green");
-		
-		MyTranslatorModel tm = GWT.create(MyTranslatorModel.class);
-		Translator translator = new Translator(show, tm.createModel());
+
+		Translator translator = new Translator(show,
+				MyTranslatorModel.INSTANCE.createModel());
 		translator.setPart(box1);
-		
+
 		Segment segment = new Segment(show);
 		segment.add(translator);
-		
+
 		show.activateSegment(segment);
-		
+
 		return show;
 	}
 
 	@GrinFile(value = "translator_model.txt")
 	interface MyTranslatorModel extends InterpolatedModelParser {
+		MyTranslatorModel INSTANCE = GWT.create(MyTranslatorModel.class);
 	};
 }
 }}}
