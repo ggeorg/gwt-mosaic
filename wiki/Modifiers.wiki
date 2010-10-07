@@ -189,24 +189,23 @@ public class Showcase implements EntryPoint {
 		Box box1 = new Box(show, 20, 20, 100, 100);
 		box1.setBackground("orange");
 		box1.setBorder("5px solid red");
-		
+
 		Box box2 = new Box(show, 100, 100, 50, 50);
 		box2.setBackground("yellow");
 		box2.setBorder("5px solid green");
-		
+
 		Box box3 = new Box(show, 135, 135, 25, 25);
 		box3.setBackground("cyan");
 		box3.setBorder("5px solid blue");
-		
+
 		Group group = new Group(show);
 		group.add(box1);
 		group.add(box2);
 		group.add(box3);
 
-		MyFadeModel fm = GWT.create(MyFadeModel.class);
-		Fade fade = new Fade(show, fm.createModel());
+		Fade fade = new Fade(show, MyFadeModel.INSTANCE.createModel());
 		fade.setPart(group);
-		
+
 		Segment segment = new Segment(show);
 		segment.add(fade);
 
@@ -214,9 +213,10 @@ public class Showcase implements EntryPoint {
 
 		return show;
 	}
-	
+
 	@GrinFile(value = "fade_model.txt")
 	interface MyFadeModel extends InterpolatedModelParser {
+		MyFadeModel INSTANCE = GWT.create(MyFadeModel.class);
 	};
 }
 }}}
