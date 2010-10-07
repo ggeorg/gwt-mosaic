@@ -102,6 +102,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author ggeorg
  */
 public class Box extends Control implements Resizable {
+	
+	public Box(Show show) {
+		super(show, 0, 0);
+	}
 
 	public Box(Show show, int x, int y, int width, int height) {
 		super(show, x, y, width, height);
