@@ -65,7 +65,7 @@ public abstract class Control extends Feature implements HasPrefSize,
 	private Property<String> background;
 	private boolean backgroundChanged;
 
-	private String newStyleName;
+	private String lastStyleName;
 	private Property<String> styleName;
 	private boolean styleNameChanged;
 
@@ -177,7 +177,6 @@ public abstract class Control extends Feature implements HasPrefSize,
 			styleName = new Property<String>();
 			styleName.addValueChangeHandler(new ValueChangeHandler<String>() {
 				public void onValueChange(ValueChangeEvent<String> event) {
-					newStyleName = event.getValue();
 					styleNameChanged = true;
 					markAsChanged();
 				}
@@ -212,12 +211,12 @@ public abstract class Control extends Feature implements HasPrefSize,
 			backgroundChanged = false;
 		}
 		if (init || styleNameChanged) {
-			if (newStyleName != null) {
-				w.removeStyleName(newStyleName);
-				newStyleName = null;
+			if (lastStyleName != null) {
+				w.removeStyleName(lastStyleName);
 			}
-			if (getStyleName().$() != null) {
-				w.addStyleName(getStyleName().$());
+			lastStyleName = getStyleName().$();
+			if (lastStyleName != null) {
+				w.addStyleName(lastStyleName);
 			}
 			styleNameChanged = false;
 		}
