@@ -415,13 +415,13 @@ public class Showcase implements EntryPoint {
 		box1.setBackground("orange");
 		box1.setBorder("5px solid green");
 
-		MyTranslatorModel tm = GWT.create(MyTranslatorModel.class);
-		Translator translator = new Translator(show, tm.createModel());
+		Translator translator = new Translator(show,
+				MyTranslatorModel.INSTANCE.createModel());
 		translator.setPart(box1);
 
 		Clipped clipped = new Clipped(show, new Rectangle(10, 10, 250, 150));
 		clipped.setPart(translator);
-		
+
 		// A box that shows the clipping rectangle
 		Box box2 = new Box(show, 10, 10, 250, 150);
 		box2.setBorder("1px dotted red");
@@ -437,6 +437,7 @@ public class Showcase implements EntryPoint {
 
 	@GrinFile(value = "translator_model.txt")
 	interface MyTranslatorModel extends InterpolatedModelParser {
+		MyTranslatorModel INSTANCE = GWT.create(MyTranslatorModel.class);
 	};
 }
 }}}
