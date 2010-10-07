@@ -173,6 +173,7 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 				other.$(thiz.$());
 			}
 		});
+		$(other.$());
 	}
 
 	// ---------------------------------------------------------------------
