@@ -12,10 +12,9 @@ The basic set of modifiers are:
   * Translator
   * Clipped
 
-Some node types can support runtime scaling. Images can be scaled, and so can boxes, but e.g. text cannot. For this reason, the scaling model is not a normal modifier node (yet(?)) - it does not have children whose appearance it modifies. The scaling model just maintains an x and y scale factor, and an anchor point. 
+Some node types can support runtime scaling. Images can be scaled, and so can boxes, but e.g. text cannot. For this reason, the scaling model is not a normal modifier node - it does not have children whose appearance it modifies. The scaling model just maintains an x and y scale factor, and an anchor point. 
 
-
-All features that implement [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] can refer to a scaling model to modify their size and position. In general all features that extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] implement the `HasScalingModel` interface.
+All features that implement [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] can refer to a scaling model to modify their size and position. In general all features that extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] implement the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] interface.
 
 Both the scaling factors and the anchor point can be animated. As with other animated parameters, they can be animated smoothly using tweening functions that are computed at compile time, and represented as a series of linear interpolations at runtime.
 
@@ -104,7 +103,7 @@ public class Showcase implements EntryPoint {
 }
 }}}
 
-The fade model is declared in `scaling_model.txt`: 
+The scaling model is declared in `scaling_model.txt`: 
 
 {{{
 scaling_model {
