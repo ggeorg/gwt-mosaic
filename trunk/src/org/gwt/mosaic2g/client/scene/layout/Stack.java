@@ -112,7 +112,7 @@ public class Stack extends AbstractLayout {
 		if (!isActivated() || !changed) {
 			return;
 		}
-		
+
 		final HorizontalAlignmentConstant horzAlign = getHorizontalAlignment();
 		final VerticalAlignmentConstant vertAlign = getVerticalAlignment();
 
@@ -120,26 +120,18 @@ public class Stack extends AbstractLayout {
 		while (it.hasNext()) {
 			final Feature f = it.next();
 
-			int fw;
-			int fh;
+			int fw = f.getWidth().$();
+			int fh = f.getHeight().$();
 
-			if (f instanceof Resizable) {
-				f.getWidth().$(fw = lastWidth);
-				f.getHeight().$(fh = lastHeight);
+			if (fw == Integer.MIN_VALUE) {
+				fw = f.getPrefWidth();
 			} else {
-				fw = f.getWidth().$();
-				fh = f.getHeight().$();
-
-				if (fw == Integer.MIN_VALUE) {
-					if (f.instanceOfHasPrefSize()) {
-						fw = f.getPrefWidth();
-					}
-				}
-				if (fh == Integer.MIN_VALUE) {
-					if (f.instanceOfHasPrefSize()) {
-						fh = f.getPrefHeight();
-					}
-				}
+				f.getWidth().$(fw = lastWidth);
+			}
+			if (fw == Integer.MIN_VALUE) {
+				fh = f.getPrefHeight();
+			} else {
+				f.getHeight().$(fh = lastHeight);
 			}
 
 			int dx = (lastX - f.getX().$());

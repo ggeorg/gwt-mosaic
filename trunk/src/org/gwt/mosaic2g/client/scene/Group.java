@@ -80,7 +80,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Group extends HasFeaturesImpl {
+public class Group extends HasFeaturesImpl implements HasScalingModel {
 
 	private InterpolatedModel scalingModel;
 	private boolean managedSM;

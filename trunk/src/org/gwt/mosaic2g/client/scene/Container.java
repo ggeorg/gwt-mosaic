@@ -18,15 +18,12 @@ package org.gwt.mosaic2g.client.scene;
 import java.util.Iterator;
 
 import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
-import org.gwt.mosaic2g.client.scene.layout.Resizable;
 
 /**
  * 
  * @author ggeorg
  */
-public class Container extends HasFeaturesImpl implements HasPrefSize,
-		Resizable {
+public class Container extends HasFeaturesImpl {
 
 	public Container(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
@@ -42,12 +39,12 @@ public class Container extends HasFeaturesImpl implements HasPrefSize,
 		int width = 0;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			Feature f = it.next();
-			if (f.instanceOfHasPrefSize()) {
-				width = Math.max(width, ((HasPrefSize) f).getPrefWidth());
-			} else {
-				width = Math.max(width, f.getWidth().$());
+			final Feature f = it.next();
+			int fw = f.getWidth().$();
+			if (fw == Integer.MIN_VALUE) {
+				fw = f.getPrefWidth();
 			}
+			width = Math.max(width, fw);
 		}
 		return width;
 	}
@@ -57,12 +54,12 @@ public class Container extends HasFeaturesImpl implements HasPrefSize,
 		int height = 0;
 		Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
-			Feature f = it.next();
-			if (f.instanceOfHasPrefSize()) {
-				height = Math.max(height, ((HasPrefSize) f).getPrefHeight());
-			} else {
-				height = Math.max(height, f.getHeight().$());
+			final Feature f = it.next();
+			int fh = f.getHeight().$();
+			if (fh == Integer.MIN_VALUE) {
+				fh = f.getPrefHeight();
 			}
+			height = Math.max(height, fh);
 		}
 		return height;
 	}
@@ -104,24 +101,8 @@ public class Container extends HasFeaturesImpl implements HasPrefSize,
 		while (it.hasNext()) {
 			final Feature f = it.next();
 
-			int fw = f.getWidth().$();
-			int fh = f.getHeight().$();
-
-			if (fw == Integer.MIN_VALUE) {
-				if (f.instanceOfHasPrefSize()) {
-					fw = f.getPrefWidth();
-				}
-			}
-			if (fh == Integer.MIN_VALUE) {
-				if (f.instanceOfHasPrefSize()) {
-					fh = f.getPrefHeight();
-				}
-			}
-
-			if (f.instanceOfResizable()) {
-				f.getWidth().$(width);
-				f.getHeight().$(height);
-			}
+			f.getWidth().$(width);
+			f.getHeight().$(height);
 
 			final int dx = x - f.getX().$();
 			final int dy = y - f.getY().$();

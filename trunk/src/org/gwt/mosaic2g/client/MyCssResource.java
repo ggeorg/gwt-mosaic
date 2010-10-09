@@ -21,4 +21,6 @@ public interface MyCssResource extends CssResource {
 	String scene();
 	String labelWidget();
 	String labelWidgetText();
+	String progressBarBgBox();
+	String progressBarFgBox();
 }
