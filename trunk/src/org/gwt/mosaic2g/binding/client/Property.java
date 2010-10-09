@@ -143,11 +143,12 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 			thizHR = null;
 		}
 		final Property<T> thiz = this;
-		other.addValueChangeHandler(new ValueChangeHandler<T>() {
+		otherHR = other.addValueChangeHandler(new ValueChangeHandler<T>() {
 			public void onValueChange(ValueChangeEvent<T> event) {
 				thiz.$(other.$());
 			}
 		});
+		$(other.$());
 	}
 	
 	public void bind(final Property<T> other) {
@@ -174,6 +175,76 @@ public final class Property<T> implements HasValueChangeHandlers<T> {
 			}
 		});
 		$(other.$());
+	}
+	
+	public void bind(final Property<T> other, final Getter<T> getter) {
+		if (other == null) {
+			throw new NullPointerException("Can't bind to 'null'");
+		}
+		if (otherHR != null) {
+			otherHR.removeHandler();
+			otherHR = null;
+		}
+		if (thizHR != null) {
+			thizHR.removeHandler();
+			thizHR = null;
+		}
+		final Property<T> thiz = this;
+		otherHR = other.addValueChangeHandler(new ValueChangeHandler<T>() {
+			public void onValueChange(ValueChangeEvent<T> event) {
+				thiz.$(getter.get(other.$()));
+			}
+		});
+		$(getter.get(other.$()));
+	}
+	
+	public <T2> void bind(final Property<T2> other,
+			final Converter<T2, T> converter) {
+		if (other == null) {
+			throw new NullPointerException("Can't bind to 'null'");
+		}
+		if (otherHR != null) {
+			otherHR.removeHandler();
+			otherHR = null;
+		}
+		if (thizHR != null) {
+			thizHR.removeHandler();
+			thizHR = null;
+		}
+		final Property<T> thiz = this;
+		otherHR = other.addValueChangeHandler(new ValueChangeHandler<T2>() {
+			public void onValueChange(ValueChangeEvent<T2> event) {
+				thiz.$(converter.convertForward(other.$()));
+			}
+		});
+		thizHR = thiz.addValueChangeHandler(new ValueChangeHandler<T>() {
+			public void onValueChange(ValueChangeEvent<T> event) {
+				other.$(converter.convertReverse(thiz.$()));
+			}
+		});
+		ValueChangeEvent.fire(other, other.$());
+	}
+	
+	public <T2> void bindReadOnly(final Property<T2> other,
+			final Converter<T2, T> converter) {
+		if (other == null) {
+			throw new NullPointerException("Can't bind to 'null'");
+		}
+		if (otherHR != null) {
+			otherHR.removeHandler();
+			otherHR = null;
+		}
+		if (thizHR != null) {
+			thizHR.removeHandler();
+			thizHR = null;
+		}
+		final Property<T> thiz = this;
+		otherHR = other.addValueChangeHandler(new ValueChangeHandler<T2>() {
+			public void onValueChange(ValueChangeEvent<T2> event) {
+				thiz.$(converter.convertForward(other.$()));
+			}
+		});
+		ValueChangeEvent.fire(other, other.$());
 	}
 
 	// ---------------------------------------------------------------------
