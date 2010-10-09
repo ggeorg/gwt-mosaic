@@ -30,10 +30,10 @@ import org.gwt.mosaic2g.client.scene.Show;
  */
 public class HBox extends AbstractLayout {
 
-	private int count;
-
 	private int lastX, lastY, lastWidth, lastHeight;
 	private int lastFlexSum, lastFlexWidth, lastMaxFWidth, lastPrefWidth;
+	
+	private int spacing = 8;
 
 	public HBox(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0));
@@ -52,32 +52,13 @@ public class HBox extends AbstractLayout {
 
 	@Override
 	public int getPrefWidth() {
-		count = -1;
-
-		int result = 0;
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			final Feature f = it.next();
-			if (f.instanceOfHasPrefSize()) {
-				result += f.getPrefWidth();
-			} else {
-				int val = f.getWidth().$();
-				if (val == Integer.MIN_VALUE) {
-					continue;
-				}
-				result += val;
-			}
-			++count;
-		}
-
-		if (count > 0) {
-			result += spacing * count;
-		}
-
-		return result;
+		return super.getPrefWidth();
 	}
-
-	private int spacing = 8;
+	
+	@Override
+	public int getPrefHeight() {
+		return super.getPrefHeight();
+	}
 
 	public int getSpacing() {
 		return spacing;

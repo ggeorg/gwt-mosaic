@@ -68,6 +68,8 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import java.util.Iterator;
+
 /**
  * An {@code Assembly} is a feature composed of other features. It is a bit like
  * a switch statement: only one child of an assembly can be active at a time.
@@ -77,12 +79,28 @@ package org.gwt.mosaic2g.client.scene;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Assembly extends HasFeaturesImpl {
+public class Assembly extends HasFeaturesImpl implements HasScalingModel {
+
+	private InterpolatedModel scalingModel;
+	private boolean managedSM;
 
 	private Feature currentPart = null;
 
 	public Assembly(Show show) {
 		super(show);
+	}
+
+	public InterpolatedModel getScalingModel() {
+		return scalingModel;
+	}
+
+	public void setScalingModel(InterpolatedModel scalingModel) {
+		setScalingModel(scalingModel, false);
+	}
+
+	public void setScalingModel(InterpolatedModel scalingModel, boolean managed) {
+		this.scalingModel = scalingModel;
+		this.managedSM = managed;
 	}
 
 	public Feature getCurrentPart() {
@@ -111,12 +129,27 @@ public class Assembly extends HasFeaturesImpl {
 
 	@Override
 	protected void setSetupMode(boolean mode) {
-		super.setSetupMode(mode);
 		if (mode) {
+			Iterator<Feature> it = iterator();
+			while (it.hasNext()) {
+				final Feature f = it.next();
+				if (f instanceof HasScalingModel) {
+					((HasScalingModel) f).setScalingModel(scalingModel,
+							managedSM);
+				}
+			}
 			currentPart = parts.get(0);
 		} else {
+			Iterator<Feature> it = iterator();
+			while (it.hasNext()) {
+				final Feature f = it.next();
+				if (f instanceof HasScalingModel) {
+					((HasScalingModel) f).setScalingModel(null);
+				}
+			}
 			currentPart = null;
 		}
+		super.setSetupMode(mode);
 	}
 
 	@Override

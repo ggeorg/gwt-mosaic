@@ -69,8 +69,6 @@
 package org.gwt.mosaic2g.client.scene;
 
 import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
-import org.gwt.mosaic2g.client.scene.layout.Resizable;
 
 /**
  * Abstract base class for features that modify a single child feature.
@@ -160,16 +158,6 @@ public abstract class Modifier extends Feature {
 	}
 
 	// ---------------------------------------------------------------------
-
-	@Override
-	public boolean instanceOfResizable() {
-		return (part instanceof Resizable);
-	}
-
-	@Override
-	public boolean instanceOfHasPrefSize() {
-		return (part instanceof HasPrefSize);
-	}
 	
 	@Override
 	public int getPrefWidth() {
@@ -180,5 +168,7 @@ public abstract class Modifier extends Feature {
 	public int getPrefHeight() {
 		return getPrefHeight();
 	}
+	
+	// TODO flex
 
 }

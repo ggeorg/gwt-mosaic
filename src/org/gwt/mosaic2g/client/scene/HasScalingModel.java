@@ -15,11 +15,8 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
-import org.gwt.mosaic2g.client.util.Rectangle;
-
 /**
  * 
- * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
 public interface HasScalingModel {
@@ -28,6 +25,4 @@ public interface HasScalingModel {
 	void setScalingModel(InterpolatedModel scalingModel);
 
 	void setScalingModel(InterpolatedModel scalingModel, boolean managed);
-
-	Rectangle getScaledBounds(); // TODO remove
 }

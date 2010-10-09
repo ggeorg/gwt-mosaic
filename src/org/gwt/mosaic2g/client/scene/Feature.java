@@ -69,8 +69,6 @@
 package org.gwt.mosaic2g.client.scene;
 
 import org.gwt.mosaic2g.binding.client.Property;
-import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
-import org.gwt.mosaic2g.client.scene.layout.Resizable;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -380,14 +378,6 @@ public abstract class Feature implements Node {
 	}
 
 	// ---------------------------------------------------------------------
-
-	public boolean instanceOfResizable() {
-		return (this instanceof Resizable);
-	}
-
-	public boolean instanceOfHasPrefSize() {
-		return (this instanceof HasPrefSize);
-	}
 
 	public int getPrefWidth() {
 		return 0;
