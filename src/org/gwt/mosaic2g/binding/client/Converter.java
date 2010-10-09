@@ -26,6 +26,8 @@ public abstract class Converter<S, T> {
 
 	public abstract T convertForward(S value);
 	
-	public abstract S convertReverse(T value);
+	public S convertReverse(T value) {
+		throw new UnsupportedOperationException();
+	}
 
 }
