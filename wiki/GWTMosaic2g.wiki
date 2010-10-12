@@ -53,8 +53,8 @@ A segment specifies a number of features that are displayed (activated). A show 
 
 The entities actually displayed by a show are called *features*. Features can be divided in:
 
- * Controls
- * Groups
+ * [Controls]
+ * [Groups]
  * [Modifiers]
  * Timers
 
