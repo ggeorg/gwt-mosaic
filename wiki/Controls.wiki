@@ -116,3 +116,56 @@ public class Showcase implements EntryPoint {
 
 }
 }}}
+
+The `LoginForm.ui.xml` file:
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+	xmlns:mail='urn:import:com.google.gwt.sample.mail.client'>
+
+	<ui:style>
+	.panel {
+		padding: 2em 3em;
+	}
+	.input {
+		width: 100%;
+	}
+	</ui:style>
+	
+	<g:HTMLPanel width='20em' styleName='{style.panel}'>
+		<table width='100%' cellspacing='0' cellpadding='5'>
+			<tr>
+				<td>Username:</td>
+				<td><g:TextBox styleName='{style.input}' ui:field='userName'/></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><g:PasswordTextBox styleName='{style.input}' ui:field='password'/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><g:Button text='Submit' ui:field='submitBtn'/></td>
+			</tr>
+		</table>
+	</g:HTMLPanel>
+
+</ui:UiBinder>
+}}}
+
+and the CSS used:
+
+{{{
+.loginForm {
+    background: white !important;
+    background: -moz-linear-gradient(top, white, lightGray) !important;
+    background: -webkit-gradient(linear, left top, left bottom, from(white), to(lightGray)) !important;
+    border: 2px solid lightGray !important;
+    -moz-border-radius: 1em; 
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    -moz-box-shadow: 0.5em 0.5em 0.5em #4d4d4d;
+    -webkit-box-shadow: 0.5em 0.5em 0.5em #4d4d4d;
+    box-shadow: 0.5em 0.5em 0.5em #4d4d4d;
+}
+}}}
