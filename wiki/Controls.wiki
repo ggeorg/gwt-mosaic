@@ -2,11 +2,11 @@
 
 = Introduction =
 
-A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] feature has a visual representation.
+A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] feature has a visual representation. The provided primitive controls use GWT derived Widgets. A control in general can wrap any GWT Widget and it can be also used in combination with UiBinder.
 
 = Details =
 
-The basic set of controls are:
+The primitive set of controls are:
   * Box
   * Text
   * Image
