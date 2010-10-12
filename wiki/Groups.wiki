@@ -19,6 +19,12 @@ A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/
 
 An [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Assembly.java Assembly] is a little bit like a visual "switch" statement. An assembly has a number of child nodes, but only one of the children is active at any one time. Using an assembly, you can switch out what is visible on the screen. Assemblies let you manage the state of the user interface in a purely declerative way.
 
+Demo:
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-assembly-wiki.xml?v=3" height="256" width="512" border="0"/>
+
+The code:
+
 {{{
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
