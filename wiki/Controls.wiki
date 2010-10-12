@@ -20,4 +20,4 @@ An [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g
 
 An ImageSequence is like an image node, except that it has a sequence of images that are shown, one per frame. This allows one to produce a cel animation. An image sequence can repeat, starting with any frame of the animation.
 
-http://gwt-mosaic.googlecode.com/svn/wiki/2g/control1.png
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/controls1.png
