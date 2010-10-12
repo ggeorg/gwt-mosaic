@@ -7,18 +7,10 @@ A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/
 = Details =
 
 The primitive set of controls are:
-  * Box
-  * Text
-  * Image
-  * ImageSequence (TODO)
-
-A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Box.java Box] displays a rectangular box (`<div>`).
-
-A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Text.java Text] feature lets you display text or html.
-
-An [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Image.java Image] feature displays a single image using an url.
-
-An ImageSequence is like an image node, except that it has a sequence of images that are shown, one per frame. This allows one to produce a cel animation. An image sequence can repeat, starting with any frame of the animation.
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Box.java Box] displays a rectangular box.
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Text.java Text] feature lets you display text or html.
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Image.java Image] feature displays a single image using an url.
+  * ImageSequence is like an image node, except that it has a sequence of images that are shown, one per frame. This allows one to produce a cel animation. An image sequence can repeat, starting with any frame of the animation.
 
 == Using UiBinder ==
 
