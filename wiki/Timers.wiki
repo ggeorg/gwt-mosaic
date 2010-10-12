@@ -49,6 +49,8 @@ public class Showcase implements EntryPoint {
 		});
 	}
 
+	private DateTimeFormat formatter = DateTimeFormat
+			.getFormat(PredefinedFormat.TIME_FULL);
 	private Text text;
 
 	private Show createShow() {
@@ -72,8 +74,6 @@ public class Showcase implements EntryPoint {
 		Timer timer = new Timer(show, 25, new Command[] { new Command() {
 			@Override
 			public void execute() {
-				DateTimeFormat formatter = DateTimeFormat
-						.getFormat(PredefinedFormat.TIME_FULL);
 				text.getText().$(formatter.format(new Date()));
 			}
 		} });
@@ -86,6 +86,5 @@ public class Showcase implements EntryPoint {
 
 		return show;
 	}
-
 }
 }}}
