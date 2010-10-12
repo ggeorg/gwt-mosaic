@@ -1,0 +1,13 @@
+#sidebar TableOfContents
+
+= Introduction =
+
+A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] feature has a visual representation. You can think about it as a GWT Widget wrapper.
+
+= Details =
+
+The basic set of controls are:
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Box.java Box]
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Text.java Text]
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Image.java Image]
+  * ImageSequence (TODO)
