@@ -2,7 +2,7 @@
 
 = Introduction =
 
-A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] feature has a visual representation. You can think about it as a GWT Widget wrapper.
+A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] feature has a visual representation.
 
 = Details =
 
