@@ -14,3 +14,102 @@ The provided group features are:
 A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Group.java Group] is just a list of child nodes. When a group is made visible, all ofits child nodes will be visible.
 
 An [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Assembly.java Assembly] is a little bit like a visual "switch" statement. An assembly has a number of child nodes, but only one of the children is active at any one time. Using an assembly, you can switch out what is visible on the screen. Assemblies let you manage the state of the user interface in a purely declerative way.
+
+== Assembly ==
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Assembly;
+import org.gwt.mosaic2g.client.scene.Feature;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.Timer;
+import org.gwt.mosaic2g.client.scene.Translator;
+import org.gwt.mosaic2g.client.scene.control.Box;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private Scene scene;
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		RootLayoutPanel.get().add(scene = new Scene());
+		scene.setShow(createShow());
+
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				animationEngine.start();
+			}
+		});
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		final Box red = new Box(show, 20, 20, 50, 50);
+		red.setBackground("orange");
+		red.setBorder("5px solid red");
+
+		final Box green = new Box(show, 20, 20, 50, 50);
+		green.setBackground("yellow");
+		green.setBorder("5px solid green");
+
+		final Box blue = new Box(show, 20, 20, 50, 50);
+		blue.setBackground("cyan");
+		blue.setBorder("5px solid blue");
+
+		final Assembly assembly = new Assembly(show);
+		assembly.add(red);
+		assembly.add(green);
+		assembly.add(blue);
+
+		// we use a timer to switch the active assembly feature
+		Timer timer = new Timer(show, 25, new Command[] { new Command() {
+			@Override
+			public void execute() {
+				Feature part = assembly.getCurrentPart();
+				if (part == red) {
+					assembly.setCurrentPart(green);
+				} else if (part == green) {
+					assembly.setCurrentPart(blue);
+				} else {
+					assembly.setCurrentPart(red);
+				}
+			}
+		} });
+
+		Translator translator = new Translator(show,
+				MyTranslatorModel.INSTANCE.createModel());
+		translator.setPart(assembly);
+
+		Segment s = new Segment(show);
+		s.add(translator);
+		s.add(timer);
+
+		show.activateSegment(s);
+
+		return show;
+	}
+
+	@GrinFile(value = "translator_model.txt")
+	interface MyTranslatorModel extends InterpolatedModelParser {
+		MyTranslatorModel INSTANCE = GWT.create(MyTranslatorModel.class);
+	};
+}
+}}}
