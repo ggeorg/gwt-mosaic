@@ -49,8 +49,7 @@ public class Showcase implements EntryPoint {
 		});
 	}
 
-	private DateTimeFormat formatter = DateTimeFormat
-			.getFormat(PredefinedFormat.TIME_FULL);
+	private DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.TIME_FULL);
 	private Text text;
 
 	private Show createShow() {
