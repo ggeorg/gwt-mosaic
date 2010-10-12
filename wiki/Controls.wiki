@@ -8,8 +8,8 @@ A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/
 
 The primitive set of controls are:
   * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Box.java Box] - displays a rectangular box.
-  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Text.java Text] - feature lets you display text or html.
-  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Image.java Image] - feature displays a single image using an url.
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Text.java Text] - lets you display text or html.
+  * [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Image.java Image] - displays a single image using an url.
   * ImageSequence - like an image node, except that it has a sequence of images that are shown, one per frame. This allows one to produce a cel animation. An image sequence can repeat, starting with any frame of the animation.
 
 == Using UiBinder ==
