@@ -161,3 +161,7 @@ and the CSS used:
     box-shadow: 0.5em 0.5em 0.5em #4d4d4d;
 }
 }}}
+
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
