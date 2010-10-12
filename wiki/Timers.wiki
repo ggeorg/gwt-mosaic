@@ -1,0 +1,89 @@
+#sidebar TableOfContents
+
+A [Timer] is a feature that counts how many frames happen while it's active, and after a certain number of frames has gone by, it triggers a command.
+
+Example:
+
+Code:
+
+{{{
+import java.util.Date;
+
+import org.gwt.mosaic2g.binding.client.Getter;
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.Timer;
+import org.gwt.mosaic2g.client.scene.control.Text;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private Scene scene;
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		RootLayoutPanel.get().add(scene = new Scene());
+		scene.setShow(createShow());
+
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				animationEngine.start();
+			}
+		});
+	}
+
+	private Text text;
+
+	private Show createShow() {
+		Show show = new Show();
+
+		text = new Text(show, scene.getClientWidth().createBinding(
+				new Getter<Integer>() {
+					@Override
+					public Integer get(Integer value) {
+						return (value - text.getPrefWidth()) / 2;
+					}
+				}), scene.getClientHeight().createBinding(
+				new Getter<Integer>() {
+					@Override
+					public Integer get(Integer value) {
+						return (value - text.getPrefHeight()) / 2;
+					}
+				}));
+		text.setStyleName("timeDisplay");
+
+		Timer timer = new Timer(show, 25, new Command[] { new Command() {
+			@Override
+			public void execute() {
+				DateTimeFormat formatter = DateTimeFormat
+						.getFormat(PredefinedFormat.TIME_FULL);
+				text.getText().$(formatter.format(new Date()));
+			}
+		} });
+
+		Segment s = new Segment(show);
+		s.add(text);
+		s.add(timer);
+
+		show.activateSegment(s);
+
+		return show;
+	}
+
+}
+}}}
