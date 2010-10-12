@@ -10,3 +10,7 @@ The provided group features are:
   * Group
   * Assembly
   * Container
+
+A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Group.java Group] is just a list of child nodes. When a group is made visible, all ofits child nodes will be visible.
+
+An [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Assembly.java Assembly] is a little bit like a visual "switch" statement. An assembly has a number of child nodes, but only one of the children is active at any one time. Using an assembly, you can switch out what is visible on the screen. Assemblies let you manage the state of the user interface in a purely declerative way.
