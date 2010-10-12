@@ -19,3 +19,5 @@ A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/
 An [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/control/Image.java Image] feature displays a single image using an url.
 
 An ImageSequence is like an image node, except that it has a sequence of images that are shown, one per frame. This allows one to produce a cel animation. An image sequence can repeat, starting with any frame of the animation.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/controls.png
