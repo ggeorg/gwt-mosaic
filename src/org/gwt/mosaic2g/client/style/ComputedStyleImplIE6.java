@@ -42,7 +42,7 @@ public class ComputedStyleImplIE6 extends ComputedStyleImpl {
 	      default:
 	        // test currentStyle before touching
 	        value = elem.currentStyle ? elem.currentStyle[property] : null;
-	        value = (elem.style[property] || value || null);
+	        value = (value || elem.style[property] || null);
 	    }
 	  } else { // default to inline only
 	    value = (elem.style[property] || null);
