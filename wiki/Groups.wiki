@@ -206,3 +206,7 @@ public class Showcase implements EntryPoint {
 	};
 }
 }}}
+
+== Container ==
+
+A [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Container.java Container] is the base class of all layout managers like: HBox, VBox, Grid and Stack.
