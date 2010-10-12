@@ -1,0 +1,12 @@
+#sidebar TableOfContents
+
+= Introduction =
+
+The group or structural features don't show anything themselves, but they allow the nodes of a scene graph to be put together in useful ways.
+
+= Details =
+
+The provided group features are:
+  * Group
+  * Assembly
+  * Container
