@@ -92,6 +92,8 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -115,7 +117,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Text extends Control implements HasAlignment {
 
-	private String text;
+	private final Property<String> text;
 	private boolean asHTML;
 	private boolean textChanged;
 
@@ -136,20 +138,27 @@ public class Text extends Control implements HasAlignment {
 				.valueOf(Integer.MIN_VALUE));
 	}
 
-	public Text(Show show, Property<Integer> x, Property<Integer> y,
-			Property<Integer> width, Property<Integer> height) {
-		super(show, x, y, width, height);
-	}
-
 	public Text(Show show, int x, int y) {
-		super(show, x, y, Integer.MIN_VALUE, Integer.MIN_VALUE);
+		this(show, x, y, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
 
 	public Text(Show show, int x, int y, int width, int height) {
-		super(show, x, y, width, height);
+		this(show, Property.valueOf(x), Property.valueOf(y), Property
+				.valueOf(width), Property.valueOf(height));
 	}
 
-	public String getText() {
+	public Text(Show show, Property<Integer> x, Property<Integer> y,
+			Property<Integer> width, Property<Integer> height) {
+		super(show, x, y, width, height);
+		text = new Property<String>();
+		text.addValueChangeHandler(new ValueChangeHandler<String>(){
+			public void onValueChange(ValueChangeEvent<String> event) {
+				Text.this.textChanged = true;
+				markAsChanged();
+			}});
+	}
+
+	public Property<String> getText() {
 		return text;
 	}
 
@@ -161,10 +170,8 @@ public class Text extends Control implements HasAlignment {
 		if (text != null && text.equals(this.text) && asHTML == this.asHTML) {
 			return;
 		}
-		this.text = text;
+		this.text.$(text);
 		this.asHTML = asHTML;
-		this.textChanged = true;
-		markAsChanged();
 	}
 
 	public HorizontalAlignmentConstant getHorizontalAlignment() {
@@ -213,9 +220,9 @@ public class Text extends Control implements HasAlignment {
 		if (w instanceof HasHTML && (init || textChanged)) {
 			final HasHTML hasHTML = (HasHTML) w;
 			if (asHTML) {
-				hasHTML.setHTML(text);
+				hasHTML.setHTML(text.$());
 			} else {
-				hasHTML.setText(text);
+				hasHTML.setText(text.$());
 			}
 			textChanged = false;
 		}
