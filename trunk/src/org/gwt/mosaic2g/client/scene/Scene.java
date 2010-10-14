@@ -28,6 +28,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -60,8 +61,6 @@ public class Scene extends Composite implements AnimationClient,
 	private boolean sizeChanged = false;
 	private Property<Integer> clientWidthP;
 	private Property<Integer> clientHeightP;
-
-	private int initialClientWidth, initialClientHeight;
 
 	public Scene() {
 		this(new AbsolutePanel() {
@@ -112,15 +111,16 @@ public class Scene extends Composite implements AnimationClient,
 		super.onLoad();
 		DeferredCommand.addCommand(new Command() {
 			public void execute() {
-				initialClientWidth = getElement().getClientWidth();
-				initialClientHeight = getElement().getClientHeight();
+				ValueChangeEvent.fire(getClientWidth(), getElement()
+						.getClientWidth());
+				ValueChangeEvent.fire(getClientWidth(), getElement()
+						.getClientHeight());
 			}
 		});
 	}
 
 	@Override
 	protected void onUnload() {
-		initialClientWidth = initialClientHeight = 0;
 		super.onUnload();
 	}
 
@@ -172,14 +172,6 @@ public class Scene extends Composite implements AnimationClient,
 					});
 		}
 		return clientHeightP;
-	}
-
-	public int getInitialClientWidth() {
-		return initialClientWidth;
-	}
-
-	public int getInitialClientHeight() {
-		return initialClientHeight;
 	}
 
 	public boolean isSizeChanged() {
@@ -287,7 +279,7 @@ public class Scene extends Composite implements AnimationClient,
 		if (opacity != null) {
 			opacity.applyTo(elem);
 			elem.setPropertyBoolean("clearOpacity", true);
-		} else if(elem.getPropertyBoolean("clearOpacity")) {
+		} else if (elem.getPropertyBoolean("clearOpacity")) {
 			elem.getStyle().clearOpacity(); // FIXME ie???
 		}
 
