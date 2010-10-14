@@ -86,8 +86,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public class Image extends Control implements /* TODO Resizable */LoadHandler,
-		ErrorHandler {
+public class Image extends Control implements LoadHandler, ErrorHandler {
 
 	private String url;
 	private boolean urlChanged = false;
@@ -98,6 +97,12 @@ public class Image extends Control implements /* TODO Resizable */LoadHandler,
 
 	public Image(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0), Property
+				.valueOf(Integer.MIN_VALUE), Property
+				.valueOf(Integer.MIN_VALUE));
+	}
+
+	public Image(Show show, int x, int y) {
+		this(show, Property.valueOf(x), Property.valueOf(y), Property
 				.valueOf(Integer.MIN_VALUE), Property
 				.valueOf(Integer.MIN_VALUE));
 	}
