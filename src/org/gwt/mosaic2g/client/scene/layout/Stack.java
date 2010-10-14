@@ -47,6 +47,10 @@ public class Stack extends AbstractLayout {
 	public Stack(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0));
 	}
+	
+	public Stack(Show show, int x, int y) {
+		this(show, Property.valueOf(x), Property.valueOf(y));
+	}
 
 	public Stack(Show show, Property<Integer> x, Property<Integer> y) {
 		super(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
