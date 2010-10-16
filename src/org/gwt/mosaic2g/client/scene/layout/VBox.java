@@ -15,35 +15,50 @@
  */
 package org.gwt.mosaic2g.client.scene.layout;
 
+import java.util.Iterator;
+
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.Feature;
+import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
 /**
+ * The {@code VBox} container lays out its managed content nodes in a single
+ * vertical column.
  * 
  * @author ggeorg
  */
 public class VBox extends AbstractLayout {
-	
-	private int count;
 
 	private int lastX, lastY, lastWidth, lastHeight;
 	private int lastFlexSum, lastFlexHeight, lastMaxFHeight, lastPrefHeight;
+	
+	private int spacing = 8;
 
 	public VBox(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0));
 	}
-	
+
 	public VBox(Show show, Property<Integer> x, Property<Integer> y) {
 		this(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
 				.valueOf(Integer.MIN_VALUE));
 	}
-	
+
 	public VBox(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
+		setVerticalAlignment(ALIGN_TOP);
 	}
-
-	private int spacing = 8;
+	
+	@Override
+	public int getPrefWidth() {
+		return super.getPrefWidth();
+	}
+	
+	@Override
+	public int getPrefHeight() {
+		return super.getPrefHeight();
+	}
 
 	public int getSpacing() {
 		return spacing;
@@ -53,7 +68,7 @@ public class VBox extends AbstractLayout {
 		this.spacing = spacing;
 		markAsChanged();
 	}
-	
+
 	@Override
 	protected void setSetupMode(boolean mode) {
 		super.setSetupMode(mode);
@@ -64,4 +79,139 @@ public class VBox extends AbstractLayout {
 		}
 	}
 	
+	@Override
+	public boolean nextFrame(Scene scene) {
+		changed = (changed || super.nextFrame(scene));
+		if (changed) {
+			int x = getX().$();
+			int y = getY().$();
+			int width = getWidth().$();
+			int height = getHeight().$();
+
+			if (width == Integer.MIN_VALUE) {
+				width = getPrefWidth();
+			}
+
+			if (height == Integer.MIN_VALUE) {
+				height = getPrefHeight();
+			}
+
+			// if(lastX != x || lastY != y || lastWidth != width || lastHeight
+			// != height) {
+			lastX = x;
+			lastY = y;
+			lastWidth = width;
+			lastHeight = height;
+			// }
+
+			int flexSum = 0;
+			int maxHeight = 0;
+			int prefHeight = 0;
+			Iterator<Feature> it = iterator();
+			while (it.hasNext()) {
+				final Feature f = it.next();
+				final int fflex = f.getFlex();
+				if (fflex > 0) {
+					flexSum += fflex;
+				} else {
+					int fh = f.getHeight().$();
+					if (fh == Integer.MIN_VALUE) {
+						fh = f.getPrefHeight();
+					}
+					if (fh > maxHeight) {
+						maxHeight = fh;
+					}
+					prefHeight += fh;
+				}
+			}
+
+			int size = getParts().size();
+
+			if (prefHeight > 0) {
+				if (isEqualSize()) {
+					prefHeight = size * maxHeight;
+				}
+				prefHeight += (spacing * (size - 1));
+			}
+
+			lastFlexSum = flexSum;
+			lastFlexHeight = lastHeight - prefHeight;
+			lastMaxFHeight = maxHeight;
+			lastPrefHeight = prefHeight;
+		}
+		return changed;
+	}
+
+	@Override
+	public void paintFrame(Scene scene) {
+		if (!isActivated() || !changed) {
+			return;
+		}
+
+		int startX, startY;
+
+		if (lastFlexSum == 0) {
+			VerticalAlignmentConstant pack = getVerticalAlignment();
+			if (pack == VBox.ALIGN_BOTTOM) {
+				startY = lastY + (lastHeight - lastPrefHeight);
+			} else if (pack == VBox.ALIGN_MIDDLE) {
+				startY = lastY + (lastHeight - lastPrefHeight) / 2;
+			} else {
+				startY = lastY;
+			}
+		} else {
+			startY = lastY;
+		}
+
+		Iterator<Feature> it = iterator();
+		while (it.hasNext()) {
+			final Feature f = it.next();
+
+			int fh;
+
+			int fflex = f.getFlex();
+			if (fflex > 0) {
+				fh = (int) (lastFlexHeight * ((double) fflex / (double) lastFlexSum));
+				f.getHeight().$(fh);
+			} else if (isEqualSize()) {
+				fh = lastMaxFHeight;
+				f.getWidth().$(fh);
+			} else {
+				fh = f.getHeight().$();
+				if (fh == Integer.MIN_VALUE) {
+					fh = f.getPrefHeight();
+				}
+			}
+
+			HorizontalAlignmentConstant align = getHorizontalAlignment();
+			if (align == null) {
+				startX = lastX;
+				f.getWidth().$(lastWidth);
+			} else if (align == VBox.ALIGN_LEFT) {
+				startX = lastX;
+			} else {
+				int fw = f.getWidth().$();
+				if (fw == Integer.MIN_VALUE) {
+					fw = f.getPrefWidth();
+				}
+				if (align == VBox.ALIGN_CENTER) {
+					startX = lastX + (lastWidth - fw) / 2;
+				} else {
+					startX = lastX + (lastWidth - fw);
+				}
+			}
+
+			int dx = startX - f.getX().$();
+			int dy = startY - f.getY().$();
+
+			scene.translate(dx, dy);
+			f.paintFrame(scene);
+			scene.translate(-dx, -dy);
+
+			startY += fh + spacing;
+		}
+
+		paintDone();
+	}
+
 }
