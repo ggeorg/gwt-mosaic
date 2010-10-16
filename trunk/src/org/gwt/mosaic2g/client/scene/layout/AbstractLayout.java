@@ -51,7 +51,6 @@ public abstract class AbstractLayout extends Container implements
 				horzAlign = align;
 				markAsChanged();
 			}
-			System.out.println(horzAlign.getTextAlignString());
 			autoHorzAlignChanged = false;
 		}
 		return changed;
