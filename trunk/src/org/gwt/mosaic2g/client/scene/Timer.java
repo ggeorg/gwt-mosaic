@@ -82,21 +82,21 @@ public class Timer extends Feature {
 
 	private final InterpolatedModel model;
 
-	public Timer(Show show, int numFrames, Command[] commands) {
-		this(show, numFrames, true, commands);
+	public Timer(Show show, int numFrames, Command command) {
+		this(show, numFrames, true, command);
 	}
 
-	public Timer(Show show, int numFrames, boolean repeat, Command[] commands) {
+	public Timer(Show show, int numFrames, boolean repeat, Command command) {
 		super(show);
-		model = InterpolatedModel.makeTimer(numFrames, repeat, commands);
+		model = InterpolatedModel.makeTimer(numFrames, repeat, command);
 	}
 
-	public Command[] getCommands() {
-		return model.getEndCommands();
+	public Command getCommand() {
+		return model.getEndCommand();
 	}
 
-	public void setCommands(Command[] endCommands) {
-		model.setEndCommands(endCommands);
+	public void setCommands(Command endCommand) {
+		model.setEndCommand(endCommand);
 	}
 
 	@Override
