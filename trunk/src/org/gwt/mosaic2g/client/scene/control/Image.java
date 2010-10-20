@@ -96,15 +96,20 @@ public class Image extends Control implements LoadHandler, ErrorHandler {
 	private com.google.gwt.user.client.ui.Image cachedWidget;
 
 	public Image(Show show) {
-		this(show, Property.valueOf(0), Property.valueOf(0), Property
-				.valueOf(Integer.MIN_VALUE), Property
-				.valueOf(Integer.MIN_VALUE));
+		super(show, 0, 0);
 	}
 
 	public Image(Show show, int x, int y) {
-		this(show, Property.valueOf(x), Property.valueOf(y), Property
-				.valueOf(Integer.MIN_VALUE), Property
-				.valueOf(Integer.MIN_VALUE));
+		super(show, x, y);
+	}
+
+	public Image(Show show, int x, int y, int width, int height) {
+		super(show, x, y, width, height);
+	}
+
+	public Image(Show show, int x, int y, Property<Integer> width,
+			Property<Integer> height) {
+		super(show, x, y, width, height);
 	}
 
 	public Image(Show show, Property<Integer> x, Property<Integer> y,
@@ -129,6 +134,7 @@ public class Image extends Control implements LoadHandler, ErrorHandler {
 					RootPanel.get().remove(img);
 					Image.this.url = url;
 					Image.this.urlChanged = true;
+					markAsChanged();
 				}
 			});
 			Style imgStyle = img.getElement().getStyle();
@@ -146,8 +152,10 @@ public class Image extends Control implements LoadHandler, ErrorHandler {
 	protected Widget createWidget() {
 		updateWidget(cachedWidget = new com.google.gwt.user.client.ui.Image(),
 				true);
+		cachedWidget.setUrl(url);
 		cachedWidget.addLoadHandler(this);
 		cachedWidget.addErrorHandler(this);
+		updateWidget(cachedWidget, true);
 		return cachedWidget;
 	}
 
@@ -163,7 +171,6 @@ public class Image extends Control implements LoadHandler, ErrorHandler {
 	protected void setSetupMode(boolean mode) {
 		super.setSetupMode(mode);
 		if (mode) {
-			cachedWidget.setUrl(url);
 			if (!cachedWidget.isAttached()) {
 				Style widgetStyle = cachedWidget.getElement().getStyle();
 				widgetStyle.setVisibility(Visibility.HIDDEN);
@@ -196,6 +203,22 @@ public class Image extends Control implements LoadHandler, ErrorHandler {
 		Style widgetStyle = cachedWidget.getElement().getStyle();
 		widgetStyle.setVisibility(Visibility.VISIBLE);
 		super.sendFeatureSetup();
+	}
+
+	// XXX
+	public void preload() {
+		if (url != null) {
+			final com.google.gwt.user.client.ui.Image img = new com.google.gwt.user.client.ui.Image(
+					url);
+			img.addLoadHandler(new LoadHandler() {
+				public void onLoad(LoadEvent event) {
+					RootPanel.get().remove(img);
+				}
+			});
+			Style imgStyle = img.getElement().getStyle();
+			imgStyle.setVisibility(Visibility.HIDDEN);
+			RootPanel.get().add(img, Short.MIN_VALUE, Short.MIN_VALUE);
+		}
 	}
 
 }

@@ -130,12 +130,7 @@ public class Text extends Control implements HasAlignment {
 	private LabelWidget cachedWidget;
 
 	public Text(Show show) {
-		this(show, Property.valueOf(0), Property.valueOf(0));
-	}
-
-	public Text(Show show, Property<Integer> x, Property<Integer> y) {
-		this(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
-				.valueOf(Integer.MIN_VALUE));
+		this(show, 0, 0);
 	}
 
 	public Text(Show show, int x, int y) {
@@ -147,15 +142,26 @@ public class Text extends Control implements HasAlignment {
 				.valueOf(width), Property.valueOf(height));
 	}
 
+	public Text(Show show, Property<Integer> x, Property<Integer> y) {
+		this(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
+				.valueOf(Integer.MIN_VALUE));
+	}
+
+	public Text(Show show, int x, int y, Property<Integer> width,
+			Property<Integer> height) {
+		this(show, Property.valueOf(x), Property.valueOf(y), width, height);
+	}
+
 	public Text(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
 		text = new Property<String>();
-		text.addValueChangeHandler(new ValueChangeHandler<String>(){
+		text.addValueChangeHandler(new ValueChangeHandler<String>() {
 			public void onValueChange(ValueChangeEvent<String> event) {
 				Text.this.textChanged = true;
 				markAsChanged();
-			}});
+			}
+		});
 	}
 
 	public Property<String> getText() {
