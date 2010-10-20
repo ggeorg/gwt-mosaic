@@ -70,6 +70,7 @@ package org.gwt.mosaic2g.client.scene;
 
 import org.gwt.mosaic2g.client.util.Rectangle;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 
 /**
@@ -143,7 +144,7 @@ public class InterpolatedModel {
 	private int repeatIndex; // index when currFrame is repeatFrame 1
 	private int loopsRemaining; // see loopCount
 
-	protected Command[] endCommands;
+	protected Command endCommand;
 
 	public InterpolatedModel(int[] frames, int[] currValues, int[][] values) {
 		this(frames, currValues, values, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -206,15 +207,16 @@ public class InterpolatedModel {
 	public final void setField(int fieldNum, int value) {
 		// this is a value that is interpolated
 		assert (values[fieldNum] == null);
+		//GWT.log("XXX assert (values[fieldNum] == null)");
 		currValues[fieldNum] = value;
 	}
 
-	public Command[] getEndCommands() {
-		return endCommands;
+	public Command getEndCommand() {
+		return endCommand;
 	}
 
-	public void setEndCommands(Command[] endCommands) {
-		this.endCommands = endCommands;
+	public void setEndCommand(Command endCommand) {
+		this.endCommand = endCommand;
 	}
 
 	protected void activate() {
@@ -287,12 +289,12 @@ public class InterpolatedModel {
 						currFrame--;
 					}
 					currIndex = repeatIndex;
-					scene.getShow().runCommands(endCommands);
+					scene.getShow().runCommand(endCommand);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Scale the x, y, width and heigh values according to the current values of
 	 * SCALE_X_FIELD, SCALE_Y_FIELD, SCALE_X_FACTOR_FIELD and
@@ -358,15 +360,14 @@ public class InterpolatedModel {
 	}
 
 	public static InterpolatedModel makeFadeModel(int[] frames,
-			int[] fadeValues, int repeatFrame, int loopCount,
-			Command[] endCommands) {
+			int[] fadeValues, int repeatFrame, int loopCount, Command endCommand) {
 		int[][] values = new int[][] { fadeValues };
 		return makeInterpolatedModel(frames, values, repeatFrame, loopCount,
-				endCommands);
+				endCommand);
 	}
 
 	public static InterpolatedModel makeTimer(int numFrames, boolean repeat,
-			Command[] commands) {
+			Command command) {
 		int[] frames = new int[] { 0, numFrames - 1 };
 		// That means keyframes from 0 through numFrames-1, which is a total of
 		// numFrames frames. For example, a timer that's one frame long runs
@@ -382,7 +383,7 @@ public class InterpolatedModel {
 		 * and frame numFrames.
 		 */
 		return makeInterpolatedModel(frames, values, repeatFrame, loopCount,
-				commands);
+				command);
 	}
 
 	public static InterpolatedModel makeDefaultTranslatorModel() {
@@ -391,10 +392,9 @@ public class InterpolatedModel {
 	}
 
 	public static InterpolatedModel makeTranslatorModel(int[] frames,
-			int[][] values, int repeatFrame, int loopCount,
-			Command[] endCommands) {
+			int[][] values, int repeatFrame, int loopCount, Command endCommand) {
 		return makeInterpolatedModel(frames, values, repeatFrame, loopCount,
-				endCommands);
+				endCommand);
 	}
 
 	public static InterpolatedModel makeDefaultScalingModel() {
@@ -403,14 +403,13 @@ public class InterpolatedModel {
 	}
 
 	public static InterpolatedModel makeScalingModel(int[] frames,
-			int[][] values, int repeatFrame, int loopCount, Command[] commands) {
+			int[][] values, int repeatFrame, int loopCount, Command command) {
 		return makeInterpolatedModel(frames, values, repeatFrame, loopCount,
-				commands);
+				command);
 	}
 
 	public static InterpolatedModel makeInterpolatedModel(int[] frames,
-			int[][] values, int repeatFrame, int loopCount,
-			Command[] endCommands) {
+			int[][] values, int repeatFrame, int loopCount, Command endCommand) {
 		int[] currValues = new int[values.length];
 		for (int i = 0; i < values.length; i++) {
 			int[] valueList = values[i];
@@ -427,7 +426,7 @@ public class InterpolatedModel {
 		}
 		InterpolatedModel result = new InterpolatedModel(frames, currValues,
 				values, repeatFrame, loopCount);
-		result.setEndCommands(endCommands);
+		result.setEndCommand(endCommand);
 		return result;
 	}
 
