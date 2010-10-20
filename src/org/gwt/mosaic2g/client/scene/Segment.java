@@ -175,6 +175,8 @@ public class Segment implements Node, HasFeatures {
 				f.activate();
 				f.markAsChanged();
 				featureWasActiveted.put(f, Boolean.TRUE);
+			} else {
+				active = false;
 			}
 		}
 
@@ -222,6 +224,7 @@ public class Segment implements Node, HasFeatures {
 					featureWasActiveted.put(f, Boolean.TRUE);
 				}
 			}
+			active = true;
 		}
 	}
 
@@ -254,6 +257,9 @@ public class Segment implements Node, HasFeatures {
 	}
 
 	public void paintFrame(Scene scene) {
+		if(!isActive()) {
+			return;
+		}
 		Iterator<Feature> it = activeFeatures.iterator();
 		while (it.hasNext()) {
 			it.next().paintFrame(scene);
