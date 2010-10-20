@@ -101,9 +101,13 @@ import com.google.gwt.user.client.ui.Widget;
  * @author ggeorg
  */
 public class Box extends Control {
-	
+
 	public Box(Show show) {
 		super(show, 0, 0);
+	}
+
+	public Box(Show show, int x, int y) {
+		super(show, x, y);
 	}
 
 	public Box(Show show, int x, int y, int width, int height) {
