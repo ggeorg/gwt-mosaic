@@ -59,7 +59,6 @@ public class Showcase implements EntryPoint {
 		Show show = new Show();
 
 		text = new Text(show, 0, 0, scene.getClientWidth(), scene.getClientHeight());
-		text.getText().$(formatter.format(new Date()));
 		text.setStyleName("timeDisplay");
 		
 		Timer timer = new Timer(show, 25, new Command() {
