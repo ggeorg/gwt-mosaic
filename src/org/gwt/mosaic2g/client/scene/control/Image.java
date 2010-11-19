@@ -193,6 +193,7 @@ public class Image extends Control implements LoadHandler, ErrorHandler {
 	}
 
 	public void onLoad(LoadEvent event) {
+		onLoad(cachedWidget.getElement());
 		imageSetup = true;
 		sendFeatureSetup();
 	}

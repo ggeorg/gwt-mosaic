@@ -23,7 +23,7 @@ import org.gwt.mosaic2g.binding.client.Property;
  * 
  * @author ggeorg
  */
-public class Container extends HasFeaturesImpl {
+public abstract class Container extends HasFeaturesImpl {
 
 	public Container(Show show, Property<Integer> x, Property<Integer> y,
 			Property<Integer> width, Property<Integer> height) {
@@ -35,38 +35,8 @@ public class Container extends HasFeaturesImpl {
 	}
 
 	@Override
-	public int getPrefWidth() {
-		int width = 0;
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			final Feature f = it.next();
-			int fw = f.getWidth().$();
-			if (fw == Integer.MIN_VALUE) {
-				fw = f.getPrefWidth();
-			}
-			width = Math.max(width, fw);
-		}
-		return width;
-	}
-
-	@Override
-	public int getPrefHeight() {
-		int height = 0;
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			final Feature f = it.next();
-			int fh = f.getHeight().$();
-			if (fh == Integer.MIN_VALUE) {
-				fh = f.getPrefHeight();
-			}
-			height = Math.max(height, fh);
-		}
-		return height;
-	}
-
-	@Override
 	public boolean nextFrame(Scene scene) {
-		Iterator<Feature> it = iterator();
+		final Iterator<Feature> it = iterator();
 		while (it.hasNext()) {
 			Feature f = it.next();
 			if (f.nextFrame(scene)) {
@@ -76,43 +46,6 @@ public class Container extends HasFeaturesImpl {
 			}
 		}
 		return changed;
-	}
-
-	@Override
-	public void paintFrame(Scene scene) {
-		if (!isActivated() || !changed) {
-			return;
-		}
-
-		int x = getX().$();
-		int y = getY().$();
-		int width = getWidth().$();
-		int height = getHeight().$();
-
-		if (width == Integer.MIN_VALUE) {
-			width = getPrefWidth();
-		}
-
-		if (height == Integer.MIN_VALUE) {
-			height = getPrefHeight();
-		}
-
-		Iterator<Feature> it = iterator();
-		while (it.hasNext()) {
-			final Feature f = it.next();
-
-			f.getWidth().$(width);
-			f.getHeight().$(height);
-
-			final int dx = x - f.getX().$();
-			final int dy = y - f.getY().$();
-
-			scene.translate(dx, dy);
-			f.paintFrame(scene);
-			scene.translate(-dx, -dy);
-		}
-
-		paintDone();
 	}
 
 }

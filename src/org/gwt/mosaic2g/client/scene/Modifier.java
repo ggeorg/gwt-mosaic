@@ -68,7 +68,9 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.binding.client.Getter;
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
 
 /**
  * Abstract base class for features that modify a single child feature.
@@ -76,7 +78,7 @@ import org.gwt.mosaic2g.binding.client.Property;
  * @author Bill Foote (http://jovial.com)
  * @author ggeorg
  */
-public abstract class Modifier extends Feature {
+public abstract class Modifier extends Feature implements HasPrefSize {
 
 	private Feature part;
 
@@ -93,6 +95,23 @@ public abstract class Modifier extends Feature {
 			return;
 		}
 		this.part = part;
+		
+		// setup bindings
+		if (part instanceof HasPrefSize) {
+			prefWidth = ((HasPrefSize) part).getPrefWidth();
+			prefHeight = ((HasPrefSize) part).getPrefHeight();
+		} else {
+			prefWidth = part.getWidth().createBinding(new Getter<Integer>() {
+				public Integer get(Integer value) {
+					return Math.max(0, value);
+				}
+			});
+			prefHeight = part.getHeight().createBinding(new Getter<Integer>() {
+				public Integer get(Integer value) {
+					return Math.max(0, value);
+				}
+			});
+		}
 	}
 
 	@Override
@@ -158,17 +177,19 @@ public abstract class Modifier extends Feature {
 	}
 
 	// ---------------------------------------------------------------------
-	
-	@Override
-	public int getPrefWidth() {
-		return part.getPrefWidth();
+
+	private Property<Integer> prefWidth = null;
+
+	public Property<Integer> getPrefWidth() {
+		return prefWidth;
 	}
 
-	@Override
-	public int getPrefHeight() {
-		return getPrefHeight();
+	private Property<Integer> prefHeight = null;
+
+	public Property<Integer> getPrefHeight() {
+		return prefHeight;
 	}
-	
+
 	// TODO flex
 
 }
