@@ -3,7 +3,7 @@
 
 = Prerequisites =
 
- # You will need GWT-2.1.0.m3.zip; download it from [http://code.google.com/p/google-web-toolkit/downloads/list].
+ # You will need GWT-2.1.0.zip; download it from [http://code.google.com/p/google-web-toolkit/downloads/list].
  # Add the latest gwt-mosaic-2.x.jar to your classpath and add {{{<inherits name="org.gwt.mosaic2g.Mosaic" />}}} into your gwt.xml module file.
 
 = Details =
