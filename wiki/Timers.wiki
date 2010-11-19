@@ -14,8 +14,6 @@ import java.util.Date;
 import org.gwt.mosaic2g.binding.client.Getter;
 import org.gwt.mosaic2g.client.animator.AnimationClient;
 import org.gwt.mosaic2g.client.animator.AnimationEngine;
-import org.gwt.mosaic2g.client.scene.GrinFile;
-import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Segment;
 import org.gwt.mosaic2g.client.scene.Show;
@@ -23,7 +21,6 @@ import org.gwt.mosaic2g.client.scene.Timer;
 import org.gwt.mosaic2g.client.scene.control.Text;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.Command;
@@ -54,13 +51,13 @@ public class Showcase implements EntryPoint {
 		animationEngine.start();
 	}
 
+	private final DateTimeFormat formatter = DateTimeFormat
+			.getFormat(PredefinedFormat.TIME_FULL);
+
 	private Text text;
 
 	private Show createShow() {
 		Show show = new Show();
-
-		final DateTimeFormat formatter = DateTimeFormat
-				.getFormat(PredefinedFormat.TIME_FULL);
 
 		text = new Text(show, scene.getClientWidth().createBinding(
 				new Getter<Integer>() {
@@ -93,11 +90,6 @@ public class Showcase implements EntryPoint {
 
 		return show;
 	}
-
-	@GrinFile(value = "translator_model.txt")
-	interface MyTranslatorModel extends InterpolatedModelParser {
-		MyTranslatorModel INSTANCE = GWT.create(MyTranslatorModel.class);
-	};
 
 }
 }}}
