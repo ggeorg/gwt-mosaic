@@ -6,7 +6,6 @@ import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.MyClientBundle;
 import org.gwt.mosaic2g.client.scene.Assembly;
 import org.gwt.mosaic2g.client.scene.Group;
-import org.gwt.mosaic2g.client.scene.InterpolatedModel;
 import org.gwt.mosaic2g.client.scene.Show;
 
 public class ProgressBar extends Assembly {
@@ -54,31 +53,30 @@ public class ProgressBar extends Assembly {
 		enabled = new Group(show);
 		collapsed = new Group(show);
 
-		bgBox = new Box(show);
-		bgBox.getX().bind(getX());
-		bgBox.getY().bind(getY());
-		bgBox.getWidth().bind(getWidth());
-		bgBox.getHeight().bind(getHeight());
+		bgBox = new Box(show, getX().createBinding(), getY().createBinding(),
+				getWidth().createBinding(), getHeight().createBinding());
+		// bgBox.getX().bind(getX());
+		// bgBox.getY().bind(getY());
+		// bgBox.getWidth().bind(getWidth());
+		// bgBox.getHeight().bind(getHeight());
 
-		fgBox = new Box(show);
-		fgBox.getX().bind(getX());
-		fgBox.getY().bind(getY());
-		fgBox.getWidth().bindReadOnly(progress, new Converter<Double, Integer>() {
-			@Override
-			public Integer convertForward(Double value) {
-				if (value != null) {
-					int width = bgBox.getWidth().$();
-					if (width == Integer.MIN_VALUE) {
-						width = bgBox.getPrefWidth();
+		fgBox = new Box(show, getX().createBinding(), getY().createBinding(),
+				Property.valueOf(0), getHeight().createBinding());
+		// fgBox.getX().bind(getX());
+		// fgBox.getY().bind(getY());
+		fgBox.getWidth().bindReadOnly(progress,
+				new Converter<Double, Integer>() {
+					@Override
+					public Integer convertForward(Double value) {
+						if (value != null) {
+							int width = bgBox.getWidth().$();
+							return (int) (value * Math.max(0, width));
+						} else {
+							return 0;
+						}
 					}
-					width = Math.max(0, width);
-					return (int) (value * width);
-				} else {
-					return 0;
-				}
-			}
-		});
-		fgBox.getHeight().bind(getHeight());
+				});
+		// fgBox.getHeight().bind(getHeight());
 
 		enabled.add(bgBox);
 		enabled.add(fgBox);

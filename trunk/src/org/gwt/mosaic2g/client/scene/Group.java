@@ -221,7 +221,7 @@ public class Group extends HasFeaturesImpl implements HasScalingModel {
 			if (val == Integer.MIN_VALUE) {
 				if (f instanceof Control) {
 					if (val == Integer.MIN_VALUE) {
-						val = ((Control) f).getPrefWidth();
+						val = 0; //TODO((Control) f).getPrefWidth();
 					}
 				}
 			}
@@ -241,7 +241,7 @@ public class Group extends HasFeaturesImpl implements HasScalingModel {
 			if (val == Integer.MIN_VALUE) {
 				if (f instanceof Control) {
 					if (val == Integer.MIN_VALUE) {
-						val = ((Control) f).getPrefHeight();
+						val = 0;// TODO ((Control) f).getPrefHeight();
 					}
 				}
 			}

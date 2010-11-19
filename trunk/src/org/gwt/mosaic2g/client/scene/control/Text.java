@@ -73,6 +73,10 @@ import org.gwt.mosaic2g.client.MyClientBundle;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -95,8 +99,6 @@ import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -210,9 +212,12 @@ public class Text extends Control implements HasAlignment {
 			@Override
 			protected void onLoad() {
 				super.onLoad();
-				DeferredCommand.addCommand(new Command() {
+				final Element elem = getElement();
+				elem.getStyle().setVisibility(Visibility.HIDDEN);
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					public void execute() {
-						Text.this.markAsChanged();
+						Text.this.onLoad(elem);
+						elem.getStyle().setVisibility(Visibility.VISIBLE);
 					}
 				});
 			}

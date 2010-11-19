@@ -45,16 +45,26 @@ public class Stack extends AbstractLayout {
 	private int lastX, lastY, lastWidth, lastHeight;
 
 	public Stack(Show show) {
-		this(show, Property.valueOf(0), Property.valueOf(0));
+		this(show, 0, 0);
 	}
-	
+
 	public Stack(Show show, int x, int y) {
 		this(show, Property.valueOf(x), Property.valueOf(y));
 	}
 
+	public Stack(Show show, int x, int y, Property<Integer> width,
+			Property<Integer> height) {
+		this(show, Property.valueOf(x), Property.valueOf(y), width, height);
+	}
+
 	public Stack(Show show, Property<Integer> x, Property<Integer> y) {
-		super(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
+		this(show, x, y, Property.valueOf(Integer.MIN_VALUE), Property
 				.valueOf(Integer.MIN_VALUE));
+	}
+
+	public Stack(Show show, Property<Integer> x, Property<Integer> y,
+			Property<Integer> width, Property<Integer> height) {
+		super(show, x, y, width, height);
 		setHorizontalAlignment(ALIGN_CENTER);
 		setVerticalAlignment(ALIGN_MIDDLE);
 	}
@@ -76,14 +86,6 @@ public class Stack extends AbstractLayout {
 			int y = getY().$();
 			int width = getWidth().$();
 			int height = getHeight().$();
-
-			if (width == Integer.MIN_VALUE) {
-				width = getPrefWidth();
-			}
-
-			if (height == Integer.MIN_VALUE) {
-				height = getPrefHeight();
-			}
 
 			final HorizontalAlignmentConstant horzAlign = getHorizontalAlignment();
 			final VerticalAlignmentConstant vertAlign = getVerticalAlignment();
@@ -128,18 +130,20 @@ public class Stack extends AbstractLayout {
 			int fh = f.getHeight().$();
 
 			if (fw == Integer.MIN_VALUE) {
-				fw = f.getPrefWidth();
+				fw = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+						.getPrefWidth().$() : 0;
 			} else {
 				f.getWidth().$(fw = lastWidth);
 			}
-			if (fw == Integer.MIN_VALUE) {
-				fh = f.getPrefHeight();
+			if (fh == Integer.MIN_VALUE) {
+				fh = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+						.getPrefHeight().$() : 0;
 			} else {
 				f.getHeight().$(fh = lastHeight);
 			}
 
-			int dx = (lastX - f.getX().$());
-			int dy = (lastY - f.getY().$());
+			int dx = lastX;
+			int dy = lastY;
 
 			if (horzAlign == Stack.ALIGN_RIGHT) {
 				dx -= fw;
@@ -153,9 +157,14 @@ public class Stack extends AbstractLayout {
 				dy -= (fh / 2);
 			} /* else { default } */
 
-			scene.translate(dx, dy);
+			f.getX().$(dx);
+			f.getY().$(dy);
+
+			f.markAsChanged();
+
+			//scene.translate(dx, dy);
 			f.paintFrame(scene);
-			scene.translate(-dx, -dy);
+			//scene.translate(-dx, -dy);
 		}
 
 		paintDone();

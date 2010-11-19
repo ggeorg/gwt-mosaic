@@ -15,9 +15,12 @@
  */
 package org.gwt.mosaic2g.client.scene;
 
+import org.gwt.mosaic2g.binding.client.Getter;
 import org.gwt.mosaic2g.binding.client.Property;
+import org.gwt.mosaic2g.client.scene.layout.HasPrefSize;
 import org.gwt.mosaic2g.client.util.Rectangle;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -48,7 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author ggeorg
  */
 public abstract class Control extends Feature implements HasScalingModel,
-		HasAllMouseHandlers, HasClickHandlers, HasDoubleClickHandlers {
+		HasAllMouseHandlers, HasClickHandlers, HasDoubleClickHandlers, HasPrefSize {
 	private static final String DEFAULT_BORDER = "0px none";
 	private static final String DEFAULT_BACKGROUND = "none";
 
@@ -94,22 +97,38 @@ public abstract class Control extends Feature implements HasScalingModel,
 		setHeight(height);
 	}
 
-	@Override
-	public int getPrefWidth() {
-		if (widget == null || !widget.isAttached()) {
-			return super.getWidth().$();
-		} else {
-			return widget.getElement().getClientWidth();
+	private Property<Integer> prefWidth = null;
+
+	public Property<Integer> getPrefWidth() {
+		if (prefWidth == null) {
+			prefWidth = getWidth().createBinding(new Getter<Integer>() {
+				public Integer get(Integer value) {
+					if (widget == null || !widget.isAttached()) {
+						return getWidth().$();
+					} else {
+						return widget.getElement().getClientWidth();
+					}
+				}
+			});
 		}
+		return prefWidth;
 	}
 
-	@Override
-	public int getPrefHeight() {
-		if (widget == null || !widget.isAttached()) {
-			return super.getHeight().$();
-		} else {
-			return widget.getElement().getClientHeight();
+	private Property<Integer> prefHeight = null;
+
+	public Property<Integer> getPrefHeight() {
+		if (prefHeight == null) {
+			prefHeight = getHeight().createBinding(new Getter<Integer>() {
+				public Integer get(Integer value) {
+					if (widget == null || !widget.isAttached()) {
+						return getHeight().$();
+					} else {
+						return widget.getElement().getClientHeight();
+					}
+				}
+			});
 		}
+		return prefHeight;
 	}
 
 	public InterpolatedModel getScalingModel() {
@@ -218,6 +237,15 @@ public abstract class Control extends Feature implements HasScalingModel,
 			}
 			styleNameChanged = false;
 		}
+	}
+
+	protected void onLoad(final Element elem) {
+		getShow().runCommand(new Command() {
+			public void execute() {
+				ValueChangeEvent.fire(getWidth(), getPrefWidth().$());
+				ValueChangeEvent.fire(getHeight(), getPrefHeight().$());
+			}
+		});
 	}
 
 	@Override

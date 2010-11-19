@@ -22,6 +22,8 @@ import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+
 /**
  * The {@code HBox} container lays out its managed content nodes in a single
  * horizontal row.
@@ -31,12 +33,22 @@ import org.gwt.mosaic2g.client.scene.Show;
 public class HBox extends AbstractLayout {
 
 	private int lastX, lastY, lastWidth, lastHeight;
-	private int lastFlexSum, lastFlexWidth, lastMaxFWidth, lastPrefWidth;
-	
+	private int lastFlexSum, lastFlexWidth, lastMaxFWidth, lastMaxFHeight,
+			lastPrefWidth;
+
 	private int spacing = 8;
 
 	public HBox(Show show) {
 		this(show, Property.valueOf(0), Property.valueOf(0));
+	}
+
+	public HBox(Show show, int x, int y) {
+		this(show, Property.valueOf(x), Property.valueOf(y));
+	}
+
+	public HBox(Show show, int x, int y, int width, int height) {
+		this(show, Property.valueOf(x), Property.valueOf(y), Property
+				.valueOf(width), Property.valueOf(height));
 	}
 
 	public HBox(Show show, Property<Integer> x, Property<Integer> y) {
@@ -48,16 +60,6 @@ public class HBox extends AbstractLayout {
 			Property<Integer> width, Property<Integer> height) {
 		super(show, x, y, width, height);
 		setAutoHorizontalAlignment(ALIGN_CONTENT_START);
-	}
-
-	@Override
-	public int getPrefWidth() {
-		return super.getPrefWidth();
-	}
-	
-	@Override
-	public int getPrefHeight() {
-		return super.getPrefHeight();
 	}
 
 	public int getSpacing() {
@@ -75,7 +77,7 @@ public class HBox extends AbstractLayout {
 		if (mode) {
 			lastX = lastY = OFFSCREEN;
 			lastWidth = lastHeight = Integer.MIN_VALUE;
-			lastFlexSum = lastFlexWidth = lastMaxFWidth = lastPrefWidth = 0;
+			lastFlexSum = lastFlexWidth = lastMaxFWidth = lastMaxFHeight = lastPrefWidth = 0;
 		}
 	}
 
@@ -89,11 +91,30 @@ public class HBox extends AbstractLayout {
 			int height = getHeight().$();
 
 			if (width == Integer.MIN_VALUE) {
-				width = getPrefWidth();
+				width = 0;
+				final Iterator<Feature> it = iterator();
+				while (it.hasNext()) {
+					final Feature f = it.next();
+					final int fflex = f.getFlex();
+					if (fflex > 0) {
+						continue;
+					} else {
+						width += f.getWidth().$() + spacing;
+					}
+				}
+				getWidth().$(width = Math.max(0, width - spacing));
+				ValueChangeEvent.fire(getWidth(), getWidth().$());
 			}
 
 			if (height == Integer.MIN_VALUE) {
-				height = getPrefHeight();
+				height = 0;
+
+				Iterator<Feature> it = iterator();
+				while (it.hasNext()) {
+					final Feature f = it.next();
+					height = Math.max(height, f.getHeight().$());
+				}
+				getHeight().$(height);
 			}
 
 			// if(lastX != x || lastY != y || lastWidth != width || lastHeight
@@ -106,6 +127,7 @@ public class HBox extends AbstractLayout {
 
 			int flexSum = 0;
 			int maxWidth = 0;
+			int maxHeight = 0;
 			int prefWidth = 0;
 			Iterator<Feature> it = iterator();
 			while (it.hasNext()) {
@@ -116,13 +138,15 @@ public class HBox extends AbstractLayout {
 				} else {
 					int fw = f.getWidth().$();
 					if (fw == Integer.MIN_VALUE) {
-						fw = f.getPrefWidth();
+						fw = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+								.getPrefWidth().$() : 0;
 					}
 					if (fw > maxWidth) {
 						maxWidth = fw;
 					}
 					prefWidth += fw;
 				}
+				maxHeight = Math.max(maxHeight, f.getHeight().$());
 			}
 
 			int size = getParts().size();
@@ -134,9 +158,17 @@ public class HBox extends AbstractLayout {
 				prefWidth += (spacing * (size - 1));
 			}
 
+			if (lastMaxFWidth == Integer.MIN_VALUE) {
+				getWidth().$(lastMaxFWidth = maxWidth);
+				ValueChangeEvent.fire(getWidth(), getWidth().$());
+			}
+			if (lastMaxFHeight == Integer.MIN_VALUE) {
+				getHeight().$(lastMaxFHeight = maxHeight);
+				ValueChangeEvent.fire(getHeight(), getHeight().$());
+			}
+
 			lastFlexSum = flexSum;
 			lastFlexWidth = lastWidth - prefWidth;
-			lastMaxFWidth = maxWidth;
 			lastPrefWidth = prefWidth;
 		}
 		return changed;
@@ -147,7 +179,6 @@ public class HBox extends AbstractLayout {
 		if (!isActivated() || !changed) {
 			return;
 		}
-
 		int startX, startY;
 
 		if (lastFlexSum == 0) {
@@ -179,7 +210,10 @@ public class HBox extends AbstractLayout {
 			} else {
 				fw = f.getWidth().$();
 				if (fw == Integer.MIN_VALUE) {
-					fw = f.getPrefWidth();
+					if (fw == Integer.MIN_VALUE) {
+						fw = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+								.getPrefWidth().$() : 0;
+					}
 				}
 			}
 
@@ -192,7 +226,8 @@ public class HBox extends AbstractLayout {
 			} else {
 				int fh = f.getHeight().$();
 				if (fh == Integer.MIN_VALUE) {
-					fh = f.getPrefHeight();
+					fh = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+							.getPrefHeight().$() : 0;
 				}
 				if (align == HBox.ALIGN_MIDDLE) {
 					startY = lastY + (lastHeight - fh) / 2;
@@ -201,12 +236,17 @@ public class HBox extends AbstractLayout {
 				}
 			}
 
-			int dx = startX - f.getX().$();
-			int dy = startY - f.getY().$();
+			// int dx = startX - f.getX().$();
+			// int dy = startY - f.getY().$();
 
-			scene.translate(dx, dy);
+			f.getX().$(startX);
+			f.getY().$(startY);
+
+			f.markAsChanged();
+
+			// scene.translate(dx, dy);
 			f.paintFrame(scene);
-			scene.translate(-dx, -dy);
+			// scene.translate(-dx, -dy);
 
 			startX += fw + spacing;
 		}

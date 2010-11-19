@@ -378,15 +378,7 @@ public abstract class Feature implements Node {
 	}
 
 	// ---------------------------------------------------------------------
-
-	public int getPrefWidth() {
-		return 0;
-	}
-
-	public int getPrefHeight() {
-		return 0;
-	}
-
+	
 	public int getFlex() {
 		return flex;
 	}

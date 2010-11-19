@@ -72,7 +72,10 @@ import org.gwt.mosaic2g.binding.client.Property;
 import org.gwt.mosaic2g.client.scene.Control;
 import org.gwt.mosaic2g.client.scene.Show;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -126,11 +129,24 @@ public class Box extends Control {
 
 	@Override
 	protected Widget createWidget() {
-		final Widget result = new BoxWidget();
+		final Widget result = new BoxWidget() {
+			@Override
+			protected void onLoad() {
+				super.onLoad();
+				final Element elem = getElement();
+				//elem.getStyle().setVisibility(Visibility.HIDDEN);
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+					public void execute() {
+						Box.this.onLoad(elem);
+						//elem.getStyle().setVisibility(Visibility.VISIBLE);
+					}
+				});
+			}
+		};
 		updateWidget(result, true);
 		return result;
 	}
-
+	
 	// -------------------------
 	private class BoxWidget extends Widget implements HasClickHandlers,
 			HasDoubleClickHandlers, HasAllMouseHandlers {
