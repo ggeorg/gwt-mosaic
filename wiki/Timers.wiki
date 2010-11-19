@@ -18,7 +18,6 @@ import org.gwt.mosaic2g.client.scene.Segment;
 import org.gwt.mosaic2g.client.scene.Show;
 import org.gwt.mosaic2g.client.scene.Timer;
 import org.gwt.mosaic2g.client.scene.control.Text;
-import org.gwt.mosaic2g.client.scene.layout.Stack;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -54,17 +53,15 @@ public class Showcase implements EntryPoint {
 	private final DateTimeFormat formatter = DateTimeFormat
 			.getFormat(PredefinedFormat.TIME_FULL);
 
+	private Text text;
+
 	private Show createShow() {
 		Show show = new Show();
 
-		final Text text = new Text(show);
+		text = new Text(show, 0, 0, scene.getClientWidth(), scene.getClientHeight());
 		text.getText().$(formatter.format(new Date()));
 		text.setStyleName("timeDisplay");
-
-		Stack stack = new Stack(show, 0, 0, scene.getClientWidth(),
-				scene.getClientHeight());
-		stack.add(text);
-
+		
 		Timer timer = new Timer(show, 25, new Command() {
 			@Override
 			public void execute() {
@@ -74,7 +71,7 @@ public class Showcase implements EntryPoint {
 
 		Segment s = new Segment(show);
 		s.add(timer);
-		s.add(stack);
+		s.add(text);
 
 		show.activateSegment(s);
 
