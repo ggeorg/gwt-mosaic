@@ -4,7 +4,7 @@ A [Timer] is a feature that counts how many frames happen while it's active, and
 
 Example:
 
-<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-timer-wiki.xml?v=1" height="256" width="512" border="0"/>
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-timer-wiki.xml?v=2" height="256" width="512" border="0"/>
 
 Code:
 
