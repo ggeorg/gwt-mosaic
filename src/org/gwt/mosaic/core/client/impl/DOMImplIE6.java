@@ -47,7 +47,7 @@ public class DOMImplIE6 extends DOMImpl {
         default:
           // test currentStyle before touching
           value = elem.currentStyle ? elem.currentStyle[attr] : null;
-          value = (elem.style[attr] || value || null);
+          value = (value || elem.style[attr] || null);
       }
     } else { // default to inline only
       value = (elem.style[attr] || null);
