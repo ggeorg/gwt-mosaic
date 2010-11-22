@@ -42,7 +42,7 @@ public class DOMImpl {
       if (computed) { // test computed before touching for safari
         value = computed[attr];
       }
-      return (elem.style[attr] || value || '');
+      return (value || elem.style[attr] || '');
     } else { // default to inline only
       return (el.style[attr] || '');
     }
