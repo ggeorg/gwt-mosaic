@@ -4,6 +4,8 @@
   <property name="gwt.args" value="" />
 	
   <property name="project.version" value="2.0.0.m2" />
+  <!--<property name="junit.jar" value="${base.dir}/lib/junit-3.8.2.jar" />-->
+  <property name="junit.jar" value="${base.dir}/lib/junit-4.6.jar" />
 
   <!-- Configure path to GWT SDK -->
   <property name="gwt.sdk" location="C:/Users/ggeorg/projects/gwt-2.1.0.M3" />
@@ -35,15 +37,12 @@
     </copy>
   </target>
 
-<!--
-Test targets suppressed because -junit argument was not specified when running webAppCreator.
-
   <target name="javac.tests" depends="javac" description="Compiles test code">
     <javac srcdir="test" includes="**" encoding="utf-8"
       source="1.5" target="1.5" nowarn="true"
       destdir="war/WEB-INF/classes"
       debug="true" debuglevel="lines,vars,source">
-      <classpath location="path_to_the_junit_jar"/>
+      <classpath location="${junit.jar}"/>
       <classpath refid="project.class.path"/>
     </javac>
   </target>
@@ -58,7 +57,7 @@ Test targets suppressed because -junit argument was not specified when running w
         <pathelement location="src" />
         <pathelement location="test" />
         <path refid="project.class.path" />
-        <pathelement location="path_to_the_junit_jar" />
+        <pathelement location="${junit.jar}" />
       </classpath>
       <batchtest todir="reports/htmlunit.dev" >
         <fileset dir="test" >
@@ -80,7 +79,7 @@ Test targets suppressed because -junit argument was not specified when running w
         <pathelement location="src" />
         <pathelement location="test" />
         <path refid="project.class.path" />
-        <pathelement location="path_to_the_junit_jar" />
+        <pathelement location="${junit.jar}" />
       </classpath>
       <batchtest todir="reports/htmlunit.prod" >
         <fileset dir="test" >
@@ -96,7 +95,6 @@ Test targets suppressed because -junit argument was not specified when running w
     <antcall target="test.dev" />
     <antcall target="test.prod" />
   </target>
--->
 	
   <target name="jar" depends="javac" description="Package up the project">
     <jar destfile="${ant.project.name}-${project.version}.jar">
