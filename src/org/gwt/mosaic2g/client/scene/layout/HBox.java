@@ -22,8 +22,6 @@ import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-
 /**
  * The {@code HBox} container lays out its managed content nodes in a single
  * horizontal row.
@@ -33,8 +31,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 public class HBox extends AbstractLayout {
 
 	private int lastX, lastY, lastWidth, lastHeight;
-	private int lastFlexSum, lastFlexWidth, lastMaxFWidth, lastMaxFHeight,
-			lastPrefWidth;
+	private int lastFlexSum, lastFlexWidth, lastMaxFWidth, lastPrefWidth;
 
 	private int spacing = 8;
 
@@ -77,7 +74,7 @@ public class HBox extends AbstractLayout {
 		if (mode) {
 			lastX = lastY = OFFSCREEN;
 			lastWidth = lastHeight = Integer.MIN_VALUE;
-			lastFlexSum = lastFlexWidth = lastMaxFWidth = lastMaxFHeight = lastPrefWidth = 0;
+			lastFlexSum = lastFlexWidth = lastMaxFWidth = lastPrefWidth = 0;
 		}
 	}
 
@@ -89,45 +86,12 @@ public class HBox extends AbstractLayout {
 			int y = getY().$();
 			int width = getWidth().$();
 			int height = getHeight().$();
-
-			if (width == Integer.MIN_VALUE) {
-				width = 0;
-				final Iterator<Feature> it = iterator();
-				while (it.hasNext()) {
-					final Feature f = it.next();
-					final int fflex = f.getFlex();
-					if (fflex > 0) {
-						continue;
-					} else {
-						width += f.getWidth().$() + spacing;
-					}
-				}
-				getWidth().$(width = Math.max(0, width - spacing));
-				ValueChangeEvent.fire(getWidth(), getWidth().$());
-			}
-
-			if (height == Integer.MIN_VALUE) {
-				height = 0;
-
-				Iterator<Feature> it = iterator();
-				while (it.hasNext()) {
-					final Feature f = it.next();
-					height = Math.max(height, f.getHeight().$());
-				}
-				getHeight().$(height);
-			}
-
-			// if(lastX != x || lastY != y || lastWidth != width || lastHeight
-			// != height) {
-			lastX = x;
-			lastY = y;
-			lastWidth = width;
-			lastHeight = height;
-			// }
+			int size = getParts().size();
+			
+			// --------
 
 			int flexSum = 0;
 			int maxWidth = 0;
-			int maxHeight = 0;
 			int prefWidth = 0;
 			Iterator<Feature> it = iterator();
 			while (it.hasNext()) {
@@ -146,29 +110,51 @@ public class HBox extends AbstractLayout {
 					}
 					prefWidth += fw;
 				}
-				maxHeight = Math.max(maxHeight, f.getHeight().$());
 			}
 
-			int size = getParts().size();
+			if (isEqualSize()) {
+				prefWidth = size * maxWidth;
+			}
+			prefWidth += (spacing * (size - 1));
+			
+			// --------
 
-			if (prefWidth > 0) {
-				if (isEqualSize()) {
-					prefWidth = size * maxWidth;
+			if (width == Integer.MIN_VALUE) {
+				width = prefWidth;
+			}
+
+			if (height == Integer.MIN_VALUE) {
+				height = 0;
+				it = iterator();
+				while (it.hasNext()) {
+					final Feature f = it.next();
+					int fh = f.getHeight().$();
+					if (fh == Integer.MIN_VALUE) {
+						fh = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+								.getPrefHeight().$() : 0;
+					}
+					height = Math.max(height, fh);
 				}
-				prefWidth += (spacing * (size - 1));
+			}
+			
+			// --------
+			
+			if (lastWidth != width) {
+				getPrefWidth().$(width);
 			}
 
-			if (lastMaxFWidth == Integer.MIN_VALUE) {
-				getWidth().$(lastMaxFWidth = maxWidth);
-				ValueChangeEvent.fire(getWidth(), getWidth().$());
+			if (lastHeight != height) {
+				getPrefHeight().$(height);
 			}
-			if (lastMaxFHeight == Integer.MIN_VALUE) {
-				getHeight().$(lastMaxFHeight = maxHeight);
-				ValueChangeEvent.fire(getHeight(), getHeight().$());
-			}
+			
+			// --------
 
+			lastX = x;
+			lastY = y;
+			lastWidth = width;
+			lastHeight = height;
 			lastFlexSum = flexSum;
-			lastFlexWidth = lastWidth - prefWidth;
+			lastFlexWidth = width - prefWidth;
 			lastPrefWidth = prefWidth;
 		}
 		return changed;
@@ -210,10 +196,8 @@ public class HBox extends AbstractLayout {
 			} else {
 				fw = f.getWidth().$();
 				if (fw == Integer.MIN_VALUE) {
-					if (fw == Integer.MIN_VALUE) {
-						fw = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+					fw = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
 								.getPrefWidth().$() : 0;
-					}
 				}
 			}
 
