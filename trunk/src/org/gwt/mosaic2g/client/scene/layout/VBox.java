@@ -22,8 +22,6 @@ import org.gwt.mosaic2g.client.scene.Feature;
 import org.gwt.mosaic2g.client.scene.Scene;
 import org.gwt.mosaic2g.client.scene.Show;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-
 /**
  * The {@code VBox} container lays out its managed content nodes in a single
  * vertical column.
@@ -33,8 +31,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 public class VBox extends AbstractLayout {
 
 	private int lastX, lastY, lastWidth, lastHeight;
-	private int lastFlexSum, lastFlexHeight, lastMaxFWidth, lastMaxFHeight,
-			lastPrefHeight;
+	private int lastFlexSum, lastFlexHeight, lastMaxFHeight, lastPrefHeight;
 
 	private int spacing = 8;
 
@@ -77,7 +74,7 @@ public class VBox extends AbstractLayout {
 		if (mode) {
 			lastX = lastY = OFFSCREEN;
 			lastWidth = lastHeight = Integer.MIN_VALUE;
-			lastFlexSum = lastFlexHeight = lastMaxFWidth = lastMaxFHeight = lastPrefHeight = 0;
+			lastFlexSum = lastFlexHeight = lastMaxFHeight = lastPrefHeight = 0;
 		}
 	}
 
@@ -89,44 +86,11 @@ public class VBox extends AbstractLayout {
 			int y = getY().$();
 			int width = getWidth().$();
 			int height = getHeight().$();
+			int size = getParts().size();
 
-			if (width == Integer.MIN_VALUE) {
-				width = 0;
-
-				Iterator<Feature> it = iterator();
-				while (it.hasNext()) {
-					final Feature f = it.next();
-					width = Math.max(width, f.getWidth().$());
-				}
-				getWidth().$(width);
-			}
-
-			if (height == Integer.MIN_VALUE) {
-				height = 0;
-				final Iterator<Feature> it = iterator();
-				while (it.hasNext()) {
-					final Feature f = it.next();
-					final int fflex = f.getFlex();
-					if (fflex > 0) {
-						continue;
-					} else {
-						height += f.getHeight().$() + spacing;
-					}
-				}
-				getHeight().$(height = Math.max(0, height - spacing));
-				ValueChangeEvent.fire(getHeight(), getHeight().$());
-			}
-
-			// if(lastX != x || lastY != y || lastWidth != width || lastHeight
-			// != height) {
-			lastX = x;
-			lastY = y;
-			lastWidth = width;
-			lastHeight = height;
-			// }
+			// --------
 
 			int flexSum = 0;
-			int maxWidth = 0;
 			int maxHeight = 0;
 			int prefHeight = 0;
 			Iterator<Feature> it = iterator();
@@ -146,29 +110,51 @@ public class VBox extends AbstractLayout {
 					}
 					prefHeight += fh;
 				}
-				maxWidth = Math.max(maxWidth, f.getWidth().$());
 			}
 
-			int size = getParts().size();
+			if (isEqualSize()) {
+				prefHeight = size * maxHeight;
+			}
+			prefHeight += (spacing * (size - 1));
 
-			if (prefHeight > 0) {
-				if (isEqualSize()) {
-					prefHeight = size * maxHeight;
+			// --------
+
+			if (width == Integer.MIN_VALUE) {
+				width = 0;
+				it = iterator();
+				while (it.hasNext()) {
+					final Feature f = it.next();
+					int fw = f.getWidth().$();
+					if (fw == Integer.MIN_VALUE) {
+						fw = (f instanceof HasPrefSize) ? ((HasPrefSize) f)
+								.getPrefWidth().$() : 0;
+					}
+					width = Math.max(width, fw);
 				}
-				prefHeight += (spacing * (size - 1));
 			}
 
-			if (lastMaxFWidth != maxWidth) {
-				getWidth().$(lastMaxFWidth = maxWidth);
-				ValueChangeEvent.fire(getWidth(), getWidth().$());
-			}
-			if (lastMaxFHeight != maxHeight) {
-				getHeight().$(lastMaxFHeight = maxHeight);
-				ValueChangeEvent.fire(getHeight(), getHeight().$());
+			if (height == Integer.MIN_VALUE) {
+				height = prefHeight;
 			}
 
+			// --------
+
+			if (lastWidth != width) {
+				getPrefWidth().$(width);
+			}
+
+			if (lastHeight != height) {
+				getPrefHeight().$(height);
+			}
+
+			// --------
+
+			lastX = x;
+			lastY = y;
+			lastWidth = width;
+			lastHeight = height;
 			lastFlexSum = flexSum;
-			lastFlexHeight = lastHeight - prefHeight;
+			lastFlexHeight = height - prefHeight;
 			lastPrefHeight = prefHeight;
 		}
 		return changed;
