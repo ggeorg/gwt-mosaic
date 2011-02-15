@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesPushButtonSkin">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.PushButtonSkin" />
+	</replace-with>
+</module>

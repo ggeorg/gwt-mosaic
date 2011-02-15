@@ -16,10 +16,11 @@
  */
 package gwt.mosaic.client.wtk;
 
-import com.google.gwt.core.client.GWT;
-
+import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.wtk.content.ButtonDataRenderer;
 import gwt.mosaic.client.wtk.skin.PushButtonSkin;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * Component representing a push button.
@@ -27,6 +28,9 @@ import gwt.mosaic.client.wtk.skin.PushButtonSkin;
 // @DefaultProperty("buttonData")
 public class PushButton extends Button {
 	private static final Button.DataRenderer DEFAULT_DATA_RENDERER = new ButtonDataRenderer();
+	
+	interface SkinBeanAdapter extends BeanAdapter<PushButtonSkin> {
+	}
 
 	public PushButton() {
 		this(false, null);
@@ -46,7 +50,9 @@ public class PushButton extends Button {
 		setToggleButton(toggleButton);
 		setDataRenderer(DEFAULT_DATA_RENDERER);
 
-		//setSkin((Skin) GWT.create(PushButtonSkin.class));
+		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
+		adapter.setBean((PushButtonSkin) GWT.create(PushButtonSkin.class));
+		setSkin(adapter);
 	}
 
 	@Override

@@ -14,6 +14,7 @@
 	<inherits name="gwt.mosaic.BeanAdapter" />
 	<inherits name="gwt.mosaic.Color" />
 	<inherits name="gwt.mosaic.ComputedStyle" />
+	<inherits name="gwt.mosaic.Rhodes" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='gwt.mosaic.client.GwtMosaic' />
