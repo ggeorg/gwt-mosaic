@@ -4,7 +4,9 @@ import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.wtk.Application;
 import gwt.mosaic.client.wtk.Display;
 import gwt.mosaic.client.wtk.ImageView;
+import gwt.mosaic.client.wtk.PushButton;
 import gwt.mosaic.client.wtk.Window;
+import gwt.mosaic.client.wtk.content.ButtonData;
 import gwt.mosaic.client.wtk.media.Picture;
 
 public class DefaultApplication implements Application {
@@ -18,10 +20,10 @@ public class DefaultApplication implements Application {
 		ImageView imageView = new ImageView();
 		imageView.setImage(new Picture("http://www.google.gr/images/logos/ps_logo2a_cp.png"));
 		
-//		PushButton pushButton = new PushButton();
-//		pushButton.setButtonData(new ButtonData("Hello"));
+		PushButton pushButton = new PushButton();
+		pushButton.setButtonData(new ButtonData("Hello"));
 
-		window.setContent(imageView);
+		window.setContent(pushButton);
 		window.setTitle("Hello World!");
 		window.setMaximized(true);
 
