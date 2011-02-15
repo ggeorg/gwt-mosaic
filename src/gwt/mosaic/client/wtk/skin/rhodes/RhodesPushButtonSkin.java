@@ -51,6 +51,8 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
     private Color disabledBevelColor;
 
     private static final int CORNER_RADIUS = 4;
+    
+    private Widget widget = null;
 
     public RhodesPushButtonSkin() {
         //TerraTheme theme = (TerraTheme)Theme.getTheme();
@@ -75,8 +77,10 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
     
 	@Override
 	public Widget asWidget() {
-		// TODO Auto-generated method stub
-		return null;
+		if(widget == null) {
+			widget = (Widget) new com.google.gwt.user.client.ui.Button("Hello!");
+		}
+		return widget;
 	}
 
     @Override
