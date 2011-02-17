@@ -19,8 +19,6 @@ package gwt.mosaic.client.wtk;
 import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.wtk.skin.FlowPaneSkin;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * Container that arranges components in a horizontal line, wrapping when
  * contents don't fit on a single line.
@@ -30,8 +28,6 @@ public class FlowPane extends Container {
 	}
 	
 	public FlowPane() {
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new FlowPaneSkin());
-		setSkin(adapter);
+		installSkin(FlowPane.class);
 	}
 }

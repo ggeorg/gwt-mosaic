@@ -21,12 +21,8 @@ import gwt.mosaic.client.collections.ArrayList;
 import gwt.mosaic.client.collections.Sequence;
 import gwt.mosaic.client.util.ImmutableIterator;
 import gwt.mosaic.client.util.ListenerList;
-import gwt.mosaic.client.wtk.skin.GridPaneFillerSkin;
-import gwt.mosaic.client.wtk.skin.GridPaneSkin;
 
 import java.util.Iterator;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Container that arranges components in a two-dimensional grid, where every
@@ -269,13 +265,8 @@ public class GridPane extends Container {
 	 * Component that can be used as filler for empty cells.
 	 */
 	public static class Filler extends Component {
-		interface SkinBeanAdapter extends BeanAdapter<GridPaneFillerSkin> {
-		}
-		
 		public Filler() {
-			SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-			adapter.setBean(new GridPaneFillerSkin());
-			setSkin(adapter);
+			installSkin(Filler.class);
 		}
 	}
 
@@ -327,9 +318,6 @@ public class GridPane extends Container {
 			}
 		}
 	}
-	
-	interface SkinBeanAdapter extends BeanAdapter<GridPaneSkin> {
-	}
 
 	private int columnCount;
 
@@ -357,9 +345,7 @@ public class GridPane extends Container {
 
 		setColumnCount(columnCount);
 
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new GridPaneSkin());
-		setSkin(adapter);
+		installSkin(GridPane.class);
 	}
 
 	@Override

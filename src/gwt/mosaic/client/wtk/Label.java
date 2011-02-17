@@ -16,11 +16,7 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.util.ListenerList;
-import gwt.mosaic.client.wtk.skin.LabelSkin;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Component that displays a string of text.
@@ -83,9 +79,6 @@ public class Label extends Component {
 		}
 	}
 
-	interface SkinBeanAdapter extends BeanAdapter<LabelSkin> {
-	}
-
 	private String text = null;
 
 	private String textKey = null;
@@ -102,11 +95,7 @@ public class Label extends Component {
 	public Label(String text) {
 		this.text = text;
 
-		System.out.println("========================" + this.getClass().getSuperclass());
-		
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new LabelSkin());
-		setSkin(adapter);
+		installSkin(Label.class);
 	}
 
 	public String getText() {

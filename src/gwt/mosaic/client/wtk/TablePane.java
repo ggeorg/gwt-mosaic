@@ -21,13 +21,8 @@ import gwt.mosaic.client.collections.ArrayList;
 import gwt.mosaic.client.collections.Sequence;
 import gwt.mosaic.client.util.ImmutableIterator;
 import gwt.mosaic.client.util.ListenerList;
-import gwt.mosaic.client.wtk.TablePane.Filler;
-import gwt.mosaic.client.wtk.skin.TablePaneFillerSkin;
-import gwt.mosaic.client.wtk.skin.TablePaneSkin;
 
 import java.util.Iterator;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Container that arranges components in a two-dimensional grid, optionally
@@ -625,13 +620,8 @@ public class TablePane extends Container {
 	 * Component that can be used as filler for empty cells.
 	 */
 	public static final class Filler extends Component {
-		interface SkinBeanAdapter extends BeanAdapter<TablePaneFillerSkin> {
-		}
-		
 		public Filler() {
-			SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-			adapter.setBean(new TablePaneFillerSkin());
-			setSkin(adapter);
+			installSkin(Filler.class);
 		}
 	}
 
@@ -746,9 +736,6 @@ public class TablePane extends Container {
 			}
 		}
 	}
-	
-	interface SkinBeanAdapter extends BeanAdapter<TablePaneSkin> {
-	}
 
 	private ArrayList<Row> rows = null;
 	private RowSequence rowSequence = new RowSequence();
@@ -783,13 +770,12 @@ public class TablePane extends Container {
 		this.rows = new ArrayList<Row>();
 		this.columns = new ArrayList<Column>(columns);
 
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new TablePaneSkin());
-		setSkin(adapter);
+		installSkin(TablePane.class);
 	}
 
 	@Override
-	protected void setSkin(BeanAdapter<? extends gwt.mosaic.client.wtk.Skin> styles) {
+	protected void setSkin(
+			BeanAdapter<? extends gwt.mosaic.client.wtk.Skin> styles) {
 		if (!(styles.getBean() instanceof TablePane.Skin)) {
 			throw new IllegalArgumentException("Skin class must implement "
 					+ TablePane.Skin.class.getName());

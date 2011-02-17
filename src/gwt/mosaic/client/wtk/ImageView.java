@@ -16,12 +16,8 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.client.wtk.media.Image;
-import gwt.mosaic.client.wtk.skin.ImageViewSkin;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Component that displays an image.
@@ -121,9 +117,6 @@ public class ImageView extends Component {
 			}
 		}
 	}
-	
-	interface SkinBeanAdapter extends BeanAdapter<ImageViewSkin> {
-	}
 
 	private Image image = null;
 	private boolean asynchronous = false;
@@ -154,9 +147,7 @@ public class ImageView extends Component {
 	public ImageView(Image image) {
 		setImage(image);
 
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new ImageViewSkin());
-		setSkin(adapter);
+		installSkin(ImageView.class);
 	}
 
 	/**

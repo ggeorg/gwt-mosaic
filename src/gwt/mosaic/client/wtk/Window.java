@@ -16,15 +16,11 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.collections.ArrayList;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.Sequence;
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.client.util.Vote;
-import gwt.mosaic.client.wtk.skin.WindowSkin;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Top-level container representing the entry point into a user interface.
@@ -423,9 +419,6 @@ public class Window extends Container {
 			}
 		}
 	}
-	
-	interface SkinBeanAdapter extends BeanAdapter<WindowSkin> {
-	}
 
 	private Window owner = null;
 	private ArrayList<Window> ownedWindows = new ArrayList<Window>();
@@ -460,9 +453,7 @@ public class Window extends Container {
 	public Window(Component content) {
 		setContent(content);
 		
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new WindowSkin());
-		setSkin(adapter);
+		installSkin(Window.class);
 	}
 
 	@Override

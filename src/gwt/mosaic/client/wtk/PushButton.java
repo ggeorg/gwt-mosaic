@@ -16,11 +16,7 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.wtk.content.ButtonDataRenderer;
-import gwt.mosaic.client.wtk.skin.rhodes.RhodesPushButtonSkin;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Component representing a push button.
@@ -28,9 +24,6 @@ import com.google.gwt.core.client.GWT;
 // @DefaultProperty("buttonData")
 public class PushButton extends Button {
 	private static final Button.DataRenderer DEFAULT_DATA_RENDERER = new ButtonDataRenderer();
-	
-	interface SkinBeanAdapter extends BeanAdapter<RhodesPushButtonSkin> {
-	}
 
 	public PushButton() {
 		this(false, null);
@@ -50,9 +43,7 @@ public class PushButton extends Button {
 		setToggleButton(toggleButton);
 		setDataRenderer(DEFAULT_DATA_RENDERER);
 
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new RhodesPushButtonSkin());
-		setSkin(adapter);
+		installSkin(PushButton.class);
 	}
 
 	@Override

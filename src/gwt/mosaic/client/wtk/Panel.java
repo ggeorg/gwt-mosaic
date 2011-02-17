@@ -16,21 +16,11 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
-import gwt.mosaic.client.wtk.skin.PanelSkin;
-
-import com.google.gwt.core.client.GWT;
-
 /**
  * Simple container that performs no layout.
  */
 public class Panel extends Container {
-	interface SkinBeanAdapter extends BeanAdapter<PanelSkin> {
-	}
-	
 	public Panel() {
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new PanelSkin());
-		setSkin(adapter);
+		installSkin(Panel.class);
 	}
 }

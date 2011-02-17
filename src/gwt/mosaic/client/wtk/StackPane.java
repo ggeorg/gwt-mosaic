@@ -16,22 +16,12 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
-import gwt.mosaic.client.wtk.skin.StackPaneSkin;
-
-import com.google.gwt.core.client.GWT;
-
 /**
  * Container that behaves like a stack of transparencies, all of which are
  * visible at the same time.
  */
 public class StackPane extends Container {
-	interface SkinBeanAdapter extends BeanAdapter<StackPaneSkin> {
-	}
-	
 	public StackPane() {
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new StackPaneSkin());
-		setSkin(adapter);
+		installSkin(StackPane.class);
 	}
 }
