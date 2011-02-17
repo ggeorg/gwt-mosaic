@@ -19,7 +19,7 @@
 	</ui:style>
 
 	<g:SimplePanel styleName='{style.outerDiv}'>
-		<g:HTML styleName='{style.innerDiv}' ui:field='innerDiv' />
+		<g:HTML styleName='{style.innerDiv}' ui:field='htmlDiv' />
 	</g:SimplePanel>
 
 </ui:UiBinder>

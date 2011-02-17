@@ -364,7 +364,7 @@ public abstract class Container extends Component implements
 			// Only paint components that are visible and intersect the current clip rectangle
 			if(component.isVisible() /*&& componentBounds intersects contianerBounds*/) {
 				// Paint the component
-				component.paint(getSkin().asWidget());
+				component.paint(getSkin().getWidget());
 			}
 		}
 	}

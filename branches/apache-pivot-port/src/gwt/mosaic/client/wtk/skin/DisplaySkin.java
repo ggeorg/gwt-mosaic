@@ -47,7 +47,7 @@ public class DisplaySkin extends ContainerSkin {
 	}
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		if (widget == null) {
 			widget = ((Display) getComponent()).getDisplayHost().asWidget();
 			widget.setStyleName("m-Display");

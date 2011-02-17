@@ -123,7 +123,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 	}
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		if (widget == null) {
 			widget = new PushButtonWidget();
 			widget.addStyleName("m-PushButton");
@@ -293,7 +293,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 			}
 		}
 
-		PushButtonWidget pushButtonWidget = (PushButtonWidget) asWidget();
+		PushButtonWidget pushButtonWidget = (PushButtonWidget) getWidget();
 
 		// Paint the border
 		if (borderColorChanged) {

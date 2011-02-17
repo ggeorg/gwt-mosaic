@@ -83,7 +83,7 @@ public class WindowSkin extends ContainerSkin implements Window.Skin,
 	}
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		if (widget == null) {
 			widget = new SimplePanel() {
 
@@ -206,7 +206,7 @@ public class WindowSkin extends ContainerSkin implements Window.Skin,
 		}
 
 		DisplayHost displayHost = window.getDisplay().getDisplayHost();
-		displayHost.add(asWidget());
+		displayHost.add(getWidget());
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class WindowSkin extends ContainerSkin implements Window.Skin,
 		}
 
 		DisplayHost displayHost = display.getDisplayHost();
-		displayHost.remove(asWidget());
+		displayHost.remove(getWidget());
 	}
 
 	@Override
