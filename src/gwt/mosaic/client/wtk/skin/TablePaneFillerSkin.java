@@ -63,7 +63,7 @@ public class TablePaneFillerSkin implements Skin {
 	}
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		// TODO Auto-generated method stub
 		return null;
 	}

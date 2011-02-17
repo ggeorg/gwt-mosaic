@@ -1,9 +1,9 @@
-.labelWidget, .imageWidget, .pushButtonWidget {
+.imageWidget, .pushButtonWidget {
 	overflow: hidden;
 	display: table;
 }
 
-.labelWidgetInner, .imageWidgetInner, .pushButtonWidgetInner {
+.imageWidgetInner, .pushButtonWidgetInner {
 	margin: 0px;
 	border: 0px none;
 	background: inherited;

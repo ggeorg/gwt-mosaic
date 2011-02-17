@@ -154,15 +154,15 @@ public abstract class ContainerSkin extends ComponentSkin implements
 	@Override
 	public void paint(Widget context) {
 		if (backgroundColorChanged) {
-			if (asWidget() instanceof HasBackgroundColor) {
-				((HasBackgroundColor) asWidget())
+			if (getWidget() instanceof HasBackgroundColor) {
+				((HasBackgroundColor) getWidget())
 						.setBackgroundColor(backgroundColor);
 				backgroundColorChanged = false;
 			} else {
 				if (backgroundColor != null) {
-					backgroundColor.applyTo(asWidget().getElement(), true);
+					backgroundColor.applyTo(getWidget().getElement(), true);
 				} else {
-					Style style = asWidget().getElement().getStyle();
+					Style style = getWidget().getElement().getStyle();
 					style.setBackgroundColor("transparent");
 				}
 			}

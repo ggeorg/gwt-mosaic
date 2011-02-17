@@ -1862,16 +1862,16 @@ public abstract class Component implements ConstrainedVisual {
 	public void paint(Widget context) {
 		System.out.println("---P-------------" + getClass().getName());
 		if (context == null) {
-			getSkin().asWidget().removeFromParent();
+			getSkin().getWidget().removeFromParent();
 			return;
 		}
 
-		if (!getSkin().asWidget().isAttached()) {
+		if (!getSkin().getWidget().isAttached()) {
 			if (context instanceof HasOneWidget) {
 				((HasOneWidget) context).setWidget((IsWidget) getSkin()
-						.asWidget());
+						.getWidget());
 			} else if (context instanceof HasWidgets) {
-				((HasWidgets) context).add(getSkin().asWidget());
+				((HasWidgets) context).add(getSkin().getWidget());
 			}
 			invalidate();
 		}

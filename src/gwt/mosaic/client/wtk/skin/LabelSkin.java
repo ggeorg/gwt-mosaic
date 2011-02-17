@@ -12,39 +12,27 @@ import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.TextDecoration;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasWordWrap;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 public class LabelSkin extends ComponentSkin implements LabelListener {
+
+	public interface View extends IsWidget, HasAlignment, HasHTML, HasWordWrap {
+
+		void setFont(Font font);
+
+		void setTextDecoration(TextDecoration textDecoration);
+
+		void setColor(Color color);
+
+		void setBackgroundColor(Color backgroundColor);
+
+		void setPadding(Insets padding);
+	}
 
 	private Font font;
 	private boolean fontChanged;
@@ -73,7 +61,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	// Changed by LabelListener implementation.
 	private boolean textChanged = true;
 
-	private LabelWidget widget = null;
+	private View display = null;
 
 	public LabelSkin() {
 		// Theme theme = Theme.getTheme();
@@ -112,19 +100,19 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	}
 
 	@Override
-	public Widget asWidget() {
-		if (widget == null) {
-			widget = new LabelWidget();
-			widget.addStyleName("m-Label");
+	public Widget getWidget() {
+		if (display == null) {
+			display = GWT.create(View.class);
+			display.asWidget().addStyleName("m-Label");
 		}
-		return widget;
+		return display.asWidget();
 	}
 
 	@Override
 	public int getPreferredWidth(int height) {
 		int preferredWidth;
-		if (asWidget().isAttached()) {
-			Element elem = asWidget().getElement();
+		if (getWidget().isAttached()) {
+			Element elem = getWidget().getElement();
 			preferredWidth = (int) Math.ceil(elem.getClientWidth());
 		} else {
 			preferredWidth = 0;
@@ -139,8 +127,8 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	@Override
 	public int getPreferredHeight(int width) {
 		int preferredHeight;
-		if (asWidget().isAttached()) {
-			Element elem = asWidget().getElement();
+		if (getWidget().isAttached()) {
+			Element elem = getWidget().getElement();
 			preferredHeight = (int) Math.ceil(elem.getClientHeight());
 		} else {
 			preferredHeight = 0;
@@ -159,7 +147,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 	@Override
 	public void paint(Widget context) {
-		LabelWidget labelWidget = (LabelWidget) asWidget();
+		View labelWidget = (View) getWidget();
 
 		if (backgroundColorChanged) {
 			labelWidget.setBackgroundColor(backgroundColor);
@@ -178,11 +166,11 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 		if (horizontalAlignmentChanged) {
 			if (horizontalAlignment == HorizontalAlignment.LEFT) {
-				labelWidget.setHorizontalAlignment(LabelWidget.ALIGN_LEFT);
+				labelWidget.setHorizontalAlignment(View.ALIGN_LEFT);
 			} else if (horizontalAlignment == HorizontalAlignment.CENTER) {
-				labelWidget.setHorizontalAlignment(LabelWidget.ALIGN_CENTER);
+				labelWidget.setHorizontalAlignment(View.ALIGN_CENTER);
 			} else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
-				labelWidget.setHorizontalAlignment(LabelWidget.ALIGN_RIGHT);
+				labelWidget.setHorizontalAlignment(View.ALIGN_RIGHT);
 			}
 			horizontalAlignmentChanged = false;
 		}
@@ -199,11 +187,11 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 		if (verticalAlignmentChanged) {
 			if (verticalAlignment == VerticalAlignment.TOP) {
-				labelWidget.setVerticalAlignment(LabelWidget.ALIGN_TOP);
+				labelWidget.setVerticalAlignment(View.ALIGN_TOP);
 			} else if (verticalAlignment == VerticalAlignment.CENTER) {
-				labelWidget.setVerticalAlignment(LabelWidget.ALIGN_MIDDLE);
+				labelWidget.setVerticalAlignment(View.ALIGN_MIDDLE);
 			} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-				labelWidget.setVerticalAlignment(LabelWidget.ALIGN_BOTTOM);
+				labelWidget.setVerticalAlignment(View.ALIGN_BOTTOM);
 			}
 			verticalAlignmentChanged = false;
 		}
@@ -405,165 +393,5 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	public void textChanged(Label label, String previousText) {
 		textChanged = true;
 		invalidateComponent();
-	}
-
-	// -------------------------
-	interface MyUiBinder extends UiBinder<Widget, LabelWidget> {
-	}
-
-	private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
-	class LabelWidget extends Composite implements HasAlignment,
-			HasHTML, HasWordWrap, HasClickHandlers, HasDoubleClickHandlers,
-			HasAllMouseHandlers {
-
-		@UiField
-		HTML innerDiv;
-
-		private VerticalAlignmentConstant vertAlign;
-
-		public LabelWidget() {
-			initWidget(uiBinder.createAndBindUi(this));
-
-			setWordWrap(false);
-
-//			SkinClientBundle.INSTANCE.css().ensureInjected();
-//			setStyleName(SkinClientBundle.INSTANCE.css().labelWidget());
-//			innerDiv.setStyleName(SkinClientBundle.INSTANCE.css()
-//					.labelWidgetInner());
-		}
-
-		public void setFont(Font font) {
-			if (font != null) {
-				font.applyTo(innerDiv.getElement());
-			}
-		}
-
-		public void setTextDecoration(TextDecoration textDecoration) {
-			Style style = innerDiv.getElement().getStyle();
-			if (textDecoration != null) {
-				style.setTextDecoration(textDecoration);
-			} else {
-				style.setTextDecoration(TextDecoration.NONE);
-			}
-		}
-
-		public void setColor(Color color) {
-			if (color != null) {
-				color.applyTo(innerDiv.getElement(), false);
-			} else {
-				Style style = innerDiv.getElement().getStyle();
-				style.setColor("");
-			}
-		}
-
-		public void setBackgroundColor(Color backgroundColor) {
-			if (backgroundColor != null) {
-				backgroundColor.applyTo(getElement(), true);
-			} else {
-				Style style = getElement().getStyle();
-				style.setBackgroundColor("");
-			}
-		}
-
-		public void setPadding(Insets padding) {
-			Style style = innerDiv.getElement().getStyle();
-			style.setPaddingTop(padding.top, Unit.PX);
-			style.setPaddingRight(padding.right, Unit.PX);
-			style.setPaddingBottom(padding.bottom, Unit.PX);
-			style.setPaddingLeft(padding.left, Unit.PX);
-		}
-
-		public String getText() {
-			return innerDiv.getText();
-		}
-
-		public void setText(String text) {
-			innerDiv.setText(text);
-		}
-
-		public boolean getWordWrap() {
-			return innerDiv.getWordWrap();
-		}
-
-		public void setWordWrap(boolean wrap) {
-			innerDiv.setWordWrap(wrap);
-		}
-
-		public String getHTML() {
-			return innerDiv.getHTML();
-		}
-
-		public void setHTML(String html) {
-			this.innerDiv.setHTML(html);
-		}
-
-		public HorizontalAlignmentConstant getHorizontalAlignment() {
-			return innerDiv.getHorizontalAlignment();
-		}
-
-		public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-			innerDiv.setHorizontalAlignment(align);
-		}
-
-		public VerticalAlignmentConstant getVerticalAlignment() {
-			return vertAlign;
-		}
-
-		public void setVerticalAlignment(VerticalAlignmentConstant align) {
-			vertAlign = align;
-			innerDiv.getElement()
-					.getStyle()
-					.setProperty(
-							"verticalAlign",
-							vertAlign == null ? "" : vertAlign
-									.getVerticalAlignString());
-		}
-
-		@Override
-		public void setWidth(String width) {
-			super.setWidth(width);
-			innerDiv.setWidth(width);
-		}
-
-		@Override
-		public void setHeight(String height) {
-			super.setHeight(height);
-			innerDiv.setHeight(height);
-		}
-
-		public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-			return addDomHandler(handler, MouseDownEvent.getType());
-		}
-
-		public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-			return addDomHandler(handler, MouseUpEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-			return addDomHandler(handler, MouseOutEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-			return addDomHandler(handler, MouseOverEvent.getType());
-		}
-
-		public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-			return addDomHandler(handler, MouseMoveEvent.getType());
-		}
-
-		public HandlerRegistration addMouseWheelHandler(
-				MouseWheelHandler handler) {
-			return addDomHandler(handler, MouseWheelEvent.getType());
-		}
-
-		public HandlerRegistration addDoubleClickHandler(
-				DoubleClickHandler handler) {
-			return addHandler(handler, DoubleClickEvent.getType());
-		}
-
-		public HandlerRegistration addClickHandler(ClickHandler handler) {
-			return addDomHandler(handler, ClickEvent.getType());
-		}
 	}
 }

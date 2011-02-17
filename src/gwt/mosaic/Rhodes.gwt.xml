@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
+	<replace-with class="gwt.mosaic.client.wtk.skin.LabelSkinView">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.LabelSkin.View" />
+	</replace-with>
+	
 	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTheme">
 		<when-type-is class="gwt.mosaic.client.wtk.Theme" />
 	</replace-with>

@@ -116,7 +116,7 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 	}
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		if (widget == null) {
 			widget = new ImageWidget();
 

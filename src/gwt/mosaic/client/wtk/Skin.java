@@ -1,6 +1,6 @@
 package gwt.mosaic.client.wtk;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Interface defining a "skin". A skin is the graphical representation of a
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Skins are responsible for invalidating or repainting the component as
  * appropriate in response to events and style changes.
  */
-public interface Skin extends ConstrainedVisual, IsWidget {
+public interface Skin extends ConstrainedVisual {
 
 	/**
 	 * Associates a skin with a component.
@@ -58,5 +58,12 @@ public interface Skin extends ConstrainedVisual, IsWidget {
 	 *         otherwise.
 	 */
 	public boolean isFocusable();
+
+	/**
+	 * Returns the skin's view (in MVP terms).
+	 * 
+	 * @return the skin's view.
+	 */
+	public Widget getWidget();
 
 }

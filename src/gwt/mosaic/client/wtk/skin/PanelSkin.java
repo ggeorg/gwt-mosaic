@@ -9,7 +9,7 @@ public class PanelSkin extends ContainerSkin {
 	private AbsolutePanel widget = null;
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		if (widget == null) {
 			
 			widget = new AbsolutePanel() {

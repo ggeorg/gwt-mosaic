@@ -27,7 +27,7 @@ public class GridPaneFillerSkin extends ComponentSkin {
 	private SimplePanel widget;
 
 	@Override
-	public Widget asWidget() {
+	public Widget getWidget() {
 		if (widget == null) {
 			widget = new SimplePanel();
 			widget.setStyleName("m-GridPanelFiller");

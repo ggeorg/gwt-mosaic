@@ -107,10 +107,11 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 	@Override
 	public void layout() {
-		System.out.println(getComponent().getClass().getName() + ", sizeChanged " + sizeChanged);
+		System.out.println(getComponent().getClass().getName()
+				+ ", sizeChanged " + sizeChanged);
 
 		if (locationChanged) {
-			Widget w = asWidget();
+			Widget w = getWidget();
 			Element elem = w.getElement();
 			DOM.setStyleAttribute(elem, "position", "absolute");
 			DOM.setStyleAttribute(elem, "left", component.getX() + "px");
@@ -118,17 +119,17 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 		}
 
 		if (sizeChanged) {
-			Widget w = asWidget();
-//			Element elem = w.getElement();
+			Widget w = getWidget();
+			// Element elem = w.getElement();
 			if (width >= 0) {
-//				width -= ComputedStyle.getPaddingLeft(elem);
-//				width -= ComputedStyle.getPaddingRight(elem);
+				// width -= ComputedStyle.getPaddingLeft(elem);
+				// width -= ComputedStyle.getPaddingRight(elem);
 				w.setWidth(width + Unit.PX.toString());
 				// NOTE: don't use widgetStyle.setWidth(width, Unit.PX) !!!
 			}
 			if (height >= 0) {
-//				height -= ComputedStyle.getPaddingTop(elem);
-//				height -= ComputedStyle.getPaddingBottom(elem);
+				// height -= ComputedStyle.getPaddingTop(elem);
+				// height -= ComputedStyle.getPaddingBottom(elem);
 				w.setHeight(height + Unit.PX.toString());
 				// NOTE: don't use widgetStyle.setHeight(height, Unit.PX) !!!
 			}
