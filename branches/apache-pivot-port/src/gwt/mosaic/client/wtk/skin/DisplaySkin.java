@@ -49,7 +49,7 @@ public class DisplaySkin extends ContainerSkin {
 	@Override
 	public Widget asWidget() {
 		if (widget == null) {
-			widget = ((Display) getComponent()).getDisplayHost().getPanel();
+			widget = ((Display) getComponent()).getDisplayHost().asWidget();
 			widget.setStyleName("m-Display");
 		}
 		return widget;

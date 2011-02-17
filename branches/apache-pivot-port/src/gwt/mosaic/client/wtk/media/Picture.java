@@ -1,11 +1,10 @@
 package gwt.mosaic.client.wtk.media;
 
-import gwt.mosaic.client.wtk.ApplicationContext.DisplayHost;
-
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Image representing a bitmapped picture.
@@ -59,7 +58,7 @@ public class Picture extends Image {
 	}
 
 	@Override
-	public void paint(DisplayHost displayHost) {
+	public void paint(Widget context) {
 		// No-op
 	}
 }

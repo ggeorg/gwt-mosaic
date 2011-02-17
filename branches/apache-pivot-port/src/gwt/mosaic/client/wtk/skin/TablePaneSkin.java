@@ -18,7 +18,6 @@ package gwt.mosaic.client.wtk.skin;
 
 import gwt.mosaic.client.collections.Dictionary;
 import gwt.mosaic.client.collections.Sequence;
-import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.Bounds;
 import gwt.mosaic.client.wtk.Component;
 import gwt.mosaic.client.wtk.Dimensions;
@@ -27,6 +26,8 @@ import gwt.mosaic.client.wtk.TablePane;
 import gwt.mosaic.client.wtk.TablePaneAttributeListener;
 import gwt.mosaic.client.wtk.TablePaneListener;
 import gwt.mosaic.client.wtk.style.Color;
+
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Table pane skin.
@@ -577,8 +578,8 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
     }
 
     @Override
-    public void paint(ApplicationContext.DisplayHost displayHost) {
-        super.paint(displayHost);
+    public void paint(Widget context) {
+        super.paint(context);
 
         TablePane tablePane = (TablePane)getComponent();
 

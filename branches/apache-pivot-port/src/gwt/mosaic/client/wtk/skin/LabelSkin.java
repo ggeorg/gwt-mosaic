@@ -1,9 +1,7 @@
 package gwt.mosaic.client.wtk.skin;
 
 import gwt.mosaic.client.collections.Dictionary;
-import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.Component;
-import gwt.mosaic.client.wtk.ComponentSkin;
 import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.HorizontalAlignment;
 import gwt.mosaic.client.wtk.Insets;
@@ -12,13 +10,10 @@ import gwt.mosaic.client.wtk.LabelListener;
 import gwt.mosaic.client.wtk.VerticalAlignment;
 import gwt.mosaic.client.wtk.style.Color;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.TextDecoration;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -43,7 +38,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasWordWrap;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,44 +45,60 @@ import com.google.gwt.user.client.ui.Widget;
 public class LabelSkin extends ComponentSkin implements LabelListener {
 
 	private Font font;
-	private boolean fontChanged = false;
+	private boolean fontChanged;
 
 	private Color color;
-	private boolean colorChanged = false;
+	private boolean colorChanged;
 
 	private Color backgroundColor;
-	private boolean backgroundColorChanged = false;
+	private boolean backgroundColorChanged;
 
 	private TextDecoration textDecoration;
-	private boolean textDecorationChanged = false;
+	private boolean textDecorationChanged;
 
 	private HorizontalAlignment horizontalAlignment;
-	private boolean horizontalAlignmentChanged = false;
+	private boolean horizontalAlignmentChanged;
 
 	private VerticalAlignment verticalAlignment;
-	private boolean verticalAlignmentChanged = false;
+	private boolean verticalAlignmentChanged;
 
 	private Insets padding;
-	private boolean paddingChanged = false;
+	private boolean paddingChanged;
 
 	private boolean wrapText;
-	private boolean wrapTextChanged = false;
+	private boolean wrapTextChanged;
 
-	// Managed by LabelListener implementation.
-	private boolean textChanged = false;
+	// Changed by LabelListener implementation.
+	private boolean textChanged = true;
 
 	private LabelWidget widget = null;
 
 	public LabelSkin() {
 		// Theme theme = Theme.getTheme();
+
 		font = new Font();// theme.getFont();
+		fontChanged = true;
+
 		color = Color.BLACK;
+		colorChanged = true;
+
 		backgroundColor = null;
+		backgroundColorChanged = true;
+
 		textDecoration = null;
+		textDecorationChanged = true;
+
 		horizontalAlignment = HorizontalAlignment.LEFT;
+		horizontalAlignmentChanged = true;
+
 		verticalAlignment = VerticalAlignment.TOP;
+		verticalAlignmentChanged = true;
+
 		padding = Insets.NONE;
+		paddingChanged = true;
+
 		wrapText = false;
+		wrapTextChanged = true;
 	}
 
 	@Override
@@ -102,19 +112,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	@Override
 	public Widget asWidget() {
 		if (widget == null) {
-			widget = new LabelWidget() {
-				@Override
-				protected void onLoad() {
-					super.onLoad();
-					final Element elem = getElement();
-					elem.getStyle().setVisibility(Visibility.HIDDEN);
-					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-						public void execute() {
-							elem.getStyle().setVisibility(Visibility.VISIBLE);
-						}
-					});
-				}
-			};
+			widget = new LabelWidget();
 			widget.addStyleName("m-Label");
 		}
 		return widget;
@@ -158,82 +156,64 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	}
 
 	@Override
-	public void paint(ApplicationContext.DisplayHost displayHost) {
-		Widget widget = asWidget();
-		Style style = widget.getElement().getStyle();
+	public void paint(Widget context) {
+		LabelWidget labelWidget = (LabelWidget) asWidget();
 
 		if (backgroundColorChanged) {
-			if (backgroundColor != null) {
-				backgroundColor.applyTo(widget.getElement(), true);
-			} else {
-				style.setBackgroundColor("transparent");
-			}
+			labelWidget.setBackgroundColor(backgroundColor);
 			backgroundColorChanged = false;
 		}
 
 		if (colorChanged) {
-			color.applyTo(widget.getElement(), false);
+			labelWidget.setColor(color);
 			colorChanged = false;
 		}
 
 		if (fontChanged) {
-			font.applyTo(widget.getElement());
+			labelWidget.setFont(font);
 			fontChanged = false;
 		}
 
 		if (horizontalAlignmentChanged) {
 			if (horizontalAlignment == HorizontalAlignment.LEFT) {
-				((LabelWidget) widget)
-						.setHorizontalAlignment(LabelWidget.ALIGN_LEFT);
+				labelWidget.setHorizontalAlignment(LabelWidget.ALIGN_LEFT);
 			} else if (horizontalAlignment == HorizontalAlignment.CENTER) {
-				((LabelWidget) widget)
-						.setHorizontalAlignment(LabelWidget.ALIGN_CENTER);
+				labelWidget.setHorizontalAlignment(LabelWidget.ALIGN_CENTER);
 			} else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
-				((LabelWidget) widget)
-						.setHorizontalAlignment(LabelWidget.ALIGN_RIGHT);
+				labelWidget.setHorizontalAlignment(LabelWidget.ALIGN_RIGHT);
 			}
 			horizontalAlignmentChanged = false;
 		}
 
 		if (paddingChanged) {
-			style.setPaddingTop(padding.top, Unit.PX);
-			style.setPaddingRight(padding.right, Unit.PX);
-			style.setPaddingBottom(padding.bottom, Unit.PX);
-			style.setPaddingLeft(padding.left, Unit.PX);
+			labelWidget.setPadding(padding);
 			paddingChanged = false;
 		}
 
 		if (textDecorationChanged) {
-			if (textDecoration != null) {
-				style.setTextDecoration(textDecoration);
-			} else {
-				style.setTextDecoration(TextDecoration.NONE);
-			}
+			labelWidget.setTextDecoration(textDecoration);
 			textDecorationChanged = false;
 		}
 
 		if (verticalAlignmentChanged) {
 			if (verticalAlignment == VerticalAlignment.TOP) {
-				((LabelWidget) widget)
-						.setVerticalAlignment(LabelWidget.ALIGN_TOP);
+				labelWidget.setVerticalAlignment(LabelWidget.ALIGN_TOP);
 			} else if (verticalAlignment == VerticalAlignment.CENTER) {
-				((LabelWidget) widget)
-						.setVerticalAlignment(LabelWidget.ALIGN_MIDDLE);
+				labelWidget.setVerticalAlignment(LabelWidget.ALIGN_MIDDLE);
 			} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-				((LabelWidget) widget)
-						.setVerticalAlignment(LabelWidget.ALIGN_BOTTOM);
+				labelWidget.setVerticalAlignment(LabelWidget.ALIGN_BOTTOM);
 			}
 			verticalAlignmentChanged = false;
 		}
 
 		if (wrapTextChanged) {
-			((LabelWidget) widget).setWordWrap(wrapText);
+			labelWidget.setWordWrap(wrapText);
 			wrapTextChanged = false;
 		}
 
 		if (textChanged) {
 			Label label = (Label) getComponent();
-			((HasHTML) asWidget()).setHTML(label.getText());
+			labelWidget.setHTML(label.getText());
 		}
 	}
 
@@ -430,50 +410,92 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 			HasHTML, HasWordWrap, HasClickHandlers, HasDoubleClickHandlers,
 			HasAllMouseHandlers {
 		private final SimplePanel div;
-		private final HTML htmlDiv;
+		private final HTML innerDiv;
 
-		private VerticalAlignmentConstant vertAlign = HasVerticalAlignment.ALIGN_MIDDLE;
+		private VerticalAlignmentConstant vertAlign;
 
 		public LabelWidget() {
 			initWidget(div = new SimplePanel());
-			div.add(htmlDiv = new HTML());
+			div.add(innerDiv = new HTML());
 			setWordWrap(false);
-			
+
 			SkinClientBundle.INSTANCE.css().ensureInjected();
 			setStyleName(SkinClientBundle.INSTANCE.css().labelWidget());
-			htmlDiv.setStyleName(SkinClientBundle.INSTANCE.css().labelWidgetText());
+			innerDiv.setStyleName(SkinClientBundle.INSTANCE.css()
+					.labelWidgetInner());
+		}
+
+		public void setFont(Font font) {
+			if (font != null) {
+				font.applyTo(innerDiv.getElement());
+			}
+		}
+
+		public void setTextDecoration(TextDecoration textDecoration) {
+			Style style = innerDiv.getElement().getStyle();
+			if (textDecoration != null) {
+				style.setTextDecoration(textDecoration);
+			} else {
+				style.setTextDecoration(TextDecoration.NONE);
+			}
+		}
+
+		public void setColor(Color color) {
+			if (color != null) {
+				color.applyTo(innerDiv.getElement(), false);
+			} else {
+				Style style = innerDiv.getElement().getStyle();
+				style.setColor("");
+			}
+		}
+
+		public void setBackgroundColor(Color backgroundColor) {
+			if (backgroundColor != null) {
+				backgroundColor.applyTo(getElement(), true);
+			} else {
+				Style style = getElement().getStyle();
+				style.setBackgroundColor("");
+			}
+		}
+
+		public void setPadding(Insets padding) {
+			Style style = innerDiv.getElement().getStyle();
+			style.setPaddingTop(padding.top, Unit.PX);
+			style.setPaddingRight(padding.right, Unit.PX);
+			style.setPaddingBottom(padding.bottom, Unit.PX);
+			style.setPaddingLeft(padding.left, Unit.PX);
 		}
 
 		public String getText() {
-			return htmlDiv.getText();
+			return innerDiv.getText();
 		}
 
 		public void setText(String text) {
-			htmlDiv.setText(text);
+			innerDiv.setText(text);
 		}
 
 		public boolean getWordWrap() {
-			return htmlDiv.getWordWrap();
+			return innerDiv.getWordWrap();
 		}
 
 		public void setWordWrap(boolean wrap) {
-			htmlDiv.setWordWrap(wrap);
+			innerDiv.setWordWrap(wrap);
 		}
 
 		public String getHTML() {
-			return htmlDiv.getHTML();
+			return innerDiv.getHTML();
 		}
 
 		public void setHTML(String html) {
-			htmlDiv.setHTML(html);
+			this.innerDiv.setHTML(html);
 		}
 
 		public HorizontalAlignmentConstant getHorizontalAlignment() {
-			return htmlDiv.getHorizontalAlignment();
+			return innerDiv.getHorizontalAlignment();
 		}
 
 		public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-			htmlDiv.setHorizontalAlignment(align);
+			innerDiv.setHorizontalAlignment(align);
 		}
 
 		public VerticalAlignmentConstant getVerticalAlignment() {
@@ -482,7 +504,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 		public void setVerticalAlignment(VerticalAlignmentConstant align) {
 			vertAlign = align;
-			htmlDiv.getElement()
+			innerDiv.getElement()
 					.getStyle()
 					.setProperty(
 							"verticalAlign",
@@ -493,13 +515,13 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		@Override
 		public void setWidth(String width) {
 			super.setWidth(width);
-			htmlDiv.setWidth(width);
+			innerDiv.setWidth(width);
 		}
 
 		@Override
 		public void setHeight(String height) {
 			super.setHeight(height);
-			htmlDiv.setHeight(height);
+			innerDiv.setHeight(height);
 		}
 
 		public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {

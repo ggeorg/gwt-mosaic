@@ -16,9 +16,7 @@
  */
 package gwt.mosaic.client.wtk.skin;
 
-import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.Component;
-import gwt.mosaic.client.wtk.ComponentSkin;
 import gwt.mosaic.client.wtk.Dimensions;
 import gwt.mosaic.client.wtk.HorizontalAlignment;
 import gwt.mosaic.client.wtk.ImageView;
@@ -266,7 +264,7 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 	}
 
 	@Override
-	public void paint(ApplicationContext.DisplayHost displayHost) {
+	public void paint(Widget context) {
 		ImageView imageView = (ImageView) getComponent();
 		Image image = imageView.getImage();
 

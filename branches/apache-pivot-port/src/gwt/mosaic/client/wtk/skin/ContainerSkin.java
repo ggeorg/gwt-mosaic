@@ -17,9 +17,7 @@
 package gwt.mosaic.client.wtk.skin;
 
 import gwt.mosaic.client.collections.Sequence;
-import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.Component;
-import gwt.mosaic.client.wtk.ComponentSkin;
 import gwt.mosaic.client.wtk.Container;
 import gwt.mosaic.client.wtk.ContainerListener;
 import gwt.mosaic.client.wtk.ContainerMouseListener;
@@ -29,6 +27,7 @@ import gwt.mosaic.client.wtk.Mouse;
 import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Abstract base class for container skins.
@@ -119,6 +118,10 @@ public abstract class ContainerSkin extends ComponentSkin implements
 		}
 	}
 
+	protected interface HasBackgroundColor {
+		public void setBackgroundColor(Color backgroundColor);
+	}
+
 	private Color backgroundColor = null;
 	private boolean backgroundColorChanged = false;
 
@@ -149,17 +152,20 @@ public abstract class ContainerSkin extends ComponentSkin implements
 	}
 
 	@Override
-	public void paint(ApplicationContext.DisplayHost displayHost) {
-		System.out.println("========================== paint "
-				+ getComponent().getClass().getName());
+	public void paint(Widget context) {
 		if (backgroundColorChanged) {
-			if (backgroundColor != null) {
-				backgroundColor.applyTo(asWidget().getElement(), true);
+			if (asWidget() instanceof HasBackgroundColor) {
+				((HasBackgroundColor) asWidget())
+						.setBackgroundColor(backgroundColor);
+				backgroundColorChanged = false;
 			} else {
-				Style style = asWidget().getElement().getStyle();
-				style.setBackgroundColor("transparent");
+				if (backgroundColor != null) {
+					backgroundColor.applyTo(asWidget().getElement(), true);
+				} else {
+					Style style = asWidget().getElement().getStyle();
+					style.setBackgroundColor("transparent");
+				}
 			}
-			backgroundColorChanged = false;
 		}
 	}
 
@@ -178,6 +184,7 @@ public abstract class ContainerSkin extends ComponentSkin implements
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		this.backgroundColorChanged = true;
+		repaintComponent();
 	}
 
 	// Container events

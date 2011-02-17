@@ -27,8 +27,9 @@ import com.google.gwt.user.client.Timer;
  * Container that serves as the root of a component hierarchy.
  */
 public final class Display extends Container {
-	interface SkinBeanAdapter extends BeanAdapter<DisplaySkin>{}
-	
+	interface SkinBeanAdapter extends BeanAdapter<DisplaySkin> {
+	}
+
 	private ApplicationContext.DisplayHost displayHost;
 
 	public Display(ApplicationContext.DisplayHost displayHost) {
@@ -64,7 +65,7 @@ public final class Display extends Container {
 		throw new UnsupportedOperationException(
 				"Can't change the visibility of the display.");
 	}
-	
+
 	// --------------------
 
 	@Override
@@ -96,7 +97,7 @@ public final class Display extends Container {
 		@Override
 		public void run() {
 			DisplayHost displayHost = Display.this.getDisplayHost();
-			Display.this.paint(displayHost);
+			Display.this.paint(displayHost.asWidget());
 		}
 	};
 

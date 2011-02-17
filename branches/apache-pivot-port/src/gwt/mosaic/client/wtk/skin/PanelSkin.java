@@ -11,7 +11,9 @@ public class PanelSkin extends ContainerSkin {
 	@Override
 	public Widget asWidget() {
 		if (widget == null) {
+			
 			widget = new AbsolutePanel() {
+				
 				@Override
 				public void setWidgetPosition(Widget w, int left, int top) {
 					if (!GWT.isProdMode()) {
@@ -38,14 +40,14 @@ public class PanelSkin extends ContainerSkin {
 					DOM.setStyleAttribute(h, "top", top + "px");
 					// }
 				}
+
 			};
-			
+
 			String className = getComponent().getClass().getName();
 			className = className.substring(className.lastIndexOf('.') + 1);
-			widget.setStyleName("m-" + className);
+			widget.addStyleName("m-" + className);
 		}
 
 		return widget;
 	}
-
 }
