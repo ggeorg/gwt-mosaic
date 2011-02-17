@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
+<!-- 
 	<replace-with class="gwt.mosaic.client.wtk.style.ColorImplIE6">
 		<when-type-is class="gwt.mosaic.client.wtk.style.ColorImpl" />
 		<when-property-is name="user.agent" value="ie6" />
 	</replace-with>
+ -->
 </module>
