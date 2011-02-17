@@ -102,6 +102,8 @@ public class Label extends Component {
 	public Label(String text) {
 		this.text = text;
 
+		System.out.println("========================" + this.getClass().getSuperclass());
+		
 		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
 		adapter.setBean(new LabelSkin());
 		setSkin(adapter);
