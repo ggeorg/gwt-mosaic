@@ -1,11 +1,10 @@
 package gwt.mosaic.client.wtk.skin;
 
-import com.google.gwt.user.client.ui.Widget;
-
-import gwt.mosaic.client.wtk.ApplicationContext.DisplayHost;
 import gwt.mosaic.client.wtk.Component;
 import gwt.mosaic.client.wtk.Dimensions;
 import gwt.mosaic.client.wtk.Skin;
+
+import com.google.gwt.user.client.ui.Widget;
 
 public class TablePaneFillerSkin implements Skin {
 
@@ -58,7 +57,7 @@ public class TablePaneFillerSkin implements Skin {
 	}
 
 	@Override
-	public void paint(DisplayHost displayHost) {
+	public void paint(Widget context) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -30,122 +30,151 @@ import gwt.mosaic.client.wtk.style.Color;
  * Default button data renderer.
  */
 public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
-    protected ImageView imageView = new ImageView();
-    protected Label label = new Label();
+	protected ImageView imageView = new ImageView();
+	protected Label label = new Label();
 
-    public ButtonDataRenderer() {
-        getStyles().put("horizontalAlignment", HorizontalAlignment.CENTER);
-        getStyles().put("verticalAlignment", VerticalAlignment.CENTER);
+	public ButtonDataRenderer() {
+		getStyles().put("horizontalAlignment", HorizontalAlignment.CENTER);
+		getStyles().put("verticalAlignment", VerticalAlignment.CENTER);
 
-        add(imageView);
-        add(label);
+		add(imageView);
+		add(label);
 
-        imageView.getStyles().put("backgroundColor", null);
-    }
+		imageView.getStyles().put("backgroundColor", null);
+	}
 
-    @Override
-    public void setSize(int width, int height) {
-        super.setSize(width, height);
+	@Override
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
 
-        // Since this component doesn't have a parent, it won't be validated
-        // via layout; ensure that it is valid here
-        validate();
-    }
+		// Since this component doesn't have a parent, it won't be validated
+		// via layout; ensure that it is valid here
+		validate();
+	}
 
-    @Override
-    public void render(Object data, Button button, boolean highlighted) {
-        Image icon = null;
-        String text = null;
+	private Button button;
 
-        if (data instanceof ButtonData) {
-            ButtonData buttonData = (ButtonData)data;
-            icon = buttonData.getIcon();
-            text = buttonData.getText();
-        } else if (data instanceof Image) {
-            icon = (Image)data;
-        } else {
-            if (data != null) {
-                text = data.toString();
-            }
-        }
+//	@Override
+//	public void invalidate() {
+//		super.invalidate();
+//
+//		if (button != null) {
+//			button.invalidate();
+//		}
+//	}
+//
+//	@Override
+//	public void repaint(boolean immediate) {
+//		super.repaint(immediate);
+//
+//		if (button != null) {
+//			button.repaint(immediate);
+//		}
+//	}
 
-        // Update the image view
-        if (icon == null) {
-            imageView.setVisible(false);
-        } else {
-            imageView.setVisible(true);
-            imageView.setImage(icon);
+	@Override
+	public void render(Object data, Button button, boolean highlighted) {
+		this.button = button;
+		if (!isValid()) {
+			this.button.invalidate();
+		}
+		try {
+			Image icon = null;
+			String text = null;
 
-            imageView.getStyles().put("opacity", button.isEnabled() ? 1.0f : 0.5f);
-        }
+			if (data instanceof ButtonData) {
+				ButtonData buttonData = (ButtonData) data;
+				icon = buttonData.getIcon();
+				text = buttonData.getText();
+			} else if (data instanceof Image) {
+				icon = (Image) data;
+			} else {
+				if (data != null) {
+					text = data.toString();
+				}
+			}
 
-        // Update the label
-        label.setText(text);
+			// Update the image view
+			if (icon == null) {
+				imageView.setVisible(false);
+			} else {
+				imageView.setVisible(true);
+				imageView.setImage(icon);
 
-        if (text == null) {
-            label.setVisible(false);
-        } else {
-            label.setVisible(true);
+				imageView.getStyles().put("opacity",
+						button.isEnabled() ? 1.0f : 0.5f);
+			}
 
-            Font font = (Font)button.getStyles().get("font");
-            label.getStyles().put("font", font);
+			// Update the label
+			label.setText(text);
 
-            Color color;
-            if (button.isEnabled()) {
-                color = (Color)button.getStyles().get("color");
-            } else {
-                color = (Color)button.getStyles().get("disabledColor");
-            }
+			if (text == null) {
+				label.setVisible(false);
+			} else {
+				label.setVisible(true);
 
-            label.getStyles().put("color", color);
-        }
-    }
+				Font font = (Font) button.getStyles().get("font");
+				label.getStyles().put("font", font);
 
-    public int getIconWidth() {
-        return imageView.getPreferredWidth(-1);
-    }
+				Color color;
+				if (button.isEnabled()) {
+					color = (Color) button.getStyles().get("color");
+				} else {
+					color = (Color) button.getStyles().get("disabledColor");
+				}
 
-    public void setIconWidth(int iconWidth) {
-        imageView.setPreferredWidth(iconWidth);
-    }
+				label.getStyles().put("color", color);
+			}
+		} finally {
+			this.button = null;
+		}
+	}
 
-    public int getIconHeight() {
-        return imageView.getPreferredHeight(-1);
-    }
+	public int getIconWidth() {
+		return imageView.getPreferredWidth(-1);
+	}
 
-    public void setIconHeight(int iconHeight) {
-        imageView.setPreferredHeight(iconHeight);
-    }
+	public void setIconWidth(int iconWidth) {
+		imageView.setPreferredWidth(iconWidth);
+	}
 
-    public boolean getShowIcon() {
-        return imageView.isVisible();
-    }
+	public int getIconHeight() {
+		return imageView.getPreferredHeight(-1);
+	}
 
-    public void setShowIcon(boolean showIcon) {
-        imageView.setVisible(showIcon);
-    }
+	public void setIconHeight(int iconHeight) {
+		imageView.setPreferredHeight(iconHeight);
+	}
 
-    public boolean getFillIcon() {
-        return (Boolean)imageView.getStyles().get("fill");
-    }
+	public boolean getShowIcon() {
+		return imageView.isVisible();
+	}
 
-    public void setFillIcon(boolean fillIcon) {
-        imageView.getStyles().put("fill", fillIcon);
-    }
+	public void setShowIcon(boolean showIcon) {
+		imageView.setVisible(showIcon);
+	}
 
-    @Override
-    public String toString(Object data) {
-        String string = null;
+	public boolean getFillIcon() {
+		return (Boolean) imageView.getStyles().get("fill");
+	}
 
-        if (data instanceof ButtonData) {
-            ButtonData buttonData = (ButtonData)data;
-            string = buttonData.getText();
-        } else {
-            if (data != null) {
-                string = data.toString();
-            }
-        }
+	public void setFillIcon(boolean fillIcon) {
+		imageView.getStyles().put("fill", fillIcon);
+	}
 
-        return string;
-    }
+	@Override
+	public String toString(Object data) {
+		String string = null;
+
+		if (data instanceof ButtonData) {
+			ButtonData buttonData = (ButtonData) data;
+			string = buttonData.getText();
+		} else {
+			if (data != null) {
+				string = data.toString();
+			}
+		}
+
+		return string;
+	}
 }

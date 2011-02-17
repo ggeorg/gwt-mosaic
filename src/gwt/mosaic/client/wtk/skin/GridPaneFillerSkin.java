@@ -16,8 +16,6 @@
  */
 package gwt.mosaic.client.wtk.skin;
 
-import gwt.mosaic.client.wtk.ApplicationContext.DisplayHost;
-import gwt.mosaic.client.wtk.ComponentSkin;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,7 +51,7 @@ public class GridPaneFillerSkin extends ComponentSkin {
 	}
 
 	@Override
-	public void paint(DisplayHost displayHost) {
+	public void paint(Widget context) {
 		// No-op
 	}
 }

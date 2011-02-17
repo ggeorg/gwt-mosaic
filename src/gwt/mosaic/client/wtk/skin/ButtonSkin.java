@@ -23,8 +23,6 @@ import gwt.mosaic.client.wtk.ButtonListener;
 import gwt.mosaic.client.wtk.ButtonPressListener;
 import gwt.mosaic.client.wtk.ButtonStateListener;
 import gwt.mosaic.client.wtk.Component;
-import gwt.mosaic.client.wtk.ComponentSkin;
-import gwt.mosaic.client.wtk.Cursor;
 
 /**
  * Abstract base class for button skins.
@@ -42,12 +40,12 @@ public abstract class ButtonSkin extends ComponentSkin implements
 		button.getButtonStateListeners().add(this);
 		button.getButtonPressListeners().add(this);
 
-		// TODO button.setCursor(Cursor.HAND);
+		//button.setCursor(Cursor.HAND);
 	}
 
 	@Override
 	public void layout() {
-		// No-op
+		super.layout();
 	}
 
 	// Component state events
@@ -92,6 +90,9 @@ public abstract class ButtonSkin extends ComponentSkin implements
 	@Override
 	public void dataRendererChanged(Button button,
 			Button.DataRenderer previousDataRenderer) {
+		if(previousDataRenderer != null) {
+			previousDataRenderer.paint(null);
+		}
 		invalidateComponent();
 	}
 

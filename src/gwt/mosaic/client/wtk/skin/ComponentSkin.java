@@ -14,23 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gwt.mosaic.client.wtk;
+package gwt.mosaic.client.wtk.skin;
 
+import gwt.mosaic.client.wtk.Component;
+import gwt.mosaic.client.wtk.ComponentKeyListener;
+import gwt.mosaic.client.wtk.ComponentListener;
+import gwt.mosaic.client.wtk.ComponentMouseButtonListener;
+import gwt.mosaic.client.wtk.ComponentMouseListener;
+import gwt.mosaic.client.wtk.ComponentMouseWheelListener;
+import gwt.mosaic.client.wtk.ComponentStateListener;
+import gwt.mosaic.client.wtk.Container;
+import gwt.mosaic.client.wtk.Cursor;
+import gwt.mosaic.client.wtk.Dimensions;
+import gwt.mosaic.client.wtk.DragSource;
+import gwt.mosaic.client.wtk.DropTarget;
+import gwt.mosaic.client.wtk.Keyboard;
 import gwt.mosaic.client.wtk.Keyboard.KeyCode;
 import gwt.mosaic.client.wtk.Keyboard.Modifier;
-import gwt.mosaic.client.wtk.style.ComputedStyle;
+import gwt.mosaic.client.wtk.MenuHandler;
+import gwt.mosaic.client.wtk.Mouse;
+import gwt.mosaic.client.wtk.Skin;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasOneWidget;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ComponentSkin implements Skin, ComponentListener,
 		ComponentStateListener, ComponentMouseListener,
 		ComponentMouseButtonListener, ComponentMouseWheelListener,
-		ComponentKeyListener/*, ComponentTooltipListener*/ {
+		ComponentKeyListener/* , ComponentTooltipListener */{
 	private Component component = null;
 
 	private int width = 0;
@@ -94,7 +107,7 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 	@Override
 	public void layout() {
-		System.out.println(getComponent().getClass().getName());
+		System.out.println(getComponent().getClass().getName() + ", sizeChanged " + sizeChanged);
 
 		if (locationChanged) {
 			Widget w = asWidget();
@@ -106,18 +119,18 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 		if (sizeChanged) {
 			Widget w = asWidget();
-			Element elem = w.getElement();
+//			Element elem = w.getElement();
 			if (width >= 0) {
-				width -= ComputedStyle.getPaddingLeft(elem);
-				width -= ComputedStyle.getPaddingRight(elem);
+//				width -= ComputedStyle.getPaddingLeft(elem);
+//				width -= ComputedStyle.getPaddingRight(elem);
 				w.setWidth(width + Unit.PX.toString());
-				// widgetStyle.setWidth(width, Unit.PX);
+				// NOTE: don't use widgetStyle.setWidth(width, Unit.PX) !!!
 			}
 			if (height >= 0) {
-				height -= ComputedStyle.getPaddingTop(elem);
-				height -= ComputedStyle.getPaddingBottom(elem);
+//				height -= ComputedStyle.getPaddingTop(elem);
+//				height -= ComputedStyle.getPaddingBottom(elem);
 				w.setHeight(height + Unit.PX.toString());
-				// widgetStyle.setHeight(height, Unit.PX);
+				// NOTE: don't use widgetStyle.setHeight(height, Unit.PX) !!!
 			}
 			sizeChanged = false;
 		}
@@ -134,22 +147,7 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 	// Component events
 	@Override
 	public void parentChanged(Component component, Container previousParent) {
-		if (this.component != component) {
-			return;
-		}
-		Widget widget = asWidget();
-		if (widget.isAttached()) {
-			widget.removeFromParent();
-		}
-		Component parent = component.getParent();
-		if (parent != null) {
-			Widget parentWidget = parent.getSkin().asWidget();
-			if (parentWidget instanceof HasWidgets) {
-				((HasWidgets) parentWidget).add(widget);
-			} else if (parentWidget instanceof HasOneWidget) {
-				((HasOneWidget) parentWidget).setWidget(widget);
-			}
-		}
+		// No-op
 	}
 
 	@Override

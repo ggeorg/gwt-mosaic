@@ -23,6 +23,8 @@ import gwt.mosaic.client.util.ListenerList;
 
 import java.util.Iterator;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Abstract base class for containers.
  */
@@ -351,22 +353,18 @@ public abstract class Container extends Component implements
 	}
 
 	@Override
-	public void paint(ApplicationContext.DisplayHost displayHost) { 
-		int count = getLength();
+	public void paint(Widget context) { 
+		super.paint(context);
 		
-		super.paint(displayHost);
+		int count = getLength();
 		
 		for(int i = 0; i < count; i++) {
 			Component component = get(i);
 			
 			// Only paint components that are visible and intersect the current clip rectangle
 			if(component.isVisible() /*&& componentBounds intersects contianerBounds*/) {
-				
-				
 				// Paint the component
-				component.paint(displayHost);
-				
-				
+				component.paint(getSkin().asWidget());
 			}
 		}
 	}

@@ -4,7 +4,9 @@ import com.google.gwt.resources.client.CssResource;
 
 public interface SkinCssResource extends CssResource {
 	String labelWidget();
-	String labelWidgetText();
+	String labelWidgetInner();
 	String imageWidget();
 	String imageWidgetInner();
+	String pushButtonWidget();
+	String pushButtonWidgetInner();
 }

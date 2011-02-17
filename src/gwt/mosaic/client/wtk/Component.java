@@ -30,6 +30,11 @@ import gwt.mosaic.client.wtk.effects.Decorator;
 
 import java.util.Iterator;
 
+import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Top level abstract base class for all components. In MVC terminology, a
  * component represents the "controller". It has no inherent visual
@@ -742,12 +747,12 @@ public abstract class Component implements ConstrainedVisual {
 	 * @param skin
 	 *            The new skin.
 	 */
-	//@SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	protected void setSkin(BeanAdapter<? extends Skin> styles) {
-		if(styles == null) {
+		if (styles == null) {
 			throw new IllegalArgumentException("styles is null.");
 		}
-		
+
 		if (styles.getBean() == null) {
 			throw new IllegalArgumentException("skin is null.");
 		}
@@ -1780,6 +1785,7 @@ public abstract class Component implements ConstrainedVisual {
 	 * Called to lay out the component.
 	 */
 	protected void layout() {
+		System.out.println("---L-------------"+getClass().getName());
 		skin.layout();
 	}
 
@@ -1812,11 +1818,28 @@ public abstract class Component implements ConstrainedVisual {
 	 * Paints the component. Delegates to the skin.
 	 */
 	@Override
-	public void paint(ApplicationContext.DisplayHost displayHost) {
+	public void paint(Widget context) {
+		System.out.println("---P-------------"+getClass().getName());
+		if (context == null) {
+			getSkin().asWidget().removeFromParent();
+			return;
+		}
+
+		if (!getSkin().asWidget().isAttached()) {
+			if (context instanceof HasOneWidget) {
+				((HasOneWidget) context).setWidget((IsWidget) getSkin()
+						.asWidget());
+			} else if (context instanceof HasWidgets) {
+				((HasWidgets) context).add(getSkin().asWidget());
+			}
+			invalidate();
+		}
+
 		if (!needsPainting) {
 			return;
 		}
-		skin.paint(displayHost);
+
+		skin.paint(context);
 		needsPainting = false;
 	}
 

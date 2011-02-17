@@ -57,8 +57,6 @@ public class BeanAdapterGenerator extends Generator {
 		IndentedWriter niceWriter = new IndentedWriter(new PrintWriter(
 				stringWriter));
 		writer.writeBeanAdapter(niceWriter, javaBeanProperties);
-		
-		System.out.println(stringWriter);
 
 		printWriter.print(stringWriter.toString());
 		

@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -29,7 +30,7 @@ public class ApplicationContext {
 	/**
 	 * Native display host.
 	 */
-	public static class DisplayHost implements HasWidgets {
+	public static class DisplayHost implements IsWidget, HasWidgets {
 		// private boolean paintPending = false;
 		// private boolean debugPaint = false; // system property
 
@@ -41,8 +42,9 @@ public class ApplicationContext {
 
 			display = new Display(this);
 		}
-		
-		public AbsolutePanel getPanel() {
+
+		@Override
+		public Widget asWidget() {
 			return panel;
 		}
 
