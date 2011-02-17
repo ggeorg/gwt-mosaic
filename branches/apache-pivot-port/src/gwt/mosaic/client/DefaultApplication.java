@@ -58,7 +58,7 @@ public class DefaultApplication implements Application {
 		pane.add(imageView);
 		pane.add(label2);
 
-		window.setContent(pushButton);
+		window.setContent(label1);
 		window.setTitle("Hello World!");
 		window.setX(10);
 		window.setY(10);

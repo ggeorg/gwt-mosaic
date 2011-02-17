@@ -8,5 +8,5 @@
 }
 
 .m-Label > div {
-	border: 10px solid red;
+	border: 1px dotted gray;
 }
