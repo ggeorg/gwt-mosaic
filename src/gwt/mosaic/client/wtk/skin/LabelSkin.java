@@ -10,6 +10,7 @@ import gwt.mosaic.client.wtk.LabelListener;
 import gwt.mosaic.client.wtk.VerticalAlignment;
 import gwt.mosaic.client.wtk.style.Color;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.TextDecoration;
@@ -34,12 +35,13 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasWordWrap;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class LabelSkin extends ComponentSkin implements LabelListener {
@@ -406,23 +408,29 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	}
 
 	// -------------------------
-	private class LabelWidget extends Composite implements HasAlignment,
+	interface MyUiBinder extends UiBinder<Widget, LabelWidget> {
+	}
+
+	private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
+	class LabelWidget extends Composite implements HasAlignment,
 			HasHTML, HasWordWrap, HasClickHandlers, HasDoubleClickHandlers,
 			HasAllMouseHandlers {
-		private final SimplePanel div;
-		private final HTML innerDiv;
+
+		@UiField
+		HTML innerDiv;
 
 		private VerticalAlignmentConstant vertAlign;
 
 		public LabelWidget() {
-			initWidget(div = new SimplePanel());
-			div.add(innerDiv = new HTML());
+			initWidget(uiBinder.createAndBindUi(this));
+
 			setWordWrap(false);
 
-			SkinClientBundle.INSTANCE.css().ensureInjected();
-			setStyleName(SkinClientBundle.INSTANCE.css().labelWidget());
-			innerDiv.setStyleName(SkinClientBundle.INSTANCE.css()
-					.labelWidgetInner());
+//			SkinClientBundle.INSTANCE.css().ensureInjected();
+//			setStyleName(SkinClientBundle.INSTANCE.css().labelWidget());
+//			innerDiv.setStyleName(SkinClientBundle.INSTANCE.css()
+//					.labelWidgetInner());
 		}
 
 		public void setFont(Font font) {
