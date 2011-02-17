@@ -787,6 +787,47 @@ public abstract class Component implements ConstrainedVisual {
 		repaint();
 	}
 
+	/**
+	 * Installs the skin for the given component class, as defined by the
+	 * current theme.
+	 * 
+	 * @param componentClass
+	 */
+	@SuppressWarnings("unchecked")
+	protected void installSkin(Class<? extends Component> componentClass) {
+		// Walk up component hierarchy from this type; if we find a match and
+		// the super class equals the given component class, install the skin.
+		// Otherwise, ignore - it will be installed later by a subclass of the
+		// component class.
+		Class<? extends Component> type = getClass();
+
+		Theme theme = Theme.getTheme();
+		BeanAdapter<? extends Skin> adapter = theme.get(type);
+
+		while (adapter == null && type != componentClass
+				&& type != Component.class) {
+			type = (Class<? extends Component>) type.getSuperclass();
+
+			if (type != Component.class) {
+				adapter = theme.get(type);
+			}
+		}
+
+		if (type == Component.class) {
+			throw new IllegalArgumentException(componentClass.getName()
+					+ " is not an ancestor of " + getClass().getName());
+		}
+
+		if (adapter == null) {
+			throw new IllegalArgumentException("No skin mapping for "
+					+ componentClass.getName() + " found.");
+		}
+
+		if (type == componentClass) {
+			setSkin(adapter);
+		}
+	}
+
 	public Container getParent() {
 		return parent;
 	}
@@ -1785,7 +1826,7 @@ public abstract class Component implements ConstrainedVisual {
 	 * Called to lay out the component.
 	 */
 	protected void layout() {
-		System.out.println("---L-------------"+getClass().getName());
+		System.out.println("---L-------------" + getClass().getName());
 		skin.layout();
 	}
 
@@ -1819,7 +1860,7 @@ public abstract class Component implements ConstrainedVisual {
 	 */
 	@Override
 	public void paint(Widget context) {
-		System.out.println("---P-------------"+getClass().getName());
+		System.out.println("---P-------------" + getClass().getName());
 		if (context == null) {
 			getSkin().asWidget().removeFromParent();
 			return;

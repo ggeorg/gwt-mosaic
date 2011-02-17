@@ -16,11 +16,7 @@
  */
 package gwt.mosaic.client.wtk;
 
-import com.google.gwt.core.client.GWT;
-
-import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.util.ListenerList;
-import gwt.mosaic.client.wtk.skin.BoxPaneSkin;
 
 /**
  * Container that arranges components in a line, either vertically or
@@ -37,9 +33,6 @@ public class BoxPane extends Container {
 		}
 	}
 
-	interface SkinBeanAdapter extends BeanAdapter<BoxPaneSkin> {
-	}
-
 	private Orientation orientation = null;
 	private BoxPaneListenerList boxPaneListeners = new BoxPaneListenerList();
 
@@ -50,9 +43,7 @@ public class BoxPane extends Container {
 	public BoxPane(Orientation orientation) {
 		setOrientation(orientation);
 
-		SkinBeanAdapter adapter = GWT.create(SkinBeanAdapter.class);
-		adapter.setBean(new BoxPaneSkin());
-		setSkin(adapter);
+		installSkin(BoxPane.class);
 	}
 
 	public Orientation getOrientation() {
