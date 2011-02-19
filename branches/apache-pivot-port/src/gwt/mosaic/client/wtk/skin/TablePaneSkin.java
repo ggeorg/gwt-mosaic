@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
     TablePaneListener, TablePaneAttributeListener {
-    private Insets padding = Insets.NONE;
+	private Insets padding = Insets.NONE;
     private int horizontalSpacing = 0;
     private int verticalSpacing = 0;
     private boolean showHorizontalGridLines = false;

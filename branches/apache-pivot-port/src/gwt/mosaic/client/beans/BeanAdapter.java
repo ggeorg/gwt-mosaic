@@ -16,6 +16,8 @@
  */
 package gwt.mosaic.client.beans;
 
+import java.util.Iterator;
+
 import gwt.mosaic.client.collections.Map;
 
 /**
@@ -28,4 +30,8 @@ public interface BeanAdapter<T> extends Map<String, Object> {
 	public void setBean(T bean);
 	
 	public boolean isReadOnly(String key);
+	
+	public Iterator<String> getNotifyingProperties();
+
+	public Class<?> getType(String key);
 }

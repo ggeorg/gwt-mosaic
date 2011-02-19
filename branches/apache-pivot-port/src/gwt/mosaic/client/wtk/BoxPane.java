@@ -22,6 +22,7 @@ import gwt.mosaic.client.util.ListenerList;
  * Container that arranges components in a line, either vertically or
  * horizontally.
  */
+@SuppressWarnings("serial")
 public class BoxPane extends Container {
 	private static class BoxPaneListenerList extends
 			ListenerList<BoxPaneListener> implements BoxPaneListener {
@@ -33,8 +34,8 @@ public class BoxPane extends Container {
 		}
 	}
 
-	private Orientation orientation = null;
-	private BoxPaneListenerList boxPaneListeners = new BoxPaneListenerList();
+	private transient Orientation orientation = null;
+	private transient BoxPaneListenerList boxPaneListeners = new BoxPaneListenerList();
 
 	public BoxPane() {
 		this(Orientation.HORIZONTAL);

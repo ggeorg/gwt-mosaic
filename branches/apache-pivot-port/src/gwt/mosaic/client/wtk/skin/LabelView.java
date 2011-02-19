@@ -1,10 +1,12 @@
 package gwt.mosaic.client.wtk.skin;
 
+import gwt.mosaic.client.wtk.Component;
 import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.Insets;
 import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.TextDecoration;
 import com.google.gwt.dom.client.Style.Unit;
@@ -18,11 +20,11 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasWordWrap;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LabelSkinView extends Composite implements LabelSkin.View,
+public class LabelView extends Composite implements LabelSkin.View,
 		HasAlignment, HasHTML, HasWordWrap {
 	private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-	interface MyUiBinder extends UiBinder<Widget, LabelSkinView> {
+	interface MyUiBinder extends UiBinder<Widget, LabelView> {
 	}
 
 	@UiField
@@ -30,11 +32,32 @@ public class LabelSkinView extends Composite implements LabelSkin.View,
 
 	private VerticalAlignmentConstant valign = HasVerticalAlignment.ALIGN_TOP;
 
-	LabelSkinView() {
+	private Component presender;
+
+	LabelView() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		setWordWrap(false);
 		setVerticalAlignment(valign);
+	}
+	
+	@Override
+	public void setPresender(Component component) {
+		this.presender = component;
+	}
+	
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		
+		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				if(presender != null) {
+					presender.invalidate();
+				}
+			}
+		});
 	}
 
 	@Override

@@ -112,72 +112,100 @@ class BeanAdapterWriter {
 			}
 			if (method.getName().startsWith("set")
 					&& method.getParameters().length == 1) {
+
 				String name = Introspector.decapitalize(method.getName()
 						.substring(3));
+
 				String propertyType = null;
 				JParameter[] parameters = method.getParameters();
 				if (parameters.length == 1) {
 					JParameter parameter = parameters[0];
-					propertyType = parameter.getType().getErasedType()
-							.getQualifiedSourceName();
+					JType parameterType = parameter.getType().getErasedType();
+					if (parameterType.isPrimitive() != null) {
+						propertyType = parameterType.isPrimitive()
+								.getQualifiedBoxedSourceName();
+					} else {
+						propertyType = parameterType
+								.getParameterizedQualifiedSourceName();
+					}
 				} else {
 					warn("Property '" + name + "' has " + parameters.length
 							+ " parameters: " + parameters + "!");
 					continue;
 				}
-				JavaBeanProperty property = properties.get(name);
+
+				JavaBeanProperty property = properties.get(name + '#'
+						+ propertyType);
+
 				if (property == null) {
 					property = new JavaBeanProperty(name);
-					properties.put(name, property);
+					properties.put(name + '#' + propertyType, property);
 				}
+
 				property.setter = method;
+
 				if (property.propertyType == null) {
 					property.propertyType = propertyType;
-				} else if (!property.propertyType.equals(propertyType)) {
-					warn("Property '" + name + "' has an invalid setter: "
-							+ propertyType + " was excpected, "
-							+ property.propertyType + " found!");
-					continue;
 				}
+
 			} else if (method.getName().startsWith("get")
 					&& method.getParameters().length == 0) {
+
 				String name = Introspector.decapitalize(method.getName()
 						.substring(3));
-				String propertyType = method.getReturnType().getErasedType()
-						.getQualifiedSourceName();
-				JavaBeanProperty property = properties.get(name);
+
+				String propertyType = null;
+				JType retType = method.getReturnType().getErasedType();
+				if (retType.isPrimitive() != null) {
+					propertyType = retType.isPrimitive()
+							.getQualifiedBoxedSourceName();
+				} else {
+					propertyType = retType
+							.getParameterizedQualifiedSourceName();
+				}
+
+				JavaBeanProperty property = properties.get(name + "#"
+						+ propertyType);
+
 				if (property == null) {
 					property = new JavaBeanProperty(name);
-					properties.put(name, property);
+					properties.put(name + "#" + propertyType, property);
 				}
+
 				property.getter = method;
+
 				if (property.propertyType == null) {
 					property.propertyType = propertyType;
-				} else if (!property.propertyType.equals(propertyType)) {
-					warn("Property '" + name + "' has an invalid getter: "
-							+ propertyType + " was excpected, "
-							+ property.propertyType + " found!");
-					continue;
 				}
+
 			} else if (method.getName().startsWith("is")
 					&& method.getParameters().length == 0) {
+
 				String name = Introspector.decapitalize(method.getName()
 						.substring(2));
-				String propertyType = method.getReturnType().getErasedType()
-						.getQualifiedSourceName();
-				JavaBeanProperty property = properties.get(name);
+
+				String propertyType = null;
+				JType retType = method.getReturnType().getErasedType();
+				if (retType.isPrimitive() != null) {
+					propertyType = retType.isPrimitive()
+							.getQualifiedBoxedSourceName();
+				} else {
+					propertyType = retType
+							.getParameterizedQualifiedSourceName();
+				}
+
+				JavaBeanProperty property = properties.get(name + "#"
+						+ propertyType);
+
 				if (property == null) {
 					property = new JavaBeanProperty(name);
-					properties.put(name, property);
+					properties.put(name + "#" + propertyType, property);
 				}
+
 				property.getter = method;
+
 				if (property.propertyType == null) {
 					property.propertyType = propertyType;
-				} else if (!property.propertyType.equals(propertyType)) {
-					warn("Property '" + name + "' has an invalid (is) getter: "
-							+ propertyType + " was excpected, "
-							+ property.propertyType + " found!");
-					continue;
 				}
 			}
 		}
@@ -217,21 +245,21 @@ class BeanAdapterWriter {
 	}
 
 	private void writeSetter(IndentedWriter w, JavaBeanProperty property) {
-		w.write("setterMap.put(\"%s\", new SetterMethod() {", property.name);
+		if (property.getter != null) {
+			w.write("setterMap.put(\"%s\", new SetterMethod() {", property.name);
+		} else {
+			w.write("setterMap.put(\"%s\", new SetterMethod() {", property.name
+					+ "#" + property.propertyType, property.propertyType);
+		}
 		w.indent();
 
 		w.write("@Override");
 		w.write("public void invokeSetterMethod(Object value) {");
 		w.indent();
-		JType argType = property.setter.getParameters()[0].getType()
-				.getErasedType();
-		if (argType.isPrimitive() != null) {
-			w.write("getBean().%s((%s) value);", property.setter.getName(),
-					argType.isPrimitive().getQualifiedBoxedSourceName());
-		} else {
-			w.write("getBean().%s((%s) value);", property.setter.getName(),
-					argType.getParameterizedQualifiedSourceName());
-		}
+
+		w.write("getBean().%s((%s) value);", property.setter.getName(),
+				property.propertyType);
+
 		w.outdent();
 		w.write("}");
 

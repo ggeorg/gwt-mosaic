@@ -7,13 +7,13 @@
   
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>gwt.mosaic.server.GreetingServiceImpl</servlet-class>
+    <servlet-name>bxmlSerializerServlet</servlet-name>
+    <servlet-class>gwt.mosaic.server.BXMLSerializerServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/gwtmosaic/greet</url-pattern>
+    <servlet-name>bxmlSerializerServlet</servlet-name>
+    <url-pattern>/gwtmosaic/bxml</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

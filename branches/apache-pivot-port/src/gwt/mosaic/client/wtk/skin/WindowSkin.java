@@ -104,6 +104,10 @@ public class WindowSkin extends ContainerSkin implements Window.Skin,
 			Style style = widget.getElement().getStyle();
 			style.setPosition(Position.RELATIVE);
 			style.setOverflow(Overflow.HIDDEN);
+
+			// invalidate after creation.
+//			invalidateComponent();
+//			repaintComponent();
 		}
 		return widget;
 	}

@@ -36,6 +36,7 @@ import java.util.Iterator;
  * {@link Filler filler cells} in the cells that are spanned.
  */
 // @DefaultProperty("rows")
+@SuppressWarnings("serial")
 public class TablePane extends Container {
 	/**
 	 * Represents a table pane row.
@@ -737,14 +738,14 @@ public class TablePane extends Container {
 		}
 	}
 
-	private ArrayList<Row> rows = null;
-	private RowSequence rowSequence = new RowSequence();
+	private transient ArrayList<Row> rows = null;
+	private transient RowSequence rowSequence = new RowSequence();
 
-	private ArrayList<Column> columns = null;
-	private ColumnSequence columnSequence = new ColumnSequence();
+	private transient ArrayList<Column> columns = null;
+	private transient ColumnSequence columnSequence = new ColumnSequence();
 
-	private TablePaneListenerList tablePaneListeners = new TablePaneListenerList();
-	private TablePaneAttributeListenerList tablePaneAttributeListeners = new TablePaneAttributeListenerList();
+	private transient TablePaneListenerList tablePaneListeners = new TablePaneListenerList();
+	private transient TablePaneAttributeListenerList tablePaneAttributeListeners = new TablePaneAttributeListenerList();
 
 	public static final String RELATIVE_SIZE_INDICATOR = "*";
 

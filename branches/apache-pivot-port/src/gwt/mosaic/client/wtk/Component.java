@@ -23,13 +23,20 @@ import gwt.mosaic.client.collections.Dictionary;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.collections.Sequence;
+import gwt.mosaic.client.json.JSONSerializer;
 import gwt.mosaic.client.util.AncestorComparator;
 import gwt.mosaic.client.util.ImmutableIterator;
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.client.wtk.effects.Decorator;
+import gwt.mosaic.shared.beans.IDProperty;
+import gwt.mosaic.shared.serialization.SerializationException;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -42,19 +49,27 @@ import com.google.gwt.user.client.ui.Widget;
  * "model") and the skin, an implementation of {@link Skin} which serves as the
  * "view".
  */
-// @IDProperty("name")
-public abstract class Component implements ConstrainedVisual {
+@IDProperty("name")
+@SuppressWarnings("serial")
+public abstract class Component implements ConstrainedVisual, Serializable {
 	/**
 	 * Style dictionary implementation.
 	 */
-	public final class StyleDictionary implements Dictionary<String, Object>,
-			Iterable<String> {
-		private StyleDictionary() {
+	public static final class StyleDictionary implements
+			Dictionary<String, Object>, Iterable<String>, Serializable {
+		private Component component;
+
+		public StyleDictionary() {
+			this(null);
+		}
+
+		public StyleDictionary(Component component) {
+			this.component = component;
 		}
 
 		@Override
 		public Object get(String key) {
-			return styles.get(key);
+			return component.styles.get(key);
 		}
 
 		@Override
@@ -62,12 +77,12 @@ public abstract class Component implements ConstrainedVisual {
 			Object previousValue = null;
 
 			try {
-				previousValue = styles.put(key, value);
-				componentStyleListeners.styleUpdated(Component.this, key,
+				previousValue = component.styles.put(key, value);
+				component.componentStyleListeners.styleUpdated(component, key,
 						previousValue);
 			} catch (PropertyNotFoundException exception) {
 				System.err.println("\"" + key + "\" is not a valid style for "
-						+ Component.this);
+						+ component);
 			}
 
 			return previousValue;
@@ -80,18 +95,20 @@ public abstract class Component implements ConstrainedVisual {
 
 		@Override
 		public boolean containsKey(String key) {
-			return styles.containsKey(key);
+			return component.styles.containsKey(key);
 		}
 
 		public boolean isReadOnly(String key) {
-			return styles.isReadOnly(key);
+			return component.styles.isReadOnly(key);
 		}
 
-		// TODO public Class<?> getType(String key) {}
+		public Class<?> getType(String key) {
+			return component.styles.getType(key);
+		}
 
 		@Override
 		public Iterator<String> iterator() {
-			return new ImmutableIterator<String>(styles.iterator());
+			return new ImmutableIterator<String>(component.styles.iterator());
 		}
 	}
 
@@ -100,6 +117,8 @@ public abstract class Component implements ConstrainedVisual {
 	 */
 	public final class UserDataDictionary implements
 			Dictionary<String, Object>, Iterable<String> {
+		private static final long serialVersionUID = 323698131113657748L;
+
 		private UserDataDictionary() {
 		}
 
@@ -153,6 +172,8 @@ public abstract class Component implements ConstrainedVisual {
 	 */
 	public final class DecoratorSequence implements Sequence<Decorator>,
 			Iterable<Decorator> {
+		private static final long serialVersionUID = 6086912248184605244L;
+
 		@Override
 		public int add(Decorator decorator) {
 			int index = getLength();
@@ -610,7 +631,7 @@ public abstract class Component implements ConstrainedVisual {
 	}
 
 	// The currently installed skin, or null if no skin is installed
-	private Skin skin = null;
+	private transient Skin skin = null;
 
 	// Preferred width and height values explicitly set by the user
 	private int preferredWidth = -1;
@@ -643,8 +664,8 @@ public abstract class Component implements ConstrainedVisual {
 	private boolean visible = true;
 
 	// The component's decorators
-	private ArrayList<Decorator> decorators = new ArrayList<Decorator>();
-	private DecoratorSequence decoratorSequence = new DecoratorSequence();
+	private transient ArrayList<Decorator> decorators = new ArrayList<Decorator>();
+	private transient DecoratorSequence decoratorSequence = new DecoratorSequence();
 
 	// The component's enabled flag
 	private boolean enabled = true;
@@ -662,52 +683,74 @@ public abstract class Component implements ConstrainedVisual {
 	// null;
 
 	// The component's drag source
-	private DragSource dragSource = null;
+	private transient DragSource dragSource = null;
 
 	// The component's drop target
-	private DropTarget dropTarget = null;
+	private transient DropTarget dropTarget = null;
 
 	// The component's menu handler
-	private MenuHandler menuHandler = null;
+	private transient MenuHandler menuHandler = null;
 
 	// The component's name
 	private String name = null;
 
 	// The component's styles
-	private BeanAdapter<? extends Skin> styles = null;
-	private StyleDictionary styleDictionary = new StyleDictionary();
+	private transient BeanAdapter<? extends Skin> styles = null;
+	private StyleDictionary styleDictionary = new StyleDictionary(this);
+	private String jsonStyles = null;
 
 	// User data
-	private HashMap<String, Object> userData = new HashMap<String, Object>();
-	private UserDataDictionary userDataDictionary = new UserDataDictionary();
+	private transient HashMap<String, Object> userData = new HashMap<String, Object>();
+	private transient UserDataDictionary userDataDictionary = new UserDataDictionary();
 
 	// Container attributes
-	private HashMap<? extends Enum<?>, Object> attributes = null;
+	private transient HashMap<? extends Enum<?>, Object> attributes = null;// XXX
 
 	// The component's automation ID
 	private String automationID;
 
 	// Event listener lists
-	private ComponentListenerList componentListeners = new ComponentListenerList();
-	private ComponentStateListenerList componentStateListeners = new ComponentStateListenerList();
-	private ComponentDecoratorListenerList componentDecoratorListeners = new ComponentDecoratorListenerList();
-	private ComponentStyleListenerList componentStyleListeners = new ComponentStyleListenerList();
-	private ComponentMouseListenerList componentMouseListeners = new ComponentMouseListenerList();
-	private ComponentMouseButtonListenerList componentMouseButtonListeners = new ComponentMouseButtonListenerList();
-	private ComponentMouseWheelListenerList componentMouseWheelListeners = new ComponentMouseWheelListenerList();
-	private ComponentKeyListenerList componentKeyListeners = new ComponentKeyListenerList();
-	private ComponentTooltipListenerList componentTooltipListeners = new ComponentTooltipListenerList();
-	private ComponentDataListenerList componentDataListeners = new ComponentDataListenerList();
+	private transient ComponentListenerList componentListeners = new ComponentListenerList();
+	private transient ComponentStateListenerList componentStateListeners = new ComponentStateListenerList();
+	private transient ComponentDecoratorListenerList componentDecoratorListeners = new ComponentDecoratorListenerList();
+	private transient ComponentStyleListenerList componentStyleListeners = new ComponentStyleListenerList();
+	private transient ComponentMouseListenerList componentMouseListeners = new ComponentMouseListenerList();
+	private transient ComponentMouseButtonListenerList componentMouseButtonListeners = new ComponentMouseButtonListenerList();
+	private transient ComponentMouseWheelListenerList componentMouseWheelListeners = new ComponentMouseWheelListenerList();
+	private transient ComponentKeyListenerList componentKeyListeners = new ComponentKeyListenerList();
+	private transient ComponentTooltipListenerList componentTooltipListeners = new ComponentTooltipListenerList();
+	private transient ComponentDataListenerList componentDataListeners = new ComponentDataListenerList();
 
 	// The component that currently has the focus
 	private static Component focusedComponent = null;
 
 	// Typed and named styles
-	private static HashMap<Class<? extends Component>, Map<String, ?>> typedStyles = new HashMap<Class<? extends Component>, Map<String, ?>>();
-	private static HashMap<String, Map<String, ?>> namedStyles = new HashMap<String, Map<String, ?>>();
+	private static transient HashMap<Class<? extends Component>, Map<String, ?>> typedStyles = new HashMap<Class<? extends Component>, Map<String, ?>>();
+	private static transient HashMap<String, Map<String, ?>> namedStyles = new HashMap<String, Map<String, ?>>();
 
 	// Class event listeners
-	private static ComponentClassListenerList componentClassListeners = new ComponentClassListenerList();
+	private static transient ComponentClassListenerList componentClassListeners = new ComponentClassListenerList();
+
+	protected Component() {
+		super();
+
+		if (!GWT.isClient()) {
+			return;
+		}
+
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				try {
+					if (jsonStyles != null) {
+						setStyles(jsonStyles);
+					}
+				} catch (SerializationException e) {
+					GWT.log(e.getMessage(), e);
+				}
+			}
+		});
+	}
 
 	/**
 	 * Returns the component's automation ID.
@@ -795,36 +838,41 @@ public abstract class Component implements ConstrainedVisual {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void installSkin(Class<? extends Component> componentClass) {
-		// Walk up component hierarchy from this type; if we find a match and
-		// the super class equals the given component class, install the skin.
-		// Otherwise, ignore - it will be installed later by a subclass of the
-		// component class.
-		Class<? extends Component> type = getClass();
+		if (GWT.isClient()) {
+			// Walk up component hierarchy from this type; if we find a match
+			// and
+			// the super class equals the given component class, install the
+			// skin.
+			// Otherwise, ignore - it will be installed later by a subclass of
+			// the
+			// component class.
+			Class<? extends Component> type = getClass();
 
-		Theme theme = Theme.getTheme();
-		BeanAdapter<? extends Skin> adapter = theme.get(type);
+			Theme theme = Theme.getTheme();
+			BeanAdapter<? extends Skin> adapter = theme.get(type);
 
-		while (adapter == null && type != componentClass
-				&& type != Component.class) {
-			type = (Class<? extends Component>) type.getSuperclass();
+			while (adapter == null && type != componentClass
+					&& type != Component.class) {
+				type = (Class<? extends Component>) type.getSuperclass();
 
-			if (type != Component.class) {
-				adapter = theme.get(type);
+				if (type != Component.class) {
+					adapter = theme.get(type);
+				}
 			}
-		}
 
-		if (type == Component.class) {
-			throw new IllegalArgumentException(componentClass.getName()
-					+ " is not an ancestor of " + getClass().getName());
-		}
+			if (type == Component.class) {
+				throw new IllegalArgumentException(componentClass.getName()
+						+ " is not an ancestor of " + getClass().getName());
+			}
 
-		if (adapter == null) {
-			throw new IllegalArgumentException("No skin mapping for "
-					+ componentClass.getName() + " found.");
-		}
+			if (adapter == null) {
+				throw new IllegalArgumentException("No skin mapping for "
+						+ componentClass.getName() + " found.");
+			}
 
-		if (type == componentClass) {
-			setSkin(adapter);
+			if (type == componentClass) {
+				setSkin(adapter);
+			}
 		}
 	}
 
@@ -1861,6 +1909,7 @@ public abstract class Component implements ConstrainedVisual {
 	@Override
 	public void paint(Widget context) {
 		System.out.println("---P-------------" + getClass().getName());
+
 		if (context == null) {
 			getSkin().getWidget().removeFromParent();
 			return;
@@ -2275,8 +2324,17 @@ public abstract class Component implements ConstrainedVisual {
 	 * @param styles
 	 *            The styles encoded as a JSON map.
 	 */
-	// TODO public void setStyles(String styles) throws SerializationException
-	// {}
+	public void setStyles(String styles) throws SerializationException {
+		if (styles == null) {
+			throw new IllegalArgumentException("styles is null.");
+		}
+
+		if (!GWT.isClient()) {
+			jsonStyles = styles;
+		} else {
+			setStyles(JSONSerializer.parseMap(styles));
+		}
+	}
 
 	/**
 	 * Returns the typed style dictionary.

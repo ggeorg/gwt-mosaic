@@ -98,7 +98,7 @@ public class ArrayQueue<T> implements Queue<T>, Serializable {
 	}
 
 	public void ensureCapacity(int capacity) {
-		arrayList.ensureCapacity(capacity);
+		// No-op
 	}
 
 	@Override

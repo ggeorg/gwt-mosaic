@@ -7,7 +7,6 @@ import gwt.mosaic.client.wtk.Skin;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TablePaneFillerSkin implements Skin {
-
 	@Override
 	public void setSize(int width, int height) {
 		// TODO Auto-generated method stub

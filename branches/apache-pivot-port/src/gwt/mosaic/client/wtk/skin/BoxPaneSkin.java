@@ -158,8 +158,8 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 
 				if (component.isVisible()) {
 					Dimensions preferredSize = component.getPreferredSize();
-					preferredWidth += preferredSize.width;
-					preferredHeight = Math.max(preferredSize.height,
+					preferredWidth += preferredSize.getWidth();
+					preferredHeight = Math.max(preferredSize.getHeight(),
 							preferredHeight);
 					j++;
 				}
@@ -182,9 +182,9 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 
 				if (component.isVisible()) {
 					Dimensions preferredSize = component.getPreferredSize();
-					preferredWidth = Math.max(preferredSize.width,
+					preferredWidth = Math.max(preferredSize.getWidth(),
 							preferredWidth);
-					preferredHeight += preferredSize.height;
+					preferredHeight += preferredSize.getHeight();
 					j++;
 				}
 			}
@@ -240,18 +240,19 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 						Dimensions size = component.getPreferredSize();
 
 						int componentBaseline = component.getBaseline(
-								size.width, size.height);
+								size.getWidth(), size.getHeight());
 
 						if (componentBaseline != -1) {
 							switch (verticalAlignment) {
 							case CENTER: {
-								componentBaseline += (contentHeight - size.height) / 2;
+								componentBaseline += (contentHeight - size
+										.getHeight()) / 2;
 								break;
 							}
 
 							case BOTTOM: {
 								componentBaseline += contentHeight
-										- size.height;
+										- size.getHeight();
 								break;
 							}
 							}
@@ -280,14 +281,14 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 					}
 
 					if (baseline == -1) {
-						baseline = component.getBaseline(size.width,
-								size.height);
+						baseline = component.getBaseline(size.getWidth(),
+								size.getHeight());
 						if (baseline != -1) {
 							baseline += contentHeight;
 						}
 					}
 
-					contentHeight += size.height + spacing;
+					contentHeight += size.getHeight() + spacing;
 				}
 			}
 
@@ -372,8 +373,8 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 					} else {
 						Dimensions preferredComponentSize = component
 								.getPreferredSize();
-						componentWidth = preferredComponentSize.width;
-						componentHeight = preferredComponentSize.height;
+						componentWidth = preferredComponentSize.getWidth();
+						componentHeight = preferredComponentSize.getHeight();
 					}
 
 					switch (verticalAlignment) {
@@ -440,8 +441,8 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 					} else {
 						Dimensions preferredComponentSize = component
 								.getPreferredSize();
-						componentWidth = preferredComponentSize.width;
-						componentHeight = preferredComponentSize.height;
+						componentWidth = preferredComponentSize.getWidth();
+						componentHeight = preferredComponentSize.getHeight();
 					}
 
 					switch (horizontalAlignment) {

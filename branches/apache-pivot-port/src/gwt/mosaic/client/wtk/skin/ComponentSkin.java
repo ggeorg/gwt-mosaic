@@ -44,6 +44,7 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 		ComponentStateListener, ComponentMouseListener,
 		ComponentMouseButtonListener, ComponentMouseWheelListener,
 		ComponentKeyListener/* , ComponentTooltipListener */{
+
 	private Component component = null;
 
 	private int width = 0;
@@ -107,8 +108,8 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 	@Override
 	public void layout() {
-		System.out.println(getComponent().getClass().getName()
-				+ ", sizeChanged " + sizeChanged);
+		System.out.println(getClass().getName() + ", sizeChanged "
+				+ sizeChanged + "(" + width + "x" + height + ")");
 
 		if (locationChanged) {
 			Widget w = getWidget();

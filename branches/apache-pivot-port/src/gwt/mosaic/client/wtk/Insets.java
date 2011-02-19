@@ -17,6 +17,8 @@
 package gwt.mosaic.client.wtk;
 
 import gwt.mosaic.client.collections.Dictionary;
+import gwt.mosaic.client.json.JSONSerializer;
+import gwt.mosaic.shared.serialization.SerializationException;
 
 import java.io.Serializable;
 
@@ -127,22 +129,21 @@ public final class Insets implements Serializable {
 	}
 
 	public static Insets decode(String value) {
-//		if (value == null) {
-//			throw new IllegalArgumentException();
-//		}
-//
-//		Insets insets;
-//		if (value.startsWith("{")) {
-//			try {
-//				insets = new Insets(JSONSerializer.parseMap(value));
-//			} catch (SerializationException exception) {
-//				throw new IllegalArgumentException(exception);
-//			}
-//		} else {
-//			insets = new Insets(Integer.parseInt(value));
-//		}
-//
-//		return insets;
-		throw new UnsupportedOperationException();
+		if (value == null) {
+			throw new IllegalArgumentException();
+		}
+
+		Insets insets;
+		if (value.startsWith("{")) {
+			try {
+				insets = new Insets(JSONSerializer.parseMap(value));
+			} catch (SerializationException exception) {
+				throw new IllegalArgumentException(exception);
+			}
+		} else {
+			insets = new Insets(Integer.parseInt(value));
+		}
+
+		return insets;
 	}
 }

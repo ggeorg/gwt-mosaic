@@ -212,8 +212,9 @@ public class GridPaneSkin extends PanelSkin implements GridPane.Skin,
 				if (component != null && component.isVisible()) {
 					Dimensions d = component.getPreferredSize();
 					preferredCellHeight = Math.max(preferredCellHeight,
-							d.height);
-					preferredCellWidth = Math.max(preferredCellWidth, d.width);
+							d.getHeight());
+					preferredCellWidth = Math.max(preferredCellWidth,
+							d.getWidth());
 				}
 			}
 		}
@@ -290,7 +291,7 @@ public class GridPaneSkin extends PanelSkin implements GridPane.Skin,
 	@Override
 	public void layout() {
 		super.layout();
-		
+
 		GridPane gridPane = (GridPane) getComponent();
 
 		GridPane.RowSequence rows = gridPane.getRows();

@@ -21,6 +21,7 @@ import gwt.mosaic.client.util.ListenerList;
 /**
  * Component that displays a string of text.
  */
+@SuppressWarnings("serial")
 public class Label extends Component {
 	/**
 	 * Translates between text and context data during data binding.
@@ -81,12 +82,12 @@ public class Label extends Component {
 
 	private String text = null;
 
-	private String textKey = null;
-	private BindType textBindType = BindType.BOTH;
-	private TextBindMapping textBindMapping = null;
+	private transient String textKey = null;
+	private transient BindType textBindType = BindType.BOTH;
+	private transient TextBindMapping textBindMapping = null;
 
-	private LabelListenerList labelListeners = new LabelListenerList();
-	private LabelBindingListenerList labelBindingListeners = new LabelBindingListenerList();
+	private transient LabelListenerList labelListeners = new LabelListenerList();
+	private transient LabelBindingListenerList labelBindingListeners = new LabelBindingListenerList();
 
 	public Label() {
 		this(null);

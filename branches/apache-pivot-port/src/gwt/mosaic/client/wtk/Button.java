@@ -21,6 +21,7 @@ import gwt.mosaic.client.util.ListenerList;
 /**
  * Abstract base class for button components.
  */
+@SuppressWarnings("serial")
 public abstract class Button extends Component {
 	/**
 	 * Enumeration representing a button's selection state.
@@ -273,40 +274,40 @@ public abstract class Button extends Component {
 		}
 	}
 
-	private Object buttonData = null;
-	private DataRenderer dataRenderer = null;
+	private transient Object buttonData = null;
+	private transient DataRenderer dataRenderer = null;
 
-	private Action action = null;
-	private ActionListener actionListener = new ActionListener() {
+	private transient Action action = null;
+	private transient ActionListener actionListener = new ActionListener() {
 		@Override
 		public void enabledChanged(Action action) {
 			setEnabled(action.isEnabled());
 		}
 	};
 
-	private State state = State.UNSELECTED;
+	private transient State state = State.UNSELECTED;
 
 	private boolean toggleButton = false;
 	private boolean triState = false;
 
-	private ButtonGroup buttonGroup = null;
+	private transient ButtonGroup buttonGroup = null;
 
 	private String selectedKey = null;
-	private BindType selectedBindType = BindType.BOTH;
-	private SelectedBindMapping selectedBindMapping = null;
+	private transient BindType selectedBindType = BindType.BOTH;
+	private transient SelectedBindMapping selectedBindMapping = null;
 
 	private String stateKey = null;
-	private BindType stateBindType = BindType.BOTH;
-	private StateBindMapping stateBindMapping = null;
+	private transient BindType stateBindType = BindType.BOTH;
+	private transient StateBindMapping stateBindMapping = null;
 
 	private String buttonDataKey = null;
-	private BindType buttonDataBindType = BindType.BOTH;
-	private ButtonDataBindMapping buttonDataBindMapping = null;
+	private transient BindType buttonDataBindType = BindType.BOTH;
+	private transient ButtonDataBindMapping buttonDataBindMapping = null;
 
-	private ButtonListenerList buttonListeners = new ButtonListenerList();
-	private ButtonStateListenerList buttonStateListeners = new ButtonStateListenerList();
-	private ButtonPressListenerList buttonPressListeners = new ButtonPressListenerList();
-	private ButtonBindingListenerList buttonBindingListeners = new ButtonBindingListenerList();
+	private transient ButtonListenerList buttonListeners = new ButtonListenerList();
+	private transient ButtonStateListenerList buttonStateListeners = new ButtonStateListenerList();
+	private transient ButtonPressListenerList buttonPressListeners = new ButtonPressListenerList();
+	private transient ButtonBindingListenerList buttonBindingListeners = new ButtonBindingListenerList();
 
 	public Button() {
 		this(null);

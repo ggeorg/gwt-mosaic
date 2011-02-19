@@ -71,10 +71,10 @@ public class DisplaySkin extends ContainerSkin {
 				} else {
 					Dimensions preferredSize = window.getPreferredSize();
 
-					if (window.getWidth() != preferredSize.width
-							|| window.getHeight() != preferredSize.height) {
-						window.setSize(preferredSize.width,
-								preferredSize.height);
+					if (window.getWidth() != preferredSize.getWidth()
+							|| window.getHeight() != preferredSize.getHeight()) {
+						window.setSize(preferredSize.getWidth(),
+								preferredSize.getHeight());
 					}
 				}
 			}

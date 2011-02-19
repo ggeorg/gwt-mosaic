@@ -2,14 +2,17 @@ package gwt.mosaic.client.wtk;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public final class Dimensions implements Serializable {
-	private static final long serialVersionUID = 4473499770546954200L;
-
-	public final int width;
-	public final int height;
+	protected int width;
+	protected int height;
 
 	public static final String WIDTH_KEY = "width";
 	public static final String HEIGHT_KEY = "height";
+	
+	public Dimensions() {
+		this(0, 0);
+	}
 
 	public Dimensions(int width, int height) {
 		this.width = width;
@@ -25,6 +28,14 @@ public final class Dimensions implements Serializable {
 	}
 
 	// TODO public Dimensions(Dictionary<String, ?> dimensions) {}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
 
 	@Override
 	public boolean equals(Object object) {

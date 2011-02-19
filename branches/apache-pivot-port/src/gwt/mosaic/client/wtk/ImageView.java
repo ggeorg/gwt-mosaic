@@ -23,6 +23,7 @@ import gwt.mosaic.client.wtk.media.Image;
  * Component that displays an image.
  */
 // @DefaultProperty("image")
+@SuppressWarnings("serial")
 public class ImageView extends Component {
 	/**
 	 * Translates between image and context data during data binding.
@@ -118,14 +119,14 @@ public class ImageView extends Component {
 		}
 	}
 
-	private Image image = null;
-	private boolean asynchronous = false;
-	private String imageKey = null;
-	private BindType imageBindType = BindType.BOTH;
-	private ImageBindMapping imageBindMapping = null;
+	private transient Image image = null;
+	private transient boolean asynchronous = false;
+	private transient String imageKey = null;
+	private transient BindType imageBindType = BindType.BOTH;
+	private transient ImageBindMapping imageBindMapping = null;
 
-	private ImageViewListenerList imageViewListeners = new ImageViewListenerList();
-	private ImageViewBindingListenerList imageViewBindingListeners = new ImageViewBindingListenerList();
+	private transient ImageViewListenerList imageViewListeners = new ImageViewListenerList();
+	private transient ImageViewBindingListenerList imageViewBindingListeners = new ImageViewBindingListenerList();
 
 	// Maintains a mapping of image URL to image views that should be notified
 	// when an asynchronously loaded image is available

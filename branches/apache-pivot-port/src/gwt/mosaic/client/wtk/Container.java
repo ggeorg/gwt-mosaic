@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Abstract base class for containers.
  */
+@SuppressWarnings("serial")
 public abstract class Container extends Component implements
 		Sequence<Component>, Iterable<Component> {
 	private static class ContainerListenerList extends
@@ -119,17 +120,17 @@ public abstract class Container extends Component implements
 
 	private ArrayList<Component> components = new ArrayList<Component>();
 
-	private FocusTraversalPolicy focusTraversalPolicy = null;
+	private transient FocusTraversalPolicy focusTraversalPolicy = null;
 
-	private Component mouseOverComponent = null;
-	private boolean mouseDown = false;
-	private Component mouseDownComponent = null;
-	private long mouseDownTime = 0;
-	private int mouseClickCount = 0;
-	private boolean mouseClickConsumed = false;
+	private transient Component mouseOverComponent = null;
+	private transient boolean mouseDown = false;
+	private transient Component mouseDownComponent = null;
+	private transient long mouseDownTime = 0;
+	private transient int mouseClickCount = 0;
+	private transient boolean mouseClickConsumed = false;
 
-	private ContainerListenerList containerListeners = new ContainerListenerList();
-	private ContainerMouseListenerList containerMouseListeners = new ContainerMouseListenerList();
+	private transient ContainerListenerList containerListeners = new ContainerListenerList();
+	private transient ContainerMouseListenerList containerMouseListeners = new ContainerMouseListenerList();
 
 	@Override
 	public final int add(Component component) {

@@ -103,7 +103,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 	public RhodesPushButtonSkin() {
 		// TerraTheme theme = (TerraTheme)Theme.getTheme();
 
-		setFont(new Font("Verdana", "11px", FontStyle.NORMAL, FontWeight.BOLD));
+		setFont(new Font(FontStyle.NORMAL, FontWeight.BOLD, 11, "Verdana"));
 
 		setColor(new Color(0x00, 0x00, 0x00));
 		setDisabledColor(new Color(0x99, 0x99, 0x99));
@@ -136,7 +136,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		int preferredWidth = 0;
 
 		if (height == -1) {
-			preferredWidth = getPreferredSize().width;
+			preferredWidth = getPreferredSize().getWidth();
 		} else {
 			PushButton pushButton = (PushButton) getComponent();
 			Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
@@ -168,7 +168,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		int preferredHeight = 0;
 
 		if (width == -1) {
-			preferredHeight = getPreferredSize().height;
+			preferredHeight = getPreferredSize().getHeight();
 		} else {
 			PushButton pushButton = (PushButton) getComponent();
 			Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
@@ -204,10 +204,10 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 
 		Dimensions preferredContentSize = dataRenderer.getPreferredSize();
 
-		int preferredWidth = preferredContentSize.width + padding.left
+		int preferredWidth = preferredContentSize.getWidth() + padding.left
 				+ padding.right + 2 * BORDER_WIDTH ;
 
-		int preferredHeight = preferredContentSize.height + padding.top
+		int preferredHeight = preferredContentSize.getHeight() + padding.top
 				+ padding.bottom + 2 * BORDER_WIDTH;
 
 		// Adjust for preferred aspect ratio

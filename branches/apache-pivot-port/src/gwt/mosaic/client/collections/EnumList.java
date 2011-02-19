@@ -19,7 +19,6 @@ package gwt.mosaic.client.collections;
 import gwt.mosaic.client.util.ListenerList;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

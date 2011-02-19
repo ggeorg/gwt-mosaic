@@ -26,11 +26,16 @@ import com.google.gwt.user.client.Timer;
 /**
  * Container that serves as the root of a component hierarchy.
  */
+@SuppressWarnings("serial")
 public final class Display extends Container {
 	interface SkinBeanAdapter extends BeanAdapter<DisplaySkin> {
 	}
 
-	private ApplicationContext.DisplayHost displayHost;
+	private transient ApplicationContext.DisplayHost displayHost;
+	
+	protected Display() {
+		// No-op
+	}
 
 	public Display(ApplicationContext.DisplayHost displayHost) {
 		this.displayHost = displayHost;
@@ -86,14 +91,14 @@ public final class Display extends Container {
 		}
 	}
 
-	private final Timer validateTimer = new Timer() {
+	private final transient Timer validateTimer = new Timer() {
 		@Override
 		public void run() {
 			Display.this.validate();
 		}
 	};
 
-	private final Timer repaintTimer = new Timer() {
+	private final transient Timer repaintTimer = new Timer() {
 		@Override
 		public void run() {
 			DisplayHost displayHost = Display.this.getDisplayHost();
