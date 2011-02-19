@@ -81,7 +81,7 @@ public class FlowPaneSkin extends PanelSkin {
 			if (alignToBaseline) {
 				// Delegate to preferred size calculations
 				Dimensions preferredSize = getPreferredSize();
-				preferredHeight = preferredSize.height;
+				preferredHeight = preferredSize.getHeight();
 			} else {
 				// Preferred height is the maximum preferred height of all
 				// components
@@ -115,7 +115,7 @@ public class FlowPaneSkin extends PanelSkin {
 				if (component.isVisible()) {
 					Dimensions size = component.getPreferredSize();
 
-					if (rowWidth + size.width > contentWidth && rowWidth > 0) {
+					if (rowWidth + size.getWidth() > contentWidth && rowWidth > 0) {
 						// The component is too big to fit in the remaining
 						// space,
 						// and it is not the only component in this row; wrap
@@ -127,16 +127,16 @@ public class FlowPaneSkin extends PanelSkin {
 						rowDescent = 0;
 					}
 
-					rowWidth += size.width + horizontalSpacing;
+					rowWidth += size.getWidth() + horizontalSpacing;
 
 					if (alignToBaseline) {
-						int baseline = component.getBaseline(size.width,
-								size.height);
+						int baseline = component.getBaseline(size.getWidth(),
+								size.getHeight());
 						rowAscent = Math.max(rowAscent, baseline);
-						rowDescent = Math.max(rowDescent, size.height
+						rowDescent = Math.max(rowDescent, size.getHeight()
 								- baseline);
 					} else {
-						rowAscent = Math.max(rowAscent, size.height);
+						rowAscent = Math.max(rowAscent, size.getHeight());
 					}
 				}
 			}
@@ -175,15 +175,15 @@ public class FlowPaneSkin extends PanelSkin {
 
 			if (component.isVisible()) {
 				Dimensions size = component.getPreferredSize();
-				preferredWidth += size.width;
+				preferredWidth += size.getWidth();
 
 				if (alignToBaseline) {
-					int baseline = component.getBaseline(size.width,
-							size.height);
+					int baseline = component.getBaseline(size.getWidth(),
+							size.getHeight());
 					ascent = Math.max(ascent, baseline);
-					descent = Math.max(descent, size.height - baseline);
+					descent = Math.max(descent, size.getHeight() - baseline);
 				} else {
-					ascent = Math.max(ascent, size.height);
+					ascent = Math.max(ascent, size.getHeight());
 				}
 
 				j++;
@@ -222,7 +222,7 @@ public class FlowPaneSkin extends PanelSkin {
 				if (component.isVisible()) {
 					Dimensions size = component.getPreferredSize();
 
-					if (rowWidth + size.width > contentWidth && rowWidth > 0) {
+					if (rowWidth + size.getWidth() > contentWidth && rowWidth > 0) {
 						// The component is too big to fit in the remaining
 						// space,
 						// and it is not the only component in this row; wrap
@@ -230,8 +230,8 @@ public class FlowPaneSkin extends PanelSkin {
 					}
 
 					baseline = Math.max(baseline,
-							component.getBaseline(size.width, size.height));
-					rowWidth += size.width + horizontalSpacing;
+							component.getBaseline(size.getWidth(), size.getHeight()));
+					rowWidth += size.getWidth() + horizontalSpacing;
 				}
 			}
 
@@ -263,7 +263,7 @@ public class FlowPaneSkin extends PanelSkin {
 				Dimensions componentSize = component.getPreferredSize();
 				component.setSize(componentSize);
 
-				if (rowWidth + componentSize.width > contentWidth
+				if (rowWidth + componentSize.getWidth() > contentWidth
 						&& rowWidth > 0) {
 					// The component is too big to fit in the remaining space,
 					// and it is not the only component in this row
@@ -274,7 +274,7 @@ public class FlowPaneSkin extends PanelSkin {
 
 				// Add the component to the row
 				row.add(component);
-				rowWidth += componentSize.width + horizontalSpacing;
+				rowWidth += componentSize.getWidth() + horizontalSpacing;
 			}
 		}
 

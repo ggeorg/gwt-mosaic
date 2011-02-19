@@ -23,6 +23,8 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 	public interface View extends IsWidget, HasAlignment, HasHTML, HasWordWrap {
 
+		void setPresender(Component component);
+
 		void setFont(Font font);
 
 		void setTextDecoration(TextDecoration textDecoration);
@@ -32,8 +34,10 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		void setBackgroundColor(Color backgroundColor);
 
 		void setPadding(Insets padding);
+
 	}
 
+	// ---------------------------------------------------------------------
 	private Font font;
 	private boolean fontChanged;
 
@@ -61,7 +65,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	// Changed by LabelListener implementation.
 	private boolean textChanged = true;
 
-	private View display = null;
+	private View widget = null;
 
 	public LabelSkin() {
 		// Theme theme = Theme.getTheme();
@@ -101,11 +105,12 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 	@Override
 	public Widget getWidget() {
-		if (display == null) {
-			display = GWT.create(View.class);
-			display.asWidget().addStyleName("m-Label");
+		if (widget == null) {
+			widget = GWT.create(View.class);
+			widget.setPresender(getComponent());
+			widget.asWidget().addStyleName("m-Label");
 		}
-		return display.asWidget();
+		return widget.asWidget();
 	}
 
 	@Override
@@ -204,6 +209,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (textChanged) {
 			Label label = (Label) getComponent();
 			labelWidget.setHTML(label.getText());
+			textChanged = false;
 		}
 	}
 
@@ -231,22 +237,20 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		}
 	}
 
-	public final void setFont(String fond) {
+	public void setFont(String font) {
 		if (font == null) {
 			throw new IllegalArgumentException("font is null");
 		}
 
-		throw new UnsupportedOperationException();
-		// setFont(decodeFont(font));
+		setFont(Font.decode(font));
 	}
 
-	public final void setFont(Dictionary<String, ?> font) {
+	public void setFont(Dictionary<String, ?> font) {
 		if (font == null) {
 			throw new IllegalArgumentException("font is null.");
 		}
 
-		throw new UnsupportedOperationException();
-		// setFont(Theme.deriveFont(font));
+		setFont(new Font(font));
 	}
 
 	public Color getColor() {
@@ -265,13 +269,11 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		}
 	}
 
-	public final void setColor(String color) {
+	public void setColor(String color) {
 		if (color == null) {
 			throw new IllegalArgumentException("color is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setColor(GraphicsUtilities.decodeColor(color));
+		setColor(Color.decode(color, false));
 	}
 
 	public Color getBackgroundColor() {
@@ -284,13 +286,12 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		repaintComponent();
 	}
 
-	public final void setBackgroundColor(String backgroundColor) {
+	public void setBackgroundColor(String backgroundColor) {
 		if (backgroundColor == null) {
 			throw new IllegalArgumentException("backgroundColor is null");
 		}
 
-		throw new UnsupportedOperationException();
-		// setColor(GraphicsUtilities.decodeColor(color));
+		setBackgroundColor(Color.decode(backgroundColor, true));
 	}
 
 	public TextDecoration getTextDecoration() {
@@ -319,6 +320,15 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		}
 	}
 
+	public void setHorizontalAlignment(String horizontalAlignment) {
+		if (horizontalAlignment == null) {
+			throw new IllegalArgumentException("horizontalAlignment is null.");
+		}
+
+		setHorizontalAlignment(HorizontalAlignment.valueOf(horizontalAlignment
+				.toUpperCase()));
+	}
+
 	public VerticalAlignment getVerticalAlignment() {
 		return verticalAlignment;
 	}
@@ -333,6 +343,15 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 			verticalAlignmentChanged = true;
 			repaintComponent();
 		}
+	}
+
+	public void setVerticalAlignment(String verticalAlignment) {
+		if (verticalAlignment == null) {
+			throw new IllegalArgumentException("verticalAlignment is null.");
+		}
+
+		setVerticalAlignment(VerticalAlignment.valueOf(verticalAlignment
+				.toUpperCase()));
 	}
 
 	public Insets getPadding() {
@@ -351,7 +370,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		}
 	}
 
-	public final void setPadding(Dictionary<String, ?> padding) {
+	public void setPadding(Dictionary<String, ?> padding) {
 		if (padding == null) {
 			throw new IllegalArgumentException("padding is null.");
 		}
@@ -359,11 +378,11 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		setPadding(new Insets(padding));
 	}
 
-	public final void setPadding(int padding) {
+	public void setPadding(int padding) {
 		setPadding(new Insets(padding));
 	}
 
-	public final void setPadding(Number padding) {
+	public void setPadding(Number padding) {
 		if (padding == null) {
 			throw new IllegalArgumentException("padding is null.");
 		}
@@ -371,7 +390,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		setPadding(padding.intValue());
 	}
 
-	public final void setPadding(String padding) {
+	public void setPadding(String padding) {
 		if (padding == null) {
 			throw new IllegalArgumentException("padding is null.");
 		}

@@ -170,27 +170,27 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 					// Scale to fit
 					if (preserveAspectRatio) {
 						float aspectRatio = (float) width / (float) height;
-						float imageAspectRatio = (float) imageSize.width
-								/ (float) imageSize.height;
+						float imageAspectRatio = (float) imageSize.getWidth()
+								/ (float) imageSize.getHeight();
 
 						if (aspectRatio > imageAspectRatio) {
 							baseline *= (float) height
-									/ (float) imageSize.height;
+									/ (float) imageSize.getHeight();
 						} else {
 							float scaleY = (float) width
-									/ (float) imageSize.width;
+									/ (float) imageSize.getWidth();
 							baseline *= scaleY;
-							baseline += (int) (height - imageSize.height
+							baseline += (int) (height - imageSize.getHeight()
 									* scaleY) / 2;
 						}
 					} else {
-						baseline *= (float) height / (float) imageSize.height;
+						baseline *= (float) height / (float) imageSize.getHeight();
 					}
 				} else {
 					if (verticalAlignment == VerticalAlignment.CENTER) {
-						baseline += (height - imageSize.height) / 2;
+						baseline += (height - imageSize.getHeight()) / 2;
 					} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-						baseline += height - imageSize.height;
+						baseline += height - imageSize.getHeight();
 					}
 				}
 			}
@@ -216,34 +216,34 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 				// Scale to fit
 				if (preserveAspectRatio) {
 					float aspectRatio = (float) width / (float) height;
-					float imageAspectRatio = (float) imageSize.width
-							/ (float) imageSize.height;
+					float imageAspectRatio = (float) imageSize.getWidth()
+							/ (float) imageSize.getHeight();
 
 					if (aspectRatio > imageAspectRatio) {
 						imageY = 0;
-						scaleY = (float) height / (float) imageSize.height;
+						scaleY = (float) height / (float) imageSize.getHeight();
 
-						imageX = (int) (width - imageSize.width * scaleY) / 2;
+						imageX = (int) (width - imageSize.getWidth() * scaleY) / 2;
 						scaleX = scaleY;
 					} else {
 						imageX = 0;
-						scaleX = (float) width / (float) imageSize.width;
+						scaleX = (float) width / (float) imageSize.getWidth();
 
-						imageY = (int) (height - imageSize.height * scaleX) / 2;
+						imageY = (int) (height - imageSize.getHeight() * scaleX) / 2;
 						scaleY = scaleX;
 					}
 				} else {
 					imageX = 0;
-					scaleX = (float) width / (float) imageSize.width;
+					scaleX = (float) width / (float) imageSize.getWidth();
 
 					imageY = 0;
-					scaleY = (float) height / (float) imageSize.height;
+					scaleY = (float) height / (float) imageSize.getHeight();
 				}
 			} else {
 				if (horizontalAlignment == HorizontalAlignment.CENTER) {
-					imageX = (width - imageSize.width) / 2;
+					imageX = (width - imageSize.getWidth()) / 2;
 				} else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
-					imageX = width - imageSize.width;
+					imageX = width - imageSize.getWidth();
 				} else {
 					imageX = 0;
 				}
@@ -251,9 +251,9 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 				scaleX = 1.0f;
 
 				if (verticalAlignment == VerticalAlignment.CENTER) {
-					imageY = (height - imageSize.height) / 2;
+					imageY = (height - imageSize.getHeight()) / 2;
 				} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-					imageY = height - imageSize.height;
+					imageY = height - imageSize.getHeight();
 				} else {
 					imageY = 0;
 				}

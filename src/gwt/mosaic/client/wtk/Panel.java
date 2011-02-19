@@ -19,6 +19,7 @@ package gwt.mosaic.client.wtk;
 /**
  * Simple container that performs no layout.
  */
+@SuppressWarnings("serial")
 public class Panel extends Container {
 	public Panel() {
 		installSkin(Panel.class);

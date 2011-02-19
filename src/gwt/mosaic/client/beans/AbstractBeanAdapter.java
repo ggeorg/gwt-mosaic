@@ -22,6 +22,7 @@ import java.util.Iterator;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.collections.MapListener;
+import gwt.mosaic.client.util.ImmutableIterator;
 import gwt.mosaic.client.util.ListenerList;
 
 /**
@@ -135,9 +136,19 @@ public class AbstractBeanAdapter<T> implements BeanAdapter<T> {
 	}
 
 	protected void invokeSetterMethod(String propertyName, Object value) {
-		SetterMethod setterMethod = setterMap.get(propertyName);
+		SetterMethod setterMethod = setterMap.get(propertyName + "#"
+				+ value.getClass().getName());
 		if (setterMethod != null) {
 			setterMethod.invokeSetterMethod(value);
+
+			mapListeners.valueUpdated(this, propertyName, null);
+		} else if (value != null) {
+			setterMethod = setterMap.get(propertyName);
+			if (setterMethod != null) {
+				setterMethod.invokeSetterMethod(value);
+
+				mapListeners.valueUpdated(this, propertyName, null);
+			}
 		}
 	}
 
@@ -246,11 +257,21 @@ public class AbstractBeanAdapter<T> implements BeanAdapter<T> {
 	 */
 	@Override
 	public Iterator<String> iterator() {
-		return getterMap.iterator();
+		return new ImmutableIterator<String>(getterMap.iterator());
 	}
 
 	@Override
 	public ListenerList<MapListener<String, Object>> getMapListeners() {
 		return mapListeners;
+	}
+
+	@Override
+	public Iterator<String> getNotifyingProperties() {
+		return new ImmutableIterator<String>(setterMap.iterator());
+	}
+
+	@Override
+	public Class<?> getType(String key) {
+		throw new UnsupportedOperationException();
 	}
 }

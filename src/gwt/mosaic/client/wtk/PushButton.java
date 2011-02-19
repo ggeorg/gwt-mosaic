@@ -22,8 +22,9 @@ import gwt.mosaic.client.wtk.content.ButtonDataRenderer;
  * Component representing a push button.
  */
 // @DefaultProperty("buttonData")
+@SuppressWarnings("serial")
 public class PushButton extends Button {
-	private static final Button.DataRenderer DEFAULT_DATA_RENDERER = new ButtonDataRenderer();
+	private static final transient Button.DataRenderer DEFAULT_DATA_RENDERER = new ButtonDataRenderer();
 
 	public PushButton() {
 		this(false, null);

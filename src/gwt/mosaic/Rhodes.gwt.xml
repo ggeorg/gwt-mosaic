@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
-	<replace-with class="gwt.mosaic.client.wtk.skin.LabelSkinView">
+	<replace-with class="gwt.mosaic.client.wtk.skin.LabelView">
 		<when-type-is class="gwt.mosaic.client.wtk.skin.LabelSkin.View" />
 	</replace-with>
 	

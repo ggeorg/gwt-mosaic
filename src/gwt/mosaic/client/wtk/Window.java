@@ -21,13 +21,16 @@ import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.Sequence;
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.client.util.Vote;
+import gwt.mosaic.shared.beans.DefaultProperty;
 
 /**
  * Top-level container representing the entry point into a user interface.
  * Windows are direct descendants of the display.
  */
-// @DefaultProperty("content")
+@DefaultProperty("content")
 public class Window extends Container {
+	private static final long serialVersionUID = 2488498554212091165L;
+
 	/**
 	 * Window skin interface.
 	 */
@@ -420,31 +423,31 @@ public class Window extends Container {
 		}
 	}
 
-	private Window owner = null;
-	private ArrayList<Window> ownedWindows = new ArrayList<Window>();
+	private transient Window owner = null;
+	private transient ArrayList<Window> ownedWindows = new ArrayList<Window>();
 
-	private ArrayList<ActionMapping> actionMappings = new ArrayList<ActionMapping>();
-	private ActionMappingSequence actionMappingSequence = new ActionMappingSequence();
+	private transient ArrayList<ActionMapping> actionMappings = new ArrayList<ActionMapping>();
+	private transient ActionMappingSequence actionMappingSequence = new ActionMappingSequence();
 
-	private HashMap<Keyboard.KeyStroke, Action> actionMap = new HashMap<Keyboard.KeyStroke, Action>();
+	private transient HashMap<Keyboard.KeyStroke, Action> actionMap = new HashMap<Keyboard.KeyStroke, Action>();
 
 	private String title = null;
 	// TODO private ArrayList<Image> iconImageList = new ArrayList<Image>();
 	// TODO private IconImageSequence iconImageSequence = new IconImageSequence();
 	private Component content = null;
-	private Component focusDescendant = null;
+	private transient Component focusDescendant = null;
 
-	private boolean closing = false;
+	private transient boolean closing = false;
 
 	private Point restoreLocation = null;
 
-	private WindowListenerList windowListeners = new WindowListenerList();
-	private WindowStateListenerList windowStateListeners = new WindowStateListenerList();
-	private WindowActionMappingListenerList windowActionMappingListeners = new WindowActionMappingListenerList();
+	private transient WindowListenerList windowListeners = new WindowListenerList();
+	private transient WindowStateListenerList windowStateListeners = new WindowStateListenerList();
+	private transient WindowActionMappingListenerList windowActionMappingListeners = new WindowActionMappingListenerList();
 
-	private static WindowClassListenerList windowClassListeners = new WindowClassListenerList();
+	private static transient WindowClassListenerList windowClassListeners = new WindowClassListenerList();
 
-	private static Window activeWindow = null;
+	private static transient Window activeWindow = null;
 
 	public Window() {
 		this(null);

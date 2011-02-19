@@ -7,14 +7,17 @@ import java.io.Serializable;
 /**
  * Class representing the location of an object.
  */
+@SuppressWarnings("serial")
 public final class Point implements Serializable {
-	private static final long serialVersionUID = -4438298400782987456L;
-
-	public final int x;
-	public final int y;
+	protected int x;
+	protected int y;
 
 	public static final String X_KEY = "x";
 	public static final String Y_KEY = "y";
+	
+	public Point() {
+		this(0, 0);
+	}
 
 	public Point(int x, int y) {
 		this.x = x;
@@ -46,6 +49,14 @@ public final class Point implements Serializable {
 		} else {
 			y = 0;
 		}
+	}
+	
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 
 	public Point translate(int dx, int dy) {

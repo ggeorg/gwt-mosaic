@@ -16,17 +16,12 @@
  */
 package gwt.mosaic.client.wtk;
 
-import gwt.mosaic.client.beans.BeanAdapter;
-import gwt.mosaic.client.wtk.skin.FlowPaneSkin;
-
 /**
  * Container that arranges components in a horizontal line, wrapping when
  * contents don't fit on a single line.
  */
+@SuppressWarnings("serial")
 public class FlowPane extends Container {
-	interface SkinBeanAdapter extends BeanAdapter<FlowPaneSkin> {
-	}
-	
 	public FlowPane() {
 		installSkin(FlowPane.class);
 	}

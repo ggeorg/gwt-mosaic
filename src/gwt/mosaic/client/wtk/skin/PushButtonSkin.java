@@ -25,7 +25,7 @@ import gwt.mosaic.client.wtk.PushButton;
  * Abstract base class for push button skins.
  */
 public abstract class PushButtonSkin extends ButtonSkin {
-    protected boolean pressed = false;
+	protected boolean pressed = false;
 
     @Override
     public void enabledChanged(Component component) {

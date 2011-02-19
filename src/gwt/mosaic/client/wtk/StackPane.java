@@ -20,6 +20,7 @@ package gwt.mosaic.client.wtk;
  * Container that behaves like a stack of transparencies, all of which are
  * visible at the same time.
  */
+@SuppressWarnings("serial")
 public class StackPane extends Container {
 	public StackPane() {
 		installSkin(StackPane.class);

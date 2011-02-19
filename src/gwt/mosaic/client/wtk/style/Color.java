@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 
 public class Color {
-	private ColorImpl impl = GWT.create(ColorImpl.class);
+	private static ColorImpl impl = GWT.create(ColorImpl.class);
 
 	public static final Color WHITE = new Color(255, 255, 255);
 	public static final Color LIGHT_GRAY = new Color(192, 192, 192);
@@ -193,6 +193,14 @@ public class Color {
 	@Override
 	public String toString() {
 		return impl.toString(r, g, b, alpha);
+	}
+
+	public static Color decode(String color, boolean backgroundColor) {
+		if (backgroundColor) {
+			return impl.parse(color);
+		} else {
+			return impl.parse(color);
+		}
 	}
 
 }

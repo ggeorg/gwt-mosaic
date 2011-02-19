@@ -22,576 +22,515 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
  * Implementation of the {@link List} interface that is backed by an
- * array.
+ * <tt>java.lang.ArrayList</tt>.
  * <p>
- * NOTE This class is not thread-safe. For concurrent access, use a
- * {@link org.apache.pivot.collections.concurrent.SynchronizedList}.
+ * NOTE This class is not thread-safe.
  */
+@SuppressWarnings("serial")
 public class ArrayList<T> implements List<T>, Serializable {
-    private static final long serialVersionUID = 2123086211369612675L;
-
-    private class ArrayListItemIterator implements ItemIterator<T> {
-        private int index = 0;
-        private int modificationCount;
-        private boolean forward = true;
-
-        public ArrayListItemIterator() {
-            modificationCount = ArrayList.this.modificationCount;
-        }
-
-        @Override
-        public boolean hasNext() {
-            if (modificationCount != ArrayList.this.modificationCount) {
-                throw new ConcurrentModificationException();
-            }
-
-            return (index < length);
-        }
-
-        @Override
-        public T next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-
-            forward = true;
-            return get(index++);
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            if (modificationCount != ArrayList.this.modificationCount) {
-                throw new ConcurrentModificationException();
-            }
+	private class ArrayListItemIterator implements ItemIterator<T> {
+		private int index = 0;
+		private int modificationCount;
+		private boolean forward = true;
+
+		public ArrayListItemIterator() {
+			modificationCount = ArrayList.this.modificationCount;
+		}
+
+		@Override
+		public boolean hasNext() {
+			if (modificationCount != ArrayList.this.modificationCount) {
+				throw new ConcurrentModificationException();
+			}
+
+			return (index < items.size());
+		}
+
+		@Override
+		public T next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+
+			forward = true;
+			return get(index++);
+		}
+
+		@Override
+		public boolean hasPrevious() {
+			if (modificationCount != ArrayList.this.modificationCount) {
+				throw new ConcurrentModificationException();
+			}
+
+			return (index > 0);
+		}
+
+		@Override
+		public T previous() {
+			if (!hasPrevious()) {
+				throw new NoSuchElementException();
+			}
+
+			forward = false;
+			return get(--index);
+		}
+
+		@Override
+		public void toStart() {
+			index = 0;
+		}
+
+		@Override
+		public void toEnd() {
+			index = items.size();
+		}
+
+		@Override
+		public void insert(T item) {
+			indexBoundsCheck();
 
-            return (index > 0);
-        }
+			ArrayList.this.insert(item, index);
+			modificationCount++;
+		}
 
-        @Override
-        public T previous() {
-            if (!hasPrevious()) {
-                throw new NoSuchElementException();
-            }
+		@Override
+		public void update(T item) {
+			indexBoundsCheck();
 
-            forward = false;
-            return get(--index);
-        }
+			ArrayList.this.update(forward ? index - 1 : index, item);
+			modificationCount++;
+		}
 
-        @Override
-        public void toStart() {
-            index = 0;
-        }
+		@Override
+		public void remove() {
+			indexBoundsCheck();
 
-        @Override
-        public void toEnd() {
-            index = length;
-        }
+			if (forward) {
+				index--;
+			}
+
+			ArrayList.this.remove(index, 1);
+			modificationCount++;
+		}
+
+		private void indexBoundsCheck() {
+			if (index < 0 || index > +ArrayList.this.getLength()) {
+				throw new IllegalStateException("index  " + index
+						+ " out of bounds");
+			}
+		}
+	}
+
+	private java.util.ArrayList<T> items;
+
+	private transient Comparator<T> comparator = null;
 
-        @Override
-        public void insert(T item) {
-            indexBoundsCheck();
+	private transient int modificationCount = 0;
+	private transient ListListenerList<T> listListeners = null;
+
+	public ArrayList(java.util.ArrayList<T> items) {
+		this.items = items;
+	}
 
-            ArrayList.this.insert(item, index);
-            modificationCount++;
-        }
+	public ArrayList() {
+		items = new java.util.ArrayList<T>();
+	}
 
-        @Override
-        public void update(T item) {
-            indexBoundsCheck();
+	public ArrayList(Comparator<T> comparator) {
+		this();
+		this.comparator = comparator;
+	}
 
-            ArrayList.this.update(forward ? index - 1 : index, item);
-            modificationCount++;
-        }
+	public ArrayList(int capacity) {
+		ArrayList.verifyNonNegative("capacity", capacity);
 
-        @Override
-        public void remove() {
-            indexBoundsCheck();
+		items = new java.util.ArrayList<T>(capacity);
+	}
 
-            if (forward) {
-                index--;
-            }
+	public ArrayList(T... items) {
+		this(items, 0, items.length);
+	}
 
-            ArrayList.this.remove(index, 1);
-            modificationCount++;
-        }
+	public ArrayList(T[] items, int index, int count) {
+		verifyNotNull("items", items);
+		verifyIndexBounds(index, count, 0, items.length);
 
-        private void indexBoundsCheck() {
-            if (index < 0 || index >+ ArrayList.this.length) {
-                throw new IllegalStateException("index  " + index + " out of bounds");
-            }
-        }
-    }
+		this.items = new java.util.ArrayList<T>(count);
 
+		for (int i = 0; i < count; i++) {
+			this.items.add(i, items[index + i]);
+		}
+	}
 
-    private Object[] items;
-    private int length = 0;
+	public ArrayList(Sequence<T> items) {
+		this(items, 0, items.getLength());
+	}
+
+	public ArrayList(Sequence<T> items, int index, int count) {
+		verifyNotNull("items", items);
+		verifyIndexBounds(index, count, 0, items.getLength());
+
+		this.items = new java.util.ArrayList<T>(count);
 
-    private Comparator<T> comparator = null;
+		for (int i = 0; i < count; i++) {
+			this.items.add(i, items.get(index + i));
+		}
+	}
 
-    private transient int modificationCount = 0;
-    private transient ListListenerList<T> listListeners = null;
+	public ArrayList(ArrayList<T> arrayList) {
+		this();
 
-    public static final int DEFAULT_CAPACITY = 10;
+		verifyNotNull("arrayList", arrayList);
 
-    public ArrayList() {
-        items = new Object[DEFAULT_CAPACITY];
-    }
+		items.addAll(arrayList.items);
+	}
 
-    public ArrayList(Comparator<T> comparator) {
-        this();
-        this.comparator = comparator;
-    }
+	public ArrayList(ArrayList<T> arrayList, int index, int count) {
+		this();
 
-    public ArrayList(int capacity) {
-        ArrayList.verifyNonNegative("capacity", capacity);
+		verifyNotNull("arrayList", arrayList);
+		verifyIndexBounds(index, count, 0, arrayList.getLength());
 
-        items = new Object[capacity];
-    }
+		items.addAll(arrayList.items.subList(index, index + count));
 
-    public ArrayList(T... items) {
-        this(items, 0, items.length);
-    }
+		comparator = arrayList.comparator;
+	}
 
-    public ArrayList(T[] items, int index, int count) {
-        verifyNotNull("items", items);
-        verifyIndexBounds(index, count, 0, items.length);
+	@Override
+	public int add(T item) {
+		int index = -1;
 
-        this.items = new Object[count];
-        System.arraycopy(items, index, this.items, 0, count);
+		if (comparator == null) {
+			index = items.size();
+			insert(item, index);
+		} else {
+			// Perform a binary search to find the insertion point
+			index = binarySearch(this, item, comparator);
+			if (index < 0) {
+				index = -(index + 1);
+			}
 
-        length = count;
-    }
-
-    public ArrayList(Sequence<T> items) {
-        this(items, 0, items.getLength());
-    }
-
-    public ArrayList(Sequence<T> items, int index, int count) {
-        verifyNotNull("items", items);
-        verifyIndexBounds(index, count, 0, items.getLength());
-
-        this.items = new Object[count];
-
-        for (int i = 0; i < count; i++) {
-            this.items[i] = items.get(index + i);
-        }
-
-        length = count;
-    }
-
-    public ArrayList(ArrayList<T> arrayList) {
-        this(arrayList, 0, arrayList.length);
-    }
-
-    public ArrayList(ArrayList<T> arrayList, int index, int count) {
-        verifyNotNull("arrayList", arrayList);
-        verifyIndexBounds(index, count, 0, arrayList.length);
-
-        items = new Object[count];
-        length = count;
-
-        System.arraycopy(arrayList.items, index, items, 0, count);
+			insert(item, index, false);
+		}
 
-        comparator = arrayList.comparator;
-    }
+		return index;
+	}
 
-    @Override
-    public int add(T item) {
-        int index = -1;
-
-        if (comparator == null) {
-            index = length;
-            insert(item, index);
-        }
-        else {
-            // Perform a binary search to find the insertion point
-            index = binarySearch(this, item, comparator);
-            if (index < 0) {
-                index = -(index + 1);
-            }
+	@Override
+	public void insert(T item, int index) {
+		insert(item, index, true);
+	}
 
-            insert(item, index, false);
-        }
+	private void insert(T item, int index, boolean validate) {
+		verifyIndexBounds(index, 0, items.size());
 
-        return index;
-    }
+		if (comparator != null && validate) {
+			int i = binarySearch(this, item, comparator);
+			if (i < 0) {
+				i = -(i + 1);
+			}
 
-    @Override
-    public void insert(T item, int index) {
-        insert(item, index, true);
-    }
+			if (index != i) {
+				throw new IllegalArgumentException("Illegal insertion point.");
+			}
+		}
 
-    private void insert(T item, int index, boolean validate) {
-        verifyIndexBounds(index, 0, length);
+		// Insert item
+		items.add(index, item);
 
-        if (comparator != null
-            && validate) {
-            int i = binarySearch(this, item, comparator);
-            if (i < 0) {
-                i = -(i + 1);
-            }
-
-            if (index != i) {
-                throw new IllegalArgumentException("Illegal insertion point.");
-            }
-        }
-
-        // Insert item
-        ensureCapacity(length + 1);
-        System.arraycopy(items, index, items, index + 1, length - index);
-        items[index] = item;
-
-        length++;
-        modificationCount++;
-
-        if (listListeners != null) {
-            listListeners.itemInserted(this, index);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public T update(int index, T item) {
-        verifyIndexBounds(index, 0, length - 1);
-
-        T previousItem = (T)items[index];
-
-        if (previousItem != item) {
-            if (comparator != null) {
-                // Ensure that the new item is greater or equal to its
-                // predecessor and less than or equal to its successor
-                T predecessorItem = (index > 0 ? (T)items[index - 1] : null);
-                T successorItem = (index < length - 1 ? (T)items[index + 1] : null);
-
-                if ((predecessorItem != null
-                    && comparator.compare(item, predecessorItem) == -1)
-                    || (successorItem != null
-                    && comparator.compare(item, successorItem) == 1)) {
-                    throw new IllegalArgumentException("Illegal item modification.");
-                }
-            }
-
-            items[index] = item;
-
-            modificationCount++;
-        }
-
-        if (listListeners != null) {
-            listListeners.itemUpdated(this, index, previousItem);
-        }
-
-        return previousItem;
-    }
-
-    @Override
-    public int remove(T item) {
-        int index = indexOf(item);
-
-        if (index >= 0) {
-           remove(index, 1);
-        }
-
-        return index;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Sequence<T> remove(int index, int count) {
-        verifyIndexBounds(index, count, 0, length);
-
-        ArrayList<T> removed = new ArrayList<T>((T[])items, index, count);
-
-        // Remove items
-        if (count > 0) {
-            int end = index + count;
-            System.arraycopy(items, index + count, items, index, length - end);
-
-            length -= count;
-            modificationCount++;
-
-            // Clear any orphaned references
-            for (int i = length, n = length + count; i < n; i++) {
-                items[i] =  null;
-            }
-
-            if (listListeners != null) {
-                listListeners.itemsRemoved(this, index, removed);
-            }
-        }
-
-        return removed;
-    }
-
-    @Override
-    public void clear() {
-        if (length > 0) {
-            items = new Object[items.length];
-            length = 0;
-            modificationCount++;
-
-            if (listListeners != null) {
-                listListeners.listCleared(this);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public T get(int index) {
-        verifyIndexBounds(index, 0, length - 1);
-
-        return (T)items[index];
-    }
-
-    @Override
-    public int indexOf(T item) {
-        int index = -1;
-
-        if (comparator == null) {
-            index = 0;
-            while (index < length) {
-                if (item == null) {
-                    if (items[index] == null) {
-                        break;
-                    }
-                } else {
-                    if (item.equals(items[index])) {
-                        break;
-                    }
-                }
-
-                index++;
-            }
-
-            if (index == length) {
-                index = -1;
-            }
-        }
-        else {
-            // Perform a binary search to find the index
-            index = binarySearch(this, item, comparator);
-            if (index < 0) {
-                index = -1;
-            }
-        }
-
-        return index;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return (length == 0);
-    }
-
-    @Override
-    public int getLength() {
-        return length;
-    }
-
-    public void trimToSize() {
-        Object[] items = new Object[length];
-        System.arraycopy(this.items, 0, items, 0, length);
-
-        this.items = items;
-        length = items.length;
-    }
-
-    public void ensureCapacity(int capacity) {
-        if (capacity > items.length) {
-            capacity = Math.max(this.items.length * 3 / 2, capacity);
-            Object[] items = new Object[capacity];
-            System.arraycopy(this.items, 0, items, 0, length);
-
-            this.items = items;
-        }
-    }
-
-    public int getCapacity() {
-        return items.length;
-    }
-
-    public Object[] toArray() {
-        //return Arrays.copyOf(items, length);
-    	throw new UnsupportedOperationException();
-    }
-
-    public T[] toArray(Class<? extends T[]> type) {
-        //return Arrays.copyOf(items, length, type);
-    	throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Comparator<T> getComparator() {
-        return comparator;
-    }
-
-    @Override
-    public void setComparator(Comparator<T> comparator) {
-        Comparator<T> previousComparator = this.comparator;
-
-        if (comparator != null) {
-            sort(this, comparator);
-        }
-
-        this.comparator = comparator;
-
-        if (listListeners != null) {
-            listListeners.comparatorChanged(this, previousComparator);
-        }
-    }
-
-    @Override
-    public ItemIterator<T> iterator() {
-        return new ArrayListItemIterator();
-    }
-
-    @Override
-    public ListenerList<ListListener<T>> getListListeners() {
-        if (listListeners == null) {
-            listListeners = new ListListenerList<T>();
-        }
-
-        return listListeners;
-    }
-
-    @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public boolean equals(Object o) {
-        boolean equals = false;
-
-        if (this == o) {
-            equals = true;
-        } else if (o instanceof List) {
-            List<T> list = (List)o;
-
-            if (length == list.getLength()) {
-                Iterator<T> iterator = list.iterator();
-                equals = true;
-
-                for (T element : this) {
-                    if (!(iterator.hasNext()
-                        && element.equals(iterator.next()))) {
-                        equals = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return equals;
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        for (T item : this) {
-            hashCode = 31 * hashCode + (item == null ? 0 : item.hashCode());
-        }
-
-        return hashCode;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(getClass().getName());
-        sb.append(" [");
-
-        int i = 0;
-        for (T item : this) {
-            if (i > 0) {
-                sb.append(", ");
-            }
-
-            sb.append(item);
-            i++;
-        }
-
-        sb.append("]");
-
-        return sb.toString();
-    }
-
-    public static <T> void sort(ArrayList<T> arrayList, Comparator<T> comparator) {
-        sort(arrayList, 0, arrayList.getLength(), comparator);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> void sort(ArrayList<T> arrayList, int from, int to, Comparator<T> comparator) {
-        verifyNotNull("arrayList", arrayList);
-        verifyNotNull("comparator", comparator);
-
-        Arrays.sort((T[])arrayList.items, from, to, comparator);
-
-        arrayList.modificationCount++;
-    }
-
-    public static <T extends Comparable<? super T>> void sort(ArrayList<T> arrayList) {
-        sort(arrayList, new Comparator<T>() {
-            @Override
-            public int compare(T t1, T t2) {
-                return t1.compareTo(t2);
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> int binarySearch(ArrayList<T> arrayList, T item, Comparator<T> comparator) {
-//        verifyNotNull("arrayList", arrayList);
-//        verifyNotNull("comparator", comparator);
-//        verifyNotNull("item", item);
-//
-//        int index = Arrays.binarySearch((T[])arrayList.items, 0, arrayList.length, item, comparator);
-//
-//        return index;
-    	throw new UnsupportedOperationException();
-    }
-
-    public static <T extends Comparable<? super T>> int binarySearch(ArrayList<T> arrayList,
-        T item) {
-        return binarySearch(arrayList, item, new Comparator<T>() {
-            @Override
-            public int compare(T t1, T t2) {
-                return t1.compareTo(t2);
-            }
-        });
-    }
-
-    private static void verifyNotNull(String argument, Object value) {
-        if (value == null) {
-            throw new IllegalArgumentException(argument + " cannot be null.");
-        }
-    }
-
-    private static void verifyNonNegative(String argument, int value) {
-        if (value < 0) {
-            throw new IllegalArgumentException(argument + " cannot be negative.");
-        }
-    }
-
-    private static void verifyIndexBounds(int index, int start, int end) {
-        if (index < start || index > end) {
-            throw new IndexOutOfBoundsException("index " + index + " out of bounds.");
-        }
-    }
-
-    private static void verifyIndexBounds(int index, int count, int start, int end) {
-        if (count < 0) {
-            throw new IllegalArgumentException();
-        }
-
-        if (index < start) {
-            throw new IndexOutOfBoundsException("index " + index + " out of bounds.");
-        }
-
-        if (index + count > end) {
-            throw new IndexOutOfBoundsException("index + count " + index + "," + count + " out of range.");
-        }
-    }
+		modificationCount++;
+
+		if (listListeners != null) {
+			listListeners.itemInserted(this, index);
+		}
+	}
+
+	@Override
+	public T update(int index, T item) {
+		verifyIndexBounds(index, 0, items.size() - 1);
+
+		T previousItem = items.get(index);
+
+		if (previousItem != item) {
+			if (comparator != null) {
+				// Ensure that the new item is greater or equal to its
+				// predecessor and less than or equal to its successor
+				T predecessorItem = (index > 0 ? items.get(index - 1) : null);
+				T successorItem = (index < items.size() - 1 ? items
+						.get(index + 1) : null);
+
+				if ((predecessorItem != null && comparator.compare(item,
+						predecessorItem) == -1)
+						|| (successorItem != null && comparator.compare(item,
+								successorItem) == 1)) {
+					throw new IllegalArgumentException(
+							"Illegal item modification.");
+				}
+			}
+
+			items.set(index, item);
+
+			modificationCount++;
+		}
+
+		if (listListeners != null) {
+			listListeners.itemUpdated(this, index, previousItem);
+		}
+
+		return previousItem;
+	}
+
+	@Override
+	public int remove(T item) {
+		int index = indexOf(item);
+
+		if (index >= 0) {
+			remove(index, 1);
+		}
+
+		return index;
+	}
+
+	@Override
+	public Sequence<T> remove(int index, int count) {
+		verifyIndexBounds(index, count, 0, items.size());
+
+		java.util.ArrayList<T> removedItems = new java.util.ArrayList<T>(
+				items.subList(index, index + count));
+		ArrayList<T> removed = new ArrayList<T>(removedItems);
+
+		// Remove items
+		if (count > 0) {
+
+			modificationCount++;
+
+			if (listListeners != null) {
+				listListeners.itemsRemoved(this, index, removed);
+			}
+		}
+
+		return removed;
+	}
+
+	@Override
+	public void clear() {
+		if (items.size() > 0) {
+			items.clear();
+
+			modificationCount++;
+
+			if (listListeners != null) {
+				listListeners.listCleared(this);
+			}
+		}
+	}
+
+	@Override
+	public T get(int index) {
+		verifyIndexBounds(index, 0, items.size() - 1);
+
+		return items.get(index);
+	}
+
+	@Override
+	public int indexOf(T item) {
+		int index = -1;
+
+		if (comparator == null) {
+			index = items.indexOf(item);
+		} else {
+			// Perform a binary search to find the index
+			index = binarySearch(this, item, comparator);
+			if (index < 0) {
+				index = -1;
+			}
+		}
+
+		return index;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return items.isEmpty();
+	}
+
+	@Override
+	public int getLength() {
+		return items.size();
+	}
+
+	public void trimToSize() {
+		// No-op
+	}
+
+	public void ensureCapacity(int capacity) {
+		// No-op
+	}
+
+	public int getCapacity() {
+		return items.size();
+	}
+
+	public Object[] toArray() {
+		return items.toArray();
+	}
+
+	public T[] toArray(Class<? extends T[]> type) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Comparator<T> getComparator() {
+		return comparator;
+	}
+
+	@Override
+	public void setComparator(Comparator<T> comparator) {
+		Comparator<T> previousComparator = this.comparator;
+
+		if (comparator != null) {
+			sort(this, comparator);
+		}
+
+		this.comparator = comparator;
+
+		if (listListeners != null) {
+			listListeners.comparatorChanged(this, previousComparator);
+		}
+	}
+
+	@Override
+	public ItemIterator<T> iterator() {
+		return new ArrayListItemIterator();
+	}
+
+	@Override
+	public ListenerList<ListListener<T>> getListListeners() {
+		if (listListeners == null) {
+			listListeners = new ListListenerList<T>();
+		}
+
+		return listListeners;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return items.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return items.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(getClass().getName());
+		sb.append(" [");
+
+		int i = 0;
+		for (T item : this) {
+			if (i > 0) {
+				sb.append(", ");
+			}
+
+			sb.append(item);
+			i++;
+		}
+
+		sb.append("]");
+
+		return sb.toString();
+	}
+
+	public static <T> void sort(ArrayList<T> arrayList, Comparator<T> comparator) {
+		sort(arrayList, 0, arrayList.getLength(), comparator);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> void sort(ArrayList<T> arrayList, int from, int to,
+			Comparator<T> comparator) {
+		verifyNotNull("arrayList", arrayList);
+		verifyNotNull("comparator", comparator);
+
+		Arrays.sort((T[]) arrayList.items.toArray(), from, to, comparator);
+
+		arrayList.modificationCount++;
+	}
+
+	public static <T extends Comparable<? super T>> void sort(
+			ArrayList<T> arrayList) {
+		sort(arrayList, new Comparator<T>() {
+			@Override
+			public int compare(T t1, T t2) {
+				return t1.compareTo(t2);
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> int binarySearch(ArrayList<T> arrayList, T item,
+			Comparator<T> comparator) {
+		verifyNotNull("arrayList", arrayList);
+		verifyNotNull("comparator", comparator);
+		verifyNotNull("item", item);
+
+		int index = Arrays.binarySearch((T[]) arrayList.items.toArray(), item,
+				comparator);
+
+		return index;
+	}
+
+	public static <T extends Comparable<? super T>> int binarySearch(
+			ArrayList<T> arrayList, T item) {
+		return binarySearch(arrayList, item, new Comparator<T>() {
+			@Override
+			public int compare(T t1, T t2) {
+				return t1.compareTo(t2);
+			}
+		});
+	}
+
+	private static void verifyNotNull(String argument, Object value) {
+		if (value == null) {
+			throw new IllegalArgumentException(argument + " cannot be null.");
+		}
+	}
+
+	private static void verifyNonNegative(String argument, int value) {
+		if (value < 0) {
+			throw new IllegalArgumentException(argument
+					+ " cannot be negative.");
+		}
+	}
+
+	private static void verifyIndexBounds(int index, int start, int end) {
+		if (index < start || index > end) {
+			throw new IndexOutOfBoundsException("index " + index
+					+ " out of bounds.");
+		}
+	}
+
+	private static void verifyIndexBounds(int index, int count, int start,
+			int end) {
+		if (count < 0) {
+			throw new IllegalArgumentException();
+		}
+
+		if (index < start) {
+			throw new IndexOutOfBoundsException("index " + index
+					+ " out of bounds.");
+		}
+
+		if (index + count > end) {
+			throw new IndexOutOfBoundsException("index + count " + index + ","
+					+ count + " out of range.");
+		}
+	}
 }

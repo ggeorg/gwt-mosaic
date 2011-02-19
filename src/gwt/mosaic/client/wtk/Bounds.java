@@ -23,9 +23,8 @@ import java.io.Serializable;
 /**
  * Class representing the bounds of an object.
  */
+@SuppressWarnings("serial")
 public final class Bounds implements Serializable {
-    private static final long serialVersionUID = -2473226417628417475L;
-
     public final int x;
     public final int y;
     public final int width;

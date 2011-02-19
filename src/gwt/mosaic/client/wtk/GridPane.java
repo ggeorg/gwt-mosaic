@@ -29,6 +29,7 @@ import java.util.Iterator;
  * cell is the same size.
  */
 // @DefaultProperty("rows")
+@SuppressWarnings("serial")
 public class GridPane extends Container {
 	/**
 	 * Represents a grid pane row.
@@ -319,12 +320,12 @@ public class GridPane extends Container {
 		}
 	}
 
-	private int columnCount;
+	private transient int columnCount;
 
-	private ArrayList<Row> rows = new ArrayList<Row>();
-	private RowSequence rowSequence = new RowSequence();
+	private transient ArrayList<Row> rows = new ArrayList<Row>();
+	private transient RowSequence rowSequence = new RowSequence();
 
-	private GridPaneListenerList gridPaneListeners = new GridPaneListenerList();
+	private transient GridPaneListenerList gridPaneListeners = new GridPaneListenerList();
 
 	/**
 	 * Creates a new grid pane.

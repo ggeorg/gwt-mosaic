@@ -26,7 +26,7 @@ import gwt.mosaic.client.wtk.StackPane;
  * Stack pane skin.
  */
 public class StackPaneSkin extends PanelSkin {
-    private Insets padding = Insets.NONE;
+	private Insets padding = Insets.NONE;
 
     @Override
     public int getPreferredWidth(int height) {
@@ -69,10 +69,10 @@ public class StackPaneSkin extends PanelSkin {
             Dimensions preferredCardSize = component.getPreferredSize();
 
             preferredWidth = Math.max(preferredWidth,
-                preferredCardSize.width);
+                preferredCardSize.getWidth());
 
             preferredHeight = Math.max(preferredHeight,
-                preferredCardSize.height);
+                preferredCardSize.getHeight());
         }
 
         preferredWidth += (padding.left + padding.right);
