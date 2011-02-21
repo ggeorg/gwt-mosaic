@@ -37,7 +37,7 @@ import java.util.Iterator;
  */
 // @DefaultProperty("rows")
 @SuppressWarnings("serial")
-public class TablePane extends Container {
+public class TableInput extends Container {
 	/**
 	 * Represents a table pane row.
 	 */
@@ -48,7 +48,7 @@ public class TablePane extends Container {
 
 		private ArrayList<Component> cells = new ArrayList<Component>();
 
-		private TablePane tablePane = null;
+		private TableInput tablePane = null;
 
 		public Row() {
 			this(-1, false, false);
@@ -74,7 +74,7 @@ public class TablePane extends Container {
 		 * @return The row's table pane, or <tt>null</tt> if the row does not
 		 *         currently belong to a table.
 		 */
-		public TablePane getTablePane() {
+		public TableInput getTablePane() {
 			return tablePane;
 		}
 
@@ -283,7 +283,7 @@ public class TablePane extends Container {
 	 * Represents a table pane column.
 	 */
 	public static class Column {
-		private TablePane tablePane = null;
+		private TableInput tablePane = null;
 
 		private int width;
 		private boolean relative;
@@ -313,7 +313,7 @@ public class TablePane extends Container {
 		 * @return The column's table pane, or <tt>null</tt> if the column does
 		 *         not currently belong to a table.
 		 */
-		public TablePane getTablePane() {
+		public TableInput getTablePane() {
 			return tablePane;
 		}
 
@@ -435,7 +435,7 @@ public class TablePane extends Container {
 
 	/**
 	 * Class that manages a table pane's row list. Callers get access to the row
-	 * sequence via {@link TablePane#getRows()}.
+	 * sequence via {@link TableInput#getRows()}.
 	 */
 	public final class RowSequence implements Sequence<Row>, Iterable<Row> {
 		private RowSequence() {
@@ -461,15 +461,15 @@ public class TablePane extends Container {
 			}
 
 			rows.insert(row, index);
-			row.tablePane = TablePane.this;
+			row.tablePane = TableInput.this;
 
 			for (int i = 0, n = row.getLength(); i < n; i++) {
 				Component component = row.get(i);
-				TablePane.this.add(component);
+				TableInput.this.add(component);
 			}
 
 			// Notify listeners
-			tablePaneListeners.rowInserted(TablePane.this, index);
+			tablePaneListeners.rowInserted(TableInput.this, index);
 		}
 
 		@Override
@@ -498,11 +498,11 @@ public class TablePane extends Container {
 
 					for (int j = 0, m = row.getLength(); j < m; j++) {
 						Component component = row.get(j);
-						TablePane.this.remove(component);
+						TableInput.this.remove(component);
 					}
 				}
 
-				tablePaneListeners.rowsRemoved(TablePane.this, index, removed);
+				tablePaneListeners.rowsRemoved(TableInput.this, index, removed);
 			}
 
 			return removed;
@@ -531,7 +531,7 @@ public class TablePane extends Container {
 
 	/**
 	 * Class that manages a table pane's column list. Callers get access to the
-	 * column sequence via {@link TablePane#getColumns()}.
+	 * column sequence via {@link TableInput#getColumns()}.
 	 */
 	public final class ColumnSequence implements Sequence<Column>,
 			Iterable<Column> {
@@ -558,10 +558,10 @@ public class TablePane extends Container {
 			}
 
 			columns.insert(column, index);
-			column.tablePane = TablePane.this;
+			column.tablePane = TableInput.this;
 
 			// Notify listeners
-			tablePaneListeners.columnInserted(TablePane.this, index);
+			tablePaneListeners.columnInserted(TableInput.this, index);
 		}
 
 		@Override
@@ -589,7 +589,7 @@ public class TablePane extends Container {
 					column.tablePane = null;
 				}
 
-				tablePaneListeners.columnsRemoved(TablePane.this, index,
+				tablePaneListeners.columnsRemoved(TableInput.this, index,
 						removed);
 			}
 
@@ -633,22 +633,22 @@ public class TablePane extends Container {
 	private static class TablePaneListenerList extends
 			ListenerList<TablePaneListener> implements TablePaneListener {
 		@Override
-		public void rowInserted(TablePane tablePane, int index) {
+		public void rowInserted(TableInput tablePane, int index) {
 			for (TablePaneListener listener : this) {
 				listener.rowInserted(tablePane, index);
 			}
 		}
 
 		@Override
-		public void rowsRemoved(TablePane tablePane, int index,
-				Sequence<TablePane.Row> rows) {
+		public void rowsRemoved(TableInput tablePane, int index,
+				Sequence<TableInput.Row> rows) {
 			for (TablePaneListener listener : this) {
 				listener.rowsRemoved(tablePane, index, rows);
 			}
 		}
 
 		@Override
-		public void rowHeightChanged(TablePane.Row row, int previousHeight,
+		public void rowHeightChanged(TableInput.Row row, int previousHeight,
 				boolean previousRelative) {
 			for (TablePaneListener listener : this) {
 				listener.rowHeightChanged(row, previousHeight, previousRelative);
@@ -656,29 +656,29 @@ public class TablePane extends Container {
 		}
 
 		@Override
-		public void rowHighlightedChanged(TablePane.Row row) {
+		public void rowHighlightedChanged(TableInput.Row row) {
 			for (TablePaneListener listener : this) {
 				listener.rowHighlightedChanged(row);
 			}
 		}
 
 		@Override
-		public void columnInserted(TablePane tablePane, int index) {
+		public void columnInserted(TableInput tablePane, int index) {
 			for (TablePaneListener listener : this) {
 				listener.columnInserted(tablePane, index);
 			}
 		}
 
 		@Override
-		public void columnsRemoved(TablePane tablePane, int index,
-				Sequence<TablePane.Column> columns) {
+		public void columnsRemoved(TableInput tablePane, int index,
+				Sequence<TableInput.Column> columns) {
 			for (TablePaneListener listener : this) {
 				listener.columnsRemoved(tablePane, index, columns);
 			}
 		}
 
 		@Override
-		public void columnWidthChanged(TablePane.Column column,
+		public void columnWidthChanged(TableInput.Column column,
 				int previousWidth, boolean previousRelative) {
 			for (TablePaneListener listener : this) {
 				listener.columnWidthChanged(column, previousWidth,
@@ -687,21 +687,21 @@ public class TablePane extends Container {
 		}
 
 		@Override
-		public void columnHighlightedChanged(TablePane.Column column) {
+		public void columnHighlightedChanged(TableInput.Column column) {
 			for (TablePaneListener listener : this) {
 				listener.columnHighlightedChanged(column);
 			}
 		}
 
 		@Override
-		public void cellInserted(TablePane.Row row, int column) {
+		public void cellInserted(TableInput.Row row, int column) {
 			for (TablePaneListener listener : this) {
 				listener.cellInserted(row, column);
 			}
 		}
 
 		@Override
-		public void cellsRemoved(TablePane.Row row, int column,
+		public void cellsRemoved(TableInput.Row row, int column,
 				Sequence<Component> removed) {
 			for (TablePaneListener listener : this) {
 				listener.cellsRemoved(row, column, removed);
@@ -709,7 +709,7 @@ public class TablePane extends Container {
 		}
 
 		@Override
-		public void cellUpdated(TablePane.Row row, int column,
+		public void cellUpdated(TableInput.Row row, int column,
 				Component previousComponent) {
 			for (TablePaneListener listener : this) {
 				listener.cellUpdated(row, column, previousComponent);
@@ -721,7 +721,7 @@ public class TablePane extends Container {
 			ListenerList<TablePaneAttributeListener> implements
 			TablePaneAttributeListener {
 		@Override
-		public void rowSpanChanged(TablePane tablePane, Component component,
+		public void rowSpanChanged(TableInput tablePane, Component component,
 				int previousRowSpan) {
 			for (TablePaneAttributeListener listener : this) {
 				listener.rowSpanChanged(tablePane, component, previousRowSpan);
@@ -729,7 +729,7 @@ public class TablePane extends Container {
 		}
 
 		@Override
-		public void columnSpanChanged(TablePane tablePane, Component component,
+		public void columnSpanChanged(TableInput tablePane, Component component,
 				int previousColumnSpan) {
 			for (TablePaneAttributeListener listener : this) {
 				listener.columnSpanChanged(tablePane, component,
@@ -752,7 +752,7 @@ public class TablePane extends Container {
 	/**
 	 * Creates a new <tt>TablePane</tt> with empty row and column sequences.
 	 */
-	public TablePane() {
+	public TableInput() {
 		this(new ArrayList<Column>());
 	}
 
@@ -763,7 +763,7 @@ public class TablePane extends Container {
 	 *            The column sequence to use. A copy of this sequence will be
 	 *            made
 	 */
-	public TablePane(Sequence<Column> columns) {
+	public TableInput(Sequence<Column> columns) {
 		if (columns == null) {
 			throw new IllegalArgumentException("columns is null");
 		}
@@ -771,15 +771,15 @@ public class TablePane extends Container {
 		this.rows = new ArrayList<Row>();
 		this.columns = new ArrayList<Column>(columns);
 
-		installSkin(TablePane.class);
+		installSkin(TableInput.class);
 	}
 
 	@Override
 	protected void setSkin(
 			BeanAdapter<? extends gwt.mosaic.client.wtk.Skin> styles) {
-		if (!(styles.getBean() instanceof TablePane.Skin)) {
+		if (!(styles.getBean() instanceof TableInput.Skin)) {
 			throw new IllegalArgumentException("Skin class must implement "
-					+ TablePane.Skin.class.getName());
+					+ TableInput.Skin.class.getName());
 		}
 
 		super.setSkin(styles);
@@ -804,7 +804,7 @@ public class TablePane extends Container {
 	 *         y-coordinate.
 	 */
 	public int getRowAt(int y) {
-		TablePane.Skin tablePaneSkin = (TablePane.Skin) getSkin();
+		TableInput.Skin tablePaneSkin = (TableInput.Skin) getSkin();
 		return tablePaneSkin.getRowAt(y);
 	}
 
@@ -815,7 +815,7 @@ public class TablePane extends Container {
 	 *            The row index.
 	 */
 	public Bounds getRowBounds(int row) {
-		TablePane.Skin tablePaneSkin = (TablePane.Skin) getSkin();
+		TableInput.Skin tablePaneSkin = (TableInput.Skin) getSkin();
 		return tablePaneSkin.getRowBounds(row);
 	}
 
@@ -838,7 +838,7 @@ public class TablePane extends Container {
 	 *         given x-coordinate.
 	 */
 	public int getColumnAt(int x) {
-		TablePane.Skin tablePaneSkin = (TablePane.Skin) getSkin();
+		TableInput.Skin tablePaneSkin = (TableInput.Skin) getSkin();
 		return tablePaneSkin.getColumnAt(x);
 	}
 
@@ -849,7 +849,7 @@ public class TablePane extends Container {
 	 *            The column index.
 	 */
 	public Bounds getColumnBounds(int column) {
-		TablePane.Skin tablePaneSkin = (TablePane.Skin) getSkin();
+		TableInput.Skin tablePaneSkin = (TableInput.Skin) getSkin();
 		return tablePaneSkin.getColumnBounds(column);
 	}
 
@@ -932,8 +932,8 @@ public class TablePane extends Container {
 		if (previousRowSpan != rowSpan) {
 			Container parent = component.getParent();
 
-			if (parent instanceof TablePane) {
-				TablePane tablePane = (TablePane) parent;
+			if (parent instanceof TableInput) {
+				TableInput tablePane = (TableInput) parent;
 				tablePane.tablePaneAttributeListeners.rowSpanChanged(tablePane,
 						component, previousRowSpan);
 			}
@@ -953,8 +953,8 @@ public class TablePane extends Container {
 		if (previousColumnSpan != columnSpan) {
 			Container parent = component.getParent();
 
-			if (parent instanceof TablePane) {
-				TablePane tablePane = (TablePane) parent;
+			if (parent instanceof TableInput) {
+				TableInput tablePane = (TableInput) parent;
 				tablePane.tablePaneAttributeListeners.columnSpanChanged(
 						tablePane, component, previousColumnSpan);
 			}

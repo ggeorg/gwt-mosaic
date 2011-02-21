@@ -2,6 +2,7 @@ package gwt.mosaic.rebind;
 
 import gwt.mosaic.client.beans.AbstractBeanAdapter;
 import gwt.mosaic.client.beans.BeanAdapter;
+import gwt.mosaic.client.beans.BeanAdapterFactory;
 import gwt.mosaic.client.beans.GetterMethod;
 import gwt.mosaic.client.beans.SetterMethod;
 
@@ -9,6 +10,7 @@ import java.beans.Introspector;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -223,6 +225,8 @@ class BeanAdapterWriter {
 
 		writeClassOpen(w);
 		w.indent();
+		
+		writeBeanFactoryRegistration(w);
 
 		w.write("public %s() {", implClassName);
 		w.indent();
@@ -244,6 +248,31 @@ class BeanAdapterWriter {
 		w.write("}");
 	}
 
+	private void writeBeanFactoryRegistration(IndentedWriter w) {
+		w.write("static {");
+		w.indent();
+		w.write("BeanAdapterFactory.register(%s.class, new BeanAdapterFactory<%s>() {",
+				beanType.getParameterizedQualifiedSourceName(),
+				beanType.getParameterizedQualifiedSourceName());
+		w.indent();
+		w.write("@Override");
+		w.write("protected BeanAdapter<%s> create(Object value) {",
+				beanType.getParameterizedQualifiedSourceName());
+		w.indent();
+		w.write("BeanAdapter<%s> adapter = GWT.create(%s.class);",
+				beanType.getParameterizedQualifiedSourceName(),
+				baseClass.getParameterizedQualifiedSourceName());
+		w.write("adapter.setBean((%s)value);",
+				beanType.getParameterizedQualifiedSourceName());
+		w.write("return adapter;");
+		w.outdent();
+		w.write("}");
+		w.outdent();
+		w.write("});");
+		w.outdent();
+		w.write("}");
+	}
+
 	private void writeSetter(IndentedWriter w, JavaBeanProperty property) {
 		if (property.getter != null) {
 			w.write("setterMap.put(\"%s\", new SetterMethod() {", property.name);
@@ -256,13 +285,18 @@ class BeanAdapterWriter {
 		w.write("@Override");
 		w.write("public void invokeSetterMethod(Object value) {");
 		w.indent();
-
+		w.write("try {");
+		w.indent();
 		w.write("getBean().%s((%s) value);", property.setter.getName(),
 				property.propertyType);
-
+		w.outdent();
+		w.write("} catch (Exception ex) {");
+		w.indent();
+		w.write("throw new RuntimeException(ex);");
 		w.outdent();
 		w.write("}");
-
+		w.outdent();
+		w.write("}");
 		w.outdent();
 		w.write("});");
 	}
@@ -274,6 +308,8 @@ class BeanAdapterWriter {
 		w.write("@Override");
 		w.write("public Object invokeGetterMethod() {");
 		w.indent();
+		w.write("try {");
+		w.indent();
 		JType retType = property.getter.getReturnType().getErasedType();
 		if (retType.isPrimitive() != null) {
 			w.write("return (%s) getBean().%s();", retType.isPrimitive()
@@ -281,6 +317,12 @@ class BeanAdapterWriter {
 		} else {
 			w.write("return getBean().%s();", property.getter.getName());
 		}
+		w.outdent();
+		w.write("} catch (Exception ex) {");
+		w.indent();
+		w.write("throw new RuntimeException(ex);");
+		w.outdent();
+		w.write("}");
 		w.outdent();
 		w.write("}");
 
@@ -298,7 +340,9 @@ class BeanAdapterWriter {
 	private void writeImports(IndentedWriter w) {
 		w.write("import %s;", AbstractBeanAdapter.class.getName());
 		w.write("import %s;", BeanAdapter.class.getName());
+		w.write("import %s;", BeanAdapterFactory.class.getName());
 		w.write("import %s;", GetterMethod.class.getName());
+		w.write("import %s;", GWT.class.getName());
 		w.write("import %s;", SetterMethod.class.getName());
 	}
 

@@ -22,7 +22,7 @@ import gwt.mosaic.client.wtk.Bounds;
 import gwt.mosaic.client.wtk.Component;
 import gwt.mosaic.client.wtk.Dimensions;
 import gwt.mosaic.client.wtk.Insets;
-import gwt.mosaic.client.wtk.TablePane;
+import gwt.mosaic.client.wtk.TableInput;
 import gwt.mosaic.client.wtk.TablePaneAttributeListener;
 import gwt.mosaic.client.wtk.TablePaneListener;
 import gwt.mosaic.client.wtk.style.Color;
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Table pane skin.
  */
-public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
+public class TablePaneSkin extends PanelSkin implements TableInput.Skin,
     TablePaneListener, TablePaneAttributeListener {
 	private Insets padding = Insets.NONE;
     private int horizontalSpacing = 0;
@@ -50,16 +50,16 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
     public void install(Component component) {
         super.install(component);
 
-        TablePane tablePane = (TablePane)component;
+        TableInput tablePane = (TableInput)component;
         tablePane.getTablePaneListeners().add(this);
         tablePane.getTablePaneAttributeListeners().add(this);
     }
 
     @Override
     public int getPreferredWidth(int height) {
-        TablePane tablePane = (TablePane)getComponent();
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput tablePane = (TableInput)getComponent();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -74,7 +74,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         // columns their preferred width
 
         for (int i = 0; i < columnCount; i++) {
-            TablePane.Column column = columns.get(i);
+            TableInput.Column column = columns.get(i);
             int columnWidth = column.getWidth();
             boolean isRelative = column.isRelative();
 
@@ -132,14 +132,14 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         // content
 
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             for (int j = 0, n = row.getLength(); j < n && j < columnCount; j++) {
                 Component component = row.get(j);
 
                 if (component != null
                     && component.isVisible()) {
-                    int columnSpan = TablePane.getColumnSpan(component);
+                    int columnSpan = TableInput.getColumnSpan(component);
 
                     if (columnSpan > 1) {
                         // We might need to adjust column widths to accomodate
@@ -245,9 +245,9 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
     @Override
     public int getPreferredHeight(int width) {
-        TablePane tablePane = (TablePane)getComponent();
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput tablePane = (TableInput)getComponent();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -268,7 +268,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         // rows their preferred height
 
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
             int rowHeight = row.getHeight();
             boolean isRelative = row.isRelative();
 
@@ -326,14 +326,14 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         // content
 
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             for (int j = 0, n = row.getLength(); j < n && j < columnCount; j++) {
                 Component component = row.get(j);
 
                 if (component != null
                     && component.isVisible()) {
-                    int rowSpan = TablePane.getRowSpan(component);
+                    int rowSpan = TableInput.getRowSpan(component);
 
                     if (rowSpan > 1) {
                         // We might need to adjust row heights to accomodate
@@ -447,10 +447,10 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
     @Override
     public int getBaseline(int width, int height) {
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -464,7 +464,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         int rowY = padding.top;
 
         for (int i = 0; i < rowCount && baseline == -1; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
             boolean rowVisible = false;
 
             for (int j = 0, n = row.getLength(); j < n && j < columnCount && baseline == -1; j++) {
@@ -472,13 +472,13 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
                 if (component != null
                     && component.isVisible()) {
-                    int columnSpan = Math.min(TablePane.getColumnSpan(component), columnCount - j);
+                    int columnSpan = Math.min(TableInput.getColumnSpan(component), columnCount - j);
                     int componentWidth = (columnSpan - 1) * horizontalSpacing;
                     for (int k = 0; k < columnSpan && j + k < columnCount; k++) {
                         componentWidth += columnWidths[j + k];
                     }
 
-                    int rowSpan = Math.min(TablePane.getRowSpan(component), rowCount  - i);
+                    int rowSpan = Math.min(TableInput.getRowSpan(component), rowCount  - i);
                     int componentHeight = (rowSpan - 1) * verticalSpacing;
                     for (int k = 0; k < rowSpan && i + k < rowCount; k++) {
                         componentHeight += rowHeights[i + k];
@@ -505,10 +505,10 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
     @Override
     public void layout() {
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -538,7 +538,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
         int componentY = padding.top;
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             int componentX = padding.left;
             for (int j = 0, n = row.getLength(); j < n && j < columnCount; j++) {
@@ -548,14 +548,14 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
                     && child.isVisible()) {
                     child.setLocation(componentX, componentY);
 
-                    int columnSpan = TablePane.getColumnSpan(child);
+                    int columnSpan = TableInput.getColumnSpan(child);
                     columnSpan = Math.min(columnSpan, columnCount - j);
                     int childWidth = (columnSpan - 1) * horizontalSpacing;
                     for (int k = 0; k < columnSpan && j + k < columnCount; k++) {
                         childWidth += columnWidths[j + k];
                     }
 
-                    int rowSpan = TablePane.getRowSpan(child);
+                    int rowSpan = TableInput.getRowSpan(child);
                     rowSpan = Math.min(rowSpan,rowCount  - i);
                     int childHeight = (rowSpan - 1) * verticalSpacing;
                     for (int k = 0; k < rowSpan && i + k < rowCount; k++) {
@@ -581,10 +581,10 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
     public void paint(Widget context) {
         super.paint(context);
 
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -596,7 +596,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
         // Paint the highlighted rows
         for (int i = 0, rowY = padding.top; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             if (row.isHighlighted()) {
                 //XXX graphics.fillRect(0, rowY, width, rowHeights[i]);
@@ -607,7 +607,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
         // Paint the highlighted columns
         for (int j = 0, columnX = padding.left; j < columnCount; j++) {
-            TablePane.Column column = columns.get(j);
+            TableInput.Column column = columns.get(j);
 
             if (column.isHighlighted()) {
                 // XXX graphics.fillRect(columnX, 0, columnWidths[j], height);
@@ -856,10 +856,10 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
      * and vacant cells are denoted by <tt>false</tt>
      */
     private boolean[][] getOccupiedCells() {
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -867,7 +867,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         boolean[][] occupiedCells = new boolean[rowCount][columnCount];
 
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             for (int j = 0, n = row.getLength(); j < n && j < columnCount; j++) {
                 Component component = row.get(j);
@@ -875,8 +875,8 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
                 if (component != null
                     && component.isVisible()) {
 
-                    int rowSpan = TablePane.getRowSpan(component);
-                    int columnSpan = TablePane.getColumnSpan(component);
+                    int rowSpan = TableInput.getRowSpan(component);
+                    int columnSpan = TableInput.getColumnSpan(component);
 
                     for (int k = 0; k < rowSpan && i + k < rowCount; k++) {
                         for (int l = 0; l < columnSpan && j + l < columnCount; l++) {
@@ -903,21 +903,21 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
      * The index of the column whose preferred width we're calculating
      */
     private int getPreferredColumnWidth(int columnIndex) {
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.RowSequence rows = tablePane.getRows();
+        TableInput.RowSequence rows = tablePane.getRows();
 
         int preferredWidth = 0;
 
         for (int i = 0, n = rows.getLength(); i < n; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             if (row.getLength() > columnIndex) {
                 Component component = row.get(columnIndex);
 
                 if (component != null
                     && component.isVisible()
-                    && TablePane.getColumnSpan(component) == 1) {
+                    && TableInput.getColumnSpan(component) == 1) {
                     preferredWidth = Math.max(preferredWidth,
                         component.getPreferredWidth(-1));
                 }
@@ -978,10 +978,10 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
             throw new IllegalArgumentException("columnWidths is null");
         }
 
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.ColumnSequence columns = tablePane.getColumns();
-        TablePane.Row row = tablePane.getRows().get(rowIndex);
+        TableInput.ColumnSequence columns = tablePane.getColumns();
+        TableInput.Row row = tablePane.getRows().get(rowIndex);
 
         int preferredHeight = 0;
 
@@ -990,7 +990,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
             if (component != null
                 && component.isVisible()
-                && TablePane.getRowSpan(component) == 1) {
+                && TableInput.getRowSpan(component) == 1) {
                 preferredHeight = Math.max(preferredHeight,
                     component.getPreferredHeight(columnWidths[j]));
             }
@@ -1038,10 +1038,10 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
      * specified constraint
      */
     private int[] getColumnWidths(int width) {
-        TablePane tablePane = (TablePane)getComponent();
+        TableInput tablePane = (TableInput)getComponent();
 
-        TablePane.RowSequence rows = tablePane.getRows();
-        TablePane.ColumnSequence columns = tablePane.getColumns();
+        TableInput.RowSequence rows = tablePane.getRows();
+        TableInput.ColumnSequence columns = tablePane.getColumns();
 
         int rowCount = rows.getLength();
         int columnCount = columns.getLength();
@@ -1059,7 +1059,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
         for (int j = 0; j < columnCount; j++) {
             if (isColumnVisible(j)) {
-                TablePane.Column column = columns.get(j);
+                TableInput.Column column = columns.get(j);
                 int columnWidth = column.getWidth();
 
                 if (column.isRelative()) {
@@ -1092,14 +1092,14 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         // width of the spanning content.
 
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             for (int j = 0, n = row.getLength(); j < n && j < columnCount; j++) {
                 Component component = row.get(j);
 
                 if (component != null
                     && component.isVisible()) {
-                    int columnSpan = TablePane.getColumnSpan(component);
+                    int columnSpan = TableInput.getColumnSpan(component);
 
                     if (columnSpan > 1) {
                         // We might need to adjust column widths to accomodate
@@ -1212,8 +1212,8 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
             throw new IllegalArgumentException("columnWidths is null");
         }
 
-        TablePane tablePane = (TablePane)getComponent();
-        TablePane.RowSequence rows = tablePane.getRows();
+        TableInput tablePane = (TableInput)getComponent();
+        TableInput.RowSequence rows = tablePane.getRows();
 
         int rowCount = tablePane.getRows().getLength();
         int columnCount = tablePane.getColumns().getLength();
@@ -1231,7 +1231,7 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
 
         for (int i = 0; i < rowCount; i++) {
             if (isRowVisible(i)) {
-                TablePane.Row row = rows.get(i);
+                TableInput.Row row = rows.get(i);
                 int rowHeight = row.getHeight();
 
                 if (row.isRelative()) {
@@ -1264,14 +1264,14 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
         // width of the spanning content.
 
         for (int i = 0; i < rowCount; i++) {
-            TablePane.Row row = rows.get(i);
+            TableInput.Row row = rows.get(i);
 
             for (int j = 0, n = row.getLength(); j < n && j < columnCount; j++) {
                 Component component = row.get(j);
 
                 if (component != null
                     && component.isVisible()) {
-                    int rowSpan = TablePane.getRowSpan(component);
+                    int rowSpan = TableInput.getRowSpan(component);
 
                     if (rowSpan > 1) {
                         // We might need to adjust row heights to accomodate
@@ -1453,72 +1453,72 @@ public class TablePaneSkin extends PanelSkin implements TablePane.Skin,
     // TablePaneListener methods
 
     @Override
-    public void rowInserted(TablePane tablePane, int index) {
+    public void rowInserted(TableInput tablePane, int index) {
         invalidateComponent();
     }
 
     @Override
-    public void rowsRemoved(TablePane tablePane, int index, Sequence<TablePane.Row> rows) {
+    public void rowsRemoved(TableInput tablePane, int index, Sequence<TableInput.Row> rows) {
         invalidateComponent();
     }
 
     @Override
-    public void rowHeightChanged(TablePane.Row row, int previousHeight, boolean previousRelative) {
+    public void rowHeightChanged(TableInput.Row row, int previousHeight, boolean previousRelative) {
         invalidateComponent();
     }
 
     @Override
-    public void rowHighlightedChanged(TablePane.Row row) {
-        TablePane tablePane = row.getTablePane();
+    public void rowHighlightedChanged(TableInput.Row row) {
+        TableInput tablePane = row.getTablePane();
         repaintComponent(/*getRowBounds(tablePane.getRows().indexOf(row))*/);
     }
 
     @Override
-    public void columnInserted(TablePane tablePane, int index) {
+    public void columnInserted(TableInput tablePane, int index) {
         invalidateComponent();
     }
 
     @Override
-    public void columnsRemoved(TablePane tablePane, int index, Sequence<TablePane.Column> columns) {
+    public void columnsRemoved(TableInput tablePane, int index, Sequence<TableInput.Column> columns) {
         invalidateComponent();
     }
 
     @Override
-    public void columnWidthChanged(TablePane.Column column, int previousWidth,
+    public void columnWidthChanged(TableInput.Column column, int previousWidth,
         boolean previousRelative) {
         invalidateComponent();
     }
 
     @Override
-    public void columnHighlightedChanged(TablePane.Column column) {
-        TablePane tablePane = column.getTablePane();
+    public void columnHighlightedChanged(TableInput.Column column) {
+        TableInput tablePane = column.getTablePane();
         repaintComponent(/*getColumnBounds(tablePane.getColumns().indexOf(column))*/);
     }
 
     @Override
-    public void cellInserted(TablePane.Row row, int column) {
+    public void cellInserted(TableInput.Row row, int column) {
         invalidateComponent();
     }
 
     @Override
-    public void cellsRemoved(TablePane.Row row, int column, Sequence<Component> removed) {
+    public void cellsRemoved(TableInput.Row row, int column, Sequence<Component> removed) {
         invalidateComponent();
     }
 
     @Override
-    public void cellUpdated(TablePane.Row row, int column, Component previousComponent) {
+    public void cellUpdated(TableInput.Row row, int column, Component previousComponent) {
         invalidateComponent();
     }
 
     // TablePaneAttribute events
 
     @Override
-    public void rowSpanChanged(TablePane tablePane, Component component, int previousRowSpan) {
+    public void rowSpanChanged(TableInput tablePane, Component component, int previousRowSpan) {
         invalidateComponent();
     }
 
     @Override
-    public void columnSpanChanged(TablePane tablePane, Component component,
+    public void columnSpanChanged(TableInput tablePane, Component component,
         int previousColumnSpan) {
         invalidateComponent();
     }

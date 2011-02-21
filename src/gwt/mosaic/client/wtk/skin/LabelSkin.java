@@ -11,8 +11,10 @@ import gwt.mosaic.client.wtk.VerticalAlignment;
 import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.TextDecoration;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasWordWrap;
@@ -21,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class LabelSkin extends ComponentSkin implements LabelListener {
 
-	public interface View extends IsWidget, HasAlignment, HasHTML, HasWordWrap {
+	public interface UI extends IsWidget, HasAlignment, HasHTML, HasWordWrap {
 
 		void setPresender(Component component);
 
@@ -65,7 +67,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	// Changed by LabelListener implementation.
 	private boolean textChanged = true;
 
-	private View widget = null;
+	private UI ui = null;
 
 	public LabelSkin() {
 		// Theme theme = Theme.getTheme();
@@ -105,12 +107,12 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 	@Override
 	public Widget getWidget() {
-		if (widget == null) {
-			widget = GWT.create(View.class);
-			widget.setPresender(getComponent());
-			widget.asWidget().addStyleName("m-Label");
+		if (ui == null) {
+			ui = GWT.create(UI.class);
+			ui.setPresender(getComponent());
+			ui.asWidget().addStyleName("m-Label");
 		}
-		return widget.asWidget();
+		return ui.asWidget();
 	}
 
 	@Override
@@ -118,7 +120,16 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		int preferredWidth;
 		if (getWidget().isAttached()) {
 			Element elem = getWidget().getElement();
-			preferredWidth = (int) Math.ceil(elem.getClientWidth());
+			String oldPosition = DOM.getStyleAttribute(elem, "position");
+			try {
+				DOM.setStyleAttribute(elem, "position", "static");
+				DOM.setStyleAttribute(elem, "width", "");
+				DOM.setStyleAttribute(elem, "height", (height < 0) ? ""
+						: (height + Unit.PX.getType()));
+				preferredWidth = (int) Math.ceil(elem.getClientWidth());
+			} finally {
+				DOM.setStyleAttribute(elem, "position", oldPosition);
+			}
 		} else {
 			preferredWidth = 0;
 
@@ -134,7 +145,16 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		int preferredHeight;
 		if (getWidget().isAttached()) {
 			Element elem = getWidget().getElement();
-			preferredHeight = (int) Math.ceil(elem.getClientHeight());
+			String oldPosition = DOM.getStyleAttribute(elem, "position");
+			try {
+				DOM.setStyleAttribute(elem, "position", "static");
+				DOM.setStyleAttribute(elem, "width", "");
+				DOM.setStyleAttribute(elem, "height", (width < 0) ? ""
+						: (width + Unit.PX.getType()));
+				preferredHeight = (int) Math.ceil(elem.getClientHeight());
+			} finally {
+				DOM.setStyleAttribute(elem, "position", oldPosition);
+			}
 		} else {
 			preferredHeight = 0;
 
@@ -152,63 +172,63 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 	@Override
 	public void paint(Widget context) {
-		View labelWidget = (View) getWidget();
+		UI ui = (UI) getWidget();
 
 		if (backgroundColorChanged) {
-			labelWidget.setBackgroundColor(backgroundColor);
+			ui.setBackgroundColor(backgroundColor);
 			backgroundColorChanged = false;
 		}
 
 		if (colorChanged) {
-			labelWidget.setColor(color);
+			ui.setColor(color);
 			colorChanged = false;
 		}
 
 		if (fontChanged) {
-			labelWidget.setFont(font);
+			ui.setFont(font);
 			fontChanged = false;
 		}
 
 		if (horizontalAlignmentChanged) {
 			if (horizontalAlignment == HorizontalAlignment.LEFT) {
-				labelWidget.setHorizontalAlignment(View.ALIGN_LEFT);
+				ui.setHorizontalAlignment(UI.ALIGN_LEFT);
 			} else if (horizontalAlignment == HorizontalAlignment.CENTER) {
-				labelWidget.setHorizontalAlignment(View.ALIGN_CENTER);
+				ui.setHorizontalAlignment(UI.ALIGN_CENTER);
 			} else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
-				labelWidget.setHorizontalAlignment(View.ALIGN_RIGHT);
+				ui.setHorizontalAlignment(UI.ALIGN_RIGHT);
 			}
 			horizontalAlignmentChanged = false;
 		}
 
 		if (paddingChanged) {
-			labelWidget.setPadding(padding);
+			ui.setPadding(padding);
 			paddingChanged = false;
 		}
 
 		if (textDecorationChanged) {
-			labelWidget.setTextDecoration(textDecoration);
+			ui.setTextDecoration(textDecoration);
 			textDecorationChanged = false;
 		}
 
 		if (verticalAlignmentChanged) {
 			if (verticalAlignment == VerticalAlignment.TOP) {
-				labelWidget.setVerticalAlignment(View.ALIGN_TOP);
+				ui.setVerticalAlignment(UI.ALIGN_TOP);
 			} else if (verticalAlignment == VerticalAlignment.CENTER) {
-				labelWidget.setVerticalAlignment(View.ALIGN_MIDDLE);
+				ui.setVerticalAlignment(UI.ALIGN_MIDDLE);
 			} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-				labelWidget.setVerticalAlignment(View.ALIGN_BOTTOM);
+				ui.setVerticalAlignment(UI.ALIGN_BOTTOM);
 			}
 			verticalAlignmentChanged = false;
 		}
 
 		if (wrapTextChanged) {
-			labelWidget.setWordWrap(wrapText);
+			ui.setWordWrap(wrapText);
 			wrapTextChanged = false;
 		}
 
 		if (textChanged) {
 			Label label = (Label) getComponent();
-			labelWidget.setHTML(label.getText());
+			ui.setHTML(label.getText());
 			textChanged = false;
 		}
 	}
@@ -241,7 +261,6 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (font == null) {
 			throw new IllegalArgumentException("font is null");
 		}
-
 		setFont(Font.decode(font));
 	}
 
@@ -249,7 +268,6 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (font == null) {
 			throw new IllegalArgumentException("font is null.");
 		}
-
 		setFont(new Font(font));
 	}
 
@@ -273,7 +291,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (color == null) {
 			throw new IllegalArgumentException("color is null.");
 		}
-		setColor(Color.decode(color, false));
+		setColor(Color.decode(color));
 	}
 
 	public Color getBackgroundColor() {
@@ -290,8 +308,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (backgroundColor == null) {
 			throw new IllegalArgumentException("backgroundColor is null");
 		}
-
-		setBackgroundColor(Color.decode(backgroundColor, true));
+		setBackgroundColor(Color.decode(backgroundColor));
 	}
 
 	public TextDecoration getTextDecoration() {
@@ -302,6 +319,10 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		this.textDecoration = textDecoration;
 		this.textDecorationChanged = true;
 		repaintComponent();
+	}
+
+	public void setTextDecoration(String textDecoration) {
+		setTextDecoration(TextDecoration.valueOf(textDecoration.toUpperCase()));
 	}
 
 	public HorizontalAlignment getHorizontalAlignment() {
@@ -324,7 +345,6 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (horizontalAlignment == null) {
 			throw new IllegalArgumentException("horizontalAlignment is null.");
 		}
-
 		setHorizontalAlignment(HorizontalAlignment.valueOf(horizontalAlignment
 				.toUpperCase()));
 	}
@@ -374,7 +394,6 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (padding == null) {
 			throw new IllegalArgumentException("padding is null.");
 		}
-
 		setPadding(new Insets(padding));
 	}
 
@@ -386,7 +405,6 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (padding == null) {
 			throw new IllegalArgumentException("padding is null.");
 		}
-
 		setPadding(padding.intValue());
 	}
 
@@ -394,7 +412,6 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (padding == null) {
 			throw new IllegalArgumentException("padding is null.");
 		}
-
 		setPadding(Insets.decode(padding));
 	}
 

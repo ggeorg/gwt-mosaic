@@ -52,7 +52,7 @@ public class BeanAdapterGenerator extends Generator {
 				implName, oracle, logger);
 		Collection<JavaBeanProperty> javaBeanProperties = writer
 				.lookupJavaBeanPropertyAccessors(writer.getBeanType());
-		
+
 		StringWriter stringWriter = new StringWriter();
 		IndentedWriter niceWriter = new IndentedWriter(new PrintWriter(
 				stringWriter));
@@ -60,9 +60,9 @@ public class BeanAdapterGenerator extends Generator {
 
 //		System.out.println("=================================");
 //		System.out.println(stringWriter.toString());
-		
+
 		printWriter.print(stringWriter.toString());
-		
+
 		writerManager.commit();
 	}
 

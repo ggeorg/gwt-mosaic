@@ -27,52 +27,52 @@ public interface TablePaneListener {
      */
     public static class Adapter implements TablePaneListener {
         @Override
-        public void rowInserted(TablePane tablePane, int index) {
+        public void rowInserted(TableInput tablePane, int index) {
         }
 
         @Override
-        public void rowsRemoved(TablePane tablePane, int index,
-            Sequence<TablePane.Row> rows) {
+        public void rowsRemoved(TableInput tablePane, int index,
+            Sequence<TableInput.Row> rows) {
         }
 
         @Override
-        public void rowHeightChanged(TablePane.Row row, int previousHeight,
+        public void rowHeightChanged(TableInput.Row row, int previousHeight,
             boolean previousRelative) {
         }
 
         @Override
-        public void rowHighlightedChanged(TablePane.Row row) {
+        public void rowHighlightedChanged(TableInput.Row row) {
         }
 
         @Override
-        public void columnInserted(TablePane tablePane, int index) {
+        public void columnInserted(TableInput tablePane, int index) {
         }
 
         @Override
-        public void columnsRemoved(TablePane tablePane, int index,
-            Sequence<TablePane.Column> columns) {
+        public void columnsRemoved(TableInput tablePane, int index,
+            Sequence<TableInput.Column> columns) {
         }
 
         @Override
-        public void columnWidthChanged(TablePane.Column column, int previousWidth,
+        public void columnWidthChanged(TableInput.Column column, int previousWidth,
             boolean previousRelative) {
         }
 
         @Override
-        public void columnHighlightedChanged(TablePane.Column column) {
+        public void columnHighlightedChanged(TableInput.Column column) {
         }
 
         @Override
-        public void cellInserted(TablePane.Row row, int column) {
+        public void cellInserted(TableInput.Row row, int column) {
         }
 
         @Override
-        public void cellsRemoved(TablePane.Row row, int column,
+        public void cellsRemoved(TableInput.Row row, int column,
             Sequence<Component> removed) {
         }
 
         @Override
-        public void cellUpdated(TablePane.Row row, int column,
+        public void cellUpdated(TableInput.Row row, int column,
             Component previousComponent) {
         }
     }
@@ -83,7 +83,7 @@ public interface TablePaneListener {
      * @param tablePane
      * @param index
      */
-    public void rowInserted(TablePane tablePane, int index);
+    public void rowInserted(TableInput tablePane, int index);
 
     /**
      * Called when rows have been removed from a table pane.
@@ -92,8 +92,8 @@ public interface TablePaneListener {
      * @param index
      * @param rows
      */
-    public void rowsRemoved(TablePane tablePane, int index,
-        Sequence<TablePane.Row> rows);
+    public void rowsRemoved(TableInput tablePane, int index,
+        Sequence<TableInput.Row> rows);
 
     /**
      * Called when a row's height has changed.
@@ -102,7 +102,7 @@ public interface TablePaneListener {
      * @param previousHeight
      * @param previousRelative
      */
-    public void rowHeightChanged(TablePane.Row row, int previousHeight,
+    public void rowHeightChanged(TableInput.Row row, int previousHeight,
         boolean previousRelative);
 
     /**
@@ -110,7 +110,7 @@ public interface TablePaneListener {
      *
      * @param row
      */
-    public void rowHighlightedChanged(TablePane.Row row);
+    public void rowHighlightedChanged(TableInput.Row row);
 
     /**
      * Called when a column has been inserted into a table pane.
@@ -118,7 +118,7 @@ public interface TablePaneListener {
      * @param tablePane
      * @param index
      */
-    public void columnInserted(TablePane tablePane, int index);
+    public void columnInserted(TableInput tablePane, int index);
 
     /**
      * Called when column's have been removed from a table pane.
@@ -127,8 +127,8 @@ public interface TablePaneListener {
      * @param index
      * @param columns
      */
-    public void columnsRemoved(TablePane tablePane, int index,
-        Sequence<TablePane.Column> columns);
+    public void columnsRemoved(TableInput tablePane, int index,
+        Sequence<TableInput.Column> columns);
 
     /**
      * Called when a column's width has changed.
@@ -137,7 +137,7 @@ public interface TablePaneListener {
      * @param previousWidth
      * @param previousRelative
      */
-    public void columnWidthChanged(TablePane.Column column, int previousWidth,
+    public void columnWidthChanged(TableInput.Column column, int previousWidth,
         boolean previousRelative);
 
     /**
@@ -145,7 +145,7 @@ public interface TablePaneListener {
      *
      * @param column
      */
-    public void columnHighlightedChanged(TablePane.Column column);
+    public void columnHighlightedChanged(TableInput.Column column);
 
     /**
      * Called when a cell has been inserted into a table pane.
@@ -153,7 +153,7 @@ public interface TablePaneListener {
      * @param row
      * @param column
      */
-    public void cellInserted(TablePane.Row row, int column);
+    public void cellInserted(TableInput.Row row, int column);
 
     /**
      * Called when cell's have been removed from a table pane.
@@ -162,7 +162,7 @@ public interface TablePaneListener {
      * @param column
      * @param removed
      */
-    public void cellsRemoved(TablePane.Row row, int column,
+    public void cellsRemoved(TableInput.Row row, int column,
         Sequence<Component> removed);
 
     /**
@@ -172,6 +172,6 @@ public interface TablePaneListener {
      * @param column
      * @param previousComponent
      */
-    public void cellUpdated(TablePane.Row row, int column,
+    public void cellUpdated(TableInput.Row row, int column,
         Component previousComponent);
 }

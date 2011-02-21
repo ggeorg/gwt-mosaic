@@ -25,12 +25,12 @@ public interface TablePaneAttributeListener {
      */
     public static class Adapter implements TablePaneAttributeListener {
         @Override
-        public void rowSpanChanged(TablePane tablePane, Component component,
+        public void rowSpanChanged(TableInput tablePane, Component component,
             int previousRowSpan) {
         }
 
         @Override
-        public void columnSpanChanged(TablePane tablePane, Component component,
+        public void columnSpanChanged(TableInput tablePane, Component component,
             int previousColumnSpan) {
         }
     }
@@ -41,7 +41,7 @@ public interface TablePaneAttributeListener {
      * @param component
      * @param previousRowSpan
      */
-    public void rowSpanChanged(TablePane tablePane, Component component,
+    public void rowSpanChanged(TableInput tablePane, Component component,
         int previousRowSpan);
 
     /**
@@ -51,6 +51,6 @@ public interface TablePaneAttributeListener {
      * @param component
      * @param previousColumnSpan
      */
-    public void columnSpanChanged(TablePane tablePane, Component component,
+    public void columnSpanChanged(TableInput tablePane, Component component,
         int previousColumnSpan);
 }

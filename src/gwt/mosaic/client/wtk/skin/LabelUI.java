@@ -20,11 +20,11 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasWordWrap;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LabelView extends Composite implements LabelSkin.View,
+public class LabelUI extends Composite implements LabelSkin.UI,
 		HasAlignment, HasHTML, HasWordWrap {
 	private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-	interface MyUiBinder extends UiBinder<Widget, LabelView> {
+	interface MyUiBinder extends UiBinder<Widget, LabelUI> {
 	}
 
 	@UiField
@@ -34,7 +34,7 @@ public class LabelView extends Composite implements LabelSkin.View,
 
 	private Component presender;
 
-	LabelView() {
+	LabelUI() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		setWordWrap(false);
