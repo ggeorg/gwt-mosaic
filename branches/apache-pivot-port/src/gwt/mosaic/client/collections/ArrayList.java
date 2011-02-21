@@ -305,6 +305,10 @@ public class ArrayList<T> implements List<T>, Serializable {
 
 		// Remove items
 		if (count > 0) {
+			
+			if(!items.removeAll(removedItems)) {
+				return null; // TODO check if I should return 'null' or an empty sequence
+			}
 
 			modificationCount++;
 

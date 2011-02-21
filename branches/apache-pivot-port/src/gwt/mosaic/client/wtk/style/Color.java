@@ -195,12 +195,8 @@ public class Color {
 		return impl.toString(r, g, b, alpha);
 	}
 
-	public static Color decode(String color, boolean backgroundColor) {
-		if (backgroundColor) {
-			return impl.parse(color);
-		} else {
-			return impl.parse(color);
-		}
+	public static Color decode(String color) {
+		return impl.parse(color);
 	}
 
 }

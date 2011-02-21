@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
-	<replace-with class="gwt.mosaic.client.wtk.skin.LabelView">
-		<when-type-is class="gwt.mosaic.client.wtk.skin.LabelSkin.View" />
+	<replace-with class="gwt.mosaic.client.wtk.skin.LabelUI">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.LabelSkin.UI" />
+	</replace-with>
+	
+	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTextInputUI">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTextInputSkin.UI" />
 	</replace-with>
 	
 	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTheme">

@@ -18,6 +18,9 @@ package gwt.mosaic.client.wtk;
 
 import java.util.Iterator;
 
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -71,5 +74,82 @@ public class ApplicationContext {
 		public boolean remove(Widget w) {
 			return panel.remove(w);
 		}
+
+		public void processKeyDownEvent(KeyDownEvent event) {
+			Component focusedComponent = Component.getFocusedComponent();
+
+			boolean consumed = false;
+
+			int keyCode = event.getNativeKeyCode();
+
+			// Get the key location
+			Keyboard.KeyLocation keyLocation = Keyboard.KeyLocation.STANDARD;
+			try {
+				if (!focusedComponent.isBlocked()) {
+					consumed = focusedComponent
+							.keyPressed(keyCode, keyLocation);
+				}
+			} catch (Exception exception) {
+				handleUncaughtException(exception);
+			}
+
+			if (consumed) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+		}
+
+		public void processKeyUpEvent(KeyUpEvent event) {
+			Component focusedComponent = Component.getFocusedComponent();
+
+			boolean consumed = false;
+
+			int keyCode = event.getNativeKeyCode();
+
+			// Get the key location
+			Keyboard.KeyLocation keyLocation = Keyboard.KeyLocation.STANDARD;
+			// TODO if (dragDescendant == null) {
+			try {
+				if (focusedComponent != null) {
+					if (!focusedComponent.isBlocked()) {
+						consumed = focusedComponent.keyReleased(keyCode,
+								keyLocation);
+					}
+				}
+			} catch (Exception exception) {
+				handleUncaughtException(exception);
+			}
+
+			if (consumed) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+		}
+
+		public void processKeyPressEvent(KeyPressEvent event) {
+			Component focusedComponent = Component.getFocusedComponent();
+
+			boolean consumed = false;
+
+			char keyChar = event.getCharCode();
+
+			try {
+				if (focusedComponent != null) {
+					if (!focusedComponent.isBlocked()) {
+						consumed = focusedComponent.keyTyped(keyChar);
+					}
+				}
+			} catch (Exception exception) {
+				handleUncaughtException(exception);
+			}
+
+			if (consumed) {
+				event.stopPropagation();
+			}
+		}
+	}
+
+	private static void handleUncaughtException(Exception exception) {
+		throw new UnsupportedOperationException("TODO", exception);
 	}
 }

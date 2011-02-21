@@ -25,7 +25,7 @@ import java.util.Comparator;
 /**
  * Class for monitoring Java bean property changes.
  */
-public class BeanMonitor<T> {
+public class BeanMonitor {
 	private class PropertyChangeListenerList extends
 			ListenerList<PropertyChangeListener> implements
 			PropertyChangeListener {
@@ -56,9 +56,9 @@ public class BeanMonitor<T> {
 		}
 	}
 
-	private final BeanAdapter<T> bean;
+	private final BeanAdapter<?> bean;
 
-	private final PropertyChangeListenerList propertyChangeListenerList = new PropertyChangeListenerList();
+	private final PropertyChangeListenerList propertyChangeListeners = new PropertyChangeListenerList();
 	private final MapListener<String, Object> mapListener = new MapListener<String, Object>() {
 		@Override
 		public void valueAdded(Map<String, Object> map, String key) {
@@ -68,7 +68,7 @@ public class BeanMonitor<T> {
 		@Override
 		public void valueUpdated(Map<String, Object> map, String key,
 				Object previousValue) {
-			propertyChangeListenerList.propertyChanged(bean, key);
+			propertyChangeListeners.propertyChanged(bean, key);
 		}
 
 		@Override
@@ -89,14 +89,18 @@ public class BeanMonitor<T> {
 		}
 	};
 
-	public BeanMonitor(BeanAdapter<T> bean) {
+	public BeanMonitor(BeanAdapter<?> bean) {
+		if (bean == null) {
+            throw new IllegalArgumentException();
+        }
+		
 		this.bean = bean;
 	}
 
 	/**
 	 * Returns the bean object that this monitor wraps.
 	 */
-	public BeanAdapter<T> getBean() {
+	public BeanAdapter<?> getBean() {
 		return bean;
 	}
 
@@ -110,7 +114,7 @@ public class BeanMonitor<T> {
 	 *         otherwise.
 	 */
 	public boolean isNotifying(String key) {
-		return !bean.isReadOnly(key);
+		return !bean.isReadOnly(key); // TODO ----------------------------
 	}
 
 	/**
@@ -134,9 +138,9 @@ public class BeanMonitor<T> {
 
 		listenersMap.remove(mapListener);
 	}
-
-	public PropertyChangeListenerList getPropertyChangeListenerList() {
-		return propertyChangeListenerList;
-	}
+	
+	public ListenerList<PropertyChangeListener> getPropertyChangeListeners() {
+        return propertyChangeListeners;
+    }
 
 }

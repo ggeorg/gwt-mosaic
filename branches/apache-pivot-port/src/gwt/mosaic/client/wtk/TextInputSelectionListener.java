@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gwt.mosaic.client.beans;
-
-import gwt.mosaic.client.collections.Map;
-
-import java.util.Iterator;
+package gwt.mosaic.client.wtk;
 
 /**
- * @param <T>
- *            The Java bean type.
+ * Text input selection listener interface.
  */
-public interface BeanAdapter<T> extends Map<String, Object> {
-
-	public T getBean();
-
-	public void setBean(T bean);
-
-	public boolean isReadOnly(String key);
-
-	public Iterator<String> getNotifyingProperties();
-
-	public Class<?> getType(String key);
-
+public interface TextInputSelectionListener {
+	/**
+	 * Called when a text input's selection state has changed.
+	 * 
+	 * @param textInput
+	 *            The source of the event.
+	 * 
+	 * @param previousSelectionStart
+	 *            If the selection changed directly, the previous selection
+	 *            start index. Otherwise, the current selection start index.
+	 * 
+	 * @param previousSelectionLength
+	 *            If the selection changed directly, the previous selection
+	 *            length. Otherwise, the current selection length.
+	 */
+	public void selectionChanged(TextInput textInput,
+			int previousSelectionStart, int previousSelectionLength);
 }

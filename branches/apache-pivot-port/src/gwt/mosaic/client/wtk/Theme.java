@@ -17,6 +17,7 @@
 package gwt.mosaic.client.wtk;
 
 import gwt.mosaic.client.beans.BeanAdapter;
+import gwt.mosaic.client.collections.ArrayList;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.wtk.skin.BoxPaneSkin;
 import gwt.mosaic.client.wtk.skin.FlowPaneSkin;
@@ -29,6 +30,7 @@ import gwt.mosaic.client.wtk.skin.StackPaneSkin;
 import gwt.mosaic.client.wtk.skin.TablePaneFillerSkin;
 import gwt.mosaic.client.wtk.skin.TablePaneSkin;
 import gwt.mosaic.client.wtk.skin.WindowSkin;
+import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.core.client.GWT;
 
@@ -45,10 +47,104 @@ import com.google.gwt.core.client.GWT;
  * own skin, which will result in the addition of duplicate listeners.
  */
 public abstract class Theme {
+
 	public static final String NAME_KEY = "name";
 	public static final String SIZE_KEY = "size";
 	public static final String BOLD_KEY = "bold";
 	public static final String ITALIC_KEY = "italic";
+
+	/** Active window border. */
+	public static final int ACTIVE_BORDER_COLOR = 0;
+
+	/** Active window caption. */
+	public static final int ACTIVE_CAPTION_COLOR = 1;
+
+	/** Background color of multiple document interface. */
+	public static final int ACTIVE_WORKSPACE_COLOR = 2;
+
+	/** Desktop background. */
+	public static final int BACKGROUND_COLOR = 3;
+
+	/** Face color for three-dimensional display elements. */
+	public static final int BUTTON_FACE_COLOR = 4;
+
+	/**
+	 * Dark shadow for three-dimensional display elements (for edges facing away
+	 * from the light source).
+	 */
+	public static final int BUTTON_HIGHLIGHT_COLOR = 5;
+
+	/** Shadow color for three-dimensional display elements. */
+	public static final int BUTTON_SHADOW_COLOR = 6;
+
+	/** Text on push buttons. */
+	public static final int BUTTON_TEXT_COLOR = 7;
+
+	/** Text in caption, size box, and scrollbar arrow box. */
+	public static final int CAPTION_TEXT_COLOR = 8;
+
+	/**
+	 * Grayed (disabled) text. This color is set to #000 if the current display
+	 * driver does not support a solid gray color.
+	 */
+	public static final int GRAY_TEXT_COLOR = 9;
+
+	/** Item(s) selected in a control. */
+	public static final int HIGHLIGHT_COLOR = 10;
+
+	/** Text of item(s) selected in a control. */
+	public static final int HIGHLIGHT_TEXT_COLOR = 11;
+
+	/** Inactive window border. */
+	public static final int INACTIVE_BORDER_COLOR = 12;
+
+	/** Inactive window caption. */
+	public static final int INACTIVE_CAPTION_COLOR = 13;
+
+	/** Color of text in an inactive caption. */
+	public static final int INACTIVE_CAPTION_TEXT_COLOR = 14;
+
+	/** Background color for tooltip controls. */
+	public static final int INFO_BACKGROUND_COLOR = 15;
+
+	/** Text color for tooltip controls. */
+	public static final int INFO_TEXT_COLOR = 16;
+
+	/** Menu background. */
+	public static final int MENU_COLOR = 17;
+
+	/** Text in menus. */
+	public static final int MENU_TEXT_COLOR = 18;
+
+	/** Scroll bar gray area. */
+	public static final int SCROLLBAR_COLOR = 19;
+
+	/** Dark shadow for three-dimensional display elements. */
+	public static final int THREE_D_DARK_SHADOW_COLOR = 20;
+
+	/** Face color for three-dimensional display elements. */
+	public static final int THREE_D_FACE_COLOR = 21;
+
+	/** Highlight color for three-dimensional display elements. */
+	public static final int THREE_D_HIGHLIGHT_COLOR = 22;
+
+	/**
+	 * Light color for three-dimensional display elements (for edges facing the
+	 * light source).
+	 */
+	public static final int THREE_D_LIGHT_SHADOW_COLOR = 23;
+
+	/** Dark shadow for three-dimensional display elements. */
+	public static final int THREE_D_SHADOW_COLOR = 24;
+
+	/** Window background. */
+	public static final int WINDOW_COLOR = 25;
+
+	/** Window frame. */
+	public static final int WINDOW_FRAME_COLOR = 26;
+
+	/** Text in windows. */
+	public static final int WINDOW_TEXT_COLOR = 27;
 
 	// ---------------------------------------------------------------------
 	private static Theme theme = GWT.create(Theme.class);
@@ -108,7 +204,9 @@ public abstract class Theme {
 		BeanAdapter<T> create();
 	}
 
-	protected HashMap<Class<? extends Component>, BeanAdapterFactory<? extends Skin>> componentSkinMap = new HashMap<Class<? extends Component>, BeanAdapterFactory<? extends Skin>>();
+	protected final HashMap<Class<? extends Component>, BeanAdapterFactory<? extends Skin>> componentSkinMap = new HashMap<Class<? extends Component>, BeanAdapterFactory<? extends Skin>>();
+
+	protected final ArrayList<Color> colors = new ArrayList<Color>();
 
 	public Theme() {
 		// componentSkinMap.put(Border.class, BorderSkin.class);
@@ -196,7 +294,7 @@ public abstract class Theme {
 						return adapter;
 					}
 				});
-		componentSkinMap.put(TablePane.class,
+		componentSkinMap.put(TableInput.class,
 				new BeanAdapterFactory<TablePaneSkin>() {
 					@Override
 					public BeanAdapter<TablePaneSkin> create() {
@@ -206,7 +304,7 @@ public abstract class Theme {
 						return adapter;
 					}
 				});
-		componentSkinMap.put(TablePane.Filler.class,
+		componentSkinMap.put(TableInput.Filler.class,
 				new BeanAdapterFactory<TablePaneFillerSkin>() {
 					@Override
 					public BeanAdapter<TablePaneFillerSkin> create() {
@@ -309,4 +407,13 @@ public abstract class Theme {
 	//
 	// return new Font(name, style, size);
 	// }
+	
+	/**
+     * Gets a value from the theme's color palette.
+     *
+     * @param index
+     */
+    public Color getColor(int index) {
+        return colors.get(index);
+    }
 }

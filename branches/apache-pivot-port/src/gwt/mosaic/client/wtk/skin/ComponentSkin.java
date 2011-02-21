@@ -28,6 +28,7 @@ import gwt.mosaic.client.wtk.Cursor;
 import gwt.mosaic.client.wtk.Dimensions;
 import gwt.mosaic.client.wtk.DragSource;
 import gwt.mosaic.client.wtk.DropTarget;
+import gwt.mosaic.client.wtk.FocusTraversalDirection;
 import gwt.mosaic.client.wtk.Keyboard;
 import gwt.mosaic.client.wtk.Keyboard.KeyCode;
 import gwt.mosaic.client.wtk.Keyboard.Modifier;
@@ -36,8 +37,10 @@ import gwt.mosaic.client.wtk.Mouse;
 import gwt.mosaic.client.wtk.Skin;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ComponentSkin implements Skin, ComponentListener,
@@ -91,11 +94,11 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 		assert (this.component == null) : "Skin is already installed on a component.";
 
 		component.getComponentListeners().add(this);
-		// component.getComponentStateListeners().add(this);
-		// component.getComponentMouseListeners().add(this);
-		// component.getComponentMouseButtonListeners().add(this);
-		// component.getComponentMouseWheelListeners().add(this);
-		// component.getComponentKeyListeners().add(this);
+		component.getComponentStateListeners().add(this);
+		component.getComponentMouseListeners().add(this);
+		component.getComponentMouseButtonListeners().add(this);
+		component.getComponentMouseWheelListeners().add(this);
+		component.getComponentKeyListeners().add(this);
 		// component.getComponentTooltipListeners().add(this);
 
 		this.component = component;
@@ -228,7 +231,11 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 	@Override
 	public void focusedChanged(Component component, Component obverseComponent) {
-		// No-op
+		// TODO check again Component focus
+		// Widget widget = getWidget();
+		// if ((widget != null) && (widget instanceof Focusable)) {
+		// ((Focusable) widget).setFocus(getComponent().isFocused());
+		// }
 	}
 
 	// Component mouse events
@@ -284,7 +291,30 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 	@Override
 	public boolean keyPressed(Component component, int keyCode,
 			Keyboard.KeyLocation keyLocation) {
-		throw new UnsupportedOperationException();
+		boolean consumed = false;
+
+		// if (keyCode == KeyCodes.KEY_TAB && getComponent().isFocused()) {
+		//
+		// FocusTraversalDirection direction = (Keyboard
+		// .isPressed(Keyboard.Modifier.SHIFT)) ?
+		// FocusTraversalDirection.BACKWARD
+		// : FocusTraversalDirection.FORWARD;
+		//
+		// // Transfer focus to the next component
+		// Component focusedComponent = component.transferFocus(direction);
+		//
+		// // Ensure that the focused component is visible
+		// if (component != focusedComponent && focusedComponent != null) {
+		// // TODO Scroll area to visible.
+		// // focusedComponent.scrollAreaToVisible(0, 0,
+		// // focusedComponent.getWidth(),
+		// // focusedComponent.getHeight());
+		// }
+		//
+		// consumed = true;
+		// }
+
+		return consumed;
 	}
 
 	@Override

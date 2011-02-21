@@ -1,6 +1,14 @@
 <Window title="Hello BXML!" maximized="true"
 	xmlns:bxml="http://pivot.apache.org/bxml" xmlns="gwt.mosaic.client.wtk">
-	<Label text="Hello BXML!"
-		styles="{ font:{ weight:'bold', style:'italic', size:32 }, color:'#ff0000',
-            horizontalAlignment:'center', verticalAlignment:'center' }" />
+	
+	<Label text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+		styles="{ 
+			font: { weight: 'bold', style: 'italic', size: 32, family: 'Verdana' }, 
+			color: '#ff0000',
+            horizontalAlignment: 'center', 
+            verticalAlignment: 'center', 
+            textDecoration: 'underline',
+            wrapText: true
+            }" />
+
 </Window>

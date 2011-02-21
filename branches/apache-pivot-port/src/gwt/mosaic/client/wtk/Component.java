@@ -840,12 +840,9 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 	protected void installSkin(Class<? extends Component> componentClass) {
 		if (GWT.isClient()) {
 			// Walk up component hierarchy from this type; if we find a match
-			// and
-			// the super class equals the given component class, install the
-			// skin.
-			// Otherwise, ignore - it will be installed later by a subclass of
-			// the
-			// component class.
+			// and the super class equals the given component class, install the
+			// skin. Otherwise, ignore - it will be installed later by a
+			// subclass of the component class.
 			Class<? extends Component> type = getClass();
 
 			Theme theme = Theme.getTheme();
@@ -2106,7 +2103,27 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 	 *         <tt>false</tt>, otherwise.
 	 */
 	public boolean isFocusable() {
-		throw new UnsupportedOperationException();
+		boolean focusable = skin.isFocusable();
+
+		if (focusable) {
+			Component component = this;
+
+			while (focusable && component != null
+					&& !(component instanceof Window)) {
+				focusable = component.isVisible() && isEnabled();
+
+				component = component.getParent();
+				focusable &= component != null;
+			}
+
+			if (focusable) {
+				Window window = (Window) component;
+				focusable = window.isVisible() && window.isEnabled()
+						&& window.isOpen() && !window.isClosing();
+			}
+		}
+
+		return focusable;
 	}
 
 	/**
@@ -2147,7 +2164,17 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 	 *         otherwise.
 	 */
 	public boolean requestFocus() {
-		throw new UnsupportedOperationException();
+		if (isFocusable()) {
+			setFocusedComponent(this);
+
+			// XXX ApplicationContext.DisplayHost displayHost =
+			// getDisplay().getDisplayHost();
+			// if (!displayHost.isFocusOwner()) {
+			// displayHost.requestFocusInWindow();
+			// }
+		}
+
+		return isFocused();
 	}
 
 	/**
