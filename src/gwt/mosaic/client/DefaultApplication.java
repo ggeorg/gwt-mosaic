@@ -6,14 +6,13 @@ import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.beans.NamespaceBinding;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.Map;
-import gwt.mosaic.client.util.Vote;
 import gwt.mosaic.client.wtk.Application;
 import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Display;
+import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.Label;
 import gwt.mosaic.client.wtk.Orientation;
 import gwt.mosaic.client.wtk.TextInput;
-import gwt.mosaic.client.wtk.TextInputContentListener;
 import gwt.mosaic.client.wtk.Window;
 import gwt.mosaic.client.wtk.style.Color;
 
@@ -26,7 +25,12 @@ public class DefaultApplication implements Application {
 
 	interface LabelBeanAdapter extends BeanAdapter<Label> {
 	}
-
+	
+	static {
+		GWT.create(TextInputBeanAdapter.class);
+		GWT.create(LabelBeanAdapter.class);
+	}
+	
 	@SuppressWarnings("unused")
 	private static BXMLSerializerServiceAsync rpc = GWT
 			.create(BXMLSerializerService.class);
@@ -45,63 +49,11 @@ public class DefaultApplication implements Application {
 		textInput.setPrompt("Name");
 		pane.add(textInput);
 
-		textInput.getTextInputContentListeners().add(
-				new TextInputContentListener() {
-					@Override
-					public Vote previewInsertText(TextInput textInput,
-							CharSequence text, int index) {
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public void insertTextVetoed(TextInput textInput,
-							Vote reason) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void textInserted(TextInput textInput, int index,
-							int count) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public Vote previewRemoveText(TextInput textInput,
-							int index, int count) {
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public void removeTextVetoed(TextInput textInput,
-							Vote reason) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void textRemoved(TextInput textInput, int index,
-							int count) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void textChanged(TextInput textInput) {
-						System.out.println("::::::::::::::::"+textInput);
-					}
-				});
-
 		Label label = new Label();
 		label.setText("");
-		label.getStyles().put("backgroundColor", Color.YELLOW);
+		label.getStyles().put("backgroundColor", Color.GRAY);
+		label.getStyles().put("font", Font.decode("{size: 48}"));
 		pane.add(label);
-
-		GWT.create(TextInputBeanAdapter.class);
-		GWT.create(LabelBeanAdapter.class);
 
 		Map<String, Object> namespace = new HashMap<String, Object>();
 		namespace.put("textInput1", textInput);

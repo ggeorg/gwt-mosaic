@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import gwt.mosaic.client.collections.HashMap;
+import gwt.mosaic.client.collections.HashSet;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.collections.MapListener;
 import gwt.mosaic.client.util.ImmutableIterator;
@@ -35,7 +36,36 @@ import gwt.mosaic.client.util.ListenerList;
  * determined by the type of the value being set. If the value is <tt>null</tt>,
  * the return type of the getter method is used.
  */
-public class AbstractBeanAdapter<T> implements BeanAdapter<T> {
+public abstract class AbstractBeanAdapter<T> implements BeanAdapter<T> {
+	protected class PropertyChangeListenerList extends
+			ListenerList<PropertyChangeListener> implements
+			PropertyChangeListener {
+
+		@Override
+		public void add(PropertyChangeListener listener) {
+			if (isEmpty()) {
+				registerBeanListeners();
+			}
+
+			super.add(listener);
+		}
+
+		@Override
+		public void remove(PropertyChangeListener listener) {
+			super.remove(listener);
+
+			if (isEmpty()) {
+				unregisterBeanListeners();
+			}
+		}
+
+		@Override
+		public void propertyChanged(Object bean, String propertyName) {
+			for (PropertyChangeListener listener : this) {
+				listener.propertyChanged(bean, propertyName);
+			}
+		}
+	}
 
 	/**
 	 * Property iterator. Returns a value for each getter method and public,
@@ -44,12 +74,18 @@ public class AbstractBeanAdapter<T> implements BeanAdapter<T> {
 	protected abstract class PropertyIterator implements Iterator<String> {
 	}
 
-	private T bean;
+	protected T bean;
 
-	private MapListenerList<String, Object> mapListeners = new MapListenerList<String, Object>();
+	protected final HashMap<String, GetterMethod> getterMap = new HashMap<String, GetterMethod>();
+	protected final HashMap<String, SetterMethod> setterMap = new HashMap<String, SetterMethod>();
 
-	protected HashMap<String, GetterMethod> getterMap = new HashMap<String, GetterMethod>();
-	protected HashMap<String, SetterMethod> setterMap = new HashMap<String, SetterMethod>();
+	protected final HashSet<String> notifyingProperties = new HashSet<String>();
+
+	protected final HashMap<Class<?>, Object> beanListenerProxies = new HashMap<Class<?>, Object>();
+
+	protected final PropertyChangeListenerList propertyChangeListeners = new PropertyChangeListenerList();
+	
+	private final MapListenerList<String, Object> mapListeners = new MapListenerList<String, Object>();
 
 	/**
 	 * Creates a new bean dictionary.
@@ -267,11 +303,22 @@ public class AbstractBeanAdapter<T> implements BeanAdapter<T> {
 
 	@Override
 	public Iterator<String> getNotifyingProperties() {
-		return new ImmutableIterator<String>(setterMap.iterator());
+		return new ImmutableIterator<String>(notifyingProperties.iterator());
 	}
 
 	@Override
 	public Class<?> getType(String key) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public boolean isNotifying(String key) {
+		return notifyingProperties.contains(key);
+	}
+
+	@Override
+	public ListenerList<PropertyChangeListener> getPropertyChangeListeners() {
+		return propertyChangeListeners;
+	}
+
 }

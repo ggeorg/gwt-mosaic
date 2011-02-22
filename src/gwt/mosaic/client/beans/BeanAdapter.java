@@ -17,6 +17,7 @@
 package gwt.mosaic.client.beans;
 
 import gwt.mosaic.client.collections.Map;
+import gwt.mosaic.client.util.ListenerList;
 
 import java.util.Iterator;
 
@@ -35,5 +36,21 @@ public interface BeanAdapter<T> extends Map<String, Object> {
 	public Iterator<String> getNotifyingProperties();
 
 	public Class<?> getType(String key);
+
+	public boolean isNotifying(String key);
+
+	/**
+	 * Registers event listeners on the bean so that the dictionary can fire
+	 * property change events and report which properties can fire change
+	 * events.
+	 */
+	public void registerBeanListeners();
+
+	/**
+	 * Un-registers event listeners on the bean.
+	 */
+	public void unregisterBeanListeners();
+
+	public ListenerList<PropertyChangeListener> getPropertyChangeListeners();
 
 }

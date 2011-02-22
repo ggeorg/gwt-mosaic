@@ -96,6 +96,30 @@ public abstract class BeanAdapterFactory<T> {
 				public Class<?> getType(String key) {
 					throw new UnsupportedOperationException();
 				}
+
+				@Override
+				public boolean isNotifying(String key) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+
+				@Override
+				public void registerBeanListeners() {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void unregisterBeanListeners() {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public ListenerList<PropertyChangeListener> getPropertyChangeListeners() {
+					// TODO Auto-generated method stub
+					return null;
+				}
 			};
 			adapter.setBean((Map<?, ?>) value);
 

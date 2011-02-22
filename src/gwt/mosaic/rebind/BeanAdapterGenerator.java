@@ -1,10 +1,7 @@
 package gwt.mosaic.rebind;
 
-import gwt.mosaic.rebind.BeanAdapterWriter.JavaBeanProperty;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collection;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -50,13 +47,14 @@ public class BeanAdapterGenerator extends Generator {
 
 		BeanAdapterWriter writer = new BeanAdapterWriter(interfaceType,
 				implName, oracle, logger);
-		Collection<JavaBeanProperty> javaBeanProperties = writer
-				.lookupJavaBeanPropertyAccessors(writer.getBeanType());
+
+		writer.lookupJavaBeanPropertyAccessors(writer.getBeanType());
+		writer.lookupNotifyingProperties(writer.getBeanType());
 
 		StringWriter stringWriter = new StringWriter();
 		IndentedWriter niceWriter = new IndentedWriter(new PrintWriter(
 				stringWriter));
-		writer.writeBeanAdapter(niceWriter, javaBeanProperties);
+		writer.writeBeanAdapter(niceWriter);
 
 //		System.out.println("=================================");
 //		System.out.println(stringWriter.toString());
