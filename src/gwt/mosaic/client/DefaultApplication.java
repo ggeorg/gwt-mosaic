@@ -2,7 +2,6 @@ package gwt.mosaic.client;
 
 import gwt.mosaic.client.beans.BXMLSerializerService;
 import gwt.mosaic.client.beans.BXMLSerializerServiceAsync;
-import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.beans.NamespaceBinding;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.Map;
@@ -19,17 +18,6 @@ import gwt.mosaic.client.wtk.style.Color;
 import com.google.gwt.core.client.GWT;
 
 public class DefaultApplication implements Application {
-
-	interface TextInputBeanAdapter extends BeanAdapter<TextInput> {
-	}
-
-	interface LabelBeanAdapter extends BeanAdapter<Label> {
-	}
-	
-	static {
-		GWT.create(TextInputBeanAdapter.class);
-		GWT.create(LabelBeanAdapter.class);
-	}
 	
 	@SuppressWarnings("unused")
 	private static BXMLSerializerServiceAsync rpc = GWT

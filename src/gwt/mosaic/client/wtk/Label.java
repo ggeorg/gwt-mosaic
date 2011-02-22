@@ -17,11 +17,13 @@
 package gwt.mosaic.client.wtk;
 
 import gwt.mosaic.client.util.ListenerList;
+import gwt.mosaic.shared.beans.Bean;
 
 /**
  * Component that displays a string of text.
  */
 @SuppressWarnings("serial")
+@Bean
 public class Label extends Component {
 	/**
 	 * Translates between text and context data during data binding.

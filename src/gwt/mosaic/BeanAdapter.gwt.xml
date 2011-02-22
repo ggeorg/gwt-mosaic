@@ -3,4 +3,7 @@
 	<generate-with class="gwt.mosaic.rebind.BeanAdapterGenerator">
 		<when-type-assignable class="gwt.mosaic.client.beans.BeanAdapter" />
 	</generate-with>
+	<generate-with class="gwt.mosaic.rebind.BeanAdapterFactoryGenerator">
+		<when-type-assignable class="gwt.mosaic.client.beans.BeanAdapterFactory" />
+	</generate-with>
 </module>

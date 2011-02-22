@@ -304,9 +304,9 @@ class BeanAdapterWriter {
 		writeClassOpen(w);
 		w.indent();
 
-		w.newline();
-		writeBeanAdapterFactoryRegistration(w);
-		w.newline();
+//		w.newline();
+//		writeBeanAdapterFactoryRegistration(w);
+//		w.newline();
 
 		// default constructor
 		w.write("public %s() {", implClassName);
@@ -449,30 +449,30 @@ class BeanAdapterWriter {
 		}
 	}
 
-	private void writeBeanAdapterFactoryRegistration(IndentedWriter w) {
-		w.write("static {");
-		w.indent();
-		w.write("BeanAdapterFactory.register(%s.class, new BeanAdapterFactory<%s>() {",
-				beanType.getParameterizedQualifiedSourceName(),
-				beanType.getParameterizedQualifiedSourceName());
-		w.indent();
-		w.write("@Override");
-		w.write("protected BeanAdapter<%s> create(Object value) {",
-				beanType.getParameterizedQualifiedSourceName());
-		w.indent();
-		w.write("BeanAdapter<%s> adapter = GWT.create(%s.class);",
-				beanType.getParameterizedQualifiedSourceName(),
-				baseClass.getParameterizedQualifiedSourceName());
-		w.write("adapter.setBean((%s)value);",
-				beanType.getParameterizedQualifiedSourceName());
-		w.write("return adapter;");
-		w.outdent();
-		w.write("}");
-		w.outdent();
-		w.write("});");
-		w.outdent();
-		w.write("}");
-	}
+//	private void writeBeanAdapterFactoryRegistration(IndentedWriter w) {
+//		w.write("static {");
+//		w.indent();
+//		w.write("BeanAdapterFactory.register(%s.class, new BeanAdapterFactory<%s>() {",
+//				beanType.getParameterizedQualifiedSourceName(),
+//				beanType.getParameterizedQualifiedSourceName());
+//		w.indent();
+//		w.write("@Override");
+//		w.write("protected BeanAdapter<%s> create(Object value) {",
+//				beanType.getParameterizedQualifiedSourceName());
+//		w.indent();
+//		w.write("BeanAdapter<%s> adapter = GWT.create(%s.class);",
+//				beanType.getParameterizedQualifiedSourceName(),
+//				baseClass.getParameterizedQualifiedSourceName());
+//		w.write("adapter.setBean((%s)value);",
+//				beanType.getParameterizedQualifiedSourceName());
+//		w.write("return adapter;");
+//		w.outdent();
+//		w.write("}");
+//		w.outdent();
+//		w.write("});");
+//		w.outdent();
+//		w.write("}");
+//	}
 
 	private void writeSetter(IndentedWriter w, JavaBeanProperty property) {
 		if (property.getter != null) {
