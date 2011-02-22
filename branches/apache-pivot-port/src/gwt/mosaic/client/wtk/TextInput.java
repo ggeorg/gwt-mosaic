@@ -21,11 +21,13 @@ import gwt.mosaic.client.collections.LinkedList;
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.client.util.Vote;
 import gwt.mosaic.client.wtk.validator.Validator;
+import gwt.mosaic.shared.beans.Bean;
 
 /**
  * A component that allows a user to enter a single line of unformatted text.
  */
 @SuppressWarnings("serial")
+@Bean
 public class TextInput extends Component {
     /**
      * Text input skin interface. Text input skins are required to implement

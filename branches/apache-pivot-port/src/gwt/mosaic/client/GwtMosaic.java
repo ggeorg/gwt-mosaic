@@ -1,5 +1,6 @@
 package gwt.mosaic.client;
 
+import gwt.mosaic.client.beans.BeanAdapterFactory;
 import gwt.mosaic.client.collections.HashMap;
 import gwt.mosaic.client.collections.immutable.ImmutableMap;
 import gwt.mosaic.client.wtk.Application;
@@ -23,6 +24,10 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class GwtMosaic extends ApplicationContext implements EntryPoint,
 		ClosingHandler, CloseHandler<Window>, ResizeHandler {
+	
+	static {
+		GWT.create(BeanAdapterFactory.class);
+	}
 
 	private DisplayHost displayHost = null;
 	private Application application = null;
