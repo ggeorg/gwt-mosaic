@@ -5,17 +5,21 @@ import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.beans.BeanAdapterFactory;
 import gwt.mosaic.client.beans.GetterMethod;
 import gwt.mosaic.client.beans.SetterMethod;
+import gwt.mosaic.client.util.ListenerList;
 
 import java.beans.Introspector;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.uibinder.rebind.IndentedWriter;
 import com.google.gwt.uibinder.rebind.MortalLogger;
@@ -36,6 +40,9 @@ class BeanAdapterWriter {
 		}
 	}
 
+	public static final String LISTENERS_SUFFIX = "Listeners";
+	public static final String PROPERTY_CHANGE_SUFFIX = "Changed";
+
 	/**
 	 * The type we have been asked to generate, e.g. MyBeanAdapter.
 	 */
@@ -50,6 +57,11 @@ class BeanAdapterWriter {
 	private final MortalLogger logger;
 
 	private final JClassType beanType;
+
+	private HashMap<String, JavaBeanProperty> javaBeanProperties = new HashMap<String, JavaBeanProperty>();
+	private HashSet<String> properties = new HashSet<String>();
+	private HashSet<String> notifyingProperties = new HashSet<String>();
+	private HashSet<JClassType> beanListenerInterfaces = new HashSet<JClassType>();
 
 	public BeanAdapterWriter(JClassType baseClass, String implClassName,
 			TypeOracle oracle, MortalLogger logger)
@@ -104,9 +116,73 @@ class BeanAdapterWriter {
 		return beanType;
 	}
 
-	Collection<JavaBeanProperty> lookupJavaBeanPropertyAccessors(JClassType type) {
-		HashMap<String, JavaBeanProperty> properties = new HashMap<String, JavaBeanProperty>();
+	public void lookupNotifyingProperties(JClassType type) {
+		JMethod[] methods = type.getOverridableMethods();
+		for (JMethod method : methods) {
+			if (!method.isPublic() || method.isStatic()) {
+				continue;
+			}
 
+			JType returnType = method.getReturnType();
+			JClassType classType = returnType.isClass();
+
+			if (classType == null) {
+				continue;
+			}
+
+			JClassType listenerListClassType = oracle
+					.findType(ListenerList.class.getName());
+			if (listenerListClassType.isAssignableFrom(classType)) {
+				JParameterizedType genericType = classType.isParameterized();
+
+				if (genericType == null) {
+					continue;
+				}
+
+				JClassType[] typeArguments = genericType.getTypeArgs();
+
+				if (typeArguments.length != 1) {
+					continue;
+				}
+
+				JClassType listenerInterface = typeArguments[0].isInterface();
+
+				if (listenerInterface == null) {
+					logger.warn(typeArguments[0]
+							.getParameterizedQualifiedSourceName()
+							+ " listener interface is not an interface.");
+					continue;
+				}
+
+				boolean hasNotifyingProperties = false;
+
+				JMethod[] interfaceMethods = listenerInterface
+						.getOverridableMethods();
+				for (JMethod interfaceMethod : interfaceMethods) {
+					String interfaceMethodName = interfaceMethod.getName();
+
+					if (interfaceMethodName.endsWith(PROPERTY_CHANGE_SUFFIX)) {
+						String propertyName = interfaceMethodName.substring(0,
+								interfaceMethodName.length()
+										- PROPERTY_CHANGE_SUFFIX.length());
+						if (properties.contains(propertyName)) {
+							notifyingProperties.add(propertyName);
+
+							if (!hasNotifyingProperties) {
+								hasNotifyingProperties = true;
+							}
+						}
+					}
+				}
+
+				if (hasNotifyingProperties) {
+					beanListenerInterfaces.add(listenerInterface);
+				}
+			}
+		}
+	}
+
+	void lookupJavaBeanPropertyAccessors(JClassType type) {
 		JMethod[] methods = type.getOverridableMethods();
 		for (JMethod method : methods) {
 			if (!method.isPublic() || method.isStatic()) {
@@ -136,12 +212,12 @@ class BeanAdapterWriter {
 					continue;
 				}
 
-				JavaBeanProperty property = properties.get(name + '#'
+				JavaBeanProperty property = javaBeanProperties.get(name + '#'
 						+ propertyType);
 
 				if (property == null) {
 					property = new JavaBeanProperty(name);
-					properties.put(name + '#' + propertyType, property);
+					javaBeanProperties.put(name + '#' + propertyType, property);
 				}
 
 				property.setter = method;
@@ -166,12 +242,12 @@ class BeanAdapterWriter {
 							.getParameterizedQualifiedSourceName();
 				}
 
-				JavaBeanProperty property = properties.get(name + "#"
+				JavaBeanProperty property = javaBeanProperties.get(name + "#"
 						+ propertyType);
 
 				if (property == null) {
 					property = new JavaBeanProperty(name);
-					properties.put(name + "#" + propertyType, property);
+					javaBeanProperties.put(name + "#" + propertyType, property);
 				}
 
 				property.getter = method;
@@ -179,6 +255,8 @@ class BeanAdapterWriter {
 				if (property.propertyType == null) {
 					property.propertyType = propertyType;
 				}
+
+				properties.add(name);
 
 			} else if (method.getName().startsWith("is")
 					&& method.getParameters().length == 0) {
@@ -196,12 +274,12 @@ class BeanAdapterWriter {
 							.getParameterizedQualifiedSourceName();
 				}
 
-				JavaBeanProperty property = properties.get(name + "#"
+				JavaBeanProperty property = javaBeanProperties.get(name + "#"
 						+ propertyType);
 
 				if (property == null) {
 					property = new JavaBeanProperty(name);
-					properties.put(name + "#" + propertyType, property);
+					javaBeanProperties.put(name + "#" + propertyType, property);
 				}
 
 				property.getter = method;
@@ -209,13 +287,13 @@ class BeanAdapterWriter {
 				if (property.propertyType == null) {
 					property.propertyType = propertyType;
 				}
+
+				properties.add(name);
 			}
 		}
-		return properties.values();
 	}
 
-	public void writeBeanAdapter(IndentedWriter w,
-			Collection<JavaBeanProperty> javaBeanProperties)
+	public void writeBeanAdapter(IndentedWriter w)
 			throws UnableToCompleteException {
 		writePackage(w);
 		w.newline();
@@ -225,11 +303,17 @@ class BeanAdapterWriter {
 
 		writeClassOpen(w);
 		w.indent();
-		
-		writeBeanFactoryRegistration(w);
 
+		w.newline();
+		writeBeanAdapterFactoryRegistration(w);
+		w.newline();
+
+		// default constructor
 		w.write("public %s() {", implClassName);
 		w.indent();
+
+		Collection<JavaBeanProperty> javaBeanProperties = this.javaBeanProperties
+				.values();
 
 		for (JavaBeanProperty property : javaBeanProperties) {
 			if (property.getter != null) {
@@ -240,15 +324,132 @@ class BeanAdapterWriter {
 			}
 		}
 
+		w.newline();
+		writeNotifyingProperties(w);
+		w.newline();
+
+		w.newline();
+		writeBeanListenerProxies(w);
+		w.newline();
+
+		// close default constructor
 		w.outdent();
 		w.write("}");
+
+		writeRegisterBeanListenersMethod(w);
+		writeUnregisterBeanListenersMethod(w);
 
 		// close class
 		w.outdent();
 		w.write("}");
 	}
 
-	private void writeBeanFactoryRegistration(IndentedWriter w) {
+	private void writeUnregisterBeanListenersMethod(IndentedWriter w) {
+		w.write("@Override");
+		w.write("public void unregisterBeanListeners() {");
+		w.indent();
+
+		for (JClassType listenerInterface : beanListenerInterfaces) {
+			w.write("bean.get%ss().remove((%s) beanListenerProxies.get(%s.class));",
+					listenerInterface.getName(),
+					listenerInterface.getParameterizedQualifiedSourceName(),
+					listenerInterface.getQualifiedSourceName());
+		}
+
+		w.outdent();
+		w.write("}");
+	}
+
+	private void writeRegisterBeanListenersMethod(IndentedWriter w) {
+		w.write("@Override");
+		w.write("public void registerBeanListeners() {");
+		w.indent();
+
+		for (JClassType listenerInterface : beanListenerInterfaces) {
+			w.write("bean.get%ss().add((%s) beanListenerProxies.get(%s.class));",
+					listenerInterface.getName(),
+					listenerInterface.getParameterizedQualifiedSourceName(),
+					listenerInterface.getQualifiedSourceName());
+		}
+
+		w.outdent();
+		w.write("}");
+	}
+
+	private void writeBeanListenerProxies(IndentedWriter w) {
+		for (JClassType listenerInterface : beanListenerInterfaces) {
+			try {
+				oracle.getType(listenerInterface.getQualifiedSourceName()
+						+ ".Adapter");
+				w.write("beanListenerProxies.put(%s.class, new %s.Adapter() {",
+						listenerInterface.getQualifiedSourceName(),
+						listenerInterface.getParameterizedQualifiedSourceName());
+			} catch (NotFoundException e) {
+				logger.warn(e.getMessage());
+				w.write("beanListenerProxies.put(%s.class, new %s() {",
+						listenerInterface.getQualifiedSourceName(),
+						listenerInterface.getParameterizedQualifiedSourceName());
+			}
+			w.indent();
+
+			JMethod[] interfaceMethods = listenerInterface
+					.getOverridableMethods();
+			for (JMethod interfaceMethod : interfaceMethods) {
+				String interfaceMethodName = interfaceMethod.getName();
+
+				if (interfaceMethodName.endsWith(PROPERTY_CHANGE_SUFFIX)) {
+					String propertyName = interfaceMethodName.substring(0,
+							interfaceMethodName.length()
+									- PROPERTY_CHANGE_SUFFIX.length());
+					if (properties.contains(propertyName)) {
+
+						StringBuilder sb = new StringBuilder();
+						JType[] parameterTypes = interfaceMethod
+								.getParameterTypes();
+						for (int i = 0; i < parameterTypes.length; i++) {
+							JType parameterType = parameterTypes[i];
+							if (i == parameterTypes.length - 1) {
+								sb.append(
+										parameterType
+												.getParameterizedQualifiedSourceName())
+										.append(" arg").append(i);
+							} else {
+								sb.append(
+										parameterType
+												.getParameterizedQualifiedSourceName())
+										.append(" arg").append(i).append(", ");
+							}
+						}
+
+						w.write("@Override");
+						w.write("public %s %sChanged(%s) {", interfaceMethod
+								.getReturnType()
+								.getParameterizedQualifiedSourceName(),
+								propertyName, sb.toString());
+						w.indent();
+
+						w.write("propertyChangeListeners.propertyChanged(bean, \"%s\");",
+								propertyName);
+
+						w.outdent();
+						w.write("}");
+					}
+				}
+			}
+
+			w.outdent();
+			w.write("});");
+		}
+
+	}
+
+	private void writeNotifyingProperties(IndentedWriter w) {
+		for (String notifyingProperty : notifyingProperties) {
+			w.write("notifyingProperties.add(\"%s\");", notifyingProperty);
+		}
+	}
+
+	private void writeBeanAdapterFactoryRegistration(IndentedWriter w) {
 		w.write("static {");
 		w.indent();
 		w.write("BeanAdapterFactory.register(%s.class, new BeanAdapterFactory<%s>() {",
@@ -287,8 +488,9 @@ class BeanAdapterWriter {
 		w.indent();
 		w.write("try {");
 		w.indent();
-		w.write("getBean().%s((%s) value);", property.setter.getName(),
-				property.propertyType);
+		w.write("((%s) bean).%s((%s) value);",
+				beanType.getParameterizedQualifiedSourceName(),
+				property.setter.getName(), property.propertyType);
 		w.outdent();
 		w.write("} catch (Exception ex) {");
 		w.indent();

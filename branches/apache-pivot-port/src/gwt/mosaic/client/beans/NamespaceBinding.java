@@ -99,7 +99,7 @@ public class NamespaceBinding {
 			sourceMonitor = null;
 		} else {
 			sourceMap = BeanAdapterFactory.createFor(source);
-			sourceMonitor = new BeanMonitor((BeanAdapter<?>) sourceMap);
+			sourceMonitor = new BeanMonitor(source);
 		}
 
 		if (!sourceMap.containsKey(sourceKey)) {

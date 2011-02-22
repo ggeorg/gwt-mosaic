@@ -16,91 +16,28 @@
  */
 package gwt.mosaic.client.beans;
 
-import gwt.mosaic.client.collections.Map;
-import gwt.mosaic.client.collections.MapListener;
 import gwt.mosaic.client.util.ListenerList;
-
-import java.util.Comparator;
 
 /**
  * Class for monitoring Java bean property changes.
  */
 public class BeanMonitor {
-	private class PropertyChangeListenerList extends
-			ListenerList<PropertyChangeListener> implements
-			PropertyChangeListener {
+	private final Object bean;
+	private final BeanAdapter<?> beanAdapter;
 
-		@Override
-		public void add(PropertyChangeListener listener) {
-			if (isEmpty()) {
-				registerBeanListeners();
-			}
-
-			super.add(listener);
-		}
-
-		@Override
-		public void remove(PropertyChangeListener listener) {
-			super.remove(listener);
-
-			if (isEmpty()) {
-				unregisterBeanListeners();
-			}
-		}
-
-		@Override
-		public void propertyChanged(Object bean, String propertyName) {
-			for (PropertyChangeListener listener : this) {
-				listener.propertyChanged(bean, propertyName);
-			}
-		}
-	}
-
-	private final BeanAdapter<?> bean;
-
-	private final PropertyChangeListenerList propertyChangeListeners = new PropertyChangeListenerList();
-	private final MapListener<String, Object> mapListener = new MapListener<String, Object>() {
-		@Override
-		public void valueAdded(Map<String, Object> map, String key) {
-			// No-op
-		}
-
-		@Override
-		public void valueUpdated(Map<String, Object> map, String key,
-				Object previousValue) {
-			propertyChangeListeners.propertyChanged(bean, key);
-		}
-
-		@Override
-		public void valueRemoved(Map<String, Object> map, String key,
-				Object value) {
-			// No-op
-		}
-
-		@Override
-		public void mapCleared(Map<String, Object> map) {
-			// No-op
-		}
-
-		@Override
-		public void comparatorChanged(Map<String, Object> map,
-				Comparator<String> previousComparator) {
-			// No-op
-		}
-	};
-
-	public BeanMonitor(BeanAdapter<?> bean) {
+	public BeanMonitor(Object bean) {
 		if (bean == null) {
-            throw new IllegalArgumentException();
-        }
-		
+			throw new IllegalArgumentException();
+		}
+
 		this.bean = bean;
+		this.beanAdapter = BeanAdapterFactory.createFor(bean);
 	}
 
 	/**
 	 * Returns the bean object that this monitor wraps.
 	 */
-	public BeanAdapter<?> getBean() {
+	public Object getBean() {
 		return bean;
 	}
 
@@ -114,33 +51,11 @@ public class BeanMonitor {
 	 *         otherwise.
 	 */
 	public boolean isNotifying(String key) {
-		return !bean.isReadOnly(key); // TODO ----------------------------
+		return beanAdapter.isNotifying(key);
 	}
 
-	/**
-	 * Registers event listeners on the bean so that the dictionary can fire
-	 * property change events and report which properties can fire change
-	 * events.
-	 */
-	private void registerBeanListeners() {
-		ListenerList<MapListener<String, Object>> listenersMap = bean
-				.getMapListeners();
-
-		listenersMap.add(mapListener);
-	}
-
-	/**
-	 * Un-registers event listeners on the bean.
-	 */
-	private void unregisterBeanListeners() {
-		ListenerList<MapListener<String, Object>> listenersMap = bean
-				.getMapListeners();
-
-		listenersMap.remove(mapListener);
-	}
-	
 	public ListenerList<PropertyChangeListener> getPropertyChangeListeners() {
-        return propertyChangeListeners;
-    }
+		return beanAdapter.getPropertyChangeListeners();
+	}
 
 }
