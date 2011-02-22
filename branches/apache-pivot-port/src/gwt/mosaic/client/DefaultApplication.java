@@ -41,6 +41,7 @@ public class DefaultApplication implements Application {
 		label.setText("");
 		label.getStyles().put("backgroundColor", Color.GRAY);
 		label.getStyles().put("font", Font.decode("{size: 48}"));
+		label.getStyles().put("wrapText", true);
 		pane.add(label);
 
 		Map<String, Object> namespace = new HashMap<String, Object>();
@@ -52,9 +53,9 @@ public class DefaultApplication implements Application {
 		namespaceBinding1.bind();
 
 		window.setContent(pane);
-		window.setX(20);
-		window.setY(20);
-		//window.setMaximized(true);
+//		window.setX(20);
+//		window.setY(20);
+		window.setMaximized(true);
 		window.open(display);
 	}
 

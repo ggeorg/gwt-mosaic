@@ -229,6 +229,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 		if (textChanged) {
 			Label label = (Label) getComponent();
 			ui.setHTML(label.getText());
+			invalidateComponent();
 			textChanged = false;
 		}
 	}
@@ -428,6 +429,8 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	@Override
 	public void textChanged(Label label, String previousText) {
 		textChanged = true;
+		System.out.println("=================== Text changed '" + previousText
+				+ "' to '" + label.getText()+"'");
 		invalidateComponent();
 	}
 }
