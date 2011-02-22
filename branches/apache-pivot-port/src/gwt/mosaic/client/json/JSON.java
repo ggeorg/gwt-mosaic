@@ -72,7 +72,7 @@ public class JSON {
 			String key = keys.get(i);
 
 			BeanAdapter<?> beanAdapter = BeanAdapterFactory.createFor(value);
-			if (beanAdapter.containsKey(key)) {
+			if (beanAdapter != null && beanAdapter.containsKey(key)) {
 				value = beanAdapter.get(key);
 			} else if (value instanceof Sequence<?>) {
 				Sequence<Object> sequence = (Sequence<Object>) value;
