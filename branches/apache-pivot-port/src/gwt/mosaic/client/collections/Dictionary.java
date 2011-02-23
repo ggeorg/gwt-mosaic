@@ -16,16 +16,22 @@
  */
 package gwt.mosaic.client.collections;
 
+import java.io.Serializable;
+
 /**
  * Interface representing a set of key/value pairs.
  */
-public interface Dictionary<K, V> {
+public interface Dictionary<K, V> extends Serializable {
 	/**
 	 * Class representing a key/value pair.
 	 */
-	public static final class Pair<K, V> {
-		public final K key;
-		public final V value;
+	@SuppressWarnings("serial")
+	public static final class Pair<K, V> implements Serializable {
+		public/* final */K key;
+		public/* final */V value;
+
+		public Pair() {
+		}
 
 		public Pair(K key, V value) {
 			if (key == null) {

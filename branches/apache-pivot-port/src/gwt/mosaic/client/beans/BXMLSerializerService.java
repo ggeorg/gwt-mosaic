@@ -1,7 +1,5 @@
 package gwt.mosaic.client.beans;
 
-import gwt.mosaic.client.wtk.Window;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -10,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("bxml")
 public interface BXMLSerializerService extends RemoteService {
-	Window readWindow(String resourceName) throws IllegalArgumentException;
+	BXMLSerializerResponse readWindow(String resourceName) throws IllegalArgumentException;
 }

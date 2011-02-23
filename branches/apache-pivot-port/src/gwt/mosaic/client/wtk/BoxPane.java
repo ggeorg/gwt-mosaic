@@ -17,12 +17,14 @@
 package gwt.mosaic.client.wtk;
 
 import gwt.mosaic.client.util.ListenerList;
+import gwt.mosaic.shared.beans.Bean;
 
 /**
  * Container that arranges components in a line, either vertically or
  * horizontally.
  */
 @SuppressWarnings("serial")
+@Bean
 public class BoxPane extends Container {
 	private static class BoxPaneListenerList extends
 			ListenerList<BoxPaneListener> implements BoxPaneListener {
@@ -34,7 +36,7 @@ public class BoxPane extends Container {
 		}
 	}
 
-	private transient Orientation orientation = null;
+	private Orientation orientation = null;
 	private transient BoxPaneListenerList boxPaneListeners = new BoxPaneListenerList();
 
 	public BoxPane() {
