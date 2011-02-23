@@ -250,7 +250,7 @@ public class TextInput extends Component {
         }
     }
 
-    private StringBuilder characters = new StringBuilder();
+    private transient StringBuilder characters = new StringBuilder();
 
     private int selectionStart = 0;
     private int selectionLength = 0;
@@ -261,19 +261,19 @@ public class TextInput extends Component {
     private String prompt = null;
 
     private String textKey = null;
-    private BindType textBindType = BindType.BOTH;
-    private TextBindMapping textBindMapping = null;
+    private transient BindType textBindType = BindType.BOTH;
+    private transient TextBindMapping textBindMapping = null;
 
-    private Validator validator = null;
-    private boolean strictValidation = false;
-    private boolean textValid = true;
+    private transient Validator validator = null;
+    private transient boolean strictValidation = false;
+    private transient boolean textValid = true;
 
-    private LinkedList<Edit> editHistory = new LinkedList<Edit>();
+    private transient LinkedList<Edit> editHistory = new LinkedList<Edit>();
 
-    private TextInputListenerList textInputListeners = new TextInputListenerList();
-    private TextInputContentListenerList textInputContentListeners = new TextInputContentListenerList();
-    private TextInputSelectionListenerList textInputSelectionListeners = new TextInputSelectionListenerList();
-    private TextInputBindingListenerList textInputBindingListeners = new TextInputBindingListenerList();
+    private transient TextInputListenerList textInputListeners = new TextInputListenerList();
+    private transient TextInputContentListenerList textInputContentListeners = new TextInputContentListenerList();
+    private transient TextInputSelectionListenerList textInputSelectionListeners = new TextInputSelectionListenerList();
+    private transient TextInputBindingListenerList textInputBindingListeners = new TextInputBindingListenerList();
 
     public static final int DEFAULT_TEXT_SIZE = 16;
 

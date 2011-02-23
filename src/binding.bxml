@@ -1,0 +1,14 @@
+<Window title="Binding with BXML!" maximized="true"
+	xmlns:bxml="http://pivot.apache.org/bxml" xmlns="gwt.mosaic.client.wtk">
+
+	<BoxPane orientation="vertical">
+		<TextInput bxml:id="textInput1" prompt="Name" />
+		<Label bxml:id="label1" text=""
+			styles="{ 
+			backgroundColor: '#484848',
+			font: {size: 48},
+			wrapText: true 
+			}" />
+	</BoxPane>
+
+</Window>

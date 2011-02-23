@@ -110,7 +110,7 @@ public class RhodesTextInputUI extends Composite implements
 			@Override
 			public void execute() {
 				if (presender != null) {
-					presender.invalidate();
+					presender.repaint();
 				}
 			}
 		});

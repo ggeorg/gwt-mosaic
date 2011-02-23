@@ -49,7 +49,7 @@ public class GwtMosaic extends ApplicationContext implements EntryPoint,
 			application = GWT.create(Application.class);
 		} catch (Throwable throwable) {
 			GWT.log("No application", throwable);
-			application = new DefaultApplication();
+			application = new DefaultApplication3();
 		}
 
 		Window.addWindowClosingHandler(this);

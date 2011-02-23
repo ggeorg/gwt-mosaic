@@ -31,15 +31,16 @@ import java.util.NoSuchElementException;
  * NOTE This class is not thread-safe. For concurrent access, use a
  * {@link org.apache.pivot.collections.concurrent.SynchronizedList}.
  */
+@SuppressWarnings("serial")
 public class LinkedList<T> implements List<T>, Serializable {
-	private static final long serialVersionUID = 2100691224732602812L;
-
-	private static class Node<T> implements Serializable {
-		private static final long serialVersionUID = -848937850230412572L;
-
+	
+	public static class Node<T> implements Serializable {
 		private Node<T> previous;
 		private Node<T> next;
 		private T item;
+		
+		public Node() {
+		}
 
 		public Node(Node<T> previous, Node<T> next, T item) {
 			this.previous = previous;

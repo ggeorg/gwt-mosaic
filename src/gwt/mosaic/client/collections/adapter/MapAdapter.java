@@ -34,6 +34,10 @@ import java.util.SortedMap;
 public class MapAdapter<K, V> implements Map<K, V>, Serializable {
     private java.util.Map<K, V> map = null;
     private transient MapListenerList<K, V> mapListeners = new MapListenerList<K, V>();
+    
+    public MapAdapter() {
+    	
+    }
 
     public MapAdapter(java.util.Map<K, V> map) {
         if (map == null) {
