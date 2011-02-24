@@ -6,6 +6,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * The async counterpart of <tt>BXMLSerializerService</tt>.
  */
 public interface BXMLSerializerServiceAsync {
-	void readWindow(String resourceName, AsyncCallback<BXMLSerializerResponse> callback)
+	void readObject(String resourceName, AsyncCallback<BXMLSerializerDTO> callback)
 			throws IllegalArgumentException;
 }

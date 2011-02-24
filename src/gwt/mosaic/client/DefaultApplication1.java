@@ -6,6 +6,7 @@ import com.google.gwt.dom.client.Style.FontWeight;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.wtk.Application;
 import gwt.mosaic.client.wtk.BoxPane;
+import gwt.mosaic.client.wtk.Checkbox;
 import gwt.mosaic.client.wtk.Display;
 import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.HorizontalAlignment;
@@ -31,8 +32,26 @@ public class DefaultApplication1 implements Application {
 		imageView.setImage(new Picture(
 				"http://www.google.gr/images/logos/ps_logo2a_cp.png"));
 
-		PushButton pushButton = new PushButton();
-		pushButton.setButtonData(new ButtonData(new Picture(
+		PushButton pushButton1 = new PushButton();
+		Picture pic1 = new Picture(
+				"http://upload.wikimedia.org/wikipedia/en/f/f6/Gwt-logo.png");
+		pic1.setPixelSize(96, 96);
+		pushButton1.setButtonData(new ButtonData(pic1, "PushButton #1"));
+
+		PushButton pushButton2 = new PushButton();
+		Picture pic2 = new Picture(
+				"http://upload.wikimedia.org/wikipedia/en/f/f6/Gwt-logo.png");
+		pic2.setPixelSize(96, 96);
+		pushButton2.setButtonData(new ButtonData(pic2, "PushButton #2"));
+		
+		PushButton pushButton3 = new PushButton();
+		Picture pic3 = new Picture(
+				"http://upload.wikimedia.org/wikipedia/en/f/f6/Gwt-logo.png");
+		pic3.setPixelSize(96, 96);
+		pushButton3.setButtonData(new ButtonData(pic3, "PushButton #311"));
+
+		Checkbox checkbox = new Checkbox();
+		checkbox.setButtonData(new ButtonData(new Picture(
 				"http://upload.wikimedia.org/wikipedia/en/f/f6/Gwt-logo.png"),
 				"This is a PushButton"));
 
@@ -55,14 +74,16 @@ public class DefaultApplication1 implements Application {
 		BoxPane pane = new BoxPane();
 		pane.getStyles().put("padding", new Insets(20));
 		pane.getStyles().put("fill", true);
-		pane.add(imageView);
-		pane.add(label2);
+		pane.add(pushButton1);
+		pane.add(pushButton2);
+		pane.add(pushButton3);
 
-		window.setContent(label1);
+		window.setContent(pane);
+		// window.setContent(checkbox);
 		window.setTitle("Hello World!");
-		window.setX(10);
-		window.setY(10);
-		// window.setMaximized(true);
+//		window.setX(10);
+	//	window.setY(10);
+		window.setMaximized(true);
 
 		window.open(display);
 	}

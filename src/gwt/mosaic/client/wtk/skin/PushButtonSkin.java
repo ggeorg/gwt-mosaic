@@ -16,6 +16,8 @@
  */
 package gwt.mosaic.client.wtk.skin;
 
+import com.google.gwt.event.dom.client.KeyCodes;
+
 import gwt.mosaic.client.wtk.Component;
 import gwt.mosaic.client.wtk.Keyboard;
 import gwt.mosaic.client.wtk.Mouse;
@@ -27,96 +29,101 @@ import gwt.mosaic.client.wtk.PushButton;
 public abstract class PushButtonSkin extends ButtonSkin {
 	protected boolean pressed = false;
 
-    @Override
-    public void enabledChanged(Component component) {
-        super.enabledChanged(component);
+	@Override
+	public void enabledChanged(Component component) {
+		super.enabledChanged(component);
 
-        pressed = false;
-    }
+		pressed = false;
+	}
 
-    @Override
-    public void focusedChanged(Component component, Component obverseComponent) {
-        super.focusedChanged(component, obverseComponent);
+	@Override
+	public void focusedChanged(Component component, Component obverseComponent) {
+		super.focusedChanged(component, obverseComponent);
 
-        pressed = false;
-    }
+		pressed = false;
+	}
 
-    @Override
-    public void mouseOut(Component component) {
-        super.mouseOut(component);
+	@Override
+	public void mouseOut(Component component) {
+		super.mouseOut(component);
 
-        pressed = false;
-    }
+		pressed = false;
+	}
 
-    @Override
-    public boolean mouseDown(Component component, Mouse.Button button, int x, int y) {
-        boolean consumed = super.mouseDown(component, button, x, y);
+	@Override
+	public boolean mouseDown(Component component, Mouse.Button button, int x,
+			int y) {
+		boolean consumed = super.mouseDown(component, button, x, y);
 
-        pressed = true;
-        repaintComponent();
+		pressed = true;
+		repaintComponent();
 
-        return consumed;
-    }
+		return consumed;
+	}
 
-    @Override
-    public boolean mouseUp(Component component, Mouse.Button button, int x, int y) {
-        boolean consumed = super.mouseUp(component, button, x, y);
+	@Override
+	public boolean mouseUp(Component component, Mouse.Button button, int x,
+			int y) {
+		boolean consumed = super.mouseUp(component, button, x, y);
 
-        pressed = false;
-        repaintComponent();
+		pressed = false;
+		repaintComponent();
 
-        return consumed;
-    }
+		return consumed;
+	}
 
-    @Override
-    public boolean mouseClick(Component component, Mouse.Button button, int x, int y, int count) {
-        boolean consumed = super.mouseClick(component, button, x, y, count);
+	@Override
+	public boolean mouseClick(Component component, Mouse.Button button, int x,
+			int y, int count) {
+		boolean consumed = super.mouseClick(component, button, x, y, count);
 
-        PushButton pushButton = (PushButton)getComponent();
-        pushButton.press();
+		PushButton pushButton = (PushButton) getComponent();
+		pushButton.press();
 
-        return consumed;
-    }
+		return consumed;
+	}
 
-    /**
-     * {@link KeyCode#SPACE SPACE} Repaints the component to reflect the pressed
-     * state.
-     *
-     * @see #keyReleased(Component, int,
-     * org.apache.pivot.wtk.Keyboard.KeyLocation)
-     */
-    @Override
-    public boolean keyPressed(Component component, int keyCode, Keyboard.KeyLocation keyLocation) {
-        boolean consumed = false;
+	/**
+	 * {@link KeyCode#SPACE SPACE} Repaints the component to reflect the pressed
+	 * state.
+	 * 
+	 * @see #keyReleased(Component, int,
+	 *      org.apache.pivot.wtk.Keyboard.KeyLocation)
+	 */
+	@Override
+	public boolean keyPressed(Component component, int keyCode,
+			Keyboard.KeyLocation keyLocation) {
+		boolean consumed = false;
 
-//        if (keyCode == Keyboard.KeyCode.SPACE) {
-//            pressed = true;
-//            repaintComponent();
-//        } else {
-//            consumed = super.keyPressed(component, keyCode, keyLocation);
-//        }
+		if (keyCode == KeyCodes.KEY_ENTER /* XXX Keyboard.KeyCode.SPACE */) {
+			pressed = true;
+			repaintComponent();
+		} else {
+			consumed = super.keyPressed(component, keyCode, keyLocation);
+		}
 
-        return consumed;
-    }
+		return consumed;
+	}
 
-    /**
-     * {@link KeyCode#SPACE SPACE} 'presses' the button.
-     */
-    @Override
-    public boolean keyReleased(Component component, int keyCode, Keyboard.KeyLocation keyLocation) {
-        boolean consumed = false;
+	/**
+	 * {@link KeyCode#SPACE SPACE} 'presses' the button.
+	 */
+	@Override
+	public boolean keyReleased(Component component, int keyCode,
+			Keyboard.KeyLocation keyLocation) {
+		boolean consumed = false;
 
-//        PushButton pushButton = (PushButton)getComponent();
-//
-//        if (keyCode == Keyboard.KeyCode.SPACE) {
-//            pressed = false;
-//            repaintComponent();
-//
-//            pushButton.press();
-//        } else {
-//            consumed = super.keyReleased(component, keyCode, keyLocation);
-//        }
+		PushButton pushButton = (PushButton) getComponent();
 
-        return consumed;
-    }
+		if (keyCode == KeyCodes.KEY_ENTER /* XXX Keyboard.KeyCode.SPACE */) {
+			pressed = false;
+			repaintComponent();
+
+			pushButton.press();
+		} else {
+			consumed = super.keyReleased(component, keyCode, keyLocation);
+		}
+
+		return consumed;
+	}
 }

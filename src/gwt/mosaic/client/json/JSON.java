@@ -90,6 +90,97 @@ public class JSON {
 	}
 
 	/**
+	 * Sets the value at the given path.
+	 * 
+	 * @param root
+	 * @param path
+	 * @param value
+	 * 
+	 * @return The value previously associated with the path.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T put(Object root, String path, T value) {
+		if (root == null) {
+			throw new IllegalArgumentException("root is null.");
+		}
+
+		Sequence<String> keys = parse(path);
+		if (keys.getLength() == 0) {
+			throw new IllegalArgumentException("Path is empty.");
+		}
+
+		String key = keys.remove(keys.getLength() - 1, 1).get(0);
+		Object parent = get(root, keys);
+		if (parent == null) {
+			throw new IllegalArgumentException("Invalid path.");
+		}
+
+		BeanAdapter<?> beanAdapter = BeanAdapterFactory.createFor(parent);
+
+		Object previousValue;
+		if ((beanAdapter != null) && beanAdapter.containsKey(key)) {
+			previousValue = beanAdapter.put(key, value);
+		} else if (parent instanceof Sequence<?>) {
+			Sequence<Object> sequence = (Sequence<Object>) parent;
+			previousValue = sequence.update(Integer.parseInt(key), value);
+		} else if (parent instanceof Dictionary<?, ?>) {
+			Dictionary<String, Object> dictionary = (Dictionary<String, Object>) parent;
+			previousValue = dictionary.put(key, value);
+		} else {
+			throw new IllegalArgumentException("Property \"" + key
+					+ "\" not found.");
+		}
+
+		return (T) previousValue;
+	}
+
+	/**
+	 * Tests the existence of a path in a given object.
+	 * 
+	 * @param root
+	 * @param path
+	 * 
+	 * @return <tt>true</tt> if the path exists; <tt>false</tt>, otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	public static boolean containsKey(Object root, String path) {
+		if (root == null) {
+			throw new IllegalArgumentException("root is null.");
+		}
+
+		Sequence<String> keys = parse(path);
+		if (keys.getLength() == 0) {
+			throw new IllegalArgumentException("Path is empty.");
+		}
+
+		String key = keys.remove(keys.getLength() - 1, 1).get(0);
+		Object parent = get(root, keys);
+
+		boolean containsKey;
+		if (parent == null) {
+			containsKey = false;
+		} else {
+			BeanAdapter<?> beanAdapter = BeanAdapterFactory.createFor(parent);
+			containsKey = (beanAdapter != null) && beanAdapter.containsKey(key);
+
+			if (!containsKey) {
+				if (parent instanceof Sequence<?>) {
+					Sequence<Object> sequence = (Sequence<Object>) parent;
+					containsKey = (sequence.getLength() > Integer.parseInt(key));
+				} else if (parent instanceof Dictionary<?, ?>) {
+					Dictionary<String, Object> dictionary = (Dictionary<String, Object>) parent;
+					containsKey = dictionary.containsKey(key);
+				} else {
+					throw new IllegalArgumentException("Property \"" + key
+							+ "\" not found.");
+				}
+			}
+		}
+
+		return containsKey;
+	}
+
+	/**
 	 * Parses a JSON path into a sequence of string keys.
 	 * 
 	 * @param path

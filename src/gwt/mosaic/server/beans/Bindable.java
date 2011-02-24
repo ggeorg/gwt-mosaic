@@ -18,6 +18,7 @@ package gwt.mosaic.server.beans;
 
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.server.util.Resources;
+import gwt.mosaic.shared.beans.BXML;
 
 import java.net.URL;
 

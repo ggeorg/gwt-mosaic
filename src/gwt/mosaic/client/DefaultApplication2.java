@@ -1,6 +1,6 @@
 package gwt.mosaic.client;
 
-import gwt.mosaic.client.beans.BXMLSerializerResponse;
+import gwt.mosaic.client.beans.BXMLSerializerDTO;
 import gwt.mosaic.client.beans.BXMLSerializerService;
 import gwt.mosaic.client.beans.BXMLSerializerServiceAsync;
 import gwt.mosaic.client.collections.Map;
@@ -21,14 +21,14 @@ public class DefaultApplication2 implements Application {
 	public void startup(final Display display, Map<String, String> properties)
 			throws Exception {
 
-		rpc.readWindow("window.bxml", new AsyncCallback<BXMLSerializerResponse>() {
+		rpc.readObject("window.bxml", new AsyncCallback<BXMLSerializerDTO>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log(caught.getMessage(), caught);
 			}
 
 			@Override
-			public void onSuccess(BXMLSerializerResponse result) {
+			public void onSuccess(BXMLSerializerDTO result) {
 				DefaultApplication2.this.window = (Window) result.getRoot();
 				window.open(display);
 			}

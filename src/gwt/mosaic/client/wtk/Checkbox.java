@@ -21,53 +21,56 @@ import gwt.mosaic.shared.beans.Bean;
 import gwt.mosaic.shared.beans.DefaultProperty;
 
 /**
- * Component representing a push button.
+ * Component representing a checkbox.
  */
 @Bean
 @DefaultProperty("buttonData")
 @SuppressWarnings("serial")
-public class PushButton extends Button {
-	private static final transient Button.DataRenderer DEFAULT_DATA_RENDERER = new ButtonDataRenderer();
+public class Checkbox extends Button {
+	private static final Button.DataRenderer DEFAULT_DATA_RENDERER = new ButtonDataRenderer();
 
-	public PushButton() {
-		this(false, null);
+	static {
+		DEFAULT_DATA_RENDERER.getStyles().put("horizontalAlignment",
+				HorizontalAlignment.LEFT);
 	}
 
-	public PushButton(boolean toggleButton) {
-		this(toggleButton, null);
+	public Checkbox() {
+		this(null);
 	}
 
-	public PushButton(Object buttonData) {
-		this(false, buttonData);
-	}
-
-	public PushButton(boolean toggleButton, Object buttonData) {
+	public Checkbox(Object buttonData) {
 		super(buttonData);
+		super.setToggleButton(true);
 
-		setToggleButton(toggleButton);
 		setDataRenderer(DEFAULT_DATA_RENDERER);
 
-		installSkin(PushButton.class);
+		installSkin(Checkbox.class);
 	}
 
 	@Override
 	public void press() {
-		if (isToggleButton()) {
-			State state = getState();
+		State state = getState();
 
-			if (getButtonGroup() == null) {
-				if (state == State.SELECTED) {
-					setState(State.UNSELECTED);
-				} else if (state == State.UNSELECTED) {
-					setState(isTriState() ? State.MIXED : State.SELECTED);
-				} else {
-					setState(State.SELECTED);
-				}
-			} else {
-				setSelected(true);
-			}
+		if (state == State.SELECTED) {
+			setState(State.UNSELECTED);
+		} else if (state == State.UNSELECTED) {
+			setState(isTriState() ? State.MIXED : State.SELECTED);
+		} else {
+			setState(State.SELECTED);
 		}
 
 		super.press();
+	}
+
+	@Override
+	public void setToggleButton(boolean toggleButton) {
+		throw new UnsupportedOperationException(
+				"Checkboxes are always toggle buttons.");
+	}
+
+	@Override
+	public void setButtonGroup(ButtonGroup buttonGroup) {
+		throw new UnsupportedOperationException(
+				"Checkboxes can't be added to a group.");
 	}
 }

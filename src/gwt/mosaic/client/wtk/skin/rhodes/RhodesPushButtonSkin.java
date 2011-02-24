@@ -24,52 +24,34 @@ import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.Insets;
 import gwt.mosaic.client.wtk.Mouse;
 import gwt.mosaic.client.wtk.PushButton;
+import gwt.mosaic.client.wtk.Theme;
 import gwt.mosaic.client.wtk.skin.PushButtonSkin;
-import gwt.mosaic.client.wtk.skin.SkinClientBundle;
 import gwt.mosaic.client.wtk.style.Color;
 
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.FontWeight;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasAllFocusHandlers;
-import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasOneWidget;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Terra push button skin.
  */
 public class RhodesPushButtonSkin extends PushButtonSkin {
+
+	public interface UI extends IsWidget {
+		void setPresender(Component presender);
+
+		void setBorderColor(Color borderColor);
+
+		void setBackgroundColor(Color backgroundColor);
+
+		void setInnerHTML(String string);
+
+		void setPadding(Insets padding);
+	}
+
 	private Font font;
 	private Color color;
 	private Color disabledColor;
@@ -98,10 +80,10 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 	private static final int CORNER_RADIUS = 4;
 	private static final int BORDER_WIDTH = 1;
 
-	private Widget widget = null;
+	private UI ui = null;
 
 	public RhodesPushButtonSkin() {
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
+		Theme theme = Theme.getTheme();
 
 		setFont(new Font(FontStyle.NORMAL, FontWeight.BOLD, 11, "Verdana"));
 
@@ -111,7 +93,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		setDisabledBackgroundColor(new Color(0xdd, 0xdc, 0xd5));
 		setBorderColor(new Color(0x99, 0x99, 0x99));
 		setDisabledBorderColor(new Color(0x99, 0x99, 0x99));
-		setPadding(new Insets(0));//new Insets(2, 3, 2, 3));
+		setPadding(new Insets(2, 5, 2, 5));
 		minimumAspectRatio = Float.NaN;
 		maximumAspectRatio = Float.NaN;
 		toolbar = false;
@@ -124,11 +106,12 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 
 	@Override
 	public Widget getWidget() {
-		if (widget == null) {
-			widget = new PushButtonWidget();
-			widget.addStyleName("m-PushButton");
+		if (ui == null) {
+			ui = GWT.create(UI.class);
+			ui.setPresender(getComponent());
+			ui.asWidget().addStyleName("m-PushButton");
 		}
-		return widget;
+		return ui.asWidget();
 	}
 
 	@Override
@@ -205,7 +188,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		Dimensions preferredContentSize = dataRenderer.getPreferredSize();
 
 		int preferredWidth = preferredContentSize.getWidth() + padding.left
-				+ padding.right + 2 * BORDER_WIDTH ;
+				+ padding.right + 2 * BORDER_WIDTH;
 
 		int preferredHeight = preferredContentSize.getHeight() + padding.top
 				+ padding.bottom + 2 * BORDER_WIDTH;
@@ -246,16 +229,16 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 
 		return baseline;
 	}
-	
+
 	@Override
 	public void layout() {
 		super.layout();
-		
+
 		PushButton pushButton = (PushButton) getComponent();
 
 		int width = getWidth();
 		int height = getHeight();
-		
+
 		Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
 		dataRenderer
 				.render(pushButton.getButtonData(), pushButton, highlighted);
@@ -269,16 +252,17 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 								height
 										- (padding.top + padding.bottom + 2 * BORDER_WIDTH),
 								0));
+		dataRenderer.paint(getWidget());
+
+		ui.setInnerHTML(dataRenderer.toString());
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint(final Widget context) {
 		PushButton pushButton = (PushButton) getComponent();
 
 		int width = getWidth();
 		int height = getHeight();
-		
-		System.out.println(width + "X" + height);
 
 		if (!toolbar || highlighted || pushButton.isEnabled()) {
 			if (pushButton.isEnabled()) {
@@ -293,23 +277,28 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 			}
 		}
 
-		PushButtonWidget pushButtonWidget = (PushButtonWidget) getWidget();
+		// PushButtonWidget pushButtonWidget = (PushButtonWidget) getWidget();
 
 		// Paint the border
 		if (borderColorChanged) {
-			pushButtonWidget.setBorderColor(borderColor);
+			ui.setBorderColor(borderColor);
 			borderColorChanged = false;
 		}
 
 		// Paint the background
 		if (backgroundColorChanged) {
-			pushButtonWidget.setBackgroundColor(backgroundColor);
+			ui.setBackgroundColor(backgroundColor);
 			backgroundColorChanged = false;
+		}
+
+		if (paddingChanged) {
+			ui.setPadding(padding);
+			paddingChanged = false;
 		}
 
 		// Paint the content
 
-		Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
+		final Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
 		dataRenderer
 				.render(pushButton.getButtonData(), pushButton, highlighted);
 		dataRenderer
@@ -322,7 +311,9 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 								height
 										- (padding.top + padding.bottom + 2 * BORDER_WIDTH),
 								0));
-		dataRenderer.paint(widget);
+		dataRenderer.paint(getWidget());
+		
+		ui.setInnerHTML(dataRenderer.toString());
 
 		// // Paint the focus state
 		// if (pushButton.isFocused()
@@ -442,18 +433,14 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		if (font == null) {
 			throw new IllegalArgumentException("font is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setFont(decodeFont(font));
+		setFont(Font.decode(font));
 	}
 
 	public final void setFont(Dictionary<String, ?> font) {
 		if (font == null) {
 			throw new IllegalArgumentException("font is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setFont(Theme.deriveFont(font));
+		setFont(new Font(font));
 	}
 
 	public Color getColor() {
@@ -473,15 +460,11 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		if (color == null) {
 			throw new IllegalArgumentException("color is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setColor(GraphicsUtilities.decodeColor(color));
+		setColor(Color.decode(color));
 	}
 
 	public final void setColor(int color) {
-		throw new UnsupportedOperationException();
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
-		// setColor(theme.getColor(color));
+		setColor(Theme.getTheme().getColor(color));
 	}
 
 	public Color getDisabledColor() {
@@ -501,15 +484,11 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		if (disabledColor == null) {
 			throw new IllegalArgumentException("disabledColor is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setDisabledColor(GraphicsUtilities.decodeColor(disabledColor));
+		setDisabledColor(Color.decode(disabledColor));
 	}
 
 	public final void setDisabledColor(int disabledColor) {
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
-		// setDisabledColor(theme.getColor(disabledColor));
-		throw new UnsupportedOperationException();
+		setDisabledColor(Theme.getTheme().getColor(disabledColor));
 	}
 
 	public Color getBackgroundColor() {
@@ -534,15 +513,11 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		if (backgroundColor == null) {
 			throw new IllegalArgumentException("backgroundColor is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setBackgroundColor(GraphicsUtilities.decodeColor(backgroundColor));
+		setBackgroundColor(Color.decode(backgroundColor));
 	}
 
 	public final void setBackgroundColor(int backgroundColor) {
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
-		// setBackgroundColor(theme.getColor(backgroundColor));
-		throw new UnsupportedOperationException();
+		setBackgroundColor(Theme.getTheme().getColor(backgroundColor));
 	}
 
 	public Color getDisabledBackgroundColor() {
@@ -565,15 +540,12 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 			throw new IllegalArgumentException(
 					"disabledBackgroundColor is null.");
 		}
-
-		// setDisabledBackgroundColor(GraphicsUtilities.decodeColor(disabledBackgroundColor));
-		throw new UnsupportedOperationException();
+		setDisabledBackgroundColor(Color.decode(disabledBackgroundColor));
 	}
 
 	public final void setDisabledBackgroundColor(int disabledBackgroundColor) {
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
-		// setDisabledBackgroundColor(theme.getColor(disabledBackgroundColor));
-		throw new UnsupportedOperationException();
+		setDisabledBackgroundColor(Theme.getTheme().getColor(
+				disabledBackgroundColor));
 	}
 
 	public Color getBorderColor() {
@@ -596,15 +568,11 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		if (borderColor == null) {
 			throw new IllegalArgumentException("borderColor is null.");
 		}
-
-		// setBorderColor(GraphicsUtilities.decodeColor(borderColor));
-		throw new UnsupportedOperationException();
+		setBorderColor(Color.decode(borderColor));
 	}
 
 	public final void setBorderColor(int borderColor) {
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
-		// setBorderColor(theme.getColor(borderColor));
-		throw new UnsupportedOperationException();
+		setBorderColor(Theme.getTheme().getColor(borderColor));
 	}
 
 	public Color getDisabledBorderColor() {
@@ -624,15 +592,11 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		if (disabledBorderColor == null) {
 			throw new IllegalArgumentException("disabledBorderColor is null.");
 		}
-
-		// setDisabledBorderColor(GraphicsUtilities.decodeColor(disabledBorderColor));
-		throw new UnsupportedOperationException();
+		setDisabledBorderColor(Color.decode(disabledBorderColor));
 	}
 
 	public final void setDisabledBorderColor(int disabledBorderColor) {
-		// TerraTheme theme = (TerraTheme)Theme.getTheme();
-		// setDisabledBorderColor(theme.getColor(disabledBorderColor));
-		throw new UnsupportedOperationException();
+		setDisabledBorderColor(Theme.getTheme().getColor(disabledBorderColor));
 	}
 
 	public Insets getPadding() {
@@ -756,140 +720,5 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		}
 
 		return super.mouseClick(component, button, x, y, count);
-	}
-
-	// -------------------------
-	private class PushButtonWidget extends SimplePanel implements HasAlignment,
-			HasClickHandlers, HasDoubleClickHandlers, HasAllMouseHandlers,
-			/* HasAllKeyHandlers, */HasAllFocusHandlers, HasOneWidget {
-		private final FocusPanel innerDiv;
-
-		private HorizontalAlignmentConstant halign = HasHorizontalAlignment.ALIGN_CENTER;
-		private VerticalAlignmentConstant valign = HasVerticalAlignment.ALIGN_MIDDLE;
-
-		public PushButtonWidget() {
-			add(innerDiv = new FocusPanel());
-
-			setHorizontalAlignment(halign);
-			setVerticalAlignment(valign);
-
-			SkinClientBundle.INSTANCE.css().ensureInjected();
-			setStyleName(SkinClientBundle.INSTANCE.css().pushButtonWidget());
-			innerDiv.setStyleName(SkinClientBundle.INSTANCE.css()
-					.pushButtonWidgetInner());
-		}
-
-		public void setBackgroundColor(Color backgroundColor) {
-			if (backgroundColor != null) {
-				backgroundColor.applyTo(innerDiv.getElement(), true);
-			} else {
-				Style style = innerDiv.getElement().getStyle();
-				style.setBackgroundColor("");
-			}
-		}
-
-		public void setBorderColor(Color borderColor) {
-			Style style = innerDiv.getElement().getStyle();
-			if (borderColor != null) {
-				style.setBorderColor(borderColor.toString());
-				style.setBorderStyle(BorderStyle.SOLID);
-				style.setBorderWidth(BORDER_WIDTH, Unit.PX);
-			} else {
-				style.setBorderColor("");
-				style.setBorderStyle(BorderStyle.NONE);
-				style.setBorderWidth(0, Unit.PX);
-			}
-		}
-
-		@Override
-		public Widget getWidget() {
-			return innerDiv.getWidget();
-		}
-
-		@Override
-		public void setWidget(IsWidget w) {
-			innerDiv.setWidget(w);
-		}
-
-		@Override
-		public HorizontalAlignmentConstant getHorizontalAlignment() {
-			return halign;
-		}
-
-		@Override
-		public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-			halign = align;
-			DOM.setStyleAttribute(innerDiv.getElement(), "textAlign",
-					halign == null ? "" : halign.getTextAlignString());
-		}
-
-		@Override
-		public VerticalAlignmentConstant getVerticalAlignment() {
-			return valign;
-		}
-
-		@Override
-		public void setVerticalAlignment(VerticalAlignmentConstant align) {
-			valign = align;
-			DOM.setStyleAttribute(innerDiv.getElement(), "verticalAlign",
-					valign == null ? "" : valign.getVerticalAlignString());
-		}
-
-		@Override
-		public void setWidth(String width) {
-			super.setWidth(width);
-			innerDiv.setWidth(width);
-		}
-
-		@Override
-		public void setHeight(String height) {
-			super.setHeight(height);
-			innerDiv.setHeight(height);
-		}
-
-		public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-			return addDomHandler(handler, MouseDownEvent.getType());
-		}
-
-		public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-			return addDomHandler(handler, MouseUpEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-			return addDomHandler(handler, MouseOutEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-			return addDomHandler(handler, MouseOverEvent.getType());
-		}
-
-		public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-			return addDomHandler(handler, MouseMoveEvent.getType());
-		}
-
-		public HandlerRegistration addMouseWheelHandler(
-				MouseWheelHandler handler) {
-			return addDomHandler(handler, MouseWheelEvent.getType());
-		}
-
-		public HandlerRegistration addDoubleClickHandler(
-				DoubleClickHandler handler) {
-			return addHandler(handler, DoubleClickEvent.getType());
-		}
-
-		public HandlerRegistration addClickHandler(ClickHandler handler) {
-			return addDomHandler(handler, ClickEvent.getType());
-		}
-
-		@Override
-		public HandlerRegistration addFocusHandler(FocusHandler handler) {
-			return innerDiv.addFocusHandler(handler);
-		}
-
-		@Override
-		public HandlerRegistration addBlurHandler(BlurHandler handler) {
-			return innerDiv.addBlurHandler(handler);
-		}
-
 	}
 }

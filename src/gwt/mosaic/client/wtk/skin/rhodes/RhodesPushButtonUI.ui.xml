@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:m='urn:import:gwt.mosaic.client.wtk.skin'>
+
+	<ui:style>
+	.outerDiv {
+		margin: 0px !important;
+		padding: 0px !important;
+		border: 0px none !important;
+		
+		display: table !important;
+		overflow: hidden !important;
+	}
+	.innerDiv {
+		margin: 0px !important;
+		border: 1px solid gray !important;
+		background: inherited;
+		color: inherited;
+		display: table-cell !important;
+		
+		vertical-align: middle !important;
+		
+		-moz-border-radius: 4px 4px 4px 4px;
+		-webkit-border-radius: 4px 4px 4px 4px;
+		border-radius: 4px 4px 4px 4px;
+		
+		background: -moz-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)) !important;
+		background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,1)), to(rgba(255,255,255,0))) !important;
+	}
+	.innerDiv:active {
+		background: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255,1)) !important;
+		background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,1))) !important;
+	}
+	</ui:style>
+
+	<g:SimplePanel styleName='{style.outerDiv}'>
+		<g:FocusPanel styleName='{style.innerDiv}' ui:field="innerDiv"/>
+	</g:SimplePanel>
+
+</ui:UiBinder>

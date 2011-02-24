@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:m='urn:import:gwt.mosaic.client.wtk.skin'>
+
+	<ui:style>
+	.outerDiv {
+		margin: 0px !important;
+		padding: 0px !important;
+		border: 0px none !important;
+		
+		display: table !important;
+		overflow: hidden !important;
+	}
+	.inputDiv {
+		margin: 0px !important;
+		border: 1px solid gray !important;
+		background: inherited;
+		color: inherited;
+		display: table-cell !important;
+		
+		vertical-align: middle !important;
+	}
+	.input {
+		margin: 0px !important;
+		padding: 0px !important;
+		border: 0px none !important;
+		outline: 0px none !important;
+	}
+	.inputDiv > div {
+		display: inline-block;
+	}
+	</ui:style>
+
+	<g:HTMLPanel styleName='{style.outerDiv}'>
+		<g:HTMLPanel styleName='{style.inputDiv}' ui:field="inputDiv">
+			<m:CheckboxUI styleName='{style.input}' ui:field='checkBox' />
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+
+</ui:UiBinder>

@@ -32,6 +32,7 @@ import gwt.mosaic.server.serialization.CSVSerializer;
 import gwt.mosaic.server.serialization.PropertiesSerializer;
 import gwt.mosaic.server.serialization.Serializer;
 import gwt.mosaic.server.util.Resources;
+import gwt.mosaic.shared.beans.BXML;
 import gwt.mosaic.shared.beans.DefaultProperty;
 import gwt.mosaic.shared.beans.IDProperty;
 import gwt.mosaic.shared.serialization.SerializationException;

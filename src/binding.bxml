@@ -1,5 +1,7 @@
-<Window title="Binding with BXML!" maximized="true"
-	xmlns:bxml="http://pivot.apache.org/bxml" xmlns="gwt.mosaic.client.wtk">
+<m:DefaultApplication.MyWindow title="Binding with BXML!" maximized="true"
+	xmlns:bxml="http://pivot.apache.org/bxml" 
+	xmlns="gwt.mosaic.client.wtk"
+	xmlns:m="gwt.mosaic.client">
 
 	<BoxPane orientation="vertical">
 		<TextInput bxml:id="textInput1" prompt="Name" />
@@ -11,4 +13,4 @@
 			}" />
 	</BoxPane>
 
-</Window>
+</m:DefaultApplication.MyWindow>

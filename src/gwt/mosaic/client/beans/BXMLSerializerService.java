@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("bxml")
 public interface BXMLSerializerService extends RemoteService {
-	BXMLSerializerResponse readWindow(String resourceName) throws IllegalArgumentException;
+	BXMLSerializerDTO readObject(String resourceName) throws IllegalArgumentException;
 }
