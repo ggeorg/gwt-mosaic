@@ -16,6 +16,9 @@
  */
 package gwt.mosaic.client.wtk;
 
+import com.google.gwt.core.client.GWT;
+
+import gwt.mosaic.client.json.JSON;
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.shared.beans.Bean;
 
@@ -84,7 +87,7 @@ public class Label extends Component {
 
 	private String text = null;
 
-	private transient String textKey = null;
+	private String textKey = null;
 	private transient BindType textBindType = BindType.BOTH;
 	private transient TextBindMapping textBindMapping = null;
 
@@ -171,29 +174,35 @@ public class Label extends Component {
 
 	@Override
 	public void load(Object context) {
-		// if (textKey != null
-		// && JSON.containsKey(context, textKey)
-		// && textBindType != BindType.STORE) {
-		// Object value = JSON.get(context, textKey);
-		//
-		// if (textBindMapping == null) {
-		// value = (value == null) ? null : value.toString();
-		// } else {
-		// value = textBindMapping.toString(value);
-		// }
-		//
-		// setText((String)value);
-		// }
+		if (!GWT.isClient()) {
+			throw new UnsupportedOperationException();
+		}
+		
+		if (textKey != null && JSON.containsKey(context, textKey)
+				&& textBindType != BindType.STORE) {
+			Object value = JSON.get(context, textKey);
+
+			if (textBindMapping == null) {
+				value = (value == null) ? null : value.toString();
+			} else {
+				value = textBindMapping.toString(value);
+			}
+
+			setText((String) value);
+		}
 	}
 
 	@Override
 	public void store(Object context) {
-		// if (textKey != null
-		// && textBindType != BindType.LOAD) {
-		// String text = getText();
-		// JSON.put(context, textKey, (textBindMapping == null) ?
-		// text : textBindMapping.valueOf(text));
-		// }
+		if (!GWT.isClient()) {
+			throw new UnsupportedOperationException();
+		}
+
+		if (textKey != null && textBindType != BindType.LOAD) {
+				String text = getText();
+				JSON.put(context, textKey, (textBindMapping == null) ? text
+						: textBindMapping.valueOf(text));
+		}
 	}
 
 	@Override

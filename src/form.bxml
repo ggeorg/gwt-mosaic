@@ -1,0 +1,10 @@
+<mosaic:DefaultApplication.MyWindow
+	title="DataBinding" maximized="true" xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:mosaic="gwt.mosaic.client" xmlns="gwt.mosaic.client.wtk">
+
+	<BoxPane bxml:id="form" orientation="vertical">
+		<Label textKey="id" />
+		<TextInput textKey="name" />
+	</BoxPane>
+
+</mosaic:DefaultApplication.MyWindow>
