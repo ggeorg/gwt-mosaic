@@ -1,55 +1,52 @@
 package gwt.mosaic.client;
 
-import com.google.gwt.core.client.GWT;
-
 import gwt.mosaic.client.beans.BXMLSerializer;
-import gwt.mosaic.client.beans.BeanAdapter;
-import gwt.mosaic.client.beans.BeanAdapterFactory;
 import gwt.mosaic.client.beans.Bindable;
+import gwt.mosaic.client.beans.NamespaceBinding;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.wtk.Application;
-import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Display;
 import gwt.mosaic.client.wtk.Window;
 
-public class DefaultApplication implements Application {
+import com.google.gwt.core.client.GWT;
+
+public class DefaultApplication4 implements Application {
 
 	@SuppressWarnings("serial")
 	public static class MyWindow extends Window implements Bindable {
-		private BoxPane form;
-
+		
+		public MyWindow() {
+			// No-op
+		}
+		
 		@Override
 		public void initialize(Map<String, Object> namespace) {
-			form = (BoxPane) namespace.get("form");
-
-			@SuppressWarnings("unchecked")
-			BeanAdapter<Contact> adapter = (BeanAdapter<Contact>) BeanAdapterFactory
-					.createFor(CONTACT);
-			form.load(adapter);
+			NamespaceBinding namespaceBinding1 = new NamespaceBinding(
+					namespace, "textInput1.text", "label1.text");
+			namespaceBinding1.bind();
 		}
 	}
 
-	private static final Contact CONTACT = new Contact("101", "Joe User");
-	
-	private MyWindow window;
+	private Window window;
 
 	@Override
 	public void startup(final Display display, Map<String, String> properties)
 			throws Exception {
-		BXMLSerializer<MyWindow> bxmlSerializer = new BXMLSerializer<MyWindow>() {
+
+		BXMLSerializer<Window> bxmlSerializer = new BXMLSerializer<Window>() {
 			@Override
 			protected void onFailure(Throwable caught) {
 				GWT.log(caught.getMessage(), caught);
 			}
 
 			@Override
-			protected void onSuceess(MyWindow root) {
-				DefaultApplication.this.window = root;
+			protected void onSuceess(Window root) {
+				DefaultApplication4.this.window = root;
 
 				window.open(display);
 			}
 		};
-		bxmlSerializer.readObject("form.bxml");
+		bxmlSerializer.readObject("binding.bxml");
 	}
 
 	@Override
@@ -61,13 +58,11 @@ public class DefaultApplication implements Application {
 	@Override
 	public void suspend() throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 }
