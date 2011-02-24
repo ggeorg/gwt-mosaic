@@ -8,21 +8,21 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 @SuppressWarnings("serial")
-public class BXMLSerializerResponse implements Serializable {
+public class BXMLSerializerDTO implements Serializable {
 
 	private Serializable root;
 
-	private Map<String, Serializable> namespace = new HashMap<String, Serializable>();
+	private Map<String, Object> namespace = new HashMap<String, Object>();
 
-	BXMLSerializerResponse() {
+	BXMLSerializerDTO() {
 	}
 
-	public BXMLSerializerResponse(Serializable root,
-			Map<String, ? extends Serializable> namespace) {
+	public BXMLSerializerDTO(Serializable root,
+			Map<String, ? extends Object> namespace) {
 		if (root == null) {
 			throw new IllegalArgumentException();
 		}
-		if (!(root instanceof Serializable)) {
+		if (!(root instanceof Object)) {
 			throw new IllegalArgumentException();
 		}
 		this.root = root;
@@ -30,7 +30,7 @@ public class BXMLSerializerResponse implements Serializable {
 		Iterator<String> it = namespace.iterator();
 		while (it.hasNext()) {
 			String key = it.next();
-			this.namespace.put(key, (Serializable) namespace.get(key));
+			this.namespace.put(key, (Object) namespace.get(key));
 		}
 	}
 
@@ -39,8 +39,7 @@ public class BXMLSerializerResponse implements Serializable {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map<String, ? extends Serializable> getNamespace() {
-		//return new ImmutableMap(new MapAdapter(this.namespace));
+	public Map<String, Object> getNamespace() {
 		return new ImmutableMap(this.namespace);
 	}
 

@@ -22,7 +22,7 @@ public class Picture extends Image {
 			@Override
 			public void onLoad(LoadEvent event) {
 				imageListeners.onLoad(Picture.this);
-				imageListeners.sizeChanged(Picture.this, 0, getWidth());
+				imageListeners.sizeChanged(Picture.this, getHeight(), getWidth());
 			}
 		});
 		this.img.addErrorHandler(new ErrorHandler() {
@@ -60,5 +60,17 @@ public class Picture extends Image {
 	@Override
 	public void paint(Widget context) {
 		// No-op
+	}
+	
+	@Override
+	public void setWidth(String width) {
+		super.setWidth(width);
+		img.setWidth(width);
+	}
+	
+	@Override
+	public void setHeight(String height) {
+		super.setHeight(height);
+		img.setHeight(height);
 	}
 }

@@ -18,6 +18,8 @@ package gwt.mosaic.client.wtk;
 
 import java.util.Iterator;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -42,6 +44,8 @@ public class ApplicationContext {
 
 		public DisplayHost(AbsolutePanel panel) {
 			this.panel = panel;
+			
+			panel.add(ApplicationContext.rendererContext, Short.MIN_VALUE, Short.MIN_VALUE);
 
 			display = new Display(this);
 		}
@@ -147,6 +151,12 @@ public class ApplicationContext {
 				event.stopPropagation();
 			}
 		}
+	}
+	
+	private static final AbsolutePanel rendererContext = new AbsolutePanel();
+	
+	public static AbsolutePanel getRendererContext() {
+		return rendererContext;
 	}
 
 	private static void handleUncaughtException(Exception exception) {

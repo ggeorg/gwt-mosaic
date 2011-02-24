@@ -18,11 +18,14 @@ package gwt.mosaic.client.wtk;
 
 import gwt.mosaic.client.util.ListenerList;
 import gwt.mosaic.client.wtk.media.Image;
+import gwt.mosaic.shared.beans.Bean;
+import gwt.mosaic.shared.beans.DefaultProperty;
 
 /**
  * Component that displays an image.
  */
-// @DefaultProperty("image")
+@Bean
+@DefaultProperty("image")
 @SuppressWarnings("serial")
 public class ImageView extends Component {
 	/**

@@ -348,13 +348,11 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 		repaintComponent();
 	}
 
-	public final void setBackgroundColor(String backgroundColor) {
+	public /* TODO final*/ void setBackgroundColor(String backgroundColor) {
 		if (backgroundColor == null) {
 			throw new IllegalArgumentException("backgroundColor is null.");
 		}
-
-		throw new UnsupportedOperationException();
-		// setBackgroundColor(GraphicsUtilities.decodeColor(backgroundColor));
+		setBackgroundColor(Color.decode(backgroundColor));
 	}
 
 	public float getOpacity() {

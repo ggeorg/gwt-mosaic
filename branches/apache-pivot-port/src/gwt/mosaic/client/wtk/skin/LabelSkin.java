@@ -228,7 +228,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 
 		if (textChanged) {
 			Label label = (Label) getComponent();
-			ui.setHTML(label.getText());
+			ui.setText(label.getText());
 			textChanged = false;
 		}
 		

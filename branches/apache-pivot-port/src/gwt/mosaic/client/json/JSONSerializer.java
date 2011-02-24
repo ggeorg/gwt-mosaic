@@ -1,12 +1,13 @@
 package gwt.mosaic.client.json;
 
+import gwt.mosaic.client.collections.HashMap;
+import gwt.mosaic.client.collections.List;
+import gwt.mosaic.client.collections.Map;
+import gwt.mosaic.shared.serialization.SerializationException;
+
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-
-import gwt.mosaic.client.collections.HashMap;
-import gwt.mosaic.client.collections.Map;
-import gwt.mosaic.shared.serialization.SerializationException;
 
 public class JSONSerializer {
 
@@ -33,12 +34,12 @@ public class JSONSerializer {
 			if (value.isNull() != null) {
 				continue;
 			}
-			
+
 			if ((value.isArray() != null) || (value.isObject() != null)) {
 				result.put(key, value.toString());
 				continue;
 			}
-			
+
 			if (value.isNumber() != null) {
 				result.put(key, Double.valueOf(value.isNumber().doubleValue()));
 				continue;
@@ -56,6 +57,31 @@ public class JSONSerializer {
 			}
 		}
 		return result;
+	}
+	
+	/**
+     * Converts a JSON value to a Java object.
+     *
+     * @param json
+     * The JSON value.
+     *
+     * @return
+     * The parsed object.
+     */
+    public static Object parse(String json) throws SerializationException {
+		throw new UnsupportedOperationException();
+    }
+
+	/**
+	 * Converts a JSON value to a list.
+	 * 
+	 * @param json
+	 *            The JSON value.
+	 * 
+	 * @return The parsed list.
+	 */
+	public static List<?> parseList(String json) throws SerializationException {
+		throw new UnsupportedOperationException();
 	}
 
 }

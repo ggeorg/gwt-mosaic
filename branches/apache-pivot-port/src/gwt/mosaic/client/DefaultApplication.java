@@ -1,8 +1,7 @@
 package gwt.mosaic.client;
 
-import gwt.mosaic.client.beans.BXMLSerializerResponse;
-import gwt.mosaic.client.beans.BXMLSerializerService;
-import gwt.mosaic.client.beans.BXMLSerializerServiceAsync;
+import gwt.mosaic.client.beans.BXMLSerializer;
+import gwt.mosaic.client.beans.Bindable;
 import gwt.mosaic.client.beans.NamespaceBinding;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.wtk.Application;
@@ -10,11 +9,23 @@ import gwt.mosaic.client.wtk.Display;
 import gwt.mosaic.client.wtk.Window;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class DefaultApplication implements Application {
-	private static BXMLSerializerServiceAsync rpc = GWT
-			.create(BXMLSerializerService.class);
+
+	@SuppressWarnings("serial")
+	public static class MyWindow extends Window implements Bindable {
+		
+		public MyWindow() {
+			// No-op
+		}
+		
+		@Override
+		public void initialize(Map<String, Object> namespace) {
+			NamespaceBinding namespaceBinding1 = new NamespaceBinding(
+					namespace, "textInput1.text", "label1.text");
+			namespaceBinding1.bind();
+		}
+	}
 
 	private Window window;
 
@@ -22,28 +33,20 @@ public class DefaultApplication implements Application {
 	public void startup(final Display display, Map<String, String> properties)
 			throws Exception {
 
-		rpc.readWindow("binding.bxml",
-				new AsyncCallback<BXMLSerializerResponse>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log(caught.getMessage(), caught);
-					}
+		BXMLSerializer<Window> bxmlSerializer = new BXMLSerializer<Window>() {
+			@Override
+			protected void onFailure(Throwable caught) {
+				GWT.log(caught.getMessage(), caught);
+			}
 
-					@Override
-					public void onSuccess(BXMLSerializerResponse result) {
-						DefaultApplication.this.window = (Window) result
-								.getRoot();
+			@Override
+			protected void onSuceess(Window root) {
+				DefaultApplication.this.window = root;
 
-						@SuppressWarnings("unchecked")
-						NamespaceBinding namespaceBinding1 = new NamespaceBinding(
-								(Map<String, Object>) result.getNamespace(),
-								"textInput1.text", "label1.text");
-
-						namespaceBinding1.bind();
-
-						window.open(display);
-					}
-				});
+				window.open(display);
+			}
+		};
+		bxmlSerializer.readObject("binding.bxml");
 	}
 
 	@Override

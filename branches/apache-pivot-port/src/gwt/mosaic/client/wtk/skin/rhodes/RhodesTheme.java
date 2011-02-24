@@ -3,6 +3,7 @@ package gwt.mosaic.client.wtk.skin.rhodes;
 import com.google.gwt.core.client.GWT;
 
 import gwt.mosaic.client.beans.BeanAdapter;
+import gwt.mosaic.client.wtk.Checkbox;
 import gwt.mosaic.client.wtk.PushButton;
 import gwt.mosaic.client.wtk.TextInput;
 import gwt.mosaic.client.wtk.Theme;
@@ -15,6 +16,9 @@ public class RhodesTheme extends Theme {
 	}
 
 	interface TextInputSkinBeanAdapter extends BeanAdapter<RhodesTextInputSkin> {
+	}
+	
+	interface CheckboxSkinBeanAdapter extends BeanAdapter<RhodesCheckboxSkin> {
 	}
 
 	public RhodesTheme() {
@@ -37,6 +41,17 @@ public class RhodesTheme extends Theme {
 						TextInputSkinBeanAdapter adapter = GWT
 								.create(TextInputSkinBeanAdapter.class);
 						adapter.setBean(new RhodesTextInputSkin());
+						return adapter;
+					}
+				});
+		
+		componentSkinMap.put(Checkbox.class,
+				new BeanAdapterFactory<RhodesCheckboxSkin>() {
+					@Override
+					public BeanAdapter<RhodesCheckboxSkin> create() {
+						CheckboxSkinBeanAdapter adapter = GWT
+								.create(CheckboxSkinBeanAdapter.class);
+						adapter.setBean(new RhodesCheckboxSkin());
 						return adapter;
 					}
 				});

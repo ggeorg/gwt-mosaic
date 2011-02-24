@@ -1,6 +1,6 @@
 package gwt.mosaic.server;
 
-import gwt.mosaic.client.beans.BXMLSerializerResponse;
+import gwt.mosaic.client.beans.BXMLSerializerDTO;
 import gwt.mosaic.client.beans.BXMLSerializerService;
 import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.wtk.Window;
@@ -17,7 +17,7 @@ public class BXMLSerializerServiceImpl extends RemoteServiceServlet implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public BXMLSerializerResponse readWindow(String resourceName)
+	public BXMLSerializerDTO readObject(String resourceName)
 			throws IllegalArgumentException {
 		InputStream inputStream = getClass().getClassLoader()
 				.getResourceAsStream(resourceName);
@@ -31,7 +31,7 @@ public class BXMLSerializerServiceImpl extends RemoteServiceServlet implements
 			throw new IllegalArgumentException(e.getMessage());
 		}
 
-		return new BXMLSerializerResponse(window,
+		return new BXMLSerializerDTO(window,
 				(Map<String, ? extends Serializable>) bxmlSerializer
 						.getNamespace());
 	}

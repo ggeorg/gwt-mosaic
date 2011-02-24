@@ -16,6 +16,7 @@
  */
 package gwt.mosaic.client.wtk.content;
 
+import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Button;
 import gwt.mosaic.client.wtk.Font;
@@ -26,9 +27,12 @@ import gwt.mosaic.client.wtk.VerticalAlignment;
 import gwt.mosaic.client.wtk.media.Image;
 import gwt.mosaic.client.wtk.style.Color;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Default button data renderer.
  */
+@SuppressWarnings("serial")
 public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 	protected ImageView imageView = new ImageView();
 	protected Label label = new Label();
@@ -39,94 +43,69 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 		add(imageView);
 		add(label);
-
-		imageView.getStyles().put("backgroundColor", null);
+		
+		// attach it to renderer context
+		paint(ApplicationContext.getRendererContext());
 	}
 
 	@Override
 	public void setSize(int width, int height) {
-		super.setSize(width, height);
+		ApplicationContext.getRendererContext().setPixelSize(Window.getClientWidth(), Window.getClientHeight());
 
+		super.setSize(width, height);
+		
 		// Since this component doesn't have a parent, it won't be validated
 		// via layout; ensure that it is valid here
 		validate();
 	}
 
-	private Button button;
-
-//	@Override
-//	public void invalidate() {
-//		super.invalidate();
-//
-//		if (button != null) {
-//			button.invalidate();
-//		}
-//	}
-//
-//	@Override
-//	public void repaint(boolean immediate) {
-//		super.repaint(immediate);
-//
-//		if (button != null) {
-//			button.repaint(immediate);
-//		}
-//	}
-
 	@Override
 	public void render(Object data, Button button, boolean highlighted) {
-		this.button = button;
-		if (!isValid()) {
-			this.button.invalidate();
+		Image icon = null;
+		String text = null;
+
+		if (data instanceof ButtonData) {
+			ButtonData buttonData = (ButtonData) data;
+			icon = buttonData.getIcon();
+			text = buttonData.getText();
+		} else if (data instanceof Image) {
+			icon = (Image) data;
+		} else {
+			if (data != null) {
+				text = data.toString();
+			}
 		}
-		try {
-			Image icon = null;
-			String text = null;
 
-			if (data instanceof ButtonData) {
-				ButtonData buttonData = (ButtonData) data;
-				icon = buttonData.getIcon();
-				text = buttonData.getText();
-			} else if (data instanceof Image) {
-				icon = (Image) data;
+		// Update the image view
+		if (icon == null) {
+			imageView.setVisible(false);
+		} else {
+			imageView.setVisible(true);
+			imageView.setImage(icon);
+
+			imageView.getStyles().put("opacity",
+					button.isEnabled() ? 1.0f : 0.5f);
+		}
+
+		// Update the label
+		label.setText(text);
+
+		if (text == null) {
+			label.setVisible(false);
+		} else {
+			label.setVisible(true);
+
+			Font font = (Font) button.getStyles().get("font");
+			label.getStyles().put("font", font);
+
+			Color color;
+			if (button.isEnabled()) {
+				color = (Color) button.getStyles().get("color");
 			} else {
-				if (data != null) {
-					text = data.toString();
-				}
+				color = (Color) button.getStyles().get("disabledColor");
 			}
 
-			// Update the image view
-			if (icon == null) {
-				imageView.setVisible(false);
-			} else {
-				imageView.setVisible(true);
-				imageView.setImage(icon);
-
-				imageView.getStyles().put("opacity",
-						button.isEnabled() ? 1.0f : 0.5f);
-			}
-
-			// Update the label
-			label.setText(text);
-
-			if (text == null) {
-				label.setVisible(false);
-			} else {
-				label.setVisible(true);
-
-				Font font = (Font) button.getStyles().get("font");
-				label.getStyles().put("font", font);
-
-				Color color;
-				if (button.isEnabled()) {
-					color = (Color) button.getStyles().get("color");
-				} else {
-					color = (Color) button.getStyles().get("disabledColor");
-				}
-
-				label.getStyles().put("color", color);
-			}
-		} finally {
-			this.button = null;
+			label.getStyles().put("color", color);
 		}
 	}
 
@@ -176,5 +155,10 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 		}
 
 		return string;
+	}
+	
+	@Override
+	public String toString() {
+		return getSkin().getWidget().toString();
 	}
 }

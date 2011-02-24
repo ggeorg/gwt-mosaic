@@ -14,24 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gwt.mosaic.server.beans;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package gwt.mosaic.client.wtk;
 
 /**
- * Annotation that causes a loaded BXML element to be bound to the annotated
- * field.
+ * List view item state listener interface.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface BXML {
+public interface ListViewItemStateListener {
     /**
-     * The ID of the BXML variable that references the element to bind. It
-     * should be a valid <tt>bxml:id</tt> from the loaded BXML resource. If
-     * unspecified, the name of the annotated field will be used.
+     * Called when an item's checked state has changed.
+     *
+     * @param listView
+     * @param index
      */
-    public String id() default "\0";
+    public void itemCheckedChanged(ListView listView, int index);
 }

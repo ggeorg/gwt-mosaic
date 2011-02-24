@@ -8,6 +8,14 @@
 		<when-type-is class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTextInputSkin.UI" />
 	</replace-with>
 	
+	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesCheckboxUI">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.rhodes.RhodesCheckboxSkin.UI" />
+	</replace-with>
+	
+	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesPushButtonUI">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.rhodes.RhodesPushButtonSkin.UI" />
+	</replace-with>
+	
 	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTheme">
 		<when-type-is class="gwt.mosaic.client.wtk.Theme" />
 	</replace-with>
