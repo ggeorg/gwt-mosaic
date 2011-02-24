@@ -88,8 +88,8 @@ public class Label extends Component {
 	private String text = null;
 
 	private String textKey = null;
-	private transient BindType textBindType = BindType.BOTH;
-	private transient TextBindMapping textBindMapping = null;
+	private BindType textBindType = BindType.BOTH;
+	private TextBindMapping textBindMapping = null;
 
 	private transient LabelListenerList labelListeners = new LabelListenerList();
 	private transient LabelBindingListenerList labelBindingListeners = new LabelBindingListenerList();

@@ -1,5 +1,7 @@
 package gwt.mosaic.client;
 
+import java.io.Serializable;
+
 import com.google.gwt.core.client.GWT;
 
 import gwt.mosaic.client.beans.BXMLSerializer;
@@ -13,6 +15,7 @@ import gwt.mosaic.client.examples.IMAccount;
 import gwt.mosaic.client.wtk.Application;
 import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Display;
+import gwt.mosaic.client.wtk.Label;
 import gwt.mosaic.client.wtk.Window;
 
 public class DefaultApplication implements Application {
@@ -29,6 +32,18 @@ public class DefaultApplication implements Application {
 			BeanAdapter<Contact> adapter = (BeanAdapter<Contact>) BeanAdapterFactory
 					.createFor(CONTACT);
 			form.load(adapter);
+		}
+	}
+	
+	public static class IdMapping implements Serializable, Label.TextBindMapping {
+		@Override
+		public String toString(Object value) {
+			return "Id: " + value;
+		}
+
+		@Override
+		public Object valueOf(String text) {
+			throw new UnsupportedOperationException();
 		}
 	}
 
