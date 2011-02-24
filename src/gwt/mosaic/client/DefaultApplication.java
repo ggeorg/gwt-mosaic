@@ -7,6 +7,9 @@ import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.beans.BeanAdapterFactory;
 import gwt.mosaic.client.beans.Bindable;
 import gwt.mosaic.client.collections.Map;
+import gwt.mosaic.client.examples.Address;
+import gwt.mosaic.client.examples.Contact;
+import gwt.mosaic.client.examples.IMAccount;
 import gwt.mosaic.client.wtk.Application;
 import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Display;
@@ -29,8 +32,11 @@ public class DefaultApplication implements Application {
 		}
 	}
 
-	private static final Contact CONTACT = new Contact("101", "Joe User");
-	
+	private static final Contact CONTACT = new Contact("101", "Joe User",
+			new Address("123 Main St.", "Cambridge", "MA", "02142"),
+			"(617) 555-1234", "joe_user@foo.com", new IMAccount("juser1234",
+					"AIM"));
+
 	private MyWindow window;
 
 	@Override

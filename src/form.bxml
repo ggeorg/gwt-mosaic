@@ -4,7 +4,19 @@
 
 	<BoxPane bxml:id="form" orientation="vertical">
 		<Label textKey="id" />
-		<TextInput textKey="name" />
+		<TextInput textKey="name" prompt="Name" />
+		
+		<Label text="Address:" styles="{textDecoration: 'underline'}"/>
+		<TextInput textKey="address.street" prompt="Street" />
+		<TextInput textKey="address.city" prompt="City" />
+		<TextInput textKey="address.state" textSize="6" prompt="State" />
+		<TextInput textKey="address.zip" textSize="6" prompt="Zip" />
+		
+		<Label preferredHeight="8" />
+		<TextInput textKey="phoneNumber"/>
+        <TextInput textKey="emailAddress"/>
+        
+        <TextInput textKey="imAccount.id"/>
 	</BoxPane>
 
 </mosaic:DefaultApplication.MyWindow>
