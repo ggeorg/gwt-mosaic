@@ -43,11 +43,6 @@ public abstract class ButtonSkin extends ComponentSkin implements
 		//button.setCursor(Cursor.HAND);
 	}
 
-	@Override
-	public void layout() {
-		super.layout();
-	}
-
 	// Component state events
 	@Override
 	public void enabledChanged(Component component) {
@@ -91,7 +86,7 @@ public abstract class ButtonSkin extends ComponentSkin implements
 	public void dataRendererChanged(Button button,
 			Button.DataRenderer previousDataRenderer) {
 		if(previousDataRenderer != null) {
-			previousDataRenderer.paint(null);
+			previousDataRenderer.paint();
 		}
 		invalidateComponent();
 	}

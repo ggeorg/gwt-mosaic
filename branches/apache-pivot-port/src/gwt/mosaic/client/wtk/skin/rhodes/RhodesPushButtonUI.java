@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class RhodesPushButtonUI extends Composite implements
@@ -25,7 +26,7 @@ public class RhodesPushButtonUI extends Composite implements
 	}
 
 	@UiField
-	FocusPanel innerDiv;
+	SimplePanel innerDiv;
 
 	private Component presender;
 

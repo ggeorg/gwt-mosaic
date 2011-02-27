@@ -32,6 +32,7 @@ import gwt.mosaic.client.wtk.Window;
 import gwt.mosaic.client.wtk.WindowListener;
 import gwt.mosaic.client.wtk.WindowStateListener;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
@@ -86,7 +87,6 @@ public class WindowSkin extends ContainerSkin implements Window.Skin,
 	public Widget getWidget() {
 		if (widget == null) {
 			widget = new SimplePanel() {
-
 				@Override
 				public void setWidget(Widget w) {
 					super.setWidget(w);
@@ -95,6 +95,19 @@ public class WindowSkin extends ContainerSkin implements Window.Skin,
 					// it to be treated as a positioning child.
 					Style style = w.getElement().getStyle();
 					style.setPosition(Position.ABSOLUTE);
+				}
+				
+				@Override
+				protected void onLoad() {
+					super.onLoad();
+					
+					Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+						@Override
+						public void execute() {
+							//repaintComponent();
+							invalidateComponent();
+						}
+					});
 				}
 			};
 			widget.setStyleName("m-Window");

@@ -14,39 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gwt.mosaic.client.wtk.skin;
-
-
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+package gwt.mosaic.client.wtk;
 
 /**
- * Grid pane filler skin.
+ * Table view header press listener.
  */
-public class GridPaneFillerSkin extends ComponentSkin {
-	private SimplePanel widget;
-
-	@Override
-	public Widget getWidget() {
-		if (widget == null) {
-			widget = new SimplePanel();
-			widget.setStyleName("m-GridPanelFiller");
-		}
-		return widget;
-	}
-
-	@Override
-	public boolean isFocusable() {
-		return false;
-	}
-
-	@Override
-	public int getPreferredWidth(int height) {
-		return 0;
-	}
-
-	@Override
-	public int getPreferredHeight(int width) {
-		return 0;
-	}
+public interface TableViewHeaderPressListener {
+    /**
+     * Called when a table view header has been pressed.
+     *
+     * @param tableViewHeader
+     * @param index
+     */
+    public void headerPressed(TableViewHeader tableViewHeader, int index);
 }

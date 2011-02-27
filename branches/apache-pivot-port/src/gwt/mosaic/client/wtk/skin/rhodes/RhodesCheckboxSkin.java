@@ -178,7 +178,7 @@ public class RhodesCheckboxSkin extends CheckboxSkin {
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
 		Checkbox checkbox = (Checkbox) getComponent();
 		int width = getWidth();
 		int height = getHeight();
@@ -190,7 +190,7 @@ public class RhodesCheckboxSkin extends CheckboxSkin {
 		dataRenderer.setSize(
 				Math.max(width - (CHECKBOX_SIZE + spacing * 2), 0), height);
 
-		dataRenderer.paint(getWidget());
+		dataRenderer.paint();
 
 		// Paint the focus state
 		if (checkbox.isFocused()) {

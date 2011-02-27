@@ -4,7 +4,6 @@ import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Image representing a bitmapped picture.
@@ -58,7 +57,7 @@ public class Picture extends Image {
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
 		// No-op
 	}
 	

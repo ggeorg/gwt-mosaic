@@ -244,8 +244,6 @@ public class FlowPaneSkin extends PanelSkin {
 
 	@Override
 	public void layout() {
-		super.layout();
-
 		FlowPane flowPane = (FlowPane) getComponent();
 		int width = getWidth();
 		int contentWidth = Math.max(width - (padding.left + padding.right), 0);

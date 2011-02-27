@@ -273,6 +273,7 @@ public class RhodesTextInputSkin extends ComponentSkin implements
 	@Override
 	public void layout() {
 		super.layout();
+		// No-op
 
 		// TextInput textInput = (TextInput) getComponent();
 		//
@@ -325,7 +326,7 @@ public class RhodesTextInputSkin extends ComponentSkin implements
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
 		TextInput textInput = (TextInput) getComponent();
 
 		Color backgroundColor;
@@ -408,6 +409,8 @@ public class RhodesTextInputSkin extends ComponentSkin implements
 		if (borderColorChanged) {
 			ui.setBorderColor(borderColor);
 		}
+		
+		super.paint();
 	}
 
 	public int getInsertionPoint(int x) {

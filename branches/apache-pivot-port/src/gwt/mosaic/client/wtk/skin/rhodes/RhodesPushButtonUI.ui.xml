@@ -9,6 +9,7 @@
 		margin: 0px !important;
 		padding: 0px !important;
 		border: 0px none !important;
+		outline: 0px none !important;
 		
 		display: table !important;
 		overflow: hidden !important;
@@ -19,6 +20,7 @@
 		background: inherited;
 		color: inherited;
 		display: table-cell !important;
+		position: relative !important;
 		
 		vertical-align: middle !important;
 		
@@ -26,17 +28,20 @@
 		-webkit-border-radius: 4px 4px 4px 4px;
 		border-radius: 4px 4px 4px 4px;
 		
-		background: -moz-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)) !important;
-		background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,1)), to(rgba(255,255,255,0))) !important;
+		background-image: -moz-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)) !important;
+		background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,1)), to(rgba(255,255,255,0))) !important;
 	}
 	.innerDiv:active {
-		background: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255,1)) !important;
-		background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,1))) !important;
+		background-image: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255,1)) !important;
+		background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,1))) !important;
+	}
+	.outerDiv:focus > div {
+		border: 1px solid black !important;
 	}
 	</ui:style>
 
-	<g:SimplePanel styleName='{style.outerDiv}'>
-		<g:FocusPanel styleName='{style.innerDiv}' ui:field="innerDiv"/>
-	</g:SimplePanel>
+	<g:FocusPanel styleName='{style.outerDiv}'>
+		<g:SimplePanel styleName='{style.innerDiv}' ui:field="innerDiv"/>
+	</g:FocusPanel>
 
 </ui:UiBinder>

@@ -56,7 +56,7 @@ public class TablePaneFillerSkin implements Skin {
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
 		// TODO Auto-generated method stub
 		
 	}

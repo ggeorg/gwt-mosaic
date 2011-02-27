@@ -27,7 +27,6 @@ import gwt.mosaic.client.wtk.Mouse;
 import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Abstract base class for container skins.
@@ -152,7 +151,7 @@ public abstract class ContainerSkin extends ComponentSkin implements
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
 		if (backgroundColorChanged) {
 			if (getWidget() instanceof HasBackgroundColor) {
 				((HasBackgroundColor) getWidget())
@@ -167,6 +166,8 @@ public abstract class ContainerSkin extends ComponentSkin implements
 				}
 			}
 		}
+		
+		super.paint();
 	}
 
 	/**

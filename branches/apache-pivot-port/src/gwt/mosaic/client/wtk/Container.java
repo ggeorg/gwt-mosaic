@@ -23,8 +23,6 @@ import gwt.mosaic.client.util.ListenerList;
 
 import java.util.Iterator;
 
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * Abstract base class for containers.
  */
@@ -161,8 +159,7 @@ public abstract class Container extends Component implements
 		components.insert(component, index);
 
 		// Repaint the area occupied by the new component
-		// repaint(component.getDecoratedBounds());
-		repaint();
+		repaint(component);
 
 		invalidate();
 
@@ -202,7 +199,7 @@ public abstract class Container extends Component implements
 			}
 
 			// repaint(component.getDecoratedBounds());
-			repaint();
+			repaint(component);
 
 			component.setParent(null);
 		}
@@ -240,7 +237,7 @@ public abstract class Container extends Component implements
 
 			// Repaint the area occupied by the component
 			// repaint(component.getDecoratedBounds());
-			repaint();
+			repaint(component);
 
 			// Notify listeners
 			containerListeners.componentMoved(this, from, to);
@@ -342,6 +339,16 @@ public abstract class Container extends Component implements
 
 		super.setVisible(visible);
 	}
+	
+	@Override
+	protected void attach(boolean mode) {
+		super.attach(mode);
+		
+		for (int i = 0, n = components.getLength(); i < n; i++) {
+			Component component = components.get(i);
+			component.setup(mode);
+		}
+	}
 
 	@Override
 	protected void layout() {
@@ -354,20 +361,8 @@ public abstract class Container extends Component implements
 	}
 
 	@Override
-	public void paint(Widget context) { 
-		super.paint(context);
-		
-		int count = getLength();
-		
-		for(int i = 0; i < count; i++) {
-			Component component = get(i);
-			
-			// Only paint components that are visible and intersect the current clip rectangle
-			if(component.isVisible() /*&& componentBounds intersects contianerBounds*/) {
-				// Paint the component
-				component.paint(getSkin().getWidget());
-			}
-		}
+	public void paint() {
+		super.paint();
 	}
 
 	/**
@@ -657,7 +652,7 @@ public abstract class Container extends Component implements
 				Component component = getComponentAt(x, y);
 
 				long currentTime = System.currentTimeMillis();
-				int multiClickInterval = 333;//Platform.getMultiClickInterval();
+				int multiClickInterval = 333;// Platform.getMultiClickInterval();
 				if (mouseDownComponent == component
 						&& currentTime - mouseDownTime < multiClickInterval) {
 					mouseClickCount++;

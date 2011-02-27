@@ -1,6 +1,7 @@
 package gwt.mosaic.client.wtk.skin;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,6 +40,19 @@ public class PanelSkin extends ContainerSkin {
 					DOM.setStyleAttribute(h, "left", left + "px");
 					DOM.setStyleAttribute(h, "top", top + "px");
 					// }
+				}
+				
+				@Override
+				protected void onLoad() {
+					super.onLoad();
+					
+					Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+						@Override
+						public void execute() {
+							//repaintComponent();
+							invalidateComponent();
+						}
+					});
 				}
 
 			};

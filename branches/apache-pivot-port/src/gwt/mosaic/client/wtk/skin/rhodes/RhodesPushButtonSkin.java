@@ -29,7 +29,6 @@ import gwt.mosaic.client.wtk.skin.PushButtonSkin;
 import gwt.mosaic.client.wtk.style.Color;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -230,35 +229,35 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		return baseline;
 	}
 
+//	@Override
+//	public void layout() {
+//		super.layout();
+//
+//		PushButton pushButton = (PushButton) getComponent();
+//
+//		int width = getWidth();
+//		int height = getHeight();
+//
+//		Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
+//		dataRenderer
+//				.render(pushButton.getButtonData(), pushButton, highlighted);
+//		dataRenderer
+//				.setSize(
+//						Math.max(
+//								width
+//										- (padding.left + padding.right + 2 * BORDER_WIDTH),
+//								0),
+//						Math.max(
+//								height
+//										- (padding.top + padding.bottom + 2 * BORDER_WIDTH),
+//								0));
+//		dataRenderer.paint();
+//
+//		ui.setInnerHTML(dataRenderer.toString());
+//	}
+
 	@Override
-	public void layout() {
-		super.layout();
-
-		PushButton pushButton = (PushButton) getComponent();
-
-		int width = getWidth();
-		int height = getHeight();
-
-		Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
-		dataRenderer
-				.render(pushButton.getButtonData(), pushButton, highlighted);
-		dataRenderer
-				.setSize(
-						Math.max(
-								width
-										- (padding.left + padding.right + 2 * BORDER_WIDTH),
-								0),
-						Math.max(
-								height
-										- (padding.top + padding.bottom + 2 * BORDER_WIDTH),
-								0));
-		dataRenderer.paint(getWidget());
-
-		ui.setInnerHTML(dataRenderer.toString());
-	}
-
-	@Override
-	public void paint(final Widget context) {
+	public void paint() {
 		PushButton pushButton = (PushButton) getComponent();
 
 		int width = getWidth();
@@ -301,6 +300,9 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		final Button.DataRenderer dataRenderer = pushButton.getDataRenderer();
 		dataRenderer
 				.render(pushButton.getButtonData(), pushButton, highlighted);
+		
+		System.out.println("--------------------------------------------- "+width+"x"+height);
+		
 		dataRenderer
 				.setSize(
 						Math.max(
@@ -311,7 +313,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 								height
 										- (padding.top + padding.bottom + 2 * BORDER_WIDTH),
 								0));
-		dataRenderer.paint(getWidget());
+		dataRenderer.paint();
 		
 		ui.setInnerHTML(dataRenderer.toString());
 

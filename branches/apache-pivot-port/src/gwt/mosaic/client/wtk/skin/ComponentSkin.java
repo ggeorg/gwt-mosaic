@@ -40,9 +40,14 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Abstract base class for component skins.
+ */
 public abstract class ComponentSkin implements Skin, ComponentListener,
 		ComponentStateListener, ComponentMouseListener,
 		ComponentMouseButtonListener, ComponentMouseWheelListener,
@@ -52,7 +57,7 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 	private int width = 0;
 	private int height = 0;
-	private boolean sizeChanged = false;
+	private boolean sizeChanged = true;
 
 	// Managed by ComponentListener#locationChanged().
 	private boolean locationChanged = false;
@@ -111,18 +116,20 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 
 	@Override
 	public void layout() {
-		System.out.println(getClass().getName() + ", sizeChanged "
-				+ sizeChanged + "(" + width + "x" + height + ")");
-
+		
 		if (locationChanged) {
 			Widget w = getWidget();
 			Element elem = w.getElement();
 			DOM.setStyleAttribute(elem, "position", "absolute");
 			DOM.setStyleAttribute(elem, "left", component.getX() + "px");
 			DOM.setStyleAttribute(elem, "top", component.getY() + "px");
+			locationChanged = false;
+			
+			repaintComponent();
 		}
 
-		if (sizeChanged) {
+		//if (sizeChanged) 
+		{
 			Widget w = getWidget();
 			// Element elem = w.getElement();
 			if (width >= 0) {
@@ -138,7 +145,14 @@ public abstract class ComponentSkin implements Skin, ComponentListener,
 				// NOTE: don't use widgetStyle.setHeight(height, Unit.PX) !!!
 			}
 			sizeChanged = false;
+			
+			repaintComponent();
 		}
+	}
+	
+	@Override
+	public void paint() {
+		// No-op
 	}
 
 	/**

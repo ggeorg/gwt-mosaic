@@ -26,32 +26,10 @@ import gwt.mosaic.client.wtk.media.Image;
 import gwt.mosaic.client.wtk.media.ImageListener;
 import gwt.mosaic.client.wtk.style.Color;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -60,6 +38,12 @@ import com.google.gwt.user.client.ui.Widget;
  * TODO Add a rotation (float) style.
  */
 public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
+	
+	public interface UI extends IsWidget, HasAlignment, AcceptsOneWidget {
+		void setPresender(Component component);
+	}
+	
+	// ---------------------------------------------------------------------
 	private Color backgroundColor = null;
 	private float opacity = 1.0f;
 
@@ -76,8 +60,6 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 	private int imageY = 0;
 	private float scaleX = 1;
 	private float scaleY = 1;
-
-	private ImageWidget widget = null;
 
 	private ImageListener imageListener = new ImageListener() {
 		@Override
@@ -101,6 +83,12 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 			repaintComponent();
 		}
 	};
+	
+	private UI ui = null;
+	
+	public ImageViewSkin() {
+		// No-op
+	}
 
 	@Override
 	public void install(Component component) {
@@ -117,15 +105,15 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 
 	@Override
 	public Widget getWidget() {
-		if (widget == null) {
-			widget = new ImageWidget();
+		if(ui == null) {
+			ui = GWT.create(UI.class);
+			ui.setPresender(getComponent());
+			ui.asWidget().addStyleName("m-ImageView");
 
 			setHorizontalAlignment(HorizontalAlignment.CENTER);
 			setVerticalAlignment(VerticalAlignment.CENTER);
-
-			widget.addStyleName("m-ImageView");
 		}
-		return widget;
+		return ui.asWidget();
 	}
 
 	@Override
@@ -202,7 +190,7 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 	@Override
 	public void layout() {
 		super.layout();
-
+		
 		ImageView imageView = (ImageView) getComponent();
 		Image image = imageView.getImage();
 
@@ -264,42 +252,35 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
+		UI ui = (UI) getWidget();
+
 		ImageView imageView = (ImageView) getComponent();
 		Image image = imageView.getImage();
-
-		int width = getWidth();
-		int height = getHeight();
-
+		
 		if (horizontalAlignmentChanged) {
 			if (horizontalAlignment == HorizontalAlignment.LEFT) {
-				((ImageWidget) widget)
-						.setHorizontalAlignment(ImageWidget.ALIGN_LEFT);
+				ui.setHorizontalAlignment(UI.ALIGN_LEFT);
 			} else if (horizontalAlignment == HorizontalAlignment.CENTER) {
-				((ImageWidget) widget)
-						.setHorizontalAlignment(ImageWidget.ALIGN_CENTER);
+				ui.setHorizontalAlignment(UI.ALIGN_CENTER);
 			} else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
-				((ImageWidget) widget)
-						.setHorizontalAlignment(ImageWidget.ALIGN_RIGHT);
+				ui.setHorizontalAlignment(UI.ALIGN_RIGHT);
 			}
 			horizontalAlignmentChanged = false;
 		}
-
+		
 		if (verticalAlignmentChanged) {
 			if (verticalAlignment == VerticalAlignment.TOP) {
-				((ImageWidget) widget)
-						.setVerticalAlignment(ImageWidget.ALIGN_TOP);
+				ui.setVerticalAlignment(UI.ALIGN_TOP);
 			} else if (verticalAlignment == VerticalAlignment.CENTER) {
-				((ImageWidget) widget)
-						.setVerticalAlignment(ImageWidget.ALIGN_MIDDLE);
+				ui.setVerticalAlignment(UI.ALIGN_MIDDLE);
 			} else if (verticalAlignment == VerticalAlignment.BOTTOM) {
-				((ImageWidget) widget)
-						.setVerticalAlignment(ImageWidget.ALIGN_BOTTOM);
+				ui.setVerticalAlignment(UI.ALIGN_BOTTOM);
 			}
 			verticalAlignmentChanged = false;
 		}
 
-		widget.setWidget(imageView.getImage());
+		ui.setWidget(imageView.getImage());
 
 		// if (backgroundColor != null) {
 		// graphics.setPaint(backgroundColor);
@@ -329,6 +310,8 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 		// image.paint(imageGraphics);
 		// imageGraphics.dispose();
 		// }
+		
+		super.paint();
 	}
 
 	/**
@@ -448,107 +431,6 @@ public class ImageViewSkin extends ComponentSkin implements ImageViewListener {
 	@Override
 	public void asynchronousChanged(ImageView imageView) {
 		// No-op
-	}
-
-	// -------------------------
-	private class ImageWidget extends Composite implements HasAlignment,
-			HasClickHandlers, HasDoubleClickHandlers, HasAllMouseHandlers {
-		private final SimplePanel div;
-		private final SimplePanel innerDiv;
-
-		private HorizontalAlignmentConstant halign = HasHorizontalAlignment.ALIGN_CENTER;
-		private VerticalAlignmentConstant valign = HasVerticalAlignment.ALIGN_MIDDLE;
-
-		public ImageWidget() {
-			initWidget(div = new SimplePanel());
-			div.add(innerDiv = new SimplePanel());
-
-			SkinClientBundle.INSTANCE.css().ensureInjected();
-			setStyleName(SkinClientBundle.INSTANCE.css().imageWidget());
-			innerDiv.setStyleName(SkinClientBundle.INSTANCE.css()
-					.imageWidgetInner());
-		}
-
-		@Override
-		public Widget getWidget() {
-			return innerDiv.getWidget();
-		}
-
-		@Override
-		public void setWidget(Widget w) {
-			innerDiv.setWidget(w);
-		}
-
-		@Override
-		public HorizontalAlignmentConstant getHorizontalAlignment() {
-			return halign;
-		}
-
-		@Override
-		public void setHorizontalAlignment(HorizontalAlignmentConstant align) {
-			halign = align;
-			DOM.setStyleAttribute(innerDiv.getElement(), "textAlign",
-					halign == null ? "" : halign.getTextAlignString());
-		}
-
-		@Override
-		public VerticalAlignmentConstant getVerticalAlignment() {
-			return valign;
-		}
-
-		@Override
-		public void setVerticalAlignment(VerticalAlignmentConstant align) {
-			valign = align;
-			DOM.setStyleAttribute(innerDiv.getElement(), "verticalAlign",
-					valign == null ? "" : valign.getVerticalAlignString());
-		}
-
-		@Override
-		public void setWidth(String width) {
-			super.setWidth(width);
-			innerDiv.setWidth(width);
-		}
-
-		@Override
-		public void setHeight(String height) {
-			super.setHeight(height);
-			innerDiv.setHeight(height);
-		}
-
-		public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-			return addDomHandler(handler, MouseDownEvent.getType());
-		}
-
-		public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-			return addDomHandler(handler, MouseUpEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-			return addDomHandler(handler, MouseOutEvent.getType());
-		}
-
-		public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-			return addDomHandler(handler, MouseOverEvent.getType());
-		}
-
-		public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-			return addDomHandler(handler, MouseMoveEvent.getType());
-		}
-
-		public HandlerRegistration addMouseWheelHandler(
-				MouseWheelHandler handler) {
-			return addDomHandler(handler, MouseWheelEvent.getType());
-		}
-
-		public HandlerRegistration addDoubleClickHandler(
-				DoubleClickHandler handler) {
-			return addHandler(handler, DoubleClickEvent.getType());
-		}
-
-		public HandlerRegistration addClickHandler(ClickHandler handler) {
-			return addDomHandler(handler, ClickEvent.getType());
-		}
-
 	}
 
 }
