@@ -17,7 +17,7 @@
 package gwt.mosaic.client.wtk;
 
 import gwt.mosaic.client.beans.BeanAdapter;
-import gwt.mosaic.client.wtk.ApplicationContext.DisplayHost;
+import gwt.mosaic.client.collections.HashSet;
 import gwt.mosaic.client.wtk.skin.DisplaySkin;
 
 import com.google.gwt.core.client.GWT;
@@ -32,7 +32,7 @@ public final class Display extends Container {
 	}
 
 	private transient ApplicationContext.DisplayHost displayHost;
-	
+
 	protected Display() {
 		// No-op
 	}
@@ -73,36 +73,59 @@ public final class Display extends Container {
 
 	// --------------------
 
+	private static final int DEFAULT_DELAY_MILLIS = 33;
+
+	private int invalidateTimerDelayMillis = DEFAULT_DELAY_MILLIS;
+	private int repaintTimerDelayMillis = DEFAULT_DELAY_MILLIS;
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
 
-		validateTimer.schedule(33);
+		validateTimer.schedule(invalidateTimerDelayMillis--);
+
+		if (invalidateTimerDelayMillis <= 0) {
+			invalidateTimerDelayMillis = DEFAULT_DELAY_MILLIS;
+		}
 	}
 
 	@Override
-	public void repaint(boolean immediate) {
-		super.repaint(immediate);
-
+	public void repaint(Component component, boolean immediate) {
+		componentsToPaint.add(component);
+		//immediate = true;
 		if (immediate) {
-			repaintTimer.schedule(0);
+			repaintTimer.cancel();
+			repaintTimer.run();
 		} else {
-			repaintTimer.schedule(33);
+			repaintTimer.schedule(repaintTimerDelayMillis--);
+		}
+
+		if (repaintTimerDelayMillis <= 0) {
+			repaintTimerDelayMillis = DEFAULT_DELAY_MILLIS;
 		}
 	}
 
 	private final transient Timer validateTimer = new Timer() {
 		@Override
 		public void run() {
+			Display.this.setup(true);
 			Display.this.validate();
 		}
 	};
 
+	private transient HashSet<Component> componentsToPaint = new HashSet<Component>();
 	private final transient Timer repaintTimer = new Timer() {
 		@Override
 		public void run() {
-			DisplayHost displayHost = Display.this.getDisplayHost();
-			Display.this.paint(displayHost.asWidget());
+			if (componentsToPaint.isEmpty()) {
+				return;
+			}
+			HashSet<Component> oldComponentsToPaint = componentsToPaint;
+			componentsToPaint = new HashSet<Component>();
+			for (Component component : oldComponentsToPaint) {
+				component.paint();
+			}
+			oldComponentsToPaint.clear();
 		}
 	};
 
@@ -144,4 +167,5 @@ public final class Display extends Container {
 	public FocusTraversalPolicy getFocusTraversalPolicy() {
 		return null;
 	}
+
 }

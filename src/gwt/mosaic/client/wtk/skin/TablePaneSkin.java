@@ -505,6 +505,8 @@ public class TablePaneSkin extends PanelSkin implements TableInput.Skin,
 
     @Override
     public void layout() {
+    	super.layout();
+
         TableInput tablePane = (TableInput)getComponent();
 
         TableInput.RowSequence rows = tablePane.getRows();
@@ -578,8 +580,8 @@ public class TablePaneSkin extends PanelSkin implements TableInput.Skin,
     }
 
     @Override
-    public void paint(Widget context) {
-        super.paint(context);
+    public void paint() {
+        super.paint();
 
         TableInput tablePane = (TableInput)getComponent();
 

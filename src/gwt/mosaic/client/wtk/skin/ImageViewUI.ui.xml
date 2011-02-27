@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+	<ui:style>
+	.outerDiv {
+		display: table;
+		overflow: hidden;
+	}
+	.innerDiv {
+		margin: 0px;
+		border: 0px none;
+		background: inherited;
+		color: inherited;
+		display: table-cell;
+		line-height: 120%;
+	}
+	</ui:style>
+
+	<g:SimplePanel styleName='{style.outerDiv}'>
+		<g:SimplePanel styleName='{style.innerDiv}' ui:field='innerDiv' />
+	</g:SimplePanel>
+
+</ui:UiBinder>

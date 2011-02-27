@@ -290,8 +290,6 @@ public class GridPaneSkin extends PanelSkin implements GridPane.Skin,
 
 	@Override
 	public void layout() {
-		super.layout();
-
 		GridPane gridPane = (GridPane) getComponent();
 
 		GridPane.RowSequence rows = gridPane.getRows();

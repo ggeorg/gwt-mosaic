@@ -171,7 +171,7 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 	}
 
 	@Override
-	public void paint(Widget context) {
+	public void paint() {
 		UI ui = (UI) getWidget();
 
 		if (backgroundColorChanged) {
@@ -232,7 +232,9 @@ public class LabelSkin extends ComponentSkin implements LabelListener {
 			textChanged = false;
 		}
 		
-		invalidateComponent();
+		super.paint();
+		
+		// invalidateComponent();
 	}
 
 	/**

@@ -54,7 +54,8 @@ public class LabelUI extends Composite implements LabelSkin.UI,
 			@Override
 			public void execute() {
 				if(presender != null) {
-					presender.repaint();
+					//presender.repaint();
+					presender.invalidate();
 				}
 			}
 		});

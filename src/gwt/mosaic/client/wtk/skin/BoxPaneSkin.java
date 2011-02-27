@@ -326,10 +326,10 @@ public class BoxPaneSkin extends PanelSkin implements BoxPaneListener {
 
 	@Override
 	public void layout() {
+		super.layout();
+
 		BoxPane boxPane = (BoxPane) getComponent();
 		int n = boxPane.getLength();
-
-		super.layout();
 
 		int width = getWidth();
 		int height = getHeight();

@@ -18,12 +18,12 @@ package gwt.mosaic.client.wtk;
 
 import java.util.Iterator;
 
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,8 +44,13 @@ public class ApplicationContext {
 
 		public DisplayHost(AbsolutePanel panel) {
 			this.panel = panel;
-			
-			panel.add(ApplicationContext.rendererContext, Short.MIN_VALUE, Short.MIN_VALUE);
+
+			panel.add(ApplicationContext.rendererContext);
+			DOM.setStyleAttribute(
+					ApplicationContext.rendererContext.getElement(),
+					"visibility", "hidden");
+//			ApplicationContext.rendererContext.setPixelSize(Short.MAX_VALUE,
+//					Short.MAX_VALUE);
 
 			display = new Display(this);
 		}
@@ -152,10 +157,10 @@ public class ApplicationContext {
 			}
 		}
 	}
-	
-	private static final AbsolutePanel rendererContext = new AbsolutePanel();
-	
-	public static AbsolutePanel getRendererContext() {
+
+	private static final FlowPanel rendererContext = new FlowPanel();
+
+	public static HasWidgets getRendererContext() {
 		return rendererContext;
 	}
 

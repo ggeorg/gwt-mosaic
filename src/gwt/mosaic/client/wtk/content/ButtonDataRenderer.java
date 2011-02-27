@@ -16,9 +16,12 @@
  */
 package gwt.mosaic.client.wtk.content;
 
+import gwt.mosaic.client.collections.HashSet;
 import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Button;
+import gwt.mosaic.client.wtk.Component;
+import gwt.mosaic.client.wtk.Dimensions;
 import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.HorizontalAlignment;
 import gwt.mosaic.client.wtk.ImageView;
@@ -27,7 +30,7 @@ import gwt.mosaic.client.wtk.VerticalAlignment;
 import gwt.mosaic.client.wtk.media.Image;
 import gwt.mosaic.client.wtk.style.Color;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasWidgets;
 
 /**
  * Default button data renderer.
@@ -43,17 +46,20 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 		add(imageView);
 		add(label);
-		
-		// attach it to renderer context
-		paint(ApplicationContext.getRendererContext());
+
+		// imageView.getStyles().put("backgroundColor", null);
+
+		// attach
+		HasWidgets rendererContext = ApplicationContext.getRendererContext();
+		rendererContext.add(getSkin().getWidget());
 	}
 
 	@Override
 	public void setSize(int width, int height) {
-		ApplicationContext.getRendererContext().setPixelSize(Window.getClientWidth(), Window.getClientHeight());
-
-		super.setSize(width, height);
+		System.out.println("SET SIZE " + width + "x" + height);
 		
+		super.setSize(width, height);
+
 		// Since this component doesn't have a parent, it won't be validated
 		// via layout; ensure that it is valid here
 		validate();
@@ -61,6 +67,9 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 	@Override
 	public void render(Object data, Button button, boolean highlighted) {
+		
+		System.out.println("RENDER " +data);
+		
 		Image icon = null;
 		String text = null;
 
@@ -142,6 +151,11 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 	}
 
 	@Override
+	public void repaint(Component component, boolean immediate) {
+		component.paint();
+	}
+
+	@Override
 	public String toString(Object data) {
 		String string = null;
 
@@ -156,9 +170,11 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 		return string;
 	}
-	
+
 	@Override
 	public String toString() {
+		System.out.println("TO STRING");
+		
 		return getSkin().getWidget().toString();
 	}
 }

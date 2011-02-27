@@ -37,7 +37,6 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -654,7 +653,7 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 	private Container parent = null;
 
 	// The component's valid state
-	private boolean valid = false;
+	private transient boolean valid = false;
 
 	// The component's location, relative to the parent's origin
 	private int x = 0;
@@ -886,6 +885,11 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 
 		Container previousParent = this.parent;
 		this.parent = parent;
+
+		// detach
+		if (GWT.isClient()) {
+			setup(parent != null);
+		}
 
 		if (previousParent != null) {
 			previousParent.descendantRemoved(this);
@@ -1857,10 +1861,50 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 		}
 	}
 
+	private transient boolean setup = false;
+
+	public final void setup(boolean mode) {
+		if (mode) {
+			if (!setup) {
+				attach(true);
+			}
+		} else {
+			attach(false);
+		}
+	}
+
+	protected void attach(boolean mode) {
+		setup = mode;
+
+		if (!mode) {
+			Widget componentWidget = getSkin().getWidget();
+			componentWidget.removeFromParent();
+			return;
+		}
+
+		if (parent == null) {
+			return;
+		}
+
+		System.out.println("---S-------------" + getClass().getName());
+		Widget componentWidget = getSkin().getWidget();
+		if (!componentWidget.isAttached()) {
+			Widget parentWidget = parent.getSkin().getWidget();
+			if (parentWidget instanceof AcceptsOneWidget) {
+				AcceptsOneWidget panel = (AcceptsOneWidget) parentWidget;
+				panel.setWidget(componentWidget);
+			} else if (parentWidget instanceof HasWidgets) {
+				HasWidgets panel = (HasWidgets) parentWidget;
+				panel.add(componentWidget);
+			}
+			repaint(true);
+		}
+	}
+
 	/**
 	 * Lays out the component by calling {@link Skin#layout()}.
 	 */
-	public void validate() {
+	public final void validate() {
 		if (!valid && visible) {
 			layout();
 			valid = true;
@@ -1875,8 +1919,6 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 		skin.layout();
 	}
 
-	private boolean needsPainting = false;
-
 	/**
 	 * Flags the entire component as needing to be repainted.
 	 */
@@ -1890,13 +1932,30 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 	 * @param immediate
 	 */
 	public void repaint(boolean immediate) {
-		needsPainting = true;
+		repaint(this, immediate);
+	}
 
+	/**
+	 * Flags the specified component as needing to be repainted.
+	 * 
+	 * @param immediate
+	 */
+	public void repaint(Component component) {
 		if (parent != null) {
-			// Notify the parent that the region needs updating
-			parent.repaint(immediate);
+			// Notify the parent that the component needs updating
+			parent.repaint(component, false);
+		}
+	}
 
-			// Repaint any affected decorators
+	/**
+	 * Flags the specified component as needing to be repainted.
+	 * 
+	 * @param immediate
+	 */
+	public void repaint(Component component, boolean immediate) {
+		if (parent != null) {
+			// Notify the parent that the component needs updating
+			parent.repaint(component, immediate);
 		}
 	}
 
@@ -1904,39 +1963,9 @@ public abstract class Component implements ConstrainedVisual, Serializable {
 	 * Paints the component. Delegates to the skin.
 	 */
 	@Override
-	public void paint(final Widget context) {
+	public void paint() {
 		System.out.println("---P-------------" + getClass().getName());
-
-		if (this instanceof Renderer) {
-			if (!getSkin().getWidget().isAttached()) {
-				AbsolutePanel rendererContext = ApplicationContext.getRendererContext();
-				rendererContext.add(getSkin().getWidget());
-				invalidate();
-			}
-		} else {
-			if (context == null) {
-				getSkin().getWidget().removeFromParent();
-				return;
-			}
-
-			if (!getSkin().getWidget().isAttached()) {
-				if (context instanceof AcceptsOneWidget) {
-					AcceptsOneWidget panel = (AcceptsOneWidget) context;
-					panel.setWidget(getSkin().getWidget());
-				} else if (context instanceof HasWidgets) {
-					HasWidgets panel = (HasWidgets) context;
-					panel.add(getSkin().getWidget());
-				}
-				invalidate();
-			}
-
-			if (!needsPainting) {
-				return;
-			}
-		}
-
-		skin.paint(context);
-		needsPainting = false;
+		skin.paint();
 	}
 
 	/**
