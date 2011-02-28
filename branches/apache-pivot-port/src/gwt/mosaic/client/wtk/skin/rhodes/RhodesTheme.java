@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 
 import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.wtk.Checkbox;
+import gwt.mosaic.client.wtk.ListView;
 import gwt.mosaic.client.wtk.PushButton;
 import gwt.mosaic.client.wtk.TextInput;
 import gwt.mosaic.client.wtk.Theme;
@@ -19,6 +20,9 @@ public class RhodesTheme extends Theme {
 	}
 	
 	interface CheckboxSkinBeanAdapter extends BeanAdapter<RhodesCheckboxSkin> {
+	}
+	
+	interface ListViewSkinBeanAdapter extends BeanAdapter<RhodesListViewSkin> {
 	}
 
 	public RhodesTheme() {
@@ -52,6 +56,17 @@ public class RhodesTheme extends Theme {
 						CheckboxSkinBeanAdapter adapter = GWT
 								.create(CheckboxSkinBeanAdapter.class);
 						adapter.setBean(new RhodesCheckboxSkin());
+						return adapter;
+					}
+				});
+		
+		componentSkinMap.put(ListView.class,
+				new BeanAdapterFactory<RhodesListViewSkin>() {
+					@Override
+					public BeanAdapter<RhodesListViewSkin> create() {
+						ListViewSkinBeanAdapter adapter = GWT
+								.create(ListViewSkinBeanAdapter.class);
+						adapter.setBean(new RhodesListViewSkin());
 						return adapter;
 					}
 				});

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.wtk.skin'>
+
+	<ui:style>
+		.outerDiv {
+			margin: 0px !important;
+			padding: 0px !important;
+			border: 0px none !important;
+			/*outline: 0px none !important;*/
+	
+			display: table !important;
+			overflow: hidden !important;
+		}
+		.innerDiv {
+
+		}
+	</ui:style>
+
+	<g:FocusPanel styleName="{style.outerDiv}">
+		<g:FlowPanel styleName='{style.innerDiv}' ui:field="innerDiv" />
+	</g:FocusPanel>
+
+</ui:UiBinder>

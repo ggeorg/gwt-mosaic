@@ -330,6 +330,7 @@ public class RhodesPushButtonSkin extends PushButtonSkin {
 		// Math.max(height - 5, 0), CORNER_RADIUS / 2, CORNER_RADIUS / 2));
 		// }
 
+		super.paint();
 	}
 
 	// @Override
