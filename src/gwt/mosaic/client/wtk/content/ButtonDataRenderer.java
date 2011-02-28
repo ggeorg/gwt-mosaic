@@ -16,12 +16,10 @@
  */
 package gwt.mosaic.client.wtk.content;
 
-import gwt.mosaic.client.collections.HashSet;
 import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.BoxPane;
 import gwt.mosaic.client.wtk.Button;
 import gwt.mosaic.client.wtk.Component;
-import gwt.mosaic.client.wtk.Dimensions;
 import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.HorizontalAlignment;
 import gwt.mosaic.client.wtk.ImageView;
@@ -56,8 +54,6 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 	@Override
 	public void setSize(int width, int height) {
-		System.out.println("SET SIZE " + width + "x" + height);
-		
 		super.setSize(width, height);
 
 		// Since this component doesn't have a parent, it won't be validated
@@ -67,9 +63,6 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 	@Override
 	public void render(Object data, Button button, boolean highlighted) {
-		
-		System.out.println("RENDER " +data);
-		
 		Image icon = null;
 		String text = null;
 
@@ -151,11 +144,6 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 	}
 
 	@Override
-	public void repaint(Component component, boolean immediate) {
-		component.paint();
-	}
-
-	@Override
 	public String toString(Object data) {
 		String string = null;
 
@@ -170,11 +158,14 @@ public class ButtonDataRenderer extends BoxPane implements Button.DataRenderer {
 
 		return string;
 	}
+	
+	@Override
+	public void repaint(Component component, boolean immediate) {
+		component.paint();
+	}
 
 	@Override
 	public String toString() {
-		System.out.println("TO STRING");
-		
 		return getSkin().getWidget().toString();
 	}
 }

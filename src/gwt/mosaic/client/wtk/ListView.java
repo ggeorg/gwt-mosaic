@@ -20,7 +20,6 @@ import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.collections.ArrayList;
 import gwt.mosaic.client.collections.List;
 import gwt.mosaic.client.collections.ListListener;
-import gwt.mosaic.client.collections.Map;
 import gwt.mosaic.client.collections.Sequence;
 import gwt.mosaic.client.collections.immutable.ImmutableList;
 import gwt.mosaic.client.json.JSON;
@@ -38,6 +37,7 @@ import java.util.Comparator;
  * to select or check one or more items.
  */
 @DefaultProperty("listData")
+@SuppressWarnings("serial")
 public class ListView extends Component {
     /**
      * Enumeration defining supported selection modes.
@@ -696,13 +696,12 @@ public class ListView extends Component {
 
     @Override
     protected void setSkin(BeanAdapter<? extends gwt.mosaic.client.wtk.Skin> styles) {
-    	throw new UnsupportedOperationException();
-//        if (!(skin instanceof ListView.Skin)) {
-//            throw new IllegalArgumentException("Skin class must implement "
-//                + ListView.Skin.class.getName());
-//        }
-//
-//        super.setSkin(skin);
+        if (!(styles.getBean() instanceof ListView.Skin)) {
+            throw new IllegalArgumentException("Skin class must implement "
+                + ListView.Skin.class.getName());
+        }
+
+        super.setSkin(styles);
     }
 
     /**
@@ -1812,5 +1811,10 @@ public class ListView extends Component {
 
     public ListenerList<ListViewBindingListener> getListViewBindingListeners() {
         return listViewBindingListeners;
+    }
+    
+    @Override
+    public void paint() {
+    	super.paint();
     }
 }

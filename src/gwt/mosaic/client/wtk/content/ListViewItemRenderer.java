@@ -16,8 +16,12 @@
  */
 package gwt.mosaic.client.wtk.content;
 
+import com.google.gwt.user.client.ui.HasWidgets;
+
+import gwt.mosaic.client.wtk.ApplicationContext;
 import gwt.mosaic.client.wtk.Bounds;
 import gwt.mosaic.client.wtk.BoxPane;
+import gwt.mosaic.client.wtk.Component;
 import gwt.mosaic.client.wtk.Font;
 import gwt.mosaic.client.wtk.HorizontalAlignment;
 import gwt.mosaic.client.wtk.ImageView;
@@ -31,139 +35,159 @@ import gwt.mosaic.client.wtk.style.Color;
 /**
  * Default list view item renderer.
  */
-public class ListViewItemRenderer extends BoxPane implements ListView.ItemRenderer {
-    protected ImageView imageView = new ImageView();
-    protected Label label = new Label();
+@SuppressWarnings("serial")
+public class ListViewItemRenderer extends BoxPane implements
+		ListView.ItemRenderer {
+	protected ImageView imageView = new ImageView();
+	protected Label label = new Label();
 
-    public static final int DEFAULT_ICON_WIDTH = 16;
-    public static final int DEFAULT_ICON_HEIGHT = 16;
-    public static boolean DEFAULT_SHOW_ICON = false;
+	public static final int DEFAULT_ICON_WIDTH = 16;
+	public static final int DEFAULT_ICON_HEIGHT = 16;
+	public static boolean DEFAULT_SHOW_ICON = false;
 
-    public ListViewItemRenderer() {
-        getStyles().put("horizontalAlignment", HorizontalAlignment.LEFT);
-        getStyles().put("verticalAlignment", VerticalAlignment.CENTER);
-        getStyles().put("padding", new Insets(2, 3, 2, 3));
+	public ListViewItemRenderer() {
+		getStyles().put("horizontalAlignment", HorizontalAlignment.LEFT);
+		getStyles().put("verticalAlignment", VerticalAlignment.CENTER);
+		getStyles().put("padding", new Insets(2, 3, 2, 3));
 
-        add(imageView);
-        add(label);
+		add(imageView);
+		add(label);
 
-        imageView.setPreferredSize(DEFAULT_ICON_WIDTH, DEFAULT_ICON_HEIGHT);
-        imageView.setVisible(DEFAULT_SHOW_ICON);
-    }
+		imageView.setPreferredSize(DEFAULT_ICON_WIDTH, DEFAULT_ICON_HEIGHT);
+		imageView.setVisible(DEFAULT_SHOW_ICON);
 
-    @Override
-    public void setSize(int width, int height) {
-        super.setSize(width, height);
+		// attach
+		HasWidgets rendererContext = ApplicationContext.getRendererContext();
+		rendererContext.add(getSkin().getWidget());
+	}
 
-        // Since this component doesn't have a parent, it won't be validated
-        // via layout; ensure that it is valid here
-        validate();
-    }
+	@Override
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
 
-    @Override
-    public void render(Object item, int index, ListView listView, boolean selected,
-        boolean checked, boolean highlighted, boolean disabled) {
-        renderStyles(listView, selected, highlighted, disabled);
+		// Since this component doesn't have a parent, it won't be validated
+		// via layout; ensure that it is valid here
+		validate();
+	}
 
-        Image icon = null;
-        String text = null;
+	@Override
+	public void render(Object item, int index, ListView listView,
+			boolean selected, boolean checked, boolean highlighted,
+			boolean disabled) {
+		renderStyles(listView, selected, highlighted, disabled);
 
-        if (item instanceof ListItem) {
-            ListItem listItem = (ListItem)item;
-            icon = listItem.getIcon();
-            text = listItem.getText();
-        } else if (item instanceof Image) {
-            icon = (Image)item;
-        } else {
-            if (item != null) {
-                text = item.toString();
-            }
-        }
+		Image icon = null;
+		String text = null;
 
-        imageView.setImage(icon);
-        label.setText(text);
-    }
+		if (item instanceof ListItem) {
+			ListItem listItem = (ListItem) item;
+			icon = listItem.getIcon();
+			text = listItem.getText();
+		} else if (item instanceof Image) {
+			icon = (Image) item;
+		} else {
+			if (item != null) {
+				text = item.toString();
+			}
+		}
 
-    protected void renderStyles(ListView listView, boolean selected,
-        boolean highlighted, boolean disabled) {
-        imageView.getStyles().put("opacity", listView.isEnabled() ? 1.0f : 0.5f);
+		imageView.setImage(icon);
+		label.setText((index == -1) ? "M" : text);
+	}
 
-        Font font = (Font)listView.getStyles().get("font");
-        label.getStyles().put("font", font);
+	protected void renderStyles(ListView listView, boolean selected,
+			boolean highlighted, boolean disabled) {
+		imageView.getStyles()
+				.put("opacity", listView.isEnabled() ? 1.0f : 0.5f);
 
-        Color color;
-        if (listView.isEnabled() && !disabled) {
-            if (selected) {
-                if (listView.isFocused()) {
-                    color = (Color)listView.getStyles().get("selectionColor");
-                } else {
-                    color = (Color)listView.getStyles().get("inactiveSelectionColor");
-                }
-            } else {
-                color = (Color)listView.getStyles().get("color");
-            }
-        } else {
-            color = (Color)listView.getStyles().get("disabledColor");
-        }
+		Font font = (Font) listView.getStyles().get("font");
+		label.getStyles().put("font", font);
 
-        label.getStyles().put("color", color);
-    }
+		Color color;
+		if (listView.isEnabled() && !disabled) {
+			if (selected) {
+				if (listView.isFocused()) {
+					color = (Color) listView.getStyles().get("selectionColor");
+				} else {
+					color = (Color) listView.getStyles().get(
+							"inactiveSelectionColor");
+				}
+			} else {
+				color = (Color) listView.getStyles().get("color");
+			}
+		} else {
+			color = (Color) listView.getStyles().get("disabledColor");
+		}
 
-    public String toString(Object item) {
-        String string = null;
+		label.getStyles().put("color", color);
+	}
 
-        if (item instanceof ListItem) {
-            ListItem listItem = (ListItem)item;
-            string = listItem.getText();
-        } else {
-            if (item != null) {
-                string = item.toString();
-            }
-        }
+	public String toString(Object item) {
+		String string = null;
 
-        return string;
-    }
+		if (item instanceof ListItem) {
+			ListItem listItem = (ListItem) item;
+			string = listItem.getText();
+		} else {
+			if (item != null) {
+				string = item.toString();
+			}
+		}
 
-    public int getIconWidth() {
-        return imageView.getPreferredWidth(-1);
-    }
+		return string;
+	}
 
-    public void setIconWidth(int iconWidth) {
-        imageView.setPreferredWidth(iconWidth);
-    }
+	public int getIconWidth() {
+		return imageView.getPreferredWidth(-1);
+	}
 
-    public int getIconHeight() {
-        return imageView.getPreferredHeight(-1);
-    }
+	public void setIconWidth(int iconWidth) {
+		imageView.setPreferredWidth(iconWidth);
+	}
 
-    public void setIconHeight(int iconHeight) {
-        imageView.setPreferredHeight(iconHeight);
-    }
+	public int getIconHeight() {
+		return imageView.getPreferredHeight(-1);
+	}
 
-    public boolean getShowIcon() {
-        return imageView.isVisible();
-    }
+	public void setIconHeight(int iconHeight) {
+		imageView.setPreferredHeight(iconHeight);
+	}
 
-    public void setShowIcon(boolean showIcon) {
-        imageView.setVisible(showIcon);
-    }
+	public boolean getShowIcon() {
+		return imageView.isVisible();
+	}
 
-    public boolean getFillIcon() {
-        return (Boolean)imageView.getStyles().get("fill");
-    }
+	public void setShowIcon(boolean showIcon) {
+		imageView.setVisible(showIcon);
+	}
 
-    public void setFillIcon(boolean fillIcon) {
-        imageView.getStyles().put("fill", fillIcon);
-    }
+	public boolean getFillIcon() {
+		return (Boolean) imageView.getStyles().get("fill");
+	}
 
-    /**
-     * Gets the bounds of the text that is rendered by this renderer.
-     *
-     * @return
-     * The bounds of the rendered text, or <tt>null</tt> if this renderer did
-     * not render any text.
-     */
-    public Bounds getTextBounds() {
-        return (label.isVisible() ? label.getBounds() : null);
-    }
+	public void setFillIcon(boolean fillIcon) {
+		imageView.getStyles().put("fill", fillIcon);
+	}
+
+	/**
+	 * Gets the bounds of the text that is rendered by this renderer.
+	 * 
+	 * @return The bounds of the rendered text, or <tt>null</tt> if this
+	 *         renderer did not render any text.
+	 */
+	public Bounds getTextBounds() {
+		return (label.isVisible() ? label.getBounds() : null);
+	}
+	
+	@Override
+	public void repaint(Component component, boolean immediate) {
+		component.paint();
+	}
+	
+	@Override
+	public String toString() {
+		System.out.println("TO STRING");
+		
+		return getSkin().getWidget().toString();
+	}
 }

@@ -8,6 +8,10 @@
 		<when-type-is class="gwt.mosaic.client.wtk.skin.LabelSkin.UI" />
 	</replace-with>
 	
+	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesListViewUI">
+		<when-type-is class="gwt.mosaic.client.wtk.skin.rhodes.RhodesListViewSkin.UI" />
+	</replace-with>
+	
 	<replace-with class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTextInputUI">
 		<when-type-is class="gwt.mosaic.client.wtk.skin.rhodes.RhodesTextInputSkin.UI" />
 	</replace-with>

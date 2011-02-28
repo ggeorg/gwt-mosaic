@@ -47,7 +47,8 @@ public class RhodesPushButtonUI extends Composite implements
 			@Override
 			public void execute() {
 				if (presender != null) {
-					presender.repaint();
+					//presender.repaint();
+					presender.invalidate();
 				}
 			}
 		});
