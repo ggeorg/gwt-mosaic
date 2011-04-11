@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+	<ui:style>
+		.separator {
+			overflow: hidden !important;
+			margin: 4px 0px 8px 0px;
+			/* margin-bottom = Form.verticalSpacing for symmetry */
+		}
+		
+		.separatorTable {
+			margin: 0px !important;
+			border: 0px !important;
+		}
+		
+		.txtSpan {
+			white-space: nowrap !important;
+			margin: 0px 0.33em 0px 0px;
+			font-weight: bold;
+			color: CaptionText;
+
+			text-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+		}
+		
+		.hr {
+			color: CaptionText;
+			background-color: CaptionText;
+			border-style: solid;
+			border-width: 0px 0px 1px 0px;
+			height: 0px;
+
+			-moz-box-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+			-webkit-box-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+			box-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+		}
+		
+		.txtSpanShadow {
+			text-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+		}
+		
+		.hrShadow {
+			-moz-box-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+			-webkit-box-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+			box-shadow: 0.1em 0.1em 0.2em ThreeDLightShadow;
+		}
+	</ui:style>
+
+	<div class="m-Separator {style.separator}">
+		<table class="m-SeparatorTable {style.separatorTable}" width="100%"
+			cellspacing="0" cellpadding="0">
+
+			<col align="left" valign="middle" />
+			<col align="left" valign="middle" width="100%" />
+
+			<tr>
+				<td>
+					<span class="m-SeparatorText {style.txtSpan}" ui:field='txtSpan' />
+				</td>
+				<td>
+					<hr class="m-SeparatorHR {style.hr}" />
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</ui:UiBinder>

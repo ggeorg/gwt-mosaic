@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<generate-with class="gwt.mosaic.rebind.BeanAdapterGenerator">
+		<when-type-assignable class="gwt.mosaic.client.beans.BeanAdapter" />
+	</generate-with>
+	<generate-with class="gwt.mosaic.rebind.BeanAdapterFactoryGenerator">
+		<when-type-assignable class="gwt.mosaic.client.beans.BeanAdapterFactory" />
+	</generate-with>
+</module>
