@@ -1,0 +1,120 @@
+#summary Using Application module & Actions with UiBinder.
+
+= Introduction =
+
+The UiBinder framework allows you to build your applications as HTML pages with GWT widgets sprinkled throughout them (see [http://code.google.com/intl/el/webtoolkit/doc/latest/DevGuideUiBinder.html Declarative Layout with UiBinder]).
+
+This tutorial will show how to bind UiBinder declared elements with GWT Mosaic Actions using the Application module.
+
+A GWT Mosaic Action can be used to invoke an operation that can come from multiple sources. For example, an application 'exit' operation can be invoked from the Exit menu, a context menu or by pressing a button. The command will be called no matter how it is invoked by the user. In addition, disabling the command will automatically disable the menu items and buttons.
+
+= Details =
+
+Here's a very simple example of a UiBinder template that contains a {{{MenuBar}}} with an Exit {{{MenuItem}}} and a {{{ToolBar}}} with an Exit {{{ToolButton}}}:
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:org.gwt.mosaic.ui.client'
+	xmlns:l='urn:import:org.gwt.mosaic.ui.client.layout'>
+
+	<l:LayoutPanel ui:field='mainPanel' widgetSpacing="0">
+		<l:BoxLayout orientation="vertical">
+			<l:BoxLayoutData fillWidth="true">
+				<g:MenuBar>
+					<g:MenuItem>
+						<div>File</div>
+						<g:MenuBar>
+							<g:MenuItem ui:field='miExit' />
+						</g:MenuBar>
+					</g:MenuItem>
+				</g:MenuBar>
+			</l:BoxLayoutData>
+
+			<l:BoxLayoutData fillWidth="true">
+				<m:ToolBar>
+					<m:ToolButton ui:field='toolBtnExit' />
+				</m:ToolBar>
+			</l:BoxLayoutData>
+		</l:BoxLayout>
+	</l:LayoutPanel>
+
+</ui:UiBinder>
+}}}
+
+If the owner class is our {{{EntryPoint}}} class, the implementation looks like:
+
+{{{
+import org.gwt.mosaic.actions.client.Action;
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+import org.gwt.mosaic.application.client.ApplicationConstants;
+import org.gwt.mosaic.application.client.ApplicationResources;
+import org.gwt.mosaic.application.client.CmdAction;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+import org.gwt.mosaic.application.client.util.ApplicationFramework;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.ToolButton;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Widget;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+  interface Binder extends UiBinder<Widget, Test> {
+  }
+
+  private static final Binder binder = GWT.create(Binder.class);
+
+  @UiField
+  LayoutPanel mainPanel;
+
+  @UiField
+  MenuItem miExit;
+
+  @UiField
+  ToolButton toolBtnExit;
+
+  public void onModuleLoad() {
+    launch(this, new ApplicationResources() {
+      private final ApplicationConstants constants = GWT.create(TestConstants.class);
+      private final ApplicationClientBundle clientBundle = GWT.create(TestClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
+      }
+
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
+      }
+    });
+  }
+
+  @Override
+  protected void initialize() {
+    binder.createAndBindUi(this);
+
+    ApplicationFramework.bind("exitName", miExit);
+    ApplicationFramework.bind("exitName", toolBtnExit);
+  }
+
+  @Override
+  protected void startup() {
+    show(mainPanel);
+  }
+
+  @CmdAction(name = "exitName", description = "exitShortDescription", image = "exit_action")
+  public void exitCmd() {
+    InfoPanel.show("Action", (String) getContext().getActionMap().get(
+        "exitName").getValue(Action.NAME));
+  }
+}
+}}}
+
+If you run the application you will notice that both the {{{ToolButton}}} and {{{MenuItem}}} are bound to the same {{{exitCmd}}} action:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-uibinder.png
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>

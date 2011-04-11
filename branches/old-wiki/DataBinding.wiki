@@ -1,0 +1,248 @@
+#summary Data binding library & GWT data-aware widgets.
+#sidebar TableOfContents
+
+= Introduction =
+
+The data dinding library contains classes and interfaces that provide basic data access. The library contains also a few widgets (so far: DBTextBox, DBLabel, DBListBox and DBLookupListBox) capable of accessing (database) data.
+
+The design follows the principles of the DataExpress library used in JBuilder, and the DB related classes in Delphi.
+
+= Details =
+
+The data dinding library includes functionality covering the three main phases of data handling:
+
+<ul>
+<li>Providing: functionality to obtain data and manage local data sets.</li>
+<li>Manipulation: navigation and editing of the data locally.</li>
+<li>Resolving: functionality for the updating of the data from the local data sets back to the original source of the data.</li>
+</ul>
+
+The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSet.java DataSet] interface is the corner stone of the library. It provides a cursor for accessing and navigating table data. Manages a list in memory to temporarily store a new inserted row, or changes to the current row. Multiple data-aware widgets can be bound to (through a [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/DataSource.java DataSource] object) and synchronized with the same _DataSet_.
+
+The [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreDataSet.java ListStoreDataSet] and [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/BeanStoreDataSet.java BeanStoreDataSet] are the only availbale so far implementors of _DataSet_. Both extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/AbstractDataSet.java AbstractDataSet] which is an almost complete abstract implementation of _DataSet_.
+
+Not implemented yet, but will be in the next release is master-detail relationships.
+
+The purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Provider.java Provider] interface is to "provide" (or populate) a _DataSet_ with data and as a factory for creating new rows to insert to the _DataSet_. This interface is implemented so far by [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreProvider.java ListStoreProvider] and [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/BeanStoreProvider.java BeanStoreProvider].
+
+And, the purpose of the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/Resolver.java Resolver] interface is the data from the local data sets back to the original source of the data (the database). [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/ListStoreResolver.java ListStoreResolver] is the only implementor of _Resolver_ interface so far.
+
+== Data Binding in Action ===
+
+This example shows how to bind a ListBox, a HTML and a TextBox widget to a list of users (`List<User>`) using the data dinding library.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/data-binding1.png
+
+Code:
+
+{{{
+import java.util.ArrayList;
+import java.util.List;
+
+import org.gwt.mosaic2g.binding.client.AbstractBinder;
+import org.gwt.mosaic2g.db.client.Column;
+import org.gwt.mosaic2g.db.client.DataRowDescriptor;
+import org.gwt.mosaic2g.db.client.DataSource;
+import org.gwt.mosaic2g.db.client.IntegerColumn;
+import org.gwt.mosaic2g.db.client.ListStoreDataSet;
+import org.gwt.mosaic2g.db.client.ListStoreProvider.DataFactory;
+import org.gwt.mosaic2g.db.client.StringColumn;
+import org.gwt.mosaic2g.db.client.ui.DBLabel;
+import org.gwt.mosaic2g.db.client.ui.DBListBox;
+import org.gwt.mosaic2g.db.client.ui.DBTextBox;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.RootPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+
+	// 'userId' is used as a primary key for newly created users by a provider.
+	private int userId = 0;
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+
+		// Create the database (store) - in a real example this will be database
+		// object.
+		final List<User> store = new ArrayList<User>();
+		for (int i = 0; i < 100; i++) {
+			User user = new User(++userId, "FirtsName" + i, "LastName" + i,
+					20 + (int) (Math.random() * 50));
+			store.add(user);
+		}
+
+		// Create a DataSet: ListStoreDataSet is used since the database is a
+		// java.util.List. The DataFactory object is used in
+		// DataSet.insert(boolean before) to create a new row in the
+		// ListStoreDataSet.
+		final ListStoreDataSet<User> dataSet = new ListStoreDataSet<User>(
+				store, new DataFactory<User>() {
+					@Override
+					public User create() {
+						return new User(++userId, null, null, 0);
+					}
+				});
+		// Get the DataRowDescriptor to add column descriptors to the DataSet.
+		DataRowDescriptor<User> descr = dataSet.getDataRowDescriptor();
+
+		// Create the 'id' column and add it to the DataRowDescriptor.
+		Column<Integer> idC = new IntegerColumn("id",
+				new AbstractBinder<Integer>() {
+					public Integer get() {
+						if (dataSet.getOpen().$()) {
+							return dataSet.getRowData().getId();
+						}
+						return null;
+					}
+				});
+		descr.addColumn(idC);
+
+		// Create the 'firstName' column and add it to the DataRowDescriptor.
+		Column<String> firstNameC = new StringColumn("firstName",
+				new AbstractBinder<String>() {
+					public String get() {
+						if (dataSet.getOpen().$()) {
+							return dataSet.getRowData().getFirstName();
+						}
+						return null;
+					}
+
+					public void set(String value) {
+						if (dataSet.getOpen().$()) {
+							dataSet.getRowData().setFirstName(value);
+
+							// Fire a value change event so that other
+							// data-aware controls (like the DBListBox we are
+							// going to use) get notified about any changes in
+							// 'firstName' column.
+							fireValueChangeEvent(value);
+						}
+					}
+				});
+		descr.addColumn(firstNameC);
+
+		// Create the DataSource object (used by the data-aware widgets)
+
+		DataSource<User> dataSource = new DataSource<User>(dataSet);
+
+		// Create the data-ware widgets
+
+		DBListBox<User> usersLB = new DBListBox<User>(dataSource, idC,
+				firstNameC);
+		usersLB.setVisibleItemCount(10);
+
+		DBLabel<User, Integer> idL = new DBLabel<User, Integer>(dataSource, idC);
+
+		DBTextBox<User, String> firstNameTB = new DBTextBox<User, String>(
+				dataSource, firstNameC);
+
+		// Open the DataSet
+
+		dataSet.open();
+
+		// Add the data-aware widgets to a FlexTable and display them.
+
+		FlexTable panel = new FlexTable();
+		panel.setWidget(0, 1, usersLB);
+		panel.setText(1, 0, "Id: ");
+		panel.setWidget(1, 1, idL);
+		panel.setText(2, 0, "First Name: ");
+		panel.setWidget(2, 1, firstNameTB);
+
+		RootPanel.get().add(panel, 10, 10);
+	}
+}
+}}}
+
+The `User` class used (POJOs are OK):
+
+{{{
+public class User {
+	private int id;
+	private String firstName;
+	private String lastName;
+	private int age;
+
+	public User() { }
+
+	public User(int id, String firstName, String lastName, int age) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.age = age;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", age=" + age + "]";
+	}
+}
+}}}
+
+== Source code ==
+
+[http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/db/client/]
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
