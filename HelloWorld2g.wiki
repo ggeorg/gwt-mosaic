@@ -1,0 +1,116 @@
+#summary Hello World in GWT Mosaic 2g.
+#sidebar TableOfContents
+
+= Prerequisites =
+
+ # You will need GWT-2.1.0.zip; download it from [http://code.google.com/p/google-web-toolkit/downloads/list].
+ # Add the latest gwt-mosaic-2.x.jar to your classpath and add {{{<inherits name="org.gwt.mosaic2g.Mosaic" />}}} into your gwt.xml module file.
+
+= Details =
+
+It's the classic hello world a la GWT Mosaic 2g.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/hello-world.png
+
+The code:
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.control.Text;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Main implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (e.g. RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph (always a show node).
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		// The show is the root node of the scene graph.
+		Show show = new Show();
+
+		// Create a text node and set its text property to "Hello World".
+		Text text = new Text(show);
+		text.setText("Hello World");
+		// Declare a border for our text node.
+		text.setBorder("10px solid green");
+
+		// Add our text node to a segment node. A segment specifies which nodes
+		// in a scene graph are active.
+		Segment s = new Segment(show);
+		s.add(text);
+
+		// Exactly one segment can be active at any given time.
+		show.activateSegment(s);
+
+		// Return the root node (which is always a show node) of our scene
+		// graph.
+		return show;
+	}
+
+}
+}}}
+
+== Understanding Bounds ==
+
+The visual features displayed within a GWT Mosaic scene are fully represented by a 2D scene graph where each visual feature is represented by a distinct node with variables that can be manipulated dynamically. The node's size and position (otherwise known as "bounds") becomes complicated when considering these many CSS properties you can look at in order to determine the width and height of elements.
+
+In GWT Mosaic 2g the bounds used for layout and positioning a visual feature are:
+
+ * bounds.x := left - marginLeft - borderLeftWidth
+ * bounds.y := top  - marginTop  - borderTopWidth
+ * bounds.width  := width   - (paddingLeft + paddingRight)
+ * bounds.height := height  - (paddingTop  + paddinBottom)
+
+Note: using those conventions the bounds.width and bounds.height is equal to clientWidth and clientHeight respectively.
+
+This can be visualized with the following code snip set:
+
+{{{
+Box b1 = new Box(show, 50, 50, 100, 100);
+b1.setBorder("20px solid orange");
+b1.setStyleName("with-padding");
+
+Box b2 = new Box(show, 50, 50, 100, 100);
+b2.setBorder("10px dashed green");
+b2.setStyleName("with-padding");
+
+Box b3 = new Box(show, 50, 50, 100, 100);
+b3.setBackground("yellow");
+}}}
+
+The CSS for class="with-padding" is:
+
+{{{
+.with-padding { padding: 10px !important; }
+}}}
+
+http://gwt-mosaic.googlecode.com/svn/wiki/2g/bounds.png
+
+_(Now it must be clear why, in the hello world screenshot above, the left and top part of the border is not visible)_
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>

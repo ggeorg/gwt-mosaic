@@ -1,0 +1,287 @@
+#summary A JSR 296 inspired application framework.
+#sidebar TableOfContents
+
+= Introduction =
+
+The application module provides a simple framework for building GWT based applications. It is a small set of Java classes that provides infrastructure that's common to most GWT applications:
+
+ * Management of application life-cycle, startup and shutdown
+ * Support for loading localized resources, like strings, messages (TODO) and images
+ * Support for loosely coupling Actions to their presentation
+
+= Application module examples =
+
+This section provides a series of examples that incrementally expose many of the most important aspects of the API.
+
+== Hello World based on {{{Application}}} ==
+
+To write an application, you need to do just a few things:
+
+ * Make your {{{EntryPoint}}} class to extend the {{{Application}}} class and override its {{{startup}}} method. Your {{{startup}}} method should create and show the application's initial GUI.
+ * In your {{{Entrypoint}}} {{{onLoad}}} method, call the static {{{Application.launch}}} method. This initializes the application module.
+
+The following example does just that.
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends Application implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this);
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = new Button("Hello World", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Thank you!");
+      }
+    });
+
+    Viewport viewport = new Viewport(new BorderLayout());
+    viewport.getLayoutPanel().add(btn);
+    viewport.attach();
+  }
+}
+}}}
+
+If you run {{{Test}}} class you'll see something like this:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-example1.png
+
+There is still a lot of ({{{Viewport}}}) boilerplate here, because {{{Application}}} base class can't assume very much about how the application's GUI is structured. The next example shows how to write the same thing more simply, by using a class that extends {{{Application}}} called {{{SingleFrameApplication}}}.
+
+== Hello World based on {{{SingleFrameApplication}}} ==
+
+To create an application based on {{{Viewport}}}, extend the {{{SingleFrameApplication}}} class. Your application's subclass should override {{{startup}}} to create the application's main GUI panel and then call {{{show}}} to create, configure, and show a {{{Viewport}}} that contains the panel.
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this);
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = new Button("Hello World", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Thank you!");
+      }
+    });
+
+    show(btn);
+  }
+}
+}}}
+
+This example does exactly what the previous one does, however the biolerplate for creating and configuring {{{Viewport}}} is handled by the {{{SingleFrameApplication.show}}} method. {{{SingleFrameApplication}}} also takes care of some other things like History management.
+
+=== An {{{Application}}} with Resources ===
+
+In the previous examples, we created an application that shows by default {{{[Application Title]}}} in the browsers title bar, and a button with a literal string. Strings that are going to be read by the user should be localized, and to enable that, they should be loaded from an {{{ApplicationResource}}} bundle.
+
+Here's a new version of the previous example, that configures the application module with an {{{ApplicationResource}}} bundle:
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+import org.gwt.mosaic.application.client.ApplicationConstants;
+import org.gwt.mosaic.application.client.ApplicationResources;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this, new ApplicationResources() {
+      final TestConstants constants = GWT.create(TestConstants.class);
+      final TestClientBundle clientBundle = GWT.create(TestClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
+      }
+
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
+      }
+    });
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = new Button("Hello World", new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Thank you!");
+      }
+    });
+
+    show(btn);
+  }
+}
+}}}
+
+Where {{{TestConstants}}} is an interface that extends {{{ApplicationConstants}}}:
+
+{{{
+import org.gwt.mosaic.application.client.ApplicationConstants;
+
+public interface TestConstants extends ApplicationConstants {
+
+}
+}}}
+
+and, {{{TestClientBundle}}} is an interface that extends {{{ApplicationClientBundle}}}:
+
+{{{
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+
+public interface TestClientBundle extends ApplicationClientBundle {
+
+}
+}}}
+
+The {{{TestConstants.properties}}} file for our application contains the string literals defined in {{{ApplicationConstants}}} that we want to override:
+
+{{{
+applicationId = test
+applicationTitle = Test
+applicationVersion = 0.1
+applicationVendor = GWT Mosaic
+applicationVendorId = GWTMosaic
+applicationHomepage = http://code.google.com/p/gwt-mosaic/
+applicationDescription = GWT Mosaic Test Application
+}}}
+
+This example goes a little overboard configuring the browser's title bar from the {{{ApplicationResource}}} bundle. In a real application, one would use resources for values that were likely to be localized, or images. This can make it easier for a developer to understand what the application's external resource dependencies are, and it can simplify making systematic changes.
+
+If you run our {{{Test}}} you'll see something like this:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-example2.png
+
+The application module uses the {{{TestConstants.properties}}} to set the browser's title bar to the specified value.
+
+== Defining Actions with the {{{@CmdAction}}} Annotation ==
+
+The {{{@CmdAction}}} annotation marks a method that's intended to serve as the implementation of an {{{Action}}}'s {{{actionPerformed}}} method. The {{{ApplicationContext getActionMap}}} method creates an {{{ActionMap}}} that contains one {{{Action}}} object for each {{{@CmdAction}}} defined by a class that extends {{{Application}}} class.
+
+We define a {{{@CmdAction}}} for our {{{Test}}} application:
+
+{{{
+  @CmdAction(description = "helloWorldShortDescription", image = "bell")
+  public void helloWorld() {
+    Window.alert("Thank you!");
+  }
+}}}
+
+and we use the static method {{{ApplicationFramework.newButton("helloWorld")}}} to create the button in {{{startup}}}:
+
+{{{
+  @Override
+  protected void startup() {
+    Button btn = ApplicationFramework.newButton("helloWorld");
+
+    show(btn);
+  }
+}}}
+
+The default presentation properties of Actions defined this way are initialized automatically from the {{{ApplicationResources}}} bundle. In this case the Action's text and short description (tooltip) can be defined in {{{TestConstants}}}:
+
+{{{
+import org.gwt.mosaic.application.client.ApplicationConstants;
+
+public interface TestConstants extends ApplicationConstants {
+
+  @DefaultStringValue("Hello World")
+  String helloWorld();
+  
+  @DefaultStringValue("Hello World Short Description")
+  String helloWorldShortDescription();
+}
+}}}
+
+We inherit the {{{bell}}} image from the {{{ApplicationClientBundle}}}.
+
+Finally our {{{Test}}} application {{{EntryPoint}}} class looks like:
+
+{{{
+import org.gwt.mosaic.application.client.Application;
+import org.gwt.mosaic.application.client.ApplicationClientBundle;
+import org.gwt.mosaic.application.client.ApplicationConstants;
+import org.gwt.mosaic.application.client.ApplicationResources;
+import org.gwt.mosaic.application.client.CmdAction;
+import org.gwt.mosaic.application.client.SingleFrameApplication;
+import org.gwt.mosaic.application.client.util.ApplicationFramework;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+
+public class Test extends SingleFrameApplication implements EntryPoint {
+
+  public void onModuleLoad() {
+    Application.launch(this, new ApplicationResources() {
+      final TestConstants constants = GWT.create(TestConstants.class);
+      final TestClientBundle clientBundle = GWT.create(TestClientBundle.class);
+
+      public ApplicationConstants getConstants() {
+        return constants;
+      }
+
+      public ApplicationClientBundle getClientBundle() {
+        return clientBundle;
+      }
+    });
+  }
+
+  @Override
+  protected void startup() {
+    Button btn = ApplicationFramework.newButton("helloWorld");
+
+    show(btn);
+  }
+
+  @CmdAction(description = "helloWorldShortDescription", image = "bell")
+  public void helloWorld() {
+    Window.alert("Thank you!");
+  }
+}
+}}}
+
+If you run {{{Test}}} you'll see something like this:
+
+http://gwt-mosaic.googlecode.com/svn/wiki/app-example3.png
+
+The {{{helloWorld}}} method is executed each time you click on the button.
+
+== Exiting or reloading the {{{Application}}} ==
+
+TODO
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>

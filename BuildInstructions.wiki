@@ -1,0 +1,52 @@
+#summary Build instructions for building gwt-mosaic.jar and running the demo.
+#sidebar TableOfContents
+
+=== Requirements ===
+
+ * GWT 1.5.3 is required.
+ * The build requires a *GWT_HOME* enviornment variable
+ * Eclipse requires a *GWT15_HOME* classpath variable
+
+===1. Building===
+----
+To build a JAR enter:
+{{{
+	ant
+}}}	
+_Note: please check the build.properties and choose the correct value for the
+'gwt.dev' variable (default is 'gwt-dev-linux')._
+
+Other ANT targets are:
+ * all - for building the JAR and the demo WAR
+ * jar - for building the JAR only (default)
+ * war - for building the WAR
+
+=== 2. The demo ===
+----
+To compile and run the demo enter:
+{{{
+	Mosaic-compile
+	Mosaic-shell
+}}}
+_Note: both scripts are for linux._
+
+===3. Using===
+----
+To use the library you will need also gwt-dnd.jar & gwt-incubator.jar 
+from the lib directory and you have to add:
+{{{
+	<inherits name='org.gwt.mosaic.Mosaic' />
+	<inherits name='org.gwt.mosaic.actions.Actions' />
+
+        <!-- Inherit the default GWT Mosaic style sheet. You can change -->
+        <!-- the theme of your GWT Mosaic application by uncommenting   -->
+        <!-- any one of the following lines.                            -->
+        <!-- <inherits name='org.gwt.mosaic.theme.standard.Standard' /> -->
+        <!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
+        <!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
+        <inherits name='org.gwt.mosaic.theme.aegean.Aegean' />
+}}}
+in your module gwt.xml file.
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>

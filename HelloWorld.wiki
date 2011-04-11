@@ -1,0 +1,162 @@
+#summary A Hello World application.
+#sidebar TableOfContents
+
+= Introduction =
+
+Demonstration of `Viewport` & `LayoutPanel`.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/hello-world.png
+
+= Details =
+
+Java code:
+
+{{{
+import org.gwt.mosaic.ui.client.CaptionLayoutPanel;
+import org.gwt.mosaic.ui.client.InfoPanel;
+import org.gwt.mosaic.ui.client.MessageBox;
+import org.gwt.mosaic.ui.client.ToolBar;
+import org.gwt.mosaic.ui.client.ToolButton;
+import org.gwt.mosaic.ui.client.Viewport;
+import org.gwt.mosaic.ui.client.layout.BorderLayout;
+import org.gwt.mosaic.ui.client.layout.BorderLayoutData;
+import org.gwt.mosaic.ui.client.layout.BoxLayout;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData;
+import org.gwt.mosaic.ui.client.layout.LayoutPanel;
+import org.gwt.mosaic.ui.client.layout.BorderLayout.Region;
+import org.gwt.mosaic.ui.client.layout.BoxLayout.Orientation;
+import org.gwt.mosaic.ui.client.layout.BoxLayoutData.FillStyle;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class HelloWorld implements EntryPoint {
+  private final Command menuCommand = new Command() {
+    public void execute() {
+      MessageBox.alert(Window.getTitle(),
+          "Thank you for selecting a menu item.");
+    }
+  };
+
+  private final ClickHandler clickHandler = new ClickHandler() {
+    public void onClick(ClickEvent event) {
+      final Button btn = (Button) event.getSource();
+      InfoPanel.show(btn.getHTML(), "Stop poking me!");
+    }
+  };
+
+  private Widget newMenuBar() {
+    // Create a menu bar
+    final MenuBar menu = new MenuBar();
+    menu.setAnimationEnabled(true);
+
+    // Create the File menu
+    MenuBar fileMenu = new MenuBar(true);
+    fileMenu.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("File", fileMenu));
+    fileMenu.addItem("New", menuCommand);
+    fileMenu.addItem("Open...", menuCommand);
+    fileMenu.addItem("Open Location...", menuCommand);
+    fileMenu.addSeparator();
+    fileMenu.addItem("Quit", menuCommand);
+
+    // Create the Edit menu
+    MenuBar editMenu = new MenuBar(true);
+    editMenu.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("Edit", editMenu));
+    editMenu.addItem("Cut", menuCommand);
+    editMenu.addItem("Copy", menuCommand);
+    editMenu.addItem("Paste", menuCommand);
+    editMenu.addSeparator();
+    editMenu.addItem("Preferences", menuCommand);
+
+    // Create the Help menu
+    MenuBar helpMenu = new MenuBar(true);
+    helpMenu.setAnimationEnabled(true);
+    menu.addItem(new MenuItem("Help", helpMenu));
+    helpMenu.addItem("About", menuCommand);
+
+    return menu;
+  }
+
+  private Widget newToolBar() {
+    final ToolBar toolBar = new ToolBar();
+
+    toolBar.add(new ToolButton("Push 1", clickHandler));
+    toolBar.add(new ToolButton("Push 2", clickHandler));
+    toolBar.add(new ToolButton("Push 3", clickHandler));
+
+    toolBar.addSeparator();
+
+    toolBar.add(new ToolButton("Push 4", clickHandler));
+    toolBar.add(new ToolButton("Push 5", clickHandler));
+    
+    toolBar.addSpring();
+    
+    toolBar.add(new ToolButton("Push 6", clickHandler));
+
+    return toolBar;
+  }
+
+  /**
+   * This is the entry point method.
+   */
+  public void onModuleLoad() {    
+    final LayoutPanel toolBox = new LayoutPanel(new BoxLayout(Orientation.VERTICAL));
+    toolBox.setPadding(0);
+    toolBox.setWidgetSpacing(0);
+    toolBox.add(newMenuBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
+    toolBox.add(newToolBar(), new BoxLayoutData(FillStyle.HORIZONTAL));
+
+    final Viewport viewport = new Viewport(new BorderLayout());
+    final LayoutPanel content = viewport.getLayoutPanel();
+    content.setPadding(0);
+    content.add(toolBox, new BorderLayoutData(Region.NORTH));
+    content.add(new CaptionLayoutPanel("West"), new BorderLayoutData(
+        Region.WEST, "20%", "3em", "25%", true));
+    content.add(new CaptionLayoutPanel("Center"), new BorderLayoutData(true));
+    content.add(new HTML("Status bar"), new BorderLayoutData(Region.SOUTH));
+
+    viewport.attach();
+  }
+}
+}}}
+
+The GWT Module XML should contain:
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='test'>
+	<!-- Inherit Mosaic Web Toolkit stuff.                          -->
+	<inherits name='org.gwt.mosaic.Mosaic' />
+
+	<!-- Inherit the default GWT Mosaic style sheet. You can change -->
+	<!-- the theme of your GWT Mosaic application by uncommenting   -->
+	<!-- any one of the following lines.                            -->
+	<!-- <inherits name='org.gwt.mosaic.theme.standard.Standard' /> -->
+	<!-- <inherits name="org.gwt.mosaic.chrome.Chrome"/>            -->
+	<!-- <inherits name="org.gwt.mosaic.dark.Dark"/>                -->
+	<inherits name='org.gwt.mosaic.theme.aegean.Aegean' />
+
+	<!-- Other module inherits                                      -->
+
+	<!-- Specify the app entry point class.                         -->
+	<entry-point class='...' />
+
+	<!-- Specify the paths for translatable code                    -->
+	<source path='client' />
+</module>
+}}}
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>

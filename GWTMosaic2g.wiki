@@ -1,0 +1,89 @@
+#summary The 2nd Generation of GWT Mosaic framework designed as a GWT 2.1 extension.
+#labels Featured,Phase-Design
+#sidebar TableOfContents
+
+= Introduction =
+
+GWT Mosaic (2g) is built on top of a simple animation framework with support for maintaining a constant animation rate by dropping frames, rather slowing down the visual results.
+
+The second generation of GWT Mosaic provides a full-featured 2D scene graph API based on [https://hdcookbook.dev.java.net/grin.html HD Cookbook GRIN Scene Graph]. Similar to GRIN the framework is designed to be extended with other presentation elements, including programmatic elements. The GWT Mosaic scene graph doesn't try to address the overall control of an application; that's left for the developer to do in code. The framework does provide a simple state machine and timeline that might help structure application control.
+
+= Details =
+
+An application can be structured like this:
+
+{{{
+public class Application implements EntryPoint {
+	private Scene scene;
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		RootLayoutPanel.get().add(scene = new Scene());
+		scene.setShow(createShow());
+		AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+                animationEngine.setFrameMillis(40); // 25fps
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		final Show show = new Show();
+	    ...
+	}
+}
+}}}
+
+== Show ==
+
+The center of GWT Mosaic's scene graph is called a *Show*. The main function of a show is to display a *Feature*. A feature is something that presents something sensory to the user, like an image, text or maybe sound and video in future. A set of features that are presented together (at the same time) are collected into a *Segment*.
+
+A show doesn't provide any real control logic or application state; that's left to the developer. A show can:
+
+ * Move from any segment to any other segment.
+ * Manage initialization, e.g. loading images.
+ * Automatically move to another segment e.g. when an animation within the segment finishes.
+
+== Segment ==
+
+A segment specifies a number of features that are displayed (activated). A show is divided into a set of mutually-exclusive segments, exactly one of which is active at any given time.
+
+== Feature ==
+
+The entities actually displayed by a show are called *features*. Features can be divided in:
+
+ * [Controls]
+ * [Groups]
+ * [Modifiers]
+ * Timers
+
+The controls are the easiest ones to understand because they have a visual representation. Those are: Box, Image, ImageSequence, Text and any composition of them.
+
+Groups are features that represent a group of features. The group features are: Group, Assembly (a special case of a group feature that acts like a switch statement: only one child of an assembly can be active at a time), and Container which is the base class of all layout managers like Stack, HBox, VBox and Grid.
+
+Modifiers are features that modify a single feature. Those are the features used for translation (Translator), fade effects (Fade) and clipping (Clipped).
+
+The Timer feature triggers a set of commands after a number of keyframes.
+
+== Commands ==
+
+Commands are used as a glue to bind the framework together. Actions, like selecting a segment or part of a feature assembly are done using a command. When a command is executed, it is done in a scene-graph-safe-manner (commands are deferred until it is safe for execution).
+
+To execute a command simple call {{{show.runCommand(Command)}}} at any time in your code, as stated below, this will execute the command at the right point in the frame pump loop.
+
+== Synchronization ==
+
+Any change to a show's model needs to be synchronized into the "frame pump" loop, which is basically:
+
+{{{
+for frame 1 to infinity
+	wait until it is time to display the next frame
+	update show model
+	render show to screen
+}}}
+
+This is facilitated with a command model. At any time by calling {{{show.runCommand(Command)}}} the show queues the command for later execution, at the right point in the frame pump loop.
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>

@@ -1,0 +1,519 @@
+#sidebar TableOfContents
+
+= Introduction =
+
+A modifier feature is a feature that has a child (which can be a group or features). A modifier will modify the display of its child features in some way.
+
+= Details =
+
+The basic set of modifiers are:
+
+  * Fade
+  * Translator
+  * Clipped
+
+Some node types can support runtime scaling. Images can be scaled, and so can boxes, but e.g. text cannot. For this reason, the scaling model is not a normal modifier node - it does not have children whose appearance it modifies. The scaling model just maintains an x and y scale factor, and an anchor point. 
+
+All features that implement [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] can refer to a scaling model to modify their size and position. In general all features that extend [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/Control.java Control] implement the [http://code.google.com/p/gwt-mosaic/source/browse/trunk/src/org/gwt/mosaic2g/client/scene/HasScalingModel.java HasScalingModel] interface.
+
+Both the scaling factors and the anchor point can be animated. As with other animated parameters, they can be animated smoothly using tweening functions that are computed at compile time, and represented as a series of linear interpolations at runtime.
+
+Scaling model example:
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-scaling-wiki.xml?v=3" height="256" width="512" border="0"/>
+
+Code:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.Group;
+import org.gwt.mosaic2g.client.scene.InterpolatedModel;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.control.Box;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+        private final Scene scene = new Scene();
+
+        /**
+         * This is the entry point method.
+         */
+        public void onModuleLoad() {
+                // Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+                // Within the panel we add the scene. A scene is a top level area where
+                // you can set the root node of a scene graph, which is always a show
+                // node.
+                RootLayoutPanel.get().add(scene);
+                scene.setShow(createShow());
+
+                // Create an AnimationEngine instance with all AnimationClient(s) it has
+                // to manage (Scene implements the AnimationClient interface).
+                final AnimationEngine animationEngine = new AnimationEngine(
+                                new AnimationClient[] { scene });
+                // Start the animation engine.
+                animationEngine.start();
+        }
+        
+        private Show createShow() {
+                Show show = new Show();
+
+                InterpolatedModel scalingModel = MyScalingModel.INSTANCE.createModel();
+                
+                Box box1 = new Box(show, 20, 20, 100, 100);
+                box1.setBackground("orange");
+                box1.setBorder("5px solid red");
+
+                Box box2 = new Box(show, 100, 100, 50, 50);
+                box2.setBackground("yellow");
+                box2.setBorder("5px solid green");
+
+                Box box3 = new Box(show, 135, 135, 25, 25);
+                box3.setBackground("cyan");
+                box3.setBorder("5px solid blue");
+                
+                Group group = new Group(show);
+                group.add(box1);
+                group.add(box2);
+                group.add(box3);
+                group.setScalingModel(scalingModel);
+                
+                Segment segment = new Segment(show);
+                segment.add(group);
+
+                show.activateSegment(segment);
+
+                return show;
+        }
+        
+        @GrinFile(value = "scaling_model.txt")
+        interface MyScalingModel extends InterpolatedModelParser {
+        	MyScalingModel INSTANCE = GWT.create(MyScalingModel.class);
+        };
+}
+}}}
+
+The scaling model is declared in `scaling_model.txt`: 
+
+{{{
+scaling_model {
+	0	40 	40 	1000	1000	start 		mills
+	50	40	40	1500	1500	ease-out-bounce	mills
+	100	40	40	1000	1000	ease-in-bounce	mills
+} repeat 0 ;
+}}}
+
+The BNF describing the syntaxt of a scaling model txt file:
+
+{{{
+    scaling_model ::= "scaling_model" "{" scale_key_frame* "}"
+		[ "repeat" frame_number ] 
+		[ loop_count ] ";"
+	# There must be >= 1 scale_key_frame
+    
+    scale_key_frame ::=  frame_number x y x_scale y_scale [ tween_type ] "mills"
+
+    	# The first frame must be zero
+	# The scale factor is in mills (1/1000); a factor of 1000 is 1:1 scale
+	# The x,y values are the anchor point for the scaling operation.  
+	#     Scaled objects get bigger and smaller, centered at this anchor
+	#     point.  You can also think of it as the "origin for scaling."
+}}}
+
+For `tween_type` see [Modifiers#Tween_Type].
+
+== Fade ==
+
+A fade modifier will set the alpha level for the drawing of its children. The fade level can vary over time, and a smooth animation effect can be achieved with one of the "tween" functions.
+
+Example:
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-fade-wiki.xml?v=2" height="256" width="512" border="0"/>
+
+Code:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Fade;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.Group;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.control.Box;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		Box box1 = new Box(show, 20, 20, 100, 100);
+		box1.setBackground("orange");
+		box1.setBorder("5px solid red");
+
+		Box box2 = new Box(show, 100, 100, 50, 50);
+		box2.setBackground("yellow");
+		box2.setBorder("5px solid green");
+
+		Box box3 = new Box(show, 135, 135, 25, 25);
+		box3.setBackground("cyan");
+		box3.setBorder("5px solid blue");
+
+		Group group = new Group(show);
+		group.add(box1);
+		group.add(box2);
+		group.add(box3);
+
+		Fade fade = new Fade(show, MyFadeModel.INSTANCE.createModel());
+		fade.setPart(group);
+
+		Segment segment = new Segment(show);
+		segment.add(fade);
+
+		show.activateSegment(segment);
+
+		return show;
+	}
+
+	@GrinFile(value = "fade_model.txt")
+	interface MyFadeModel extends InterpolatedModelParser {
+		MyFadeModel INSTANCE = GWT.create(MyFadeModel.class);
+	};
+}
+}}}
+
+The fade model is declared in `fade_model.txt`: 
+
+{{{
+fade_model {
+	0		192		start
+	25		64		linear
+	50		192		ease-out-cubic
+} repeat 0 ;
+}}}
+
+The BNF describing the syntaxt of a fade model txt file:
+
+{{{
+    fade_model ::= "fade_model" "{" ( frame_number alpha_int tween_type ) * "}" 
+		[ "repeat" frame_number ] 
+		[ loop_count ] ";"
+
+}}}
+
+For `tween_type` see [Modifiers#Tween_Type].
+
+== Translator ==
+
+A translator moves the position of its children on the page by a relative delta-x and delta-y. The delta values can be animated over time, and smooth animations can be had with various tweening functions. Translators work on pre-computed values linked into a path by linear interpolation.
+
+A translator is split into two piecces: the actual translator, and the translator model that holds the points.
+
+Example:
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-translator-wiki.xml?v=1" height="256" width="512" border="0"/>
+
+Code:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.Translator;
+import org.gwt.mosaic2g.client.scene.control.Box;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		Box box1 = new Box(show, 20, 20, 50, 50);
+		box1.setBackground("orange");
+		box1.setBorder("5px solid green");
+
+		Translator translator = new Translator(show,
+				MyTranslatorModel.INSTANCE.createModel());
+		translator.setPart(box1);
+
+		Segment segment = new Segment(show);
+		segment.add(translator);
+
+		show.activateSegment(segment);
+
+		return show;
+	}
+
+	@GrinFile(value = "translator_model.txt")
+	interface MyTranslatorModel extends InterpolatedModelParser {
+		MyTranslatorModel INSTANCE = GWT.create(MyTranslatorModel.class);
+	};
+}
+}}}
+
+The translator model is declared in `translator_model.txt`:
+
+{{{
+translator_model {
+	0		0		0		start
+	25		200		0		linear-relative
+	50		200		100		ease-out-back
+	75		0		100		linear-relative
+	100		0		0		ease-in-back
+} repeat 0 ;
+}}}
+
+The BNF describing the syntaxt of a translator model txt file:
+
+{{{
+    translator_model ::= "translator_model" "{" trans_key_frame * "}" 
+			    [ "repeat" frame_number ] 
+			    [ loop_count ] ";"
+
+        # Use "offscreen" keyword for x,y position to place a feature 
+        # off the screen without causing the animation engine to repaint extra
+        # region.
+
+    trans_key_frame ::= frame_number x y trans_tween
+
+    trans_tween ::=    "linear-relative"  [ "max-error" integer ]
+    		     | tween_type
+
+    	# linear and linear-relative are special for translations.  You
+	# should always use linear-relative; that's linear interpolation
+	# using relative coordinates for the child nodes (that is, the
+	# interpolation specifies delta-x and delta-y for each child).
+}}}
+
+For `tween_type` see [Modifiers#Tween_Type].
+
+== Clipped ==
+
+A clipped modifier clips its children within a clipping rectangle. This can be useful in conjunction with a translator, to make a set of child nodes slide out.
+
+Example:
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-clipped-wiki.xml?v=1" height="256" width="512" border="0"/>
+
+Code:
+
+{{{
+import org.gwt.mosaic2g.client.animator.AnimationClient;
+import org.gwt.mosaic2g.client.animator.AnimationEngine;
+import org.gwt.mosaic2g.client.scene.Clipped;
+import org.gwt.mosaic2g.client.scene.GrinFile;
+import org.gwt.mosaic2g.client.scene.InterpolatedModelParser;
+import org.gwt.mosaic2g.client.scene.Scene;
+import org.gwt.mosaic2g.client.scene.Segment;
+import org.gwt.mosaic2g.client.scene.Show;
+import org.gwt.mosaic2g.client.scene.Translator;
+import org.gwt.mosaic2g.client.scene.control.Box;
+import org.gwt.mosaic2g.client.util.Rectangle;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class Showcase implements EntryPoint {
+	private final Scene scene = new Scene();
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+		// Specify a GWT panel (here RootLayoutPanel) to render our scene graph.
+		// Within the panel we add the scene. A scene is a top level area where
+		// you can set the root node of a scene graph, which is always a show
+		// node.
+		RootLayoutPanel.get().add(scene);
+		scene.setShow(createShow());
+
+		// Create an AnimationEngine instance with all AnimationClient(s) it has
+		// to manage (Scene implements the AnimationClient interface).
+		final AnimationEngine animationEngine = new AnimationEngine(
+				new AnimationClient[] { scene });
+		// Start the animation engine.
+		animationEngine.start();
+	}
+
+	private Show createShow() {
+		Show show = new Show();
+
+		Box box1 = new Box(show, 20, 20, 50, 50);
+		box1.setBackground("orange");
+		box1.setBorder("5px solid green");
+
+		Translator translator = new Translator(show,
+				MyTranslatorModel.INSTANCE.createModel());
+		translator.setPart(box1);
+
+		Clipped clipped = new Clipped(show, new Rectangle(10, 10, 250, 150));
+		clipped.setPart(translator);
+
+		// A box that shows the clipping rectangle
+		Box box2 = new Box(show, 10, 10, 250, 150);
+		box2.setBorder("1px dotted red");
+
+		Segment segment = new Segment(show);
+		segment.add(box2);
+		segment.add(clipped);
+
+		show.activateSegment(segment);
+
+		return show;
+	}
+
+	@GrinFile(value = "translator_model.txt")
+	interface MyTranslatorModel extends InterpolatedModelParser {
+		MyTranslatorModel INSTANCE = GWT.create(MyTranslatorModel.class);
+	};
+}
+}}}
+
+The `translator_model.txt` file is the same with the previous example.
+
+== Tween Type ==
+
+The BNF for `tween_type`:
+
+{{{
+    tween_type ::=
+              "linear"  [ "max-error" integer ]
+	    | "start"
+	    | "ease-in-quad" [ "max-error" integer ]
+	    | "ease-out-quad" [ "max-error" integer ]
+	    | "ease-in-out-quad" [ "max-error" integer ]
+	    | "ease-in-cubic" [ "max-error" integer ]
+	    | "ease-out-cubic" [ "max-error" integer ]
+	    | "ease-in-out-cubic" [ "max-error" integer ]
+	    | "ease-in-quart" [ "max-error" integer ]
+	    | "ease-out-quart" [ "max-error" integer ]
+	    | "ease-in-out-quart" [ "max-error" integer ]
+	    | "ease-in-quint" [ "max-error" integer ]
+	    | "ease-out-quint" [ "max-error" integer ]
+	    | "ease-in-out-quint" [ "max-error" integer ]
+	    | "ease-in-sine" [ "max-error" integer ]
+	    | "ease-out-sine" [ "max-error" integer ]
+	    | "ease-in-out-sine" [ "max-error" integer ]
+	    | "ease-in-expo" [ "max-error" integer ]
+	    | "ease-out-expo" [ "max-error" integer ]
+	    | "ease-in-out-expo" [ "max-error" integer ]
+	    | "ease-in-circ" [ "max-error" integer ]
+	    | "ease-out-circ" [ "max-error" integer ]
+	    | "ease-in-out-circ" [ "max-error" integer ]
+	    | "ease-in-elastic" [ "amplitude" double ] [ "period" double ] 
+	    			[ "max-error" integer ]
+	    | "ease-out-elastic" [ "amplitude" double ] [ "period" double ] 
+	    			 [ "max-error" integer ]
+	    | "ease-in-out-elastic" [ "amplitude" double ] [ "period" double ] 
+	    			    [ "max-error" integer ]
+	    | "ease-in-back" [ "overshoot" double ] [ "max-error" integer ]
+	    | "ease-out-back" [ "overshoot" double ] [ "max-error" integer ]
+	    | "ease-in-out-back" [ "overshoot" double ] [ "max-error" integer ]
+	    | "ease-in-bounce" [ "max-error" integer ]
+	    | "ease-out-bounce" [ "max-error" integer ]
+	    | "ease-in-out-bounce" [ "max-error" integer ]
+	    | "ease-points" "{" tween-point * "}" [ "max-error" integer ]
+
+        # The tween type give the algorithm used for the transition from the
+	# previous key frame to the present one.
+	#
+	# start is a synonym for linear.  It's intended to be
+	# used for the first keyframe, since the tween type for the
+	# first keyframe is meaningless.
+	#
+	# The other tweening types are described in 
+	# com.robertpenner.PennerEasing, and in his book, which you can
+	# find out about at http://robertpenner.com.
+	#
+	# max-error says how many units of error you're willing to tolerate
+	# when the compiler uses linear interpolation segments to approximate
+	# tweening.  It defaults to 0, that is, no error.  Setting a higher
+	# tolerance will result in a smaller .grin file and less runtime
+	# memory usage.  The grin compiler tells you how many key frames
+	# are added for interpolation due to tweening; if the number looks
+	# huge, consider increasing the error tolerance.
+
+    tween_point ::= "(" integer * ")"
+}}}
+
+Read more about tween functions at:
+
+ * [http://robertpenner.com/easing/]
+ * [http://robertpenner.com/easing/easing_demo.html Equation Visualizer]
+
+
+
+<wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
