@@ -1,0 +1,129 @@
+<!-- HelloWidgetWorld.ui.xml -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<ui:style>
+		.pretty {
+			background-color: skyblue;
+			border: 2px solid blue;
+			padding: 5px;
+			margin: 5px;
+		}
+		
+		.box {
+			padding: 5px;
+			border: 5px solid red;
+			margin: 10px;
+		}
+	</ui:style>
+
+	<!-- <m:Table styleName="{style.box}"> <m:Table.Column weight="1" /> <m:Table.Column 
+		weight="2" /> <m:Table.Column weight="3" /> <m:Table.Row weight="3"> <m:Button 
+		columnSpan='2'>(0,0)</m:Button> <m:Span /> <m:Button>(0,2)</m:Button> </m:Table.Row> 
+		<m:Table.Row> <m:Button>(1,0)</m:Button> <m:Button rowSpan='2'>(1,1)</m:Button> 
+		<m:Button>(1,2)</m:Button> </m:Table.Row> <m:Table.Row weight="4"> <m:Button>(2,0)</m:Button> 
+		<m:Span /> <m:Table styleName="{style.box}"> <m:Table.Column weight="1" /> 
+		<m:Table.Column weight="2" /> <m:Table.Column weight="3" /> <m:Table.Row 
+		weight="3"> <m:Button columnSpan='2'>(0,0)</m:Button> <m:Span /> <m:Button>(0,2)</m:Button> 
+		</m:Table.Row> <m:Table.Row> <m:Button>(1,0)</m:Button> <m:Button rowSpan='2'>(1,1)</m:Button> 
+		<m:Button>(1,2)</m:Button> </m:Table.Row> <m:Table.Row weight="4"> <m:Button>(2,0)</m:Button> 
+		<m:Span /> <m:Button>(2,2)</m:Button> </m:Table.Row> </m:Table> </m:Table.Row> 
+		</m:Table> -->
+	<!-- <m:Grid styleName="{style.box}" columnCount='3'> <m:Grid.Row> <m:Label 
+		styleName='{style.pretty}' horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(0,0)</m:Label> 
+		<m:Label styleName='{style.pretty}' horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(0,1)</m:Label> 
+		<m:Span /> </m:Grid.Row> <m:Grid.Row> <m:Label styleName='{style.pretty}' 
+		horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(1,0)</m:Label> <m:Span 
+		/> <m:Label styleName='{style.pretty}' horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(1,2)</m:Label> 
+		</m:Grid.Row> <m:Grid.Row> <m:Span /> <m:Label styleName='{style.pretty}' 
+		horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(2,1)</m:Label> <m:Grid 
+		styleName="{style.box}" columnCount='3'> <m:Grid.Row> <m:Label styleName='{style.pretty}' 
+		horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(0,0)</m:Label> <m:Label 
+		styleName='{style.pretty}' horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(0,1)</m:Label> 
+		<m:Span /> </m:Grid.Row> <m:Grid.Row> <m:Label styleName='{style.pretty}' 
+		horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(1,0)</m:Label> <m:Span 
+		/> <m:Label styleName='{style.pretty}' horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(1,2)</m:Label> 
+		</m:Grid.Row> <m:Grid.Row> <m:Span /> <m:Label styleName='{style.pretty}' 
+		horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(2,1)</m:Label> <m:Label 
+		styleName='{style.pretty}' horizontalAlignment="CENTER" verticalAlignment="MIDDLE">(2,2)</m:Label> 
+		</m:Grid.Row> </m:Grid> </m:Grid.Row> </m:Grid> -->
+
+	<!-- <m:HBox styleName="{style.box}" fill="false" spacing="1" horizontalAlignment="CENTER"> 
+		<m:Label styleName='{style.pretty}' preferredWidth='20%' preferredHeight='50px' 
+		horizontalAlignment="START">Label #1</m:Label> <m:HTML styleName='{style.pretty}' 
+		preferredWidth='20%'> Label <b>#2</b> </m:HTML> <m:VBox styleName="{style.box}" 
+		fill="true" spacing="1" preferredWidth="50%"> <m:Label styleName='{style.pretty}'>Label 
+		#1</m:Label> <m:Label styleName='{style.pretty}'>Label #2</m:Label> </m:VBox> 
+		</m:HBox> -->
+
+	<m:Table styleName="{style.box}">
+		<m:Table.Column weight="1" />
+		<m:Table.Row weight="1">
+			<m:Form fill="false">
+				<m:Form.Section>
+					<m:Form.Field label="Name:">
+						<m:HBox>
+							<m:TextBox prompt="Last" value="Georgopoulos" />
+							<m:TextBox prompt="First" />
+						</m:HBox>
+					</m:Form.Field>
+				</m:Form.Section>
+				<m:Form.Section>
+					<m:Form.Field label="Home:">
+						<m:VBox>
+							<m:TextBox visibleLength="25" prompt="Street" />
+							<m:HBox>
+								<m:TextBox prompt="City" />
+								<m:TextBox visibleLength="6" prompt="State" />
+								<m:TextBox visibleLength="10" prompt="Zip" />
+							</m:HBox>
+						</m:VBox>
+					</m:Form.Field>
+					<m:Form.Field label="Work:">
+						<m:VBox>
+							<m:TextBox visibleLength="25" prompt="Street" />
+							<m:HBox>
+								<m:TextBox prompt="City" />
+								<m:TextBox visibleLength="6" prompt="State" />
+								<m:TextBox visibleLength="10" prompt="Zip" />
+							</m:HBox>
+						</m:VBox>
+					</m:Form.Field>
+				</m:Form.Section>
+				<m:Form.Section heading="Phone Numbers">
+					<m:Form.Field label="Home:">
+						<m:TextBox />
+					</m:Form.Field>
+					<m:Form.Field label="Work:">
+						<m:TextBox />
+					</m:Form.Field>
+				</m:Form.Section>
+				<m:Form.Section heading="Email Addresses">
+					<m:Form.Field label="Home:">
+						<m:TextBox />
+					</m:Form.Field>
+					<m:Form.Field label="Work:">
+						<m:TextBox />
+					</m:Form.Field>
+				</m:Form.Section>
+			</m:Form>
+		</m:Table.Row>
+		<m:Table.Row>
+			<m:Separator />
+		</m:Table.Row>
+		<m:Table.Row>
+			<m:Table>
+				<m:Table.Column weight="1" />
+				<m:Table.Column />
+				<m:Table.Row>
+					<m:Span />
+					<m:HBox horizontalAlignment="RIGHT" verticalAlignment="MIDDLE">
+						<m:Button>Submit</m:Button>
+					</m:HBox>
+				</m:Table.Row>
+			</m:Table>
+		</m:Table.Row>
+	</m:Table>
+
+</ui:UiBinder>
