@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<generate-with class="org.gwt.mosaic2g.rebind.InterpolatedModelGenerator">
+		<when-type-assignable
+			class="org.gwt.mosaic2g.client.scene.InterpolatedModelParser" />
+	</generate-with>
+</module>
