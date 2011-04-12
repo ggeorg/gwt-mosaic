@@ -113,14 +113,14 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 			if (isValid() && (preferredWidth != -1)) {
 				return preferredWidth;
 			}
-
+		}
 			// then check if there is a fixed preferredWidth hint stored in
 			// layoutData
 			LayoutData layoutData = WidgetHelper.getLayoutData(this);
 			if (layoutData.getPreferredWidth() != null) {
 				return WidgetHelper.getPreferredWidthImpl(this, clientHeight);
 			}
-		}
+		
 
 		int preferredWidth = 0;
 
@@ -168,17 +168,17 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 
 		if (clientWidth == -1) {
 			// First, check if preferredHeight is cached
-			if ((clientWidth == -1) && isValid() && (preferredHeight != -1)) {
+			if (isValid() && (preferredHeight != -1)) {
 				return preferredHeight;
 			}
-
+		}
 			// then check if there is a fixed preferredHeight hint stored in
 			// layoutData
 			LayoutData layoutData = WidgetHelper.getLayoutData(this);
 			if (layoutData.getPreferredHeight() != null) {
 				return WidgetHelper.getPreferredHeightImpl(this, clientWidth);
 			}
-		}
+		
 
 		int preferredHeight = 0;
 
@@ -436,8 +436,8 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 		int width = getElement().getOffsetWidth();
 		int height = getElement().getClientHeight();
 
-		int preferredWidth = getPreferredWidth(fill ? height : -1);
-		width = Math.max(width, preferredWidth);
+		//int preferredWidth = getPreferredWidth(fill ? height : -1);
+		//width = Math.max(width, preferredWidth);
 
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 

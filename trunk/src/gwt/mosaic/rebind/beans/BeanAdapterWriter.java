@@ -1,4 +1,4 @@
-package gwt.mosaic.rebind;
+package gwt.mosaic.rebind.beans;
 
 import gwt.mosaic.client.beans.AbstractBeanAdapter;
 import gwt.mosaic.client.beans.BeanAdapter;
@@ -18,7 +18,6 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.uibinder.rebind.IndentedWriter;
 import com.google.gwt.uibinder.rebind.MortalLogger;
@@ -126,7 +125,6 @@ class BeanAdapterWriter {
 			if(!hasPropertyChangeHandlers.isAssignableFrom(implInterface)) {
 				continue;
 			}
-			System.out.println(implInterface.getQualifiedSourceName());
 			
 			if(null != implInterface.isParameterized()) {
 				continue;
