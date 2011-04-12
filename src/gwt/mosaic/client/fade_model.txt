@@ -1,0 +1,5 @@
+fade_model {
+        0              192             	start
+        25              32              linear
+        50             192            	linear
+} repeat 0 ;

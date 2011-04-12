@@ -27,10 +27,10 @@
 		<m:Button styleName="{style.m}">Button1</m:Button>
 		<m:Button ui:field="button" weight="1">Click me!</m:Button>
 		<m:Button weight="3">Button3</m:Button>
-		<m:Box ui:field="box2" orientation="VERTICAL" fill="true"
+		<m:Box ui:field="box2" orientation="VERTICAL" fill="false"
 			verticalAlignment="MIDDLE" horizontalAlignment="CENTER">
 			<m:Button styleName="{style.m}">Button1</m:Button>
-			<m:Button weight="1">Button2</m:Button>
+			<m:Button weight="1" preferredHeight="200px">Button2</m:Button>
 			<m:Button weight="3">Button3</m:Button>
 		</m:Box>
 	</m:Box>

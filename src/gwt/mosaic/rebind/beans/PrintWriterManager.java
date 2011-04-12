@@ -1,4 +1,4 @@
-package gwt.mosaic.rebind;
+package gwt.mosaic.rebind.beans;
 
 import java.io.PrintWriter;
 import java.util.HashSet;

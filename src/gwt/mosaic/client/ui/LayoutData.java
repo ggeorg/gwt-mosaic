@@ -72,4 +72,20 @@ class LayoutData {
 		this.weight = weight;
 	}
 
+	private int dx = 0;
+	private int dy = 0;
+	
+	public void translate(int dx, int dy) {
+		this.dx = dx;
+		this.dy = dy;
+	}
+
+	public int getDx() {
+		return dx;
+	}
+
+	public int getDy() {
+		return dy;
+	}
+
 }

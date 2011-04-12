@@ -1,4 +1,4 @@
-package gwt.mosaic.rebind;
+package gwt.mosaic.rebind.beans;
 
 import gwt.mosaic.client.beans.BeanAdapter;
 import gwt.mosaic.client.beans.BeanAdapterFactory;

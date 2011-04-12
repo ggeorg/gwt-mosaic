@@ -47,6 +47,9 @@ public class WidgetHelper {
 	}
 
 	public static void setLocation(Widget w, int x, int y) {
+		LayoutData layoutData = getLayoutData(w);
+		x += layoutData.getDx();
+		y += layoutData.getDy();
 		Element elem = w.getElement();
 		DOM.setStyleAttribute(elem, "position", "absolute");
 		DOM.setStyleAttribute(elem, "left", x + "px");
@@ -85,6 +88,8 @@ public class WidgetHelper {
 		if (w.isAttached()) {
 			Element elem = w.getElement();
 			String oldPosition = DOM.getStyleAttribute(elem, "position");
+			String oldWidth = DOM.getStyleAttribute(elem, "width");
+			String oldHeight = DOM.getStyleAttribute(elem, "height");
 			try {
 				DOM.setStyleAttribute(elem, "position", "static");
 				if (widthHint == null) {
@@ -98,6 +103,8 @@ public class WidgetHelper {
 						+ getBoxModel(w).getMarginWidthContribution();
 			} finally {
 				DOM.setStyleAttribute(elem, "position", oldPosition);
+				DOM.setStyleAttribute(elem, "width", oldWidth);
+				DOM.setStyleAttribute(elem, "height", oldHeight);
 			}
 		} else {
 			// TODO check layoutData
@@ -125,6 +132,8 @@ public class WidgetHelper {
 		if (w.isAttached()) {
 			Element elem = w.getElement();
 			String oldPosition = DOM.getStyleAttribute(elem, "position");
+			String oldWidth = DOM.getStyleAttribute(elem, "width");
+			String oldHeight = DOM.getStyleAttribute(elem, "height");
 			try {
 				DOM.setStyleAttribute(elem, "position", "static");
 				DOM.setStyleAttribute(elem, "width", (width < 0) ? ""
@@ -138,6 +147,8 @@ public class WidgetHelper {
 						+ getBoxModel(w).getMarginHeightContribution();
 			} finally {
 				DOM.setStyleAttribute(elem, "position", oldPosition);
+				DOM.setStyleAttribute(elem, "width", oldWidth);
+				DOM.setStyleAttribute(elem, "height", oldHeight);
 			}
 		} else {
 			// TODO check layoutData
@@ -200,6 +211,11 @@ public class WidgetHelper {
 
 	public static void setWeight(Widget w, int weight) {
 		getLayoutData(w).setWeight(weight);
+		invalidate(w);
+	}
+
+	public static void translate(Box w, int dx, int dy) {
+		getLayoutData(w).translate(dx, dy);
 		invalidate(w);
 	}
 }
