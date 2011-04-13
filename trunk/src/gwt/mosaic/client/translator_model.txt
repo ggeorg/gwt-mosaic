@@ -1,7 +1,0 @@
-translator_model {
-        0               0               0               start
-        25              200             0               linear-relative
-        50              200             100             ease-out-back
-        75              0               100             linear-relative
-        100             0               0               ease-in-back
-} repeat 0 ;
