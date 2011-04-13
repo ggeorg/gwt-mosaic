@@ -14,7 +14,6 @@
 	<inherits name='gwt.mosaic.BeanAdapter' />
 	<inherits name='gwt.mosaic.ComputedStyle' />
 	<inherits name='gwt.mosaic.LabelImpl' />
-	<inherits name='gwt.mosaic.InterpolatedModel' />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='gwt.mosaic.client.GWTMosaic' />

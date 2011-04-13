@@ -1,0 +1,48 @@
+<!-- HelloWidgetWorld.ui.xml -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<ui:style>
+		.pretty {
+			background-color: skyblue;
+			border: 2px solid blue;
+			padding: 5px;
+			margin: 5px;
+		}
+		
+		.box {
+			padding: 5px;
+			border: 5px solid red;
+			margin: 10px;
+		}
+		
+		.m {
+			min-width: 300px;
+		}
+	</ui:style>
+
+	<m:Box ui:field="box1" fill="true" verticalAlignment="MIDDLE" horizontalAlignment="CENTER"> 
+		<m:Button styleName="{style.m}">Button1</m:Button> <m:Button ui:field="button" 
+		weight="1">Click me!</m:Button> <m:Button weight="3">Button3</m:Button> <m:Box 
+		ui:field="box2" orientation="VERTICAL" fill="false" verticalAlignment="MIDDLE" 
+		horizontalAlignment="CENTER"> <m:Button styleName="{style.m}">Button1</m:Button> 
+		<m:Button weight="1" preferredHeight="200px">Button2</m:Button> <m:Button 
+		weight="3">Button3</m:Button> </m:Box> </m:Box>
+
+	<!-- <m:Grid weight="1"> <m:Grid.Column /> <m:Grid.Column weight="1" /> 
+		<m:Grid.Row weight="1"> <m:Button text="Rabbit" /> <m:Grid weight="1"> <m:Grid.Column 
+		/> <m:Grid.Column weight="1"/> <m:Grid.Row weight="1"> <m:Button text="Rabbit" 
+		/> <m:Button text="Elephant" /> </m:Grid.Row> <m:Grid.Row> <m:Button text="Koala" 
+		/> <m:Button text="Gorilla" /> </m:Grid.Row> </m:Grid> </m:Grid.Row> <m:Grid.Row> 
+		<m:Button text="Koala" /> <m:Button text="Gorilla" /> </m:Grid.Row> </m:Grid> -->
+
+<!-- 
+	<m:SplitPanel ui:field="box1">
+		<m:Button ui:field="button" styleName="{style.m}" preferredWidth="10em" preferredHeight="5em">Click me!</m:Button>
+		<m:Button preferredWidth="10em">Button2</m:Button>
+		<m:Button preferredWidth="10em">Button3</m:Button>
+	</m:SplitPanel>
+	 -->
+
+</ui:UiBinder>

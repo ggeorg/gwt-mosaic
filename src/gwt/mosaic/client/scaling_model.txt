@@ -1,0 +1,5 @@
+scaling_model {
+        0       40      40      1000    1000    start           mills
+        50      40      40      1500    1500    ease-out-bounce mills
+        100     40      40      1000    1000    ease-in-bounce  mills
+} repeat 0 ;
