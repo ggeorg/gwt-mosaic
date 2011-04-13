@@ -1,0 +1,28 @@
+<!-- HelloWidgetWorld.ui.xml -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<ui:style>
+		.box {
+			padding: 10px;
+			border: 4px solid blue;
+			margin: 10px;
+		}
+	</ui:style>
+
+	<m:Box addStyleNames="{style.box}">
+		<m:Button ui:field="button1">One</m:Button>
+		<m:Button ui:field="button2">One</m:Button>
+		<m:Button ui:field="button3">One</m:Button>
+		<m:Button ui:field="button4">One</m:Button>
+
+		<m:Box addStyleNames="{style.box}">
+			<m:Button>One</m:Button>
+			<m:Button>One</m:Button>
+			<m:Button>One</m:Button>
+			<m:Button>One</m:Button>
+		</m:Box>
+	</m:Box>
+
+</ui:UiBinder>
