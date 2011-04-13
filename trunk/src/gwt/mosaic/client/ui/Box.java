@@ -536,6 +536,8 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 								- widgetHeight;
 						break;
 					}
+				} else {
+					y = boxModel.getPadding().top;
 				}
 
 				// Set the component's size and position
@@ -659,6 +661,8 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 							break;
 						}
 					}
+				} else {
+					x = boxModel.getPadding().left;
 				}
 
 				// Set the component's size and position

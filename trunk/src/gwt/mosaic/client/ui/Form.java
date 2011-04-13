@@ -4,6 +4,7 @@ import gwt.mosaic.client.style.BoxModel;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -90,7 +91,7 @@ public class Form extends LayoutPanel {
 	public static class Field extends Layer {
 		private String label = null;
 
-		final Label labelWidget = new Label();
+		final InlineLabel labelWidget = new InlineLabel();
 
 		public Field() {
 			Element elem = getElement();
@@ -218,7 +219,7 @@ public class Form extends LayoutPanel {
 		int maximumLabelWidth = 0;
 		int maximumFieldWidth = 0;
 		int maximumSeparatorWidth = 0;
-		
+
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
 		for (int sectionIndex = 0, sectionCount = getWidgetCount(); sectionIndex < sectionCount; sectionIndex++) {
@@ -236,7 +237,7 @@ public class Form extends LayoutPanel {
 				Widget field = fieldWidget.getWidget(0);
 
 				if (fieldWidget.isVisible()) {
-					Label label = fieldWidget.labelWidget;
+					InlineLabel label = fieldWidget.labelWidget;
 					maximumLabelWidth = Math.max(maximumLabelWidth,
 							WidgetHelper.getPreferredWidth(label, -1));
 
@@ -263,7 +264,7 @@ public class Form extends LayoutPanel {
 	@Override
 	public int getPreferredHeight(int width) {
 		int preferredHeight = 0;
-		
+
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
 		// Determine the field width constraint
@@ -286,7 +287,7 @@ public class Form extends LayoutPanel {
 
 				if (fieldWidget.isVisible()) {
 					// Determine the label size and baseline
-					Label label = fieldWidget.labelWidget;
+					InlineLabel label = fieldWidget.labelWidget;
 					Dimensions labelSize = WidgetHelper.getPreferredSize(label);
 					int labelAscent = WidgetHelper.getBaseline(label,
 							labelSize.width, labelSize.height);
@@ -344,7 +345,7 @@ public class Form extends LayoutPanel {
 
 		int sectionCount = getWidgetCount();
 		int sectionIndex = 0;
-		
+
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
 		int rowY = 0;
@@ -367,10 +368,10 @@ public class Form extends LayoutPanel {
 
 				if (fieldWidget.isVisible()) {
 					// Determine the label size and baseline
-					Label label = fieldWidget.labelWidget;
-					Dimensions labelSize = label.getPreferredSize();
-					int labelAscent = label.getBaseline(labelSize.width,
-							labelSize.height);
+					InlineLabel label = fieldWidget.labelWidget;
+					Dimensions labelSize = WidgetHelper.getPreferredSize(label);
+					int labelAscent = WidgetHelper.getBaseline(label,
+							labelSize.width, labelSize.height);
 
 					// Determine the field size and baseline
 					Dimensions fieldSize;
@@ -407,7 +408,7 @@ public class Form extends LayoutPanel {
 	private int getFieldWidth(int width) {
 		int maximumLabelWidth = 0;
 		int maximumFlagMessageWidth = 0;
-		
+
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
 		for (int sectionIndex = 0, sectionCount = getWidgetCount(); sectionIndex < sectionCount; sectionIndex++) {
@@ -419,7 +420,7 @@ public class Form extends LayoutPanel {
 				// Widget field = fieldWidget.getWidget(0);
 
 				if (fieldWidget.isVisible()) {
-					Label label = fieldWidget.labelWidget;
+					InlineLabel label = fieldWidget.labelWidget;
 					maximumLabelWidth = Math.max(maximumLabelWidth,
 							WidgetHelper.getPreferredWidth(label, -1));
 
@@ -446,7 +447,7 @@ public class Form extends LayoutPanel {
 		// Determine the maximum label and flag message width
 		int maximumLabelWidth = 0;
 		int maximumFlagMessageWidth = 0;
-		
+
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
 		for (int sectionIndex = 0, sectionCount = getWidgetCount(); sectionIndex < sectionCount; sectionIndex++) {
@@ -458,7 +459,7 @@ public class Form extends LayoutPanel {
 				// Widget field = fieldWidget.getWidget(0);
 
 				if (fieldWidget.isVisible()) {
-					Label label = fieldWidget.labelWidget;
+					InlineLabel label = fieldWidget.labelWidget;
 					maximumLabelWidth = Math.max(maximumLabelWidth,
 							WidgetHelper.getPreferredWidth(label, -1));
 
@@ -505,10 +506,11 @@ public class Form extends LayoutPanel {
 			}
 
 			for (int fieldIndex = 0, fieldCount = section.getWidgetCount(); fieldIndex < fieldCount; fieldIndex++) {
-				Form.Field fieldWidget = (Form.Field) section.getWidget(fieldIndex);
+				Form.Field fieldWidget = (Form.Field) section
+						.getWidget(fieldIndex);
 				Widget field = fieldWidget.getWidget(0);
 
-				Label label = fieldWidget.labelWidget;
+				InlineLabel label = fieldWidget.labelWidget;
 
 				WidgetHelper.setSize(fieldWidget, width, 1);
 				WidgetHelper.setLocation(fieldWidget, 0, 0);
@@ -518,12 +520,12 @@ public class Form extends LayoutPanel {
 					label.setVisible(true);
 
 					// Determine the label size and baseline
-					Dimensions labelSize = label.getPreferredSize();
+					Dimensions labelSize = WidgetHelper.getPreferredSize(label);
 
 					WidgetHelper.setSize(label, labelSize.width,
 							labelSize.height);
-					int labelAscent = label.getBaseline(labelSize.width,
-							labelSize.height);
+					int labelAscent = WidgetHelper.getBaseline(label,
+							labelSize.width, labelSize.height);
 					int labelDescent = labelSize.height - labelAscent;
 
 					// Determine the field size and baseline

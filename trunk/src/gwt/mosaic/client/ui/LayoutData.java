@@ -27,16 +27,26 @@ class LayoutData {
 		return preferredWidth;
 	}
 
-	public void setPreferredWidth(String preferredWidth) {
-		this.preferredWidth = preferredWidth;
+	public boolean setPreferredWidth(String preferredWidth) {
+		if (isChanged(this.preferredWidth, preferredWidth)) {
+			this.preferredWidth = preferredWidth;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public String getPreferredHeight() {
 		return preferredHeight;
 	}
 
-	public void setPreferredHeight(String preferredHeight) {
-		this.preferredHeight = preferredHeight;
+	public boolean setPreferredHeight(String preferredHeight) {
+		if (isChanged(this.preferredHeight, preferredHeight)) {
+			this.preferredHeight = preferredHeight;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public int getColumnSpan() {
@@ -72,20 +82,14 @@ class LayoutData {
 		this.weight = weight;
 	}
 
-	private int dx = 0;
-	private int dy = 0;
-	
-	public void translate(int dx, int dy) {
-		this.dx = dx;
-		this.dy = dy;
-	}
-
-	public int getDx() {
-		return dx;
-	}
-
-	public int getDy() {
-		return dy;
+	private static boolean isChanged(Object o1, Object o2) {
+		if (o1 == o2) {
+			return false;
+		} else if (o1 != null && o1.equals(o2)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

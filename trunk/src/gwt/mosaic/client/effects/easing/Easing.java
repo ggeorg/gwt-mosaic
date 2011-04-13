@@ -20,6 +20,11 @@ package gwt.mosaic.client.effects.easing;
  * Base interface for easing operations.
  */
 public interface Easing {
+
+	public enum Type {
+		EASE_IN, EASE_OUT, EASE_IN_OUT
+	}
+
 	public double easeIn(double time, double begin, double change,
 			double duration);
 

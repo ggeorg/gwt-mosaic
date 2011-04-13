@@ -5,15 +5,32 @@
 
 	<ui:style>
 		.box {
-			padding: 1em;	
+			padding: 10px;
+			border: 4px solid blue;
+			margin: 10px;
+			
+			min-width: 200px;
+		}
+		
+		.box2 {	
+			min-height: 200px;
+			
+			height: 200px;
 		}
 	</ui:style>
 
-	<m:Box addStyleNames="{style.box}">
-		<m:Button ui:field="button1">One</m:Button>
-		<m:Button ui:field="button2">One</m:Button>
-		<m:Button ui:field="button3">One</m:Button>
-		<m:Button ui:field="button4">One</m:Button>
+	<m:Box addStyleNames="{style.box}" fill="true">
+		<m:Button addStyleNames="{style.box}">One</m:Button>
+		<m:Button>Two</m:Button>
+		<m:Button>Three</m:Button>
+		<m:Button>Four</m:Button>
+
+		<m:Box orientation="VERTICAL" addStyleNames=" {style.box2}" >
+			<m:Button addStyleNames="{style.box}">One</m:Button>
+			<m:Button>Two</m:Button>
+			<m:Button>Three</m:Button>
+			<m:Button>Four</m:Button>
+		</m:Box>
 	</m:Box>
 
 </ui:UiBinder>
