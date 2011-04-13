@@ -23,9 +23,19 @@ public class WidgetHelper {
 		return layoutData;
 	}
 
+	public static int getBoxWidth(Widget w) {
+		return getLayoutData(w).getBoxModel().getMarginWidthContribution()
+				+ w.getOffsetWidth();
+	}
+
+	public static int getBoxHeight(Widget w) {
+		return getLayoutData(w).getBoxModel().getMarginHeightContribution()
+				+ w.getOffsetHeight();
+	}
+
 	public static void setSize(Widget w, int width, int height) {
-//		System.out.println(w.getClass().getName() + ":: " + width + "x"
-//				+ height);
+		 //System.out.println(w.getClass().getName() + ":: " + width + "x"
+//		 + height);
 		if (width >= 0) {
 			int oldWidth = w.getOffsetWidth();
 			width -= getBoxModel(w).getWidthContribution();
@@ -63,13 +73,17 @@ public class WidgetHelper {
 	}
 
 	public static void invalidate(Widget w) {
+		invalidate(w, false);
+	}
+	
+	public static void invalidate(Widget w, boolean immediate) {
 		if (w instanceof LayoutPanel) {
-			((LayoutPanel) w).invalidate();
+			((LayoutPanel) w).invalidate(immediate);
 		} else {
 			Widget parent = w.getParent();
-			if (parent != null && parent instanceof LayoutPanel) {
-				((LayoutPanel) parent).invalidate();
-			}
+			if (parent != null && (parent instanceof LayoutPanel)) {
+				((LayoutPanel) parent).invalidate(immediate);
+			} 
 		}
 	}
 

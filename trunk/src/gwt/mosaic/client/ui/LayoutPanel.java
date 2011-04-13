@@ -24,7 +24,7 @@ public abstract class LayoutPanel extends AbsolutePanel implements
 			validate();
 		}
 	};
-	
+
 	// Calculated preferred width value
 	protected transient int preferredWidth = -1;
 
@@ -67,17 +67,22 @@ public abstract class LayoutPanel extends AbsolutePanel implements
 	 * size.
 	 */
 	public void invalidate() {
+		invalidate(false);
+	}
+
+	public void invalidate(boolean immediate) {
 		valid = false;
 
 		Widget parent = getParent();
 		if (parent != null) {
 			if (parent instanceof LayoutPanel) {
-				((LayoutPanel) parent).invalidate();
+				((LayoutPanel) parent).invalidate(immediate);
 			} else {
-				if (GWT.isProdMode()) {
-					validateTimer.schedule(invalidateTimerDelayMillis);
+				if (immediate) {
+					validateTimer.cancel();
+					validate();
 				} else {
-					validateTimer.schedule(2 * invalidateTimerDelayMillis);
+					validateTimer.schedule(invalidateTimerDelayMillis);
 				}
 			}
 		}

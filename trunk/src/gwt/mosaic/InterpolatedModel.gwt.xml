@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module>
-	<generate-with class="gwt.mosaic.rebind.effects.InterpolatedModelGenerator">
-		<when-type-assignable
-			class="gwt.mosaic.client.effects.InterpolatedModelParser" />
-	</generate-with>
-</module>
