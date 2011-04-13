@@ -89,8 +89,6 @@ public class NamespaceBinding {
 		if (targetPath == null) {
 			throw new IllegalArgumentException();
 		}
-		
-		System.out.println(namespace.keySet());
 
 		// Set the namespace
 		this.namespace = namespace;

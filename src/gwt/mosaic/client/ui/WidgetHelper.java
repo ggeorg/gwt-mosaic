@@ -127,8 +127,14 @@ public class WidgetHelper {
 	}
 
 	public static void setPreferredWidth(Widget w, String preferredWidth) {
-		getLayoutData(w).setPreferredWidth(preferredWidth);
-		invalidate(w);
+		setPreferredWidth(w, preferredWidth, false);
+	}
+
+	public static void setPreferredWidth(Widget w, String preferredWidth,
+			boolean invalidate) {
+		if (getLayoutData(w).setPreferredWidth(preferredWidth)) {
+			invalidate(w, invalidate);
+		}
 	}
 
 	public static int getPreferredHeight(Widget w, int width) {
@@ -171,8 +177,14 @@ public class WidgetHelper {
 	}
 
 	public static void setPreferredHeight(Widget w, String preferredHeight) {
-		getLayoutData(w).setPreferredHeight(preferredHeight);
-		invalidate(w);
+
+	}
+
+	public static void setPreferredHeight(Widget w, String preferredHeight,
+			boolean invalidate) {
+		if (getLayoutData(w).setPreferredHeight(preferredHeight)) {
+			invalidate(w);
+		}
 	}
 
 	public static Dimensions getPreferredSize(Widget w) {
@@ -228,8 +240,4 @@ public class WidgetHelper {
 		invalidate(w);
 	}
 
-	public static void translate(Box w, int dx, int dy) {
-		getLayoutData(w).translate(dx, dy);
-		invalidate(w);
-	}
 }
