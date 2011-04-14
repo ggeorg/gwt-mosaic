@@ -14,4 +14,4 @@ This tutorial describes GWTMosaic framework.
    * [Box Box]
    * [Grid Grid]
    * [Stack Stack]
-   * [Forms Forms]
+   * [Form Form]
