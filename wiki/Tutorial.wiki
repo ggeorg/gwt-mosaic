@@ -9,3 +9,9 @@ This tutorial describes GWTMosaic framework.
  * *Introduction to GWTMosaic*
   * [HelloWorld Hello, World!]
    * [HelloUiBinder Hello, UiBinder!]
+ * *Widgets*
+  * [LayoutPanels Layout Panels]
+   * [Box Box]
+   * [Grid Grid]
+   * [Stack Stack]
+   * [Forms Forms]
