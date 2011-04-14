@@ -43,7 +43,7 @@ The sizes are fairly easy to calculate for non-weighted widgets. They simply obe
 
 Weighted widgets are those that have a 'weight' property set to a value greater than 0. Recall that flexible widgets grow and shrink to fit the available space. Their default size is still calculated the same as for inflexible widgets. The following example demonstrates this:
 
-http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning2.png
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning2.png?t=1
 
 {{{
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
