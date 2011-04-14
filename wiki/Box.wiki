@@ -169,6 +169,6 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE4.png
 
 The vertical box causes the main text, the box with the text box and the box with the buttons to orient vertically. The inner boxes orient their child widgets horizontally. As you see in the image above, the label and text input are placed side by side. The spacer and the two buttons are also placed horizontally in their box. Notice how the spacer causes the buttons to appear on the right side, because it is weighted.
 
-In the next section, we will look at [ElementPositioning specifying the sizes of individual widgets and how to constraint thier sizes].
+In the next section, we will look at [Positioning specifying the sizes of individual widgets and how to constraint their sizes].
 
 <wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
