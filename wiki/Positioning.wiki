@@ -7,7 +7,12 @@ Here we'll look at controlling the position and size of a widget.
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+So far, we know how to position widgets either horizontally or vertically inside a box layout panel. We will often need more control over the position and size of widgets within the box layout panel. For this, we first need to look at how a box works.
+
+The position of an widget is determined by the layout style of its parent. For example, the position of a button in a horizontal box is to the right of the previous button, if any. The size of an widget is determined by two factors, the size that the widget wants to be and the size you specify. The size that an widget wants to be is determined by what is in the widget. For example, a button's width is determined by the amount of text inside the button.
+
+A widget will generally be as large as it needs to be to hold its contents, and no larger. Some widgets, such as text boxes have a default size, which will be used. A box layout panel will be large enough to hold its child widgets. A horizontal layout panel with three buttons in it will be as wide as three buttons,plus a small amount of padding.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
+
+In the image 
