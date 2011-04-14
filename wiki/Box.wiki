@@ -56,4 +56,36 @@ Thus, the two lines below are equivalent:
 
 [http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE1.png Screenshot]
 
-The three buttons here are oriented vertically as was indicated by the box layout panel. To change the buttons so that they are oriented horizontally, all you need to do is change the VBox widget to a HBox element.
+The three buttons here are oriented vertically as was indicated by the box layout panel. To change the buttons so that they are oriented horizontally, all you need to do is change the VBox layout panel to a HBox layout panel.
+
+== Example 2 (Login prompt) ==
+
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE2.png
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<ui:style>
+		.login {
+			margin: 10px;
+			border: 10px solid Gray;
+			padding: 10px;
+		}
+	</ui:style>
+
+	<m:VBox addStyleNames="{style.login}" fill="true">
+		<m:HBox>
+			<g:InlineLabel>Login:</g:InlineLabel>
+			<g:TextBox />
+		</m:HBox>
+		<m:HBox>
+			<g:InlineLabel>Password:</g:InlineLabel>
+			<g:PasswordTextBox />
+		</m:HBox>
+		<m:Button>OK</m:Button>
+		<m:Button>Cancel</m:Button>
+	</m:VBox>
+
+</ui:UiBinder>
+}}}
