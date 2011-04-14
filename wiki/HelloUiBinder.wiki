@@ -55,6 +55,8 @@ The XML that is used to create the UI is shown below:
 </ui:UiBinder>
 }}}
 
-Most GWTMosaic based applications will be constructed this way. You can read more about UiBinder at [http://code.google.com/webtoolkit/doc/latest/DevGuideUiBinder.html Declarative Layout with UiBinder].
+Most GWTMosaic based applications will be constructed this way. 
+
+You can read more about UiBinder at [http://code.google.com/webtoolkit/doc/latest/DevGuideUiBinder.html Declarative Layout with UiBinder].
 
 <wiki:gadget url="http://mosaic.arkasoft.com/gwt-mosaic-wiki.xml?v=3" height="95" width="728" border="0"/>
