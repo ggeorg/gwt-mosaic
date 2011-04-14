@@ -6,5 +6,5 @@ This tutorial describes GWTMosaic framework.
 
 = Details =
 
- * Introduction to GWTMosaic
+ * *Introduction to GWTMosaic*
   * [HelloWorld Hello, World!]
