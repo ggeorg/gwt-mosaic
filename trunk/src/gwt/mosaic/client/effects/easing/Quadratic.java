@@ -20,19 +20,21 @@ package gwt.mosaic.client.effects.easing;
  * Quadratic easing operation.
  */
 public class Quadratic implements Easing {
-    public double easeIn(double time, double begin, double change, double duration) {
-        return change * (time /= duration) * time + begin;
-    }
+	public double easeIn(double time, double begin, double change,
+			double duration) {
+		return change * (time /= duration) * time + begin;
+	}
 
-    public double easeOut(double time, double begin, double change, double duration) {
-        return -change * (time /= duration) * (time - 2) + begin;
-    }
+	public double easeOut(double time, double begin, double change,
+			double duration) {
+		return -change * (time /= duration) * (time - 2) + begin;
+	}
 
 	public double easeInOut(double time, double begin, double change,
 			double duration) {
-        if ((time /= duration / 2) < 1) {
-            return change / 2 * time * time + begin;
-        }
-        return -change / 2 * ((--time) * (time - 2) - 1) + begin;
-    }
+		if ((time /= duration / 2) < 1) {
+			return change / 2 * time * time + begin;
+		}
+		return -change / 2 * ((--time) * (time - 2) - 1) + begin;
+	}
 }

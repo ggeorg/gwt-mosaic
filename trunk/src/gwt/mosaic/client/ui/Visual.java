@@ -13,14 +13,18 @@ public interface Visual {
 	public int getBaseline();
 
 	// public int paint();
-	
+
 	//
 	// UiBinder related layout hints
 	//
-	
+
 	public void setPreferredWidth(String preferredWidth);
+
 	public void setPreferredHeight(String preferredHeight);
+
 	public void setColumnSpan(int columnSpan);
+
 	public void setRowSpan(int rowSpan);
+
 	public void setWeight(int weight);
 }

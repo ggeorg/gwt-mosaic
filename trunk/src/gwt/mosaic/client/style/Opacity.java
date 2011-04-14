@@ -23,7 +23,7 @@ public class Opacity {
 	public void applyTo(Element elem) {
 		impl.applyTo(elem, opacity);
 	}
-	
+
 	public void readFrom(Element elem) {
 		throw new UnsupportedOperationException("TODO");
 	}
@@ -54,5 +54,5 @@ public class Opacity {
 	public String toString() {
 		return impl.toString(opacity);
 	}
-	
+
 }

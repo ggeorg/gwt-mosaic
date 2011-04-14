@@ -4,14 +4,16 @@ import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public class ElementsRemovedEvent<E> extends GwtEvent<ElementsRemovedHandler<E>> {
+public class ElementsRemovedEvent<E> extends
+		GwtEvent<ElementsRemovedHandler<E>> {
 
 	private static Type<ElementsRemovedHandler<?>> TYPE;
 
-	public static <E> void fire(HasElementsRemovedHandlers<E> source, int index,
-			List<E> oldElements) {
+	public static <E> void fire(HasElementsRemovedHandlers<E> source,
+			int index, List<E> oldElements) {
 		if (TYPE != null) {
-			ElementsRemovedEvent<E> event = new ElementsRemovedEvent<E>(index, oldElements);
+			ElementsRemovedEvent<E> event = new ElementsRemovedEvent<E>(index,
+					oldElements);
 			source.fireEvent(event);
 		}
 	}

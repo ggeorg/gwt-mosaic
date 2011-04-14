@@ -114,13 +114,13 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 				return preferredWidth;
 			}
 		}
-			// then check if there is a fixed preferredWidth hint stored in
-			// layoutData
-			LayoutData layoutData = WidgetHelper.getLayoutData(this);
-			if (layoutData.getPreferredWidth() != null) {
-				return WidgetHelper.getPreferredWidthImpl(this, clientHeight);
-			}
-		
+
+		// then check if there is a fixed preferredWidth hint stored in
+		// layoutData
+		LayoutData layoutData = WidgetHelper.getLayoutData(this);
+		if (layoutData.getPreferredWidth() != null) {
+			return WidgetHelper.getPreferredWidthImpl(this, clientHeight);
+		}
 
 		int preferredWidth = 0;
 
@@ -141,11 +141,11 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 							fill ? clientHeight : -1);
 					++j;
 				}
-
-				// Include spacing
-				if (j > 1) {
-					preferredWidth += spacing * (j - 1);
-				}
+			}
+			
+			// Include spacing
+			if (j > 1) {
+				preferredWidth += spacing * (j - 1);
 			}
 		} else {
 			// Preferred width is the maximum preferred width of all widgets
@@ -172,13 +172,12 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 				return preferredHeight;
 			}
 		}
-			// then check if there is a fixed preferredHeight hint stored in
-			// layoutData
-			LayoutData layoutData = WidgetHelper.getLayoutData(this);
-			if (layoutData.getPreferredHeight() != null) {
-				return WidgetHelper.getPreferredHeightImpl(this, clientWidth);
-			}
-		
+		// then check if there is a fixed preferredHeight hint stored in
+		// layoutData
+		LayoutData layoutData = WidgetHelper.getLayoutData(this);
+		if (layoutData.getPreferredHeight() != null) {
+			return WidgetHelper.getPreferredHeightImpl(this, clientWidth);
+		}
 
 		int preferredHeight = 0;
 
@@ -189,7 +188,7 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 			for (Widget child : getChildren()) {
 				if (child.isVisible()) {
 					preferredHeight = Math.max(preferredHeight,
-							WidgetHelper.getPreferredHeight(child, -1));
+							WidgetHelper.getPreferredHeight(child));
 				}
 			}
 		} else {
@@ -327,7 +326,7 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 				for (Widget child : getChildren()) {
 					if (child.isVisible()) {
 						contentHeight = Math.max(contentHeight,
-								WidgetHelper.getPreferredHeight(child, -1));
+								WidgetHelper.getPreferredHeight(child));
 					}
 				}
 
@@ -433,11 +432,11 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 	private void doHorizontalLayout() {
 		int n = getWidgetCount();
 
-		int width = getElement().getOffsetWidth();
+		int width = getElement().getClientWidth();
 		int height = getElement().getClientHeight();
 
-		//int preferredWidth = getPreferredWidth(fill ? height : -1);
-		//width = Math.max(width, preferredWidth);
+		// int preferredWidth = getPreferredWidth(fill ? height : -1);
+		// width = Math.max(width, preferredWidth);
 
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
@@ -462,18 +461,18 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 					if (weight == 0) {
 						widgetWidths[i] = WidgetHelper.getPreferredWidth(child,
 								widgetHeight);
-						totalRelativeWidth -= widgetWidths[i] + 2 * spacing;
+						totalRelativeWidth -= widgetWidths[i] + spacing;
 					}
 				} else {
 					if (weight == 0) {
 						Dimensions preferredComponentSize = WidgetHelper
 								.getPreferredSize(child);
-						widgetWidths[i] = preferredComponentSize.getWidth();
-						widgetHeights[i] = preferredComponentSize.getHeight();
-						totalRelativeWidth -= widgetWidths[i] + 2 * spacing;
+						widgetWidths[i] = preferredComponentSize.width;
+						widgetHeights[i] = preferredComponentSize.height;
+						totalRelativeWidth -= widgetWidths[i] + spacing;
 					} else {
-						widgetHeights[i] = WidgetHelper.getPreferredHeight(
-								child, -1);
+						widgetHeights[i] = WidgetHelper
+								.getPreferredHeight(child);
 					}
 				}
 			}
@@ -556,8 +555,8 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 		int width = getElement().getClientWidth();
 		int height = getElement().getClientHeight();
 
-		int preferredHeight = getPreferredHeight(fill ? width : -1);
-		height = Math.max(height, preferredHeight);
+		// int preferredHeight = getPreferredHeight(fill ? width : -1);
+		// height = Math.max(height, preferredHeight);
 
 		BoxModel boxModel = WidgetHelper.getBoxModel(this);
 
@@ -582,7 +581,7 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 					if (weight == 0) {
 						widgetHeights[i] = WidgetHelper.getPreferredHeight(
 								child, widgetWidth);
-						totalRelativeHeight -= widgetHeights[i] + 2 * spacing;
+						totalRelativeHeight -= widgetHeights[i] + spacing;
 					}
 				} else {
 					if (weight == 0) {
@@ -590,10 +589,9 @@ public class Box extends LayoutPanel implements HasOrientationChangeHandlers,
 								.getPreferredSize(child);
 						widgetWidths[i] = preferredComponentSize.getWidth();
 						widgetHeights[i] = preferredComponentSize.getHeight();
-						totalRelativeHeight -= widgetHeights[i] + 2 * spacing;
+						totalRelativeHeight -= widgetHeights[i] + spacing;
 					} else {
-						widgetWidths[i] = WidgetHelper.getPreferredWidth(child,
-								-1);
+						widgetWidths[i] = WidgetHelper.getPreferredWidth(child);
 					}
 				}
 			}

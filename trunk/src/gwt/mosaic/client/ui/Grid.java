@@ -207,7 +207,7 @@ public class Grid extends LayoutPanel {
 			if (widthHint == null || isRelative) {
 				columnWidth = getPreferredColumnWidth(i);
 			} else {
-				columnWidth = WidgetHelper.getPreferredWidth(column, -1);
+				columnWidth = WidgetHelper.getPreferredWidth(column);
 			}
 
 			columnWidths[i] = columnWidth;
@@ -285,7 +285,7 @@ public class Grid extends LayoutPanel {
 						if (spannedRelativeWeight > 0
 								|| spannedDefaultWidthCellCount > 0) {
 							int rowHeight = row.isRelative() ? -1
-									: WidgetHelper.getPreferredHeight(row, -1);
+									: WidgetHelper.getPreferredHeight(row);
 							int widgetPreferredWidth = WidgetHelper
 									.getPreferredWidth(widget, rowHeight);
 
@@ -427,7 +427,7 @@ public class Grid extends LayoutPanel {
 			if (layoutData.getPreferredHeight() == null || isRelative) {
 				rowHeight = getPreferredRowHeight(i, columnWidths);
 			} else {
-				rowHeight = WidgetHelper.getPreferredHeight(row, -1);
+				rowHeight = WidgetHelper.getPreferredHeight(row);
 			}
 
 			rowHeights[i] = rowHeight;
@@ -803,7 +803,7 @@ public class Grid extends LayoutPanel {
 				if (widget != null && widget.isVisible()
 						&& WidgetHelper.getColumnSpan(widget) == 1) {
 					preferredWidth = Math.max(preferredWidth,
-							WidgetHelper.getPreferredWidth(widget, -1));
+							WidgetHelper.getPreferredWidth(widget));
 				}
 			}
 		}
@@ -951,8 +951,7 @@ public class Grid extends LayoutPanel {
 						columnWidth = getPreferredColumnWidth(j);
 						defaultWidthColumns[j] = true;
 					} else {
-						columnWidth = WidgetHelper
-								.getPreferredWidth(column, -1);
+						columnWidth = WidgetHelper.getPreferredWidth(column);
 					}
 
 					columnWidths[j] = columnWidth;
@@ -1017,7 +1016,7 @@ public class Grid extends LayoutPanel {
 
 						if (adjustCells && spannedDefaultWidthCellCount > 0) {
 							int componentPreferredWidth = WidgetHelper
-									.getPreferredWidth(component, -1);
+									.getPreferredWidth(component);
 
 							if (componentPreferredWidth > spannedWidth) {
 								// The component's preferred width is larger
@@ -1131,7 +1130,7 @@ public class Grid extends LayoutPanel {
 						rowHeight = getPreferredRowHeight(i, columnWidths);
 						defaultHeightRows[i] = true;
 					} else {
-						rowHeight = WidgetHelper.getPreferredHeight(row, -1);
+						rowHeight = WidgetHelper.getPreferredHeight(row);
 					}
 
 					rowHeights[i] = rowHeight;

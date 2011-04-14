@@ -115,25 +115,27 @@ class BeanAdapterWriter {
 
 	public void lookupNotifyingProperties(JClassType type) {
 		JClassType[] implInterfaces = type.getImplementedInterfaces();
-		
-		if(implInterfaces == null || implInterfaces.length == 0) {
+
+		if (implInterfaces == null || implInterfaces.length == 0) {
 			return;
 		}
-		
-		JClassType hasPropertyChangeHandlers = oracle.findType(HasPropertyChangeHandlers.class.getName());
-		for(JClassType implInterface : implInterfaces) {
-			if(!hasPropertyChangeHandlers.isAssignableFrom(implInterface)) {
+
+		JClassType hasPropertyChangeHandlers = oracle
+				.findType(HasPropertyChangeHandlers.class.getName());
+		for (JClassType implInterface : implInterfaces) {
+			if (!hasPropertyChangeHandlers.isAssignableFrom(implInterface)) {
 				continue;
 			}
-			
-			if(null != implInterface.isParameterized()) {
+
+			if (null != implInterface.isParameterized()) {
 				continue;
 			}
 
 			String implInterfaceName = implInterface.getName();
-			if(implInterfaceName.startsWith("Has") && implInterfaceName.endsWith("ChangeHandlers")) {
-				String propertyName = implInterfaceName.substring("Has".length(),
-						implInterfaceName.length()
+			if (implInterfaceName.startsWith("Has")
+					&& implInterfaceName.endsWith("ChangeHandlers")) {
+				String propertyName = implInterfaceName.substring(
+						"Has".length(), implInterfaceName.length()
 								- "ChangeHandlers".length());
 				propertyName = Introspector.decapitalize(propertyName);
 

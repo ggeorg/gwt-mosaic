@@ -56,8 +56,8 @@ public class BeanAdapterGenerator extends Generator {
 				stringWriter));
 		writer.writeBeanAdapter(niceWriter);
 
-//		System.out.println("=================================");
-//		System.out.println(stringWriter.toString());
+		// System.out.println("=================================");
+		// System.out.println(stringWriter.toString());
 
 		printWriter.print(stringWriter.toString());
 

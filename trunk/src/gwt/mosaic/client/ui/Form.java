@@ -228,7 +228,7 @@ public class Form extends LayoutPanel {
 			if (sectionIndex > 0 || section.getHeading() != null) {
 				Separator separator = section.separator;
 				maximumSeparatorWidth = Math.max(maximumSeparatorWidth,
-						WidgetHelper.getPreferredWidth(separator, -1));
+						WidgetHelper.getPreferredWidth(separator));
 			}
 
 			for (int fieldIndex = 0, fieldCount = section.getWidgetCount(); fieldIndex < fieldCount; fieldIndex++) {
@@ -239,7 +239,7 @@ public class Form extends LayoutPanel {
 				if (fieldWidget.isVisible()) {
 					InlineLabel label = fieldWidget.labelWidget;
 					maximumLabelWidth = Math.max(maximumLabelWidth,
-							WidgetHelper.getPreferredWidth(label, -1));
+							WidgetHelper.getPreferredWidth(label));
 
 					int fieldWidth = WidgetHelper.getPreferredWidth(field, -1);
 
@@ -422,7 +422,7 @@ public class Form extends LayoutPanel {
 				if (fieldWidget.isVisible()) {
 					InlineLabel label = fieldWidget.labelWidget;
 					maximumLabelWidth = Math.max(maximumLabelWidth,
-							WidgetHelper.getPreferredWidth(label, -1));
+							WidgetHelper.getPreferredWidth(label));
 
 					// TODO if (showFlagMessagesInline) {}
 				}
@@ -461,7 +461,7 @@ public class Form extends LayoutPanel {
 				if (fieldWidget.isVisible()) {
 					InlineLabel label = fieldWidget.labelWidget;
 					maximumLabelWidth = Math.max(maximumLabelWidth,
-							WidgetHelper.getPreferredWidth(label, -1));
+							WidgetHelper.getPreferredWidth(label));
 
 					// TODO if (showFlagMessagesInline) {}
 				}

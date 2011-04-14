@@ -20,19 +20,27 @@ package gwt.mosaic.client.effects.easing;
  * Circular easing operation.
  */
 public class Circular implements Easing {
-    public double easeIn(double time, double begin, double change, double duration) {
-        return -change * ((double)Math.sqrt(1f - (time /= duration) * time) - 1f) + begin;
-    }
+	public double easeIn(double time, double begin, double change,
+			double duration) {
+		return -change
+				* ((double) Math.sqrt(1f - (time /= duration) * time) - 1f)
+				+ begin;
+	}
 
-    public double easeOut(double time, double begin, double change, double duration) {
-        return change * (double)Math.sqrt(1f - (time = time / duration - 1f) * time) + begin;
-    }
+	public double easeOut(double time, double begin, double change,
+			double duration) {
+		return change
+				* (double) Math.sqrt(1f - (time = time / duration - 1f) * time)
+				+ begin;
+	}
 
-    public double easeInOut(double time, double begin, double change, double duration) {
-        if ((time /= duration / 2f) < 1f) {
-            return -change / 2f * ((double)Math.sqrt(1f - time * time) - 1f) + begin;
-        }
+	public double easeInOut(double time, double begin, double change,
+			double duration) {
+		if ((time /= duration / 2f) < 1f) {
+			return -change / 2f * ((double) Math.sqrt(1f - time * time) - 1f)
+					+ begin;
+		}
 		return change / 2f
-				* ((double)Math.sqrt(1f - (time -= 2f) * time) + 1f) + begin;
-    }
+				* ((double) Math.sqrt(1f - (time -= 2f) * time) + 1f) + begin;
+	}
 }

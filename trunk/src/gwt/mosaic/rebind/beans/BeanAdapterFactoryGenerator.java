@@ -140,7 +140,7 @@ public class BeanAdapterFactoryGenerator extends Generator {
 		}
 		w.outdent();
 		w.println("}");
-		
+
 		w.println("@Override");
 		w.println("protected BeanAdapter<Object> create(Object value) { throw new UnsupportedOperationException(); }");
 	}
