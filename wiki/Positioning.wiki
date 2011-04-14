@@ -17,11 +17,11 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
 
 {{{
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+	XML:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
 	<ui:style>
 		.login { margin: 10px; border: 10px solid Gray; padding: 10px; }
 	</ui:style>
-	<m:VBox>
+	<m:VBox fill="true">
 		<m:HBox addStyleNames="{style.login}">
 			<m:Button>Yes</m:Button>
 			<m:Button>No</m:Button>
@@ -31,10 +31,30 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
 </ui:UiBinder>
 }}}
 
-== preferredWidth and preferredHeight ==
+== Preferred width and height ==
 
 You may need to have more control over the size of a widget. The recommended way is to use the `preferredWidth` and `preferredHeight` properties (the `width` and `height` CSS properties are used internally and will be ignored).
 
 By setting either of the two properties, the widget will be created with that width and height. If you specify only one size property, the other is calculated as needed. The size of these properties should be specified as a number followed by a unit (e.g. 2em).
 
 == Weighted widgets ==
+
+The sizes are fairly easy to calculate for non-weighted widgets. They simply obey their specified preferred widths and heights, and if the size wasn't specified, the widget's default size is just large enough to fit the contents. For weighted widgets, the calculation is slightly trickier.
+
+Weighted widgets are those that have a 'weight' property set to a value greater than 0. Recall that flexible widgets grow and shrink to fit the available space. Their default size is still calculated the same as for inflexible widgets. The following example demonstrates this:
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	XML:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+	<ui:style>
+		.login { margin: 10px; border: 10px solid Gray; padding: 10px; }
+	</ui:style>
+	<m:VBox fill="true">
+		<m:HBox addStyleNames="{style.login}">
+			<m:Button weight="1">Yes</m:Button>
+			<m:Button>No</m:Button>
+			<m:Button>I really don't know one way or the other</m:Button>
+		</m:HBox>
+	</m:VBox>
+</ui:UiBinder>
+}}}
