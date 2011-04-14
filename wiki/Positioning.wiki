@@ -33,4 +33,8 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
 
 == preferredWidth and preferredHeight ==
 
-You may need to have more control over the size of an element in a window. The recommended way is to use the `preferredWidth` and `preferredHeight` properties since the CSS properties `width` and `height` are used internally by the layout panels.
+You may need to have more control over the size of a widget. The recommended way is to use the `preferredWidth` and `preferredHeight` properties (the `width` and `height` CSS properties are used internally and will be ignored).
+
+By setting either of the two properties, the widget will be created with that width and height. If you specify only one size property, the other is calculated as needed. The size of these properties should be specified as a number followed by a unit (e.g. 2em).
+
+== Weighted widgets ==
