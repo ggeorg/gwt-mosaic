@@ -8,3 +8,4 @@ This tutorial describes GWTMosaic framework.
 
  * *Introduction to GWTMosaic*
   * [HelloWorld Hello, World!]
+   * [HelloUiBinder Hello, UiBinder!]
