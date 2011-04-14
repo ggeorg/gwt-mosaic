@@ -15,4 +15,20 @@ A widget will generally be as large as it needs to be to hold its contents, and 
 
 http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
 
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+	<ui:style>
+		.login { margin: 10px; border: 10px solid Gray; padding: 10px; }
+	</ui:style>
+	<m:VBox>
+		<m:HBox addStyleNames="{style.login}">
+			<m:Button>Yes</m:Button>
+			<m:Button>No</m:Button>
+			<m:Button>I really don't know one way or the other</m:Button>
+		</m:HBox>
+	</m:VBox>
+</ui:UiBinder>
+}}}
+
 In the image 
