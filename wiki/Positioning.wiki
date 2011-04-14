@@ -83,6 +83,8 @@ Lets make it so that the text box will resize to fit the entire browser's window
 <m:TextBox addStyleNames="{style.findTB}" weight="1" />
 }}}
 
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning3.png
+
 Here, the text box has been made weighted. This way, it will grow if the user changes the size of the browser's window. This is useful if the user wants to enter a long string of text. Also, a minimum width of 15 ems has been set so that the text box will always show at least 15 characters. If the user resizes the browser's window to be very small, the text box will not shrink past 15 ems.
 
 Notice that in order to use `weight` as a widget we switched to the GWTMosaic's implementation of text box.
