@@ -61,4 +61,4 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning2.png?t=1
 </ui:UiBinder>
 }}}
 
-Notice that in order to see the effect of the weighted widget we changed the `fill` property of the vertical box to `true` so that the horizontal box will expand to fit all the available horizontal space.
+Notice that in order to see the effect of the weighted widget we changed the `fill` property of the vertical box to `true` so that the horizontal box will expand to fit all the available horizontal space. Then, when you resize the browser's window, extra space will be available,so that the horizontal box will grow to fill the extra space. Because the horizontal box is larger, more extra space will be created inside it, and the weighted button inside it will grow to fit the available space.
