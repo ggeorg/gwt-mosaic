@@ -12,8 +12,6 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/HelloWorld.png
 Java code:
 
 {{{
-package gwt.demos.client;
-
 import gwt.mosaic.client.ui.Box;
 import gwt.mosaic.client.ui.HorizontalAlignment;
 import gwt.mosaic.client.ui.Orientation;
