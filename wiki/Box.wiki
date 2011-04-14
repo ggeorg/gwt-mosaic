@@ -1,0 +1,20 @@
+#summary Box layout.
+#sidebar Tutorial
+
+= Introduction =
+
+Box layout panels are used to arrange widgets sequentially: horizontal box layout panels arrange out their children horizontally from left to right, and vertical box layout panels arrange their children from top to bottom.
+
+The Box layout panels support a number of options that allow a caller to customize the arrangement of child widgets:
+
+  * `spacing` - the amount of space the box layout panel inserts between widgets.
+  * `horizontalAlignment` - how the box layout panel aligns widgets on the x-axis.
+  * `verticalAlignment` - how the box layout panel aligns widgets on the y-axis.
+  * `fill` - whether or not the box layout panel should size all widgets to fill the available space; if `true`, horizontal box layout panels will make all widgets the same height, and vertical box layout panels will make all widgets the same width. 
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
