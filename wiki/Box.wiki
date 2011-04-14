@@ -10,7 +10,8 @@ The Box layout panels support a number of options that allow a caller to customi
   * `spacing` - the amount of space the box layout panel inserts between widgets.
   * `horizontalAlignment` - how the box layout panel aligns widgets on the x-axis.
   * `verticalAlignment` - how the box layout panel aligns widgets on the y-axis.
-  * `fill` - whether or not the box layout panel should size all widgets to fill the available space; if `true`, horizontal box layout panels will make all widgets the same height, and vertical box layout panels will make all widgets the same width. 
+  * `fill` - whether or not the box layout panel should size all widgets to fill the available space; if `true`, horizontal box layout panels will make all widgets the same height, and vertical box layout panels will make all widgets the same width.
+  * `weight` - this option indicates how box layout panels distribute remaining empty space among its children. Weighted widgets grow and shrink to fit their given space. Widgets with larger weight values will be made larger than the widgets with lower weight values, at the ratio determined by the two widgets. The actual value of weight is not relevant unless there are other weighted widgets within the same box layout panel. 
 
 = Details =
 
