@@ -23,19 +23,19 @@ public class WidgetHelper {
 		return layoutData;
 	}
 
-	public static int getBoxWidth(Widget w) {
+	public static int getWidth(Widget w) {
 		return getLayoutData(w).getBoxModel().getMarginWidthContribution()
 				+ w.getOffsetWidth();
 	}
 
-	public static int getBoxHeight(Widget w) {
+	public static int getHeight(Widget w) {
 		return getLayoutData(w).getBoxModel().getMarginHeightContribution()
 				+ w.getOffsetHeight();
 	}
 
 	public static void setSize(Widget w, int width, int height) {
-		 //System.out.println(w.getClass().getName() + ":: " + width + "x"
-//		 + height);
+		// System.out.println(w.getClass().getName() + ":: " + width + "x"
+		// + height);
 		if (width >= 0) {
 			int oldWidth = w.getOffsetWidth();
 			width -= getBoxModel(w).getWidthContribution();
@@ -57,9 +57,6 @@ public class WidgetHelper {
 	}
 
 	public static void setLocation(Widget w, int x, int y) {
-		LayoutData layoutData = getLayoutData(w);
-		x += layoutData.getDx();
-		y += layoutData.getDy();
 		Element elem = w.getElement();
 		DOM.setStyleAttribute(elem, "position", "absolute");
 		DOM.setStyleAttribute(elem, "left", x + "px");
@@ -75,7 +72,7 @@ public class WidgetHelper {
 	public static void invalidate(Widget w) {
 		invalidate(w, false);
 	}
-	
+
 	public static void invalidate(Widget w, boolean immediate) {
 		if (w instanceof LayoutPanel) {
 			((LayoutPanel) w).invalidate(immediate);
@@ -83,19 +80,23 @@ public class WidgetHelper {
 			Widget parent = w.getParent();
 			if (parent != null && (parent instanceof LayoutPanel)) {
 				((LayoutPanel) parent).invalidate(immediate);
-			} 
+			}
 		}
 	}
 
-	public static int getPreferredWidth(Widget w, int height) {
+	public static int getPreferredWidth(Widget w) {
+		return getPreferredWidth(w, -1);
+	}
+
+	public static int getPreferredWidth(Widget w, int clientHeight) {
 		if (w instanceof ConstrainedVisual) {
-			return ((ConstrainedVisual) w).getPreferredWidth(height);
+			return ((ConstrainedVisual) w).getPreferredWidth(clientHeight);
 		} else {
-			return getPreferredWidthImpl(w, height);
+			return getPreferredWidthImpl(w, clientHeight);
 		}
 	}
 
-	static int getPreferredWidthImpl(Widget w, int height) {
+	static int getPreferredWidthImpl(Widget w, int clientHeight) {
 		LayoutData layoutData = getLayoutData(w);
 		String widthHint = layoutData.getPreferredWidth();
 
@@ -111,10 +112,9 @@ public class WidgetHelper {
 				} else {
 					DOM.setStyleAttribute(elem, "width", widthHint);
 				}
-				DOM.setStyleAttribute(elem, "height", (height < 0) ? ""
-						: (height + Unit.PX.getType()));
-				return elem.getOffsetWidth()
-						+ getBoxModel(w).getMarginWidthContribution();
+				DOM.setStyleAttribute(elem, "height", (clientHeight < 0) ? ""
+						: (clientHeight + Unit.PX.getType()));
+				return getWidth(w);
 			} finally {
 				DOM.setStyleAttribute(elem, "position", oldPosition);
 				DOM.setStyleAttribute(elem, "width", oldWidth);
@@ -137,15 +137,19 @@ public class WidgetHelper {
 		}
 	}
 
-	public static int getPreferredHeight(Widget w, int width) {
+	public static int getPreferredHeight(Widget w) {
+		return getPreferredHeight(w, -1);
+	}
+
+	public static int getPreferredHeight(Widget w, int clientWidth) {
 		if (w instanceof ConstrainedVisual) {
-			return ((ConstrainedVisual) w).getPreferredHeight(width);
+			return ((ConstrainedVisual) w).getPreferredHeight(clientWidth);
 		} else {
-			return getPreferredHeightImpl(w, width);
+			return getPreferredHeightImpl(w, clientWidth);
 		}
 	}
 
-	static int getPreferredHeightImpl(Widget w, int width) {
+	static int getPreferredHeightImpl(Widget w, int clientWidth) {
 		LayoutData layoutData = getLayoutData(w);
 		String heightHint = layoutData.getPreferredHeight();
 
@@ -156,15 +160,14 @@ public class WidgetHelper {
 			String oldHeight = DOM.getStyleAttribute(elem, "height");
 			try {
 				DOM.setStyleAttribute(elem, "position", "static");
-				DOM.setStyleAttribute(elem, "width", (width < 0) ? ""
-						: (width + Unit.PX.getType()));
+				DOM.setStyleAttribute(elem, "width", (clientWidth < 0) ? ""
+						: (clientWidth + Unit.PX.getType()));
 				if (heightHint == null) {
 					DOM.setStyleAttribute(elem, "height", "");
 				} else {
 					DOM.setStyleAttribute(elem, "height", heightHint);
 				}
-				return elem.getOffsetHeight()
-						+ getBoxModel(w).getMarginHeightContribution();
+				return getHeight(w);
 			} finally {
 				DOM.setStyleAttribute(elem, "position", oldPosition);
 				DOM.setStyleAttribute(elem, "width", oldWidth);
@@ -191,8 +194,7 @@ public class WidgetHelper {
 		if (w instanceof ConstrainedVisual) {
 			return ((ConstrainedVisual) w).getPreferredSize();
 		} else {
-			return new Dimensions(getPreferredWidth(w, -1), getPreferredHeight(
-					w, -1));
+			return new Dimensions(getPreferredWidth(w), getPreferredHeight(w));
 		}
 	}
 

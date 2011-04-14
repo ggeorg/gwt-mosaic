@@ -193,7 +193,9 @@ public class HBox2 extends Composite implements HasWidgets, RequiresResize,
 			}
 		});
 	}
-	int totalRelativeWeight ;
+
+	int totalRelativeWeight;
+
 	private void layout() {
 		try {
 			Element elem = scrollPanel.getElement();
@@ -233,7 +235,7 @@ public class HBox2 extends Composite implements HasWidgets, RequiresResize,
 			}
 
 			int[] relativeWeights = new int[widgets.size()];
-			 totalRelativeWeight = 0;
+			totalRelativeWeight = 0;
 			for (int i = 0, n = widgets.size(); i < n; i++) {
 				Widget w = widgets.get(i);
 				relativeWeights[i] = WidgetHelper.getWeight(w);
@@ -250,18 +252,20 @@ public class HBox2 extends Composite implements HasWidgets, RequiresResize,
 						DOM.setStyleAttribute(
 								col,
 								"width",
-								WidgetHelper.getPreferredWidth(
-										cell.getWidget(), -1) + "px");
+								WidgetHelper.getPreferredWidth(cell.getWidget())
+										+ "px");
 						hPanel.setCellWidth(
 								cell,
-								WidgetHelper.getPreferredWidth(
-										cell.getWidget(), -1) + "px");
-						WidgetHelper.setSize(cell.getWidget(), col.getClientWidth(), -1);
+								WidgetHelper.getPreferredWidth(cell.getWidget())
+										+ "px");
+						WidgetHelper.setSize(cell.getWidget(),
+								col.getClientWidth(), -1);
 					} else {
 						int width = (int) (100.0 * relativeWeights[i] / totalRelativeWeight);
 						DOM.setStyleAttribute(col, "width", width + "px");
 						hPanel.setCellWidth(cell, width + "%");
-						WidgetHelper.setSize(cell.getWidget(), col.getClientWidth(), -1);
+						WidgetHelper.setSize(cell.getWidget(),
+								col.getClientWidth(), -1);
 					}
 				}
 
@@ -310,13 +314,15 @@ public class HBox2 extends Composite implements HasWidgets, RequiresResize,
 			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 				@Override
 				public void execute() {
-			if (fill || (totalRelativeWeight > 0)) {
-				for (int i = 0, n = hPanel.getWidgetCount(); i < n; i++) {
-					Cell cell = (Cell) hPanel.getWidget(i);
-					cell.getWidget().setSize("auto", "auto");
-					cell.onResize();
+					if (fill || (totalRelativeWeight > 0)) {
+						for (int i = 0, n = hPanel.getWidgetCount(); i < n; i++) {
+							Cell cell = (Cell) hPanel.getWidget(i);
+							cell.getWidget().setSize("auto", "auto");
+							cell.onResize();
+						}
+					}
 				}
-			}}});
+			});
 
 		} catch (Exception e) {
 			Window.alert(e.toString());

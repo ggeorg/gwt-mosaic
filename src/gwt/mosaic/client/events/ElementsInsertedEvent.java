@@ -9,7 +9,8 @@ public class ElementsInsertedEvent extends GwtEvent<ElementsInsertedHandler> {
 	public static void fire(HasElementsInsertedHandlers source, int index,
 			int length) {
 		if (TYPE != null) {
-			ElementsInsertedEvent event = new ElementsInsertedEvent(index, length);
+			ElementsInsertedEvent event = new ElementsInsertedEvent(index,
+					length);
 			source.fireEvent(event);
 		}
 	}

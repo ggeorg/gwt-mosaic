@@ -39,12 +39,12 @@ public class SplitPanel extends Composite implements HasWidgets,
 					@Override
 					public void execute() {
 						if (orientation == Orientation.HORIZONTAL) {
-							int width = WidgetHelper.getPreferredWidth(
-									innerPanel, -1);
+							int width = WidgetHelper
+									.getPreferredWidth(innerPanel);
 							splitPanel.setWidgetSize(Wrapper.this, width);
 						} else {
-							int height = WidgetHelper.getPreferredHeight(
-									innerPanel, -1);
+							int height = WidgetHelper
+									.getPreferredHeight(innerPanel);
 							splitPanel.setWidgetSize(Wrapper.this, height);
 						}
 					}

@@ -20,20 +20,24 @@ package gwt.mosaic.client.effects.easing;
  * Quartic easing operation.
  */
 public class Quartic implements Easing {
-    public double easeIn(double time, double begin, double change, double duration) {
-        return change * (time /= duration) * time * time * time + begin;
-    }
+	public double easeIn(double time, double begin, double change,
+			double duration) {
+		return change * (time /= duration) * time * time * time + begin;
+	}
 
-    public double easeOut(double time, double begin, double change, double duration) {
-        return -change * ((time = time / duration - 1) * time * time * time - 1) + begin;
-    }
+	public double easeOut(double time, double begin, double change,
+			double duration) {
+		return -change
+				* ((time = time / duration - 1) * time * time * time - 1)
+				+ begin;
+	}
 
 	public double easeInOut(double time, double begin, double change,
 			double duration) {
-        if ((time /= duration / 2f) < 1) {
-            return change / 2f * time * time * time * time + begin;
-        }
+		if ((time /= duration / 2f) < 1) {
+			return change / 2f * time * time * time * time + begin;
+		}
 
-        return -change / 2f * ((time -= 2) * time * time * time - 2) + begin;
-    }
+		return -change / 2f * ((time -= 2) * time * time * time - 2) + begin;
+	}
 }

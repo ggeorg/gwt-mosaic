@@ -17,13 +17,13 @@ public enum HorizontalAlignment {
 	/**
 	 * Align to center.
 	 */
-	CENTER, 
-	
+	CENTER,
+
 	/**
 	 * Align to start.
 	 */
-	START, 
-	
+	START,
+
 	/**
 	 * Align to end.
 	 */

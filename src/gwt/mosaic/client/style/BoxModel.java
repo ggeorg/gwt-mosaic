@@ -87,12 +87,12 @@ public class BoxModel {
 		Insets margin = getMargin();
 		return (margin.top + margin.bottom);
 	}
-	
+
 	public int getBorderWidthContribution() {
 		Insets border = getBorder();
 		return (border.left + border.right);
 	}
-	
+
 	public int getBorderHeightContribution() {
 		Insets border = getBorder();
 		return (border.top + border.bottom);

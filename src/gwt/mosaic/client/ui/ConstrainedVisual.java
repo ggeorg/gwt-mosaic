@@ -5,12 +5,12 @@ package gwt.mosaic.client.ui;
  */
 public interface ConstrainedVisual extends Visual {
 
-	public int getPreferredWidth(int height);
+	public int getPreferredWidth(int clientHeight);
 
-	public int getPreferredHeight(int width);
+	public int getPreferredHeight(int clientWidth);
 
 	public Dimensions getPreferredSize();
 
-	public int getBaseline(int width, int height);
+	public int getBaseline(int clientWidth, int clientHeight);
 
 }

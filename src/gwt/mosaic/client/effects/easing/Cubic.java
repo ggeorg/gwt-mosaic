@@ -20,18 +20,22 @@ package gwt.mosaic.client.effects.easing;
  * Cubic easing operation.
  */
 public class Cubic implements Easing {
-    public double easeIn(double time, double begin, double change, double duration) {
-        return change * (time /= duration) * time * time + begin;
-    }
+	public double easeIn(double time, double begin, double change,
+			double duration) {
+		return change * (time /= duration) * time * time + begin;
+	}
 
-    public double easeOut(double time, double begin, double change, double duration) {
-        return change * ((time = time / duration - 1f) * time * time + 1f) + begin;
-    }
+	public double easeOut(double time, double begin, double change,
+			double duration) {
+		return change * ((time = time / duration - 1f) * time * time + 1f)
+				+ begin;
+	}
 
-    public double easeInOut(double time, double begin, double change, double duration) {
-        if ((time /= duration / 2f) < 1f) {
-            return change / 2f * time * time * time + begin;
-        }
-        return change / 2f * ((time -= 2f) * time * time + 2f) + begin;
-    }
+	public double easeInOut(double time, double begin, double change,
+			double duration) {
+		if ((time /= duration / 2f) < 1f) {
+			return change / 2f * time * time * time + begin;
+		}
+		return change / 2f * ((time -= 2f) * time * time + 2f) + begin;
+	}
 }

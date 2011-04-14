@@ -12,7 +12,7 @@ public class KeyRemovedEvent<K> extends GwtEvent<KeyRemovedHandler<K>> {
 			source.fireEvent(event);
 		}
 	}
-	
+
 	public static Type<KeyRemovedHandler<?>> getType() {
 		if (TYPE == null) {
 			TYPE = new Type<KeyRemovedHandler<?>>();
