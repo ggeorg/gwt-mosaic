@@ -5,7 +5,7 @@
 
 This version of the application is entirely in Java; a UiBinder example is shown in the next section.
 
-http://gwt-mosaic.googlecode.com/svn/wiki/HelloWorld.png
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/HelloWorld.png
 
 
 = Details =
