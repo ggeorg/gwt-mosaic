@@ -89,3 +89,41 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE2.png
 
 </ui:UiBinder>
 }}}
+
+Here four widgets have been oriented vertically, two inner HBox layout panels and two button widgets. Notice that only the widgets that are direct descendants of the box are oriented vertically. The labels and text boxes are inside the inner HBox layout panels, so they are oriented according to those boxes, which are horizontal.
+
+== Example 3 (Aligning text boxes) ==
+
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE3.png
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<ui:style>
+		.login {
+			margin: 10px;
+			border: 10px solid Gray;
+			padding: 10px;
+		}
+	</ui:style>
+
+	<m:VBox addStyleNames="{style.login}" fill="true">
+		<m:HBox>
+			<m:VBox >
+				<g:InlineLabel>Login:</g:InlineLabel>
+				<g:InlineLabel>Password:</g:InlineLabel>
+			</m:VBox>
+			<m:VBox>
+				<g:TextBox />
+				<g:PasswordTextBox />
+			</m:VBox>
+		</m:HBox>
+		<m:Button>OK</m:Button>
+		<m:Button>Cancel</m:Button>
+	</m:VBox>
+
+</ui:UiBinder>
+}}}
+
+Notice that the text boxes are now aligned with each other. The issue now is that the 'Password' label is too high. We should really use the [Grid Grid] layout panel to fix this.
