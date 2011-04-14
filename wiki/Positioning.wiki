@@ -60,3 +60,5 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning2.png?t=1
 	</m:VBox>
 </ui:UiBinder>
 }}}
+
+Notice that in order to see the effect of the weighted widget we changed the `fill` property of the vertical box to `true` so that the horizontal box will expand to fit all the available horizontal space.
