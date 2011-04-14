@@ -19,10 +19,22 @@ The basic syntax of a box layout is as follows:
 
 {{{
 <m:HBox>
-	<!-- horizontal elements -->
+	<!-- horizontal widgets -->
 </m:HBox>
 
 <m:VBox>
-	<!-- vertical elements -->
+	<!-- vertical widgets -->
 </m:VBox>
+}}}
+
+The HBox layout panel is used to create a horizontal oriented box. Each widget placed in the HBox will be placed horizontally in a row. The VBox layout panel is used to create a vertically oriented box. Added widgets will be placed underneath each other in a column.
+
+There us also the generic Box layout panel which defaults to horizontal orientation, meaning it is equivalent to the HBox. However you can use the `orientation` property to control the orientation of Box layout panel. You can set this attribute to the value `HORIZONTAL` to create a horizontal box and `VERTICAL` to create a vertical box.
+
+Thus, the two lines below are equivalent:
+
+{{{
+<m:VBox></m:VBox>
+
+<m:Box orientation="VERTICAL"></m:Box>
 }}}
