@@ -31,4 +31,6 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
 </ui:UiBinder>
 }}}
 
-In the image 
+== preferredWidth and preferredHeight ==
+
+You may need to have more control over the size of an element in a window. The recommended way is to use the `preferredWidth` and `preferredHeight` properties since the CSS properties `width` and `height` are used internally by the layout panels.
