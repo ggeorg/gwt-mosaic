@@ -12,6 +12,7 @@ This tutorial describes GWTMosaic framework.
  * *Widgets*
   * [LayoutPanels Layout Panels]
    * [Box Box]
+    * [ElementPositioning Positioning]
    * [Grid Grid]
    * [Stack Stack]
    * [Form Form]
