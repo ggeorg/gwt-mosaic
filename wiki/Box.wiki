@@ -127,3 +127,41 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE3.png
 }}}
 
 Notice that the text boxes are now aligned with each other. The issue now is that the 'Password' label is too high. We should really use the [Grid Grid] layout panel to fix this.
+
+== Example 4 (Find files dialog) ==
+
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE4.png
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<ui:style>
+		.login {
+			margin: 10px;
+			border: 10px solid Gray;
+			padding: 10px;
+		}
+	</ui:style>
+
+	<m:VBox addStyleNames="{style.login}" fill="true">
+
+		<g:Label>Enter your search criteria and select
+			the Find button to begin
+			the search.
+		</g:Label>
+
+		<m:HBox>
+			<g:InlineLabel>Search for:</g:InlineLabel>
+			<g:TextBox />
+		</m:HBox>
+
+		<m:HBox>
+			<m:Spacer weight="1"/>
+			<m:Button>Find</m:Button>
+			<m:Button>Cancel</m:Button>
+		</m:HBox>
+	</m:VBox>
+
+</ui:UiBinder>
+}}}
