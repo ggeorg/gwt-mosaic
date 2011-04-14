@@ -15,7 +15,14 @@ The Box layout panels support a number of options that allow a caller to customi
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The basic syntax of a box layout is as follows:
+
+{{{
+<m:HBox>
+	<!-- horizontal elements -->
+</m:HBox>
+
+<m:VBox>
+	<!-- vertical elements -->
+</m:VBox>
+}}}
