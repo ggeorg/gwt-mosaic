@@ -1,5 +1,5 @@
 #summary A "Hello, World!" application.
-#sidebar TableOfContents
+#sidebar Tutorial
 
 = Introduction =
 
