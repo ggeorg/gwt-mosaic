@@ -1,0 +1,34 @@
+#summary A "Hello, UiBinder!" application.
+#sidebar Tutorial
+
+= Introduction =
+
+Below is the output of the "Hello, World!" application written using UiBinder.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/HelloUiBinder.png
+
+
+= Details =
+
+Java code;
+
+{{{
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class HelloUiBinder implements EntryPoint {
+
+	interface MyUiBinder extends UiBinder<Widget, HelloUiBinder> {
+		MyUiBinder INSTANCE = GWT.create(MyUiBinder.class);
+	}
+
+	public void onModuleLoad() {
+		Widget w = MyUiBinder.INSTANCE.createAndBindUi(this);
+		RootLayoutPanel.get().add(w);
+	}
+
+}
+}}}
