@@ -1,10 +1,9 @@
-#summary Here we'll look at controlling the position and size of an widget.
+#summary Element Positioning.
 #sidebar Tutorial
 
 = Introduction =
 
-Add your content here.
-
+Here we'll look at controlling the position and size of a widget.
 
 = Details =
 
