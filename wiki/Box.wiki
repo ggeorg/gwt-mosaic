@@ -5,7 +5,7 @@
 
 Box layout panels are used to arrange widgets sequentially: horizontal box layout panels arrange out their children horizontally from left to right, and vertical box layout panels arrange their children from top to bottom.
 
-The Box layout panels support a number of options that allow a caller to customize the arrangement of child widgets:
+The box layout panels support a number of options that allow a caller to customize the arrangement of child widgets:
 
   * `spacing` - the amount of space the box layout panel inserts between widgets.
   * `horizontalAlignment` - how the box layout panel aligns widgets on the x-axis.
@@ -38,3 +38,22 @@ Thus, the two lines below are equivalent:
 
 <m:Box orientation="VERTICAL"></m:Box>
 }}}
+
+== Example 1 ==
+
+{{{
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.client.ui'>
+
+	<m:VBox>
+		<m:Button>Yes</m:Button>
+		<m:Button>No</m:Button>
+		<m:Button>Maybe</m:Button>
+	</m:VBox>
+
+</ui:UiBinder>
+}}}
+
+[http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/BoxLayoutsE1.png Screenshot]
+
+The three buttons here are oriented vertically as was indicated by the box layout panel. To change the buttons so that they are oriented horizontally, all you need to do is change the VBox widget to a HBox element.
