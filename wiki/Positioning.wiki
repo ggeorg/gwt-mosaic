@@ -21,7 +21,7 @@ http://gwt-mosaic.googlecode.com/svn/wiki/screenshots/Positioning1.png
 	<ui:style>
 		.login { margin: 10px; border: 10px solid Gray; padding: 10px; }
 	</ui:style>
-	<m:VBox fill="true">
+	<m:VBox>
 		<m:HBox addStyleNames="{style.login}">
 			<m:Button>Yes</m:Button>
 			<m:Button>No</m:Button>
