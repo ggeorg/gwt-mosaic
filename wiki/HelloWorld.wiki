@@ -1,0 +1,16 @@
+#summary A "Hello, World!" application.
+#sidebar TableOfContents
+
+= Introduction =
+
+This version of the application is entirely in Java; a UiBinder example is shown in the next section.
+
+http://gwt-mosaic.googlecode.com/svn/wiki/HelloWorld.png
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
