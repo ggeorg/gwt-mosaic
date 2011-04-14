@@ -66,3 +66,19 @@ Notice that in order to see the effect of the weighted widget we changed the `fi
 == Minimum and Maximum Sizes ==
 
 You may also want to allow an widget ti be weighted but constrain the size so that it cannot be larger than a sertain size. Or, you may want to set a minimum size. You can set this by using the CSS properties `min-width`, `min-height`, `max-width` and `max-height`.
+
+== Our find files layout ==
+
+Lets make it so that the text box will resize to fit the entire browser's window.
+
+{{{
+<ui:style>
+	.findTB {
+		min-width: 15em;
+	}
+</ui:style>
+
+...
+
+<m:TextBox addStyleNames="{style.findTB}" weight="1" />
+}}}
