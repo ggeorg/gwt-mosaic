@@ -1,11 +1,7 @@
 #summary Tutorial.
 #labels Featured
 
-= Introduction =
-
 This tutorial describes GWTMosaic framework.
-
-= Details =
 
  * *Introduction to GWTMosaic*
   * [HelloWorld Hello, World!]
