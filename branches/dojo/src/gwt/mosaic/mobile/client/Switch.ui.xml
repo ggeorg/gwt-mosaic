@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+
+	<div class="mblSwitch">
+		<div ui:field="innerNode" class="mblSwitchInner">
+			<div ui:field="lNode" class="mblSwitchBg mblSwitchBgLeft">
+				<div ui:field="lTextNode" class="mblSwitchText mblSwitchTextLeft"></div>
+			</div>
+			<div ui:field="rNode" class="mblSwitchBg mblSwitchBgRight">
+				<div ui:field="rTextNode" class="mblSwitchText mblSwitchTextRight"></div>
+			</div>
+			<div ui:field="knobNode" class="mblSwitchKnob"></div>
+		</div>
+	</div>
+
+</ui:UiBinder>

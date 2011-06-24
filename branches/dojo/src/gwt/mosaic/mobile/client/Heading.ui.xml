@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+
+	<h1 class="mblHeading">
+		<div ui:field="btn" class="mblArrowButton" style="display: none;">
+			<div ui:field="head" class="mblArrowButtonHead"></div>
+			<div ui:field="body" class="mblArrowButtonBody mblArrowButtonText"></div>
+			<div class="mblArrowButtonNeck"></div>
+		</div>
+		<span ui:field="label" />
+		<div ui:field="_btn" class="mblArrowButton" style="display: none; visibility: hidden; float: right !important;">
+			<div ui:field="_head" class="mblArrowButtonHead"></div>
+			<div ui:field="_body" class="mblArrowButtonBody mblArrowButtonText"></div>
+			<div class="mblArrowButtonNeck"></div>
+		</div>
+	</h1>
+
+</ui:UiBinder>

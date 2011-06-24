@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+
+	<li class="mblListItem">
+		<img ui:field="iconNode" class="mblListItemIcon" style="display: none;" />
+		<a ui:field="anchorNode" class="mblListItemAnchor mblListItemAnchorNoIcon">
+			<div ui:field="textBoxNode" class="mblListItemTextBox" style="display: none;" />
+			<div ui:field="rightTextBoxNode" class="mblRightText" style="display: none;" />
+			<div ui:field="arrowNode" class="mblArrow" style="display: none;" />
+		</a>
+	</li>
+
+</ui:UiBinder>
