@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:m='urn:import:gwt.mosaic.mobile.client'>
+
+	<ui:with field="res" type="gwt.mosaic.showcase.client.Resources"/>
+
+	<m:Viewport>
+		<m:ScrollableView elementId="view1" selected="true">
+			<m:Heading>View 1</m:Heading>
+			
+			<m:EdgeToEdgeList>
+				<m:ListItem iconResource="{res.wirelessAndNetwork}" rightText="Hello" moveTo="view2">Wireless and networks</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+				<m:ListItem iconResource="{res.callSettings}" >Call settings</m:ListItem>
+			</m:EdgeToEdgeList>
+
+		</m:ScrollableView>
+
+		<m:View elementId="view2">
+			<m:Heading back="View 1" moveTo="view1">View 2</m:Heading>
+		</m:View>
+	</m:Viewport>
+
+</ui:UiBinder>

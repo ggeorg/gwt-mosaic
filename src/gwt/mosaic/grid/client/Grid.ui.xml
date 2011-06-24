@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+	<g:HTMLPanel>
+		<div ui:field="viewsHeaderNode" class="dojoxGridMasterHeader"
+			role="presentation" />
+		<div ui:field="viewsNode" class="dojoxGridMasterView" role="presentation" />
+		<div ui:field="messagesNode" class="dojoxGridMasterMessages"
+			style="display: none;" />
+		<span tabindex="0" />
+	</g:HTMLPanel>
+
+</ui:UiBinder>

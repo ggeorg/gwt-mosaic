@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<inherits name="com.google.gwt.user.UserAgent" />
+
+	<replace-with class="gwt.mosaic.core.client.ComputedStyleImplWebkit">
+		<when-type-is class="gwt.mosaic.core.client.ComputedStyleImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
+	<replace-with class="gwt.mosaic.core.client.ComputedStyleImplIE6">
+		<when-type-is class="gwt.mosaic.core.client.ComputedStyleImpl" />
+		<when-property-is name="user.agent" value="ie6" />
+	</replace-with>
+	<replace-with class="gwt.mosaic.core.client.ComputedStyleImplIE6">
+		<when-type-is class="gwt.mosaic.core.client.ComputedStyleImpl" />
+		<when-property-is name="user.agent" value="ie8" />
+	</replace-with>
+</module>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module>
-	<replace-with class="gwt.mosaic.client.ui.LabelImplSafari">
-		<when-type-is class="gwt.mosaic.client.ui.LabelImpl" />
-		<when-property-is name="user.agent" value="safari"/>
-	</replace-with>
-</module>

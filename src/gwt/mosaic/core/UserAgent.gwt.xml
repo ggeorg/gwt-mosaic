@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name="com.google.gwt.user.UserAgent"/>
+
+  <replace-with class="gwt.mosaic.core.client.UserAgentImplOpera">
+    <when-type-is class="gwt.mosaic.core.client.UserAgentImpl"/>
+    <when-property-is name="user.agent" value="opera"/>
+  </replace-with>
+
+  <replace-with class="gwt.mosaic.core.client.UserAgentImplWebkit">
+    <when-type-is class="gwt.mosaic.core.client.UserAgentImpl"/>
+    <when-property-is name="user.agent" value="safari"/>
+  </replace-with>
+
+    <replace-with class="gwt.mosaic.core.client.UserAgentImplIE9">
+        <when-type-is class="gwt.mosaic.core.client.UserAgentImpl"/>
+        <when-property-is name="user.agent" value="ie9"/>
+    </replace-with>
+
+  <replace-with class="gwt.mosaic.core.client.UserAgentImplIE8">
+    <when-type-is class="gwt.mosaic.core.client.UserAgentImpl"/>
+    <when-property-is name="user.agent" value="ie8"/>
+  </replace-with>
+
+  <replace-with class="gwt.mosaic.core.client.UserAgentImplIE6">
+    <when-type-is class="gwt.mosaic.core.client.UserAgentImpl"/>
+    <when-property-is name="user.agent" value="ie6"/>
+  </replace-with>
+
+  <replace-with class="gwt.mosaic.core.client.UserAgentImplMozilla">
+    <when-type-is class="gwt.mosaic.core.client.UserAgentImpl"/>
+    <when-property-is name="user.agent" value="gecko1_8"/>
+  </replace-with>
+</module>
