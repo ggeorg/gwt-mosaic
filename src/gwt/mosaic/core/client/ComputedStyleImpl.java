@@ -6,8 +6,8 @@ public class ComputedStyleImpl {
 
   public native ComputedStyle getComputedStyle(Element elem)
   /*-{
-    return node.nodeType == 1 ?
-        node.ownerDocument.defaultView.getComputedStyle(node, null) : {};
+    return elem.nodeType == 1 ?
+        elem.ownerDocument.defaultView.getComputedStyle(elem, null) : {};
   }-*/;
 
   public native String getProperty(ComputedStyle computedStyle, String name)

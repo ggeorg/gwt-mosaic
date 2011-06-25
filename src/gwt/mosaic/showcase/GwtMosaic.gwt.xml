@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='gwtmosaic'>
 
-  <!-- Other module inherits                                      -->
-  <inherits name='gwt.mosaic.mobile.Android'/>
+	<!-- Other module inherits -->
+	<inherits name='gwt.mosaic.mobile.IPad' />
 
-  <!-- Specify the app entry point class.                         -->
-  <entry-point class='gwt.mosaic.showcase.client.GwtMosaic'/>
+	<!-- Specify the app entry point class. -->
+	<entry-point class='gwt.mosaic.showcase.client.GwtMosaic' />
 
-  <!-- Specify the paths for translatable code                    -->
-  <source path='client'/>
-  <source path='shared'/>
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared' />
 
 </module>

@@ -1,0 +1,21 @@
+.mblFixedSpliter {
+	position: absolute;
+	left: 0px; right: 0px; /*width: 100%;*/
+	top: 0px; bottom: 0px; /*height: 100%;*/
+}
+
+.mblFixedSplitterPane {
+	position: absolute;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.mblFixedSplitterPaneH {
+	position: absolute;
+	top: 0px; bottom: 0px; /*height: 100%;*/
+}
+
+.mblFixedSplitterPaneV {
+	position: absolute;
+	left: 0px; right: 0px; /*width: 100%;*/
+}

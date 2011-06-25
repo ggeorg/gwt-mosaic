@@ -5,10 +5,25 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.ProvidesResize;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class Viewport extends Container {
+public class Viewport extends Container implements RequiresResize, ProvidesResize {
+
+  private final Timer resizeTimer = new Timer() {
+    @Override
+    public void run() {
+      Document.get().getBody().getStyle().setHeight(Document.get().getClientHeight(), Unit.PX);
+      Viewport.this.onResize();
+    }
+  };
 
   public Viewport() {
     super(RootPanel.getBodyElement());
@@ -19,9 +34,19 @@ public class Viewport extends Container {
     DOM.setStyleAttribute(getElement(), "overflow", "hidden");
 
     Document.get().getDocumentElement().addClassName("mobile");
-    Document.get().getBody().getStyle().setHeight(100, Unit.PCT);
     addClass();
+
     onAttach();
+
+    Window.addResizeHandler(new ResizeHandler() {
+      public void onResize(ResizeEvent event) {
+        resizeTimer.schedule(33);
+      }
+    });
+    
+    resizeTimer.schedule(1);
+    
+    Document.get().getBody().getStyle().setVisibility(Visibility.VISIBLE);
   }
 
   /**
@@ -36,6 +61,12 @@ public class Viewport extends Container {
       LinkElement linkElem = elems.getItem(i).cast();
       if (linkElem.getHref().endsWith("android.css")) {
         Document.get().getBody().addClassName("android");
+        break;
+      } else if (linkElem.getHref().endsWith("ipad.css")) {
+        Document.get().getBody().addClassName("ipad");
+        break;
+      } else if (linkElem.getHref().endsWith("iphone.css")) {
+        Document.get().getBody().addClassName("iphone");
         break;
       }
     }
