@@ -2,4 +2,5 @@
 <module>
 	<inherits name='gwt.mosaic.mobile.Mobile' />
 	<stylesheet src='themes/iphone/iphone.css' />
+	<stylesheet src='themes/ipad/ipad.css' />
 </module>

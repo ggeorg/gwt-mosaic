@@ -9,15 +9,27 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.ComplexPanelHelper;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.ProvidesResize;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class Container extends ComplexPanel implements HasTouchStartHandlers {
+public abstract class Container extends ComplexPanel implements RequiresResize, ProvidesResize,
+    HasTouchStartHandlers {
 
   /**
    * Creates an empty container.
    */
-  protected Container(Element divElement) {
-    setElement(divElement);
+  protected Container(Element elem) {
+    setElement(elem);
+  }
+  
+  @Override
+  public void onResize() {
+    for (Widget child : getChildren()) {
+      if (child instanceof RequiresResize) {
+        ((RequiresResize) child).onResize();
+      }
+    }
   }
 
   /**
@@ -59,10 +71,39 @@ public abstract class Container extends ComplexPanel implements HasTouchStartHan
   public void insert(Widget w, int beforeIndex) {
     insert(w, getElement(), beforeIndex, true);
   }
-  
+
   @Override
   public HandlerRegistration addTouchStartHandler(TouchStartHandler handler) {
     return addDomHandler(handler, TouchStartEvent.getType());
+  }
+
+  @Override
+  protected void add(Widget child, com.google.gwt.user.client.Element container) {
+    super.add(child, container);
+    setupChild(child);
+  }
+
+  @Override
+  protected void insert(Widget child, com.google.gwt.user.client.Element container,
+      int beforeIndex, boolean domInsert) {
+    super.insert(child, container, beforeIndex, domInsert);
+    setupChild(child);
+  }
+  
+  protected void setupChild(Widget child) {
+  }
+
+  @Override
+  public boolean remove(Widget w) {
+    if (super.remove(w)) {
+      childRemoved(w);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  protected void childRemoved(Widget w) {
   }
 
 }

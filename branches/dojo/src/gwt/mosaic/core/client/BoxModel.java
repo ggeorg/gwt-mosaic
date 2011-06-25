@@ -252,14 +252,15 @@ public class BoxModel {
     // }
     // }
     Options.Bounds mb = getMarginExtends(elem, s);
-    if (widthPx >= 0) {
+    if (widthPx != null && widthPx >= 0) {
       widthPx = Math.max(widthPx - pb.width - mb.width, 0);
     }
-    if (heightPx >= 0) {
+    if (heightPx != null && heightPx >= 0) {
       heightPx = Math.max(heightPx - pb.height - mb.height, 0);
     }
-    setBox(elem, leftPx.doubleValue(), topPx.doubleValue(), widthPx.doubleValue(), heightPx
-        .doubleValue(), Style.Unit.PX);
+    setBox(elem, leftPx != null ? leftPx.doubleValue() : null, topPx != null ? topPx.doubleValue()
+        : null, widthPx != null ? widthPx.doubleValue() : null,
+        heightPx != null ? heightPx.doubleValue() : null, Style.Unit.PX);
   }
 
   /**

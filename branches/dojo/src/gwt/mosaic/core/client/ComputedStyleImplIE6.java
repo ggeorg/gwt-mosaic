@@ -31,7 +31,7 @@ public class ComputedStyleImplIE6 extends ComputedStyleImpl {
       property = 'styleFloat'; // fall through
     default:
       // test currentStyle before touching
-      value = elem.currentStyle[property];
+      value = computedStyle[property];
     }
     return (value == null) ? null : '' + value;
   }-*/;
